@@ -108,7 +108,7 @@
 			tabMode: 'indent',
 			keyMap: 'sublime',
 			theme: 'monokai',
-			cursorScrollMargin: '20',
+			// cursorScrollMargin: '20', has issue with scrolling
 			profile: options.profile || ''
 		});
 		cm.on('change', function onChange() {

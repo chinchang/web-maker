@@ -51,6 +51,15 @@
 
 		resetSplitting();
 	}
+
+	window.saveSetting = function saveSetting(setting, value) {
+		var obj = {};
+		obj[setting] = value;
+		chrome.storage.local.set(obj, function() {
+		  // alert('Settings saved');
+		});
+	}
+
 	window.onunload = function () {
 		// editur.saveContent(editur.cm.getValue());
 	};

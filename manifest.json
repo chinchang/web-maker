@@ -1,0 +1,15 @@
+{
+	"name": "web-maker",
+	"version": "1.0",
+	"manifest_version": 2,
+	"description": "Quick web experiments",
+	"chrome_url_overrides" : {
+		"newtab": "index.html"
+	},
+	"permissions": [
+		"storage"
+	],
+	"icons": {
+		"16": "icon-16.png"
+	}
+}

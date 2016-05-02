@@ -1,0 +1,214 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Web Maker- code in your browser</title>
+		<link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
+		<link rel="stylesheet" href="lib/codemirror/theme/monokai.css">
+
+		<style>
+		body {
+			margin: 0;
+			padding: 0;
+			background: rgba(0, 0, 0, 0.5);
+			background: #444;
+			min-height: 100vh;
+			font-family: Helvetica, arial;
+		}
+		.flex {
+			display: flex;
+		}
+		.flex-grow {
+			flex-grow: 1;
+		}
+		.fr {
+			float: right;
+		}
+		.main-container {
+			position: absolute;
+			left: 0; right: 0;
+			top: 0; bottom: 0;
+			display: flex;
+			flex-direction: column;
+		}
+		.code-side,
+		.demo-side {
+			flex-basis: inherit;
+			position: relative;
+		}
+		.layout-3 .content-wrap {
+			flex-direction: row-reverse;
+		}
+		.code-side {
+			display: flex;
+			flex-direction: column;
+		}
+		.layout-2 .content-wrap {
+			flex-direction: column;
+		}
+		.layout-2 .code-side {
+			flex-direction: row;
+		}
+		.code-wrap {
+			/*border: 1px solid #e1e1e1;*/
+			flex-basis: inherit;
+			height: 33%;
+			/*border-radius: 6px;*/
+			overflow: hidden;
+			position: relative;
+			/*margin-bottom: 4px;*/
+			animation: pop-in 0.4s cubic-bezier(.71,1.7,.77,1.24) forwards 0.2s;
+			animation: pop-in 0.4s ease forwards 0.2s;
+			opacity: 0;
+		}
+		.layout-2 .code-wrap {
+			height: auto;
+			width: 33%;
+			/*margin-bottom: 0;*/
+			/*margin-right: 4px;*/
+		}
+		.code-wrap:last-child {
+			/*margin-bottom: 0;*/
+		}
+		.code-wrap:nth-of-type(3) {
+			animation-delay: 0.3s;
+		}
+		.code-wrap:nth-of-type(5) {
+			animation-delay: 0.4s;
+		}
+
+		.code-wrap:after {
+			content: attr(data-type);
+			text-transform: uppercase;
+			font-size: 65px;
+			display: block;
+			position: absolute;
+			top: 4px;
+			color: rgba(255,255,255,0.04);
+			left: 52px;
+			z-index: 3;
+			pointer-events: none;
+		}
+		@keyframes pop-in {
+			from { transform: scale(0.9); opacity: 0; }
+			to { transform: scale(1); opacity: 1; }
+		}
+
+		/* Codemirror */
+		.Codemirror {
+			width: 100%;
+			height: 100%;
+			font-size: 16px;
+		}
+		.cm-s-monokai .CodeMirror-linenumber {
+			color:rgba(255,255,255,0.2);
+		}
+
+		#demo-frame {
+			border: 0;
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			z-index: 1;
+			background: white;
+		}
+		.footer {
+			padding: 5px 10px;
+			background-color: #111;
+			color: rgba(255, 255, 255, 0.45);
+			line-height: 20px;
+		}
+		.footer__right {
+			font-size: 0;
+			line-height: 0;
+		}
+		.mode-btn {
+			margin-left: 10px;
+			display: inline-block;
+		}
+		.mode-btn svg {
+			width: 20px;
+			height: 20px;
+			fill: rgba(255, 255, 255, 0.09)
+		}
+		.mode-btn:hover svg,
+		.mode-btn.selected svg {
+			fill: rgba(255, 255, 255, 0.45);
+		}
+		.gutter-horizontal {
+			cursor: ew-resize;
+		}
+		.gutter-vertical {
+			cursor: ns-resize;
+		}
+		</style>
+	</head>
+
+	<body class="layout-">
+		<div class="main-container">
+			<div class="content-wrap  flex  flex-grow">
+				<div class="code-side" id="js-code-side">
+					<div id="js-html-code" data-type="html" class="code-wrap"></div>
+					<div id="js-css-code" data-type="css" class="code-wrap"></div>
+					<div id="js-js-code" data-type="js" class="code-wrap"></div>
+				</div>
+				<div class="demo-side" id="js-demo-side">
+					<iframe src="" frameborder="0" id="demo-frame"></iframe>
+				</div>
+			</div>
+			<div class="footer">
+				<div class="footer__right  fr">
+					<a id="js-layout-btn-1" class="mode-btn" href="javascript:void(0)">
+						<svg viewBox="0 0 100 100" style="transform:rotate(-90deg)">
+							<use xlink:href="#mode-icon" />
+						</svg>
+					</a>
+					<a id="js-layout-btn-2" class="mode-btn" href="javascript:void(0)">
+						<svg viewBox="0 0 100 100">
+							<use xlink:href="#mode-icon" />
+						</svg>
+					</a>
+					<a id="js-layout-btn-3" class="mode-btn" href="javascript:void(0)">
+						<svg viewBox="0 0 100 100" style="transform:rotate(90deg)">
+							<use xlink:href="#mode-icon" />
+						</svg>
+					</a>
+				</div>
+				&copy; Web-Maker
+			</div>
+		</div>
+
+
+		<svg  width="30" height="30" viewBox="0 0 100 100" fill="rgba(255, 255, 255, 0.09)">
+			<g id="mode-icon">
+			  <rect x="0" y="0" width="28" height="47" />
+			  <rect x="36" y="0" width="28" height="47"/>
+			  <rect x="72" y="0" width="28" height="47"/>
+			  <rect x="0" y="53" width="100" height="47"/>
+			</g>
+		</svg>
+	    <script src="lib/codemirror/lib/codemirror.js"></script>
+
+	    <script src="lib/codemirror/addon/edit/closetag.js"></script>
+
+	    <script src="lib/codemirror/mode/xml/xml.js"></script>
+	    <script src="lib/codemirror/mode/javascript/javascript.js"></script>
+	    <script src="lib/codemirror/mode/css/css.js"></script>
+	    <script src="lib/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+
+		<script src="lib/split.js"></script>
+	    <script src="script.js"></script>
+
+		<!--<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-19798102-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+		  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		</script>-->
+
+	</body>
+</html>

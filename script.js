@@ -99,12 +99,17 @@
 
 	function initEditor(element, options) {
 		var cm = CodeMirror(element, {
-			lineNumbers: true,
 			mode: options.mode,
+			lineNumbers: true,
 			lineWrapping: true,
 			autofocus: options.autofocus || false,
+			autoCloseBrackets: true,
+    		matchBrackets: true,
 			tabMode: 'indent',
-			theme: 'monokai'
+			keyMap: 'sublime',
+			theme: 'monokai',
+			cursorScrollMargin: '20',
+			profile: options.profile || ''
 		});
 		cm.on('change', function onChange() {
 			clearTimeout(updateTimer);
@@ -117,8 +122,10 @@
 
 	editur.cm.html = initEditor(htmlCode, {
 		mode: 'htmlmixed',
-		autofocus: true
+		autofocus: true,
+		profile: 'xhtml'
 	});
+	emmetCodeMirror(editur.cm.html);
 	editur.cm.css = initEditor(cssCode, {
 		mode: 'css'
 	});
@@ -139,25 +146,6 @@
 			}
 		});
 
-		function attachResizeListners () {
-			function mouseMoveListener (e) {
-				ui.codeMirrorContainer.style.width = e.pageX + 'px';
-			}
-			ui.separator.on('mousedown', function mouseDownListener(e) {
-				e.preventDefault();
-				// stop events on iframe, so it doesnt interfere during mousemove
-				ui.demoFrame.style.pointerEvents = 'none';
-				document.on('mousemove', mouseMoveListener);
-				document.on('mouseup', function mouseUpListener(e) {
-					ui.demoFrame.style.pointerEvents = 'auto';
-					document.removeEventListener('mousemove', mouseMoveListener);
-					document.removeEventListener('mouseup', mouseUpListener);
-					editur.cm.refresh();
-					// trigger a redraw
-					editur.setPreviewContent(editur.cm.getValue());
-				});
-			});
-		}
 		return;
 
 		var content = editur.getLastSavedContent();

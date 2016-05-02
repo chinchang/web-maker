@@ -61,7 +61,7 @@
 	}
 
 	window.onunload = function () {
-		// editur.saveContent(editur.cm.getValue());
+		// saveSettings();
 	};
 
 	editur.saveContent = function (content) {

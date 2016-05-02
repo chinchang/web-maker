@@ -118,11 +118,17 @@
 	});
 
 	function init () {
-		layoutBtn1.addEventListener('click', function () { toggleLayout(1) });
-		layoutBtn2.addEventListener('click', function () { toggleLayout(2) });
-		layoutBtn3.addEventListener('click', function () { toggleLayout(3) });
+		layoutBtn1.addEventListener('click', function () { saveSetting('layoutMode', 1); toggleLayout(1); });
+		layoutBtn2.addEventListener('click', function () { saveSetting('layoutMode', 2); toggleLayout(2); });
+		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); });
 
-		toggleLayout(3);
+		chrome.storage.local.get('layoutMode', function localGetCallback(result) {
+			if (result.layoutMode) {
+				toggleLayout(result.layoutMode);
+			} else {
+				toggleLayout(1);
+			}
+		});
 
 		function attachResizeListners () {
 			function mouseMoveListener (e) {

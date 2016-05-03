@@ -5,17 +5,19 @@
 	var $ = document.querySelector.bind(document);
 	var $all = document.querySelectorAll.bind(document);
 
-	var updateTimer,
-		updateDelay = 500,
-		currentLayoutMode,
-		frame = $('#demo-frame'),
-		htmlCode = $('#js-html-code'),
-		cssCode = $('#js-css-code'),
-		jsCode = $('#js-js-code');
-		layoutBtn1 = $('#js-layout-btn-1');
-		layoutBtn2 = $('#js-layout-btn-2');
-		layoutBtn3 = $('#js-layout-btn-3');
-
+	var updateTimer
+		, updateDelay = 500
+		, currentLayoutMode
+		, frame = $('#demo-frame')
+		, htmlCode = $('#js-html-code')
+		,cssCode = $('#js-css-code')
+		, jsCode = $('#js-js-code')
+		, layoutBtn1 = $('#js-layout-btn-1')
+		, layoutBtn2 = $('#js-layout-btn-2')
+		, layoutBtn3 = $('#js-layout-btn-3')
+		, helpBtn = $('#js-help-btn')
+		, helpModal = $('#js-help-modal')
+		;
 
 	editur.cm = {};
 	editur.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
@@ -146,30 +148,15 @@
 			}
 		});
 
-		return;
+		helpBtn.addEventListener('click', function () {
+			helpModal.classList.toggle('is-modal-visible');
+		});
 
-		var content = editur.getLastSavedContent();
-
-		// load demo content for new user
-		if (!content) {
-			var reqListener = function () {
-				content = this.responseText;
-				editur.cm.setValue(content);
-				editur.cm.refresh();
-				editur.setPreviewContent(content);
-			};
-
-			var oReq = new XMLHttpRequest();
-			oReq.onload = reqListener;
-			oReq.open("get", "demo.html", true);
-			oReq.send();
-		}
-		// load saved content for returning user
-		else {
-			editur.setPreviewContent(content);
-			editur.cm.setValue(content);
-			editur.cm.refresh();
-		}
+		window.addEventListener('click', function(e) {
+			if (typeof e.target.className === 'string' && e.target.className.indexOf('modal-overlay') !== -1) {
+				e.target.previousElementSibling.classList.toggle('is-modal-visible');
+			}
+		})
 	}
 
 	init();

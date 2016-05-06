@@ -80,23 +80,19 @@
 		var css = editur.cm.css.getValue();
 		var js = editur.cm.js.getValue();
 
-		self.demoFrameDocument.open(html);
-		self.demoFrameDocument.write(html);
-		self.demoFrameDocument.close();
+		frame.contentWindow.location.reload();
 
-		var scriptTag = document.createElement('script');
-		scriptTag.textContent = js;
-		self.demoFrameDocument.body.appendChild(scriptTag);
+		// Do everything in next stack so that reload completes. Otherwise
+		// the document context persists even after reload.
+		setTimeout(function () {
+			self.demoFrameDocument = frame.contentDocument;
+			html = '<html><head><script>' + 'window.addEventListener("message",function (e){ window.eval(e.data);});' + '</script><style>' + css + '</style></head><body>' + html + '</body></html>';
+			self.demoFrameDocument.open('text/html', 'replace');
+			self.demoFrameDocument.write(html);
+			self.demoFrameDocument.close();
 
-		var styleTag = self.demoFrameDocument.head.children.namedItem('css');
-		if (styleTag) {
-			styleTag.textContent = content;
-		}
-		else {
-			styleTag = document.createElement('style');
-			styleTag.textContent = css;
-			self.demoFrameDocument.head.appendChild(styleTag);
-		}
+			frame.contentWindow.postMessage(js, '*')
+		},0);
 	};
 
 	function initEditor(element, options) {

@@ -120,6 +120,19 @@
 			border-top: 1px solid rgba(255,255,255,0.14);
 			line-height: 20px;
 		}
+		.logo {
+			display: inline-block;
+			height: 25px;
+			width: 48px;
+			background: url(icon-48.png) 0px -12px;
+			background-repeat: no-repeat;
+			vertical-align: middle;
+			-webkit-filter: grayscale(0.9);
+			transition: 0.4s ease;
+		}
+		.footer:hover .logo {
+			-webkit-filter: grayscale(0);
+		}
 		.footer__right {
 			font-size: 0;
 			line-height: 0;
@@ -229,6 +242,7 @@
 						</svg>
 					</a>
 				</div>
+				<div class="logo"></div>
 				&copy; Web-Maker &nbsp;&nbsp;
 				<a id="js-help-btn">
 					<svg style="width:20px; height:20px; vertical-align:text-bottom" viewBox="0 0 24 24">

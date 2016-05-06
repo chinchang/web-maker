@@ -11,6 +11,7 @@
 	],
 	"content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-oEJh/gQdHXu0Vw34Jd7uSMA+d9M2HnPWjJvHIqRgs0w='; object-src 'self'",
 	"icons": {
-		"16": "icon-16.png"
+		"16": "icon-16.png",
+		"48": "icon-48.png"
 	}
 }

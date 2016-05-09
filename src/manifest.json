@@ -6,7 +6,7 @@
 	"chrome_url_overrides" : {
 		"newtab": "index.html"
 	},
-	"homepage_url": "http://kushagragour.in/lab/web-maker"
+	"homepage_url": "http://kushagragour.in/lab/web-maker",
 	"permissions": [
 		"storage"
 	],

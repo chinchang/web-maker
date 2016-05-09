@@ -1,11 +1,12 @@
 {
-	"name": "web-maker",
-	"version": "1.0",
+	"name": "Web Maker",
+	"version": "1.1",
 	"manifest_version": 2,
-	"description": "Quick web experiments",
+	"description": "An easy and quick accessible playground for your web experiments",
 	"chrome_url_overrides" : {
 		"newtab": "index.html"
 	},
+	"homepage_url": "http://kushagragour.in/lab/web-maker"
 	"permissions": [
 		"storage"
 	],

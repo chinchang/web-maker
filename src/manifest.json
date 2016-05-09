@@ -1,8 +1,8 @@
 {
 	"name": "Web Maker",
-	"version": "1.1",
+	"version": "1.2",
 	"manifest_version": 2,
-	"description": "An easy and quick accessible playground for your web experiments",
+	"description": "Make every new tab an offline playground for your web experiments",
 	"chrome_url_overrides" : {
 		"newtab": "index.html"
 	},

@@ -83,19 +83,33 @@
 		var css = editur.cm.css.getValue();
 		var js = editur.cm.js.getValue();
 
-		frame.contentWindow.location.reload();
 
-		// Do everything in next stack so that reload completes. Otherwise
-		// the document context persists even after reload.
-		setTimeout(function () {
-			self.demoFrameDocument = frame.contentDocument;
-			html = '<html><head><script>' + 'window.addEventListener("message",function (e){ window.eval(e.data);});' + '</script><style>' + css + '</style></head><body>' + html + '</body></html>';
-			self.demoFrameDocument.open('text/html', 'replace');
-			self.demoFrameDocument.write(html);
-			self.demoFrameDocument.close();
+		html = '<html>\n<head>\n<style>\n' + css + '\n</style>\n</head>\n<body>\n' + html + '\n<script>\n' + js + '\n</script></body>\n</html>';
 
-			frame.contentWindow.postMessage(js, '*')
-		},0);
+		var fileWritten = false;
+
+		var blob = new Blob([ html ], {type : "text/plain;charset=UTF-8"});
+
+		function errorHandler() { console.log(arguments); }
+
+		window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024 * 5, function(fs){
+			fs.root.getFile('preview.html', {create: true}, function(fileEntry) {
+				fileEntry.createWriter(function(fileWriter) {
+					function onWriteComplete() {
+						if (fileWritten) {
+							frame.src = 'filesystem:chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
+						}
+						else {
+							fileWritten = true;
+							fileWriter.seek(0);
+							fileWriter.write(blob);
+						}
+					}
+					fileWriter.onwriteend = onWriteComplete;
+					fileWriter.truncate(0)
+				}, errorHandler);
+			}, errorHandler);
+		}, errorHandler);
 	};
 
 	function initEditor(element, options) {

@@ -17,6 +17,8 @@
 		, layoutBtn3 = $('#js-layout-btn-3')
 		, helpBtn = $('#js-help-btn')
 		, helpModal = $('#js-help-modal')
+		, codepenBtn = $('#js-codepen-btn')
+		, codepenForm = $('#js-codepen-form')
 		;
 
 	editur.cm = {};
@@ -132,9 +134,9 @@
 	});
 
 	function init () {
-		layoutBtn1.addEventListener('click', function () { saveSetting('layoutMode', 1); toggleLayout(1); });
-		layoutBtn2.addEventListener('click', function () { saveSetting('layoutMode', 2); toggleLayout(2); });
-		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); });
+		layoutBtn1.addEventListener('click', function () { saveSetting('layoutMode', 1); toggleLayout(1); return false; });
+		layoutBtn2.addEventListener('click', function () { saveSetting('layoutMode', 2); toggleLayout(2); return false; });
+		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
 
 		chrome.storage.local.get('layoutMode', function localGetCallback(result) {
 			if (result.layoutMode) {
@@ -146,6 +148,22 @@
 
 		helpBtn.addEventListener('click', function () {
 			helpModal.classList.toggle('is-modal-visible');
+			return false;
+		});
+
+		codepenBtn.addEventListener('click', function (e) {
+			var json = {
+				title: 'A Web Maker experiment',
+				html: editur.cm.html.getValue(),
+				css: editur.cm.css.getValue(),
+				js: editur.cm.js.getValue()
+			};
+			json = JSON.stringify(json)
+				.replace(/"/g, "&​quot;")
+				.replace(/'/g, "&apos;")
+			codepenForm.querySelector('input').value = json;
+			codepenForm.submit();
+			e.preventDefault();
 		});
 
 		window.addEventListener('click', function(e) {

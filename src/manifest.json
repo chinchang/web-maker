@@ -10,6 +10,10 @@
 	"chrome_url_overrides" : {
 		"newtab": "index.html"
 	},
+	"options_ui": {
+		"page": "options.html",
+		"chrome_style": true
+	},
 	"browser_action": {
 		"default_title": "Web Maker",
 		"default_icon": "icon-16.png"

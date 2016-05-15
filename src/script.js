@@ -20,6 +20,7 @@
 		, codepenBtn = $('#js-codepen-btn')
 		, codepenForm = $('#js-codepen-form')
 		, saveHtmlBtn = $('#js-save-html')
+		, settingsBtn = $('#js-settings-btn')
 		;
 
 	editur.cm = {};
@@ -60,21 +61,28 @@
 	window.saveSetting = function saveSetting(setting, value) {
 		var obj = {};
 		obj[setting] = value;
+		// TODO: remove me
+		// We delegate the saving to background script because, this tab cannot do
+		// async saving once the tab starts unloading.
+		// chrome.runtime.sendMessage(obj, function(response) {
+		// 	console.log(response);
+		// });
 		chrome.storage.local.set(obj, function() {
-		  // alert('Settings saved');
+			console.log('saved', request);
 		});
+	};
+
+	function saveCode() {
+		var code = {
+			html: editur.cm.html.getValue(),
+			css: editur.cm.css.getValue(),
+			js: editur.cm.js.getValue()
+		};
+		saveSetting('code', code);
 	}
 
 	window.onunload = function () {
-		// saveSettings();
-	};
-
-	editur.saveContent = function (content) {
-		window.localStorage.editur = content;
-	};
-
-	editur.getLastSavedContent = function () {
-		return window.localStorage.editur || "";
+		saveCode();
 	};
 
 	editur.setPreviewContent = function () {
@@ -153,14 +161,6 @@
 		layoutBtn2.addEventListener('click', function () { saveSetting('layoutMode', 2); toggleLayout(2); return false; });
 		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
 
-		chrome.storage.local.get('layoutMode', function localGetCallback(result) {
-			if (result.layoutMode) {
-				toggleLayout(result.layoutMode);
-			} else {
-				toggleLayout(1);
-			}
-		});
-
 		helpBtn.addEventListener('click', function () {
 			helpModal.classList.toggle('is-modal-visible');
 			return false;
@@ -208,7 +208,34 @@
 			if (typeof e.target.className === 'string' && e.target.className.indexOf('modal-overlay') !== -1) {
 				e.target.previousElementSibling.classList.toggle('is-modal-visible');
 			}
-		})
+		});
+
+		settingsBtn.addEventListener('click', function(e) {
+			if (chrome.runtime.openOptionsPage) {
+				// New way to open options pages, if supported (Chrome 42+).
+				chrome.runtime.openOptionsPage();
+			} else {
+				// Fallback.
+				window.open(chrome.runtime.getURL('options.html'));
+			}
+			return false;
+		});
+
+
+		chrome.storage.local.get({
+			layoutMode: 1,
+			code: ''
+		}, function localGetCallback(result) {
+			toggleLayout(result.layoutMode);
+			if (result.code) {
+				editur.cm.html.setValue(result.code.html);
+				editur.cm.css.setValue(result.code.css);
+				editur.cm.js.setValue(result.code.js);
+				editur.cm.html.refresh();
+				editur.cm.css.refresh();
+				editur.cm.js.refresh();
+			}
+		});
 	}
 
 	init();

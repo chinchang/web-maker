@@ -61,14 +61,7 @@
 	window.saveSetting = function saveSetting(setting, value) {
 		var obj = {};
 		obj[setting] = value;
-		// TODO: remove me
-		// We delegate the saving to background script because, this tab cannot do
-		// async saving once the tab starts unloading.
-		// chrome.runtime.sendMessage(obj, function(response) {
-		// 	console.log(response);
-		// });
 		chrome.storage.local.set(obj, function() {
-			console.log('saved', request);
 		});
 	};
 

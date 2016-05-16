@@ -157,6 +157,8 @@
 	});
 
 	function init () {
+		var lastCode;
+
 		layoutBtn1.addEventListener('click', function () { saveSetting('layoutMode', 1); toggleLayout(1); return false; });
 		layoutBtn2.addEventListener('click', function () { saveSetting('layoutMode', 2); toggleLayout(2); return false; });
 		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
@@ -233,9 +235,18 @@
 		}, function localGetCallback(result) {
 			toggleLayout(result.layoutMode);
 			if (result.code) {
-				editur.cm.html.setValue(result.code.html);
-				editur.cm.css.setValue(result.code.css);
-				editur.cm.js.setValue(result.code.js);
+				lastCode = result.code;
+			}
+		});
+
+		// Get synced `preserveLastCode` setting to get back last code (or not).
+		chrome.storage.sync.get({
+			preserveLastCode: true
+		}, function syncGetCallback(result) {
+			if (result.preserveLastCode && lastCode) {
+				editur.cm.html.setValue(lastCode.html);
+				editur.cm.css.setValue(lastCode.css);
+				editur.cm.js.setValue(lastCode.js);
 				editur.cm.html.refresh();
 				editur.cm.css.refresh();
 				editur.cm.js.refresh();

@@ -16,7 +16,7 @@ function saveOptions(e) {
 		var status = document.getElementById('js-status');
 		status.textContent = 'Settings saved.';
 		setTimeout(function() {
-			status.textContent = '';
+			status.innerHTML = '&nbsp;';
 		}, 750);
 	});
 

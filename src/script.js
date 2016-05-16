@@ -211,12 +211,17 @@
 		});
 
 		settingsBtn.addEventListener('click', function(e) {
-			if (chrome.runtime.openOptionsPage) {
+			if (!chrome.runtime.openOptionsPage) {
 				// New way to open options pages, if supported (Chrome 42+).
+				// Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=601997
+				// Until this bug fixes, use the
+				// fallback.
 				chrome.runtime.openOptionsPage();
 			} else {
 				// Fallback.
-				window.open(chrome.runtime.getURL('options.html'));
+				chrome.tabs.create({
+					url: 'chrome://extensions?options=' + chrome.i18n.getMessage('@@extension_id')
+				});
 			}
 			return false;
 		});

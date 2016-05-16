@@ -20,6 +20,7 @@
 		, codepenBtn = $('#js-codepen-btn')
 		, codepenForm = $('#js-codepen-form')
 		, saveHtmlBtn = $('#js-save-html')
+		, settingsBtn = $('#js-settings-btn')
 		;
 
 	editur.cm = {};
@@ -61,20 +62,20 @@
 		var obj = {};
 		obj[setting] = value;
 		chrome.storage.local.set(obj, function() {
-		  // alert('Settings saved');
 		});
+	};
+
+	function saveCode() {
+		var code = {
+			html: editur.cm.html.getValue(),
+			css: editur.cm.css.getValue(),
+			js: editur.cm.js.getValue()
+		};
+		saveSetting('code', code);
 	}
 
 	window.onunload = function () {
-		// saveSettings();
-	};
-
-	editur.saveContent = function (content) {
-		window.localStorage.editur = content;
-	};
-
-	editur.getLastSavedContent = function () {
-		return window.localStorage.editur || "";
+		saveCode();
 	};
 
 	editur.setPreviewContent = function () {
@@ -149,17 +150,11 @@
 	});
 
 	function init () {
+		var lastCode;
+
 		layoutBtn1.addEventListener('click', function () { saveSetting('layoutMode', 1); toggleLayout(1); return false; });
 		layoutBtn2.addEventListener('click', function () { saveSetting('layoutMode', 2); toggleLayout(2); return false; });
 		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
-
-		chrome.storage.local.get('layoutMode', function localGetCallback(result) {
-			if (result.layoutMode) {
-				toggleLayout(result.layoutMode);
-			} else {
-				toggleLayout(1);
-			}
-		});
 
 		helpBtn.addEventListener('click', function () {
 			helpModal.classList.toggle('is-modal-visible');
@@ -208,7 +203,48 @@
 			if (typeof e.target.className === 'string' && e.target.className.indexOf('modal-overlay') !== -1) {
 				e.target.previousElementSibling.classList.toggle('is-modal-visible');
 			}
-		})
+		});
+
+		settingsBtn.addEventListener('click', function(e) {
+			if (!chrome.runtime.openOptionsPage) {
+				// New way to open options pages, if supported (Chrome 42+).
+				// Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=601997
+				// Until this bug fixes, use the
+				// fallback.
+				chrome.runtime.openOptionsPage();
+			} else {
+				// Fallback.
+				chrome.tabs.create({
+					url: 'chrome://extensions?options=' + chrome.i18n.getMessage('@@extension_id')
+				});
+			}
+			return false;
+		});
+
+
+		chrome.storage.local.get({
+			layoutMode: 1,
+			code: ''
+		}, function localGetCallback(result) {
+			toggleLayout(result.layoutMode);
+			if (result.code) {
+				lastCode = result.code;
+			}
+		});
+
+		// Get synced `preserveLastCode` setting to get back last code (or not).
+		chrome.storage.sync.get({
+			preserveLastCode: true
+		}, function syncGetCallback(result) {
+			if (result.preserveLastCode && lastCode) {
+				editur.cm.html.setValue(lastCode.html);
+				editur.cm.css.setValue(lastCode.css);
+				editur.cm.js.setValue(lastCode.js);
+				editur.cm.html.refresh();
+				editur.cm.css.refresh();
+				editur.cm.js.refresh();
+			}
+		});
 	}
 
 	init();

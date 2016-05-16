@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head><title>Settings - Web Maker</title>
+<style>
+	body {
+		font-size: 16px;
+	}
+	.btn {
+		background: #ff8c00;
+		color: white;
+		text-shadow: none;
+		border-radius: 3px;
+		border: 0;
+		outline: 0;
+		padding: 5px 8px;
+		cursor: pointer;
+		margin: 5px 0;
+		font-size: inherit;
+	}
+	.status {
+		color: green;
+		margin-bottom: 10px;
+	}
+	label {
+		display: block;
+		margin: 10px 0;
+	}
+</style>
+</head>
+<body>
+	<h3>Settings</h3>
+	<form name="optionsForm">
+		<label>
+			<input type="checkbox" name="preserveLastCode">
+			Preserve last written code
+		</label>
+
+		<div id="js-status" class="status">&nbsp;</div>
+		<button id="js-save-btn" class="btn">Save</button>
+	</form>
+
+	<script src="options.js"></script>
+</body>
+</html>

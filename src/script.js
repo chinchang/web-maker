@@ -176,7 +176,7 @@
 			e.preventDefault();
 		});
 
-		saveHtmlBtn.addEventListener('click', function (e) {
+		function save_file() {
 			var html = editur.cm.html.getValue();
 			var css = editur.cm.css.getValue();
 			var js = editur.cm.js.getValue();
@@ -197,7 +197,18 @@
 			document.body.appendChild(a);
 			a.click();
 			a.remove();
+		}
+
+		saveHtmlBtn.addEventListener('click', function (e) {
+			save_file();
 		});
+		
+		window.addEventListener('keydown',function(event) {
+			if ((event.ctrlKey)&&(event.keyCode==83)){
+				event.returnValue=false;
+				save_file();
+			 }
+		})
 
 		window.addEventListener('click', function(e) {
 			if (typeof e.target.className === 'string' && e.target.className.indexOf('modal-overlay') !== -1) {

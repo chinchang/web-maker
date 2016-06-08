@@ -197,7 +197,7 @@
 			document.body.appendChild(a);
 			a.click();
 			a.remove();
-		}
+		};
 
 		saveHtmlBtn.addEventListener('click', function (e) {
 			save_file();
@@ -208,7 +208,7 @@
 				event.returnValue=false;
 				save_file();
 			 }
-		})
+		});
 
 		window.addEventListener('click', function(e) {
 			if (typeof e.target.className === 'string' && e.target.className.indexOf('modal-overlay') !== -1) {

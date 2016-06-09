@@ -1,6 +1,8 @@
+/* eslint-disable no-extra-semi */
 ;(function () {
 
-	editur = window.editur || {};
+/* eslint-enable no-extra-semi */
+	var editur = window.editur || {};
 
 	var $ = document.querySelector.bind(document);
 	var $all = document.querySelectorAll.bind(document);
@@ -10,7 +12,7 @@
 		, currentLayoutMode
 		, frame = $('#demo-frame')
 		, htmlCode = $('#js-html-code')
-		,cssCode = $('#js-css-code')
+		, cssCode = $('#js-css-code')
 		, jsCode = $('#js-js-code')
 		, layoutBtn1 = $('#js-layout-btn-1')
 		, layoutBtn2 = $('#js-layout-btn-2')
@@ -21,14 +23,12 @@
 		, codepenForm = $('#js-codepen-form')
 		, saveHtmlBtn = $('#js-save-html')
 		, settingsBtn = $('#js-settings-btn'),
-          optionBtns= [].slice.call($all("#js-options-btn")),
-          collapseBtns= [].slice.call($all(".btn-collapse"))
-		;
+		  optionBtns = [].slice.call($all("#js-options-btn")),
+          collapseBtns = [].slice.call($all(".btn-collapse"));
 
 	editur.cm = {};
 	editur.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
 
-    
     function removeGutters() {
         var gutters = $all('.gutter');
 		for (var i = gutters.length; i--;) {
@@ -53,7 +53,9 @@
 			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal')
 		});
 	}
-	window.toggleLayout = function (mode) {
+    
+    
+	function toggleLayout(mode) {
 		currentLayoutMode = mode;
 		$('#js-layout-btn-1').classList.remove('selected');
 		$('#js-layout-btn-2').classList.remove('selected');
@@ -66,14 +68,13 @@
 
 		resetSplitting();
 	}
-    
 
-	window.saveSetting = function saveSetting(setting, value) {
+	function saveSetting(setting, value) {
 		var obj = {};
 		obj[setting] = value;
 		chrome.storage.local.set(obj, function() {
 		});
-	};
+	}
 
 	function saveCode() {
 		var code = {
@@ -89,7 +90,6 @@
 	};
 
 	editur.setPreviewContent = function () {
-		var self = this;
 		var html = editur.cm.html.getValue();
 		var css = editur.cm.css.getValue();
 		var js = editur.cm.js.getValue();
@@ -99,7 +99,7 @@
 
 		var fileWritten = false;
 
-		var blob = new Blob([ html ], {type : "text/plain;charset=UTF-8"});
+		var blob = new Blob([ html ], {type: "text/plain;charset=UTF-8"});
 
 		function errorHandler() { console.log(arguments); }
 
@@ -130,7 +130,7 @@
 			lineWrapping: true,
 			autofocus: options.autofocus || false,
 			autoCloseBrackets: true,
-    		matchBrackets: true,
+			matchBrackets: true,
 			tabMode: 'indent',
 			keyMap: 'sublime',
 			theme: 'monokai',
@@ -186,7 +186,7 @@
 			e.preventDefault();
 		});
 
-		saveHtmlBtn.addEventListener('click', function (e) {
+		saveHtmlBtn.addEventListener('click', function () {
 			var html = editur.cm.html.getValue();
 			var css = editur.cm.css.getValue();
 			var js = editur.cm.js.getValue();
@@ -200,7 +200,7 @@
 			fileName += '.html';
 
 			var a = document.createElement('a');
-			var blob = new Blob([ fileContent ], {type : "text/html;charset=UTF-8"});
+			var blob = new Blob([ fileContent ], {type: "text/html;charset=UTF-8"});
 			a.href = window.URL.createObjectURL(blob);
 			a.download = fileName;
 			a.style.display = 'none';
@@ -209,37 +209,14 @@
 			a.remove();
 		});
 
-		window.addEventListener('click', function(e) {
-			if (typeof e.target.className === 'string' && e.target.className.indexOf('modal-overlay') !== -1) {
-				e.target.previousElementSibling.classList.toggle('is-modal-visible');
-			}
-		});
-
-		settingsBtn.addEventListener('click', function(e) {
-			if (!chrome.runtime.openOptionsPage) {
-				// New way to open options pages, if supported (Chrome 42+).
-				// Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=601997
-				// Until this bug fixes, use the
-				// fallback.
-				chrome.runtime.openOptionsPage();
-			} else {
-				// Fallback.
-				chrome.tabs.create({
-					url: 'chrome://extensions?options=' + chrome.i18n.getMessage('@@extension_id')
-				});
-			}
-			return false;
-		});
-        
-        
-        var collapser= (function() {
+		        var collapser = (function() {
             
         //function to check if only one button of the all is is 'ticked'
             
             function onlyOneIsTicked() {
-                var count= 0;
+                var count = 0;
                 collapseBtns.forEach(function(collapseBtn) {
-                    if(collapseBtn.classList.contains("ticked")) {
+                    if (collapseBtn.classList.contains("ticked")) {
                         count += 1;
                     }
                 });
@@ -249,18 +226,18 @@
             
             
             function manageCollapse(isTicked, pane) {
-                var classAction= isTicked ? "remove": "add",
-                    paneType= pane.id.substr(-4),
-                    codeSide= $("#js-code-side"),
-                    demoSide= $("#js-demo-side"),
-                    dimension= currentLayoutMode === 2 ? "height" : "width"; //current main dimension of codeSide & demoSide
+                var classAction = isTicked ? "remove": "add",
+                    paneType = pane.id.substr(-4),
+                    codeSide = $("#js-code-side"),
+                    demoSide = $("#js-demo-side"),
+                    dimension = currentLayoutMode === 2 ? "height" : "width"; //current main dimension of codeSide & demoSide
                 
                   removeGutters();
            
                 //handle classes for only '.code-wrap's
                 
-                if(paneType === "code") {
-                    if(classAction === "remove") {
+                if (paneType === "code") {
+                    if (classAction === "remove") {
                         pane.classList.contains("is-collapsed") ? pane.classList[classAction]("is-collapsed"): "";
                     } else {
                         !(pane.classList.contains("is-collapsed")) ? pane.classList[classAction]("is-collapsed"): "";
@@ -270,13 +247,13 @@
                 
                 
                 //store left code panes ('.code-wrap's)
-                var leftCodePanes= (function() {
-                        var codePanes= [].slice.call($all(".code-wrap")),
-                            codePanesIds= [];
+                var leftCodePanes = (function() {
+                        var codePanes = [].slice.call($all(".code-wrap")),
+                            codePanesIds = [];
                         
                      codePanes.forEach(function(codePane) {
-                         if(!codePane.classList.contains("is-collapsed")) {
-                             codePanesIds.push("#"+ codePane.id);
+                         if (!codePane.classList.contains("is-collapsed")) {
+                             codePanesIds.push("#" + codePane.id);
                          }   
                      });
                     
@@ -286,13 +263,13 @@
                 
                     //if code panes are available, perform a split b/w them otherwise collapse "#js-code-side"
                 
-                    if(leftCodePanes){
+                    if (leftCodePanes){
                         
-                        if(codeSide.classList.contains("is-collapsed")) {
-                            codeSide.justUncollapsed= true;
+                        if (codeSide.classList.contains("is-collapsed")) {
+                            codeSide.justUncollapsed = true;
                             codeSide.classList.remove("is-collapsed");
                         } else {
-                            codeSide.justUncollapsed= false;
+                            codeSide.justUncollapsed = false;
                         }
                         
                         Split(leftCodePanes, {
@@ -301,23 +278,23 @@
                         
                     } else {
                         
-                        demoSide.style[dimension]= "100%";
+                        demoSide.style[dimension] = "100%";
                         codeSide.classList.add("is-collapsed");
-                        codeSide.style[dimension]= 0;
+                        codeSide.style[dimension] = 0;
                     }
                 
-                if(paneType === "side") {
+                if (paneType === "side") {
                     
                     //if unticked, collapse "#js-demo-side" else perform split with together "#js-code-side"
                     
-                    if(!isTicked) {
+                    if (!isTicked) {
                         demoSide.classList.add("is-collapsed");
-                        demoSide.style[dimension]= "0";
-                        codeSide.style[dimension]= "100%";
+                        demoSide.style[dimension] = "0";
+                        codeSide.style[dimension] = "100%";
                     } else {
                         
                            //split if "#js-code-side" is not collapsed
-                        if(!codeSide.classList.contains("is-collapsed")) {
+                        if (!codeSide.classList.contains("is-collapsed")) {
                             demoSide.classList.remove("is-collapsed");
                            Split(["#js-code-side", "#js-demo-side"], {
                                 direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal')
@@ -330,11 +307,11 @@
                     
                     
                     //capture the sizes of codeSide's & demoSide's main dimension before performing the split
-                      var codeSideSize= getComputedStyle(codeSide)[dimension],
-                          demoSideSize= getComputedStyle(demoSide)[dimension];
+                      var codeSideSize = getComputedStyle(codeSide)[dimension],
+                          demoSideSize = getComputedStyle(demoSide)[dimension];
             
               //split iff "#js-demo-sode" is not collapsed
-                     if(!demoSide.classList.contains("is-collapsed") && leftCodePanes) {
+                     if (!demoSide.classList.contains("is-collapsed") && leftCodePanes) {
                         Split(["#js-code-side", "#js-demo-side"], {
                             direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal')
                         });
@@ -343,20 +320,20 @@
                     /**restore the sizes if "#js-code-side" hasn't been 'just uncollapsed' in order to overwrite Split's
                     **behaviour of splitting into two halves                          
                     **/
-                    if(!codeSide.justUncollapsed) {
-                          codeSide.style[dimension]= codeSideSize;
-                          demoSide.style[dimension]= demoSideSize;
+                    if (!codeSide.justUncollapsed) {
+                          codeSide.style[dimension] = codeSideSize;
+                          demoSide.style[dimension] = demoSideSize;
                     }
                 }
                 
             }
             
             function handleCollapse() {
-                   var pane= $("#" + this.getAttribute("data-pane")),
-                       self= this;
+                   var pane = $("#" + this.getAttribute("data-pane")),
+                       self = this;
                    var isTicked= (function() {
                        
-                       if(self.classList.contains("ticked") && !onlyOneIsTicked()) {
+                       if (self.classList.contains("ticked") && !onlyOneIsTicked()) {
                            self.classList.remove("ticked");
                            return false;
                        } else {
@@ -381,10 +358,10 @@
     **/
             
             document.addEventListener("keydown", function(e) {
-                var collapseBtns= $all(".btn-collapse"),
-                    btnIndex= parseInt(e.key)-1;
+                var collapseBtns = $all(".btn-collapse"),
+                    btnIndex = parseInt(e.key)-1;
                 
-                if(e.altKey) {
+                if (e.altKey) {
                     handleCollapse.call(collapseBtns[btnIndex]);
                 }
                 
@@ -395,16 +372,38 @@
         
         optionBtns.forEach(function(optionBtn) {
            optionBtn.addEventListener("click", function(e) {
-               if(e.target.nodeName.toLocaleLowerCase() === "svg" || e.target.nodeName.toLocaleLowerCase() === "path") {
-               this.classList.toggle("selected");
+               if (e.target.nodeName.toLocaleLowerCase() === "svg" || e.target.nodeName.toLocaleLowerCase() === "path") {
+                    this.classList.toggle("selected");
                }
            });
         });
 
 
+		window.addEventListener('click', function(e) {
+			if (typeof e.target.className === 'string' && e.target.className.indexOf('modal-overlay') !== -1) {
+				e.target.previousElementSibling.classList.toggle('is-modal-visible');
+			}
+		});
+
+		settingsBtn.addEventListener('click', function() {
+			if (!chrome.runtime.openOptionsPage) {
+				// New way to open options pages, if supported (Chrome 42+).
+				// Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=601997
+				// Until this bug fixes, use the
+				// fallback.
+				chrome.runtime.openOptionsPage();
+			} else {
+				// Fallback.
+				chrome.tabs.create({
+					url: 'chrome://extensions?options=' + chrome.i18n.getMessage('@@extension_id')
+				});
+			}
+			return false;
+		});
+
+
 		chrome.storage.local.get({
 			layoutMode: 1,
-            
 			code: ''
 		}, function localGetCallback(result) {
 			toggleLayout(result.layoutMode);

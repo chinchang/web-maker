@@ -67,7 +67,6 @@
 		resetSplitting();
 	}
     
-    resetSplitting();
 
 	window.saveSetting = function saveSetting(setting, value) {
 		var obj = {};

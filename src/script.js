@@ -1,6 +1,8 @@
+/* eslint-disable no-extra-semi */
 ;(function () {
 
-	editur = window.editur || {};
+/* eslint-enable no-extra-semi */
+	var editur = window.editur || {};
 
 	var $ = document.querySelector.bind(document);
 	var $all = document.querySelectorAll.bind(document);
@@ -10,7 +12,7 @@
 		, currentLayoutMode
 		, frame = $('#demo-frame')
 		, htmlCode = $('#js-html-code')
-		,cssCode = $('#js-css-code')
+		, cssCode = $('#js-css-code')
 		, jsCode = $('#js-js-code')
 		, layoutBtn1 = $('#js-layout-btn-1')
 		, layoutBtn2 = $('#js-layout-btn-2')
@@ -44,7 +46,7 @@
 			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal')
 		});
 	}
-	window.toggleLayout = function (mode) {
+	function toggleLayout(mode) {
 		currentLayoutMode = mode;
 		$('#js-layout-btn-1').classList.remove('selected');
 		$('#js-layout-btn-2').classList.remove('selected');
@@ -58,12 +60,12 @@
 		resetSplitting();
 	}
 
-	window.saveSetting = function saveSetting(setting, value) {
+	function saveSetting(setting, value) {
 		var obj = {};
 		obj[setting] = value;
 		chrome.storage.local.set(obj, function() {
 		});
-	};
+	}
 
 	function saveCode() {
 		var code = {
@@ -79,7 +81,6 @@
 	};
 
 	editur.setPreviewContent = function () {
-		var self = this;
 		var html = editur.cm.html.getValue();
 		var css = editur.cm.css.getValue();
 		var js = editur.cm.js.getValue();
@@ -89,7 +90,7 @@
 
 		var fileWritten = false;
 
-		var blob = new Blob([ html ], {type : "text/plain;charset=UTF-8"});
+		var blob = new Blob([ html ], {type: "text/plain;charset=UTF-8"});
 
 		function errorHandler() { console.log(arguments); }
 
@@ -120,7 +121,7 @@
 			lineWrapping: true,
 			autofocus: options.autofocus || false,
 			autoCloseBrackets: true,
-    		matchBrackets: true,
+			matchBrackets: true,
 			tabMode: 'indent',
 			keyMap: 'sublime',
 			theme: 'monokai',
@@ -185,6 +186,7 @@
 			event.preventDefault();
 			saveFile();
 		  }
+
 		});
 
 		window.addEventListener('click', function(e) {
@@ -193,7 +195,7 @@
 			}
 		});
 
-		settingsBtn.addEventListener('click', function(e) {
+		settingsBtn.addEventListener('click', function() {
 			if (!chrome.runtime.openOptionsPage) {
 				// New way to open options pages, if supported (Chrome 42+).
 				// Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=601997

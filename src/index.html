@@ -15,6 +15,13 @@
 			min-height: 100vh;
 			font-family: Helvetica, arial;
 		}
+
+            button {
+                border: 0;
+                outline: 0;
+                background: transparent;
+                cursor: pointer;
+            }
 		a { text-decoration: none; color: crimson; cursor: pointer; }
 		/*a:hover { text-decoration: underline; }*/
 		.flex {
@@ -60,6 +67,7 @@
 			animation: pop-in 0.4s ease forwards 0.2s;
 			opacity: 0;
 		}
+            
 		.layout-2 .code-wrap {
 			height: auto;
 			width: 33%;
@@ -83,6 +91,20 @@
 			z-index: 3;
 			pointer-events: none;
 		}
+    
+            
+        .code-wrap.is-collapsed,
+        .code-side.is-collapsed,
+        .demo-side.is-collapsed {
+            display: none;
+            opacity: 0;
+        }
+            
+        .code-side.is-collapsed ~ .gutter {
+                display: none;
+            }
+                   
+            
 		@keyframes pop-in {
 			from { transform: scale(0.9); opacity: 0; }
 			to { transform: scale(1); opacity: 1; }
@@ -139,6 +161,8 @@
 		}
 		.mode-btn {
 			margin-left: 10px;
+            width: 24px;
+            height: 24px;
 			display: inline-block;
 		}
 		.footer__link:first-of-type {
@@ -158,12 +182,65 @@
 			fill: rgba(255, 255, 255, 0.45)
 		}
 		.mode-btn svg {
-			width: 24px;
-			height: 24px;
+			width: 100%;
+			height: 100%;
 		}
 		.mode-btn.selected svg {
 			fill: rgba(255, 255, 255, 0.45);
 		}
+            
+        .mode-btn-options {
+            position: relative;
+        }  
+            
+        .mode-btn-options .options-con {
+            position: absolute;
+            right: 0;
+            bottom: calc(100% + 6px);
+            padding: 15px 15px;
+            width: max-content;
+            background: #444444;
+            transform-origin: 100% 100%;
+            transform: scale(0);
+            cursor: initial;
+            box-shadow: 0 -1px 1px rgba(51, 51, 51, 0.32);
+            transition: transform .1s ease-out;
+            z-index: 9999;
+        }
+    
+            
+    .options-con .opt .btn-collapse {
+             text-transform: uppercase;
+             margin: 0 5px;
+             color: rgba(255, 255, 255, 0.85);
+             font-weight: 900;
+            }
+ 
+            
+    .options-con .opt .btn-collapse:active {
+        opacity: 0.7;
+    }
+            
+    .options-con .opt .btn-collapse::before {
+        content: "";
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+        border-radius: 2px;
+        border: 2px solid;
+        margin-right: 5px;
+    }
+            
+.options-con .opt .btn-collapse.ticked::before {
+    content: "✓";
+}
+            
+ .mode-btn-options.selected .options-con {
+     transform: scale(1);
+ }
+            
+            
 		.gutter-horizontal {
 			cursor: ew-resize;
 		}
@@ -267,6 +344,24 @@
 							<use xlink:href="#mode-icon" />
 						</svg>
 					</a>
+                    
+                    <div class="footer__separator"></div>
+                    
+                    <a class="mode-btn mode-btn-options" id="js-options-btn">
+                        <svg viewBox="0 0 16 16">
+                            <path d="M8.06 2C3 2 0 8 0 8s3 6 8.06 6C13 14 16 8 16 8s-3-6-7.94-6zM8 12c-2.2 0-4-1.78-4-4 0-2.2 1.8-4 4-4 2.22 0 4 1.8 4 4 0 2.22-1.78 4-4 4zm2-4c0 1.11-.89 2-2 2-1.11 0-2-.89-2-2 0-1.11.89-2 2-2 1.11 0 2 .89 2 2z"></path>
+                        </svg>
+                        
+                        <section class="options-con collapse-settings">
+                            <div class="opt">
+                                <button class="btn-collapse ticked" data-pane="js-html-code">html</button>
+                                <button class="btn-collapse ticked" data-pane="js-css-code">css</button>
+                                <button class="btn-collapse ticked" data-pane="js-js-code">JS</button>
+                                <button class="btn-collapse ticked" data-pane="js-demo-side">output</button>
+                            </div>
+                        </section>
+                        
+                    </a>
 
 					<div class="footer__separator"></div>
 

@@ -5,17 +5,21 @@ chrome.browserAction.onClicked.addListener(function(){
 	});
 });
 
+// Listen for tabs getting created.
 chrome.tabs.onCreated.addListener(function (tab) {
-	console.log('created', arguments)
+	// If a new tab is opened (without any URL), check user's
+	// replace Tab setting and act accordingly.
 	if (tab.url === 'chrome://newtab/') {
-		chrome.tabs.update(tab.id, {
-			url: chrome.extension.getURL('index.html')
-		}, function callback() {
-			console.log('ho gaya');
+		chrome.storage.sync.get({
+			replaceNewTab: true
+		}, function(items) {
+			if (items.replaceNewTab) {
+				chrome.tabs.update(tab.id, {
+					url: chrome.extension.getURL('index.html')
+				}, function callback() {
+					console.log('ho gaya');
+				});
+			}
 		});
 	}
-});
-
-chrome.tabs.onUpdated.addListener(function () {
-	console.log('updated', arguments)
 });

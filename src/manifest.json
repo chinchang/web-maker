@@ -5,17 +5,15 @@
 	"description": "Convert new tabs into an offline playground for your web experiments",
 	"homepage_url": "https://kushagragour.in/lab/web-maker",
 	"permissions": [
-		"storage"
+		"storage",
+		"tabs"
 	],
-	"chrome_url_overrides" : {
-		"newtab": "index.html"
-	},
 	"options_ui": {
 		"page": "options.html",
 		"chrome_style": true
 	},
 	"browser_action": {
-		"default_title": "Web Maker",
+		"default_title": "Start Web Maker",
 		"default_icon": "icon-16.png"
 	},
 	"background": {

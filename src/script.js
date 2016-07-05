@@ -139,7 +139,6 @@
 
 	editur.cm.html = initEditor(htmlCode, {
 		mode: 'htmlmixed',
-		autofocus: true,
 		profile: 'xhtml'
 	});
 	emmetCodeMirror(editur.cm.html);

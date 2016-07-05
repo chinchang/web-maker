@@ -114,6 +114,29 @@
 		}, errorHandler);
 	};
 
+	function saveFile() {
+		var html = editur.cm.html.getValue();
+		var css = editur.cm.css.getValue();
+		var js = editur.cm.js.getValue();
+
+		var fileContent = '<html><head>\n<style>\n'
+			+ css + '\n</style>\n</head>\n<body>\n'
+			+ html + '\n<script>\n' + js + '\n</script>\n\n</body>\n</html>';
+
+		var d = new Date();
+		var fileName = [ 'web-maker', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
+		fileName += '.html';
+
+		var a = document.createElement('a');
+		var blob = new Blob([ fileContent ], {type: "text/html;charset=UTF-8"});
+		a.href = window.URL.createObjectURL(blob);
+		a.download = fileName;
+		a.style.display = 'none';
+		document.body.appendChild(a);
+		a.click();
+		a.remove();
+	}
+
 	function initEditor(element, options) {
 		var cm = CodeMirror(element, {
 			mode: options.mode,
@@ -177,26 +200,14 @@
 		});
 
 		saveHtmlBtn.addEventListener('click', function () {
-			var html = editur.cm.html.getValue();
-			var css = editur.cm.css.getValue();
-			var js = editur.cm.js.getValue();
+			saveFile();
+		});
 
-			var fileContent = '<html><head>\n<style>\n'
-				+ css + '\n</style>\n</head>\n<body>\n'
-				+ html + '\n<script>\n' + js + '\n</script>\n\n</body>\n</html>';
-
-			var d = new Date();
-			var fileName = [ 'web-maker', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
-			fileName += '.html';
-
-			var a = document.createElement('a');
-			var blob = new Blob([ fileContent ], {type: "text/html;charset=UTF-8"});
-			a.href = window.URL.createObjectURL(blob);
-			a.download = fileName;
-			a.style.display = 'none';
-			document.body.appendChild(a);
-			a.click();
-			a.remove();
+		window.addEventListener('keydown', function (event) {
+			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)){
+				event.preventDefault();
+				saveFile();
+			}
 		});
 
 		window.addEventListener('click', function(e) {

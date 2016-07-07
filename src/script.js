@@ -3,6 +3,7 @@
 
 /* eslint-enable no-extra-semi */
 	var editur = window.editur || {};
+	var version = '1.6.0';
 
 	var $ = document.querySelector.bind(document);
 	var $all = document.querySelectorAll.bind(document);
@@ -10,6 +11,7 @@
 	var updateTimer
 		, updateDelay = 500
 		, currentLayoutMode
+		, hasSeenNotifications = true
 		, frame = $('#demo-frame')
 		, htmlCode = $('#js-html-code')
 		, cssCode = $('#js-css-code')
@@ -23,10 +25,27 @@
 		, codepenForm = $('#js-codepen-form')
 		, saveHtmlBtn = $('#js-save-html')
 		, settingsBtn = $('#js-settings-btn')
+		, notificationsBtn = $('#js-notifications-btn')
+		, notificationsModal = $('#js-notifications-modal')
 		;
 
 	editur.cm = {};
 	editur.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
+
+	// https://github.com/substack/semver-compare/blob/master/index.js
+	function semverCompare (a, b) {
+		var pa = a.split('.');
+		var pb = b.split('.');
+		for (var i = 0; i < 3; i++) {
+			var na = Number(pa[i]);
+			var nb = Number(pb[i]);
+			if (na > nb) { return 1; }
+			if (nb > na) { return -1; }
+			if (!isNaN(na) && isNaN(nb)) { return 1; }
+			if (isNaN(na) && !isNaN(nb)) { return -1; }
+		}
+		return 0;
+	}
 
 	function resetSplitting() {
 		var gutters = $all('.gutter');
@@ -184,6 +203,18 @@
 			return false;
 		});
 
+		notificationsBtn.addEventListener('click', function () {
+			notificationsModal.classList.toggle('is-modal-visible');
+			if (notificationsModal.classList.contains('is-modal-visible') && !hasSeenNotifications) {
+				hasSeenNotifications = true;
+				notificationsBtn.classList.remove('has-new');
+				chrome.storage.sync.set({
+					lastSeenVersion: version
+				}, function () {});
+			}
+			return false;
+		});
+
 		codepenBtn.addEventListener('click', function (e) {
 			var json = {
 				title: 'A Web Maker experiment',
@@ -212,7 +243,8 @@
 
 		window.addEventListener('click', function(e) {
 			if (typeof e.target.className === 'string' && e.target.className.indexOf('modal-overlay') !== -1) {
-				e.target.previousElementSibling.classList.toggle('is-modal-visible');
+				helpModal.classList.remove('is-modal-visible');
+				notificationsModal.classList.remove('is-modal-visible');
 			}
 		});
 
@@ -254,6 +286,17 @@
 				editur.cm.html.refresh();
 				editur.cm.css.refresh();
 				editur.cm.js.refresh();
+			}
+		});
+
+		// Check for new version notifications
+		chrome.storage.sync.get({
+			lastSeenVersion: ''
+		}, function syncGetCallback(result) {
+			// console.log(result, hasSeenNotifications, version);
+			if (!result.lastSeenVersion || semverCompare(result.lastSeenVersion, version) === -1) {
+				notificationsBtn.classList.add('has-new');
+				hasSeenNotifications = false;
 			}
 		});
 	}

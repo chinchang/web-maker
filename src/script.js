@@ -18,6 +18,14 @@
 		SCSS: 'scss',
 		LESS: 'less'
 	};
+	var modes = {};
+	modes[JsModes.JS] = { label: 'JS', cmMode: 'javascript' };
+	modes[JsModes.COFFEESCRIPT] = { label: 'CoffeeScript', cmMode: 'coffeescript' };
+	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'javascript' };
+	modes[CssModes.CSS] = { label: 'CSS', cmMode: 'css' };
+	modes[CssModes.SCSS] = { label: 'SCSS', cmMode: 'sass' };
+	modes[CssModes.LESS] = { label: 'LESS', cmMode: 'css' };
+
 	var updateTimer
 		, updateDelay = 500
 		, currentLayoutMode
@@ -60,16 +68,6 @@
 			if (isNaN(na) && !isNaN(nb)) { return -1; }
 		}
 		return 0;
-	}
-	function deferred() {
-		var d = {};
-		var promise = new Promise(function (resolve, reject) {
-			d.resolve = resolve;
-			d.reject = reject;
-		});
-
-		d.promise = promise;
-		return Object.assign(d, promise);
 	}
 
 	function resetSplitting() {
@@ -126,16 +124,16 @@
 
 	function updateCssMode(value) {
 		cssMode = value;
-		cssModelLabel.textContent = value;
-		editur.cm.css.setOption('mode', value);
+		cssModelLabel.textContent = modes[value].label;
+		CodeMirror.autoLoadMode(editur.cm.css, modes[value].cmMode);
 		chrome.storage.sync.set({
 			cssMode: value
 		}, function () {});
 	}
 	function updateJsMode(value) {
 		jsMode = value;
-		jsModelLabel.textContent = value;
-		editur.cm.js.setOption('mode', value);
+		jsModelLabel.textContent = modes[value].label;
+		CodeMirror.autoLoadMode(editur.cm.js, modes[value].cmMode);
 		chrome.storage.sync.set({
 			jsMode: value
 		}, function () {});
@@ -277,6 +275,7 @@
 	function init () {
 		var lastCode;
 
+		CodeMirror.modeURL = "lib/codemirror/mode/%N/%N.js";
 		window.sass = new Sass('lib/sass.worker.js');
 
 		layoutBtn1.addEventListener('click', function () { saveSetting('layoutMode', 1); toggleLayout(1); return false; });

@@ -128,11 +128,17 @@
 		cssMode = value;
 		cssModelLabel.textContent = value;
 		editur.cm.css.setOption('mode', value);
+		chrome.storage.sync.set({
+			cssMode: value
+		}, function () {});
 	}
 	function updateJsMode(value) {
 		jsMode = value;
 		jsModelLabel.textContent = value;
 		editur.cm.js.setOption('mode', value);
+		chrome.storage.sync.set({
+			jsMode: value
+		}, function () {});
 	}
 	function computeHtml() {
 		return editur.cm.html.getValue();
@@ -203,9 +209,9 @@
 
 	editur.setPreviewContent = function () {
 		var html = computeHtml();
-		var cssPromise = css = computeCss();
-		var js = computeJs();
-		Promise.all([html, cssPromise, js]).then(function (result) {
+		var cssPromise = computeCss();
+		var jsPromise = computeJs();
+		Promise.all([html, cssPromise, jsPromise]).then(function (result) {
 			createPreviewFile(result[0], result[1], result[2]);
 		});
 	};
@@ -321,7 +327,7 @@
 				var type = e.currentTarget.dataset.type;
 				var currentMode = type === 'js' ? jsMode : cssMode;
 				if (currentMode !== mode) {
-					if (type = 'js') {
+					if (type === 'js') {
 						updateJsMode(mode);
 					} else {
 						updateCssMode(mode);
@@ -329,8 +335,6 @@
 				}
 			});
 		});
-		updateJsMode(jsMode);
-		updateCssMode(cssMode);
 
 		window.addEventListener('keydown', function (event) {
 			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)){
@@ -375,7 +379,9 @@
 
 		// Get synced `preserveLastCode` setting to get back last code (or not).
 		chrome.storage.sync.get({
-			preserveLastCode: true
+			preserveLastCode: true,
+			jsMode: 'js',
+			cssMode: 'css'
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
 				editur.cm.html.setValue(lastCode.html);
@@ -385,6 +391,8 @@
 				editur.cm.css.refresh();
 				editur.cm.js.refresh();
 			}
+			updateJsMode(result.jsMode);
+			updateCssMode(result.cssMode);
 		});
 
 		// Check for new version notifications

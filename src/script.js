@@ -5,13 +5,26 @@
 	var editur = window.editur || {};
 	var version = '1.6.0';
 
-	var $ = document.querySelector.bind(document);
-	var $all = document.querySelectorAll.bind(document);
+	window.$ = document.querySelector.bind(document);
+	window.$all = document.querySelectorAll.bind(document);
 
+	var JsModes = {
+		JS: 'js',
+		ES6: 'es6',
+		COFFEESCRIPT: 'coffee'
+	};
+	var CssModes = {
+		CSS: 'js',
+		SCSS: 'scss',
+		LESS: 'less'
+	};
 	var updateTimer
 		, updateDelay = 500
 		, currentLayoutMode
 		, hasSeenNotifications = true
+		, jsMode = JsModes.ES6
+		, cssMode = CssModes.LESS
+
 		, frame = $('#demo-frame')
 		, htmlCode = $('#js-html-code')
 		, cssCode = $('#js-css-code')
@@ -27,6 +40,8 @@
 		, settingsBtn = $('#js-settings-btn')
 		, notificationsBtn = $('#js-notifications-btn')
 		, notificationsModal = $('#js-notifications-modal')
+		, jsModelLabel = $('#js-js-mode-label')
+		, cssModelLabel = $('#js-css-mode-label')
 		;
 
 	editur.cm = {};
@@ -46,6 +61,16 @@
 		}
 		return 0;
 	}
+	function deferred() {
+		var d = {};
+		var promise = new Promise(function (resolve, reject) {
+			d.resolve = resolve;
+			d.reject = reject;
+		});
+
+		d.promise = promise;
+		return Object.assign(d, promise);
+	}
 
 	function resetSplitting() {
 		var gutters = $all('.gutter');
@@ -59,10 +84,14 @@
 		$('#js-demo-side').setAttribute('style', '');
 
 		Split(['#js-html-code', '#js-css-code', '#js-js-code'], {
-			direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical')
+			direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical'),
+			minSize: 34,
+			gutterSize: 6
 		});
 		Split(['#js-code-side', '#js-demo-side' ], {
-			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal')
+			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal'),
+			minSize: 34,
+			gutterSize: 6
 		});
 	}
 	function toggleLayout(mode) {
@@ -95,16 +124,55 @@
 		saveSetting('code', code);
 	}
 
+	function updateCssMode(value) {
+		cssMode = value;
+		cssModelLabel.textContent = value;
+		editur.cm.css.setOption('mode', value);
+	}
+	function updateJsMode(value) {
+		jsMode = value;
+		jsModelLabel.textContent = value;
+		editur.cm.js.setOption('mode', value);
+	}
+	function computeHtml() {
+		return editur.cm.html.getValue();
+	}
+	function computeCss() {
+		var d = deferred();
+		var code = editur.cm.css.getValue();
+		if (cssMode === CssModes.CSS) {
+			d.resolve(code);
+		} else if (cssMode === CssModes.SCSS) {
+			sass.compile(code, function(result) {
+				d.resolve(result.text);
+			});
+		} else if (cssMode === CssModes.LESS) {
+			less.render(code).then(function (result) {
+				d.resolve(result.css);
+			});
+		}
+
+		return d.promise;
+	}
+	function computeJs() {
+		var d = deferred();
+		var code = editur.cm.js.getValue();
+		if (jsMode === JsModes.JS) {
+			d.resolve(code);
+		} else if (jsMode === JsModes.COFFEESCRIPT) {
+			d.resolve(CoffeeScript.compile(code, {bare: true}));
+		} else if (jsMode === JsModes.ES6) {
+			d.resolve(Babel.transform(editur.cm.js.getValue(), { presets: ['es2015'] }).code);
+		}
+
+		return d.promise;
+	}
+
 	window.onunload = function () {
 		saveCode();
 	};
 
-	editur.setPreviewContent = function () {
-		var html = editur.cm.html.getValue();
-		var css = editur.cm.css.getValue();
-		var js = editur.cm.js.getValue();
-
-
+	function createPreviewFile(html, css, js) {
 		html = '<html>\n<head>\n<style>\n' + css + '\n</style>\n</head>\n<body>\n' + html + '\n<script>\n' + js + '\n</script></body>\n</html>';
 
 		var fileWritten = false;
@@ -131,6 +199,15 @@
 				}, errorHandler);
 			}, errorHandler);
 		}, errorHandler);
+	}
+
+	editur.setPreviewContent = function () {
+		var html = computeHtml();
+		var cssPromise = css = computeCss();
+		var js = computeJs();
+		Promise.all([html, cssPromise, js]).then(function (result) {
+			createPreviewFile(result[0], result[1], result[2]);
+		});
 	};
 
 	function saveFile() {
@@ -194,6 +271,8 @@
 	function init () {
 		var lastCode;
 
+		window.sass = new Sass('lib/sass.worker.js');
+
 		layoutBtn1.addEventListener('click', function () { saveSetting('layoutMode', 1); toggleLayout(1); return false; });
 		layoutBtn2.addEventListener('click', function () { saveSetting('layoutMode', 2); toggleLayout(2); return false; });
 		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
@@ -233,6 +312,25 @@
 		saveHtmlBtn.addEventListener('click', function () {
 			saveFile();
 		});
+
+		// Attach listeners on mode change menu items
+		var modeItems = [].slice.call($all('.js-modes-menu a'));
+		modeItems.forEach(function (item) {
+			item.addEventListener('click', function (e) {
+				var mode = e.currentTarget.dataset.mode;
+				var type = e.currentTarget.dataset.type;
+				var currentMode = type === 'js' ? jsMode : cssMode;
+				if (currentMode !== mode) {
+					if (type = 'js') {
+						updateJsMode(mode);
+					} else {
+						updateCssMode(mode);
+					}
+				}
+			});
+		});
+		updateJsMode(jsMode);
+		updateCssMode(cssMode);
 
 		window.addEventListener('keydown', function (event) {
 			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)){

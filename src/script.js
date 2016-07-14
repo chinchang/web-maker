@@ -24,15 +24,15 @@
 		COFFEESCRIPT: 'coffee'
 	};
 	var modes = {};
-	modes[HtmlModes.HTML] = { label: 'HTML', cmMode: 'htmlmixed' };
-	modes[HtmlModes.MARKDOWN] = { label: 'Markdown', cmMode: 'markdown' };
-	modes[HtmlModes.JADE] = { label: 'Jade', cmMode: 'jade' };
-	modes[JsModes.JS] = { label: 'JS', cmMode: 'javascript' };
-	modes[JsModes.COFFEESCRIPT] = { label: 'CoffeeScript', cmMode: 'coffeescript' };
-	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'javascript' };
-	modes[CssModes.CSS] = { label: 'CSS', cmMode: 'css' };
-	modes[CssModes.SCSS] = { label: 'SCSS', cmMode: 'sass' };
-	modes[CssModes.LESS] = { label: 'LESS', cmMode: 'css' };
+	modes[HtmlModes.HTML] = { label: 'HTML', cmMode: 'htmlmixed', codepenVal: 'none' };
+	modes[HtmlModes.MARKDOWN] = { label: 'Markdown', cmMode: 'markdown', codepenVal: 'markdown' };
+	modes[HtmlModes.JADE] = { label: 'Jade', cmMode: 'jade', codepenVal: 'jade' };
+	modes[JsModes.JS] = { label: 'JS', cmMode: 'javascript', codepenVal: 'none' };
+	modes[JsModes.COFFEESCRIPT] = { label: 'CoffeeScript', cmMode: 'coffeescript', codepenVal: 'coffeescript' };
+	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'javascript', codepenVal: 'babel' };
+	modes[CssModes.CSS] = { label: 'CSS', cmMode: 'css', codepenVal: 'none' };
+	modes[CssModes.SCSS] = { label: 'SCSS', cmMode: 'sass', codepenVal: 'scss' };
+	modes[CssModes.LESS] = { label: 'LESS', cmMode: 'text/x-less', codepenVal: 'less' };
 
 	var updateTimer
 		, updateDelay = 500
@@ -269,35 +269,40 @@
 	}
 
 	editur.setPreviewContent = function () {
-		var html = computeHtml();
+		var htmlPromise = computeHtml();
 		var cssPromise = computeCss();
 		var jsPromise = computeJs();
-		Promise.all([html, cssPromise, jsPromise]).then(function (result) {
+		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
 			createPreviewFile(result[0], result[1], result[2]);
 		});
 	};
 
 	function saveFile() {
-		var html = editur.cm.html.getValue();
-		var css = editur.cm.css.getValue();
-		var js = editur.cm.js.getValue();
+		var htmlPromise = computeHtml();
+		var cssPromise = computeCss();
+		var jsPromise = computeJs();
+		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
+			var html = result[0],
+				css = result[1],
+				js = result[2];
 
-		var fileContent = '<html><head>\n<style>\n'
-			+ css + '\n</style>\n</head>\n<body>\n'
-			+ html + '\n<script>\n' + js + '\n</script>\n\n</body>\n</html>';
+			var fileContent = '<html><head>\n<style>\n'
+				+ css + '\n</style>\n</head>\n<body>\n'
+				+ html + '\n<script>\n' + js + '\n</script>\n\n</body>\n</html>';
 
-		var d = new Date();
-		var fileName = [ 'web-maker', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
-		fileName += '.html';
+			var d = new Date();
+			var fileName = [ 'web-maker', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
+			fileName += '.html';
 
-		var a = document.createElement('a');
-		var blob = new Blob([ fileContent ], {type: "text/html;charset=UTF-8"});
-		a.href = window.URL.createObjectURL(blob);
-		a.download = fileName;
-		a.style.display = 'none';
-		document.body.appendChild(a);
-		a.click();
-		a.remove();
+			var a = document.createElement('a');
+			var blob = new Blob([ fileContent ], {type: "text/html;charset=UTF-8"});
+			a.href = window.URL.createObjectURL(blob);
+			a.download = fileName;
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+		});
 	}
 
 	function initEditor(element, options) {
@@ -366,7 +371,10 @@
 				title: 'A Web Maker experiment',
 				html: editur.cm.html.getValue(),
 				css: editur.cm.css.getValue(),
-				js: editur.cm.js.getValue()
+				js: editur.cm.js.getValue(),
+				html_pre_processor: modes[htmlMode].codepenVal,
+				css_pre_processor: modes[cssMode].codepenVal,
+				js_pre_processor: modes[jsMode].codepenVal
 			};
 			json = JSON.stringify(json)
 				.replace(/"/g, "&​quot;")

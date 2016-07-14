@@ -99,7 +99,7 @@
         "no-implicit-coercion": "error",
         "no-implicit-globals": "off",
         "no-implied-eval": "error",
-        "no-inline-comments": "error",
+        "no-inline-comments": "off",
         "no-inner-declarations": [
             "error",
             "functions"
@@ -118,7 +118,7 @@
         "no-multiple-empty-lines": "error",
         "no-native-reassign": "error",
         "no-negated-condition": "off",
-        "no-nested-ternary": "error",
+        "no-nested-ternary": "off",
         "no-new": "error",
         "no-new-func": "error",
         "no-new-object": "error",
@@ -178,9 +178,9 @@
         "no-with": "error",
         "object-curly-spacing": [
             "error",
-            "never"
+            "always"
         ],
-        "object-property-newline": "error",
+        "object-property-newline": "off",
         "object-shorthand": "off",
         "one-var": "off",
         "one-var-declaration-per-line": "error",
@@ -195,7 +195,7 @@
         "padded-blocks": "off",
         "prefer-arrow-callback": "off",
         "prefer-const": "error",
-        "prefer-reflect": "error",
+        "prefer-reflect": "off",
         "prefer-rest-params": "off",
         "prefer-spread": "error",
         "prefer-template": "off",
@@ -235,7 +235,7 @@
             "error",
             "never"
         ],
-        "valid-jsdoc": "error",
+        "valid-jsdoc": "off",
         "vars-on-top": "off",
         "wrap-regex": "error",
         "yield-star-spacing": "error",
@@ -248,6 +248,17 @@
         "chrome": true,
         "CodeMirror": true,
         "Split": true,
-        "emmetCodeMirror": true
+        "emmetCodeMirror": true,
+        "deferred": true,
+        "$": true,
+        "$all": true,
+        "CoffeeScript": true,
+        "Babel": true,
+        "Sass": true,
+        "less": true,
+        "marked": true,
+        "jade": true,
+        "loadJS": true,
+        "Promise": true
     }
 }

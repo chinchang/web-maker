@@ -41,6 +41,7 @@
 		, htmlMode = HtmlModes.HTML
 		, jsMode = JsModes.JS
 		, cssMode = CssModes.CSS
+		, sass
 
 		, frame = $('#demo-frame')
 		, htmlCode = $('#js-html-code')
@@ -151,7 +152,7 @@
 			loadJS('lib/less.min.js').then(setLoadedFlag);
 		} else if (mode === CssModes.SCSS) {
 			loadJS('lib/sass.js').then(function () {
-				window.sass = new Sass('lib/sass.worker.js');
+				sass = new Sass('lib/sass.worker.js');
 				setLoadedFlag();
 			});
 		} else if (mode === JsModes.COFFEESCRIPT) {
@@ -227,7 +228,7 @@
 		if (jsMode === JsModes.JS) {
 			d.resolve(code);
 		} else if (jsMode === JsModes.COFFEESCRIPT) {
-			d.resolve(CoffeeScript.compile(code, {bare: true}));
+			d.resolve(CoffeeScript.compile(code, { bare: true }));
 		} else if (jsMode === JsModes.ES6) {
 			d.resolve(Babel.transform(editur.cm.js.getValue(), { presets: ['es2015'] }).code);
 		}
@@ -240,16 +241,16 @@
 	};
 
 	function createPreviewFile(html, css, js) {
-		html = '<html>\n<head>\n<style>\n' + css + '\n</style>\n</head>\n<body>\n' + html + '\n<script>\n' + js + '\n</script></body>\n</html>';
+		var contents = '<html>\n<head>\n<style>\n' + css + '\n</style>\n</head>\n<body>\n' + html + '\n<script>\n' + js + '\n</script></body>\n</html>';
 
 		var fileWritten = false;
 
-		var blob = new Blob([ html ], {type: "text/plain;charset=UTF-8"});
+		var blob = new Blob([ contents ], { type: "text/plain;charset=UTF-8" });
 
 		function errorHandler() { console.log(arguments); }
 
 		window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024 * 5, function(fs){
-			fs.root.getFile('preview.html', {create: true}, function(fileEntry) {
+			fs.root.getFile('preview.html', { create: true }, function(fileEntry) {
 				fileEntry.createWriter(function(fileWriter) {
 					function onWriteComplete() {
 						if (fileWritten) {
@@ -295,7 +296,7 @@
 			fileName += '.html';
 
 			var a = document.createElement('a');
-			var blob = new Blob([ fileContent ], {type: "text/html;charset=UTF-8"});
+			var blob = new Blob([ fileContent ], { type: "text/html;charset=UTF-8" });
 			a.href = window.URL.createObjectURL(blob);
 			a.download = fileName;
 			a.style.display = 'none';
@@ -372,9 +373,13 @@
 				html: editur.cm.html.getValue(),
 				css: editur.cm.css.getValue(),
 				js: editur.cm.js.getValue(),
+
+				/* eslint-disable camelcase */
 				html_pre_processor: modes[htmlMode].codepenVal,
 				css_pre_processor: modes[cssMode].codepenVal,
 				js_pre_processor: modes[jsMode].codepenVal
+
+				/* eslint-enable camelcase */
 			};
 			json = JSON.stringify(json)
 				.replace(/"/g, "&​quot;")

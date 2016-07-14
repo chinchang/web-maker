@@ -5,13 +5,44 @@
 	var editur = window.editur || {};
 	var version = '1.6.0';
 
-	var $ = document.querySelector.bind(document);
-	var $all = document.querySelectorAll.bind(document);
+	window.$ = document.querySelector.bind(document);
+	window.$all = document.querySelectorAll.bind(document);
+
+	var HtmlModes = {
+		HTML: 'html',
+		MARKDOWN: 'markdown',
+		JADE: 'jade' // unsafe eval is put in manifest for this file
+	};
+	var CssModes = {
+		CSS: 'css',
+		SCSS: 'scss',
+		LESS: 'less'
+	};
+	var JsModes = {
+		JS: 'js',
+		ES6: 'es6',
+		COFFEESCRIPT: 'coffee'
+	};
+	var modes = {};
+	modes[HtmlModes.HTML] = { label: 'HTML', cmMode: 'htmlmixed', codepenVal: 'none' };
+	modes[HtmlModes.MARKDOWN] = { label: 'Markdown', cmMode: 'markdown', codepenVal: 'markdown' };
+	modes[HtmlModes.JADE] = { label: 'Jade', cmMode: 'jade', codepenVal: 'jade' };
+	modes[JsModes.JS] = { label: 'JS', cmMode: 'javascript', codepenVal: 'none' };
+	modes[JsModes.COFFEESCRIPT] = { label: 'CoffeeScript', cmMode: 'coffeescript', codepenVal: 'coffeescript' };
+	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'javascript', codepenVal: 'babel' };
+	modes[CssModes.CSS] = { label: 'CSS', cmMode: 'css', codepenVal: 'none' };
+	modes[CssModes.SCSS] = { label: 'SCSS', cmMode: 'sass', codepenVal: 'scss' };
+	modes[CssModes.LESS] = { label: 'LESS', cmMode: 'text/x-less', codepenVal: 'less' };
 
 	var updateTimer
 		, updateDelay = 500
 		, currentLayoutMode
 		, hasSeenNotifications = true
+		, htmlMode = HtmlModes.HTML
+		, jsMode = JsModes.JS
+		, cssMode = CssModes.CSS
+		, sass
+
 		, frame = $('#demo-frame')
 		, htmlCode = $('#js-html-code')
 		, cssCode = $('#js-css-code')
@@ -27,6 +58,9 @@
 		, settingsBtn = $('#js-settings-btn')
 		, notificationsBtn = $('#js-notifications-btn')
 		, notificationsModal = $('#js-notifications-modal')
+		, htmlModelLabel = $('#js-html-mode-label')
+		, cssModelLabel = $('#js-css-mode-label')
+		, jsModelLabel = $('#js-js-mode-label')
 		;
 
 	editur.cm = {};
@@ -59,10 +93,14 @@
 		$('#js-demo-side').setAttribute('style', '');
 
 		Split(['#js-html-code', '#js-css-code', '#js-js-code'], {
-			direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical')
+			direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical'),
+			minSize: 34,
+			gutterSize: 6
 		});
 		Split(['#js-code-side', '#js-demo-side' ], {
-			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal')
+			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal'),
+			minSize: 34,
+			gutterSize: 6
 		});
 	}
 	function toggleLayout(mode) {
@@ -95,26 +133,124 @@
 		saveSetting('code', code);
 	}
 
+	/**
+	 * Loaded the code comiler based on the mode selected
+	 */
+	function handleModeRequirements(mode) {
+		// Exit if already loaded
+		if (modes[mode].hasLoaded) { return; }
+
+		function setLoadedFlag() {
+			modes[mode].hasLoaded = true;
+		}
+
+		if (mode === HtmlModes.JADE) {
+			loadJS('lib/jade.js').then(setLoadedFlag);
+		} else if (mode === HtmlModes.MARKDOWN) {
+			loadJS('lib/marked.js').then(setLoadedFlag);
+		} else if (mode === CssModes.LESS) {
+			loadJS('lib/less.min.js').then(setLoadedFlag);
+		} else if (mode === CssModes.SCSS) {
+			loadJS('lib/sass.js').then(function () {
+				sass = new Sass('lib/sass.worker.js');
+				setLoadedFlag();
+			});
+		} else if (mode === JsModes.COFFEESCRIPT) {
+			loadJS('lib/coffee-script.js').then(setLoadedFlag);
+		} else if (mode === JsModes.ES6) {
+			loadJS('lib/babel.min.js').then(setLoadedFlag);
+		}
+	}
+
+	function updateHtmlMode(value) {
+		htmlMode = value;
+		htmlModelLabel.textContent = modes[value].label;
+		handleModeRequirements(value);
+		CodeMirror.autoLoadMode(editur.cm.html, modes[value].cmMode);
+		chrome.storage.sync.set({
+			htmlMode: value
+		}, function () {});
+	}
+	function updateCssMode(value) {
+		cssMode = value;
+		cssModelLabel.textContent = modes[value].label;
+		handleModeRequirements(value);
+		CodeMirror.autoLoadMode(editur.cm.css, modes[value].cmMode);
+		chrome.storage.sync.set({
+			cssMode: value
+		}, function () {});
+	}
+	function updateJsMode(value) {
+		jsMode = value;
+		jsModelLabel.textContent = modes[value].label;
+		handleModeRequirements(value);
+		CodeMirror.autoLoadMode(editur.cm.js, modes[value].cmMode);
+		chrome.storage.sync.set({
+			jsMode: value
+		}, function () {});
+	}
+
+	// computeHtml, computeCss & computeJs evaluate the final code according
+	// to whatever mode is selected and resolve the returned promise with the code.
+	function computeHtml() {
+		var d = deferred();
+		var code = editur.cm.html.getValue();
+		if (htmlMode === HtmlModes.HTML) {
+			d.resolve(code);
+		} else if (htmlMode === HtmlModes.MARKDOWN) {
+			d.resolve(marked(code));
+		} else if (htmlMode === HtmlModes.JADE) {
+			d.resolve(jade.render(code));
+		}
+
+		return d.promise;
+	}
+	function computeCss() {
+		var d = deferred();
+		var code = editur.cm.css.getValue();
+		if (cssMode === CssModes.CSS) {
+			d.resolve(code);
+		} else if (cssMode === CssModes.SCSS) {
+			sass.compile(code, function(result) {
+				d.resolve(result.text);
+			});
+		} else if (cssMode === CssModes.LESS) {
+			less.render(code).then(function (result) {
+				d.resolve(result.css);
+			});
+		}
+
+		return d.promise;
+	}
+	function computeJs() {
+		var d = deferred();
+		var code = editur.cm.js.getValue();
+		if (jsMode === JsModes.JS) {
+			d.resolve(code);
+		} else if (jsMode === JsModes.COFFEESCRIPT) {
+			d.resolve(CoffeeScript.compile(code, { bare: true }));
+		} else if (jsMode === JsModes.ES6) {
+			d.resolve(Babel.transform(editur.cm.js.getValue(), { presets: ['es2015'] }).code);
+		}
+
+		return d.promise;
+	}
+
 	window.onunload = function () {
 		saveCode();
 	};
 
-	editur.setPreviewContent = function () {
-		var html = editur.cm.html.getValue();
-		var css = editur.cm.css.getValue();
-		var js = editur.cm.js.getValue();
-
-
-		html = '<html>\n<head>\n<style>\n' + css + '\n</style>\n</head>\n<body>\n' + html + '\n<script>\n' + js + '\n</script></body>\n</html>';
+	function createPreviewFile(html, css, js) {
+		var contents = '<html>\n<head>\n<style>\n' + css + '\n</style>\n</head>\n<body>\n' + html + '\n<script>\n' + js + '\n</script></body>\n</html>';
 
 		var fileWritten = false;
 
-		var blob = new Blob([ html ], {type: "text/plain;charset=UTF-8"});
+		var blob = new Blob([ contents ], { type: "text/plain;charset=UTF-8" });
 
 		function errorHandler() { console.log(arguments); }
 
 		window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024 * 5, function(fs){
-			fs.root.getFile('preview.html', {create: true}, function(fileEntry) {
+			fs.root.getFile('preview.html', { create: true }, function(fileEntry) {
 				fileEntry.createWriter(function(fileWriter) {
 					function onWriteComplete() {
 						if (fileWritten) {
@@ -131,29 +267,43 @@
 				}, errorHandler);
 			}, errorHandler);
 		}, errorHandler);
+	}
+
+	editur.setPreviewContent = function () {
+		var htmlPromise = computeHtml();
+		var cssPromise = computeCss();
+		var jsPromise = computeJs();
+		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
+			createPreviewFile(result[0], result[1], result[2]);
+		});
 	};
 
 	function saveFile() {
-		var html = editur.cm.html.getValue();
-		var css = editur.cm.css.getValue();
-		var js = editur.cm.js.getValue();
+		var htmlPromise = computeHtml();
+		var cssPromise = computeCss();
+		var jsPromise = computeJs();
+		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
+			var html = result[0],
+				css = result[1],
+				js = result[2];
 
-		var fileContent = '<html><head>\n<style>\n'
-			+ css + '\n</style>\n</head>\n<body>\n'
-			+ html + '\n<script>\n' + js + '\n</script>\n\n</body>\n</html>';
+			var fileContent = '<html><head>\n<style>\n'
+				+ css + '\n</style>\n</head>\n<body>\n'
+				+ html + '\n<script>\n' + js + '\n</script>\n\n</body>\n</html>';
 
-		var d = new Date();
-		var fileName = [ 'web-maker', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
-		fileName += '.html';
+			var d = new Date();
+			var fileName = [ 'web-maker', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
+			fileName += '.html';
 
-		var a = document.createElement('a');
-		var blob = new Blob([ fileContent ], {type: "text/html;charset=UTF-8"});
-		a.href = window.URL.createObjectURL(blob);
-		a.download = fileName;
-		a.style.display = 'none';
-		document.body.appendChild(a);
-		a.click();
-		a.remove();
+			var a = document.createElement('a');
+			var blob = new Blob([ fileContent ], { type: "text/html;charset=UTF-8" });
+			a.href = window.URL.createObjectURL(blob);
+			a.download = fileName;
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+		});
 	}
 
 	function initEditor(element, options) {
@@ -194,6 +344,8 @@
 	function init () {
 		var lastCode;
 
+		CodeMirror.modeURL = "lib/codemirror/mode/%N/%N.js";
+
 		layoutBtn1.addEventListener('click', function () { saveSetting('layoutMode', 1); toggleLayout(1); return false; });
 		layoutBtn2.addEventListener('click', function () { saveSetting('layoutMode', 2); toggleLayout(2); return false; });
 		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
@@ -220,7 +372,14 @@
 				title: 'A Web Maker experiment',
 				html: editur.cm.html.getValue(),
 				css: editur.cm.css.getValue(),
-				js: editur.cm.js.getValue()
+				js: editur.cm.js.getValue(),
+
+				/* eslint-disable camelcase */
+				html_pre_processor: modes[htmlMode].codepenVal,
+				css_pre_processor: modes[cssMode].codepenVal,
+				js_pre_processor: modes[jsMode].codepenVal
+
+				/* eslint-enable camelcase */
 			};
 			json = JSON.stringify(json)
 				.replace(/"/g, "&​quot;")
@@ -232,6 +391,25 @@
 
 		saveHtmlBtn.addEventListener('click', function () {
 			saveFile();
+		});
+
+		// Attach listeners on mode change menu items
+		var modeItems = [].slice.call($all('.js-modes-menu a'));
+		modeItems.forEach(function (item) {
+			item.addEventListener('click', function (e) {
+				var mode = e.currentTarget.dataset.mode;
+				var type = e.currentTarget.dataset.type;
+				var currentMode = type === 'html' ? htmlMode : (type === 'css' ? cssMode : jsMode);
+				if (currentMode !== mode) {
+					if (type === 'html') {
+						updateHtmlMode(mode);
+					} else if (type === 'js') {
+						updateJsMode(mode);
+					} else if (type === 'css') {
+						updateCssMode(mode);
+					}
+				}
+			});
 		});
 
 		window.addEventListener('keydown', function (event) {
@@ -277,7 +455,10 @@
 
 		// Get synced `preserveLastCode` setting to get back last code (or not).
 		chrome.storage.sync.get({
-			preserveLastCode: true
+			preserveLastCode: true,
+			htmlMode: 'html',
+			jsMode: 'js',
+			cssMode: 'css'
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
 				editur.cm.html.setValue(lastCode.html);
@@ -287,6 +468,9 @@
 				editur.cm.css.refresh();
 				editur.cm.js.refresh();
 			}
+			updateHtmlMode(result.htmlMode);
+			updateJsMode(result.jsMode);
+			updateCssMode(result.cssMode);
 		});
 
 		// Check for new version notifications

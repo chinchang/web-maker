@@ -5,8 +5,15 @@
 		<link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
 		<link rel="stylesheet" href="lib/codemirror/theme/monokai.css">
 		<link rel="stylesheet" href="lib/hint.min.css">
-
 		<style>
+		@font-face {
+			font-family: 'Inconsolata';
+			font-style: normal;
+			font-weight: 400;
+			src: local('Inconsolata'), url(../Inconsolata-Regular.ttf) format('truetype');
+			unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+
 		body {
 			margin: 0;
 			padding: 0;
@@ -28,6 +35,16 @@
 		}
 		.fr {
 			float: right;
+		}
+		.caret {
+			display: inline-block;
+			width: 0;
+			height: 0;
+			border: 6px solid transparent;
+			border-top-color: currentColor;
+			position: relative;
+			top: 5px;
+			margin-left: 7px;
 		}
 		.main-container {
 			position: absolute;
@@ -59,9 +76,9 @@
 			height: 33%;
 			overflow: hidden;
 			position: relative;
-			animation: pop-in 0.4s cubic-bezier(.71,1.7,.77,1.24) forwards 0.2s;
-			animation: pop-in 0.4s ease forwards 0.2s;
-			opacity: 0;
+			/*animation: pop-in 0.4s cubic-bezier(.71,1.7,.77,1.24) forwards 0.2s;*/
+			/*animation: pop-in 0.4s ease forwards 0.2s;*/
+			/*opacity: 0;*/
 		}
 		.layout-2 .code-wrap {
 			height: auto;
@@ -74,17 +91,12 @@
 			animation-delay: 0.4s;
 		}
 
-		.code-wrap:after {
-			content: attr(data-type);
-			text-transform: uppercase;
-			font-size: 65px;
-			display: block;
-			position: absolute;
-			top: 4px;
-			color: rgba(255,255,255,0.04);
-			left: 52px;
-			z-index: 3;
-			pointer-events: none;
+		.code-wrap__header {
+			padding: 5px 20px;
+			background: rgba(0,0,0,0.55);
+			color: #888;
+			border-bottom: 1px solid rgba(0,0,0,0.3);
+			font-weight: bold;
 		}
 		@keyframes pop-in {
 			from { transform: scale(0.9); opacity: 0; }
@@ -94,8 +106,11 @@
 		/* Codemirror */
 		.Codemirror {
 			width: 100%;
-			height: 100%;
+			height: calc(100% - 25px); /* 25px for header */
 			font-size: 16px;
+		}
+		.Codemirror pre {
+			font-family: 'Inconsolata', monospace;
 		}
 		.cm-s-monokai .CodeMirror-linenumber {
 			color:rgba(255,255,255,0.2);
@@ -166,6 +181,9 @@
 		}
 		.mode-btn.selected svg {
 			fill: rgba(255, 255, 255, 0.45);
+		}
+		.gutter {
+			background: rgba(0,0,0,0.2);
 		}
 		.gutter-horizontal {
 			cursor: ew-resize;
@@ -274,6 +292,49 @@
 			top: 2px;
 			left: 2px;
 		}
+		.btn-group {
+			position: relative;
+		}
+		.btn-group {
+			cursor: pointer;
+		}
+		.dropdown__menu {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			padding: 0;
+			margin: 0;
+			min-width: 200px;
+			display: block;
+			list-style: none;
+			border-radius: 4px;
+			overflow: hidden;
+			opacity: 0;
+			visibility: hidden;
+			transition: 0.25s ease;
+			transform: translateY(10px);
+			z-index: 5;
+			background: white;
+		}
+		.dropdown__menu > li > a {
+			display: block;
+			padding: 15px;
+			color: #333;
+			cursor: pointer;
+		}
+		.dropdown__menu > li > a:hover {
+			background: #ff8c00;
+			color: white;
+		}
+		.dropdown__menu > li:not(:last-child) {
+			border-bottom: 1px solid rgba(0,0,0,0.05);
+		}
+
+		.open .dropdown__menu {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
 		</style>
 	</head>
 
@@ -281,9 +342,42 @@
 		<div class="main-container">
 			<div class="content-wrap  flex  flex-grow">
 				<div class="code-side" id="js-code-side">
-					<div id="js-html-code" data-type="html" class="code-wrap"></div>
-					<div id="js-css-code" data-type="css" class="code-wrap"></div>
-					<div id="js-js-code" data-type="js" class="code-wrap"></div>
+					<div id="js-html-code" data-type="html" class="code-wrap">
+						<div class="code-wrap__header">
+							<div class="btn-group" dropdown>
+								<span id="js-html-mode-label">HTML</span><span class="caret"></span>
+								<ul class="js-modes-menu  dropdown__menu">
+									<li><a data-type="html" data-mode="html">HTML</a></li>
+									<li><a data-type="html" data-mode="markdown">Markdown</a></li>
+									<li><a data-type="html" data-mode="jade">Jade</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div id="js-css-code" data-type="css" class="code-wrap">
+						<div class="code-wrap__header">
+							<div class="btn-group" dropdown>
+								<span id="js-css-mode-label">CSS</span><span class="caret"></span>
+								<ul class="js-modes-menu  dropdown__menu">
+									<li><a data-type="css" data-mode="css">CSS</a></li>
+									<li><a data-type="css" data-mode="scss">SCSS</a></li>
+									<li><a data-type="css" data-mode="less">LESS</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div id="js-js-code" data-type="js" class="code-wrap">
+						<div class="code-wrap__header">
+							<div class="btn-group" dropdown>
+								<span id="js-js-mode-label">JS</span><span class="caret"></span>
+								<ul class="js-modes-menu  dropdown__menu">
+									<li><a data-type="js" data-mode="js">JS</a></li>
+									<li><a data-type="js" data-mode="coffee">CoffeeScript</a></li>
+									<li><a data-type="js" data-mode="es6">ES6 (Babel)</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="demo-side" id="js-demo-side">
 					<iframe src="about://blank" frameborder="0" id="demo-frame"></iframe>
@@ -421,6 +515,8 @@
 		<script src="lib/codemirror/addon/edit/matchbrackets.js"></script>
 		<script src="lib/codemirror/addon/edit/closebrackets.js"></script>
 		<script src="lib/codemirror/addon/edit/closetag.js"></script>
+		<script src="lib/codemirror/addon/comment/comment.js"></script>
+		<script src="lib/codemirror/addon/mode/loadmode.js"></script>
 
 		<script src="lib/codemirror/mode/xml/xml.js"></script>
 		<script src="lib/codemirror/mode/javascript/javascript.js"></script>
@@ -430,7 +526,11 @@
 		<script src="lib/emmet.js"></script>
 
 		<script src="lib/split.js"></script>
+
+		<script src="deferred.js"></script>
+		<script src="loader.js"></script>
 		<script src="script.js"></script>
+		<script src="dropdown.js"></script>
 
 	</body>
 </html>

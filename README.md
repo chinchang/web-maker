@@ -9,7 +9,7 @@ Web-Maker
 
 ### Features
 
-* Supports HTML, CSS & JavaScript
+* Supports Preprocessors: HTML (Jade & Markdown), CSS (SCSS & LESS) & JavaScript (ES6 & CoffeeScript)
 * Works offline
 * Very easily accessible. Simply open a new tab in Chrome!
 * Multiple layouts to choose from

@@ -14,7 +14,7 @@
 		COFFEESCRIPT: 'coffee'
 	};
 	var CssModes = {
-		CSS: 'js',
+		CSS: 'css',
 		SCSS: 'scss',
 		LESS: 'less'
 	};
@@ -122,9 +122,35 @@
 		saveSetting('code', code);
 	}
 
+	/**
+	 * Loaded the code comiler based on the mode selected
+	 */
+	function handleModeRequirements(mode) {
+		// Exit if already loaded
+		if (modes[mode].hasLoaded) { return; }
+
+		function setLoadedFlag() {
+			modes[mode].hasLoaded = true;
+		}
+
+		if (mode === CssModes.LESS) {
+			loadJS('lib/less.min.js').then(setLoadedFlag);
+		} else if (mode === CssModes.SCSS) {
+			loadJS('lib/sass.js').then(function () {
+				window.sass = new Sass('lib/sass.worker.js');
+				setLoadedFlag();
+			});
+		} else if (mode === JsModes.COFFEESCRIPT) {
+			loadJS('lib/coffee-script.js').then(setLoadedFlag);
+		} else if (mode === JsModes.ES6) {
+			loadJS('lib/babel.min.js').then(setLoadedFlag);
+		}
+	}
+
 	function updateCssMode(value) {
 		cssMode = value;
 		cssModelLabel.textContent = modes[value].label;
+		handleModeRequirements(value);
 		CodeMirror.autoLoadMode(editur.cm.css, modes[value].cmMode);
 		chrome.storage.sync.set({
 			cssMode: value
@@ -133,11 +159,15 @@
 	function updateJsMode(value) {
 		jsMode = value;
 		jsModelLabel.textContent = modes[value].label;
+		handleModeRequirements(value);
 		CodeMirror.autoLoadMode(editur.cm.js, modes[value].cmMode);
 		chrome.storage.sync.set({
 			jsMode: value
 		}, function () {});
 	}
+
+	// computeHtml, computeCss & computeJs evaluate the final code according
+	// to whatever mode is selected and resolve the returned promise with the code.
 	function computeHtml() {
 		return editur.cm.html.getValue();
 	}
@@ -276,7 +306,6 @@
 		var lastCode;
 
 		CodeMirror.modeURL = "lib/codemirror/mode/%N/%N.js";
-		window.sass = new Sass('lib/sass.worker.js');
 
 		layoutBtn1.addEventListener('click', function () { saveSetting('layoutMode', 1); toggleLayout(1); return false; });
 		layoutBtn2.addEventListener('click', function () { saveSetting('layoutMode', 2); toggleLayout(2); return false; });

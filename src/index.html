@@ -46,6 +46,26 @@
 			top: 5px;
 			margin-left: 7px;
 		}
+		.btn {
+			display: inline-block;
+			border: 0;
+			background: #0074d9;
+			/*border: 1px solid #aaa;*/
+			color: white;
+			font-size: inherit;
+			border-radius: 3px;
+			padding: 7px 15px;
+			cursor: pointer;
+			transition: 0.2s ease;
+		}
+		.btn:hover {
+			text-decoration: none;
+			box-shadow: 0 3px 5px 0 rgba(0,0,0,0.15);
+		}
+		.star:after {
+			content: '★';
+			color: #eee333;
+		}
 		.main-container {
 			position: absolute;
 			left: 0; right: 0;
@@ -193,16 +213,14 @@
 		}
 		.modal {
 			position: fixed;
-			top: 50%;
+			top: 5vh;
 			left: 50%;
-			width: 580px;
+			width: 70vw;
+			margin-left: -35vw;
 			max-width: 90vw;
 			height: auto;
 			z-index: 2000;
 			visibility: hidden;
-			backface-visibility: hidden;
-			transform: translateX(-50%) translateY(-50%) scale(2);
-			zoom: 0.5;
 		}
 		.modal__content {
 			background: #fdfdfd;
@@ -279,6 +297,9 @@
 			padding: 20px;
 			background: #f8f6f9;
 			position: relative;
+		}
+		.notification:not(:last-child) {
+			margin-bottom: 10px;
 		}
 		.notification li:not(:last-child) {
 			margin-bottom: 10px;
@@ -452,7 +473,7 @@
 
 		<div class="modal" id="js-help-modal">
 			<div class="modal__content">
-				<h1>Web Maker<small style="font-size:14px;"> v1.6.0</small></h1>
+				<h1>Web Maker<small style="font-size:14px;"> v1.7.0</small></h1>
 				<div>
 					<p>Made by <a href="https://twitter.com/chinchang457" target="_blank">Kushagra Gour</a></p>
 					<p>Tweet out your feature requests, comments & suggestions to <a href="https://twitter.com/chinchang457">@chinchang457</a>.</p>
@@ -466,6 +487,7 @@
 							<li><a target="_blank" href="https://nathancahill.github.io/Split.js/">Split.js</a> - Nathan Cahill</li>
 							<li><a target="_blank" href="https://codemirror.net/">Codemirror</a> - Marijn Haverbeke</li>
 							<li><a target="_blank" href="https://emmet.io/">Emmet</a> - Sergey Chikuyonok</li>
+							<li><a target="_blank" href="https://kushagragour.in/lab/web-maker">Web Maker!</a> - whhat!</li>
 						</ul>
 					</p>
 
@@ -480,6 +502,14 @@
 		<div class="modal" id="js-notifications-modal">
 			<div class="modal__content">
 				<h1>Whats new?</h1>
+				<div class="notification">
+				  <span class="notification__version">1.7.0</span>
+				  <ul>
+					<li><strong>Preprocessors!</strong> - Enjoy a whole list of preprocessors for HTML(Jade & markdown), CSS(SCSS & LESS) and JavaScript(CoffeeScript & Babel).</li>
+					<li>More awesome font for code.</li>
+					<li>Like it? <a href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews" target="_blank" class="btn">Please rate Web Maker <span class="star"></span></a></li>
+				  </ul>
+				</div>
 				<div class="notification">
 				  <span class="notification__version">1.6.0</span>
 				  <ul>

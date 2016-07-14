@@ -8,17 +8,25 @@
 	window.$ = document.querySelector.bind(document);
 	window.$all = document.querySelectorAll.bind(document);
 
-	var JsModes = {
-		JS: 'js',
-		ES6: 'es6',
-		COFFEESCRIPT: 'coffee'
+	var HtmlModes = {
+		HTML: 'html',
+		MARKDOWN: 'markdown',
+		JADE: 'jade' // unsafe eval is put in manifest for this file
 	};
 	var CssModes = {
 		CSS: 'css',
 		SCSS: 'scss',
 		LESS: 'less'
 	};
+	var JsModes = {
+		JS: 'js',
+		ES6: 'es6',
+		COFFEESCRIPT: 'coffee'
+	};
 	var modes = {};
+	modes[HtmlModes.HTML] = { label: 'HTML', cmMode: 'htmlmixed' };
+	modes[HtmlModes.MARKDOWN] = { label: 'Markdown', cmMode: 'markdown' };
+	modes[HtmlModes.JADE] = { label: 'Jade', cmMode: 'jade' };
 	modes[JsModes.JS] = { label: 'JS', cmMode: 'javascript' };
 	modes[JsModes.COFFEESCRIPT] = { label: 'CoffeeScript', cmMode: 'coffeescript' };
 	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'javascript' };
@@ -30,8 +38,9 @@
 		, updateDelay = 500
 		, currentLayoutMode
 		, hasSeenNotifications = true
-		, jsMode = JsModes.ES6
-		, cssMode = CssModes.LESS
+		, htmlMode = HtmlModes.HTML
+		, jsMode = JsModes.JS
+		, cssMode = CssModes.CSS
 
 		, frame = $('#demo-frame')
 		, htmlCode = $('#js-html-code')
@@ -48,8 +57,9 @@
 		, settingsBtn = $('#js-settings-btn')
 		, notificationsBtn = $('#js-notifications-btn')
 		, notificationsModal = $('#js-notifications-modal')
-		, jsModelLabel = $('#js-js-mode-label')
+		, htmlModelLabel = $('#js-html-mode-label')
 		, cssModelLabel = $('#js-css-mode-label')
+		, jsModelLabel = $('#js-js-mode-label')
 		;
 
 	editur.cm = {};
@@ -133,7 +143,11 @@
 			modes[mode].hasLoaded = true;
 		}
 
-		if (mode === CssModes.LESS) {
+		if (mode === HtmlModes.JADE) {
+			loadJS('lib/jade.js').then(setLoadedFlag);
+		} else if (mode === HtmlModes.MARKDOWN) {
+			loadJS('lib/marked.js').then(setLoadedFlag);
+		} else if (mode === CssModes.LESS) {
 			loadJS('lib/less.min.js').then(setLoadedFlag);
 		} else if (mode === CssModes.SCSS) {
 			loadJS('lib/sass.js').then(function () {
@@ -147,6 +161,15 @@
 		}
 	}
 
+	function updateHtmlMode(value) {
+		htmlMode = value;
+		htmlModelLabel.textContent = modes[value].label;
+		handleModeRequirements(value);
+		CodeMirror.autoLoadMode(editur.cm.html, modes[value].cmMode);
+		chrome.storage.sync.set({
+			htmlMode: value
+		}, function () {});
+	}
 	function updateCssMode(value) {
 		cssMode = value;
 		cssModelLabel.textContent = modes[value].label;
@@ -169,7 +192,17 @@
 	// computeHtml, computeCss & computeJs evaluate the final code according
 	// to whatever mode is selected and resolve the returned promise with the code.
 	function computeHtml() {
-		return editur.cm.html.getValue();
+		var d = deferred();
+		var code = editur.cm.html.getValue();
+		if (htmlMode === HtmlModes.HTML) {
+			d.resolve(code);
+		} else if (htmlMode === HtmlModes.MARKDOWN) {
+			d.resolve(marked(code));
+		} else if (htmlMode === HtmlModes.JADE) {
+			d.resolve(jade.render(code));
+		}
+
+		return d.promise;
 	}
 	function computeCss() {
 		var d = deferred();
@@ -353,11 +386,13 @@
 			item.addEventListener('click', function (e) {
 				var mode = e.currentTarget.dataset.mode;
 				var type = e.currentTarget.dataset.type;
-				var currentMode = type === 'js' ? jsMode : cssMode;
+				var currentMode = type === 'html' ? htmlMode : (type === 'css' ? cssMode : jsMode);
 				if (currentMode !== mode) {
-					if (type === 'js') {
+					if (type === 'html') {
+						updateHtmlMode(mode);
+					} else if (type === 'js') {
 						updateJsMode(mode);
-					} else {
+					} else if (type === 'css') {
 						updateCssMode(mode);
 					}
 				}
@@ -408,6 +443,7 @@
 		// Get synced `preserveLastCode` setting to get back last code (or not).
 		chrome.storage.sync.get({
 			preserveLastCode: true,
+			htmlMode: 'html',
 			jsMode: 'js',
 			cssMode: 'css'
 		}, function syncGetCallback(result) {
@@ -419,6 +455,7 @@
 				editur.cm.css.refresh();
 				editur.cm.js.refresh();
 			}
+			updateHtmlMode(result.htmlMode);
 			updateJsMode(result.jsMode);
 			updateCssMode(result.cssMode);
 		});

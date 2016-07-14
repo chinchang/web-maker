@@ -343,7 +343,16 @@
 			<div class="content-wrap  flex  flex-grow">
 				<div class="code-side" id="js-code-side">
 					<div id="js-html-code" data-type="html" class="code-wrap">
-						<div class="code-wrap__header">HTML</div>
+						<div class="code-wrap__header">
+							<div class="btn-group" dropdown>
+								<span id="js-html-mode-label">HTML</span><span class="caret"></span>
+								<ul class="js-modes-menu  dropdown__menu">
+									<li><a data-type="html" data-mode="html">HTML</a></li>
+									<li><a data-type="html" data-mode="markdown">Markdown</a></li>
+									<li><a data-type="html" data-mode="jade">Jade</a></li>
+								</ul>
+							</div>
+						</div>
 					</div>
 					<div id="js-css-code" data-type="css" class="code-wrap">
 						<div class="code-wrap__header">

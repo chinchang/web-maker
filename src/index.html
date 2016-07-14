@@ -5,8 +5,15 @@
 		<link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
 		<link rel="stylesheet" href="lib/codemirror/theme/monokai.css">
 		<link rel="stylesheet" href="lib/hint.min.css">
-
 		<style>
+		@font-face {
+			font-family: 'Inconsolata';
+			font-style: normal;
+			font-weight: 400;
+			src: local('Inconsolata'), url(../Inconsolata-Regular.ttf) format('truetype');
+			unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+		}
+
 		body {
 			margin: 0;
 			padding: 0;
@@ -101,6 +108,9 @@
 			width: 100%;
 			height: calc(100% - 25px); /* 25px for header */
 			font-size: 16px;
+		}
+		.Codemirror pre {
+			font-family: 'Inconsolata', monospace;
 		}
 		.cm-s-monokai .CodeMirror-linenumber {
 			color:rgba(255,255,255,0.2);

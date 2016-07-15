@@ -166,6 +166,7 @@
 		htmlMode = value;
 		htmlModelLabel.textContent = modes[value].label;
 		handleModeRequirements(value);
+		editur.cm.html.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(editur.cm.html, modes[value].cmMode);
 		chrome.storage.sync.set({
 			htmlMode: value
@@ -175,6 +176,7 @@
 		cssMode = value;
 		cssModelLabel.textContent = modes[value].label;
 		handleModeRequirements(value);
+		editur.cm.css.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(editur.cm.css, modes[value].cmMode);
 		chrome.storage.sync.set({
 			cssMode: value
@@ -184,6 +186,7 @@
 		jsMode = value;
 		jsModelLabel.textContent = modes[value].label;
 		handleModeRequirements(value);
+		editur.cm.js.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(editur.cm.js, modes[value].cmMode);
 		chrome.storage.sync.set({
 			jsMode: value

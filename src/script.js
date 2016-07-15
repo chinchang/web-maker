@@ -3,7 +3,7 @@
 
 /* eslint-enable no-extra-semi */
 	var editur = window.editur || {};
-	var version = '1.7.0';
+	var version = '1.7.1';
 
 	window.$ = document.querySelector.bind(document);
 	window.$all = document.querySelectorAll.bind(document);

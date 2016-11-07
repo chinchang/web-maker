@@ -7,6 +7,7 @@
 
 	window.$ = document.querySelector.bind(document);
 	window.$all = document.querySelectorAll.bind(document);
+	window.DEBUG = 1;
 
 	var HtmlModes = {
 		HTML: 'html',
@@ -42,7 +43,9 @@
 		, jsMode = JsModes.JS
 		, cssMode = CssModes.CSS
 		, sass
+		, currentItem
 
+		// DOM nodes 
 		, frame = $('#demo-frame')
 		, htmlCode = $('#js-html-code')
 		, cssCode = $('#js-css-code')
@@ -57,29 +60,21 @@
 		, saveHtmlBtn = $('#js-save-html')
 		, settingsBtn = $('#js-settings-btn')
 		, notificationsBtn = $('#js-notifications-btn')
+		, openBtn = $('#js-open-btn')
+		, saveBtn = $('#js-save-btn')
+		, newBtn = $('#js-new-btn')
+		, savedItemsPane = $('#js-saved-items-pane')
+		, savedItemsPaneCloseBtn = $('#js-saved-items-pane-close-btn')
 		, notificationsModal = $('#js-notifications-modal')
 		, htmlModelLabel = $('#js-html-mode-label')
 		, cssModelLabel = $('#js-css-mode-label')
 		, jsModelLabel = $('#js-js-mode-label')
+		, titleInput = $('#js-title-input')
 		;
 
 	editur.cm = {};
 	editur.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
 
-	// https://github.com/substack/semver-compare/blob/master/index.js
-	function semverCompare (a, b) {
-		var pa = a.split('.');
-		var pb = b.split('.');
-		for (var i = 0; i < 3; i++) {
-			var na = Number(pa[i]);
-			var nb = Number(pb[i]);
-			if (na > nb) { return 1; }
-			if (nb > na) { return -1; }
-			if (!isNaN(na) && isNaN(nb)) { return 1; }
-			if (isNaN(na) && !isNaN(nb)) { return -1; }
-		}
-		return 0;
-	}
 
 	function resetSplitting() {
 		var gutters = $all('.gutter');
@@ -124,13 +119,94 @@
 		});
 	}
 
-	function saveCode() {
-		var code = {
-			html: editur.cm.html.getValue(),
-			css: editur.cm.css.getValue(),
-			js: editur.cm.js.getValue()
+	// Save current item to storage
+	function saveItem() {
+		var isNewItem = !currentItem.id;
+		currentItem.id = currentItem.id || ('item-' + generateRandomId()); 
+		saveCode();
+
+		// Push into the items hash if its a new item being saved
+		if (isNewItem) {
+			chrome.storage.local.get({
+				items: {}
+			}, function (result) {
+				result.items[currentItem.id] = true;
+				chrome.storage.local.set({
+					items: result.items
+				});
+			})
+		}
+	}
+
+	function saveCode(key) {
+		currentItem.title = titleInput.value;
+		currentItem.html = editur.cm.html.getValue();
+		currentItem.css = editur.cm.css.getValue();
+		currentItem.js = editur.cm.js.getValue();
+		currentItem.updatedOn = Date.now();
+		log('saving key', key || currentItem.id, currentItem)
+		currentItem.hoid = currentItem.id;
+		saveSetting(key || currentItem.id, currentItem);
+	}
+
+	function populateItem(items) {
+		currentItem = savedItems[];
+		refreshEditor();
+	}
+	function populateItemsInSavedPane(items) {
+		if (!items || !items.length) return;
+		var html = '';
+		// TODO: sort desc. by updation date
+		items.forEach(function (item) {
+			html += '<div class="saved-item-tile">' + item.title + '</div>';
+		})
+		savedItemsPane.querySelector('#js-saved-items-wrap').innerHTML = html;
+		toggleSavedItemsPane();
+	}
+
+	function toggleSavedItemsPane() {
+		savedItemsPane.classList.toggle('is-open');
+	}
+	function openSavedItemsPane() {
+		chrome.storage.local.get('items', function (result) {
+			var itemIds = Object.getOwnPropertyNames(result.items),
+				items = [];
+
+			for (var i = 0; i < itemIds.length; i++) {
+				(function (index) {
+					chrome.storage.local.get(itemIds[index], function (itemResult) {
+						items.push(itemResult[itemIds[index]]);
+						// Check if we have all items now.
+						if (itemIds.length === items.length) {
+							populateItemsInSavedPane(items);
+						}
+					});
+				})(i);
+			}
+		});
+	}
+
+	function createNewItem() {
+		currentItem = {
+			title: 'Untitled ' + (new Date).getDate()
 		};
-		saveSetting('code', code);
+		editur.cm.html.setValue('');
+		editur.cm.css.setValue('');
+		editur.cm.js.setValue('');
+		editur.cm.html.refresh();
+		editur.cm.css.refresh();
+		editur.cm.js.refresh();
+	}
+
+	function refreshEditor() {
+		titleInput.value = currentItem.title || 'Untitled';
+		editur.cm.html.setValue(currentItem.html);
+		editur.cm.css.setValue(currentItem.css);
+		editur.cm.js.setValue(currentItem.js);
+
+		editur.cm.html.refresh();
+		editur.cm.css.refresh();
+		editur.cm.js.refresh();
 	}
 
 	/**
@@ -240,11 +316,14 @@
 	}
 
 	window.onunload = function () {
-		saveCode();
+		saveCode('code');
 	};
 
 	function createPreviewFile(html, css, js) {
-		var contents = '<html>\n<head>\n<style>\n' + css + '\n</style>\n</head>\n<body>\n' + html + '\n<script>\n' + js + '\n</script></body>\n</html>';
+		var contents = 
+			'<html>\n<head>\n' + 
+			'<style>\n' + css + '\n</style>\n</head>\n' + 
+			'<body>\n' + html + '\n<script>\n' + js + '\n</script></body>\n</html>';
 
 		var fileWritten = false;
 
@@ -257,7 +336,8 @@
 				fileEntry.createWriter(function(fileWriter) {
 					function onWriteComplete() {
 						if (fileWritten) {
-							frame.src = 'filesystem:chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
+							frame.src = 'filesystem:chrome-extension://' + 
+							chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
 						}
 						else {
 							fileWritten = true;
@@ -353,9 +433,8 @@
 		layoutBtn2.addEventListener('click', function () { saveSetting('layoutMode', 2); toggleLayout(2); return false; });
 		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
 
-		helpBtn.addEventListener('click', function () {
+		onButtonClick(helpBtn, function () {
 			helpModal.classList.toggle('is-modal-visible');
-			return false;
 		});
 
 		notificationsBtn.addEventListener('click', function () {
@@ -392,9 +471,11 @@
 			e.preventDefault();
 		});
 
-		saveHtmlBtn.addEventListener('click', function () {
-			saveFile();
-		});
+		onButtonClick(saveHtmlBtn, saveFile);
+		onButtonClick(openBtn, openSavedItemsPane);
+		onButtonClick(saveBtn, saveItem);
+		onButtonClick(newBtn, createNewItem);
+		onButtonClick(savedItemsPaneCloseBtn, toggleSavedItemsPane);
 
 		// Attach listeners on mode change menu items
 		var modeItems = [].slice.call($all('.js-modes-menu a'));
@@ -429,7 +510,7 @@
 			}
 		});
 
-		settingsBtn.addEventListener('click', function() {
+		onButtonClick(settingsBtn, function() {
 			if (!chrome.runtime.openOptionsPage) {
 				// New way to open options pages, if supported (Chrome 42+).
 				// Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=601997
@@ -442,9 +523,7 @@
 					url: 'chrome://extensions?options=' + chrome.i18n.getMessage('@@extension_id')
 				});
 			}
-			return false;
 		});
-
 
 		chrome.storage.local.get({
 			layoutMode: 1,
@@ -464,12 +543,19 @@
 			cssMode: 'css'
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
-				editur.cm.html.setValue(lastCode.html);
-				editur.cm.css.setValue(lastCode.css);
-				editur.cm.js.setValue(lastCode.js);
-				editur.cm.html.refresh();
-				editur.cm.css.refresh();
-				editur.cm.js.refresh();
+				if (lastCode.id) {
+					chrome.storage.local.get(lastCode.id, function (result) {
+						log('Load item ', lastCode.id)
+						currentItem = result[lastCode.id];
+						refreshEditor();
+					})
+				} else {
+					log('Load last unsaved item');
+					currentItem = lastCode;
+					refreshEditor();
+				}
+			} else {
+				createNewItem();
 			}
 			updateHtmlMode(result.htmlMode);
 			updateJsMode(result.jsMode);

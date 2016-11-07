@@ -19,6 +19,7 @@
 			padding: 0;
 			background: rgba(0, 0, 0, 0.5);
 			background: #444;
+			color: rgba(255,255,255,0.9);
 			min-height: 100vh;
 			font-family: Helvetica, arial;
 		}
@@ -46,11 +47,14 @@
 			top: 5px;
 			margin-left: 7px;
 		}
+		input[type="text"] {
+			padding: 3px 5px;
+			font-size: inherit;
+		}
 		.btn {
 			display: inline-block;
 			border: 0;
 			background: #0074d9;
-			/*border: 1px solid #aaa;*/
 			color: white;
 			font-size: inherit;
 			border-radius: 3px;
@@ -144,12 +148,17 @@
 			z-index: 1;
 			background: white;
 		}
+		.main-header,
 		.footer {
 			padding: 5px 10px;
 			background-color: #111;
 			color: rgba(255, 255, 255, 0.45);
 			border-top: 1px solid rgba(255,255,255,0.14);
 			line-height: 20px;
+		}
+		.main-header {
+			border: 0;
+			border-bottom: 1px solid rgba(255,255,255,0.14);
 		}
 		.logo {
 			display: inline-block;
@@ -211,6 +220,12 @@
 		.gutter-vertical {
 			cursor: ns-resize;
 		}
+		.item-title-input {
+			background: none;
+			border: 0;
+			color: rgba(255,255,255,0.8);
+			width: calc(100vw - 400px);
+		}
 		.modal {
 			position: fixed;
 			top: 5vh;
@@ -256,6 +271,21 @@
 		.is-modal-visible ~ .modal-overlay {
 			opacity: 1;
 			visibility: visible;
+		}
+		.saved-items-pane {
+			position: fixed;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			width: 400px;
+			z-index: 3;
+			background-color: #111;
+			transition: 0.3s ease;
+			will-change: transform;
+			transform: translateX(100%);
+		}
+		.saved-items-pane.is-open {
+			transform: translateX(0);
 		}
 		.notifications-btn {
 			position: relative;
@@ -359,6 +389,21 @@
 
 	<body class="layout-">
 		<div class="main-container">
+			<div class="main-header">
+				<div class="fr">
+
+					<a id="js-new-btn"><svg style="vertical-align:middle;width:14px;height:14px" viewBox="0 0 24 24">
+    <path fill="crimson" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+</svg>New</a>
+					<a id="js-save-btn" style="margin-left:10px"><svg style="vertical-align:middle;width:14px;height:14px" viewBox="0 0 24 24">
+    <path fill="crimson" d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" />
+</svg>Save</a>
+					<a id="js-open-btn" style="margin-left:10px"><svg style="width:14px;height:14px;vertical-align:middle;" viewBox="0 0 24 24">
+    <path fill="crimson" d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
+</svg>Open</a>
+				</div>
+				<input type="text" id="js-title-input" class="item-title-input" value="Untitled Work">
+			</div>
 			<div class="content-wrap  flex  flex-grow">
 				<div class="code-side" id="js-code-side">
 					<div id="js-html-code" data-type="html" class="code-wrap">
@@ -521,6 +566,14 @@
 			</div>
 		</div>
 
+		<div id="js-saved-items-pane" class="saved-items-pane">
+			<button class="btn" id="js-saved-items-pane-close-btn">X</button>
+			<h3>My Items</h3>
+			<div id="js-saved-items-wrap">
+
+			</div>
+		</div>
+
 		<div class="modal-overlay"></div>
 
 		<svg  width="30" height="30" viewBox="0 0 100 100" fill="rgba(255, 255, 255, 0.09)">
@@ -555,6 +608,7 @@
 
 		<script src="lib/split.js"></script>
 
+		<script src="utils.js"></script>
 		<script src="deferred.js"></script>
 		<script src="loader.js"></script>
 		<script src="script.js"></script>

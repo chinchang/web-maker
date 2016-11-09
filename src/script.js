@@ -44,8 +44,9 @@
 		, cssMode = CssModes.CSS
 		, sass
 		, currentItem
+		, savedItems
 
-		// DOM nodes 
+		// DOM nodes
 		, frame = $('#demo-frame')
 		, htmlCode = $('#js-html-code')
 		, cssCode = $('#js-css-code')
@@ -122,7 +123,7 @@
 	// Save current item to storage
 	function saveItem() {
 		var isNewItem = !currentItem.id;
-		currentItem.id = currentItem.id || ('item-' + generateRandomId()); 
+		currentItem.id = currentItem.id || ('item-' + utils.generateRandomId());
 		saveCode();
 
 		// Push into the items hash if its a new item being saved
@@ -144,21 +145,24 @@
 		currentItem.css = editur.cm.css.getValue();
 		currentItem.js = editur.cm.js.getValue();
 		currentItem.updatedOn = Date.now();
-		log('saving key', key || currentItem.id, currentItem)
-		currentItem.hoid = currentItem.id;
+		utils.log('saving key', key || currentItem.id, currentItem)
 		saveSetting(key || currentItem.id, currentItem);
 	}
 
 	function populateItem(items) {
-		currentItem = savedItems[];
+		// currentItem = savedItems[];
 		refreshEditor();
 	}
 	function populateItemsInSavedPane(items) {
 		if (!items || !items.length) return;
 		var html = '';
 		// TODO: sort desc. by updation date
+		items.sort(function (a, b) {
+			return b.updatedOn - a.updatedOn;
+		});
 		items.forEach(function (item) {
-			html += '<div class="saved-item-tile">' + item.title + '</div>';
+			html += '<a class="js-saved-item-tile saved-item-tile" data-item-id="' + item.id + '">' +
+				'<h3>' + item.title + '</h3><span>Last updated: ' + item.updatedOn + '</span></a>';
 		})
 		savedItemsPane.querySelector('#js-saved-items-wrap').innerHTML = html;
 		toggleSavedItemsPane();
@@ -172,9 +176,11 @@
 			var itemIds = Object.getOwnPropertyNames(result.items),
 				items = [];
 
+			savedItems = savedItems || [];
 			for (var i = 0; i < itemIds.length; i++) {
 				(function (index) {
 					chrome.storage.local.get(itemIds[index], function (itemResult) {
+						savedItems[itemIds[index]] = itemResult[itemIds[index]];
 						items.push(itemResult[itemIds[index]]);
 						// Check if we have all items now.
 						if (itemIds.length === items.length) {
@@ -187,15 +193,19 @@
 	}
 
 	function createNewItem() {
+		var d = new Date();
 		currentItem = {
-			title: 'Untitled ' + (new Date).getDate()
+			title: 'Untitled ' + d.getDate() + '-' + d.getMonth() + '-' + d.getHours() + ':' + d.getMinutes(),
+			html: '',
+			css: '',
+			js: '',
+			layoutMode: currentLayoutMode
 		};
-		editur.cm.html.setValue('');
-		editur.cm.css.setValue('');
-		editur.cm.js.setValue('');
-		editur.cm.html.refresh();
-		editur.cm.css.refresh();
-		editur.cm.js.refresh();
+		refreshEditor();
+	}
+	function openItem(itemId) {
+		currentItem = savedItems[itemId];
+		refreshEditor();
 	}
 
 	function refreshEditor() {
@@ -320,23 +330,22 @@
 	};
 
 	function createPreviewFile(html, css, js) {
-		var contents = 
-			'<html>\n<head>\n' + 
-			'<style>\n' + css + '\n</style>\n</head>\n' + 
+		var contents = '<html>\n<head>\n' +
+			'<style>\n' + css + '\n</style>\n</head>\n' +
 			'<body>\n' + html + '\n<script>\n' + js + '\n</script></body>\n</html>';
 
 		var fileWritten = false;
 
 		var blob = new Blob([ contents ], { type: "text/plain;charset=UTF-8" });
 
-		function errorHandler() { console.log(arguments); }
+		function errorHandler() { console.utils.log(arguments); }
 
 		window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024 * 5, function(fs){
 			fs.root.getFile('preview.html', { create: true }, function(fileEntry) {
 				fileEntry.createWriter(function(fileWriter) {
 					function onWriteComplete() {
 						if (fileWritten) {
-							frame.src = 'filesystem:chrome-extension://' + 
+							frame.src = 'filesystem:chrome-extension://' +
 							chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
 						}
 						else {
@@ -433,7 +442,7 @@
 		layoutBtn2.addEventListener('click', function () { saveSetting('layoutMode', 2); toggleLayout(2); return false; });
 		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
 
-		onButtonClick(helpBtn, function () {
+		utils.onButtonClick(helpBtn, function () {
 			helpModal.classList.toggle('is-modal-visible');
 		});
 
@@ -471,11 +480,17 @@
 			e.preventDefault();
 		});
 
-		onButtonClick(saveHtmlBtn, saveFile);
-		onButtonClick(openBtn, openSavedItemsPane);
-		onButtonClick(saveBtn, saveItem);
-		onButtonClick(newBtn, createNewItem);
-		onButtonClick(savedItemsPaneCloseBtn, toggleSavedItemsPane);
+		utils.onButtonClick(saveHtmlBtn, saveFile);
+		utils.onButtonClick(openBtn, openSavedItemsPane);
+		utils.onButtonClick(saveBtn, saveItem);
+		utils.onButtonClick(newBtn, createNewItem);
+		utils.onButtonClick(savedItemsPaneCloseBtn, toggleSavedItemsPane);
+		utils.onButtonClick(savedItemsPane, function (e) {
+			if (e.target.classList.contains('js-saved-item-tile')) {
+				openItem(e.target.dataset.itemId);
+				toggleSavedItemsPane();
+			}
+		});
 
 		// Attach listeners on mode change menu items
 		var modeItems = [].slice.call($all('.js-modes-menu a'));
@@ -510,7 +525,7 @@
 			}
 		});
 
-		onButtonClick(settingsBtn, function() {
+		utils.onButtonClick(settingsBtn, function() {
 			if (!chrome.runtime.openOptionsPage) {
 				// New way to open options pages, if supported (Chrome 42+).
 				// Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=601997
@@ -545,12 +560,12 @@
 			if (result.preserveLastCode && lastCode) {
 				if (lastCode.id) {
 					chrome.storage.local.get(lastCode.id, function (result) {
-						log('Load item ', lastCode.id)
+						utils.log('Load item ', lastCode.id)
 						currentItem = result[lastCode.id];
 						refreshEditor();
 					})
 				} else {
-					log('Load last unsaved item');
+					utils.log('Load last unsaved item');
 					currentItem = lastCode;
 					refreshEditor();
 				}
@@ -566,8 +581,8 @@
 		chrome.storage.sync.get({
 			lastSeenVersion: ''
 		}, function syncGetCallback(result) {
-			// console.log(result, hasSeenNotifications, version);
-			if (!result.lastSeenVersion || semverCompare(result.lastSeenVersion, version) === -1) {
+			// console.utils.log(result, hasSeenNotifications, version);
+			if (!result.lastSeenVersion || utils.semverCompare(result.lastSeenVersion, version) === -1) {
 				notificationsBtn.classList.add('has-new');
 				hasSeenNotifications = false;
 			}

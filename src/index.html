@@ -278,6 +278,7 @@
 			top: 0;
 			bottom: 0;
 			width: 400px;
+			padding: 20px;
 			z-index: 3;
 			background-color: #111;
 			transition: 0.3s ease;
@@ -286,6 +287,25 @@
 		}
 		.saved-items-pane.is-open {
 			transform: translateX(0);
+		}
+		.saved-items-pane__close-btn {
+			position: absolute;
+			left: -32px;
+			opacity: 0;
+			transition: 0.25s ease;
+		}
+		.saved-items-pane.is-open .saved-items-pane__close-btn {
+			opacity: 1;
+		}
+		.saved-item-tile {
+			padding: 20px;
+			border: 1px solid rgba(255,255,255,0.1);
+			margin: 10px 0;
+			display: block;
+			border-radius: 2px;
+		}
+		.saved-item-tile:hover {
+			background: rgba(255,255,255,0.1);
 		}
 		.notifications-btn {
 			position: relative;
@@ -567,7 +587,7 @@
 		</div>
 
 		<div id="js-saved-items-pane" class="saved-items-pane">
-			<button class="btn" id="js-saved-items-pane-close-btn">X</button>
+			<button class="btn  saved-items-pane__close-btn" id="js-saved-items-pane-close-btn">X</button>
 			<h3>My Items</h3>
 			<div id="js-saved-items-wrap">
 

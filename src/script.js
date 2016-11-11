@@ -5,8 +5,6 @@
 	var editur = window.editur || {};
 	var version = '1.7.1';
 
-	window.$ = document.querySelector.bind(document);
-	window.$all = document.querySelectorAll.bind(document);
 	window.DEBUG = 1;
 
 	var HtmlModes = {
@@ -113,11 +111,10 @@
 		resetSplitting();
 	}
 
-	function saveSetting(setting, value) {
+	function saveSetting(setting, value, cb) {
 		var obj = {};
 		obj[setting] = value;
-		chrome.storage.local.set(obj, function() {
-		});
+		chrome.storage.local.set(obj, cb || function(){});
 	}
 
 	// Save current item to storage
@@ -146,7 +143,9 @@
 		currentItem.js = editur.cm.js.getValue();
 		currentItem.updatedOn = Date.now();
 		utils.log('saving key', key || currentItem.id, currentItem)
-		saveSetting(key || currentItem.id, currentItem);
+		saveSetting(key || currentItem.id, currentItem, function () {
+			alertsService.add('Item saved.');
+		});
 	}
 
 	function populateItem(items) {
@@ -201,11 +200,13 @@
 			js: '',
 			layoutMode: currentLayoutMode
 		};
+		alertsService.add('New item created');
 		refreshEditor();
 	}
 	function openItem(itemId) {
 		currentItem = savedItems[itemId];
 		refreshEditor();
+		alertsService.add('Saved item loaded');
 	}
 
 	function refreshEditor() {

@@ -1,4 +1,7 @@
 (function () {
+	window.$ = document.querySelector.bind(document);
+	window.$all = document.querySelectorAll.bind(document);
+
 	// https://github.com/substack/semver-compare/blob/master/index.js
 	function semverCompare(a, b) {
 		var pa = a.split('.');

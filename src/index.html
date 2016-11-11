@@ -279,7 +279,7 @@
 			bottom: 0;
 			width: 400px;
 			padding: 20px;
-			z-index: 3;
+			z-index: 4;
 			background-color: #111;
 			transition: 0.3s ease;
 			will-change: transform;
@@ -402,6 +402,20 @@
 		.open .dropdown__menu {
 			opacity: 1;
 			visibility: visible;
+			transform: translateY(0);
+		}
+		.alerts-container {
+			position: fixed;
+			will-change: transform;
+			left: 50%;
+			top: 0;
+			padding: 10px;
+			background: #9f3b4e;
+			border-radius: 3px;
+			transform: translateY(-100%);
+			transition: 0.3s ease;
+		}
+		.alerts-container.is-active {
 			transform: translateY(0);
 		}
 		</style>
@@ -607,6 +621,7 @@
 			</defs>
 		</svg>
 
+		<div class="alerts-container" id="js-alerts-container"></div>
 		<form style="display:none;" action="http://codepen.io/pen/define" method="POST" target="_blank" id="js-codepen-form">
 		  <input type="hidden" name="data" value='{"title": "New Pen!", "html": "<div>Hello, World!</div>"}'>
 		</form>
@@ -631,6 +646,7 @@
 		<script src="utils.js"></script>
 		<script src="deferred.js"></script>
 		<script src="loader.js"></script>
+		<script src="notifications.js"></script>
 		<script src="script.js"></script>
 		<script src="dropdown.js"></script>
 

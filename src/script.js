@@ -548,6 +548,12 @@
 			}
 		});
 
+		titleInput.addEventListener('blur', function () {
+			if (currentItem.id) {
+				saveItem();
+			}
+		})
+
 		// Attach listeners on mode change menu items
 		var modeItems = [].slice.call($all('.js-modes-menu a'));
 		modeItems.forEach(function (item) {

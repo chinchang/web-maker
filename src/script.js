@@ -43,6 +43,8 @@
 		, sass
 		, currentItem
 		, savedItems
+		// TODO: for legacy reasons when. remove after sometime.
+		, syncedModes = {}
 
 		// DOM nodes
 		, frame = $('#demo-frame')
@@ -141,6 +143,9 @@
 		currentItem.html = editur.cm.html.getValue();
 		currentItem.css = editur.cm.css.getValue();
 		currentItem.js = editur.cm.js.getValue();
+		currentItem.htmlMode = htmlMode;
+		currentItem.cssMode = cssMode;
+		currentItem.jsMode = jsMode;
 		currentItem.updatedOn = Date.now();
 		utils.log('saving key', key || currentItem.id, currentItem)
 		saveSetting(key || currentItem.id, currentItem, function () {
@@ -218,6 +223,10 @@
 		editur.cm.html.refresh();
 		editur.cm.css.refresh();
 		editur.cm.js.refresh();
+
+		updateHtmlMode(currentItem.htmlMode || syncedModes.html || HtmlModes.HTML);
+		updateJsMode(currentItem.jsMode || syncedModes.js || JsModes.JS);
+		updateCssMode(currentItem.cssMode || syncedModes.css || CssModes.CSS);
 	}
 
 	/**
@@ -634,9 +643,9 @@
 			} else {
 				createNewItem();
 			}
-			updateHtmlMode(result.htmlMode);
-			updateJsMode(result.jsMode);
-			updateCssMode(result.cssMode);
+			syncedModes.html = result.htmlmode;
+			syncedModes.css = result.cssMode;
+			syncedModes.js = result.jsMode;
 		});
 
 		// Check for new version notifications

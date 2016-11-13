@@ -298,15 +298,23 @@
 	function computeCss() {
 		var d = deferred();
 		var code = editur.cm.css.getValue();
+		cleanupErrors('css');
+
 		if (cssMode === CssModes.CSS) {
 			d.resolve(code);
 		} else if (cssMode === CssModes.SCSS) {
 			sass.compile(code, function(result) {
+				// Something as wrong
+				if (result.line && result.message) {
+					showErrors('css', [ { lineNumber: result.line - 1, message: result.message } ]);
+				}
 				d.resolve(result.text);
 			});
 		} else if (cssMode === CssModes.LESS) {
 			less.render(code).then(function (result) {
 				d.resolve(result.css);
+			}, function (error) {
+				showErrors('css', [ { lineNumber: error.line, message: error.message } ]);
 			});
 		}
 
@@ -315,12 +323,38 @@
 	function computeJs() {
 		var d = deferred();
 		var code = editur.cm.js.getValue();
+
+		cleanupErrors('js');
+
 		if (jsMode === JsModes.JS) {
-			d.resolve(code);
+			try {
+				esprima.parse(code, {
+					tolerant: true
+				});
+			} catch(e) {
+				showErrors('js', [ { lineNumber: e.lineNumber-1, message: e.description } ]);
+			} finally {
+				d.resolve(code);
+			}
 		} else if (jsMode === JsModes.COFFEESCRIPT) {
-			d.resolve(CoffeeScript.compile(code, { bare: true }));
+			var coffeeCode;
+			try {
+				coffeeCode = CoffeeScript.compile(code, { bare: true });
+			} catch (e) {
+				showErrors('js', [ { lineNumber: e.location.first_line, message: e.message } ]);
+			} finally {
+				d.resolve(coffeeCode);
+			}
 		} else if (jsMode === JsModes.ES6) {
-			d.resolve(Babel.transform(editur.cm.js.getValue(), { presets: ['es2015'] }).code);
+			try {
+				esprima.parse(code, {
+					tolerant: true
+				});
+			} catch(e) {
+				showErrors('js', [ { lineNumber: e.lineNumber-1, message: e.description } ]);
+			} finally {
+				d.resolve(Babel.transform(code, { presets: ['es2015'] }).code);
+			}
 		}
 
 		return d.promise;
@@ -330,9 +364,24 @@
 		saveCode('code');
 	};
 
+	function cleanupErrors(lang) {
+		editur.cm[lang].clearGutter('error-gutter');
+	}
+	function showErrors(lang, errors) {
+		var editor = editur.cm[lang];
+		errors.forEach(function (e) {
+			editor.operation(function () {
+				var n = document.createElement('div');
+				n.setAttribute('data-title', e.message);
+				n.classList.add('gutter-error-marker');
+				editor.setGutterMarker(e.lineNumber, 'error-gutter', n);
+			});
+		});
+	}
 	function createPreviewFile(html, css, js) {
 		var contents = '<html>\n<head>\n' +
-			'<style>\n' + css + '\n</style>\n</head>\n' +
+			'<style>\n' + css + '\n</style>\n' +
+			'</head>\n' +
 			'<body>\n' + html + '\n<script>\n' + js + '\n</script></body>\n</html>';
 
 		var fileWritten = false;
@@ -351,11 +400,13 @@
 						}
 						else {
 							fileWritten = true;
+							// Set the write pointer to starting of file
 							fileWriter.seek(0);
 							fileWriter.write(blob);
 						}
 					}
 					fileWriter.onwriteend = onWriteComplete;
+					// Empty the file contents
 					fileWriter.truncate(0)
 				}, errorHandler);
 			}, errorHandler);
@@ -410,6 +461,8 @@
 			tabMode: 'indent',
 			keyMap: 'sublime',
 			theme: 'monokai',
+			lint: !!options.lint,
+			gutters: options.gutters || [],
 			// cursorScrollMargin: '20', has issue with scrolling
 			profile: options.profile || ''
 		});
@@ -428,10 +481,12 @@
 	});
 	emmetCodeMirror(editur.cm.html);
 	editur.cm.css = initEditor(cssCode, {
-		mode: 'css'
+		mode: 'css',
+		gutters: [ 'error-gutter' ]
 	});
 	editur.cm.js = initEditor(jsCode, {
-		mode: 'javascript'
+		mode: 'javascript',
+		gutters: [ 'error-gutter' ]
 	});
 
 	function init () {

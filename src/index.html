@@ -418,6 +418,39 @@
 		.alerts-container.is-active {
 			transform: translateY(0);
 		}
+
+		.error-gutter {
+			width: 16px;
+		}
+		.gutter-error-marker {
+			width: 10px;
+			height: 10px;
+			background: red;
+			border-radius: 50%;
+			position: relative;
+			top: 4px;
+			left: 3px;
+		}
+		.gutter-error-marker:after {
+			content: attr(data-title);
+			background: red;
+			color: white;
+			padding: 4px;
+			opacity: 0;
+			visibility: hidden;
+			position: absolute;
+			top: 12px;
+			left: 0px;
+			white-space: nowrap;
+			transform: translateX(-10px);
+			will-change: transform;
+			transition: 0.2s ease;
+		}
+		.gutter-error-marker:hover:after {
+			opacity: 1;
+			visibility: visible;
+			transform: translateX(0);
+		}
 		</style>
 	</head>
 
@@ -642,6 +675,7 @@
 		<script src="lib/emmet.js"></script>
 
 		<script src="lib/split.js"></script>
+		<script src="lib/esprima.js"></script>
 
 		<script src="utils.js"></script>
 		<script src="deferred.js"></script>

@@ -43,8 +43,8 @@
 		, sass
 		, currentItem
 		, savedItems
-		// TODO: for legacy reasons when. remove after sometime.
-		, syncedModes = {}
+		// TODO: for legacy reasons when. Will be refactored as global preferences.
+		, prefs = {}
 
 		// DOM nodes
 		, frame = $('#demo-frame')
@@ -147,6 +147,7 @@
 		currentItem.cssMode = cssMode;
 		currentItem.jsMode = jsMode;
 		currentItem.updatedOn = Date.now();
+		currentItem.layoutMode = currentLayoutMode;
 		utils.log('saving key', key || currentItem.id, currentItem)
 		saveSetting(key || currentItem.id, currentItem, function () {
 			alertsService.add('Item saved.');
@@ -224,9 +225,11 @@
 		editur.cm.css.refresh();
 		editur.cm.js.refresh();
 
-		updateHtmlMode(currentItem.htmlMode || syncedModes.html || HtmlModes.HTML);
-		updateJsMode(currentItem.jsMode || syncedModes.js || JsModes.JS);
-		updateCssMode(currentItem.cssMode || syncedModes.css || CssModes.CSS);
+		updateHtmlMode(currentItem.htmlMode || prefs.htmlMode || HtmlModes.HTML);
+		updateJsMode(currentItem.jsMode || prefs.jsMode || JsModes.JS);
+		updateCssMode(currentItem.cssMode || prefs.cssMode || CssModes.CSS);
+
+		toggleLayout(currentItem.layoutMode || prefs.layoutMode);
 	}
 
 	/**
@@ -264,9 +267,6 @@
 		handleModeRequirements(value);
 		editur.cm.html.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(editur.cm.html, modes[value].cmMode);
-		chrome.storage.sync.set({
-			htmlMode: value
-		}, function () {});
 	}
 	function updateCssMode(value) {
 		cssMode = value;
@@ -274,9 +274,6 @@
 		handleModeRequirements(value);
 		editur.cm.css.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(editur.cm.css, modes[value].cmMode);
-		chrome.storage.sync.set({
-			cssMode: value
-		}, function () {});
 	}
 	function updateJsMode(value) {
 		jsMode = value;
@@ -284,9 +281,10 @@
 		handleModeRequirements(value);
 		editur.cm.js.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(editur.cm.js, modes[value].cmMode);
-		chrome.storage.sync.set({
+		// FIXME: Will be saved as part of global settings
+		/*chrome.storage.sync.set({
 			jsMode: value
-		}, function () {});
+		}, function () {});*/
 	}
 
 	// computeHtml, computeCss & computeJs evaluate the final code according
@@ -626,6 +624,7 @@
 			code: ''
 		}, function localGetCallback(result) {
 			toggleLayout(result.layoutMode);
+			prefs.layoutMode = result.layoutMode;
 			if (result.code) {
 				lastCode = result.code;
 			}
@@ -644,7 +643,7 @@
 						utils.log('Load item ', lastCode.id)
 						currentItem = result[lastCode.id];
 						refreshEditor();
-					})
+					});
 				} else {
 					utils.log('Load last unsaved item');
 					currentItem = lastCode;
@@ -653,9 +652,9 @@
 			} else {
 				createNewItem();
 			}
-			syncedModes.html = result.htmlmode;
-			syncedModes.css = result.cssMode;
-			syncedModes.js = result.jsMode;
+			prefs.htmlMode = result.htmlmode;
+			prefs.cssMode = result.cssMode;
+			prefs.jsMode = result.jsMode;
 		});
 
 		// Check for new version notifications

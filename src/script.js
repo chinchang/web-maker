@@ -334,16 +334,18 @@
 		var code = editur.cm.js.getValue();
 
 		cleanupErrors('js');
+		var ast;
 
 		if (jsMode === JsModes.JS) {
 			try {
-				esprima.parse(code, {
+				ast = esprima.parse(code, {
 					tolerant: true
 				});
 			} catch(e) {
 				showErrors('js', [ { lineNumber: e.lineNumber-1, message: e.description } ]);
 			} finally {
-				d.resolve(code);
+				utils.addInfiniteLoopProtection(ast);
+				d.resolve(escodegen.generate(ast));
 			}
 		} else if (jsMode === JsModes.COFFEESCRIPT) {
 			var coffeeCode;
@@ -352,23 +354,31 @@
 			} catch (e) {
 				showErrors('js', [ { lineNumber: e.location.first_line, message: e.message } ]);
 			} finally {
-				d.resolve(coffeeCode);
+				ast = esprima.parse(coffeeCode, {
+					tolerant: true
+				});
+				utils.addInfiniteLoopProtection(ast);
+				d.resolve(escodegen.generate(ast));
 			}
 		} else if (jsMode === JsModes.ES6) {
 			try {
-				esprima.parse(code, {
+				ast = esprima.parse(code, {
 					tolerant: true
 				});
 			} catch(e) {
 				showErrors('js', [ { lineNumber: e.lineNumber-1, message: e.description } ]);
 			} finally {
-				d.resolve(Babel.transform(code, { presets: ['es2015'] }).code);
+				utils.addInfiniteLoopProtection(ast);
+				d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015'] }).code);
 			}
 		}
 
 		return d.promise;
 	}
 
+	window.previewException = function (error) {
+		console.error('Possible infinite loop detected.', error.stack)
+	}
 	window.onunload = function () {
 		saveCode('code');
 	};
@@ -391,7 +401,7 @@
 		var contents = '<html>\n<head>\n' +
 			'<style>\n' + css + '\n</style>\n' +
 			'</head>\n' +
-			'<body>\n' + html + '\n<script>\n' + js + '\n</script></body>\n</html>';
+			'<body>\n' + html + '\n<script>\n' + js + '\n//# sourceURL=userscript.js</script></body>\n</html>';
 
 		var fileWritten = false;
 

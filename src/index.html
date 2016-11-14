@@ -5,6 +5,7 @@
 		<link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
 		<link rel="stylesheet" href="lib/codemirror/theme/monokai.css">
 		<link rel="stylesheet" href="lib/hint.min.css">
+		<link rel="stylesheet" href="lib/inlet.css">
 		<style>
 		@font-face {
 			font-family: 'Inconsolata';
@@ -76,6 +77,12 @@
 			top: 0; bottom: 0;
 			display: flex;
 			flex-direction: column;
+			will-change: -webkit-filter;
+			transition: 0.15s ease 0.4s;
+		}
+		.overlay-visible .main-container {
+			transition-duration: 0.3s;
+			-webkit-filter: blur(3px);
 		}
 		.code-side,
 		.demo-side {
@@ -239,6 +246,7 @@
 		}
 		.modal__content {
 			background: #fdfdfd;
+			color: #444;
 			position: relative;
 			border-radius: 3px;
 			margin: 0 auto;
@@ -262,15 +270,11 @@
 			visibility: hidden;
 			top: 0;
 			left: 0;
-			z-index: 1000;
+			z-index: 5;
 			opacity: 0;
+			will-change: opacity;
 			background: rgba(0,0,0,0.6);
 			transition: all 0.3s;
-		}
-
-		.is-modal-visible ~ .modal-overlay {
-			opacity: 1;
-			visibility: visible;
 		}
 		.saved-items-pane {
 			position: fixed;
@@ -278,9 +282,9 @@
 			top: 0;
 			bottom: 0;
 			width: 400px;
-			padding: 20px;
-			z-index: 4;
-			background-color: #111;
+			padding: 20px 30px;
+			z-index: 6;
+			background-color: #272822;
 			transition: 0.3s ease;
 			will-change: transform;
 			transform: translateX(100%);
@@ -288,10 +292,19 @@
 		.saved-items-pane.is-open {
 			transform: translateX(0);
 		}
+		.is-modal-visible ~ .modal-overlay,
+		.saved-items-pane.is-open ~ .modal-overlay {
+			opacity: 1;
+			visibility: visible;
+		}
 		.saved-items-pane__close-btn {
 			position: absolute;
-			left: -32px;
+			left: -18px;
+    		top: 24px;
 			opacity: 0;
+			border-radius: 50%;
+			padding: 10px 14px;
+			background: crimson;
 			transition: 0.25s ease;
 		}
 		.saved-items-pane.is-open .saved-items-pane__close-btn {
@@ -299,13 +312,19 @@
 		}
 		.saved-item-tile {
 			padding: 20px;
-			border: 1px solid rgba(255,255,255,0.1);
-			margin: 10px 0;
+			background-color: #2f302b;
+			/*border: 1px solid rgba(255,255,255,0.1);*/
+			margin: 20px 0;
 			display: block;
-			border-radius: 2px;
+			border-radius: 4px;
+			box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
 		}
 		.saved-item-tile:hover {
 			background: rgba(255,255,255,0.1);
+		}
+		.saved-items-pane__container {
+			overflow-y: scroll;
+    		max-height: calc(100vh - 90px);
 		}
 		.notifications-btn {
 			position: relative;
@@ -635,8 +654,8 @@
 
 		<div id="js-saved-items-pane" class="saved-items-pane">
 			<button class="btn  saved-items-pane__close-btn" id="js-saved-items-pane-close-btn">X</button>
-			<h3>My Items</h3>
-			<div id="js-saved-items-wrap">
+			<h3>My Library</h3>
+			<div id="js-saved-items-wrap" class="saved-items-pane__container">
 
 			</div>
 		</div>
@@ -675,6 +694,7 @@
 		<script src="lib/emmet.js"></script>
 
 		<script src="lib/split.js"></script>
+		<script src="lib/inlet.min.js"></script>
 		<script src="lib/esprima.js"></script>
 		<script src="lib/escodegen.browser.min.js"></script>
 

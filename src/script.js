@@ -173,8 +173,13 @@
 		toggleSavedItemsPane();
 	}
 
-	function toggleSavedItemsPane() {
-		savedItemsPane.classList.toggle('is-open');
+	function toggleSavedItemsPane(shouldOpen) {
+		if (shouldOpen === false) {
+			savedItemsPane.classList.remove('is-open');
+		} else {
+			savedItemsPane.classList.toggle('is-open');
+		}
+		document.body.classList[savedItemsPane.classList.contains('is-open') ? 'add' : 'remove']('overlay-visible');
 	}
 	function openSavedItemsPane() {
 		chrome.storage.local.get('items', function (result) {
@@ -501,10 +506,12 @@
 		mode: 'css',
 		gutters: [ 'error-gutter' ]
 	});
+	Inlet(editur.cm.css);
 	editur.cm.js = initEditor(jsCode, {
 		mode: 'javascript',
 		gutters: [ 'error-gutter' ]
 	});
+	Inlet(editur.cm.js);
 
 	function init () {
 		var lastCode;
@@ -601,6 +608,7 @@
 			if (typeof e.target.className === 'string' && e.target.className.indexOf('modal-overlay') !== -1) {
 				helpModal.classList.remove('is-modal-visible');
 				notificationsModal.classList.remove('is-modal-visible');
+				toggleSavedItemsPane(false);
 			}
 		});
 

@@ -1,5 +1,5 @@
 /* eslint-disable no-extra-semi */
-;(function () {
+;(function (alertsService) {
 
 /* eslint-enable no-extra-semi */
 	var editur = window.editur || {};
@@ -154,12 +154,8 @@
 		});
 	}
 
-	function populateItem(items) {
-		// currentItem = savedItems[];
-		refreshEditor();
-	}
 	function populateItemsInSavedPane(items) {
-		if (!items || !items.length) return;
+		if (!items || !items.length) { return; }
 		var html = '';
 		// TODO: sort desc. by updation date
 		items.sort(function (a, b) {
@@ -282,9 +278,11 @@
 		editur.cm.js.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(editur.cm.js, modes[value].cmMode);
 		// FIXME: Will be saved as part of global settings
-		/*chrome.storage.sync.set({
+		/*
+		chrome.storage.sync.set({
 			jsMode: value
-		}, function () {});*/
+		}, function () {});
+		*/
 	}
 
 	// computeHtml, computeCss & computeJs evaluate the final code according
@@ -340,7 +338,7 @@
 					tolerant: true
 				});
 			} catch(e) {
-				showErrors('js', [ { lineNumber: e.lineNumber-1, message: e.description } ]);
+				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
 				utils.addInfiniteLoopProtection(ast);
 				d.resolve(escodegen.generate(ast));
@@ -364,7 +362,7 @@
 					tolerant: true
 				});
 			} catch(e) {
-				showErrors('js', [ { lineNumber: e.lineNumber-1, message: e.description } ]);
+				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
 				utils.addInfiniteLoopProtection(ast);
 				d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015'] }).code);
@@ -639,9 +637,9 @@
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
 				if (lastCode.id) {
-					chrome.storage.local.get(lastCode.id, function (result) {
+					chrome.storage.local.get(lastCode.id, function (itemResult) {
 						utils.log('Load item ', lastCode.id)
-						currentItem = result[lastCode.id];
+						currentItem = itemResult[lastCode.id];
 						refreshEditor();
 					});
 				} else {
@@ -671,4 +669,4 @@
 
 	init();
 
-})();
+})(window.alertsService);

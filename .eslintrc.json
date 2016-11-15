@@ -79,7 +79,7 @@
         "newline-per-chained-call": "error",
         "no-alert": "error",
         "no-array-constructor": "error",
-        "no-bitwise": "error",
+        "no-bitwise": "off",
         "no-caller": "error",
         "no-console": "off",
         "no-catch-shadow": "error",
@@ -164,7 +164,7 @@
         "no-unneeded-ternary": "error",
         "no-unsafe-finally": "error",
         "no-unused-expressions": "error",
-        "no-use-before-define": "error",
+        "no-use-before-define": "off",
         "no-useless-call": "error",
         "no-useless-computed-key": "error",
         "no-useless-concat": "off",
@@ -173,7 +173,7 @@
         "no-useless-rename": "error",
         "no-var": "off",
         "no-void": "error",
-        "no-warning-comments": "error",
+        "no-warning-comments": "off",
         "no-whitespace-before-property": "error",
         "no-with": "error",
         "object-curly-spacing": [
@@ -259,6 +259,9 @@
         "marked": true,
         "jade": true,
         "loadJS": true,
+        "esprima": true,
+        "escodegen": true,
+        "utils": true,
         "Promise": true
     }
 }

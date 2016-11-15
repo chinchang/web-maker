@@ -1,5 +1,5 @@
 /* eslint-disable no-extra-semi */
-;(function () {
+;(function (alertsService) {
 
 /* eslint-enable no-extra-semi */
 	var editur = window.editur || {};
@@ -154,20 +154,16 @@
 		});
 	}
 
-	function populateItem(items) {
-		// currentItem = savedItems[];
-		refreshEditor();
-	}
 	function populateItemsInSavedPane(items) {
-		if (!items || !items.length) return;
+		if (!items || !items.length) { return; }
 		var html = '';
 		// TODO: sort desc. by updation date
 		items.sort(function (a, b) {
 			return b.updatedOn - a.updatedOn;
 		});
 		items.forEach(function (item) {
-			html += '<a class="js-saved-item-tile saved-item-tile" data-item-id="' + item.id + '">' +
-				'<h3>' + item.title + '</h3><span>Last updated: ' + item.updatedOn + '</span></a>';
+			html += '<a class="js-saved-item-tile saved-item-tile" data-item-id="' + item.id + '">'
+				+ '<h3>' + item.title + '</h3><span>Last updated: ' + item.updatedOn + '</span></a>';
 		})
 		savedItemsPane.querySelector('#js-saved-items-wrap').innerHTML = html;
 		toggleSavedItemsPane();
@@ -287,9 +283,11 @@
 		editur.cm.js.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(editur.cm.js, modes[value].cmMode);
 		// FIXME: Will be saved as part of global settings
-		/*chrome.storage.sync.set({
+		/*
+		chrome.storage.sync.set({
 			jsMode: value
-		}, function () {});*/
+		}, function () {});
+		*/
 	}
 
 	// computeHtml, computeCss & computeJs evaluate the final code according
@@ -344,8 +342,8 @@
 				ast = esprima.parse(code, {
 					tolerant: true
 				});
-			} catch(e) {
-				showErrors('js', [ { lineNumber: e.lineNumber-1, message: e.description } ]);
+			} catch (e) {
+				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
 				utils.addInfiniteLoopProtection(ast);
 				d.resolve(escodegen.generate(ast));
@@ -368,8 +366,8 @@
 				ast = esprima.parse(code, {
 					tolerant: true
 				});
-			} catch(e) {
-				showErrors('js', [ { lineNumber: e.lineNumber-1, message: e.description } ]);
+			} catch (e) {
+				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
 				utils.addInfiniteLoopProtection(ast);
 				d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015'] }).code);
@@ -401,10 +399,10 @@
 		});
 	}
 	function createPreviewFile(html, css, js) {
-		var contents = '<html>\n<head>\n' +
-			'<style>\n' + css + '\n</style>\n' +
-			'</head>\n' +
-			'<body>\n' + html + '\n<script>\n' + js + '\n//# sourceURL=userscript.js</script></body>\n</html>';
+		var contents = '<html>\n<head>\n'
+			+ '<style>\n' + css + '\n</style>\n'
+			+ '</head>\n'
+			+ '<body>\n' + html + '\n<script>\n' + js + '\n//# sourceURL=userscript.js</script></body>\n</html>';
 
 		var fileWritten = false;
 
@@ -417,8 +415,8 @@
 				fileEntry.createWriter(function(fileWriter) {
 					function onWriteComplete() {
 						if (fileWritten) {
-							frame.src = 'filesystem:chrome-extension://' +
-							chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
+							frame.src = 'filesystem:chrome-extension://'
+							+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
 						}
 						else {
 							fileWritten = true;
@@ -647,9 +645,9 @@
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
 				if (lastCode.id) {
-					chrome.storage.local.get(lastCode.id, function (result) {
+					chrome.storage.local.get(lastCode.id, function (itemResult) {
 						utils.log('Load item ', lastCode.id)
-						currentItem = result[lastCode.id];
+						currentItem = itemResult[lastCode.id];
 						refreshEditor();
 					});
 				} else {
@@ -679,4 +677,4 @@
 
 	init();
 
-})();
+})(window.alertsService);

@@ -162,8 +162,8 @@
 			return b.updatedOn - a.updatedOn;
 		});
 		items.forEach(function (item) {
-			html += '<a class="js-saved-item-tile saved-item-tile" data-item-id="' + item.id + '">' +
-				'<h3>' + item.title + '</h3><span>Last updated: ' + item.updatedOn + '</span></a>';
+			html += '<a class="js-saved-item-tile saved-item-tile" data-item-id="' + item.id + '">'
+				+ '<h3>' + item.title + '</h3><span>Last updated: ' + item.updatedOn + '</span></a>';
 		})
 		savedItemsPane.querySelector('#js-saved-items-wrap').innerHTML = html;
 		toggleSavedItemsPane();
@@ -337,7 +337,7 @@
 				ast = esprima.parse(code, {
 					tolerant: true
 				});
-			} catch(e) {
+			} catch (e) {
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
 				utils.addInfiniteLoopProtection(ast);
@@ -361,7 +361,7 @@
 				ast = esprima.parse(code, {
 					tolerant: true
 				});
-			} catch(e) {
+			} catch (e) {
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
 				utils.addInfiniteLoopProtection(ast);
@@ -394,10 +394,10 @@
 		});
 	}
 	function createPreviewFile(html, css, js) {
-		var contents = '<html>\n<head>\n' +
-			'<style>\n' + css + '\n</style>\n' +
-			'</head>\n' +
-			'<body>\n' + html + '\n<script>\n' + js + '\n//# sourceURL=userscript.js</script></body>\n</html>';
+		var contents = '<html>\n<head>\n'
+			+ '<style>\n' + css + '\n</style>\n'
+			+ '</head>\n'
+			+ '<body>\n' + html + '\n<script>\n' + js + '\n//# sourceURL=userscript.js</script></body>\n</html>';
 
 		var fileWritten = false;
 
@@ -410,8 +410,8 @@
 				fileEntry.createWriter(function(fileWriter) {
 					function onWriteComplete() {
 						if (fileWritten) {
-							frame.src = 'filesystem:chrome-extension://' +
-							chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
+							frame.src = 'filesystem:chrome-extension://'
+							+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
 						}
 						else {
 							fileWritten = true;

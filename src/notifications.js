@@ -3,7 +3,7 @@
 	var noticationContainerEL = $('#js-alerts-container');
 
 	function addNotification(msg) {
-		//var n = document.createElement('div');
+		// var n = document.createElement('div');
 		// div.textContent = msg;
 		// noticationContainerEL.appendChild(n);
 		noticationContainerEL.textContent = msg;

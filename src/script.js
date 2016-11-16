@@ -625,6 +625,27 @@
 			}
 		});
 
+		$('#js-code-side').addEventListener('dragover', function(e) {
+			console.log(e);
+			return false;
+		});
+		$('#js-code-side').addEventListener('drop', function(e) {
+			var f = e.dataTransfer.files[0];
+			var reader = new FileReader();
+
+			// Closure to capture the file information.
+			reader.onload = (function(theFile) {
+				return function(e) {
+					var code = e.target.result;
+					// editor.cm.html===========
+				};
+			})(f);
+
+			// Read in the image file as a data URL.
+			reader.readAsText(f);
+			return false;
+		});
+
 		chrome.storage.local.get({
 			layoutMode: 1,
 			code: ''

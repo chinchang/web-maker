@@ -632,12 +632,18 @@
 		$('#js-code-side').addEventListener('drop', function(e) {
 			var f = e.dataTransfer.files[0];
 			var reader = new FileReader();
+			var extension = f.name.match(/\.([^\.]*)$/)[1];
 
 			// Closure to capture the file information.
 			reader.onload = (function(theFile) {
 				return function(e) {
 					var code = e.target.result;
-					// editor.cm.html===========
+					setTimeout(function() {
+						if (editur.cm[extension]) {
+							editur.cm[extension].setValue(code);
+							// editur.cm.[extension].setValue(code.match(/<body>([\s\S]*)<\/body>/)[1]);
+						}
+					}, 500)
 				};
 			})(f);
 

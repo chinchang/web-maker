@@ -1,6 +1,6 @@
 {
 	"name": "Web Maker",
-	"version": "1.7.1",
+	"version": "1.7.2",
 	"manifest_version": 2,
 	"description": "Convert new tabs into an offline playground for your web experiments",
 	"homepage_url": "https://kushagragour.in/lab/web-maker",
@@ -8,7 +8,7 @@
 		"storage",
 		"tabs"
 	],
-	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+	"content_security_policy": "script-src 'self' https://www.google-analytics.com 'unsafe-eval'; object-src 'self'",
 	"options_ui": {
 		"page": "options.html",
 		"chrome_style": true

@@ -16,6 +16,8 @@ Web-Maker
 * Save as HTML file
 * Edit in CodePen
 
+Follow [@webmaker_app](https://twitter.com/intent/follow?screen_name=webmaker_app) for updates or tweet out feature requests and suggestions.
+
 ### License
 
 MIT Licensed

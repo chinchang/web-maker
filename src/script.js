@@ -113,6 +113,7 @@
 		document.body.classList.add('layout-' + mode);
 
 		resetSplitting();
+		trackEvent('ui', 'toggleLayout', mode);
 	}
 
 	function saveSetting(setting, value, cb) {
@@ -270,6 +271,7 @@
 		handleModeRequirements(value);
 		editur.cm.html.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(editur.cm.html, modes[value].cmMode);
+		trackEvent('ui', 'updateCodeMode', 'html', value);
 	}
 	function updateCssMode(value) {
 		cssMode = value;
@@ -277,6 +279,7 @@
 		handleModeRequirements(value);
 		editur.cm.css.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(editur.cm.css, modes[value].cmMode);
+		trackEvent('ui', 'updateCodeMode', 'css', value);
 	}
 	function updateJsMode(value) {
 		jsMode = value;
@@ -284,6 +287,7 @@
 		handleModeRequirements(value);
 		editur.cm.js.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(editur.cm.js, modes[value].cmMode);
+		trackEvent('ui', 'updateCodeMode', 'js', value);
 		// FIXME: Will be saved as part of global settings
 		/*
 		chrome.storage.sync.set({
@@ -469,6 +473,7 @@
 			document.body.appendChild(a);
 			a.click();
 			a.remove();
+			trackEvent('fn', 'saveFileComplete');
 		});
 	}
 
@@ -524,6 +529,7 @@
 
 		utils.onButtonClick(helpBtn, function () {
 			helpModal.classList.toggle('is-modal-visible');
+			trackEvent('ui', 'helpButtonClick');
 		});
 
 		notificationsBtn.addEventListener('click', function () {
@@ -535,6 +541,7 @@
 					lastSeenVersion: version
 				}, function () {});
 			}
+			trackEvent('ui', 'notificationButtonClick');
 			return false;
 		});
 
@@ -557,10 +564,14 @@
 				.replace(/'/g, "&apos;")
 			codepenForm.querySelector('input').value = json;
 			codepenForm.submit();
+			trackEvent('ui', 'openInCodepen');
 			e.preventDefault();
 		});
 
-		utils.onButtonClick(saveHtmlBtn, saveFile);
+		utils.onButtonClick(saveHtmlBtn, function () {
+			saveFile();
+			trackEvent('ui', 'saveHtmlClick');
+		});
 		utils.onButtonClick(openBtn, openSavedItemsPane);
 		utils.onButtonClick(saveBtn, saveItem);
 		utils.onButtonClick(newBtn, createNewItem);
@@ -622,6 +633,7 @@
 			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)){
 				event.preventDefault();
 				saveFile();
+				trackEvent('ui', 'saveFileKeyboardShortcut');
 			}
 		});
 
@@ -646,6 +658,7 @@
 					url: 'chrome://extensions?options=' + chrome.i18n.getMessage('@@extension_id')
 				});
 			}
+			trackEvent('ui', 'settingsBtnClick');
 		});
 
 		chrome.storage.local.get({

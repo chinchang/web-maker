@@ -115,6 +115,7 @@
 		document.body.classList.add('layout-' + mode);
 
 		resetSplitting();
+		trackEvent('ui', 'toggleLayout', mode);
 	}
 
 	function saveSetting(setting, value) {
@@ -171,6 +172,7 @@
 		chrome.storage.sync.set({
 			htmlMode: value
 		}, function () {});
+		trackEvent('ui', 'updateCodeMode', 'html', value);
 	}
 	function updateCssMode(value) {
 		cssMode = value;
@@ -181,6 +183,7 @@
 		chrome.storage.sync.set({
 			cssMode: value
 		}, function () {});
+		trackEvent('ui', 'updateCodeMode', 'css', value);
 	}
 	function updateJsMode(value) {
 		jsMode = value;
@@ -191,6 +194,7 @@
 		chrome.storage.sync.set({
 			jsMode: value
 		}, function () {});
+		trackEvent('ui', 'updateCodeMode', 'js', value);
 	}
 
 	// computeHtml, computeCss & computeJs evaluate the final code according
@@ -306,6 +310,7 @@
 			document.body.appendChild(a);
 			a.click();
 			a.remove();
+			trackEvent('fn', 'saveFileComplete');
 		});
 	}
 
@@ -355,6 +360,7 @@
 
 		helpBtn.addEventListener('click', function () {
 			helpModal.classList.toggle('is-modal-visible');
+			trackEvent('ui', 'helpButtonClick');
 			return false;
 		});
 
@@ -367,6 +373,7 @@
 					lastSeenVersion: version
 				}, function () {});
 			}
+			trackEvent('ui', 'notificationButtonClick');
 			return false;
 		});
 
@@ -389,10 +396,12 @@
 				.replace(/'/g, "&apos;")
 			codepenForm.querySelector('input').value = json;
 			codepenForm.submit();
+			trackEvent('ui', 'openInCodepen');
 			e.preventDefault();
 		});
 
 		saveHtmlBtn.addEventListener('click', function () {
+			trackEvent('ui', 'saveHtmlClick');
 			saveFile();
 		});
 
@@ -418,6 +427,7 @@
 		window.addEventListener('keydown', function (event) {
 			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)){
 				event.preventDefault();
+				trackEvent('ui', 'saveFileKeyboardShortcut');
 				saveFile();
 			}
 		});
@@ -442,6 +452,7 @@
 					url: 'chrome://extensions?options=' + chrome.i18n.getMessage('@@extension_id')
 				});
 			}
+			trackEvent('ui', 'settingsBtnClick');
 			return false;
 		});
 

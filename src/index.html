@@ -48,6 +48,9 @@
 			top: 5px;
 			margin-left: 7px;
 		}
+		a > svg {
+			fill: rgba(255, 255, 255, 0.2)
+		}
 		input[type="text"] {
 			padding: 3px 5px;
 			font-size: inherit;
@@ -107,10 +110,13 @@
 			height: 33%;
 			overflow: hidden;
 			position: relative;
+			transition: height 0.30s ease;
+			will-change: height;
 			/*animation: pop-in 0.4s cubic-bezier(.71,1.7,.77,1.24) forwards 0.2s;*/
 			/*animation: pop-in 0.4s ease forwards 0.2s;*/
 			/*opacity: 0;*/
 		}
+		.code-wrap.is-dragging
 		.layout-2 .code-wrap {
 			height: auto;
 			width: 33%;
@@ -123,6 +129,9 @@
 		}
 
 		.code-wrap__header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 			padding: 5px 20px;
 			background: rgba(0,0,0,0.55);
 			color: #888;
@@ -220,6 +229,7 @@
 		}
 		.gutter {
 			background: rgba(0,0,0,0.2);
+			flex-shrink: 0;
 		}
 		.gutter-horizontal {
 			cursor: ew-resize;
@@ -502,6 +512,13 @@
 									<li><a data-type="html" data-mode="jade">Jade</a></li>
 								</ul>
 							</div>
+							<div class="code-wrap__header-right-options">
+								<a data-collapse-id="0" class="js-code-collapse-btn">
+									<svg style="width:18px;height:18px" viewBox="0 0 24 24">
+										<path d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" />
+									</svg>
+								</a>
+							</div>
 						</div>
 					</div>
 					<div id="js-css-code" data-type="css" class="code-wrap">
@@ -514,6 +531,13 @@
 									<li><a data-type="css" data-mode="less">LESS</a></li>
 								</ul>
 							</div>
+							<div class="code-wrap__header-right-options">
+								<a data-collapse-id="1" class="js-code-collapse-btn">
+									<svg style="width:18px;height:18px" viewBox="0 0 24 24">
+										<path d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" />
+									</svg>
+								</a>
+							</div>
 						</div>
 					</div>
 					<div id="js-js-code" data-type="js" class="code-wrap">
@@ -525,6 +549,13 @@
 									<li><a data-type="js" data-mode="coffee">CoffeeScript</a></li>
 									<li><a data-type="js" data-mode="es6">ES6 (Babel)</a></li>
 								</ul>
+							</div>
+							<div class="code-wrap__header-right-options">
+								<a data-collapse-id="2" class="js-code-collapse-btn">
+									<svg style="width:18px;height:18px" viewBox="0 0 24 24">
+										<path d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" />
+									</svg>
+								</a>
 							</div>
 						</div>
 					</div>

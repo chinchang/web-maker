@@ -43,6 +43,8 @@
 		, sass
 		, currentItem
 		, savedItems
+		, minCodeWrapSize = 33
+		, splitInstance
 		// TODO: for legacy reasons when. Will be refactored as global preferences.
 		, prefs = {}
 
@@ -88,9 +90,9 @@
 		$('#js-code-side').setAttribute('style', '');
 		$('#js-demo-side').setAttribute('style', '');
 
-		Split(['#js-html-code', '#js-css-code', '#js-js-code'], {
+		splitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], {
 			direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical'),
-			minSize: 34,
+			minSize: minCodeWrapSize,
 			gutterSize: 6
 		});
 		Split(['#js-code-side', '#js-demo-side' ], {
@@ -594,6 +596,27 @@
 				}
 			});
 		});
+
+		// Collapse btn event listeners
+		var collapseBtns = [].slice.call($all('.js-code-collapse-btn'));
+		collapseBtns.forEach(function (btn) {
+			btn.addEventListener('click', function (e) {
+				if (e.currentTarget.classList.contains('is-minimized')) {
+					e.currentTarget.classList.remove('is-minimized');
+					splitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
+				} else {
+					splitInstance.collapse(e.currentTarget.dataset.collapseId);
+					e.currentTarget.classList.add('is-minimized');
+				}
+				return false;
+				/*Split(['#js-html-code', '#js-css-code', '#js-js-code'], {
+					direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical'),
+					minSize: 34,
+					gutterSize: 6
+				});*/
+			});
+		});
+
 
 		window.addEventListener('keydown', function (event) {
 			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)){

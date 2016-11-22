@@ -31,7 +31,7 @@ var global = this
   //
   // The first determines which prefixes of CSS calc we need.
   // We only need to do this once on startup, when this anonymous function is called.
-  //
+  // 
   // Tests -webkit, -moz and -o prefixes. Modified from StackOverflow:
   // http://stackoverflow.com/questions/16625140/js-feature-detection-to-detect-the-usage-of-webkit-calc-over-calc/16625167#16625167
   , calc = (function () {
@@ -63,9 +63,9 @@ var global = this
   // of elements as an independant pair. Dragging the gutter between two elements
   // only changes the dimensions of elements in that pair. This is key to understanding
   // how the following functions operate, since each function is bound to a pair.
-  //
+  // 
   // A pair object is shaped like this:
-  //
+  // 
   // {
   //     a: DOM element,
   //     b: DOM element,
@@ -79,7 +79,7 @@ var global = this
   // }
   //
   // The basic sequence:
-  //
+  // 
   // 1. Set defaults to something sane. `options` doesn't have to be passed at all.
   // 2. Initialize a bunch of strings based on the direction we're splitting.
   //    A lot of the behavior in the rest of the library is paramatized down to
@@ -139,7 +139,7 @@ var global = this
     // Each helper is bound to a pair object that contains it's metadata. This
     // also makes it easy to store references to listeners that that will be
     // added and removed.
-    //
+    // 
     // Even though there are no other functions contained in them, aliasing
     // this to self saves 50 bytes or so since it's used so frequently.
     //
@@ -249,12 +249,12 @@ var global = this
         }
 
       // drag, where all the magic happens. The logic is really quite simple:
-      //
+      // 
       // 1. Ignore if the pair is not dragging.
       // 2. Get the offset of the event.
       // 3. Snap offset to min if within snappable range (within min + snapOffset).
       // 4. Actually adjust each element in the pair to offset.
-      //
+      // 
       // ---------------------------------------------------------------------
       // |    | <- this.aMin               ||              this.bMin -> |    |
       // |    |  | <- this.snapOffset      ||     this.snapOffset -> |  |    |
@@ -297,7 +297,7 @@ var global = this
 
       // Cache some important sizes when drag starts, so we don't have to do that
       // continously:
-      //
+      // 
       // `size`: The total size of the pair. First element + second element + first gutter + second gutter.
       // `percentage`: The percentage between 0-100 that the pair occupies in the parent.
       // `start`: The leading side of the first element.
@@ -482,7 +482,7 @@ var global = this
         // Determine the size of the current element. IE8 is supported by
         // staticly assigning sizes without draggable gutters. Assigns a string
         // to `size`.
-        //
+        // 
         // IE9 and above
         if (!isIE8) {
             // Create gutter elements for each pair.
@@ -537,12 +537,12 @@ var global = this
                 pair = pairs[i - 1]
 
                 calculateSizes.call(pair)
-                adjust.call(pair, pair.size - pair.bGutterSize)
+                adjust.call(pair, pair.size - Math.max(pair.bGutterSize, pair.aMin))
             } else {
                 pair = pairs[i]
 
                 calculateSizes.call(pair)
-                adjust.call(pair, pair.aMin)
+                adjust.call(pair, Math.max(pair.aGutterSize, pair.aMin))
             }
         },
         destroy: function () {

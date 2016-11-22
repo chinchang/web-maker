@@ -44,7 +44,8 @@
 		, currentItem
 		, savedItems
 		, minCodeWrapSize = 33
-		, splitInstance
+		, mainSplitInstance
+		, codeSplitInstance
 		// TODO: for legacy reasons when. Will be refactored as global preferences.
 		, prefs = {}
 
@@ -80,22 +81,19 @@
 
 
 	function resetSplitting() {
-		var gutters = $all('.gutter');
-		for (var i = gutters.length; i--;) {
-			gutters[i].remove();
+		if (codeSplitInstance) {
+			codeSplitInstance.destroy();
 		}
-		$('#js-html-code').setAttribute('style', '');
-		$('#js-css-code').setAttribute('style', '');
-		$('#js-js-code').setAttribute('style', '');
-		$('#js-code-side').setAttribute('style', '');
-		$('#js-demo-side').setAttribute('style', '');
+		if (mainSplitInstance) {
+			mainSplitInstance.destroy();
+		}
 
-		splitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], {
+		codeSplitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], {
 			direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical'),
 			minSize: minCodeWrapSize,
 			gutterSize: 6
 		});
-		Split(['#js-code-side', '#js-demo-side' ], {
+		mainSplitInstance = Split(['#js-code-side', '#js-demo-side' ], {
 			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal'),
 			minSize: 34,
 			gutterSize: 6
@@ -215,6 +213,7 @@
 	}
 	function openItem(itemId) {
 		currentItem = savedItems[itemId];
+		codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
 		refreshEditor();
 		alertsService.add('Saved item loaded');
 	}
@@ -614,10 +613,12 @@
 			btn.addEventListener('click', function (e) {
 				if (e.currentTarget.classList.contains('is-minimized')) {
 					e.currentTarget.classList.remove('is-minimized');
-					splitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
+					e.currentTarget.parentElement.parentElement.parentElement.classList.remove('is-minimized');
+					codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
 				} else {
-					splitInstance.collapse(e.currentTarget.dataset.collapseId);
+					codeSplitInstance.collapse(parseInt(e.currentTarget.dataset.collapseId, 10));
 					e.currentTarget.classList.add('is-minimized');
+					e.currentTarget.parentElement.parentElement.parentElement.classList.add('is-minimized');
 				}
 				return false;
 				/*Split(['#js-html-code', '#js-css-code', '#js-js-code'], {
@@ -659,6 +660,13 @@
 				});
 			}
 			trackEvent('ui', 'settingsBtnClick');
+		});
+
+		window.addEventListener('mousedown', function() {
+			document.body.classList.add('is-dragging');
+		});
+		window.addEventListener('mouseup', function() {
+			document.body.classList.remove('is-dragging');
 		});
 
 		chrome.storage.local.get({

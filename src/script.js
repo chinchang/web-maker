@@ -80,6 +80,18 @@
 	editur.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
 
 
+	function updateCodeWrapCollapseStates() {
+		['#js-html-code', '#js-css-code', '#js-js-code'].forEach(function (selector) {
+			var el = document.querySelector(selector);
+			var bounds = el.getBoundingClientRect();
+			if (bounds.width < 150) {
+				el.classList.add('is-minimized');
+			} else {
+				el.classList.remove('is-minimized');
+			}
+		});
+	}
+
 	function resetSplitting() {
 		if (codeSplitInstance) {
 			codeSplitInstance.destroy();
@@ -91,7 +103,10 @@
 		codeSplitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], {
 			direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical'),
 			minSize: minCodeWrapSize,
-			gutterSize: 6
+			gutterSize: 6,
+			onDragEnd: function() {
+				updateCodeWrapCollapseStates();
+			}
 		});
 		mainSplitInstance = Split(['#js-code-side', '#js-demo-side' ], {
 			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal'),
@@ -611,21 +626,26 @@
 		var collapseBtns = [].slice.call($all('.js-code-collapse-btn'));
 		collapseBtns.forEach(function (btn) {
 			btn.addEventListener('click', function (e) {
-				if (e.currentTarget.classList.contains('is-minimized')) {
-					e.currentTarget.classList.remove('is-minimized');
-					e.currentTarget.parentElement.parentElement.parentElement.classList.remove('is-minimized');
+				var codeWrapParent = e.currentTarget.parentElement.parentElement.parentElement;
+				if (codeWrapParent.classList.contains('is-minimized')) {
+					// e.currentTarget.classList.remove('is-minimized');
+					codeWrapParent.classList.remove('is-minimized');
 					codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
 				} else {
+					// codeSplitInstance.setSizes([ 0, 50, 50 ]);
 					codeSplitInstance.collapse(parseInt(e.currentTarget.dataset.collapseId, 10));
-					e.currentTarget.classList.add('is-minimized');
-					e.currentTarget.parentElement.parentElement.parentElement.classList.add('is-minimized');
+					// e.currentTarget.classList.add('is-minimized');
+					codeWrapParent.classList.add('is-minimized');
 				}
 				return false;
-				/*Split(['#js-html-code', '#js-css-code', '#js-js-code'], {
-					direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical'),
-					minSize: 34,
-					gutterSize: 6
-				});*/
+			});
+		});
+
+		['#js-html-code', '#js-css-code', '#js-js-code'].forEach(function (selector) {
+			var el = document.querySelector(selector);
+			el.addEventListener('transitionend', function() {
+				console.log('transitionend')
+				updateCodeWrapCollapseStates();
 			});
 		});
 

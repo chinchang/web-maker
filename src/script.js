@@ -81,15 +81,21 @@
 
 
 	function updateCodeWrapCollapseStates() {
-		['#js-html-code', '#js-css-code', '#js-js-code'].forEach(function (selector) {
-			var el = document.querySelector(selector);
-			var bounds = el.getBoundingClientRect();
-			if (bounds.width < 150) {
-				el.classList.add('is-minimized');
-			} else {
-				el.classList.remove('is-minimized');
-			}
-		});
+		// if (updateCodeWrapCollapseStates.timeout) {
+			clearTimeout(updateCodeWrapCollapseStates.timeout);
+		// }
+		updateCodeWrapCollapseStates.timeout = setTimeout(function () {
+				console.log('refreshing');
+			['#js-html-code', '#js-css-code', '#js-js-code'].forEach(function (selector) {
+				var el = document.querySelector(selector);
+				var bounds = el.getBoundingClientRect();
+				if (bounds.width < 150) {
+					el.classList.add('is-minimized');
+				} else {
+					el.classList.remove('is-minimized');
+				}
+			});
+		}, 500);
 	}
 
 	function resetSplitting() {
@@ -644,7 +650,6 @@
 		['#js-html-code', '#js-css-code', '#js-js-code'].forEach(function (selector) {
 			var el = document.querySelector(selector);
 			el.addEventListener('transitionend', function() {
-				console.log('transitionend')
 				updateCodeWrapCollapseStates();
 			});
 		});

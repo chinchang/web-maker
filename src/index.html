@@ -354,6 +354,7 @@
 		.saved-item-tile {
 			padding: 20px;
 			background-color: #2f302b;
+			position: relative;
 			/*border: 1px solid rgba(255,255,255,0.1);*/
 			margin: 20px 0;
 			display: block;
@@ -362,6 +363,12 @@
 		}
 		.saved-item-tile:hover {
 			background: rgba(255,255,255,0.1);
+		}
+		.saved-item-tile__close-btn {
+			padding: 20px;
+			position: absolute;
+			right: -5px;
+			top: -5px;
 		}
 		.saved-items-pane__container {
 			overflow-y: scroll;
@@ -472,6 +479,7 @@
 			padding: 10px;
 			background: #9f3b4e;
 			border-radius: 3px;
+			z-index: 6;
 			transform: translateY(-100%);
 			transition: 0.3s ease;
 		}

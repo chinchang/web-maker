@@ -115,7 +115,7 @@
 		} else {
 			options.sizes = [ 33.33, 33.33, 33.33 ];
 		}
-		console.log('reset spliiting', options.sizes)
+		utils.log('reset spliiting', options.sizes)
 		codeSplitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], options);
 		mainSplitInstance = Split(['#js-code-side', '#js-demo-side' ], {
 			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal'),
@@ -125,7 +125,7 @@
 	}
 	function toggleLayout(mode) {
 		if (currentLayoutMode === mode) {
-			console.log('setsize', currentItem.sizes || [ 33.33, 33.33, 33.33 ]);
+			utils.log('setsize', currentItem.sizes || [ 33.33, 33.33, 33.33 ]);
 			codeSplitInstance.setSizes(currentItem.sizes || [ 33.33, 33.33, 33.33 ]);
 			currentLayoutMode = mode;
 			return;
@@ -165,7 +165,7 @@
 				chrome.storage.local.set({
 					items: result.items
 				});
-			})
+			});
 		}
 	}
 
@@ -204,16 +204,20 @@
 	}
 
 	function populateItemsInSavedPane(items) {
-		if (!items || !items.length) { return; }
 		var html = '';
-		// TODO: sort desc. by updation date
-		items.sort(function (a, b) {
-			return b.updatedOn - a.updatedOn;
-		});
-		items.forEach(function (item) {
-			html += '<a class="js-saved-item-tile saved-item-tile" data-item-id="' + item.id + '">'
-				+ '<h3>' + item.title + '</h3><span>Last updated: ' + item.updatedOn + '</span></a>';
-		})
+		if (items.length) {
+			// TODO: sort desc. by updation date
+			items.sort(function (a, b) {
+				return b.updatedOn - a.updatedOn;
+			});
+			items.forEach(function (item) {
+				html += '<div class="js-saved-item-tile saved-item-tile" data-item-id="' + item.id + '">'
+					+ '<a class="js-saved-item-tile__close-btn  saved-item-tile__close-btn">X</a>'
+					+ '<h3>' + item.title + '</h3><span>Last updated: ' + item.updatedOn + '</span></div>';
+			});
+		} else {
+			html += 'Nothing saved here.'
+		}
 		savedItemsPane.querySelector('#js-saved-items-wrap').innerHTML = html;
 		toggleSavedItemsPane();
 	}
@@ -228,8 +232,12 @@
 	}
 	function openSavedItemsPane() {
 		chrome.storage.local.get('items', function (result) {
-			var itemIds = Object.getOwnPropertyNames(result.items),
+			var itemIds = Object.getOwnPropertyNames(result.items || {}),
 				items = [];
+			if (!itemIds.length) {
+				populateItemsInSavedPane([]);
+				return;
+			}
 
 			savedItems = savedItems || [];
 			for (var i = 0; i < itemIds.length; i++) {
@@ -264,6 +272,28 @@
 		// codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
 		refreshEditor();
 		alertsService.add('Saved item loaded');
+	}
+	function removeItem(itemId) {
+		var itemTile = document.querySelector('.js-saved-item-tile[data-item-id="' + itemId + '"]');
+		itemTile.remove();
+		// Remove from items list
+		chrome.storage.local.get({
+			items: {}
+		}, function (result) {
+			delete result.items[itemId]
+			chrome.storage.local.set({
+				items: result.items
+			});
+		});
+
+		// Remove individual item too.
+		chrome.storage.local.remove(itemId, function () {
+			alertsService.add('Item removed.');
+			// This item is open in the editor. Lets open a new one.
+			if (currentItem.id === itemId) {
+				createNewItem();
+			}
+		});
 	}
 
 	function refreshEditor() {
@@ -627,6 +657,10 @@
 			if (e.target.classList.contains('js-saved-item-tile')) {
 				openItem(e.target.dataset.itemId);
 				toggleSavedItemsPane();
+			}
+			if (e.target.classList.contains('js-saved-item-tile__close-btn')) {
+				utils.log('removing', e.target.parentElement)
+				removeItem(e.target.parentElement.dataset.itemId);
 			}
 		});
 

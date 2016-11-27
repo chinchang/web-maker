@@ -44,7 +44,8 @@
 		, currentItem
 		, savedItems
 		, minCodeWrapSize = 33
-		, splitInstance
+		, mainSplitInstance
+		, codeSplitInstance
 		// TODO: for legacy reasons when. Will be refactored as global preferences.
 		, prefs = {}
 
@@ -78,30 +79,57 @@
 	editur.cm = {};
 	editur.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
 
+	// Check all the code wrap if they are minimized or not
+	function updateCodeWrapCollapseStates() {
+		clearTimeout(updateCodeWrapCollapseStates.timeout);
+		updateCodeWrapCollapseStates.timeout = setTimeout(function () {
+			[ htmlCode, cssCode, jsCode ].forEach(function (el) {
+				var bounds = el.getBoundingClientRect();
+				if (bounds[currentLayoutMode === 2 ? 'width' : 'height'] < 100) {
+					el.classList.add('is-minimized');
+				} else {
+					el.classList.remove('is-minimized');
+				}
+			});
+		}, 50);
+	}
 
-	function resetSplitting() {
-		var gutters = $all('.gutter');
-		for (var i = gutters.length; i--;) {
-			gutters[i].remove();
+	function resetSplitting(dontRecreate) {
+		if (codeSplitInstance) {
+			codeSplitInstance.destroy();
 		}
-		$('#js-html-code').setAttribute('style', '');
-		$('#js-css-code').setAttribute('style', '');
-		$('#js-js-code').setAttribute('style', '');
-		$('#js-code-side').setAttribute('style', '');
-		$('#js-demo-side').setAttribute('style', '');
+		if (mainSplitInstance) {
+			mainSplitInstance.destroy();
+		}
 
-		splitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], {
+		var options = {
 			direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical'),
 			minSize: minCodeWrapSize,
-			gutterSize: 6
-		});
-		Split(['#js-code-side', '#js-demo-side' ], {
+			gutterSize: 6,
+			onDragEnd: function() {
+				updateCodeWrapCollapseStates();
+			}
+		};
+		if (currentItem && currentItem.sizes) {
+			options.sizes = currentItem.sizes;
+		} else {
+			options.sizes = [ 33.33, 33.33, 33.33 ];
+		}
+		console.log('reset spliiting', options.sizes)
+		codeSplitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], options);
+		mainSplitInstance = Split(['#js-code-side', '#js-demo-side' ], {
 			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal'),
 			minSize: 34,
 			gutterSize: 6
 		});
 	}
 	function toggleLayout(mode) {
+		if (currentLayoutMode === mode) {
+			console.log('setsize', currentItem.sizes || [ 33.33, 33.33, 33.33 ]);
+			codeSplitInstance.setSizes(currentItem.sizes || [ 33.33, 33.33, 33.33 ]);
+			currentLayoutMode = mode;
+			return;
+		}
 		currentLayoutMode = mode;
 		$('#js-layout-btn-1').classList.remove('selected');
 		$('#js-layout-btn-2').classList.remove('selected');
@@ -151,10 +179,28 @@
 		currentItem.jsMode = jsMode;
 		currentItem.updatedOn = Date.now();
 		currentItem.layoutMode = currentLayoutMode;
-		utils.log('saving key', key || currentItem.id, currentItem)
-		saveSetting(key || currentItem.id, currentItem, function () {
-			alertsService.add('Item saved.');
-		});
+
+		// debugger;
+		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
+
+		var sizes;
+		try {
+			sizes = [
+				+htmlCode.style[dimensionProperty].match(/([\d\.]+)%/)[1],
+				+cssCode.style[dimensionProperty].match(/([\d\.]+)%/)[1],
+				+jsCode.style[dimensionProperty].match(/([\d\.]+)%/)[1]
+			];
+		} catch(e) {
+			sizes = [ 33.33, 33.33, 33.33 ]
+		} finally {
+
+			currentItem.sizes = sizes;
+
+			utils.log('saving key', key || currentItem.id, currentItem)
+			saveSetting(key || currentItem.id, currentItem, function () {
+				alertsService.add('Item saved.');
+			});
+		}
 	}
 
 	function populateItemsInSavedPane(items) {
@@ -215,6 +261,7 @@
 	}
 	function openItem(itemId) {
 		currentItem = savedItems[itemId];
+		// codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
 		refreshEditor();
 		alertsService.add('Saved item loaded');
 	}
@@ -612,19 +659,26 @@
 		var collapseBtns = [].slice.call($all('.js-code-collapse-btn'));
 		collapseBtns.forEach(function (btn) {
 			btn.addEventListener('click', function (e) {
-				if (e.currentTarget.classList.contains('is-minimized')) {
-					e.currentTarget.classList.remove('is-minimized');
-					splitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
+				var codeWrapParent = e.currentTarget.parentElement.parentElement.parentElement;
+				if (codeWrapParent.classList.contains('is-minimized')) {
+					// e.currentTarget.classList.remove('is-minimized');
+					codeWrapParent.classList.remove('is-minimized');
+					codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
 				} else {
-					splitInstance.collapse(e.currentTarget.dataset.collapseId);
-					e.currentTarget.classList.add('is-minimized');
+					// codeSplitInstance.setSizes([ 0, 50, 50 ]);
+					codeSplitInstance.collapse(parseInt(e.currentTarget.dataset.collapseId, 10));
+					// e.currentTarget.classList.add('is-minimized');
+					codeWrapParent.classList.add('is-minimized');
 				}
 				return false;
-				/*Split(['#js-html-code', '#js-css-code', '#js-js-code'], {
-					direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical'),
-					minSize: 34,
-					gutterSize: 6
-				});*/
+			});
+		});
+
+		// Update code wrap collapse states whenever any of them transitions due to any
+		// reason.
+		[ htmlCode, cssCode, jsCode ].forEach(function (el) {
+			el.addEventListener('transitionend', function() {
+				updateCodeWrapCollapseStates();
 			});
 		});
 
@@ -659,6 +713,13 @@
 				});
 			}
 			trackEvent('ui', 'settingsBtnClick');
+		});
+
+		window.addEventListener('mousedown', function() {
+			document.body.classList.add('is-dragging');
+		});
+		window.addEventListener('mouseup', function() {
+			document.body.classList.remove('is-dragging');
 		});
 
 		chrome.storage.local.get({

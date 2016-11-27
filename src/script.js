@@ -213,7 +213,7 @@
 			items.forEach(function (item) {
 				html += '<div class="js-saved-item-tile saved-item-tile" data-item-id="' + item.id + '">'
 					+ '<a class="js-saved-item-tile__close-btn  saved-item-tile__close-btn">X</a>'
-					+ '<h3>' + item.title + '</h3><span>Last updated: ' + item.updatedOn + '</span></div>';
+					+ '<h3>' + item.title + '</h3><span>Last updated: ' + utils.getHumanDate(item.updatedOn) + '</span></div>';
 			});
 		} else {
 			html += 'Nothing saved here.'

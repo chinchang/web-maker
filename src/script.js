@@ -79,26 +79,22 @@
 	editur.cm = {};
 	editur.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
 
-
+	// Check all the code wrap if they are minimized or not
 	function updateCodeWrapCollapseStates() {
-		// if (updateCodeWrapCollapseStates.timeout) {
-			clearTimeout(updateCodeWrapCollapseStates.timeout);
-		// }
+		clearTimeout(updateCodeWrapCollapseStates.timeout);
 		updateCodeWrapCollapseStates.timeout = setTimeout(function () {
-				console.log('refreshing');
-			['#js-html-code', '#js-css-code', '#js-js-code'].forEach(function (selector) {
-				var el = document.querySelector(selector);
+			[ htmlCode, cssCode, jsCode ].forEach(function (el) {
 				var bounds = el.getBoundingClientRect();
-				if (bounds.width < 150) {
+				if (bounds[currentLayoutMode === 2 ? 'width' : 'height'] < 100) {
 					el.classList.add('is-minimized');
 				} else {
 					el.classList.remove('is-minimized');
 				}
 			});
-		}, 500);
+		}, 50);
 	}
 
-	function resetSplitting() {
+	function resetSplitting(dontRecreate) {
 		if (codeSplitInstance) {
 			codeSplitInstance.destroy();
 		}
@@ -106,14 +102,21 @@
 			mainSplitInstance.destroy();
 		}
 
-		codeSplitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], {
+		var options = {
 			direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical'),
 			minSize: minCodeWrapSize,
 			gutterSize: 6,
 			onDragEnd: function() {
 				updateCodeWrapCollapseStates();
 			}
-		});
+		};
+		if (currentItem && currentItem.sizes) {
+			options.sizes = currentItem.sizes;
+		} else {
+			options.sizes = [ 33.33, 33.33, 33.33 ];
+		}
+		console.log('reset spliiting', options.sizes)
+		codeSplitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], options);
 		mainSplitInstance = Split(['#js-code-side', '#js-demo-side' ], {
 			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal'),
 			minSize: 34,
@@ -121,6 +124,12 @@
 		});
 	}
 	function toggleLayout(mode) {
+		if (currentLayoutMode === mode) {
+			console.log('setsize', currentItem.sizes || [ 33.33, 33.33, 33.33 ]);
+			codeSplitInstance.setSizes(currentItem.sizes || [ 33.33, 33.33, 33.33 ]);
+			currentLayoutMode = mode;
+			return;
+		}
 		currentLayoutMode = mode;
 		$('#js-layout-btn-1').classList.remove('selected');
 		$('#js-layout-btn-2').classList.remove('selected');
@@ -170,10 +179,28 @@
 		currentItem.jsMode = jsMode;
 		currentItem.updatedOn = Date.now();
 		currentItem.layoutMode = currentLayoutMode;
-		utils.log('saving key', key || currentItem.id, currentItem)
-		saveSetting(key || currentItem.id, currentItem, function () {
-			alertsService.add('Item saved.');
-		});
+
+		// debugger;
+		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
+
+		var sizes;
+		try {
+			sizes = [
+				+htmlCode.style[dimensionProperty].match(/([\d\.]+)%/)[1],
+				+cssCode.style[dimensionProperty].match(/([\d\.]+)%/)[1],
+				+jsCode.style[dimensionProperty].match(/([\d\.]+)%/)[1]
+			];
+		} catch(e) {
+			sizes = [ 33.33, 33.33, 33.33 ]
+		} finally {
+
+			currentItem.sizes = sizes;
+
+			utils.log('saving key', key || currentItem.id, currentItem)
+			saveSetting(key || currentItem.id, currentItem, function () {
+				alertsService.add('Item saved.');
+			});
+		}
 	}
 
 	function populateItemsInSavedPane(items) {
@@ -234,7 +261,7 @@
 	}
 	function openItem(itemId) {
 		currentItem = savedItems[itemId];
-		codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
+		// codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
 		refreshEditor();
 		alertsService.add('Saved item loaded');
 	}
@@ -647,8 +674,9 @@
 			});
 		});
 
-		['#js-html-code', '#js-css-code', '#js-js-code'].forEach(function (selector) {
-			var el = document.querySelector(selector);
+		// Update code wrap collapse states whenever any of them transitions due to any
+		// reason.
+		[ htmlCode, cssCode, jsCode ].forEach(function (el) {
 			el.addEventListener('transitionend', function() {
 				updateCodeWrapCollapseStates();
 			});

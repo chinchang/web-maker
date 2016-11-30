@@ -98,12 +98,14 @@
 		.code-side {
 			display: flex;
 			flex-direction: column;
+			width: 50%;
 		}
 		.layout-2 .content-wrap {
 			flex-direction: column;
 		}
 		.layout-2 .code-side {
 			flex-direction: row;
+			width: auto;
 		}
 		.code-wrap {
 			display: flex;
@@ -112,6 +114,7 @@
 			height: 33%;
 			overflow: hidden;
 			position: relative;
+			background: #272822;
 			transition: height 0.30s ease, width 0.30s ease;
 			will-change: height;
 			/*animation: pop-in 0.4s cubic-bezier(.71,1.7,.77,1.24) forwards 0.2s;*/
@@ -141,7 +144,7 @@
 			justify-content: space-between;
 			align-items: center;
 			padding: 5px 10px;
-			background: rgba(0,0,0,0.55);
+			background: rgba(0,0,0,0.25);
 			color: #888;
 			border-bottom: 1px solid rgba(0,0,0,0.3);
 			font-weight: bold;

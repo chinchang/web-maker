@@ -235,14 +235,16 @@
 			});
 			items.forEach(function (item) {
 				html += '<div class="js-saved-item-tile saved-item-tile" data-item-id="' + item.id + '">'
-					+ '<a class="js-saved-item-tile__close-btn  saved-item-tile__close-btn">X</a>'
-					+ '<h3>' + item.title + '</h3><span>Last updated: ' + utils.getHumanDate(item.updatedOn) + '</span></div>';
+					+ '<a class="js-saved-item-tile__close-btn  saved-item-tile__close-btn hint--left" aria-label="Remove">X</a>'
+					+ '<h3 class="saved-item-tile__title">' + item.title + '</h3><span class="saved-item-tile__meta">Last updated: ' + utils.getHumanDate(item.updatedOn) + '</span></div>';
 			});
 		} else {
 			html += 'Nothing saved here.'
 		}
 		savedItemsPane.querySelector('#js-saved-items-wrap').innerHTML = html;
 		toggleSavedItemsPane();
+		// HACK: Set overflow after sometime so that the items can animate without getting cropped.
+		// setTimeout(() => $('#js-saved-items-wrap').style.overflowY = 'auto', 1000);
 	}
 
 	function toggleSavedItemsPane(shouldOpen) {
@@ -697,7 +699,9 @@
 		utils.onButtonClick(savedItemsPaneCloseBtn, toggleSavedItemsPane);
 		utils.onButtonClick(savedItemsPane, function (e) {
 			if (e.target.classList.contains('js-saved-item-tile')) {
-				openItem(e.target.dataset.itemId);
+				setTimeout(function () {
+					openItem(e.target.dataset.itemId);
+				}, 300);
 				toggleSavedItemsPane();
 			}
 			if (e.target.classList.contains('js-saved-item-tile__close-btn')) {

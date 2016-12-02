@@ -35,6 +35,9 @@
 		.flex-grow {
 			flex-grow: 1;
 		}
+		.flex-v-center {
+			align-items: center;
+		}
 		.fr {
 			float: right;
 		}
@@ -212,6 +215,10 @@
 			border: 0;
 			border-bottom: 1px solid rgba(255,255,255,0.14);
 		}
+		.main-header__btn-wrap > a {
+			margin-left: 15px;
+
+		}
 		.logo {
 			display: inline-block;
 			height: 25px;
@@ -299,6 +306,8 @@
 			opacity: 0;
 			padding: 2em;
 			font-size: 1.3em;
+			max-height: 82vh;
+			overflow-y: auto;
 			transition: all 0.19s;
 			transform: translateY(-50px) scale(0.7);
 		}
@@ -540,21 +549,25 @@
 	<body>
 		<div class="main-container">
 			<div class="main-header">
-				<div class="fr">
-					<a id="js-add-library-btn" class="">
+				<div class="main-header__btn-wrap  fr flex  flex-v-center">
+					<a id="js-add-library-btn" class="flex  flex-v-center">
 						Add library <span id="js-external-lib-count" style="visibility:hidden;" class="count-label"></span>
 					</a>
 
-					<a id="js-new-btn"><svg style="vertical-align:middle;width:14px;height:14px" viewBox="0 0 24 24">
-		}
-    <path fill="crimson" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
-</svg>New</a>
-					<a id="js-save-btn" style="margin-left:10px"><svg style="vertical-align:middle;width:14px;height:14px" viewBox="0 0 24 24">
-    <path fill="crimson" d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" />
-</svg>Save</a>
-					<a id="js-open-btn" style="margin-left:10px"><svg style="width:14px;height:14px;vertical-align:middle;" viewBox="0 0 24 24">
-    <path fill="crimson" d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
-</svg>Open</a>
+					<a id="js-new-btn" class="flex  flex-v-center">
+						<svg style="vertical-align:middle;width:14px;height:14px" viewBox="0 0 24 24">
+    						<path fill="crimson" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+						</svg>New
+					</a>
+					<a id="js-save-btn" class="flex  flex-v-center">
+						<svg style="vertical-align:middle;width:14px;height:14px" viewBox="0 0 24 24">
+    						<path fill="crimson" d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" />
+						</svg>Save</a>
+					<a id="js-open-btn" class="flex  flex-v-center">
+						<svg style="width:14px;height:14px;vertical-align:middle;" viewBox="0 0 24 24">
+						    <path fill="crimson" d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
+						</svg>Open
+					</a>
 				</div>
 				<input type="text" id="js-title-input" class="item-title-input" value="Untitled Work">
 			</div>
@@ -742,9 +755,10 @@
 				<div class="notification">
 				  <span class="notification__version">2.0.0</span>
 				  <ul>
-					<li><strong>Save and Load</strong> - Long pending and super-useful, now you can save your work and resume it anytime later.</li>
+					<li><strong>Save and Load</strong> - Long pending and super-useful, now you can save your creations and resume it anytime later.</li>
 					<li><strong>Insert JS & CSS</strong> - Load popular JavaScript & CSS libraries in your work without writing any code.</li>
-					<li><strong>Collapsed Panes</strong> - Collapse/uncollapse code panes with a single click. Your pane configuration is even saved with every work!</li>
+					<li><strong>Collapsed Panes</strong> - Collapse/uncollapse code panes with a single click. Your pane configuration is even saved with every creation!</li>
+					<li><strong>Quick color & number change</strong> - Click on any color or number and experiment with quick values using a slider.</li>
 					<li><strong>Linting</strong> - See your code errors right where you are coding.</li>
 					<li>No more browser hang due to infinite loops!</li>
 					<li><a href="https://kushagragour.in/blog/web-maker-2">Read more about this big release</a></li>

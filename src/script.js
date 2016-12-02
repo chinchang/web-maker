@@ -803,7 +803,7 @@
 		addLibrarySelect.children[2].innerHTML = libOptions;
 		addLibrarySelect.addEventListener('change', function onSelectChange(e) {
 			var target = e.target;
-			$('#js-external-' + target.selectedOptions[0].dataset.type).value += target.value + '\n';
+			$('#js-external-' + target.selectedOptions[0].dataset.type).value += '\n' + target.value;
 			onExternalLibChange();
 		});
 		externalJsTextarea.addEventListener('change', onExternalLibChange);

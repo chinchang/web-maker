@@ -4,7 +4,7 @@ window.trackEvent = function (category, action, label, value) {
 	}
 }
 
-// if online, load after 2 seconds
+// if online, load after sometime
 if (navigator.onLine) {
 	setTimeout(function() {
 		(function(i,s,o,g,r,a,m){

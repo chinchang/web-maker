@@ -115,7 +115,6 @@
 		document.body.classList.add('layout-' + mode);
 
 		resetSplitting();
-		trackEvent('ui', 'toggleLayout', mode);
 	}
 
 	function saveSetting(setting, value) {
@@ -250,6 +249,11 @@
 	function createPreviewFile(html, css, js) {
 		var contents = '<html>\n<head>\n<style>\n' + css + '\n</style>\n</head>\n<body>\n' + html + '\n<script>\n' + js + '\n</script></body>\n</html>';
 
+		// Track if people are actually writing code.
+		if (!trackEvent.hasTrackedCode && (html || css || js)) {
+			trackEvent('fn', 'hasCode');
+			trackEvent.hasTrackedCode = true;
+		}
 		var fileWritten = false;
 
 		var blob = new Blob([ contents ], { type: "text/plain;charset=UTF-8" });
@@ -354,9 +358,17 @@
 
 		CodeMirror.modeURL = "lib/codemirror/mode/%N/%N.js";
 
-		layoutBtn1.addEventListener('click', function () { saveSetting('layoutMode', 1); toggleLayout(1); return false; });
-		layoutBtn2.addEventListener('click', function () { saveSetting('layoutMode', 2); toggleLayout(2); return false; });
-		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
+		function getToggleLayoutButtonListener(mode) {
+			return function () {
+				saveSetting('layoutMode', mode);
+				trackEvent('ui', 'toggleLayoutClick', mode);
+				toggleLayout(mode);
+				return false;
+			};
+		}
+		layoutBtn1.addEventListener('click', getToggleLayoutButtonListener(1));
+		layoutBtn2.addEventListener('click', getToggleLayoutButtonListener(2));
+		layoutBtn3.addEventListener('click', getToggleLayoutButtonListener(3));
 
 		helpBtn.addEventListener('click', function () {
 			helpModal.classList.toggle('is-modal-visible');

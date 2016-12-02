@@ -1,11 +1,15 @@
 window.trackEvent = function (category, action, label, value) {
+	if (window.DEBUG) {
+		utils.log('trackevent', category, action, label, value)
+		return;
+	}
 	if (window.ga) {
 		ga('send', 'event', category, action, label, value);
 	}
 }
 
 // if online, load after 2 seconds
-if (navigator.onLine) {
+if (navigator.onLine && !window.DEBUG) {
 	setTimeout(function() {
 		(function(i,s,o,g,r,a,m){
 			i['GoogleAnalyticsObject']=r;

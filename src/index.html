@@ -38,6 +38,10 @@
 		.fr {
 			float: right;
 		}
+		.relative {
+			position: relative;
+		}
+		.full-width { width: 100%; }
 		.caret {
 			display: inline-block;
 			width: 0;
@@ -51,7 +55,7 @@
 		a > svg {
 			fill: rgba(255, 255, 255, 0.2)
 		}
-		input[type="text"] {
+		select, input[type="text"], textarea {
 			padding: 3px 5px;
 			font-size: inherit;
 		}
@@ -294,15 +298,16 @@
 			margin: 0 auto;
 			opacity: 0;
 			padding: 2em;
-			font-size: 1.5em;
-			transition: all 0.3s;
-			transform: scale(0.7);
+			font-size: 1.3em;
+			transition: all 0.19s;
+			transform: translateY(-50px) scale(0.7);
 		}
 		.is-modal-visible {
 			visibility: visible;
 		}
 		.is-modal-visible .modal__content {
-			transform: scale(1);
+			transition-duration: 0.3s;
+			transform: translateY(0px) scale(1);
 			opacity: 1;
 		}
 		.modal-overlay {
@@ -523,6 +528,12 @@
 			visibility: visible;
 			transform: translateX(0);
 		}
+		.count-label {
+			color: #ddd;
+			background: rgba(255,255,255,0.3);
+			border-radius: 5px;
+			padding: 1px 6px;
+		}
 		</style>
 	</head>
 
@@ -530,8 +541,12 @@
 		<div class="main-container">
 			<div class="main-header">
 				<div class="fr">
+					<a id="js-add-library-btn" class="">
+						Add library <span id="js-external-lib-count" style="visibility:hidden;" class="count-label"></span>
+					</a>
 
 					<a id="js-new-btn"><svg style="vertical-align:middle;width:14px;height:14px" viewBox="0 0 24 24">
+		}
     <path fill="crimson" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
 </svg>New</a>
 					<a id="js-save-btn" style="margin-left:10px"><svg style="vertical-align:middle;width:14px;height:14px" viewBox="0 0 24 24">
@@ -667,6 +682,30 @@
 			</div>
 		</div>
 
+		<div class="modal" id="js-add-library-modal">
+			<div class="modal__content" id="app">
+				<h1>Add Library</h1>
+				<h3>JavaScript</h3>
+				<textarea id="js-external-js" class="full-width" id="" cols="30" rows="5" placeholder="Put each library in new line"></textarea>
+
+				<h3>CSS</h3>
+				<textarea id="js-external-css" class="full-width" id="" cols="30" rows="5"></textarea>
+
+				<div style="margin-top:20px;">
+					Choose from popular libraries:
+					<select name="" id="js-add-library-select">
+						<option value="">-------</option>
+						<optgroup label="JavaScript Libraries">
+
+						</optgroup>
+						<optgroup label="CSS Libraries">
+
+						</optgroup>
+					</select>
+				</div>
+			</div>
+		</div>
+
 		<div class="modal" id="js-help-modal">
 			<div class="modal__content">
 				<h1>Web Maker<small style="font-size:14px;"> v1.7.1</small></h1>
@@ -781,6 +820,7 @@
 		<script src="deferred.js"></script>
 		<script src="loader.js"></script>
 		<script src="notifications.js"></script>
+		<script src="library-list.js"></script>
 		<script src="script.js"></script>
 		<script src="dropdown.js"></script>
 	</body>

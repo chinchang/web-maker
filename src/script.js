@@ -5,8 +5,6 @@
 	var editur = window.editur || {};
 	var version = '1.7.1';
 
-	window.DEBUG = 1;
-
 	var HtmlModes = {
 		HTML: 'html',
 		MARKDOWN: 'markdown',
@@ -74,6 +72,11 @@
 		, cssModelLabel = $('#js-css-mode-label')
 		, jsModelLabel = $('#js-js-mode-label')
 		, titleInput = $('#js-title-input')
+		, addLibrarySelect = $('#js-add-library-select')
+		, addLibraryBtn = $('#js-add-library-btn')
+		, addLibraryModal = $('#js-add-library-modal')
+		, externalJsTextarea = $('#js-external-js')
+		, externalCssTextarea = $('#js-external-css')
 		;
 
 	editur.cm = {};
@@ -144,6 +147,25 @@
 		trackEvent('ui', 'toggleLayout', mode);
 	}
 
+	function onExternalLibChange() {
+		utils.log('onExternalLibChange');
+		updateExternalLibUi();
+		editur.setPreviewContent();
+	}
+
+	function updateExternalLibUi() {
+		// Calculate no. of external libs
+		var noOfExternalLibs = 0;
+		noOfExternalLibs += externalJsTextarea.value.split('\n').filter(lib => !!lib).length;
+		noOfExternalLibs += externalCssTextarea.value.split('\n').filter(lib => !!lib).length;
+		if (noOfExternalLibs) {
+			$('#js-external-lib-count').textContent = noOfExternalLibs;
+			$('#js-external-lib-count').style.visibility = 'visible';
+		} else {
+			$('#js-external-lib-count').style.visibility = 'hidden';
+		}
+	}
+
 	function saveSetting(setting, value, cb) {
 		var obj = {};
 		obj[setting] = value;
@@ -179,6 +201,7 @@
 		currentItem.jsMode = jsMode;
 		currentItem.updatedOn = Date.now();
 		currentItem.layoutMode = currentLayoutMode;
+		currentItem.externalLibs = { js: externalJsTextarea.value, css: externalCssTextarea.value };
 
 		// debugger;
 		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
@@ -262,6 +285,7 @@
 			html: '',
 			css: '',
 			js: '',
+			externalLibs: { js: '', css: '' },
 			layoutMode: currentLayoutMode
 		};
 		alertsService.add('New item created');
@@ -298,10 +322,13 @@
 
 	function refreshEditor() {
 		titleInput.value = currentItem.title || 'Untitled';
+		externalJsTextarea.value = currentItem.externalLibs && (currentItem.externalLibs.js || '');
+		externalCssTextarea.value = currentItem.externalLibs && (currentItem.externalLibs.css || '');
+		externalJsTextarea.dispatchEvent(new Event('change'));
+
 		editur.cm.html.setValue(currentItem.html);
 		editur.cm.css.setValue(currentItem.css);
 		editur.cm.js.setValue(currentItem.js);
-
 		editur.cm.html.refresh();
 		editur.cm.css.refresh();
 		editur.cm.js.refresh();
@@ -481,12 +508,25 @@
 			});
 		});
 	}
-	function createPreviewFile(html, css, js) {
+
+	function getCompleteHtml(html, css, js) {
+		var externalJs = externalJsTextarea.value.split('\n').reduce(function (html, url) {
+			return html + (url ? '\n<script src="' + url + '"></script>' : '');
+		}, '');
+		var externalCss = externalCssTextarea.value.split('\n').reduce(function (html, url) {
+			return html + (url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '');
+		}, '');
 		var contents = '<html>\n<head>\n'
+			+ externalCss + '\n'
 			+ '<style>\n' + css + '\n</style>\n'
 			+ '</head>\n'
-			+ '<body>\n' + html + '\n<script>\n' + js + '\n//# sourceURL=userscript.js</script></body>\n</html>';
+			+ '<body>\n' + html + '\n'
+			+ externalJs + '\n<script>\n' + js + '\n//# sourceURL=userscript.js</script></body>\n</html>';
 
+		return contents;
+	}
+	function createPreviewFile(html, css, js) {
+		var contents = getCompleteHtml(html, css, js)
 		var fileWritten = false;
 
 		var blob = new Blob([ contents ], { type: "text/plain;charset=UTF-8" });
@@ -534,9 +574,7 @@
 				css = result[1],
 				js = result[2];
 
-			var fileContent = '<html><head>\n<style>\n'
-				+ css + '\n</style>\n</head>\n<body>\n'
-				+ html + '\n<script>\n' + js + '\n</script>\n\n</body>\n</html>';
+			var fileContent = getCompleteHtml(html, css, js);
 
 			var d = new Date();
 			var fileName = [ 'web-maker', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
@@ -607,6 +645,10 @@
 		utils.onButtonClick(helpBtn, function () {
 			helpModal.classList.toggle('is-modal-visible');
 			trackEvent('ui', 'helpButtonClick');
+		});
+		utils.onButtonClick(addLibraryBtn, function () {
+			addLibraryModal.classList.toggle('is-modal-visible');
+			trackEvent('ui', 'addLibraryButtonClick');
 		});
 
 		notificationsBtn.addEventListener('click', function () {
@@ -729,6 +771,7 @@
 			if (typeof e.target.className === 'string' && e.target.className.indexOf('modal-overlay') !== -1) {
 				helpModal.classList.remove('is-modal-visible');
 				notificationsModal.classList.remove('is-modal-visible');
+				addLibraryModal.classList.remove('is-modal-visible');
 				toggleSavedItemsPane(false);
 			}
 		});
@@ -749,6 +792,24 @@
 			trackEvent('ui', 'settingsBtnClick');
 		});
 
+		// Initialize add library select box
+		var libOptions = window.jsLibs.reduce(
+			(html, lib) => html + `<option data-type="${lib.type}" value="${lib.url}">${lib.label}</option>`,
+			'');
+		addLibrarySelect.children[1].innerHTML = libOptions;
+		libOptions = window.cssLibs.reduce(
+			(html, lib) => html + `<option data-type="${lib.type}" value="${lib.url}">${lib.label}</option>`,
+			'');
+		addLibrarySelect.children[2].innerHTML = libOptions;
+		addLibrarySelect.addEventListener('change', function onSelectChange(e) {
+			var target = e.target;
+			$('#js-external-' + target.selectedOptions[0].dataset.type).value += target.value + '\n';
+			onExternalLibChange();
+		});
+		externalJsTextarea.addEventListener('change', onExternalLibChange);
+		externalCssTextarea.addEventListener('change', onExternalLibChange);
+
+		// TODO: move to split.js ondrag listeners
 		window.addEventListener('mousedown', function() {
 			document.body.classList.add('is-dragging');
 		});

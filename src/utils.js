@@ -1,4 +1,6 @@
 (function () {
+	window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
+
 	window.$ = document.querySelector.bind(document);
 	window.$all = document.querySelectorAll.bind(document);
 	var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

@@ -174,9 +174,9 @@
 		noOfExternalLibs += externalCssTextarea.value.split('\n').filter(lib => !!lib).length;
 		if (noOfExternalLibs) {
 			$('#js-external-lib-count').textContent = noOfExternalLibs;
-			$('#js-external-lib-count').style.visibility = 'visible';
+			$('#js-external-lib-count').style.display = 'inline';
 		} else {
-			$('#js-external-lib-count').style.visibility = 'hidden';
+			$('#js-external-lib-count').style.display = 'none';
 		}
 	}
 

@@ -2,6 +2,7 @@
     "env": {
         "browser": true
     },
+    "parser": "babel-eslint",
     "extends": "eslint:recommended",
     "rules": {
         "accessor-pairs": "error",
@@ -96,7 +97,7 @@
         "no-extra-label": "error",
         "no-extra-parens": "off",
         "no-floating-decimal": "error",
-        "no-implicit-coercion": "error",
+        "no-implicit-coercion": "off",
         "no-implicit-globals": "off",
         "no-implied-eval": "error",
         "no-inline-comments": "off",
@@ -262,6 +263,7 @@
         "esprima": true,
         "escodegen": true,
         "utils": true,
-        "Promise": true
+        "Promise": true,
+        "Inlet": true
     }
 }

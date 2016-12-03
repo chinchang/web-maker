@@ -1,3 +1,5 @@
+/* global ga */
+// eslint-disable-next-line max-params
 window.trackEvent = function (category, action, label, value) {
 	if (window.DEBUG) {
 		utils.log('trackevent', category, action, label, value)
@@ -10,6 +12,8 @@ window.trackEvent = function (category, action, label, value) {
 
 // if online, load after 2 seconds
 if (navigator.onLine && !window.DEBUG) {
+	/* eslint-disable */
+
 	setTimeout(function() {
 		(function(i,s,o,g,r,a,m){
 			i['GoogleAnalyticsObject']=r;
@@ -23,4 +27,6 @@ if (navigator.onLine && !window.DEBUG) {
 		ga('set', 'checkProtocolTask', function(){ /* nothing */ });
 		ga('send', 'pageview');
 	}, 0);
+
+	/* eslint-enable */
 }

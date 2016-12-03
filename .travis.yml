@@ -1,7 +1,8 @@
 language: node_js
 node_js:
-  - '4.0'
+  - '6.0'
 install:
   - npm install -g eslint
+  - npm install -g babel-eslint
 script:
   - eslint src/*.js

@@ -12,5 +12,5 @@ window.cssLibs = [
 	{ url: 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css', label: 'Bootstrap', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.3/foundation.min.css', label: 'Foundation', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css', label: 'Animate.css', type: 'css' },
-	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.4.1/hint.min.css', label: 'Hint.css', type: 'css'}
+	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.4.1/hint.min.css', label: 'Hint.css', type: 'css' }
 ]

@@ -1,3 +1,4 @@
+/* global trackEvent */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
 
@@ -107,7 +108,7 @@
 		}
 	}
 
-	function resetSplitting(dontRecreate) {
+	function resetSplitting() {
 		if (codeSplitInstance) {
 			codeSplitInstance.destroy();
 		}
@@ -170,8 +171,8 @@
 	function updateExternalLibUi() {
 		// Calculate no. of external libs
 		var noOfExternalLibs = 0;
-		noOfExternalLibs += externalJsTextarea.value.split('\n').filter(lib => !!lib).length;
-		noOfExternalLibs += externalCssTextarea.value.split('\n').filter(lib => !!lib).length;
+		noOfExternalLibs += externalJsTextarea.value.split('\n').filter((lib) => !!lib).length;
+		noOfExternalLibs += externalCssTextarea.value.split('\n').filter((lib) => !!lib).length;
 		if (noOfExternalLibs) {
 			$('#js-external-lib-count').textContent = noOfExternalLibs;
 			$('#js-external-lib-count').style.display = 'inline';
@@ -223,11 +224,11 @@
 		var sizes;
 		try {
 			sizes = [
-				+htmlCode.style[dimensionProperty].match(/([\d\.]+)%/)[1],
-				+cssCode.style[dimensionProperty].match(/([\d\.]+)%/)[1],
-				+jsCode.style[dimensionProperty].match(/([\d\.]+)%/)[1]
+				+htmlCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
+				+cssCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
+				+jsCode.style[dimensionProperty].match(/([\d.]+)%/)[1]
 			];
-		} catch(e) {
+		} catch (e) {
 			sizes = [ 33.33, 33.33, 33.33 ]
 		} finally {
 
@@ -279,17 +280,19 @@
 			}
 
 			savedItems = savedItems || [];
-			for (var i = 0; i < itemIds.length; i++) {
-				(function (index) {
-					chrome.storage.local.get(itemIds[index], function (itemResult) {
-						savedItems[itemIds[index]] = itemResult[itemIds[index]];
-						items.push(itemResult[itemIds[index]]);
-						// Check if we have all items now.
-						if (itemIds.length === items.length) {
-							populateItemsInSavedPane(items);
-						}
-					});
-				})(i);
+			for (let i = 0; i < itemIds.length; i++) {
+
+				/* eslint-disable no-loop-func */
+				chrome.storage.local.get(itemIds[i], function (itemResult) {
+					savedItems[itemIds[i]] = itemResult[itemIds[i]];
+					items.push(itemResult[itemIds[i]]);
+					// Check if we have all items now.
+					if (itemIds.length === items.length) {
+						populateItemsInSavedPane(items);
+					}
+				});
+
+				/* eslint-enable no-loop-func */
 			}
 		});
 	}
@@ -526,11 +529,11 @@
 	}
 
 	function getCompleteHtml(html, css, js) {
-		var externalJs = externalJsTextarea.value.split('\n').reduce(function (html, url) {
-			return html + (url ? '\n<script src="' + url + '"></script>' : '');
+		var externalJs = externalJsTextarea.value.split('\n').reduce(function (scripts, url) {
+			return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
 		}, '');
-		var externalCss = externalCssTextarea.value.split('\n').reduce(function (html, url) {
-			return html + (url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '');
+		var externalCss = externalCssTextarea.value.split('\n').reduce(function (links, url) {
+			return links + (url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '');
 		}, '');
 		var contents = '<html>\n<head>\n'
 			+ externalCss + '\n'

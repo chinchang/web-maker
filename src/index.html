@@ -128,9 +128,6 @@
 			background: var(--color-bg);
 			transition: height 0.30s ease, width 0.30s ease;
 			will-change: height;
-			/*animation: pop-in 0.4s cubic-bezier(.71,1.7,.77,1.24) forwards 0.2s;*/
-			/*animation: pop-in 0.4s ease forwards 0.2s;*/
-			/*opacity: 0;*/
 		}
 		.layout-2 .code-wrap.is-minimized {
 			flex-direction: row;
@@ -634,8 +631,8 @@
 			</div>
 			<div class="content-wrap  flex  flex-grow">
 				<div class="code-side" id="js-code-side">
-					<div id="js-html-code" data-type="html" class="code-wrap">
-						<div class="code-wrap__header">
+					<div data-code-wrap-id="0" id="js-html-code" data-type="html" class="code-wrap">
+						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle code pane">
 							<div class="btn-group" dropdown title="Click to change">
 								<span id="js-html-mode-label" class="code-wrap__header-label">HTML</span><span class="caret"></span>
 								<ul class="js-modes-menu  dropdown__menu">
@@ -645,13 +642,13 @@
 								</ul>
 							</div>
 							<div class="code-wrap__header-right-options">
-								<a data-collapse-id="0" class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn">
+								<a class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle code pane">
 								</a>
 							</div>
 						</div>
 					</div>
-					<div id="js-css-code" data-type="css" class="code-wrap">
-						<div class="code-wrap__header">
+					<div data-code-wrap-id="1" id="js-css-code" data-type="css" class="code-wrap">
+						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle code pane">
 							<div class="btn-group" dropdown title="Click to change">
 								<span id="js-css-mode-label" class="code-wrap__header-label">CSS</span><span class="caret"></span>
 								<ul class="js-modes-menu  dropdown__menu">
@@ -661,13 +658,13 @@
 								</ul>
 							</div>
 							<div class="code-wrap__header-right-options">
-								<a data-collapse-id="1" class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn">
+								<a class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle code pane">
 								</a>
 							</div>
 						</div>
 					</div>
-					<div id="js-js-code" data-type="js" class="code-wrap">
-						<div class="code-wrap__header">
+					<div data-code-wrap-id="2" id="js-js-code" data-type="js" class="code-wrap">
+						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle code pane">
 							<div class="btn-group" dropdown title="Click to change">
 								<span id="js-js-mode-label" class="code-wrap__header-label">JS</span><span class="caret"></span>
 								<ul class="js-modes-menu  dropdown__menu">
@@ -677,7 +674,7 @@
 								</ul>
 							</div>
 							<div class="code-wrap__header-right-options">
-								<a data-collapse-id="2" class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn">
+								<a class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle code pane">
 								</a>
 							</div>
 						</div>

@@ -97,6 +97,16 @@
 		}, 50);
 	}
 
+	function toggleCodeWrapCollapse(codeWrapEl) {
+		if (codeWrapEl.classList.contains('is-minimized')) {
+			codeWrapEl.classList.remove('is-minimized');
+			codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
+		} else {
+			codeSplitInstance.collapse(parseInt(codeWrapEl.dataset.codeWrapId, 10));
+			codeWrapEl.classList.add('is-minimized');
+		}
+	}
+
 	function resetSplitting(dontRecreate) {
 		if (codeSplitInstance) {
 			codeSplitInstance.destroy();
@@ -109,8 +119,12 @@
 			direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical'),
 			minSize: minCodeWrapSize,
 			gutterSize: 6,
-			onDragEnd: function() {
+			onDragStart: function () {
+				document.body.classList.add('is-dragging');
+			},
+			onDragEnd: function () {
 				updateCodeWrapCollapseStates();
+				document.body.classList.remove('is-dragging');
 			}
 		};
 		if (currentItem && currentItem.sizes) {
@@ -118,7 +132,7 @@
 		} else {
 			options.sizes = [ 33.33, 33.33, 33.33 ];
 		}
-		utils.log('reset spliiting', options.sizes)
+		// utils.log('reset spliiting', options.sizes)
 		codeSplitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], options);
 		mainSplitInstance = Split(['#js-code-side', '#js-demo-side' ], {
 			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal'),
@@ -743,16 +757,7 @@
 		collapseBtns.forEach(function (btn) {
 			btn.addEventListener('click', function (e) {
 				var codeWrapParent = e.currentTarget.parentElement.parentElement.parentElement;
-				if (codeWrapParent.classList.contains('is-minimized')) {
-					// e.currentTarget.classList.remove('is-minimized');
-					codeWrapParent.classList.remove('is-minimized');
-					codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
-				} else {
-					// codeSplitInstance.setSizes([ 0, 50, 50 ]);
-					codeSplitInstance.collapse(parseInt(e.currentTarget.dataset.collapseId, 10));
-					// e.currentTarget.classList.add('is-minimized');
-					codeWrapParent.classList.add('is-minimized');
-				}
+				toggleCodeWrapCollapse(codeWrapParent);
 				return false;
 			});
 		});
@@ -780,6 +785,13 @@
 				notificationsModal.classList.remove('is-modal-visible');
 				addLibraryModal.classList.remove('is-modal-visible');
 				toggleSavedItemsPane(false);
+			}
+		});
+		window.addEventListener('dblclick', function(e) {
+			var target = e.target;
+			if (target.classList.contains('js-code-wrap__header')) {
+				var codeWrapParent = target.parentElement;
+				toggleCodeWrapCollapse(codeWrapParent);
 			}
 		});
 
@@ -815,14 +827,6 @@
 		});
 		externalJsTextarea.addEventListener('change', onExternalLibChange);
 		externalCssTextarea.addEventListener('change', onExternalLibChange);
-
-		// TODO: move to split.js ondrag listeners
-		window.addEventListener('mousedown', function() {
-			document.body.classList.add('is-dragging');
-		});
-		window.addEventListener('mouseup', function() {
-			document.body.classList.remove('is-dragging');
-		});
 
 		chrome.storage.local.get({
 			layoutMode: 1,

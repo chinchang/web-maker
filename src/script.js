@@ -324,8 +324,8 @@
 
 	function refreshEditor() {
 		titleInput.value = currentItem.title || 'Untitled';
-		externalJsTextarea.value = currentItem.externalLibs && (currentItem.externalLibs.js || '');
-		externalCssTextarea.value = currentItem.externalLibs && (currentItem.externalLibs.css || '');
+		externalJsTextarea.value = (currentItem.externalLibs && currentItem.externalLibs.js) || '';
+		externalCssTextarea.value = (currentItem.externalLibs && currentItem.externalLibs.css) || '';
 		externalJsTextarea.dispatchEvent(new Event('change'));
 
 		editur.cm.html.setValue(currentItem.html);
@@ -646,15 +646,18 @@
 
 		utils.onButtonClick(helpBtn, function () {
 			helpModal.classList.toggle('is-modal-visible');
+			document.body.classList[helpModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
 			trackEvent('ui', 'helpButtonClick');
 		});
 		utils.onButtonClick(addLibraryBtn, function () {
 			addLibraryModal.classList.toggle('is-modal-visible');
+			document.body.classList[addLibraryModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
 			trackEvent('ui', 'addLibraryButtonClick');
 		});
 
 		notificationsBtn.addEventListener('click', function () {
 			notificationsModal.classList.toggle('is-modal-visible');
+			document.body.classList[notificationsModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
 			if (notificationsModal.classList.contains('is-modal-visible') && !hasSeenNotifications) {
 				hasSeenNotifications = true;
 				notificationsBtn.classList.remove('has-new');
@@ -781,7 +784,7 @@
 		});
 
 		utils.onButtonClick(settingsBtn, function() {
-			if (!chrome.runtime.openOptionsPage) {
+			if (chrome.runtime.openOptionsPage) {
 				// New way to open options pages, if supported (Chrome 42+).
 				// Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=601997
 				// Until this bug fixes, use the

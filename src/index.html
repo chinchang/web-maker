@@ -91,10 +91,11 @@
 			display: flex;
 			flex-direction: column;
 			will-change: -webkit-filter;
-			transition: 0.15s ease 0.4s;
+			transition: 0.15s ease 0.2s;
 		}
 		.overlay-visible .main-container {
-			transition-duration: 0.3s;
+			transition-duration: 0.5s;
+			transition-delay: 0.4s;
 			-webkit-filter: blur(3px);
 		}
 		.code-side,
@@ -170,8 +171,12 @@
 			writing-mode: vertical-lr;
 			padding: 10px 5px;
 		}
+		.code-wrap__header .caret {
+			transition: 0.2s ease;
+		}
 		.is-minimized .code-wrap__header .caret {
-			display: none;
+			opacity: 0;
+			transform: translateY(10px);
 		}
 		.code-wrap__header-btn {
 			width: 18px;
@@ -758,7 +763,7 @@
 				<textarea id="js-external-js" class="full-width" id="" cols="30" rows="5" placeholder="Put each library in new line"></textarea>
 
 				<h3>CSS</h3>
-				<textarea id="js-external-css" class="full-width" id="" cols="30" rows="5"></textarea>
+				<textarea id="js-external-css" class="full-width" id="" cols="30" rows="5" placeholder="Put each library in new line"></textarea>
 
 				<div style="margin-top:20px;">
 					Choose from popular libraries:

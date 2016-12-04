@@ -1,4 +1,4 @@
-Web-Maker
+Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master)
 ======
 
 **Web-Maker** is a chrome extension that converts your Chrome tabs into an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and works offline being local on your system.

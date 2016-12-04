@@ -1,3 +1,4 @@
+/* global trackEvent */
 /* eslint-disable no-extra-semi */
 ;(function () {
 

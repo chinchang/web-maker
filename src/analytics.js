@@ -1,3 +1,5 @@
+/* global ga */
+// eslint-disable-next-line max-params
 window.trackEvent = function (category, action, label, value) {
 	if (window.ga) {
 		ga('send', 'event', category, action, label, value);
@@ -7,6 +9,8 @@ window.trackEvent = function (category, action, label, value) {
 // if online, load after sometime
 if (navigator.onLine) {
 	setTimeout(function() {
+
+		/* eslint-disable */
 		(function(i,s,o,g,r,a,m){
 			i['GoogleAnalyticsObject']=r;
 			i[r]=i[r]||function(){
@@ -18,5 +22,8 @@ if (navigator.onLine) {
 		// required for chrome extension protocol
 		ga('set', 'checkProtocolTask', function(){ /* nothing */ });
 		ga('send', 'pageview');
+
+		/* eslint-enable */
+
 	}, 0);
 }

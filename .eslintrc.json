@@ -78,7 +78,7 @@
         "newline-after-var": "off",
         "newline-before-return": "off",
         "newline-per-chained-call": "error",
-        "no-alert": "error",
+        "no-alert": "off",
         "no-array-constructor": "error",
         "no-bitwise": "off",
         "no-caller": "error",

@@ -318,6 +318,9 @@
 	}
 	function removeItem(itemId) {
 		var itemTile = document.querySelector('.js-saved-item-tile[data-item-id="' + itemId + '"]');
+		var answer = confirm(`Are you sure you want to delete "${savedItems[itemId].title}"?`);
+		if (!answer) { return; }
+
 		itemTile.remove();
 		// Remove from items list
 		chrome.storage.local.get({
@@ -774,20 +777,34 @@
 		});
 
 
+		function closeAllOverlays() {
+			helpModal.classList.remove('is-modal-visible');
+			notificationsModal.classList.remove('is-modal-visible');
+			addLibraryModal.classList.remove('is-modal-visible');
+			toggleSavedItemsPane(false);
+		}
+
 		window.addEventListener('keydown', function (event) {
-			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)){
+			// Implement Ctrl + S
+			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)) {
 				event.preventDefault();
 				saveFile();
 				trackEvent('ui', 'saveFileKeyboardShortcut');
+			}
+			// Implement Ctrl + O
+			else if ((event.ctrlKey || event.metaKey) && (event.keyCode === 79)) {
+				event.preventDefault();
+				openSavedItemsPane();
+				trackEvent('ui', 'openCreationKeyboardShortcut');
+			}
+			else if (event.keyCode === 27) {
+				closeAllOverlays();
 			}
 		});
 
 		window.addEventListener('click', function(e) {
 			if (typeof e.target.className === 'string' && e.target.className.indexOf('modal-overlay') !== -1) {
-				helpModal.classList.remove('is-modal-visible');
-				notificationsModal.classList.remove('is-modal-visible');
-				addLibraryModal.classList.remove('is-modal-visible');
-				toggleSavedItemsPane(false);
+				closeAllOverlays();
 			}
 		});
 		window.addEventListener('dblclick', function(e) {

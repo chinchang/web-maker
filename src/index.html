@@ -374,7 +374,7 @@
 			transform: translateX(100%);
 		}
 		.saved-items-pane.is-open {
-			transition-duration: 0.45s;
+			transition-duration: 0.4s;
 			transform: translateX(0);
 		}
 		.is-modal-visible ~ .modal-overlay,
@@ -448,6 +448,7 @@
 			position: absolute;
 			right: 8px;
 			top: 6px;
+			z-index: 1;
 			color: rgba(255,255,255,0.3);
 			border-radius: 50%;
 			background: rgba(255,255,255,0.05);
@@ -646,7 +647,7 @@
 						</svg>Open
 					</a>
 				</div>
-				<input type="text" id="js-title-input" class="item-title-input" value="Untitled Work">
+				<input type="text" id="js-title-input" title="Click to edit" class="item-title-input" value="Untitled Work">
 			</div>
 			<div class="content-wrap  flex  flex-grow">
 				<div class="code-side" id="js-code-side">

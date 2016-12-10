@@ -255,6 +255,11 @@
 			trackEvent('fn', 'hasCode');
 			trackEvent.hasTrackedCode = true;
 		}
+		// Track when people actually are working
+		trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
+		if (trackEvent.previewCount === 4) {
+			trackEvent('fn', 'usingPreview');
+		}
 		var fileWritten = false;
 
 		var blob = new Blob([ contents ], { type: "text/plain;charset=UTF-8" });

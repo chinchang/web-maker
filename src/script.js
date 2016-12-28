@@ -546,10 +546,20 @@
 		return contents;
 	}
 	function createPreviewFile(html, css, js) {
-		var contents = getCompleteHtml(html, css, js)
+		var contents = getCompleteHtml(html, css, js);
 		var fileWritten = false;
-
 		var blob = new Blob([ contents ], { type: "text/plain;charset=UTF-8" });
+
+		// Track if people have written code.
+		if (!trackEvent.hasTrackedCode && (html || css || js)) {
+			trackEvent('fn', 'hasCode');
+			trackEvent.hasTrackedCode = true;
+		}
+		// Track when people actually are working.
+		trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
+		if (trackEvent.previewCount === 4) {
+			trackEvent('fn', 'usingPreview');
+		}
 
 		function errorHandler() { console.utils.log(arguments); }
 

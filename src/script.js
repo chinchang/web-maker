@@ -3,8 +3,12 @@
 ;(function (alertsService) {
 
 /* eslint-enable no-extra-semi */
-	var editur = window.editur || {};
+	var scope = scope || {};
 	var version = '1.7.1';
+
+	if (DEBUG) {
+		window.scope = scope;
+	}
 
 	var HtmlModes = {
 		HTML: 'html',
@@ -53,35 +57,21 @@
 		, htmlCode = $('#js-html-code')
 		, cssCode = $('#js-css-code')
 		, jsCode = $('#js-js-code')
-		, layoutBtn1 = $('#js-layout-btn-1')
-		, layoutBtn2 = $('#js-layout-btn-2')
-		, layoutBtn3 = $('#js-layout-btn-3')
-		, helpBtn = $('#js-help-btn')
-		, helpModal = $('#js-help-modal')
-		, codepenBtn = $('#js-codepen-btn')
 		, codepenForm = $('#js-codepen-form')
-		, saveHtmlBtn = $('#js-save-html')
-		, settingsBtn = $('#js-settings-btn')
-		, notificationsBtn = $('#js-notifications-btn')
-		, openBtn = $('#js-open-btn')
-		, saveBtn = $('#js-save-btn')
-		, newBtn = $('#js-new-btn')
 		, savedItemsPane = $('#js-saved-items-pane')
 		, savedItemsPaneCloseBtn = $('#js-saved-items-pane-close-btn')
-		, notificationsModal = $('#js-notifications-modal')
 		, htmlModelLabel = $('#js-html-mode-label')
 		, cssModelLabel = $('#js-css-mode-label')
 		, jsModelLabel = $('#js-js-mode-label')
 		, titleInput = $('#js-title-input')
 		, addLibrarySelect = $('#js-add-library-select')
 		, addLibraryBtn = $('#js-add-library-btn')
-		, addLibraryModal = $('#js-add-library-modal')
 		, externalJsTextarea = $('#js-external-js')
 		, externalCssTextarea = $('#js-external-css')
 		;
 
-	editur.cm = {};
-	editur.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
+	scope.cm = {};
+	scope.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
 
 	// Check all the code wrap if they are minimized or not
 	function updateCodeWrapCollapseStates() {
@@ -149,10 +139,10 @@
 			return;
 		}
 		currentLayoutMode = mode;
-		$('#js-layout-btn-1').classList.remove('selected');
-		$('#js-layout-btn-2').classList.remove('selected');
-		$('#js-layout-btn-3').classList.remove('selected');
-		$('#js-layout-btn-' + mode).classList.add('selected');
+		layoutBtn1.classList.remove('selected');
+		layoutBtn2.classList.remove('selected');
+		layoutBtn3.classList.remove('selected');
+		$('#layoutBtn' + mode).classList.add('selected');
 		document.body.classList.remove('layout-1');
 		document.body.classList.remove('layout-2');
 		document.body.classList.remove('layout-3');
@@ -165,7 +155,7 @@
 	function onExternalLibChange() {
 		utils.log('onExternalLibChange');
 		updateExternalLibUi();
-		editur.setPreviewContent();
+		scope.setPreviewContent();
 	}
 
 	function updateExternalLibUi() {
@@ -208,9 +198,9 @@
 
 	function saveCode(key) {
 		currentItem.title = titleInput.value;
-		currentItem.html = editur.cm.html.getValue();
-		currentItem.css = editur.cm.css.getValue();
-		currentItem.js = editur.cm.js.getValue();
+		currentItem.html = scope.cm.html.getValue();
+		currentItem.css = scope.cm.css.getValue();
+		currentItem.js = scope.cm.js.getValue();
 		currentItem.htmlMode = htmlMode;
 		currentItem.cssMode = cssMode;
 		currentItem.jsMode = jsMode;
@@ -348,18 +338,26 @@
 		externalCssTextarea.value = (currentItem.externalLibs && currentItem.externalLibs.css) || '';
 		externalJsTextarea.dispatchEvent(new Event('change'));
 
-		editur.cm.html.setValue(currentItem.html);
-		editur.cm.css.setValue(currentItem.css);
-		editur.cm.js.setValue(currentItem.js);
-		editur.cm.html.refresh();
-		editur.cm.css.refresh();
-		editur.cm.js.refresh();
+		scope.cm.html.setValue(currentItem.html);
+		scope.cm.css.setValue(currentItem.css);
+		scope.cm.js.setValue(currentItem.js);
+		scope.cm.html.refresh();
+		scope.cm.css.refresh();
+		scope.cm.js.refresh();
 
 		updateHtmlMode(currentItem.htmlMode || prefs.htmlMode || HtmlModes.HTML);
 		updateJsMode(currentItem.jsMode || prefs.jsMode || JsModes.JS);
 		updateCssMode(currentItem.cssMode || prefs.cssMode || CssModes.CSS);
 
 		toggleLayout(currentItem.layoutMode || prefs.layoutMode);
+	}
+
+	function closeAllOverlays() {
+		helpModal.classList.remove('is-modal-visible');
+		notificationsModal.classList.remove('is-modal-visible');
+		addLibraryModal.classList.remove('is-modal-visible');
+		onboardModal.classList.remove('is-modal-visible');
+		toggleSavedItemsPane(false);
 	}
 
 	/**
@@ -395,26 +393,26 @@
 		htmlMode = value;
 		htmlModelLabel.textContent = modes[value].label;
 		handleModeRequirements(value);
-		editur.cm.html.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(editur.cm.html, modes[value].cmMode);
+		scope.cm.html.setOption('mode', modes[value].cmMode);
+		CodeMirror.autoLoadMode(scope.cm.html, modes[value].cmMode);
 		trackEvent('ui', 'updateCodeMode', 'html', value);
 	}
 	function updateCssMode(value) {
 		cssMode = value;
 		cssModelLabel.textContent = modes[value].label;
 		handleModeRequirements(value);
-		editur.cm.css.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(editur.cm.css, modes[value].cmMode);
+		scope.cm.css.setOption('mode', modes[value].cmMode);
+		CodeMirror.autoLoadMode(scope.cm.css, modes[value].cmMode);
 		trackEvent('ui', 'updateCodeMode', 'css', value);
 	}
 	function updateJsMode(value) {
 		jsMode = value;
 		jsModelLabel.textContent = modes[value].label;
 		handleModeRequirements(value);
-		editur.cm.js.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(editur.cm.js, modes[value].cmMode);
+		scope.cm.js.setOption('mode', modes[value].cmMode);
+		CodeMirror.autoLoadMode(scope.cm.js, modes[value].cmMode);
 		trackEvent('ui', 'updateCodeMode', 'js', value);
-		// FIXME: Will be saved as part of global settings
+		// FIXME: Will be saved as part of scope settings
 		/*
 		chrome.storage.sync.set({
 			jsMode: value
@@ -426,7 +424,7 @@
 	// to whatever mode is selected and resolve the returned promise with the code.
 	function computeHtml() {
 		var d = deferred();
-		var code = editur.cm.html.getValue();
+		var code = scope.cm.html.getValue();
 		if (htmlMode === HtmlModes.HTML) {
 			d.resolve(code);
 		} else if (htmlMode === HtmlModes.MARKDOWN) {
@@ -439,7 +437,7 @@
 	}
 	function computeCss() {
 		var d = deferred();
-		var code = editur.cm.css.getValue();
+		var code = scope.cm.css.getValue();
 		cleanupErrors('css');
 
 		if (cssMode === CssModes.CSS) {
@@ -464,7 +462,7 @@
 	}
 	function computeJs() {
 		var d = deferred();
-		var code = editur.cm.js.getValue();
+		var code = scope.cm.js.getValue();
 
 		cleanupErrors('js');
 		var ast;
@@ -517,10 +515,10 @@
 	};
 
 	function cleanupErrors(lang) {
-		editur.cm[lang].clearGutter('error-gutter');
+		scope.cm[lang].clearGutter('error-gutter');
 	}
 	function showErrors(lang, errors) {
-		var editor = editur.cm[lang];
+		var editor = scope.cm[lang];
 		errors.forEach(function (e) {
 			editor.operation(function () {
 				var n = document.createElement('div');
@@ -578,7 +576,7 @@
 		}, errorHandler);
 	}
 
-	editur.setPreviewContent = function () {
+	scope.setPreviewContent = function () {
 		var htmlPromise = computeHtml();
 		var cssPromise = computeCss();
 		var jsPromise = computeJs();
@@ -633,27 +631,56 @@
 		cm.on('change', function onChange() {
 			clearTimeout(updateTimer);
 			updateTimer = setTimeout(function () {
-				editur.setPreviewContent();
+				scope.setPreviewContent();
 			}, updateDelay);
 		});
 		return cm;
 	}
 
-	editur.cm.html = initEditor(htmlCode, {
+	scope.cm.html = initEditor(htmlCode, {
 		mode: 'htmlmixed',
 		profile: 'xhtml'
 	});
-	emmetCodeMirror(editur.cm.html);
-	editur.cm.css = initEditor(cssCode, {
+	emmetCodeMirror(scope.cm.html);
+	scope.cm.css = initEditor(cssCode, {
 		mode: 'css',
 		gutters: [ 'error-gutter' ]
 	});
-	Inlet(editur.cm.css);
-	editur.cm.js = initEditor(jsCode, {
+	Inlet(scope.cm.css);
+	scope.cm.js = initEditor(jsCode, {
 		mode: 'javascript',
 		gutters: [ 'error-gutter' ]
 	});
-	Inlet(editur.cm.js);
+	Inlet(scope.cm.js);
+
+	function openSettings() {
+		if (chrome.runtime.openOptionsPage) {
+			// New way to open options pages, if supported (Chrome 42+).
+			// Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=601997
+			// Until this bug fixes, use the
+			// fallback.
+			chrome.runtime.openOptionsPage();
+		} else {
+			// Fallback.
+			chrome.tabs.create({
+				url: 'chrome://extensions?options=' + chrome.i18n.getMessage('@@extension_id')
+			});
+		}
+	}
+
+	scope.onModalSettingsLinkClick = function () {
+		openSettings();
+		trackEvent('ui', 'onboardSettingsBtnClick');
+	}
+
+	function compileNodes() {
+		var nodes = [].slice.call($all('[d-click]'));
+		nodes.forEach(function (el) {
+			el.addEventListener('click', function (e) {
+				scope[el.getAttribute('d-click')].call(window, e)
+			});
+		})
+	}
 
 	function init () {
 		var lastCode;
@@ -665,8 +692,8 @@
 		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
 
 		utils.onButtonClick(helpBtn, function () {
-			helpModal.classList.toggle('is-modal-visible');
-			document.body.classList[helpModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
+			onboardModal.classList.toggle('is-modal-visible');
+			document.body.classList[onboardModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
 			trackEvent('ui', 'helpButtonClick');
 		});
 		utils.onButtonClick(addLibraryBtn, function () {
@@ -692,9 +719,9 @@
 		codepenBtn.addEventListener('click', function (e) {
 			var json = {
 				title: 'A Web Maker experiment',
-				html: editur.cm.html.getValue(),
-				css: editur.cm.css.getValue(),
-				js: editur.cm.js.getValue(),
+				html: scope.cm.html.getValue(),
+				css: scope.cm.css.getValue(),
+				js: scope.cm.js.getValue(),
 
 				/* eslint-disable camelcase */
 				html_pre_processor: modes[htmlMode].codepenVal,
@@ -737,7 +764,7 @@
 			if (currentItem.id) {
 				saveItem();
 			}
-		})
+		});
 
 		// Attach listeners on mode change menu items
 		var modeItems = [].slice.call($all('.js-modes-menu a'));
@@ -776,14 +803,6 @@
 			});
 		});
 
-
-		function closeAllOverlays() {
-			helpModal.classList.remove('is-modal-visible');
-			notificationsModal.classList.remove('is-modal-visible');
-			addLibraryModal.classList.remove('is-modal-visible');
-			toggleSavedItemsPane(false);
-		}
-
 		window.addEventListener('keydown', function (event) {
 			// Implement Ctrl + S
 			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)) {
@@ -816,18 +835,7 @@
 		});
 
 		utils.onButtonClick(settingsBtn, function() {
-			if (chrome.runtime.openOptionsPage) {
-				// New way to open options pages, if supported (Chrome 42+).
-				// Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=601997
-				// Until this bug fixes, use the
-				// fallback.
-				chrome.runtime.openOptionsPage();
-			} else {
-				// Fallback.
-				chrome.tabs.create({
-					url: 'chrome://extensions?options=' + chrome.i18n.getMessage('@@extension_id')
-				});
-			}
+			openSettings();
 			trackEvent('ui', 'settingsBtnClick');
 		});
 
@@ -890,13 +898,23 @@
 		chrome.storage.sync.get({
 			lastSeenVersion: ''
 		}, function syncGetCallback(result) {
+			// Check if new user
+			if (!result.lastSeenVersion) {
+				onboardModal.classList.add('is-modal-visible');
+				trackEvent('ui', 'onboardModalSeen');
+			}
 			// console.utils.log(result, hasSeenNotifications, version);
 			if (!result.lastSeenVersion || utils.semverCompare(result.lastSeenVersion, version) === -1) {
 				notificationsBtn.classList.add('has-new');
 				hasSeenNotifications = false;
 			}
 		});
+
+		requestAnimationFrame(compileNodes);
 	}
+
+	// Set few stuff on a 'scope' object so that they can be referenced dynamically.
+	scope.closeAllOverlays = closeAllOverlays;
 
 	init();
 

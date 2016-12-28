@@ -1,8 +1,12 @@
-chrome.browserAction.onClicked.addListener(function(){
+function openApp() {
 	chrome.tabs.create({
 		url: chrome.extension.getURL('index.html'),
 		selected: true
 	});
+}
+
+chrome.browserAction.onClicked.addListener(function(){
+	openApp();
 });
 
 // Listen for tabs getting created.
@@ -21,5 +25,11 @@ chrome.tabs.onCreated.addListener(function (tab) {
 				});
 			}
 		});
+	}
+});
+
+chrome.runtime.onInstalled.addListener(function callback (details) {
+	if (details.reason === 'install') {
+		openApp();
 	}
 });

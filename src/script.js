@@ -1,4 +1,9 @@
 /* global trackEvent */
+/* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
+onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, helpBtn, onboardModal, onboardModal,
+addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
+notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, openBtn, saveBtn, newBtn,
+settingsBtn, onboardModal, notificationsBtn */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
 
@@ -6,7 +11,7 @@
 	var scope = scope || {};
 	var version = '1.7.1';
 
-	if (DEBUG) {
+	if (window.DEBUG) {
 		window.scope = scope;
 	}
 

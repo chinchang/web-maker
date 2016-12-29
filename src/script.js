@@ -707,7 +707,7 @@ settingsBtn, onboardModal, notificationsBtn */
 		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
 
 		utils.onButtonClick(helpBtn, function () {
-			onboardModal.classList.toggle('is-modal-visible');
+			helpModal.classList.toggle('is-modal-visible');
 			document.body.classList[onboardModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
 			trackEvent('ui', 'helpButtonClick');
 		});
@@ -766,7 +766,7 @@ settingsBtn, onboardModal, notificationsBtn */
 			if (e.target.classList.contains('js-saved-item-tile')) {
 				setTimeout(function () {
 					openItem(e.target.dataset.itemId);
-				}, 300);
+				}, 350);
 				toggleSavedItemsPane();
 			}
 			if (e.target.classList.contains('js-saved-item-tile__close-btn')) {
@@ -819,13 +819,13 @@ settingsBtn, onboardModal, notificationsBtn */
 		});
 
 		window.addEventListener('keydown', function (event) {
-			// Implement Ctrl + S
+			// Ctrl/⌘ + S
 			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)) {
 				event.preventDefault();
-				saveFile();
-				trackEvent('ui', 'saveFileKeyboardShortcut');
+				saveItem();
+				trackEvent('ui', 'saveItemKeyboardShortcut');
 			}
-			// Implement Ctrl + O
+			// Ctrl/⌘ + O
 			else if ((event.ctrlKey || event.metaKey) && (event.keyCode === 79)) {
 				event.preventDefault();
 				openSavedItemsPane();

@@ -31,6 +31,7 @@ a { text-decoration: none; color: crimson; cursor: pointer; }
 .relative { position: relative; }
 .tac { text-align: center; }
 .full-width { width: 100%; }
+.opacity--30 { opacity: 0.3; }
 
 [class*="hint--"]:after {
 	text-transform: none;

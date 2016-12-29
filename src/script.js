@@ -249,7 +249,7 @@ settingsBtn, onboardModal, notificationsBtn */
 					+ '<h3 class="saved-item-tile__title">' + item.title + '</h3><span class="saved-item-tile__meta">Last updated: ' + utils.getHumanDate(item.updatedOn) + '</span></div>';
 			});
 		} else {
-			html += 'Nothing saved here.'
+			html += '<h2 class="opacity--30">Nothing saved here.</h2>'
 		}
 		savedItemsPane.querySelector('#js-saved-items-wrap').innerHTML = html;
 		toggleSavedItemsPane();

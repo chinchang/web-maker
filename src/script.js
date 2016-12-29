@@ -566,7 +566,7 @@ settingsBtn, onboardModal, notificationsBtn */
 			trackEvent('fn', 'usingPreview');
 		}
 
-		function errorHandler() { console.utils.log(arguments); }
+		function errorHandler() { utils.log(arguments); }
 
 		window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024 * 5, function(fs){
 			fs.root.getFile('preview.html', { create: true }, function(fileEntry) {

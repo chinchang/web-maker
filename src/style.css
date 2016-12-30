@@ -161,7 +161,6 @@ select, input[type="text"], textarea {
 }
 .is-minimized .code-wrap__header .caret {
 	opacity: 0;
-	transform: translateY(10px);
 }
 .code-wrap__header-btn {
 	width: 18px;

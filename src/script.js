@@ -275,6 +275,7 @@ settingsBtn, onboardModal, notificationsBtn */
 			}
 
 			savedItems = savedItems || [];
+			trackEvent('fn', 'fetchItems', '', itemIds.length);
 			for (let i = 0; i < itemIds.length; i++) {
 
 				/* eslint-disable no-loop-func */
@@ -335,6 +336,7 @@ settingsBtn, onboardModal, notificationsBtn */
 				createNewItem();
 			}
 		});
+		trackEvent('fn', 'itemRemoved');
 	}
 
 	function refreshEditor() {
@@ -707,7 +709,7 @@ settingsBtn, onboardModal, notificationsBtn */
 		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
 
 		utils.onButtonClick(helpBtn, function () {
-			helpModal.classList.toggle('is-modal-visible');
+			onboardModal.classList.toggle('is-modal-visible');
 			document.body.classList[onboardModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
 			trackEvent('ui', 'helpButtonClick');
 		});
@@ -758,9 +760,18 @@ settingsBtn, onboardModal, notificationsBtn */
 			saveFile();
 			trackEvent('ui', 'saveHtmlClick');
 		});
-		utils.onButtonClick(openBtn, openSavedItemsPane);
-		utils.onButtonClick(saveBtn, saveItem);
-		utils.onButtonClick(newBtn, createNewItem);
+		utils.onButtonClick(openBtn, function () {
+			openSavedItemsPane()
+			trackEvent('ui', 'openBtnClick');
+		});
+		utils.onButtonClick(saveBtn, function () {
+			trackEvent('ui', 'saveBtnClick', currentItem.id ? 'saved' : 'new');
+			saveItem();
+		});
+		utils.onButtonClick(newBtn, function () {
+			createNewItem();
+			trackEvent('ui', 'newBtnClick');
+		});
 		utils.onButtonClick(savedItemsPaneCloseBtn, toggleSavedItemsPane);
 		utils.onButtonClick(savedItemsPane, function (e) {
 			if (e.target.classList.contains('js-saved-item-tile')) {
@@ -778,6 +789,7 @@ settingsBtn, onboardModal, notificationsBtn */
 		titleInput.addEventListener('blur', function () {
 			if (currentItem.id) {
 				saveItem();
+				trackEvent('ui', 'titleChanged');
 			}
 		});
 
@@ -806,6 +818,7 @@ settingsBtn, onboardModal, notificationsBtn */
 			btn.addEventListener('click', function (e) {
 				var codeWrapParent = e.currentTarget.parentElement.parentElement.parentElement;
 				toggleCodeWrapCollapse(codeWrapParent);
+				trackEvent('ui', 'paneCollapseBtnClick', codeWrapParent.dataset.type);
 				return false;
 			});
 		});
@@ -846,6 +859,7 @@ settingsBtn, onboardModal, notificationsBtn */
 			if (target.classList.contains('js-code-wrap__header')) {
 				var codeWrapParent = target.parentElement;
 				toggleCodeWrapCollapse(codeWrapParent);
+				trackEvent('ui', 'paneHeaderDblClick', codeWrapParent.dataset.type);
 			}
 		});
 
@@ -866,6 +880,7 @@ settingsBtn, onboardModal, notificationsBtn */
 		addLibrarySelect.addEventListener('change', function onSelectChange(e) {
 			var target = e.target;
 			$('#js-external-' + target.selectedOptions[0].dataset.type).value += '\n' + target.value;
+			trackEvent('ui', 'addLibrarySelect', target.selectedOptions[0].label);
 			onExternalLibChange();
 		});
 		externalJsTextarea.addEventListener('change', onExternalLibChange);

@@ -467,7 +467,7 @@ settingsBtn, onboardModal, notificationsBtn */
 
 		return d.promise;
 	}
-	function computeJs() {
+	function computeJs(shouldPreventInfiniteLoops) {
 		var d = deferred();
 		var code = scope.cm.js.getValue();
 
@@ -482,7 +482,9 @@ settingsBtn, onboardModal, notificationsBtn */
 			} catch (e) {
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
-				utils.addInfiniteLoopProtection(ast);
+				if (shouldPreventInfiniteLoops !== false) {
+					utils.addInfiniteLoopProtection(ast);
+				}
 				d.resolve(escodegen.generate(ast));
 			}
 		} else if (jsMode === JsModes.COFFEESCRIPT) {
@@ -495,7 +497,9 @@ settingsBtn, onboardModal, notificationsBtn */
 				ast = esprima.parse(coffeeCode, {
 					tolerant: true
 				});
-				utils.addInfiniteLoopProtection(ast);
+				if (shouldPreventInfiniteLoops !== false) {
+					utils.addInfiniteLoopProtection(ast);
+				}
 				d.resolve(escodegen.generate(ast));
 			}
 		} else if (jsMode === JsModes.ES6) {
@@ -506,7 +510,9 @@ settingsBtn, onboardModal, notificationsBtn */
 			} catch (e) {
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
-				utils.addInfiniteLoopProtection(ast);
+				if (shouldPreventInfiniteLoops !== false) {
+					utils.addInfiniteLoopProtection(ast);
+				}
 				d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015'] }).code);
 			}
 		}
@@ -605,7 +611,7 @@ settingsBtn, onboardModal, notificationsBtn */
 	function saveFile() {
 		var htmlPromise = computeHtml();
 		var cssPromise = computeCss();
-		var jsPromise = computeJs();
+		var jsPromise = computeJs(false);
 		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
 			var html = result[0],
 				css = result[1],
@@ -761,7 +767,7 @@ settingsBtn, onboardModal, notificationsBtn */
 			trackEvent('ui', 'saveHtmlClick');
 		});
 		utils.onButtonClick(openBtn, function () {
-			openSavedItemsPane()
+			openSavedItemsPane();
 			trackEvent('ui', 'openBtnClick');
 		});
 		utils.onButtonClick(saveBtn, function () {

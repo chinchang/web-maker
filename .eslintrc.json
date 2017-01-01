@@ -2,6 +2,7 @@
     "env": {
         "browser": true
     },
+    "parser": "babel-eslint",
     "extends": "eslint:recommended",
     "rules": {
         "accessor-pairs": "error",
@@ -77,9 +78,9 @@
         "newline-after-var": "off",
         "newline-before-return": "off",
         "newline-per-chained-call": "error",
-        "no-alert": "error",
+        "no-alert": "off",
         "no-array-constructor": "error",
-        "no-bitwise": "error",
+        "no-bitwise": "off",
         "no-caller": "error",
         "no-console": "off",
         "no-catch-shadow": "error",
@@ -96,7 +97,7 @@
         "no-extra-label": "error",
         "no-extra-parens": "off",
         "no-floating-decimal": "error",
-        "no-implicit-coercion": "error",
+        "no-implicit-coercion": "off",
         "no-implicit-globals": "off",
         "no-implied-eval": "error",
         "no-inline-comments": "off",
@@ -164,7 +165,7 @@
         "no-unneeded-ternary": "error",
         "no-unsafe-finally": "error",
         "no-unused-expressions": "error",
-        "no-use-before-define": "error",
+        "no-use-before-define": "off",
         "no-useless-call": "error",
         "no-useless-computed-key": "error",
         "no-useless-concat": "off",
@@ -173,7 +174,7 @@
         "no-useless-rename": "error",
         "no-var": "off",
         "no-void": "error",
-        "no-warning-comments": "error",
+        "no-warning-comments": "off",
         "no-whitespace-before-property": "error",
         "no-with": "error",
         "object-curly-spacing": [
@@ -259,6 +260,10 @@
         "marked": true,
         "jade": true,
         "loadJS": true,
-        "Promise": true
+        "esprima": true,
+        "escodegen": true,
+        "utils": true,
+        "Promise": true,
+        "Inlet": true
     }
 }

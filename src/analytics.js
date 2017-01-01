@@ -1,16 +1,20 @@
 /* global ga */
 // eslint-disable-next-line max-params
 window.trackEvent = function (category, action, label, value) {
+	if (window.DEBUG) {
+		utils.log('trackevent', category, action, label, value)
+		return;
+	}
 	if (window.ga) {
 		ga('send', 'event', category, action, label, value);
 	}
 }
 
-// if online, load after sometime
-if (navigator.onLine) {
-	setTimeout(function() {
+// if online, load after 2 seconds
+if (navigator.onLine && !window.DEBUG) {
+	/* eslint-disable */
 
-		/* eslint-disable */
+	setTimeout(function() {
 		(function(i,s,o,g,r,a,m){
 			i['GoogleAnalyticsObject']=r;
 			i[r]=i[r]||function(){
@@ -22,8 +26,7 @@ if (navigator.onLine) {
 		// required for chrome extension protocol
 		ga('set', 'checkProtocolTask', function(){ /* nothing */ });
 		ga('send', 'pageview');
-
-		/* eslint-enable */
-
 	}, 0);
+
+	/* eslint-enable */
 }

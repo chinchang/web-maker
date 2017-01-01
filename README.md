@@ -11,6 +11,8 @@ Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master)
 
 * Supports Preprocessors: HTML (Jade & Markdown), CSS (SCSS & LESS) & JavaScript (ES6 & CoffeeScript)
 * Works offline
+* Save and load your creations
+* Easy addition of popular JS & CSS libraries
 * Very easily accessible. Simply open a new tab in Chrome!
 * Multiple layouts to choose from
 * Save as HTML file

@@ -480,14 +480,14 @@ select, input[type="text"], textarea {
 	}
 }
 .notifications-btn.has-new {
-	animation: shake 10s linear infinite;
+	animation: shake 7s linear infinite;
 	transform-origin: 50% 10px;
 }
 .notifications-btn__dot {
 	position: absolute;
 	right: 1;
 	top: -2px;
-	background: #2fbe3d;
+	background: #31fe45;
 	border-radius: 50%;
 	width: 12px;
 	height: 12px;

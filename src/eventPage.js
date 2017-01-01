@@ -32,4 +32,9 @@ chrome.runtime.onInstalled.addListener(function callback (details) {
 	if (details.reason === 'install') {
 		openApp();
 	}
+	if (details.reason === 'update') {
+		if ((details.previousVersion + '').indexOf('1.') === 0) {
+			openApp();
+		}
+	}
 });

@@ -9,7 +9,7 @@ settingsBtn, onboardModal, notificationsBtn */
 
 /* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '1.7.1';
+	var version = '2.0.0';
 
 	if (window.DEBUG) {
 		window.scope = scope;
@@ -715,7 +715,7 @@ settingsBtn, onboardModal, notificationsBtn */
 		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
 
 		utils.onButtonClick(helpBtn, function () {
-			onboardModal.classList.toggle('is-modal-visible');
+			helpModal.classList.toggle('is-modal-visible');
 			document.body.classList[onboardModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
 			trackEvent('ui', 'helpButtonClick');
 		});

@@ -81,7 +81,7 @@
         "no-alert": "off",
         "no-array-constructor": "error",
         "no-bitwise": "off",
-        "no-caller": "error",
+        "no-caller": "off",
         "no-console": "off",
         "no-catch-shadow": "error",
         "no-confusing-arrow": "error",

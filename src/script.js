@@ -364,7 +364,7 @@ settingsBtn, onboardModal, notificationsBtn */
 		addLibraryModal.classList.remove('is-modal-visible');
 		onboardModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
-		document.dispatchEvent( new Event('overlaysClosed'));
+		document.dispatchEvent(new Event('overlaysClosed'));
 	}
 
 	/**
@@ -947,7 +947,7 @@ settingsBtn, onboardModal, notificationsBtn */
 				onboardModal.classList.add('is-modal-visible');
 				trackEvent('ui', 'onboardModalSeen');
 				// set the current version as seen on closing the onboard modal
-				utils.once(document, 'overlaysClosed', function (e) {
+				utils.once(document, 'overlaysClosed', function () {
 					chrome.storage.sync.set({
 						lastSeenVersion: version
 					}, function () {});

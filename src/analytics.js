@@ -10,7 +10,7 @@ window.trackEvent = function (category, action, label, value) {
 	}
 }
 
-// if online, load after 2 seconds
+// if online, load after sometime
 if (navigator.onLine && !window.DEBUG) {
 	/* eslint-disable */
 
@@ -26,7 +26,7 @@ if (navigator.onLine && !window.DEBUG) {
 		// required for chrome extension protocol
 		ga('set', 'checkProtocolTask', function(){ /* nothing */ });
 		ga('send', 'pageview');
-	}, 0);
+	}, 100);
 
 	/* eslint-enable */
 }

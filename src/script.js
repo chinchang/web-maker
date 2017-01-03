@@ -154,7 +154,6 @@ settingsBtn, onboardModal, notificationsBtn */
 		document.body.classList.add('layout-' + mode);
 
 		resetSplitting();
-		trackEvent('ui', 'toggleLayout', mode);
 	}
 
 	function onExternalLibChange() {
@@ -365,6 +364,7 @@ settingsBtn, onboardModal, notificationsBtn */
 		addLibraryModal.classList.remove('is-modal-visible');
 		onboardModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
+		document.dispatchEvent( new Event('overlaysClosed'));
 	}
 
 	/**
@@ -710,13 +710,21 @@ settingsBtn, onboardModal, notificationsBtn */
 
 		CodeMirror.modeURL = "lib/codemirror/mode/%N/%N.js";
 
-		layoutBtn1.addEventListener('click', function () { saveSetting('layoutMode', 1); toggleLayout(1); return false; });
-		layoutBtn2.addEventListener('click', function () { saveSetting('layoutMode', 2); toggleLayout(2); return false; });
-		layoutBtn3.addEventListener('click', function () { saveSetting('layoutMode', 3); toggleLayout(3); return false; });
+		function getToggleLayoutButtonListener(mode) {
+			return function () {
+				saveSetting('layoutMode', mode);
+				trackEvent('ui', 'toggleLayoutClick', mode);
+				toggleLayout(mode);
+				return false;
+			};
+		}
+		layoutBtn1.addEventListener('click', getToggleLayoutButtonListener(1));
+		layoutBtn2.addEventListener('click', getToggleLayoutButtonListener(2));
+		layoutBtn3.addEventListener('click', getToggleLayoutButtonListener(3));
 
 		utils.onButtonClick(helpBtn, function () {
 			helpModal.classList.toggle('is-modal-visible');
-			document.body.classList[onboardModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
+			document.body.classList[helpModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
 			trackEvent('ui', 'helpButtonClick');
 		});
 		utils.onButtonClick(addLibraryBtn, function () {
@@ -938,6 +946,12 @@ settingsBtn, onboardModal, notificationsBtn */
 			if (!result.lastSeenVersion) {
 				onboardModal.classList.add('is-modal-visible');
 				trackEvent('ui', 'onboardModalSeen');
+				// set the current version as seen on closing the onboard modal
+				utils.once(document, 'overlaysClosed', function (e) {
+					chrome.storage.sync.set({
+						lastSeenVersion: version
+					}, function () {});
+				});
 			}
 			// console.utils.log(result, hasSeenNotifications, version);
 			if (!result.lastSeenVersion || utils.semverCompare(result.lastSeenVersion, version) === -1) {

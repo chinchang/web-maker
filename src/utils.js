@@ -98,12 +98,25 @@
 		return retVal;
 	}
 
+	// create a one-time event
+	function once(node, type, callback) {
+		// create event
+		node.addEventListener(type, function(e) {
+			// remove event
+			e.target.removeEventListener(type, arguments.callee);
+			// call handler
+			return callback(e);
+		});
+
+	}
+
 	window.utils = {
 		semverCompare: semverCompare,
 		generateRandomId: generateRandomId,
 		onButtonClick: onButtonClick,
 		addInfiniteLoopProtection: addInfiniteLoopProtection,
 		getHumanDate: getHumanDate,
-		log: log
+		log: log,
+		once: once
 	};
 })();

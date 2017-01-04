@@ -505,15 +505,32 @@ settingsBtn, onboardModal, notificationsBtn */
 		} else if (jsMode === JsModes.ES6) {
 			try {
 				ast = esprima.parse(code, {
-					tolerant: true
+					tolerant: true,
+					jsx: true
 				});
 			} catch (e) {
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
-				if (shouldPreventInfiniteLoops !== false) {
-					utils.addInfiniteLoopProtection(ast);
+				var result;
+				try {
+					result = escodegen.generate(ast);
+					if (shouldPreventInfiniteLoops !== false) {
+						utils.addInfiniteLoopProtection(ast);
+					}
+					d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015', 'react'] }).code);
+				} catch (e) {
+					// If we failed, means probably the AST contains JSX which cannot be parsed by escodegen.
+					code = Babel.transform(code, { presets: ['es2015', 'react'] }).code;
+					ast = esprima.parse(code, {
+						tolerant: true
+					});
+					if (shouldPreventInfiniteLoops !== false) {
+						utils.addInfiniteLoopProtection(ast);
+					}
+					d.resolve(escodegen.generate(ast));
+				} finally {
 				}
-				d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015'] }).code);
+
 			}
 		}
 

@@ -571,35 +571,24 @@ settingsBtn, onboardModal, notificationsBtn */
 			+ '<style>\n' + css + '\n</style>\n'
 			+ '</head>\n'
 			+ '<body>\n' + html + '\n'
-			+ externalJs + '\n<script>\n' + js + '\n//# sourceURL=userscript.js</script></body>\n</html>';
+			+ externalJs + '\n<script src="'
+			+ 'filesystem:chrome-extension://'
+			+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'script.js' + '">\n'
+			+ '</script></body>\n</html>';
 
 		return contents;
 	}
-	function createPreviewFile(html, css, js) {
-		var contents = getCompleteHtml(html, css, js);
+
+	function writeFile(name, blob, cb) {
 		var fileWritten = false;
-		var blob = new Blob([ contents ], { type: "text/plain;charset=UTF-8" });
-
-		// Track if people have written code.
-		if (!trackEvent.hasTrackedCode && (html || css || js)) {
-			trackEvent('fn', 'hasCode');
-			trackEvent.hasTrackedCode = true;
-		}
-		// Track when people actually are working.
-		trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
-		if (trackEvent.previewCount === 4) {
-			trackEvent('fn', 'usingPreview');
-		}
-
 		function errorHandler() { utils.log(arguments); }
 
 		window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024 * 5, function(fs){
-			fs.root.getFile('preview.html', { create: true }, function(fileEntry) {
+			fs.root.getFile(name, { create: true }, function(fileEntry) {
 				fileEntry.createWriter(function(fileWriter) {
 					function onWriteComplete() {
 						if (fileWritten) {
-							frame.src = 'filesystem:chrome-extension://'
-							+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
+							cb();
 						}
 						else {
 							fileWritten = true;
@@ -614,6 +603,36 @@ settingsBtn, onboardModal, notificationsBtn */
 				}, errorHandler);
 			}, errorHandler);
 		}, errorHandler);
+
+	}
+
+	function createPreviewFile(html, css, js) {
+		var contents = getCompleteHtml(html, css, js);
+		var fileWritten = false;
+		var blob = new Blob([ contents ], { type: "text/plain;charset=UTF-8" });
+		var blobjs = new Blob([ js ], { type: "text/plain;charset=UTF-8" });
+
+		// Track if people have written code.
+		if (!trackEvent.hasTrackedCode && (html || css || js)) {
+			trackEvent('fn', 'hasCode');
+			trackEvent.hasTrackedCode = true;
+		}
+		// Track when people actually are working.
+		trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
+		if (trackEvent.previewCount === 4) {
+			trackEvent('fn', 'usingPreview');
+		}
+
+		// we need to store user script in external JS file to prevent inline-script
+		// CSP from affecting it.
+		writeFile('script.js', blobjs, function () {
+			writeFile('preview.html', blob, function () {
+				frame.src = 'filesystem:chrome-extension://'
+					+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
+			});
+		});
+
+
 	}
 
 	scope.setPreviewContent = function () {

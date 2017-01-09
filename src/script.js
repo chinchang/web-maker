@@ -159,7 +159,7 @@ settingsBtn, onboardModal, notificationsBtn */
 	function onExternalLibChange() {
 		utils.log('onExternalLibChange');
 		updateExternalLibUi();
-		scope.setPreviewContent();
+		scope.setPreviewContent().catch(handleError);
 	}
 
 	function updateExternalLibUi() {
@@ -372,34 +372,37 @@ settingsBtn, onboardModal, notificationsBtn */
 	 */
 	function handleModeRequirements(mode) {
 		// Exit if already loaded
-		if (modes[mode].hasLoaded) { return; }
+		if (modes[mode].hasLoaded) { return Promise.resolve(); }
 
 		function setLoadedFlag() {
 			modes[mode].hasLoaded = true;
 		}
 
 		if (mode === HtmlModes.JADE) {
-			loadJS('lib/jade.js').then(setLoadedFlag);
+			return loadJS('lib/jade.js').then(setLoadedFlag);
 		} else if (mode === HtmlModes.MARKDOWN) {
-			loadJS('lib/marked.js').then(setLoadedFlag);
+			return loadJS('lib/marked.js').then(setLoadedFlag);
 		} else if (mode === CssModes.LESS) {
-			loadJS('lib/less.min.js').then(setLoadedFlag);
+			return loadJS('lib/less.min.js').then(setLoadedFlag);
 		} else if (mode === CssModes.SCSS) {
-			loadJS('lib/sass.js').then(function () {
+			return loadJS('lib/sass.js').then(function () {
 				sass = new Sass('lib/sass.worker.js');
 				setLoadedFlag();
 			});
 		} else if (mode === JsModes.COFFEESCRIPT) {
-			loadJS('lib/coffee-script.js').then(setLoadedFlag);
+			return loadJS('lib/coffee-script.js').then(setLoadedFlag);
 		} else if (mode === JsModes.ES6) {
-			loadJS('lib/babel.min.js').then(setLoadedFlag);
+			return loadJS('lib/babel.min.js').then(setLoadedFlag);
 		}
+
+		// return Promise.reject(new Error('Unsupported mode: "' + mode + '"'));
+		return Promise.resolve();
 	}
 
 	function updateHtmlMode(value) {
 		htmlMode = value;
 		htmlModelLabel.textContent = modes[value].label;
-		handleModeRequirements(value);
+		handleModeRequirements(value).catch(handleError);
 		scope.cm.html.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.html, modes[value].cmMode);
 		trackEvent('ui', 'updateCodeMode', 'html', value);
@@ -407,7 +410,7 @@ settingsBtn, onboardModal, notificationsBtn */
 	function updateCssMode(value) {
 		cssMode = value;
 		cssModelLabel.textContent = modes[value].label;
-		handleModeRequirements(value);
+		handleModeRequirements(value).catch(handleError);
 		scope.cm.css.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.css, modes[value].cmMode);
 		trackEvent('ui', 'updateCodeMode', 'css', value);
@@ -415,7 +418,7 @@ settingsBtn, onboardModal, notificationsBtn */
 	function updateJsMode(value) {
 		jsMode = value;
 		jsModelLabel.textContent = modes[value].label;
-		handleModeRequirements(value);
+		handleModeRequirements(value).catch(handleError);
 		scope.cm.js.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.js, modes[value].cmMode);
 		trackEvent('ui', 'updateCodeMode', 'js', value);
@@ -430,94 +433,91 @@ settingsBtn, onboardModal, notificationsBtn */
 	// computeHtml, computeCss & computeJs evaluate the final code according
 	// to whatever mode is selected and resolve the returned promise with the code.
 	function computeHtml() {
-		var d = deferred();
-		var code = scope.cm.html.getValue();
-		if (htmlMode === HtmlModes.HTML) {
-			d.resolve(code);
-		} else if (htmlMode === HtmlModes.MARKDOWN) {
-			d.resolve(marked(code));
-		} else if (htmlMode === HtmlModes.JADE) {
-			d.resolve(jade.render(code));
-		}
-
-		return d.promise;
+		return new Promise(function (resolve) {
+			var code = scope.cm.html.getValue();
+			if (htmlMode === HtmlModes.HTML) {
+				resolve(code);
+			} else if (htmlMode === HtmlModes.MARKDOWN) {
+				resolve(marked(code));
+			} else if (htmlMode === HtmlModes.JADE) {
+				resolve(jade.render(code));
+			}
+		});
 	}
 	function computeCss() {
-		var d = deferred();
-		var code = scope.cm.css.getValue();
-		cleanupErrors('css');
+		return new Promise(function (resolve) {
+			var code = scope.cm.css.getValue();
+			cleanupErrors('css');
 
-		if (cssMode === CssModes.CSS) {
-			d.resolve(code);
-		} else if (cssMode === CssModes.SCSS) {
-			sass.compile(code, function(result) {
-				// Something as wrong
-				if (result.line && result.message) {
-					showErrors('css', [ { lineNumber: result.line - 1, message: result.message } ]);
-				}
-				d.resolve(result.text);
-			});
-		} else if (cssMode === CssModes.LESS) {
-			less.render(code).then(function (result) {
-				d.resolve(result.css);
-			}, function (error) {
-				showErrors('css', [ { lineNumber: error.line, message: error.message } ]);
-			});
-		}
-
-		return d.promise;
+			if (cssMode === CssModes.CSS) {
+				resolve(code);
+			} else if (cssMode === CssModes.SCSS) {
+				sass.compile(code, function(result) {
+					// Something as wrong
+					if (result.line && result.message) {
+						showErrors('css', [ { lineNumber: result.line - 1, message: result.message } ]);
+					}
+					resolve(result.text);
+				});
+			} else if (cssMode === CssModes.LESS) {
+				less.render(code).then(function (result) {
+					resolve(result.css);
+				}, function (error) {
+					showErrors('css', [ { lineNumber: error.line, message: error.message } ]);
+				});
+			}
+		});
 	}
 	function computeJs(shouldPreventInfiniteLoops) {
-		var d = deferred();
-		var code = scope.cm.js.getValue();
+		return new Promise(function (resolve) {
+			var code = scope.cm.js.getValue();
 
-		cleanupErrors('js');
-		var ast;
+			cleanupErrors('js');
+			var ast;
 
-		if (jsMode === JsModes.JS) {
-			try {
-				ast = esprima.parse(code, {
-					tolerant: true
-				});
-			} catch (e) {
-				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
-			} finally {
-				if (shouldPreventInfiniteLoops !== false) {
-					utils.addInfiniteLoopProtection(ast);
+			if (jsMode === JsModes.JS) {
+				try {
+					ast = esprima.parse(code, {
+						tolerant: true
+					});
+				} catch (e) {
+					showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
+				} finally {
+					if (shouldPreventInfiniteLoops !== false) {
+						utils.addInfiniteLoopProtection(ast);
+					}
+					resolve(escodegen.generate(ast));
 				}
-				d.resolve(escodegen.generate(ast));
-			}
-		} else if (jsMode === JsModes.COFFEESCRIPT) {
-			var coffeeCode;
-			try {
-				coffeeCode = CoffeeScript.compile(code, { bare: true });
-			} catch (e) {
-				showErrors('js', [ { lineNumber: e.location.first_line, message: e.message } ]);
-			} finally {
-				ast = esprima.parse(coffeeCode, {
-					tolerant: true
-				});
-				if (shouldPreventInfiniteLoops !== false) {
-					utils.addInfiniteLoopProtection(ast);
+			} else if (jsMode === JsModes.COFFEESCRIPT) {
+				var coffeeCode;
+				try {
+					coffeeCode = CoffeeScript.compile(code, { bare: true });
+				} catch (e) {
+					showErrors('js', [ { lineNumber: e.location.first_line, message: e.message } ]);
+				} finally {
+					ast = esprima.parse(coffeeCode, {
+						tolerant: true
+					});
+					if (shouldPreventInfiniteLoops !== false) {
+						utils.addInfiniteLoopProtection(ast);
+					}
+					resolve(escodegen.generate(ast));
 				}
-				d.resolve(escodegen.generate(ast));
-			}
-		} else if (jsMode === JsModes.ES6) {
-			try {
-				ast = esprima.parse(code, {
-					tolerant: true
-				});
-			} catch (e) {
-				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
-			} finally {
-				if (shouldPreventInfiniteLoops !== false) {
-					utils.addInfiniteLoopProtection(ast);
+			} else if (jsMode === JsModes.ES6) {
+				try {
+					ast = esprima.parse(code, {
+						tolerant: true
+					});
+				} catch (e) {
+					showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
+				} finally {
+					if (shouldPreventInfiniteLoops !== false) {
+						utils.addInfiniteLoopProtection(ast);
+					}
+					resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015'] }).code);
 				}
-				d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015'] }).code);
 			}
-		}
-
-		return d.promise;
+		})
 	}
 
 	window.previewException = function (error) {
@@ -600,10 +600,7 @@ settingsBtn, onboardModal, notificationsBtn */
 	}
 
 	scope.setPreviewContent = function () {
-		var htmlPromise = computeHtml();
-		var cssPromise = computeCss();
-		var jsPromise = computeJs();
-		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
+		return Promise.all([computeHtml(), computeCss(), computeJs()]).then(function (result) {
 			createPreviewFile(result[0], result[1], result[2]);
 		});
 	};
@@ -654,7 +651,7 @@ settingsBtn, onboardModal, notificationsBtn */
 		cm.on('change', function onChange() {
 			clearTimeout(updateTimer);
 			updateTimer = setTimeout(function () {
-				scope.setPreviewContent();
+				scope.setPreviewContent().catch(handleError);
 			}, updateDelay);
 		});
 		return cm;
@@ -703,6 +700,14 @@ settingsBtn, onboardModal, notificationsBtn */
 				scope[el.getAttribute('d-click')].call(window, e)
 			});
 		})
+	}
+
+	function handleError (error) {
+		if (window.DEBUG) {
+			utils.log(error);
+		} else {
+			window.alert('Error: ' + (error && error.message || error));
+		}
 	}
 
 	function init () {

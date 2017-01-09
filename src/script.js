@@ -395,7 +395,8 @@ settingsBtn, onboardModal, notificationsBtn */
 			return loadJS('lib/babel.min.js').then(setLoadedFlag);
 		}
 
-		return Promise.reject(new Error('Unsupported mode: "' + mode + '"'));
+		// return Promise.reject(new Error('Unsupported mode: "' + mode + '"'));
+		return Promise.resolve();
 	}
 
 	function updateHtmlMode(value) {

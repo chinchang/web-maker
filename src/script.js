@@ -28,7 +28,8 @@ settingsBtn, onboardModal, notificationsBtn */
 	var JsModes = {
 		JS: 'js',
 		ES6: 'es6',
-		COFFEESCRIPT: 'coffee'
+		COFFEESCRIPT: 'coffee',
+		TS: 'typescript'
 	};
 	var modes = {};
 	modes[HtmlModes.HTML] = { label: 'HTML', cmMode: 'htmlmixed', codepenVal: 'none' };
@@ -37,6 +38,7 @@ settingsBtn, onboardModal, notificationsBtn */
 	modes[JsModes.JS] = { label: 'JS', cmMode: 'javascript', codepenVal: 'none' };
 	modes[JsModes.COFFEESCRIPT] = { label: 'CoffeeScript', cmMode: 'coffeescript', codepenVal: 'coffeescript' };
 	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'javascript', codepenVal: 'babel' };
+	modes[JsModes.TS] = { label: 'TypeScript', cmMode: 'javascript', codepenVal: 'typescript' };
 	modes[CssModes.CSS] = { label: 'CSS', cmMode: 'css', codepenVal: 'none' };
 	modes[CssModes.SCSS] = { label: 'SCSS', cmMode: 'sass', codepenVal: 'scss' };
 	modes[CssModes.LESS] = { label: 'LESS', cmMode: 'text/x-less', codepenVal: 'less' };
@@ -393,6 +395,8 @@ settingsBtn, onboardModal, notificationsBtn */
 			loadJS('lib/coffee-script.js').then(setLoadedFlag);
 		} else if (mode === JsModes.ES6) {
 			loadJS('lib/babel.min.js').then(setLoadedFlag);
+		} else if (mode === JsModes.TS) {
+			loadJS('lib/typescript.js').then(setLoadedFlag);
 		}
 	}
 
@@ -514,6 +518,17 @@ settingsBtn, onboardModal, notificationsBtn */
 					utils.addInfiniteLoopProtection(ast);
 				}
 				d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015'] }).code);
+			}
+		} else if (jsMode === JsModes.TS) {
+			try {
+				code = ts.transpileModule(code, { compilerOptions: { module: ts.ModuleKind.CommonJS } });
+			} catch (e) {
+				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
+			} finally {
+				if (shouldPreventInfiniteLoops !== false) {
+					// utils.addInfiniteLoopProtection(ast);
+				}
+				d.resolve(code.outputText);
 			}
 		}
 

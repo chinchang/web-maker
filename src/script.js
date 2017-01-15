@@ -711,6 +711,15 @@ settingsBtn, onboardModal, notificationsBtn */
 		trackEvent('ui', 'onboardSettingsBtnClick');
 	}
 
+	scope.onShowInTabClicked = function () {
+		onboardDontShowInTabOption.classList.remove('selected');
+		onboardShowInTabOption.classList.add('selected');
+	}
+	scope.onDontShowInTabClicked = function () {
+		onboardDontShowInTabOption.classList.add('selected');
+		onboardShowInTabOption.classList.remove('selected');
+	}
+
 	function compileNodes() {
 		var nodes = [].slice.call($all('[d-click]'));
 		nodes.forEach(function (el) {
@@ -965,6 +974,10 @@ settingsBtn, onboardModal, notificationsBtn */
 				utils.once(document, 'overlaysClosed', function () {
 					chrome.storage.sync.set({
 						lastSeenVersion: version
+					}, function () {});
+
+					chrome.storage.sync.set({
+						replaceNewTab: onboardShowInTabOption.classList.contains('selected')
 					}, function () {});
 				});
 			}

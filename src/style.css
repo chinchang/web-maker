@@ -614,3 +614,31 @@ select, input[type="text"], textarea {
 	padding: 1px 6px;
 	font-weight: bold;
 }
+.onboard-selection-wrap {
+	justify-content: center;
+}
+.onboard-selection {
+	padding: 10px;
+	margin: 0 40px;
+	border-radius: 5px;
+	transition: 0.25s ease;
+	position: relative;
+	border: 1px solid transparent;
+}
+.onboard-selection:hover {
+	cursor: pointer;
+	/*background-color: rgba(0,0,0,0.3);*/
+	transform: scale(1.15);
+	/*border-color: rgba(0,0,0,0.4);*/
+}
+.onboard-selection.selected:after {
+	content: '';
+	position: absolute;
+	right: -20px;
+	bottom: 40px;
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	background: white url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width:32px;height:32px" viewBox="0 0 24 24"><path fill="limegreen" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z" /></svg>');
+}
+

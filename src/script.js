@@ -528,6 +528,7 @@ settingsBtn, onboardModal, notificationsBtn */
 			} catch (e) {
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
+				console.log(code)
 				if (shouldPreventInfiniteLoops !== false) {
 					// utils.addInfiniteLoopProtection(ast);
 				}
@@ -992,6 +993,7 @@ settingsBtn, onboardModal, notificationsBtn */
 				hasSeenNotifications = false;
 			}
 		});
+		TowTruck(this);
 
 		requestAnimationFrame(compileNodes);
 	}

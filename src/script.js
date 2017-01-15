@@ -521,7 +521,10 @@ settingsBtn, onboardModal, notificationsBtn */
 			}
 		} else if (jsMode === JsModes.TS) {
 			try {
-				code = ts.transpileModule(code, { compilerOptions: { module: ts.ModuleKind.CommonJS } });
+				code = ts.transpileModule(code, { reportDiagnostics:true, compilerOptions: { noEmitOnError: true, diagnostics:true, module: ts.ModuleKind.ES2015 } });
+				if (code.diagnostics.length) {
+					throw({ description: code.diagnostics[0].messageText, lineNumber: ts.getLineOfLocalPosition(code.diagnostics[0].file,code.diagnostics[0].start) });
+				}
 			} catch (e) {
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {

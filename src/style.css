@@ -197,6 +197,15 @@ select, input[type="text"], textarea {
 .cm-s-monokai .CodeMirror-gutters {
 	background: var(--color-bg);
 }
+.cm-s-monokai .CodeMirror-guttermarker-subtle {
+	opacity: 0.4;
+}
+.CodeMirror-guttermarker-subtle {
+	/*visibility: hidden !important;*/
+}
+.CodeMirror-gutter-wrapper:hover .CodeMirror-guttermarker-subtle {
+	/*visibility: visible;*/
+}
 
 #demo-frame {
 	border: 0;

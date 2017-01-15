@@ -665,6 +665,7 @@ settingsBtn, onboardModal, notificationsBtn */
 			keyMap: 'sublime',
 			theme: 'monokai',
 			lint: !!options.lint,
+			foldGutter: true,
 			gutters: options.gutters || [],
 			// cursorScrollMargin: '20', has issue with scrolling
 			profile: options.profile || ''
@@ -680,17 +681,18 @@ settingsBtn, onboardModal, notificationsBtn */
 
 	scope.cm.html = initEditor(htmlCode, {
 		mode: 'htmlmixed',
-		profile: 'xhtml'
+		profile: 'xhtml',
+		gutters: [ 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ]
 	});
 	emmetCodeMirror(scope.cm.html);
 	scope.cm.css = initEditor(cssCode, {
 		mode: 'css',
-		gutters: [ 'error-gutter' ]
+		gutters: [ 'error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ]
 	});
 	Inlet(scope.cm.css);
 	scope.cm.js = initEditor(jsCode, {
 		mode: 'javascript',
-		gutters: [ 'error-gutter' ]
+		gutters: [ 'error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ]
 	});
 	Inlet(scope.cm.js);
 

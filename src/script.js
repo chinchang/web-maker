@@ -9,7 +9,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 
 /* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.0.0';
+	var version = '2.1.0';
 
 	if (window.DEBUG) {
 		window.scope = scope;

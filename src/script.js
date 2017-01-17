@@ -36,7 +36,7 @@ settingsBtn, onboardModal, notificationsBtn */
 	modes[HtmlModes.JADE] = { label: 'Jade', cmMode: 'jade', codepenVal: 'jade' };
 	modes[JsModes.JS] = { label: 'JS', cmMode: 'javascript', codepenVal: 'none' };
 	modes[JsModes.COFFEESCRIPT] = { label: 'CoffeeScript', cmMode: 'coffeescript', codepenVal: 'coffeescript' };
-	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'javascript', codepenVal: 'babel' };
+	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'jsx', codepenVal: 'babel' };
 	modes[CssModes.CSS] = { label: 'CSS', cmMode: 'css', codepenVal: 'none' };
 	modes[CssModes.SCSS] = { label: 'SCSS', cmMode: 'sass', codepenVal: 'scss' };
 	modes[CssModes.LESS] = { label: 'LESS', cmMode: 'text/x-less', codepenVal: 'less' };
@@ -505,15 +505,30 @@ settingsBtn, onboardModal, notificationsBtn */
 		} else if (jsMode === JsModes.ES6) {
 			try {
 				ast = esprima.parse(code, {
-					tolerant: true
+					tolerant: true,
+					jsx: true
 				});
 			} catch (e) {
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
-				if (shouldPreventInfiniteLoops !== false) {
-					utils.addInfiniteLoopProtection(ast);
+				try {
+					// No JSX block
+					// result = escodegen.generate(ast);
+					if (shouldPreventInfiniteLoops !== false) {
+						utils.addInfiniteLoopProtection(ast);
+					}
+					d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015', 'react'] }).code);
+				} catch (e) {
+					// If we failed, means probably the AST contains JSX which cannot be parsed by escodegen.
+					code = Babel.transform(code, { presets: ['es2015', 'react'] }).code;
+					ast = esprima.parse(code, {
+						tolerant: true
+					});
+					if (shouldPreventInfiniteLoops !== false) {
+						utils.addInfiniteLoopProtection(ast);
+					}
+					d.resolve(escodegen.generate(ast));
 				}
-				d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015'] }).code);
 			}
 		}
 

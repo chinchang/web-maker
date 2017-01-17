@@ -557,13 +557,19 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 					/* eslint-disable no-throw-literal */
 					throw ({ description: code.diagnostics[0].messageText, lineNumber: ts.getLineOfLocalPosition(code.diagnostics[0].file,code.diagnostics[0].start) });
 				}
+				try {
+					ast = esprima.parse(code.outputText, {
+						tolerant: true,
+						jsx: true
+					});
+				} finally {
+					if (shouldPreventInfiniteLoops !== false) {
+						utils.addInfiniteLoopProtection(ast);
+					}
+					d.resolve(escodegen.generate(ast));
+				}
 			} catch (e) {
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
-			} finally {
-				if (shouldPreventInfiniteLoops !== false) {
-					// utils.addInfiniteLoopProtection(ast);
-				}
-				d.resolve(code.outputText);
 			}
 		}
 

@@ -4,6 +4,7 @@
 		<title>Web Maker</title>
 		<link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
 		<link rel="stylesheet" href="lib/codemirror/theme/monokai.css">
+		<link rel="stylesheet" href="lib/codemirror/addon/fold/foldgutter.css">
 		<link rel="stylesheet" href="lib/hint.min.css">
 		<link rel="stylesheet" href="lib/inlet.css">
 		<link rel="stylesheet" href="style.css">
@@ -60,6 +61,7 @@
 									<li><a data-type="css" data-mode="css">CSS</a></li>
 									<li><a data-type="css" data-mode="scss">SCSS</a></li>
 									<li><a data-type="css" data-mode="less">LESS</a></li>
+									<li><a data-type="css" data-mode="stylus">Stylus</a></li>
 								</ul>
 							</div>
 							<div class="code-wrap__header-right-options">
@@ -76,6 +78,7 @@
 									<li><a data-type="js" data-mode="js">JS</a></li>
 									<li><a data-type="js" data-mode="coffee">CoffeeScript</a></li>
 									<li><a data-type="js" data-mode="es6">ES6 (Babel)</a></li>
+									<li><a data-type="js" data-mode="typescript">TypeScript</a></li>
 								</ul>
 							</div>
 							<div class="code-wrap__header-right-options">
@@ -184,7 +187,7 @@
 
 		<div class="modal" id="helpModal">
 			<div class="modal__content">
-				<h1>Web Maker<small style="font-size:14px;"> v2.0.0</small></h1>
+				<h1>Web Maker<small style="font-size:14px;"> v2.1.0</small></h1>
 				<div>
 					<p>Made by <a href="https://twitter.com/chinchang457" target="_blank">Kushagra Gour</a></p>
 					<p>Tweet out your feature requests, comments & suggestions to <a target="_blank" href="https://twitter.com/webmakerApp">@webmakerApp</a>.</p>
@@ -199,7 +202,7 @@
 							<li><a target="_blank" href="https://codemirror.net/">Codemirror</a> - Marijn Haverbeke</li>
 							<li><a target="_blank" href="https://emmet.io/">Emmet</a> - Sergey Chikuyonok</li>
 							<li><a target="_blank" href="http://esprima.org/">Esprima</a> - Ariya Hidayat</li>
-							<li><a target="_blank" href="https://github.com/estools/escodegen">Escodegen</a> - Mozilla</li>
+							<li><a target="_blank" href="https://github.com/estools/escodegen">Escodegen</a> - Yusuke Suzuki</li>
 							<li><a target="_blank" href="https://github.com/enjalot/Inlet">Inlet</a> - Ian Johnson</li>
 							<li><a target="_blank" href="https://kushagragour.in/lab/web-maker">Web Maker!</a> - whhat!</li>
 						</ul>
@@ -217,7 +220,7 @@
 			<div class="modal__content">
 
 				<div class="tac">
-					<svg width="186px" height="87.5px" viewBox="-145 -2 372 175" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+					<svg width="130px" height="60px" viewBox="-145 -2 372 175" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 					    <g id="logo-w/o-text" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-145.000000, -1.000000)">
 					        <polygon id="Path-1" fill="#FF4600" points="31 0 232 0 132 173.310547"></polygon>
 					        <polygon id="Path-1" fill="#FF6C00" points="0 0 201 0 101 173.310547"></polygon>
@@ -228,15 +231,44 @@
 					<h1 style="margin-top:20px">Welcome to Web Maker</h1>
 				</div>
 				<div class="tac">
-					<p>Web Maker lets you do web experiments quickly and even when you are offline.</p>
+					<!-- <p>Web Maker lets you do web experiments quickly and even when you are offline.</p> -->
 
 					<p>
-						By default, Web Maker shows up in every new tab you open. But you can change that setting:
-						<a d-click="onModalSettingsLinkClick">Click here to change setting</a>.
+						By default, Web Maker shows up in every new tab you open. But you can change that below:
 					</p>
 
+					<div class="onboard-selection-wrap flex">
+						<div class="onboard-selection selected" id="onboardShowInTabOptionBtn" d-click="onShowInTabClicked">
+							<!-- Awesome free vector from freepik.com -->
+							<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="200" viewBox="180 200 340 320" xml:space="preserve">
+							<path style="fill:#A5A5A5;stroke: #555;stroke-width: 11px;" d="M503.916,256v43.116H191.326V256c0-11.906,9.651-21.558,21.558-21.558h269.474
+							C494.264,234.442,503.916,244.094,503.916,256z"></path>
+							<path style="fill:#FED766;stroke-width: 11px;stroke: #555;" d="M503.916,288.337v194.021c0,11.906-9.651,21.558-21.558,21.558H212.884
+							c-11.906,0-21.558-9.651-21.558-21.558V288.337h43.116v-64.674c0-5.953,4.826-10.779,10.779-10.779h64.674
+							c5.953,0,10.779,4.826,10.779,10.779v64.674H503.916z"></path>
+							<rect width="120px" height="50px" rx="5" ry="5" x="210" y="315px" style="fill:rgba(0,0,0,0.25);"></rect>
+							<rect width="120px" height="50px" rx="5" ry="5" x="210" y="372px" style="fill:rgba(0,0,0,0.25);"></rect>
+							<rect width="120px" height="50px" rx="5" ry="5" x="210" y="430px" style="fill:rgba(0,0,0,0.25);"></rect>
+							<rect width="140px" height="165px" rx="5" ry="5" x="345" y="315px" style="fill:#f3f3f3;"></rect>
+							</svg>
+							<div class="onboard-selection-text">Show in new tab</div>
+						</div>
+
+						<div class="onboard-selection" id="onboardDontShowInTabOptionBtn" d-click="onDontShowInTabClicked">
+							<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="200" viewBox="180 200 340 320" xml:space="preserve">
+							<path style="fill:#A5A5A5;stroke: #555;stroke-width: 11px;" d="M503.916,256v43.116H191.326V256c0-11.906,9.651-21.558,21.558-21.558h269.474
+								C494.264,234.442,503.916,244.094,503.916,256z"></path>
+							<path style="fill:#FED766;stroke-width: 11px;stroke: #555;" d="M503.916,288.337v194.021c0,11.906-9.651,21.558-21.558,21.558H212.884
+								c-11.906,0-21.558-9.651-21.558-21.558V288.337h43.116v-64.674c0-5.953,4.826-10.779,10.779-10.779h64.674
+								c5.953,0,10.779,4.826,10.779,10.779v64.674H503.916z"></path>
+							  <rect width="200px" height="20px" rx="5" ry="5" x="250" y="365px" style="fill:#f3f3f3;"></rect>
+							</svg>
+							<div class="onboard-selection-text">Don't show in new tab</div>
+						</div>
+					</div>
+
 					<p>
-						You can always open this app by clicking the Web Maker icon in the top-right side of your browser.
+						You can change this later from Settings (<svg style="width:18px;height:18px;position:relative;top:3px;fill:#888" viewBox="0 0 24 24"><use xlink:href="#settings-icon"></use></svg>) in bottom right. Also you can open the app by clicking the Web Maker icon in the top-right side of your browser.
 					</p>
 
 					<p class="tac">
@@ -250,6 +282,17 @@
 			<div class="modal__content">
 				<h1>Whats new?</h1>
 				<div class="notification">
+				  <span class="notification__version">2.1.0</span>
+				  <ul>
+					<li><strong>TypeScript</strong> - Now you can code in TypeScript too!</li>
+					<li><strong>Stylus Preprocessor</strong> - Stylus supported adding for CSS.</li>
+					<li><strong>Code Folding</strong> - Collapse large code blocks for easy editing.</li>
+					<li><strong>Bugfix</strong> - Support JSX in JavaScript.</li>
+					<li>Better onboarding for first time users.</li>
+					<li>Like it? <a href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews" target="_blank" class="btn">Please rate Web Maker <span class="star"></span></a></li>
+				  </ul>
+				</div>
+				<div class="notification">
 				  <span class="notification__version">2.0.0</span>
 				  <ul>
 					<li><strong>Save and Load</strong> - Long pending and super-useful, now you can save your creations and resume them anytime later.</li>
@@ -258,8 +301,7 @@
 					<li><strong>Quick color & number change</strong> - Click on any color or number and experiment with quick values using a slider.</li>
 					<li><strong>Linting</strong> - See your code errors right where you are coding.</li>
 					<li>No more browser hang due to infinite loops!</li>
-					<li><a href="https://kushagragour.in/blog/web-maker-2">Read more about this big release</a></li>
-					<li>Like it? <a href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews" target="_blank" class="btn">Please rate Web Maker <span class="star"></span></a></li>
+					<!-- <li><a href="https://kushagragour.in/blog/web-maker-2">Read more about this big release</a></li> -->
 				  </ul>
 				</div>
 				<div class="notification">
@@ -312,6 +354,12 @@
 		<script src="lib/codemirror/addon/edit/closebrackets.js"></script>
 		<script src="lib/codemirror/addon/edit/closetag.js"></script>
 		<script src="lib/codemirror/addon/comment/comment.js"></script>
+		<script src="lib/codemirror/addon/fold/foldcode.js"></script>
+		<script src="lib/codemirror/addon/fold/foldgutter.js"></script>
+		<script src="lib/codemirror/addon/fold/xml-fold.js"></script>
+		<script src="lib/codemirror/addon/fold/indent-fold.js"></script>
+		<script src="lib/codemirror/addon/fold/comment-fold.js"></script>
+		<script src="lib/codemirror/addon/fold/brace-fold.js"></script>
 		<script src="lib/codemirror/addon/mode/loadmode.js"></script>
 
 		<script src="lib/codemirror/mode/xml/xml.js"></script>

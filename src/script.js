@@ -3,13 +3,13 @@
 onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, helpBtn, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, openBtn, saveBtn, newBtn,
-settingsBtn, onboardModal, notificationsBtn */
+settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardDontShowInTabOptionBtn */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
 
 /* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.0.0';
+	var version = '2.1.0';
 
 	if (window.DEBUG) {
 		window.scope = scope;
@@ -23,12 +23,14 @@ settingsBtn, onboardModal, notificationsBtn */
 	var CssModes = {
 		CSS: 'css',
 		SCSS: 'scss',
-		LESS: 'less'
+		LESS: 'less',
+		STYLUS: 'stylus'
 	};
 	var JsModes = {
 		JS: 'js',
 		ES6: 'es6',
-		COFFEESCRIPT: 'coffee'
+		COFFEESCRIPT: 'coffee',
+		TS: 'typescript'
 	};
 	var modes = {};
 	modes[HtmlModes.HTML] = { label: 'HTML', cmMode: 'htmlmixed', codepenVal: 'none' };
@@ -36,10 +38,12 @@ settingsBtn, onboardModal, notificationsBtn */
 	modes[HtmlModes.JADE] = { label: 'Jade', cmMode: 'jade', codepenVal: 'jade' };
 	modes[JsModes.JS] = { label: 'JS', cmMode: 'javascript', codepenVal: 'none' };
 	modes[JsModes.COFFEESCRIPT] = { label: 'CoffeeScript', cmMode: 'coffeescript', codepenVal: 'coffeescript' };
-	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'javascript', codepenVal: 'babel' };
+	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'jsx', codepenVal: 'babel' };
+	modes[JsModes.TS] = { label: 'TypeScript', cmMode: 'javascript', codepenVal: 'typescript' };
 	modes[CssModes.CSS] = { label: 'CSS', cmMode: 'css', codepenVal: 'none' };
 	modes[CssModes.SCSS] = { label: 'SCSS', cmMode: 'sass', codepenVal: 'scss' };
 	modes[CssModes.LESS] = { label: 'LESS', cmMode: 'text/x-less', codepenVal: 'less' };
+	modes[CssModes.STYLUS] = { label: 'Stylus', cmMode: 'stylus', codepenVal: 'stylus' };
 
 	var updateTimer
 		, updateDelay = 500
@@ -389,10 +393,14 @@ settingsBtn, onboardModal, notificationsBtn */
 				sass = new Sass('lib/sass.worker.js');
 				setLoadedFlag();
 			});
+		} else if (mode === CssModes.STYLUS) {
+			loadJS('lib/stylus.min.js').then(setLoadedFlag);
 		} else if (mode === JsModes.COFFEESCRIPT) {
 			loadJS('lib/coffee-script.js').then(setLoadedFlag);
 		} else if (mode === JsModes.ES6) {
 			loadJS('lib/babel.min.js').then(setLoadedFlag);
+		} else if (mode === JsModes.TS) {
+			loadJS('lib/typescript.js').then(setLoadedFlag);
 		}
 	}
 
@@ -463,6 +471,17 @@ settingsBtn, onboardModal, notificationsBtn */
 			}, function (error) {
 				showErrors('css', [ { lineNumber: error.line, message: error.message } ]);
 			});
+		} else if (cssMode === CssModes.STYLUS) {
+			stylus(code).render(function (error, result) {
+				if (error) {
+					window.err = error;
+					// Last line of message is the actual message
+					var tempArr = error.message.split('\n');
+					tempArr.pop(); // This is empty string in the end
+					showErrors('css', [ { lineNumber: +error.message.match(/stylus:(\d+):/)[1] - 298, message: tempArr.pop() } ]);
+				}
+				d.resolve(result);
+			});
 		}
 
 		return d.promise;
@@ -505,15 +524,52 @@ settingsBtn, onboardModal, notificationsBtn */
 		} else if (jsMode === JsModes.ES6) {
 			try {
 				ast = esprima.parse(code, {
-					tolerant: true
+					tolerant: true,
+					jsx: true
 				});
 			} catch (e) {
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
-				if (shouldPreventInfiniteLoops !== false) {
-					utils.addInfiniteLoopProtection(ast);
+				try {
+					// No JSX block
+					// result = escodegen.generate(ast);
+					if (shouldPreventInfiniteLoops !== false) {
+						utils.addInfiniteLoopProtection(ast);
+					}
+					d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015', 'react'] }).code);
+				} catch (e) {
+					// If we failed, means probably the AST contains JSX which cannot be parsed by escodegen.
+					code = Babel.transform(code, { presets: ['es2015', 'react'] }).code;
+					ast = esprima.parse(code, {
+						tolerant: true
+					});
+					if (shouldPreventInfiniteLoops !== false) {
+						utils.addInfiniteLoopProtection(ast);
+					}
+					d.resolve(escodegen.generate(ast));
 				}
-				d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015'] }).code);
+			}
+		} else if (jsMode === JsModes.TS) {
+			try {
+				code = ts.transpileModule(code, { reportDiagnostics: true, compilerOptions: { noEmitOnError: true, diagnostics: true, module: ts.ModuleKind.ES2015 } });
+				if (code.diagnostics.length) {
+
+					/* eslint-disable no-throw-literal */
+					throw ({ description: code.diagnostics[0].messageText, lineNumber: ts.getLineOfLocalPosition(code.diagnostics[0].file,code.diagnostics[0].start) });
+				}
+				try {
+					ast = esprima.parse(code.outputText, {
+						tolerant: true,
+						jsx: true
+					});
+				} finally {
+					if (shouldPreventInfiniteLoops !== false) {
+						utils.addInfiniteLoopProtection(ast);
+					}
+					d.resolve(escodegen.generate(ast));
+				}
+			} catch (e) {
+				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			}
 		}
 
@@ -647,6 +703,7 @@ settingsBtn, onboardModal, notificationsBtn */
 			keyMap: 'sublime',
 			theme: 'monokai',
 			lint: !!options.lint,
+			foldGutter: true,
 			gutters: options.gutters || [],
 			// cursorScrollMargin: '20', has issue with scrolling
 			profile: options.profile || ''
@@ -662,17 +719,18 @@ settingsBtn, onboardModal, notificationsBtn */
 
 	scope.cm.html = initEditor(htmlCode, {
 		mode: 'htmlmixed',
-		profile: 'xhtml'
+		profile: 'xhtml',
+		gutters: [ 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ]
 	});
 	emmetCodeMirror(scope.cm.html);
 	scope.cm.css = initEditor(cssCode, {
 		mode: 'css',
-		gutters: [ 'error-gutter' ]
+		gutters: [ 'error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ]
 	});
 	Inlet(scope.cm.css);
 	scope.cm.js = initEditor(jsCode, {
 		mode: 'javascript',
-		gutters: [ 'error-gutter' ]
+		gutters: [ 'error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ]
 	});
 	Inlet(scope.cm.js);
 
@@ -694,6 +752,17 @@ settingsBtn, onboardModal, notificationsBtn */
 	scope.onModalSettingsLinkClick = function () {
 		openSettings();
 		trackEvent('ui', 'onboardSettingsBtnClick');
+	}
+
+	scope.onShowInTabClicked = function () {
+		onboardDontShowInTabOptionBtn.classList.remove('selected');
+		onboardShowInTabOptionBtn.classList.add('selected');
+		trackEvent('ui', 'onboardShowInTabClick');
+	}
+	scope.onDontShowInTabClicked = function () {
+		onboardDontShowInTabOptionBtn.classList.add('selected');
+		onboardShowInTabOptionBtn.classList.remove('selected');
+		trackEvent('ui', 'onboardDontShowInTabClick');
 	}
 
 	function compileNodes() {
@@ -951,6 +1020,12 @@ settingsBtn, onboardModal, notificationsBtn */
 					chrome.storage.sync.set({
 						lastSeenVersion: version
 					}, function () {});
+
+					chrome.storage.sync.set({
+						replaceNewTab: onboardShowInTabOptionBtn.classList.contains('selected')
+					}, function () {
+						trackEvent('fn', 'setReplaceNewTabFromOnboard', onboardShowInTabOptionBtn.classList.contains('selected'));
+					});
 				});
 			}
 			// console.utils.log(result, hasSeenNotifications, version);

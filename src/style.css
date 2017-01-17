@@ -197,6 +197,15 @@ select, input[type="text"], textarea {
 .cm-s-monokai .CodeMirror-gutters {
 	background: var(--color-bg);
 }
+.cm-s-monokai .CodeMirror-guttermarker-subtle {
+	opacity: 0.4;
+}
+.CodeMirror-guttermarker-subtle {
+	/*visibility: hidden !important;*/
+}
+.CodeMirror-gutter-wrapper:hover .CodeMirror-guttermarker-subtle {
+	/*visibility: visible;*/
+}
 
 #demo-frame {
 	border: 0;
@@ -327,7 +336,8 @@ select, input[type="text"], textarea {
 	opacity: 0;
 	padding: 2em;
 	font-size: 1.3em;
-	max-height: 82vh;
+	max-height: 90vh;
+	box-sizing: border-box;
 	overflow-y: auto;
 	transition: all 0.19s;
 	transform: translateY(-50px) scale(0.7);
@@ -597,7 +607,7 @@ select, input[type="text"], textarea {
 	position: absolute;
 	top: 14px;
 	left: 0px;
-	white-space: nowrap;
+	width: 300px; /* ideally shud be equal to pane width */
 	transform: translateX(-10px);
 	will-change: transform;
 	transition: 0.2s ease;
@@ -614,3 +624,31 @@ select, input[type="text"], textarea {
 	padding: 1px 6px;
 	font-weight: bold;
 }
+.onboard-selection-wrap {
+	justify-content: center;
+}
+.onboard-selection {
+	padding: 10px;
+	margin: 0 40px;
+	border-radius: 5px;
+	transition: 0.25s ease;
+	position: relative;
+	border: 1px solid transparent;
+}
+.onboard-selection:hover {
+	cursor: pointer;
+	/*background-color: rgba(0,0,0,0.3);*/
+	transform: scale(1.15);
+	/*border-color: rgba(0,0,0,0.4);*/
+}
+.onboard-selection.selected:after {
+	content: '';
+	position: absolute;
+	right: -20px;
+	bottom: 40px;
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	background: white url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width:32px;height:32px" viewBox="0 0 24 24"><path fill="limegreen" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z" /></svg>');
+}
+

@@ -23,7 +23,8 @@ settingsBtn, onboardModal, notificationsBtn */
 	var CssModes = {
 		CSS: 'css',
 		SCSS: 'scss',
-		LESS: 'less'
+		LESS: 'less',
+		STYLUS: 'stylus'
 	};
 	var JsModes = {
 		JS: 'js',
@@ -42,6 +43,7 @@ settingsBtn, onboardModal, notificationsBtn */
 	modes[CssModes.CSS] = { label: 'CSS', cmMode: 'css', codepenVal: 'none' };
 	modes[CssModes.SCSS] = { label: 'SCSS', cmMode: 'sass', codepenVal: 'scss' };
 	modes[CssModes.LESS] = { label: 'LESS', cmMode: 'text/x-less', codepenVal: 'less' };
+	modes[CssModes.STYLUS] = { label: 'Stylus', cmMode: 'stylus', codepenVal: 'stylus' };
 
 	var updateTimer
 		, updateDelay = 500
@@ -391,6 +393,8 @@ settingsBtn, onboardModal, notificationsBtn */
 				sass = new Sass('lib/sass.worker.js');
 				setLoadedFlag();
 			});
+		} else if (mode === CssModes.STYLUS) {
+			loadJS('lib/stylus.min.js').then(setLoadedFlag);
 		} else if (mode === JsModes.COFFEESCRIPT) {
 			loadJS('lib/coffee-script.js').then(setLoadedFlag);
 		} else if (mode === JsModes.ES6) {
@@ -466,6 +470,17 @@ settingsBtn, onboardModal, notificationsBtn */
 				d.resolve(result.css);
 			}, function (error) {
 				showErrors('css', [ { lineNumber: error.line, message: error.message } ]);
+			});
+		} else if (cssMode === CssModes.STYLUS) {
+			stylus(code).render(function (error, result) {
+				if (error) {
+					window.err = error;
+					// Last line of message is the actual message
+					var tempArr = error.message.split('\n');
+					tempArr.pop(); // This is empty string in the end
+					showErrors('css', [ { lineNumber: +error.message.match(/stylus:(\d+):/)[1]-298, message: tempArr.pop() } ]);
+				}
+				d.resolve(result);
 			});
 		}
 

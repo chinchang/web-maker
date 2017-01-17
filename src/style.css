@@ -606,7 +606,7 @@ select, input[type="text"], textarea {
 	position: absolute;
 	top: 14px;
 	left: 0px;
-	white-space: nowrap;
+	width: 300px; /* ideally shud be equal to pane width */
 	transform: translateX(-10px);
 	will-change: transform;
 	transition: 0.2s ease;

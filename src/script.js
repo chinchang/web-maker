@@ -734,10 +734,12 @@ settingsBtn, onboardModal, notificationsBtn */
 	scope.onShowInTabClicked = function () {
 		onboardDontShowInTabOption.classList.remove('selected');
 		onboardShowInTabOption.classList.add('selected');
+		trackEvent('ui', 'onboardShowInTabClick');
 	}
 	scope.onDontShowInTabClicked = function () {
 		onboardDontShowInTabOption.classList.add('selected');
 		onboardShowInTabOption.classList.remove('selected');
+		trackEvent('ui', 'onboardDontShowInTabClick');
 	}
 
 	function compileNodes() {
@@ -998,7 +1000,9 @@ settingsBtn, onboardModal, notificationsBtn */
 
 					chrome.storage.sync.set({
 						replaceNewTab: onboardShowInTabOption.classList.contains('selected')
-					}, function () {});
+					}, function () {
+						trackEvent('fn', 'setReplaceNewTabFromOnboard', onboardShowInTabOption.classList.contains('selected'));
+					});
 				});
 			}
 			// console.utils.log(result, hasSeenNotifications, version);

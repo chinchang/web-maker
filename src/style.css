@@ -336,7 +336,8 @@ select, input[type="text"], textarea {
 	opacity: 0;
 	padding: 2em;
 	font-size: 1.3em;
-	max-height: 82vh;
+	max-height: 90vh;
+	box-sizing: border-box;
 	overflow-y: auto;
 	transition: all 0.19s;
 	transform: translateY(-50px) scale(0.7);

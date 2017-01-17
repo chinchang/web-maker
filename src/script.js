@@ -3,7 +3,7 @@
 onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, helpBtn, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, openBtn, saveBtn, newBtn,
-settingsBtn, onboardModal, notificationsBtn */
+settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardDontShowInTabOptionBtn */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
 
@@ -478,7 +478,7 @@ settingsBtn, onboardModal, notificationsBtn */
 					// Last line of message is the actual message
 					var tempArr = error.message.split('\n');
 					tempArr.pop(); // This is empty string in the end
-					showErrors('css', [ { lineNumber: +error.message.match(/stylus:(\d+):/)[1]-298, message: tempArr.pop() } ]);
+					showErrors('css', [ { lineNumber: +error.message.match(/stylus:(\d+):/)[1] - 298, message: tempArr.pop() } ]);
 				}
 				d.resolve(result);
 			});
@@ -536,9 +536,11 @@ settingsBtn, onboardModal, notificationsBtn */
 			}
 		} else if (jsMode === JsModes.TS) {
 			try {
-				code = ts.transpileModule(code, { reportDiagnostics:true, compilerOptions: { noEmitOnError: true, diagnostics:true, module: ts.ModuleKind.ES2015 } });
+				code = ts.transpileModule(code, { reportDiagnostics: true, compilerOptions: { noEmitOnError: true, diagnostics: true, module: ts.ModuleKind.ES2015 } });
 				if (code.diagnostics.length) {
-					throw({ description: code.diagnostics[0].messageText, lineNumber: ts.getLineOfLocalPosition(code.diagnostics[0].file,code.diagnostics[0].start) });
+
+					/* eslint-disable no-throw-literal */
+					throw ({ description: code.diagnostics[0].messageText, lineNumber: ts.getLineOfLocalPosition(code.diagnostics[0].file,code.diagnostics[0].start) });
 				}
 			} catch (e) {
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
@@ -732,13 +734,13 @@ settingsBtn, onboardModal, notificationsBtn */
 	}
 
 	scope.onShowInTabClicked = function () {
-		onboardDontShowInTabOption.classList.remove('selected');
-		onboardShowInTabOption.classList.add('selected');
+		onboardDontShowInTabOptionBtn.classList.remove('selected');
+		onboardShowInTabOptionBtn.classList.add('selected');
 		trackEvent('ui', 'onboardShowInTabClick');
 	}
 	scope.onDontShowInTabClicked = function () {
-		onboardDontShowInTabOption.classList.add('selected');
-		onboardShowInTabOption.classList.remove('selected');
+		onboardDontShowInTabOptionBtn.classList.add('selected');
+		onboardShowInTabOptionBtn.classList.remove('selected');
 		trackEvent('ui', 'onboardDontShowInTabClick');
 	}
 
@@ -999,9 +1001,9 @@ settingsBtn, onboardModal, notificationsBtn */
 					}, function () {});
 
 					chrome.storage.sync.set({
-						replaceNewTab: onboardShowInTabOption.classList.contains('selected')
+						replaceNewTab: onboardShowInTabOptionBtn.classList.contains('selected')
 					}, function () {
-						trackEvent('fn', 'setReplaceNewTabFromOnboard', onboardShowInTabOption.classList.contains('selected'));
+						trackEvent('fn', 'setReplaceNewTabFromOnboard', onboardShowInTabOptionBtn.classList.contains('selected'));
 					});
 				});
 			}

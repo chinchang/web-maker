@@ -23,6 +23,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 	var CssModes = {
 		CSS: 'css',
 		SCSS: 'scss',
+		SASS: 'sass',
 		LESS: 'less',
 		STYLUS: 'stylus'
 	};
@@ -42,6 +43,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 	modes[JsModes.TS] = { label: 'TypeScript', cmMode: 'javascript', codepenVal: 'typescript' };
 	modes[CssModes.CSS] = { label: 'CSS', cmMode: 'css', codepenVal: 'none' };
 	modes[CssModes.SCSS] = { label: 'SCSS', cmMode: 'sass', codepenVal: 'scss' };
+	modes[CssModes.SASS] = { label: 'SASS', cmMode: 'sass', codepenVal: 'sass' };
 	modes[CssModes.LESS] = { label: 'LESS', cmMode: 'text/x-less', codepenVal: 'less' };
 	modes[CssModes.STYLUS] = { label: 'Stylus', cmMode: 'stylus', codepenVal: 'stylus' };
 
@@ -388,7 +390,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			loadJS('lib/marked.js').then(setLoadedFlag);
 		} else if (mode === CssModes.LESS) {
 			loadJS('lib/less.min.js').then(setLoadedFlag);
-		} else if (mode === CssModes.SCSS) {
+		} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
 			loadJS('lib/sass.js').then(function () {
 				sass = new Sass('lib/sass.worker.js');
 				setLoadedFlag();
@@ -457,9 +459,9 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 
 		if (cssMode === CssModes.CSS) {
 			d.resolve(code);
-		} else if (cssMode === CssModes.SCSS) {
-			sass.compile(code, function(result) {
-				// Something as wrong
+		} else if (cssMode === CssModes.SCSS || cssMode === CssModes.SASS) {
+			sass.compile(code, { indentedSyntax: cssMode === CssModes.SASS }, function(result) {
+				// Something was wrong
 				if (result.line && result.message) {
 					showErrors('css', [ { lineNumber: result.line - 1, message: result.message } ]);
 				}

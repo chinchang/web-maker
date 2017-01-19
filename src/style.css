@@ -106,6 +106,15 @@ select, input[type="text"], textarea {
 	flex-direction: row;
 	width: auto;
 }
+.layout-4 .code-side {
+	display: none;
+}
+.layout-4 .code-side + .gutter {
+	display: none;
+}
+.layout-4 .demo-side {
+	width: 100% !important;
+}
 .code-wrap {
 	display: flex;
 	flex-direction: column;

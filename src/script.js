@@ -139,7 +139,10 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		mainSplitInstance = Split(['#js-code-side', '#js-demo-side' ], {
 			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal'),
 			minSize: 34,
-			gutterSize: 6
+			gutterSize: 6,
+			onDragEnd: function () {
+				scope.setPreviewContent();
+			}
 		});
 	}
 	function toggleLayout(mode) {
@@ -153,13 +156,16 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		layoutBtn1.classList.remove('selected');
 		layoutBtn2.classList.remove('selected');
 		layoutBtn3.classList.remove('selected');
+		layoutBtn4.classList.remove('selected');
 		$('#layoutBtn' + mode).classList.add('selected');
 		document.body.classList.remove('layout-1');
 		document.body.classList.remove('layout-2');
 		document.body.classList.remove('layout-3');
+		document.body.classList.remove('layout-4');
 		document.body.classList.add('layout-' + mode);
 
 		resetSplitting();
+		scope.setPreviewContent();
 	}
 
 	function onExternalLibChange() {
@@ -792,6 +798,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		layoutBtn1.addEventListener('click', getToggleLayoutButtonListener(1));
 		layoutBtn2.addEventListener('click', getToggleLayoutButtonListener(2));
 		layoutBtn3.addEventListener('click', getToggleLayoutButtonListener(3));
+		layoutBtn4.addEventListener('click', getToggleLayoutButtonListener(4));
 
 		utils.onButtonClick(helpBtn, function () {
 			helpModal.classList.toggle('is-modal-visible');

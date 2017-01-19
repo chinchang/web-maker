@@ -62,6 +62,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		, codeSplitInstance
 		// TODO: for legacy reasons when. Will be refactored as global preferences.
 		, prefs = {}
+		, codeInPreview = { html: null, css: null, js: null }
 
 		// DOM nodes
 		, frame = $('#demo-frame')
@@ -141,7 +142,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			minSize: 34,
 			gutterSize: 6,
 			onDragEnd: function () {
-				scope.setPreviewContent();
+				scope.setPreviewContent(true);
 			}
 		});
 	}
@@ -165,13 +166,13 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		document.body.classList.add('layout-' + mode);
 
 		resetSplitting();
-		scope.setPreviewContent();
+		scope.setPreviewContent(true);
 	}
 
 	function onExternalLibChange() {
 		utils.log('onExternalLibChange');
 		updateExternalLibUi();
-		scope.setPreviewContent();
+		scope.setPreviewContent(true);
 	}
 
 	function updateExternalLibUi() {
@@ -615,7 +616,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		}, '');
 		var contents = '<html>\n<head>\n'
 			+ externalCss + '\n'
-			+ '<style>\n' + css + '\n</style>\n'
+			+ '<style id="webmakerstyle">\n' + css + '\n</style>\n'
 			+ '</head>\n'
 			+ '<body>\n' + html + '\n'
 			+ externalJs + '\n<script>\n' + js + '\n//# sourceURL=userscript.js</script></body>\n</html>';
@@ -663,13 +664,29 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		}, errorHandler);
 	}
 
-	scope.setPreviewContent = function () {
-		var htmlPromise = computeHtml();
-		var cssPromise = computeCss();
-		var jsPromise = computeJs();
-		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
-			createPreviewFile(result[0], result[1], result[2]);
-		});
+	scope.setPreviewContent = function (isForced) {
+		var currentCode = {
+			html: scope.cm.html.getValue(),
+			css: scope.cm.css.getValue(),
+			js: scope.cm.js.getValue()
+		};
+		// If just CSS was changed (and everything shudn't be empty),
+		// change the styles inside the iframe.
+		if (!isForced && currentCode.html === codeInPreview.html && currentCode.js === codeInPreview.js) {
+			computeCss().then(function (css) {
+				frame.contentDocument.querySelector('#webmakerstyle').textContent = css;
+			});
+		} else {
+			var htmlPromise = computeHtml();
+			var cssPromise = computeCss();
+			var jsPromise = computeJs();
+			Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
+				createPreviewFile(result[0], result[1], result[2]);
+			});
+		}
+		codeInPreview.html = scope.cm.html.getValue();
+		codeInPreview.css = scope.cm.css.getValue();
+		codeInPreview.js = scope.cm.js.getValue();
 	};
 
 	function saveFile() {

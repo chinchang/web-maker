@@ -40,11 +40,11 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 	modes[JsModes.JS] = { label: 'JS', cmMode: 'javascript', codepenVal: 'none' };
 	modes[JsModes.COFFEESCRIPT] = { label: 'CoffeeScript', cmMode: 'coffeescript', codepenVal: 'coffeescript' };
 	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'jsx', codepenVal: 'babel' };
-	modes[JsModes.TS] = { label: 'TypeScript', cmMode: 'javascript', codepenVal: 'typescript' };
-	modes[CssModes.CSS] = { label: 'CSS', cmMode: 'css', codepenVal: 'none' };
-	modes[CssModes.SCSS] = { label: 'SCSS', cmMode: 'sass', codepenVal: 'scss' };
+	modes[JsModes.TS] = { label: 'TypeScript', cmPath: 'jsx', cmMode: 'text/typescript-jsx', codepenVal: 'typescript' };
+	modes[CssModes.CSS] = { label: 'CSS', cmPath: 'css', cmMode: 'css', codepenVal: 'none' };
+	modes[CssModes.SCSS] = { label: 'SCSS', cmPath: 'css', cmMode: 'text/x-scss', codepenVal: 'scss' };
 	modes[CssModes.SASS] = { label: 'SASS', cmMode: 'sass', codepenVal: 'sass' };
-	modes[CssModes.LESS] = { label: 'LESS', cmMode: 'text/x-less', codepenVal: 'less' };
+	modes[CssModes.LESS] = { label: 'LESS', cmPath: 'css', cmMode: 'text/x-less', codepenVal: 'less' };
 	modes[CssModes.STYLUS] = { label: 'Stylus', cmMode: 'stylus', codepenVal: 'stylus' };
 
 	var updateTimer
@@ -418,7 +418,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		htmlModelLabel.textContent = modes[value].label;
 		handleModeRequirements(value);
 		scope.cm.html.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(scope.cm.html, modes[value].cmMode);
+		CodeMirror.autoLoadMode(scope.cm.html, modes[value].cmPath || modes[value].cmMode);
 		trackEvent('ui', 'updateCodeMode', 'html', value);
 	}
 	function updateCssMode(value) {
@@ -426,7 +426,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		cssModelLabel.textContent = modes[value].label;
 		handleModeRequirements(value);
 		scope.cm.css.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(scope.cm.css, modes[value].cmMode);
+		CodeMirror.autoLoadMode(scope.cm.css, modes[value].cmPath || modes[value].cmMode);
 		trackEvent('ui', 'updateCodeMode', 'css', value);
 	}
 	function updateJsMode(value) {
@@ -434,7 +434,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		jsModelLabel.textContent = modes[value].label;
 		handleModeRequirements(value);
 		scope.cm.js.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(scope.cm.js, modes[value].cmMode);
+		CodeMirror.autoLoadMode(scope.cm.js, modes[value].cmPath || modes[value].cmMode);
 		trackEvent('ui', 'updateCodeMode', 'js', value);
 		// FIXME: Will be saved as part of scope settings
 		/*

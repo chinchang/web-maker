@@ -758,6 +758,10 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 				scope.setPreviewContent();
 			}, updateDelay);
 		});
+		cm.on('inputRead', function onChange(cm, input) {
+			if (input.text[0] === ';') { return; }
+			CodeMirror.commands.autocomplete(cm, null, { completeSingle: false })
+		});
 		return cm;
 	}
 

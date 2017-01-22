@@ -1,6 +1,6 @@
 /* global trackEvent */
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
-onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, helpBtn, onboardModal, onboardModal,
+onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, openBtn, saveBtn, newBtn,
 settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardDontShowInTabOptionBtn */
@@ -607,7 +607,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		});
 	}
 
-	function getCompleteHtml(html, css, js) {
+	function getCompleteHtml(html, css) {
 		var externalJs = externalJsTextarea.value.split('\n').reduce(function (scripts, url) {
 			return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
 		}, '');
@@ -636,14 +636,13 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 				fileEntry.createWriter(function(fileWriter) {
 					function onWriteComplete() {
 						if (fileWritten) {
-							cb();
+							return cb();
 						}
-						else {
-							fileWritten = true;
-							// Set the write pointer to starting of file
-							fileWriter.seek(0);
-							fileWriter.write(blob);
-						}
+						fileWritten = true;
+						// Set the write pointer to starting of file
+						fileWriter.seek(0);
+						fileWriter.write(blob);
+						return false;
 					}
 					fileWriter.onwriteend = onWriteComplete;
 					// Empty the file contents
@@ -656,7 +655,6 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 
 	function createPreviewFile(html, css, js) {
 		var contents = getCompleteHtml(html, css, js);
-		var fileWritten = false;
 		var blob = new Blob([ contents ], { type: "text/plain;charset=UTF-8" });
 		var blobjs = new Blob([ js ], { type: "text/plain;charset=UTF-8" });
 
@@ -758,7 +756,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 				scope.setPreviewContent();
 			}, updateDelay);
 		});
-		cm.on('inputRead', function onChange(cm, input) {
+		cm.on('inputRead', function onChange(editor, input) {
 			if (input.text[0] === ';') { return; }
 			CodeMirror.commands.autocomplete(cm, null, { completeSingle: false })
 		});

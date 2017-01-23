@@ -8,7 +8,7 @@
 		"storage",
 		"tabs"
 	],
-	"content_security_policy": "script-src 'self' https://www.google-analytics.com 'unsafe-eval'; object-src 'self'",
+	"content_security_policy": "script-src 'self' https://ajax.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://unpkg.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net/ https://www.google-analytics.com 'unsafe-eval'; object-src 'self'",
 	"options_ui": {
 		"page": "options.html",
 		"chrome_style": true

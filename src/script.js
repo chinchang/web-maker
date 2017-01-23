@@ -1,6 +1,6 @@
 /* global trackEvent */
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
-onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, helpBtn, onboardModal, onboardModal,
+onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, openBtn, saveBtn, newBtn,
 settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardDontShowInTabOptionBtn */
@@ -9,7 +9,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 
 /* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.1.0';
+	var version = '2.2.0';
 
 	if (window.DEBUG) {
 		window.scope = scope;
@@ -23,6 +23,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 	var CssModes = {
 		CSS: 'css',
 		SCSS: 'scss',
+		SASS: 'sass',
 		LESS: 'less',
 		STYLUS: 'stylus'
 	};
@@ -39,10 +40,11 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 	modes[JsModes.JS] = { label: 'JS', cmMode: 'javascript', codepenVal: 'none' };
 	modes[JsModes.COFFEESCRIPT] = { label: 'CoffeeScript', cmMode: 'coffeescript', codepenVal: 'coffeescript' };
 	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'jsx', codepenVal: 'babel' };
-	modes[JsModes.TS] = { label: 'TypeScript', cmMode: 'javascript', codepenVal: 'typescript' };
-	modes[CssModes.CSS] = { label: 'CSS', cmMode: 'css', codepenVal: 'none' };
-	modes[CssModes.SCSS] = { label: 'SCSS', cmMode: 'sass', codepenVal: 'scss' };
-	modes[CssModes.LESS] = { label: 'LESS', cmMode: 'text/x-less', codepenVal: 'less' };
+	modes[JsModes.TS] = { label: 'TypeScript', cmPath: 'jsx', cmMode: 'text/typescript-jsx', codepenVal: 'typescript' };
+	modes[CssModes.CSS] = { label: 'CSS', cmPath: 'css', cmMode: 'css', codepenVal: 'none' };
+	modes[CssModes.SCSS] = { label: 'SCSS', cmPath: 'css', cmMode: 'text/x-scss', codepenVal: 'scss' };
+	modes[CssModes.SASS] = { label: 'SASS', cmMode: 'sass', codepenVal: 'sass' };
+	modes[CssModes.LESS] = { label: 'LESS', cmPath: 'css', cmMode: 'text/x-less', codepenVal: 'less' };
 	modes[CssModes.STYLUS] = { label: 'Stylus', cmMode: 'stylus', codepenVal: 'stylus' };
 
 	var updateTimer
@@ -60,6 +62,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		, codeSplitInstance
 		// TODO: for legacy reasons when. Will be refactored as global preferences.
 		, prefs = {}
+		, codeInPreview = { html: null, css: null, js: null }
 
 		// DOM nodes
 		, frame = $('#demo-frame')
@@ -137,7 +140,10 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		mainSplitInstance = Split(['#js-code-side', '#js-demo-side' ], {
 			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal'),
 			minSize: 34,
-			gutterSize: 6
+			gutterSize: 6,
+			onDragEnd: function () {
+				scope.setPreviewContent(true);
+			}
 		});
 	}
 	function toggleLayout(mode) {
@@ -151,19 +157,22 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		layoutBtn1.classList.remove('selected');
 		layoutBtn2.classList.remove('selected');
 		layoutBtn3.classList.remove('selected');
+		layoutBtn4.classList.remove('selected');
 		$('#layoutBtn' + mode).classList.add('selected');
 		document.body.classList.remove('layout-1');
 		document.body.classList.remove('layout-2');
 		document.body.classList.remove('layout-3');
+		document.body.classList.remove('layout-4');
 		document.body.classList.add('layout-' + mode);
 
 		resetSplitting();
+		scope.setPreviewContent(true);
 	}
 
 	function onExternalLibChange() {
 		utils.log('onExternalLibChange');
 		updateExternalLibUi();
-		scope.setPreviewContent();
+		scope.setPreviewContent(true);
 	}
 
 	function updateExternalLibUi() {
@@ -388,7 +397,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			loadJS('lib/marked.js').then(setLoadedFlag);
 		} else if (mode === CssModes.LESS) {
 			loadJS('lib/less.min.js').then(setLoadedFlag);
-		} else if (mode === CssModes.SCSS) {
+		} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
 			loadJS('lib/sass.js').then(function () {
 				sass = new Sass('lib/sass.worker.js');
 				setLoadedFlag();
@@ -409,7 +418,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		htmlModelLabel.textContent = modes[value].label;
 		handleModeRequirements(value);
 		scope.cm.html.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(scope.cm.html, modes[value].cmMode);
+		CodeMirror.autoLoadMode(scope.cm.html, modes[value].cmPath || modes[value].cmMode);
 		trackEvent('ui', 'updateCodeMode', 'html', value);
 	}
 	function updateCssMode(value) {
@@ -417,7 +426,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		cssModelLabel.textContent = modes[value].label;
 		handleModeRequirements(value);
 		scope.cm.css.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(scope.cm.css, modes[value].cmMode);
+		CodeMirror.autoLoadMode(scope.cm.css, modes[value].cmPath || modes[value].cmMode);
 		trackEvent('ui', 'updateCodeMode', 'css', value);
 	}
 	function updateJsMode(value) {
@@ -425,7 +434,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		jsModelLabel.textContent = modes[value].label;
 		handleModeRequirements(value);
 		scope.cm.js.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(scope.cm.js, modes[value].cmMode);
+		CodeMirror.autoLoadMode(scope.cm.js, modes[value].cmPath || modes[value].cmMode);
 		trackEvent('ui', 'updateCodeMode', 'js', value);
 		// FIXME: Will be saved as part of scope settings
 		/*
@@ -457,9 +466,9 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 
 		if (cssMode === CssModes.CSS) {
 			d.resolve(code);
-		} else if (cssMode === CssModes.SCSS) {
-			sass.compile(code, function(result) {
-				// Something as wrong
+		} else if (cssMode === CssModes.SCSS || cssMode === CssModes.SASS) {
+			sass.compile(code, { indentedSyntax: cssMode === CssModes.SASS }, function(result) {
+				// Something was wrong
 				if (result.line && result.message) {
 					showErrors('css', [ { lineNumber: result.line - 1, message: result.message } ]);
 				}
@@ -598,7 +607,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		});
 	}
 
-	function getCompleteHtml(html, css, js) {
+	function getCompleteHtml(html, css) {
 		var externalJs = externalJsTextarea.value.split('\n').reduce(function (scripts, url) {
 			return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
 		}, '');
@@ -607,17 +616,47 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		}, '');
 		var contents = '<html>\n<head>\n'
 			+ externalCss + '\n'
-			+ '<style>\n' + css + '\n</style>\n'
+			+ '<style id="webmakerstyle">\n' + css + '\n</style>\n'
 			+ '</head>\n'
 			+ '<body>\n' + html + '\n'
-			+ externalJs + '\n<script>\n' + js + '\n//# sourceURL=userscript.js</script></body>\n</html>';
+			+ externalJs + '\n<script src="'
+			+ 'filesystem:chrome-extension://'
+			+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'script.js' + '">\n'
+			+ '</script></body>\n</html>';
 
 		return contents;
 	}
+
+	function writeFile(name, blob, cb) {
+		var fileWritten = false;
+		function errorHandler() { utils.log(arguments); }
+
+		window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024 * 5, function(fs){
+			fs.root.getFile(name, { create: true }, function(fileEntry) {
+				fileEntry.createWriter(function(fileWriter) {
+					function onWriteComplete() {
+						if (fileWritten) {
+							return cb();
+						}
+						fileWritten = true;
+						// Set the write pointer to starting of file
+						fileWriter.seek(0);
+						fileWriter.write(blob);
+						return false;
+					}
+					fileWriter.onwriteend = onWriteComplete;
+					// Empty the file contents
+					fileWriter.truncate(0)
+				}, errorHandler);
+			}, errorHandler);
+		}, errorHandler);
+
+	}
+
 	function createPreviewFile(html, css, js) {
 		var contents = getCompleteHtml(html, css, js);
-		var fileWritten = false;
 		var blob = new Blob([ contents ], { type: "text/plain;charset=UTF-8" });
+		var blobjs = new Blob([ js ], { type: "text/plain;charset=UTF-8" });
 
 		// Track if people have written code.
 		if (!trackEvent.hasTrackedCode && (html || css || js)) {
@@ -630,38 +669,41 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			trackEvent('fn', 'usingPreview');
 		}
 
-		function errorHandler() { utils.log(arguments); }
+		// we need to store user script in external JS file to prevent inline-script
+		// CSP from affecting it.
+		writeFile('script.js', blobjs, function () {
+			writeFile('preview.html', blob, function () {
+				frame.src = 'filesystem:chrome-extension://'
+					+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
+			});
+		});
 
-		window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024 * 5, function(fs){
-			fs.root.getFile('preview.html', { create: true }, function(fileEntry) {
-				fileEntry.createWriter(function(fileWriter) {
-					function onWriteComplete() {
-						if (fileWritten) {
-							frame.src = 'filesystem:chrome-extension://'
-							+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
-						}
-						else {
-							fileWritten = true;
-							// Set the write pointer to starting of file
-							fileWriter.seek(0);
-							fileWriter.write(blob);
-						}
-					}
-					fileWriter.onwriteend = onWriteComplete;
-					// Empty the file contents
-					fileWriter.truncate(0)
-				}, errorHandler);
-			}, errorHandler);
-		}, errorHandler);
+
 	}
 
-	scope.setPreviewContent = function () {
-		var htmlPromise = computeHtml();
-		var cssPromise = computeCss();
-		var jsPromise = computeJs();
-		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
-			createPreviewFile(result[0], result[1], result[2]);
-		});
+	scope.setPreviewContent = function (isForced) {
+		var currentCode = {
+			html: scope.cm.html.getValue(),
+			css: scope.cm.css.getValue(),
+			js: scope.cm.js.getValue()
+		};
+		// If just CSS was changed (and everything shudn't be empty),
+		// change the styles inside the iframe.
+		if (!isForced && currentCode.html === codeInPreview.html && currentCode.js === codeInPreview.js) {
+			computeCss().then(function (css) {
+				frame.contentDocument.querySelector('#webmakerstyle').textContent = css;
+			});
+		} else {
+			var htmlPromise = computeHtml();
+			var cssPromise = computeCss();
+			var jsPromise = computeJs();
+			Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
+				createPreviewFile(result[0], result[1], result[2]);
+			});
+		}
+		codeInPreview.html = currentCode.html;
+		codeInPreview.css = currentCode.css;
+		codeInPreview.js = currentCode.js;
 	};
 
 	function saveFile() {
@@ -713,6 +755,10 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			updateTimer = setTimeout(function () {
 				scope.setPreviewContent();
 			}, updateDelay);
+		});
+		cm.on('inputRead', function onChange(editor, input) {
+			if (input.text[0] === ';') { return; }
+			CodeMirror.commands.autocomplete(cm, null, { completeSingle: false })
 		});
 		return cm;
 	}
@@ -790,6 +836,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		layoutBtn1.addEventListener('click', getToggleLayoutButtonListener(1));
 		layoutBtn2.addEventListener('click', getToggleLayoutButtonListener(2));
 		layoutBtn3.addEventListener('click', getToggleLayoutButtonListener(3));
+		layoutBtn4.addEventListener('click', getToggleLayoutButtonListener(4));
 
 		utils.onButtonClick(helpBtn, function () {
 			helpModal.classList.toggle('is-modal-visible');

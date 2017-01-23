@@ -8,6 +8,7 @@
 :root {
 	--color-bg: #252637;
 	--color-sidebar: #3A2B63;
+	--code-font-size: 16px;
 }
 body {
 	margin: 0;
@@ -106,6 +107,15 @@ select, input[type="text"], textarea {
 	flex-direction: row;
 	width: auto;
 }
+.layout-4 .code-side {
+	display: none;
+}
+.layout-4 .code-side + .gutter {
+	display: none;
+}
+.layout-4 .demo-side {
+	width: 100% !important;
+}
 .code-wrap {
 	display: flex;
 	flex-direction: column;
@@ -182,7 +192,7 @@ select, input[type="text"], textarea {
 .Codemirror {
 	width: 100%;
 	height: calc(100% - 25px); /* 25px for header */
-	font-size: 16px;
+	font-size: var(--code-font-size);
 }
 .layout-2 .is-minimized .Codemirror {
 	height: calc(100%);
@@ -206,7 +216,19 @@ select, input[type="text"], textarea {
 .CodeMirror-gutter-wrapper:hover .CodeMirror-guttermarker-subtle {
 	/*visibility: visible;*/
 }
-
+.CodeMirror-hints {
+	font-size: var(--code-font-size);
+	border: 0;
+	background: #1e1e2c;
+}
+.CodeMirror-hint {
+	color: #bbb;
+	padding: 2px 4px;
+}
+li.CodeMirror-hint-active {
+	background: #5b429d;
+	/*color: white;*/
+}
 #demo-frame {
 	border: 0;
 	width: 100%;
@@ -552,7 +574,7 @@ select, input[type="text"], textarea {
 }
 .dropdown__menu > li > a {
 	display: block;
-	padding: 15px;
+	padding: 10px 15px;
 	color: #333;
 	cursor: pointer;
 }

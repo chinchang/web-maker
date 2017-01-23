@@ -701,9 +701,9 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 				createPreviewFile(result[0], result[1], result[2]);
 			});
 		}
-		codeInPreview.html = scope.cm.html.getValue();
-		codeInPreview.css = scope.cm.css.getValue();
-		codeInPreview.js = scope.cm.js.getValue();
+		codeInPreview.html = currentCode.html;
+		codeInPreview.css = currentCode.css;
+		codeInPreview.js = currentCode.js;
 	};
 
 	function saveFile() {

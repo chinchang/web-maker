@@ -988,6 +988,31 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			else if (event.keyCode === 27) {
 				closeAllOverlays();
 			}
+			if (event.keyCode === 40 && savedItemsPane.classList.contains('is-open')) {
+				var selectedItemElement = $('.js-saved-item-tile.selected');
+				if (selectedItemElement) {
+					selectedItemElement.classList.remove('selected');
+					selectedItemElement.nextElementSibling.classList.add('selected');
+				} else {
+					$('.js-saved-item-tile:first-child').classList.add('selected');
+				}
+			} else if (event.keyCode === 38 && savedItemsPane.classList.contains('is-open')) {
+				var selectedItemElement = $('.js-saved-item-tile.selected');
+				if (selectedItemElement) {
+					selectedItemElement.classList.remove('selected');
+					selectedItemElement.previousElementSibling.classList.add('selected');
+				} else {
+					$('.js-saved-item-tile:first-child').classList.add('selected');
+				}
+			} else if (event.keyCode === 13 && savedItemsPane.classList.contains('is-open')) {
+				var selectedItemElement = $('.js-saved-item-tile.selected');
+				setTimeout(function () {
+					openItem(selectedItemElement.dataset.itemId);
+				}, 350);
+				toggleSavedItemsPane();
+			}
+
+			utils.log(event.keyCode)
 		});
 
 		window.addEventListener('click', function(e) {

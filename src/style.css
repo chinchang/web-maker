@@ -466,7 +466,8 @@ li.CodeMirror-hint-active {
 		transform: translateX(0px);
 	}
 }
-.saved-item-tile:hover {
+.saved-item-tile:hover,
+.saved-item-tile.selected {
 	background: rgba(255,255,255,0.1);
 }
 .saved-item-tile__close-btn {

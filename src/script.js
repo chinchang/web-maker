@@ -142,7 +142,11 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			minSize: 34,
 			gutterSize: 6,
 			onDragEnd: function () {
-				scope.setPreviewContent(true);
+				// Running preview updation in next call stack, so that error there
+				// doesn't affect this dragend listener.
+				setTimeout(function () {
+					scope.setPreviewContent(true);
+				}, 1);
 			}
 		});
 	}

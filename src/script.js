@@ -611,7 +611,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		});
 	}
 
-	function getCompleteHtml(html, css) {
+	function getCompleteHtml(html, css, js) {
 		var externalJs = externalJsTextarea.value.split('\n').reduce(function (scripts, url) {
 			return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
 		}, '');
@@ -623,10 +623,16 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			+ '<style id="webmakerstyle">\n' + css + '\n</style>\n'
 			+ '</head>\n'
 			+ '<body>\n' + html + '\n'
-			+ externalJs + '\n<script src="'
-			+ 'filesystem:chrome-extension://'
-			+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'script.js' + '">\n'
-			+ '</script></body>\n</html>';
+			+ externalJs + '\n';
+
+		if (js) {
+			contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';
+		} else {
+			contents += '<script src="'
+				+ 'filesystem:chrome-extension://'
+				+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'script.js' + '">'
+		}
+		contents += '\n</script>\n</body>\n</html>';
 
 		return contents;
 	}
@@ -658,7 +664,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 	}
 
 	function createPreviewFile(html, css, js) {
-		var contents = getCompleteHtml(html, css, js);
+		var contents = getCompleteHtml(html, css);
 		var blob = new Blob([ contents ], { type: "text/plain;charset=UTF-8" });
 		var blobjs = new Blob([ js ], { type: "text/plain;charset=UTF-8" });
 

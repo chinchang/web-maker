@@ -33,6 +33,7 @@ a { text-decoration: none; color: crimson; cursor: pointer; }
 .tac { text-align: center; }
 .full-width { width: 100%; }
 .opacity--30 { opacity: 0.3; }
+.pointer-none { pointer-events: none; }
 
 [class*="hint--"]:after {
 	text-transform: none;
@@ -483,11 +484,13 @@ li.CodeMirror-hint-active {
 	color: #555;
 }
 .saved-item-tile__title {
+	pointer-events: none;
 	font-size: 1.6em;
 	margin: 0 0 1em 0;
 	opacity: 0.8;
 }
 .saved-item-tile__meta {
+	pointer-events: none;
 	opacity: 0.3;
 }
 .saved-items-pane__container {

@@ -750,6 +750,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			lineWrapping: true,
 			autofocus: options.autofocus || false,
 			autoCloseBrackets: true,
+			autoCloseTags: true,
 			matchBrackets: true,
 			tabMode: 'indent',
 			keyMap: 'sublime',

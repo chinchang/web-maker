@@ -768,7 +768,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			}, updateDelay);
 		});
 		cm.on('inputRead', function onChange(editor, input) {
-			if (input.text[0] === ';') { return; }
+			if (input.text[0] === ';' || input.text[0] === ' ') { return; }
 			CodeMirror.commands.autocomplete(cm, null, { completeSingle: false })
 		});
 		return cm;

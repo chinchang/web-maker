@@ -312,7 +312,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 	function createNewItem() {
 		var d = new Date();
 		currentItem = {
-			title: 'Untitled ' + d.getDate() + '-' + d.getMonth() + '-' + d.getHours() + ':' + d.getMinutes(),
+			title: 'Untitled ' + d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getHours() + ':' + d.getMinutes(),
 			html: '',
 			css: '',
 			js: '',

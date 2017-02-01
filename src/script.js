@@ -1011,8 +1011,6 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 				}, 350);
 				toggleSavedItemsPane();
 			}
-
-			utils.log(event.keyCode)
 		});
 
 		window.addEventListener('click', function(e) {
@@ -1049,8 +1047,11 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			trackEvent('ui', 'addLibrarySelect', target.selectedOptions[0].label);
 			onExternalLibChange();
 		});
-		externalJsTextarea.addEventListener('change', onExternalLibChange);
-		externalCssTextarea.addEventListener('change', onExternalLibChange);
+		externalJsTextarea.addEventListener('blur', onExternalLibChange);
+		externalCssTextarea.addEventListener('blur', onExternalLibChange);
+
+		new TextareaAutoComplete(externalJsTextarea, obj => obj.latest.match(/\.js$/));
+		new TextareaAutoComplete(externalCssTextarea, obj => obj.latest.match(/\.css$/));
 
 		chrome.storage.local.get({
 			layoutMode: 1,

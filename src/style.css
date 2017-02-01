@@ -582,6 +582,7 @@ li.CodeMirror-hint-active {
 	color: #333;
 	cursor: pointer;
 }
+.dropdown__menu > li.selected > a,
 .dropdown__menu > li > a:hover {
 	background: var(--color-sidebar);
 	color: white;
@@ -678,3 +679,10 @@ li.CodeMirror-hint-active {
 	background: white url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width:32px;height:32px" viewBox="0 0 24 24"><path fill="limegreen" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z" /></svg>');
 }
 
+.autocomplete-dropdown {
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+	right: 0;
+	max-height: 200px;
+	overflow-y: auto;
+}

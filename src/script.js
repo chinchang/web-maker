@@ -822,6 +822,94 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		trackEvent('ui', 'onboardDontShowInTabClick');
 	}
 
+	function saveScreenshot(dataURI) {
+		// convert base64 to raw binary data held in a string
+		// doesn't handle URLEncoded DataURIs
+		var byteString = atob(dataURI.split(',')[1]);
+
+		// separate out the mime component
+		var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+		// write the bytes of the string to an ArrayBuffer
+		var ab = new ArrayBuffer(byteString.length);
+		var ia = new Uint8Array(ab);
+		for (var i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+
+		// create a blob for writing to a file
+		var blob = new Blob([ab], {type: mimeString});
+		var size = blob.size + (1024 / 2);
+
+		var d = new Date();
+		var fileName = [ 'web-maker-screenshot', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
+		fileName += '.png';
+
+		function onWriteEnd() {
+			var filePath = 'filesystem:chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/temporary/' + fileName;
+
+			chrome.downloads.download({
+				url: filePath
+			}, function() {
+				// If there was an error, just open the screenshot in a tab.
+				// This happens in incognito mode where extension cannot access filesystem.
+				if (chrome.runtime.lastError) {
+					window.open(filePath);
+				}
+			});
+		}
+
+		function errorHandler(e) {
+			utils.log(e);
+		}
+
+		// create a blob for writing to a file
+		window.webkitRequestFileSystem(window.TEMPORARY, size, fs => {
+			fs.root.getFile(fileName, { create: true }, fileEntry => {
+				fileEntry.createWriter(function(fileWriter) {
+					fileWriter.onwriteend = onWriteEnd;
+					fileWriter.write(blob);
+				}, errorHandler);
+			}, errorHandler);
+		}, errorHandler);
+	}
+
+	scope.takeScreenshot = function (e) {
+		// Hide tooltips so that they don't show in the screenshot
+		var s = document.createElement('style');
+		s.textContent = '[class*="hint"]:after, [class*="hint"]:before { display: none!important; }';
+		document.body.appendChild(s);
+
+		setTimeout(() => {
+
+			chrome.tabs.captureVisibleTab(
+				null, { format: 'png', quality: 100 }, function(dataURI) {
+				s.remove();
+				if (dataURI) {
+					var image = new Image();
+					function onImgLoad() {
+						var c = document.createElement('canvas');
+						var iframeBounds = frame.getBoundingClientRect();
+						c.width = iframeBounds.width;
+						c.height = iframeBounds.height;
+						utils.log(c, iframeBounds)
+						ctx = c.getContext('2d');
+						ctx.drawImage(image,
+							iframeBounds.left, iframeBounds.top, iframeBounds.width, iframeBounds.height,
+							0, 0, iframeBounds.width, iframeBounds.height);
+						image.removeEventListener('load', onImgLoad);
+						saveScreenshot(c.toDataURL());
+					};
+					image.src = dataURI;
+					image.addEventListener('load', onImgLoad);
+				}
+			});
+		}, 50);
+
+		trackEvent('ui', 'takeScreenshotBtnClick');
+		e.preventDefault();
+	}
+
 	function compileNodes() {
 		var nodes = [].slice.call($all('[d-click]'));
 		nodes.forEach(function (el) {

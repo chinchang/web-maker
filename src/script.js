@@ -3,7 +3,8 @@
 onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, openBtn, saveBtn, newBtn,
-settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardDontShowInTabOptionBtn */
+settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardDontShowInTabOptionBtn
+TextareaAutoComplete */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
 
@@ -762,8 +763,8 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			// cursorScrollMargin: '20', has issue with scrolling
 			profile: options.profile || '',
 			extraKeys: {
-				"Shift-Tab": function(cm) {
-					CodeMirror.commands.indentAuto(cm);
+				"Shift-Tab": function(editor) {
+					CodeMirror.commands.indentAuto(editor);
 				}
 			}
 		});
@@ -844,7 +845,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		}
 
 		// create a blob for writing to a file
-		var blob = new Blob([ab], {type: mimeString});
+		var blob = new Blob([ab], { type: mimeString });
 		var size = blob.size + (1024 / 2);
 
 		var d = new Date();
@@ -870,9 +871,9 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		}
 
 		// create a blob for writing to a file
-		window.webkitRequestFileSystem(window.TEMPORARY, size, fs => {
-			fs.root.getFile(fileName, { create: true }, fileEntry => {
-				fileEntry.createWriter(function(fileWriter) {
+		window.webkitRequestFileSystem(window.TEMPORARY, size, (fs) => {
+			fs.root.getFile(fileName, { create: true }, (fileEntry) => {
+				fileEntry.createWriter((fileWriter) => {
 					fileWriter.onwriteend = onWriteEnd;
 					fileWriter.write(blob);
 				}, errorHandler);
@@ -886,28 +887,26 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		s.textContent = '[class*="hint"]:after, [class*="hint"]:before { display: none!important; }';
 		document.body.appendChild(s);
 
-		setTimeout(() => {
+		function onImgLoad(image) {
+			var c = document.createElement('canvas');
+			var iframeBounds = frame.getBoundingClientRect();
+			c.width = iframeBounds.width;
+			c.height = iframeBounds.height;
+			var ctx = c.getContext('2d');
+			ctx.drawImage(image,
+				iframeBounds.left, iframeBounds.top, iframeBounds.width, iframeBounds.height,
+				0, 0, iframeBounds.width, iframeBounds.height);
+			image.removeEventListener('load', onImgLoad);
+			saveScreenshot(c.toDataURL());
+		}
 
-			chrome.tabs.captureVisibleTab(
-				null, { format: 'png', quality: 100 }, function(dataURI) {
+		setTimeout(() => {
+			chrome.tabs.captureVisibleTab(null, { format: 'png', quality: 100 }, function(dataURI) {
 				s.remove();
 				if (dataURI) {
 					var image = new Image();
-					function onImgLoad() {
-						var c = document.createElement('canvas');
-						var iframeBounds = frame.getBoundingClientRect();
-						c.width = iframeBounds.width;
-						c.height = iframeBounds.height;
-						utils.log(c, iframeBounds)
-						ctx = c.getContext('2d');
-						ctx.drawImage(image,
-							iframeBounds.left, iframeBounds.top, iframeBounds.width, iframeBounds.height,
-							0, 0, iframeBounds.width, iframeBounds.height);
-						image.removeEventListener('load', onImgLoad);
-						saveScreenshot(c.toDataURL());
-					};
 					image.src = dataURI;
-					image.addEventListener('load', onImgLoad);
+					image.addEventListener('load', () => onImgLoad(image, dataURI));
 				}
 			});
 		}, 50);
@@ -1067,6 +1066,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		});
 
 		window.addEventListener('keydown', function (event) {
+			var selectedItemElement;
 			// Ctrl/⌘ + S
 			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)) {
 				event.preventDefault();
@@ -1083,7 +1083,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 				closeAllOverlays();
 			}
 			if (event.keyCode === 40 && savedItemsPane.classList.contains('is-open')) {
-				var selectedItemElement = $('.js-saved-item-tile.selected');
+				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
 					selectedItemElement.nextElementSibling.classList.add('selected');
@@ -1091,7 +1091,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 					$('.js-saved-item-tile:first-child').classList.add('selected');
 				}
 			} else if (event.keyCode === 38 && savedItemsPane.classList.contains('is-open')) {
-				var selectedItemElement = $('.js-saved-item-tile.selected');
+				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
 					selectedItemElement.previousElementSibling.classList.add('selected');
@@ -1099,7 +1099,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 					$('.js-saved-item-tile:first-child').classList.add('selected');
 				}
 			} else if (event.keyCode === 13 && savedItemsPane.classList.contains('is-open')) {
-				var selectedItemElement = $('.js-saved-item-tile.selected');
+				selectedItemElement = $('.js-saved-item-tile.selected');
 				setTimeout(function () {
 					openItem(selectedItemElement.dataset.itemId);
 				}, 350);
@@ -1144,8 +1144,8 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		externalJsTextarea.addEventListener('blur', onExternalLibChange);
 		externalCssTextarea.addEventListener('blur', onExternalLibChange);
 
-		new TextareaAutoComplete(externalJsTextarea, obj => obj.latest.match(/\.js$/));
-		new TextareaAutoComplete(externalCssTextarea, obj => obj.latest.match(/\.css$/));
+		new TextareaAutoComplete(externalJsTextarea, (obj) => obj.latest.match(/\.js$/));
+		new TextareaAutoComplete(externalCssTextarea, (obj) => obj.latest.match(/\.css$/));
 
 		chrome.storage.local.get({
 			layoutMode: 1,

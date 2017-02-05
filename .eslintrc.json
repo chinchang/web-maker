@@ -8,7 +8,7 @@
         "accessor-pairs": "error",
         "array-bracket-spacing": "off",
         "array-callback-return": "error",
-        "arrow-body-style": "error",
+        "arrow-body-style": "off",
         "arrow-parens": "error",
         "arrow-spacing": "error",
         "block-scoped-var": "error",
@@ -120,7 +120,7 @@
         "no-native-reassign": "error",
         "no-negated-condition": "off",
         "no-nested-ternary": "off",
-        "no-new": "error",
+        "no-new": "off",
         "no-new-func": "error",
         "no-new-object": "error",
         "no-new-require": "error",
@@ -246,6 +246,8 @@
         ]
     },
     "globals": {
+        "ArrayBuffer": true,
+        "Uint8Array": true,
         "chrome": true,
         "CodeMirror": true,
         "Split": true,

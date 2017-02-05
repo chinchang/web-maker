@@ -64,6 +64,7 @@ TextareaAutoComplete */
 		// TODO: for legacy reasons when. Will be refactored as global preferences.
 		, prefs = {}
 		, codeInPreview = { html: null, css: null, js: null }
+		, isSavedItemsPaneOpen = false
 
 		// DOM nodes
 		, frame = $('#demo-frame')
@@ -280,7 +281,8 @@ TextareaAutoComplete */
 		} else {
 			savedItemsPane.classList.toggle('is-open');
 		}
-		document.body.classList[savedItemsPane.classList.contains('is-open') ? 'add' : 'remove']('overlay-visible');
+		isSavedItemsPaneOpen = savedItemsPane.classList.contains('is-open');
+		document.body.classList[isSavedItemsPaneOpen ? 'add' : 'remove']('overlay-visible');
 	}
 	function openSavedItemsPane() {
 		chrome.storage.local.get('items', function (result) {
@@ -763,6 +765,15 @@ TextareaAutoComplete */
 			// cursorScrollMargin: '20', has issue with scrolling
 			profile: options.profile || '',
 			extraKeys: {
+				"Up": function (editor) {
+					// Stop up/down keys default behavior when saveditempane is open
+					if (isSavedItemsPaneOpen) { return; }
+					CodeMirror.commands.goLineUp(editor);
+				},
+				"Down": function (editor) {
+					if (isSavedItemsPaneOpen) { return; }
+					CodeMirror.commands.goLineDown(editor);
+				},
 				"Shift-Tab": function(editor) {
 					CodeMirror.commands.indentAuto(editor);
 				}
@@ -1082,7 +1093,7 @@ TextareaAutoComplete */
 			else if (event.keyCode === 27) {
 				closeAllOverlays();
 			}
-			if (event.keyCode === 40 && savedItemsPane.classList.contains('is-open')) {
+			if (event.keyCode === 40 && isSavedItemsPaneOpen) {
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
@@ -1091,7 +1102,7 @@ TextareaAutoComplete */
 					$('.js-saved-item-tile:first-child').classList.add('selected');
 				}
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
-			} else if (event.keyCode === 38 && savedItemsPane.classList.contains('is-open')) {
+			} else if (event.keyCode === 38 && isSavedItemsPaneOpen) {
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
@@ -1100,7 +1111,7 @@ TextareaAutoComplete */
 					$('.js-saved-item-tile:first-child').classList.add('selected');
 				}
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
-			} else if (event.keyCode === 13 && savedItemsPane.classList.contains('is-open')) {
+			} else if (event.keyCode === 13 && isSavedItemsPaneOpen) {
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				setTimeout(function () {
 					openItem(selectedItemElement.dataset.itemId);

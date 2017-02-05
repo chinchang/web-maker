@@ -1,6 +1,6 @@
 {
 	"name": "Web Maker",
-	"version": "2.2.2",
+	"version": "2.3.0",
 	"manifest_version": 2,
 	"description": "Convert new tabs into an offline playground for your web experiments",
 	"homepage_url": "https://kushagragour.in/lab/web-maker",

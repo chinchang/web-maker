@@ -3,7 +3,8 @@
 onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, openBtn, saveBtn, newBtn,
-settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardDontShowInTabOptionBtn */
+settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardDontShowInTabOptionBtn
+TextareaAutoComplete */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
 
@@ -63,6 +64,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		// TODO: for legacy reasons when. Will be refactored as global preferences.
 		, prefs = {}
 		, codeInPreview = { html: null, css: null, js: null }
+		, isSavedItemsPaneOpen = false
 
 		// DOM nodes
 		, frame = $('#demo-frame')
@@ -279,7 +281,8 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		} else {
 			savedItemsPane.classList.toggle('is-open');
 		}
-		document.body.classList[savedItemsPane.classList.contains('is-open') ? 'add' : 'remove']('overlay-visible');
+		isSavedItemsPaneOpen = savedItemsPane.classList.contains('is-open');
+		document.body.classList[isSavedItemsPaneOpen ? 'add' : 'remove']('overlay-visible');
 	}
 	function openSavedItemsPane() {
 		chrome.storage.local.get('items', function (result) {
@@ -312,7 +315,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 	function createNewItem() {
 		var d = new Date();
 		currentItem = {
-			title: 'Untitled ' + d.getDate() + '-' + d.getMonth() + '-' + d.getHours() + ':' + d.getMinutes(),
+			title: 'Untitled ' + d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getHours() + ':' + d.getMinutes(),
 			html: '',
 			css: '',
 			js: '',
@@ -757,9 +760,24 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			theme: 'monokai',
 			lint: !!options.lint,
 			foldGutter: true,
+			styleActiveLine: true,
 			gutters: options.gutters || [],
 			// cursorScrollMargin: '20', has issue with scrolling
-			profile: options.profile || ''
+			profile: options.profile || '',
+			extraKeys: {
+				'Up': function (editor) {
+					// Stop up/down keys default behavior when saveditempane is open
+					if (isSavedItemsPaneOpen) { return; }
+					CodeMirror.commands.goLineUp(editor);
+				},
+				'Down': function (editor) {
+					if (isSavedItemsPaneOpen) { return; }
+					CodeMirror.commands.goLineDown(editor);
+				},
+				'Shift-Tab': function(editor) {
+					CodeMirror.commands.indentAuto(editor);
+				}
+			}
 		});
 		cm.on('change', function onChange() {
 			clearTimeout(updateTimer);
@@ -767,17 +785,24 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 				scope.setPreviewContent();
 			}, updateDelay);
 		});
-		cm.on('inputRead', function onChange(editor, input) {
-			if (input.text[0] === ';' || input.text[0] === ' ') { return; }
-			CodeMirror.commands.autocomplete(cm, null, { completeSingle: false })
-		});
+		if (options.noAutocomplete) {
+			cm.addKeyMap({
+				'Ctrl-Space': 'autocomplete'
+			});
+		} else {
+			cm.on('inputRead', function onChange(editor, input) {
+				if (input.text[0] === ';' || input.text[0] === ' ') { return; }
+				CodeMirror.commands.autocomplete(cm, null, { completeSingle: false })
+			});
+		}
 		return cm;
 	}
 
 	scope.cm.html = initEditor(htmlCode, {
 		mode: 'htmlmixed',
 		profile: 'xhtml',
-		gutters: [ 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ]
+		gutters: [ 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ],
+		noAutocomplete: true
 	});
 	emmetCodeMirror(scope.cm.html);
 	scope.cm.css = initEditor(cssCode, {
@@ -820,6 +845,92 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		onboardDontShowInTabOptionBtn.classList.add('selected');
 		onboardShowInTabOptionBtn.classList.remove('selected');
 		trackEvent('ui', 'onboardDontShowInTabClick');
+	}
+
+	function saveScreenshot(dataURI) {
+		// convert base64 to raw binary data held in a string
+		// doesn't handle URLEncoded DataURIs
+		var byteString = atob(dataURI.split(',')[1]);
+
+		// separate out the mime component
+		var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+		// write the bytes of the string to an ArrayBuffer
+		var ab = new ArrayBuffer(byteString.length);
+		var ia = new Uint8Array(ab);
+		for (var i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+
+		// create a blob for writing to a file
+		var blob = new Blob([ab], { type: mimeString });
+		var size = blob.size + (1024 / 2);
+
+		var d = new Date();
+		var fileName = [ 'web-maker-screenshot', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
+		fileName += '.png';
+
+		function onWriteEnd() {
+			var filePath = 'filesystem:chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/temporary/' + fileName;
+
+			chrome.downloads.download({
+				url: filePath
+			}, function() {
+				// If there was an error, just open the screenshot in a tab.
+				// This happens in incognito mode where extension cannot access filesystem.
+				if (chrome.runtime.lastError) {
+					window.open(filePath);
+				}
+			});
+		}
+
+		function errorHandler(e) {
+			utils.log(e);
+		}
+
+		// create a blob for writing to a file
+		window.webkitRequestFileSystem(window.TEMPORARY, size, (fs) => {
+			fs.root.getFile(fileName, { create: true }, (fileEntry) => {
+				fileEntry.createWriter((fileWriter) => {
+					fileWriter.onwriteend = onWriteEnd;
+					fileWriter.write(blob);
+				}, errorHandler);
+			}, errorHandler);
+		}, errorHandler);
+	}
+
+	scope.takeScreenshot = function (e) {
+		// Hide tooltips so that they don't show in the screenshot
+		var s = document.createElement('style');
+		s.textContent = '[class*="hint"]:after, [class*="hint"]:before { display: none!important; }';
+		document.body.appendChild(s);
+
+		function onImgLoad(image) {
+			var c = document.createElement('canvas');
+			var iframeBounds = frame.getBoundingClientRect();
+			c.width = iframeBounds.width;
+			c.height = iframeBounds.height;
+			var ctx = c.getContext('2d');
+			ctx.drawImage(image,
+				iframeBounds.left, iframeBounds.top, iframeBounds.width, iframeBounds.height,
+				0, 0, iframeBounds.width, iframeBounds.height);
+			image.removeEventListener('load', onImgLoad);
+			saveScreenshot(c.toDataURL());
+		}
+
+		setTimeout(() => {
+			chrome.tabs.captureVisibleTab(null, { format: 'png', quality: 100 }, function(dataURI) {
+				s.remove();
+				if (dataURI) {
+					var image = new Image();
+					image.src = dataURI;
+					image.addEventListener('load', () => onImgLoad(image, dataURI));
+				}
+			});
+		}, 50);
+
+		trackEvent('ui', 'takeScreenshotBtnClick');
+		e.preventDefault();
 	}
 
 	function compileNodes() {
@@ -973,6 +1084,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 		});
 
 		window.addEventListener('keydown', function (event) {
+			var selectedItemElement;
 			// Ctrl/⌘ + S
 			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)) {
 				event.preventDefault();
@@ -987,6 +1099,31 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			}
 			else if (event.keyCode === 27) {
 				closeAllOverlays();
+			}
+			if (event.keyCode === 40 && isSavedItemsPaneOpen) {
+				selectedItemElement = $('.js-saved-item-tile.selected');
+				if (selectedItemElement) {
+					selectedItemElement.classList.remove('selected');
+					selectedItemElement.nextElementSibling.classList.add('selected');
+				} else {
+					$('.js-saved-item-tile:first-child').classList.add('selected');
+				}
+				$('.js-saved-item-tile.selected').scrollIntoView(false);
+			} else if (event.keyCode === 38 && isSavedItemsPaneOpen) {
+				selectedItemElement = $('.js-saved-item-tile.selected');
+				if (selectedItemElement) {
+					selectedItemElement.classList.remove('selected');
+					selectedItemElement.previousElementSibling.classList.add('selected');
+				} else {
+					$('.js-saved-item-tile:first-child').classList.add('selected');
+				}
+				$('.js-saved-item-tile.selected').scrollIntoView(false);
+			} else if (event.keyCode === 13 && isSavedItemsPaneOpen) {
+				selectedItemElement = $('.js-saved-item-tile.selected');
+				setTimeout(function () {
+					openItem(selectedItemElement.dataset.itemId);
+				}, 350);
+				toggleSavedItemsPane();
 			}
 		});
 
@@ -1024,8 +1161,11 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			trackEvent('ui', 'addLibrarySelect', target.selectedOptions[0].label);
 			onExternalLibChange();
 		});
-		externalJsTextarea.addEventListener('change', onExternalLibChange);
-		externalCssTextarea.addEventListener('change', onExternalLibChange);
+		externalJsTextarea.addEventListener('blur', onExternalLibChange);
+		externalCssTextarea.addEventListener('blur', onExternalLibChange);
+
+		new TextareaAutoComplete(externalJsTextarea, (obj) => obj.latest.match(/\.js$/));
+		new TextareaAutoComplete(externalCssTextarea, (obj) => obj.latest.match(/\.css$/));
 
 		chrome.storage.local.get({
 			layoutMode: 1,

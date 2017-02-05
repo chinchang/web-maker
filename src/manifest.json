@@ -6,7 +6,9 @@
 	"homepage_url": "https://kushagragour.in/lab/web-maker",
 	"permissions": [
 		"storage",
-		"tabs"
+		"tabs",
+		"<all_urls>",
+		"downloads"
 	],
 	"content_security_policy": "script-src 'self' https://ajax.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://unpkg.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net/ https://www.google-analytics.com 'unsafe-eval'; object-src 'self'",
 	"options_ui": {

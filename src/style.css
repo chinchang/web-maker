@@ -211,6 +211,9 @@ select, input[type="text"], textarea {
 .cm-s-monokai .CodeMirror-guttermarker-subtle {
 	opacity: 0.4;
 }
+.CodeMirror-activeline-background, .CodeMirror-activeline-gutter {
+	background: rgba(0,0,0,0.1) !important;
+}
 .CodeMirror-guttermarker-subtle {
 	/*visibility: hidden !important;*/
 }
@@ -466,7 +469,8 @@ li.CodeMirror-hint-active {
 		transform: translateX(0px);
 	}
 }
-.saved-item-tile:hover {
+.saved-item-tile:hover,
+.saved-item-tile.selected {
 	background: rgba(255,255,255,0.1);
 }
 .saved-item-tile__close-btn {
@@ -553,6 +557,32 @@ li.CodeMirror-hint-active {
 	top: 2px;
 	left: 2px;
 }
+.loader,
+.loader:after {
+	border-radius: 50%;
+	width: 3em;
+	height: 3em;
+}
+.loader {
+	font-size: 5px;
+	position: relative;
+	text-indent: -9999em;
+	border-top: 1.1em solid rgba(118,57,229, 0.2);
+	border-right: 1.1em solid rgba(118,57,229, 0.2);
+	border-bottom: 1.1em solid rgba(118,57,229, 0.2);
+	border-left: 1.1em solid #7639e5;
+	transform: translateZ(0);
+	animation: load8 1.1s infinite linear;
+}
+@keyframes load8 {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
 .btn-group {
 	position: relative;
 	cursor: pointer;
@@ -565,12 +595,13 @@ li.CodeMirror-hint-active {
 	margin: 0;
 	min-width: 200px;
 	display: block;
+	font-size: 0.88rem;
 	list-style: none;
 	border-radius: 4px;
 	overflow: hidden;
 	opacity: 0;
 	visibility: hidden;
-	transition: 0.25s ease;
+	transition: transform 0.25s ease;
 	transform: translateY(10px);
 	z-index: 5;
 	background: white;
@@ -581,6 +612,7 @@ li.CodeMirror-hint-active {
 	color: #333;
 	cursor: pointer;
 }
+.dropdown__menu > li.selected > a,
 .dropdown__menu > li > a:hover {
 	background: var(--color-sidebar);
 	color: white;
@@ -589,7 +621,8 @@ li.CodeMirror-hint-active {
 	border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
-.open .dropdown__menu {
+.open > .dropdown__menu,
+.dropdown__menu.is-open {
 	opacity: 1;
 	visibility: visible;
 	transform: translateY(0);
@@ -677,3 +710,17 @@ li.CodeMirror-hint-active {
 	background: white url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width:32px;height:32px" viewBox="0 0 24 24"><path fill="limegreen" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z" /></svg>');
 }
 
+.autocomplete-dropdown {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	right: 0;
+	max-height: 200px;
+	overflow-y: auto;
+	border: 1px solid rgba(0,0,0,0.5);
+	z-index: 2001;
+}
+.autocomplete__loader {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+}

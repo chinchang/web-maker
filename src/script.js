@@ -765,16 +765,16 @@ TextareaAutoComplete */
 			// cursorScrollMargin: '20', has issue with scrolling
 			profile: options.profile || '',
 			extraKeys: {
-				"Up": function (editor) {
+				'Up': function (editor) {
 					// Stop up/down keys default behavior when saveditempane is open
 					if (isSavedItemsPaneOpen) { return; }
 					CodeMirror.commands.goLineUp(editor);
 				},
-				"Down": function (editor) {
+				'Down': function (editor) {
 					if (isSavedItemsPaneOpen) { return; }
 					CodeMirror.commands.goLineDown(editor);
 				},
-				"Shift-Tab": function(editor) {
+				'Shift-Tab': function(editor) {
 					CodeMirror.commands.indentAuto(editor);
 				}
 			}
@@ -785,17 +785,24 @@ TextareaAutoComplete */
 				scope.setPreviewContent();
 			}, updateDelay);
 		});
-		cm.on('inputRead', function onChange(editor, input) {
-			if (input.text[0] === ';' || input.text[0] === ' ') { return; }
-			CodeMirror.commands.autocomplete(cm, null, { completeSingle: false })
-		});
+		if (options.noAutocomplete) {
+			cm.addKeyMap({
+				'Ctrl-Space': 'autocomplete'
+			});
+		} else {
+			cm.on('inputRead', function onChange(editor, input) {
+				if (input.text[0] === ';' || input.text[0] === ' ') { return; }
+				CodeMirror.commands.autocomplete(cm, null, { completeSingle: false })
+			});
+		}
 		return cm;
 	}
 
 	scope.cm.html = initEditor(htmlCode, {
 		mode: 'htmlmixed',
 		profile: 'xhtml',
-		gutters: [ 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ]
+		gutters: [ 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ],
+		noAutocomplete: true
 	});
 	emmetCodeMirror(scope.cm.html);
 	scope.cm.css = initEditor(cssCode, {

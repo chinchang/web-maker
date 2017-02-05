@@ -1090,6 +1090,7 @@ TextareaAutoComplete */
 				} else {
 					$('.js-saved-item-tile:first-child').classList.add('selected');
 				}
+				$('.js-saved-item-tile.selected').scrollIntoView(false);
 			} else if (event.keyCode === 38 && savedItemsPane.classList.contains('is-open')) {
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
@@ -1098,6 +1099,7 @@ TextareaAutoComplete */
 				} else {
 					$('.js-saved-item-tile:first-child').classList.add('selected');
 				}
+				$('.js-saved-item-tile.selected').scrollIntoView(false);
 			} else if (event.keyCode === 13 && savedItemsPane.classList.contains('is-open')) {
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				setTimeout(function () {

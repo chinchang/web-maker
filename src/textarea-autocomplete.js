@@ -109,6 +109,7 @@
 				} else {
 					this.list.querySelector('li:first-child').classList.add('selected');
 				}
+				this.list.querySelector('.selected').scrollIntoView(false);
 				event.preventDefault();
 			} else if (event.keyCode === 38 && this.isShowingSuggestions) {
 				selectedItemElement = this.list.querySelector('.selected');
@@ -118,6 +119,7 @@
 				} else {
 					this.list.querySelector('li:first-child').classList.add('selected');
 				}
+				this.list.querySelector('.selected').scrollIntoView(false);
 				event.preventDefault();
 			} else if (event.keyCode === 13 && this.isShowingSuggestions) {
 				selectedItemElement = this.list.querySelector('.selected');

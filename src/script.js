@@ -757,6 +757,7 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			theme: 'monokai',
 			lint: !!options.lint,
 			foldGutter: true,
+			styleActiveLine: true,
 			gutters: options.gutters || [],
 			// cursorScrollMargin: '20', has issue with scrolling
 			profile: options.profile || '',

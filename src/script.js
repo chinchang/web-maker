@@ -759,7 +759,12 @@ settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardD
 			foldGutter: true,
 			gutters: options.gutters || [],
 			// cursorScrollMargin: '20', has issue with scrolling
-			profile: options.profile || ''
+			profile: options.profile || '',
+			extraKeys: {
+				"Shift-Tab": function(cm) {
+					CodeMirror.commands.indentAuto(cm);
+				}
+			}
 		});
 		cm.on('change', function onChange() {
 			clearTimeout(updateTimer);

@@ -426,7 +426,6 @@ TextareaAutoComplete */
 		handleModeRequirements(value);
 		scope.cm.html.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.html, modes[value].cmPath || modes[value].cmMode);
-		trackEvent('ui', 'updateCodeMode', 'html', value);
 	}
 	function updateCssMode(value) {
 		cssMode = value;
@@ -434,7 +433,6 @@ TextareaAutoComplete */
 		handleModeRequirements(value);
 		scope.cm.css.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.css, modes[value].cmPath || modes[value].cmMode);
-		trackEvent('ui', 'updateCodeMode', 'css', value);
 	}
 	function updateJsMode(value) {
 		jsMode = value;
@@ -442,7 +440,6 @@ TextareaAutoComplete */
 		handleModeRequirements(value);
 		scope.cm.js.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.js, modes[value].cmPath || modes[value].cmMode);
-		trackEvent('ui', 'updateCodeMode', 'js', value);
 		// FIXME: Will be saved as part of scope settings
 		/*
 		chrome.storage.sync.set({
@@ -1060,6 +1057,7 @@ TextareaAutoComplete */
 					} else if (type === 'css') {
 						updateCssMode(mode);
 					}
+					trackEvent('ui', 'updateCodeMode', mode);
 				}
 			});
 		});

@@ -731,6 +731,10 @@ TextareaAutoComplete */
 			var fileName = [ 'web-maker', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
 			fileName += '.html';
 
+			if (currentItem.title) {
+				fileName = currentItem.title;
+			}
+
 			var a = document.createElement('a');
 			var blob = new Blob([ fileContent ], { type: "text/html;charset=UTF-8" });
 			a.href = window.URL.createObjectURL(blob);
@@ -996,6 +1000,9 @@ TextareaAutoComplete */
 
 				/* eslint-enable camelcase */
 			};
+			if (!currentItem.title.match(/Untitled\s\d\d*-\d/)) {
+				json.title = currentItem.title;
+			}
 			json = JSON.stringify(json)
 				.replace(/"/g, "&​quot;")
 				.replace(/'/g, "&apos;")

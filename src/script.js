@@ -592,10 +592,10 @@ TextareaAutoComplete */
 					if (shouldPreventInfiniteLoops !== false) {
 						utils.addInfiniteLoopProtection(ast);
 					}
-					d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['es2015', 'react'] }).code);
+					d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['latest', 'stage-2', 'react'] }).code);
 				} catch (e) {
 					// If we failed, means probably the AST contains JSX which cannot be parsed by escodegen.
-					code = Babel.transform(code, { presets: ['es2015', 'react'] }).code;
+					code = Babel.transform(code, { presets: ['latest', 'stage-2', 'react'] }).code;
 					ast = esprima.parse(code, {
 						tolerant: true
 					});

@@ -111,6 +111,18 @@ TextareaAutoComplete */
 			codeWrapEl.classList.add('is-minimized');
 		}
 	}
+	// Returns the sizes of main code & preview panes.
+	function getMainSplitSizesToApply() {
+		var mainSplitSizes;
+		if (currentItem && currentItem.mainSizes) {
+			// For layout mode 3, main panes are reversed using flex-direction.
+			// So we need to apply the saved sizes in reverse order.
+			mainSplitSizes = currentLayoutMode === 3 ? [ currentItem.mainSizes[1], currentItem.mainSizes[0] ] : currentItem.mainSizes;
+		} else {
+			mainSplitSizes = [ 50, 50];
+		}
+		return mainSplitSizes;
+	}
 
 	function resetSplitting() {
 		if (codeSplitInstance) {
@@ -137,12 +149,14 @@ TextareaAutoComplete */
 		} else {
 			options.sizes = [ 33.33, 33.33, 33.33 ];
 		}
-		// utils.log('reset spliiting', options.sizes)
+		utils.log('reset splitting', currentItem);
+
 		codeSplitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], options);
 		mainSplitInstance = Split(['#js-code-side', '#js-demo-side' ], {
 			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal'),
-			minSize: 34,
+			minSize: 150,
 			gutterSize: 6,
+			sizes: getMainSplitSizesToApply(),
 			onDragEnd: function () {
 				// Running preview updation in next call stack, so that error there
 				// doesn't affect this dragend listener.
@@ -154,7 +168,9 @@ TextareaAutoComplete */
 	}
 	function toggleLayout(mode) {
 		if (currentLayoutMode === mode) {
+			utils.log('setMainsize', currentItem.mainSizes || [ 50, 50 ]);
 			utils.log('setsize', currentItem.sizes || [ 33.33, 33.33, 33.33 ]);
+			mainSplitInstance.setSizes(getMainSplitSizesToApply());
 			codeSplitInstance.setSizes(currentItem.sizes || [ 33.33, 33.33, 33.33 ]);
 			currentLayoutMode = mode;
 			return;
@@ -219,6 +235,39 @@ TextareaAutoComplete */
 		}
 	}
 
+	// Calculates the sizes of html, css & js code panes.
+	function getCodePaneSizes() {
+		var sizes;
+		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
+		try {
+			sizes = [
+				+htmlCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
+				+cssCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
+				+jsCode.style[dimensionProperty].match(/([\d.]+)%/)[1]
+			];
+		} catch (e) {
+			sizes = [ 33.33, 33.33, 33.33 ]
+		} finally {
+			return sizes;
+		}
+	}
+
+	// Calculates the current sizes of code & preview panes.
+	function getMainPaneSizes() {
+		var sizes;
+		var dimensionProperty = currentLayoutMode === 2 ? 'height' : 'width';
+		try {
+			sizes = [
+				+$('#js-code-side').style[dimensionProperty].match(/([\d.]+)%/)[1],
+				+$('#js-demo-side').style[dimensionProperty].match(/([\d.]+)%/)[1]
+			];
+		} catch (e) {
+			sizes = [ 50, 50 ]
+		} finally {
+			return sizes;
+		}
+	}
+
 	function saveCode(key) {
 		currentItem.title = titleInput.value;
 		currentItem.html = scope.cm.html.getValue();
@@ -234,24 +283,14 @@ TextareaAutoComplete */
 		// debugger;
 		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
 
-		var sizes;
-		try {
-			sizes = [
-				+htmlCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+cssCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+jsCode.style[dimensionProperty].match(/([\d.]+)%/)[1]
-			];
-		} catch (e) {
-			sizes = [ 33.33, 33.33, 33.33 ]
-		} finally {
+		currentItem.sizes = getCodePaneSizes();
+		currentItem.mainSizes = getMainPaneSizes();
+		console.log(currentItem.mainSizes)
 
-			currentItem.sizes = sizes;
-
-			utils.log('saving key', key || currentItem.id, currentItem)
-			saveSetting(key || currentItem.id, currentItem, function () {
-				alertsService.add('Item saved.');
-			});
-		}
+		utils.log('saving key', key || currentItem.id, currentItem)
+		saveSetting(key || currentItem.id, currentItem, function () {
+			alertsService.add('Item saved.');
+		});
 	}
 
 	function populateItemsInSavedPane(items) {
@@ -267,7 +306,7 @@ TextareaAutoComplete */
 					+ '<h3 class="saved-item-tile__title">' + item.title + '</h3><span class="saved-item-tile__meta">Last updated: ' + utils.getHumanDate(item.updatedOn) + '</span></div>';
 			});
 		} else {
-			html += '<h2 class="opacity--30">Nothing saved here.</h2>'
+			html += '<h2 class="opacity--30">Nothing saved here.</h2>';
 		}
 		savedItemsPane.querySelector('#js-saved-items-wrap').innerHTML = html;
 		toggleSavedItemsPane();

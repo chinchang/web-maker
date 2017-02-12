@@ -10,7 +10,7 @@ TextareaAutoComplete */
 
 /* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.3.0';
+	var version = '2.3.1';
 
 	if (window.DEBUG) {
 		window.scope = scope;
@@ -290,7 +290,6 @@ TextareaAutoComplete */
 
 		currentItem.sizes = getCodePaneSizes();
 		currentItem.mainSizes = getMainPaneSizes();
-		console.log(currentItem.mainSizes)
 
 		utils.log('saving key', key || currentItem.id, currentItem)
 		saveSetting(key || currentItem.id, currentItem, function () {
@@ -1275,7 +1274,6 @@ TextareaAutoComplete */
 					});
 				});
 			}
-			// console.utils.log(result, hasSeenNotifications, version);
 			if (!result.lastSeenVersion || utils.semverCompare(result.lastSeenVersion, version) === -1) {
 				notificationsBtn.classList.add('has-new');
 				hasSeenNotifications = false;

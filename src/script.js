@@ -248,7 +248,11 @@ TextareaAutoComplete */
 		} catch (e) {
 			sizes = [ 33.33, 33.33, 33.33 ]
 		} finally {
+
+			/* eslint-disable no-unsafe-finally */
 			return sizes;
+
+			/* eslint-enable no-unsafe-finally */
 		}
 	}
 
@@ -264,7 +268,11 @@ TextareaAutoComplete */
 		} catch (e) {
 			sizes = [ 50, 50 ]
 		} finally {
+
+			/* eslint-disable no-unsafe-finally */
 			return sizes;
+
+			/* eslint-enable no-unsafe-finally */
 		}
 	}
 
@@ -279,9 +287,6 @@ TextareaAutoComplete */
 		currentItem.updatedOn = Date.now();
 		currentItem.layoutMode = currentLayoutMode;
 		currentItem.externalLibs = { js: externalJsTextarea.value, css: externalCssTextarea.value };
-
-		// debugger;
-		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
 
 		currentItem.sizes = getCodePaneSizes();
 		currentItem.mainSizes = getMainPaneSizes();

@@ -66,9 +66,20 @@ select, input[type="text"], textarea {
 	cursor: pointer;
 	transition: 0.2s ease;
 }
+.btn-icon {
+	display: inline-flex;
+	align-items: center;
+}
 .btn:hover {
 	text-decoration: none;
 	box-shadow: 0 3px 5px 0 rgba(0,0,0,0.15);
+}
+.btn-icon > svg {
+	width: 20px;
+	height: 20px;
+	fill: white;
+	vertical-align: middle;
+	margin-right: 8px;
 }
 .star:after {
 	content: '★';

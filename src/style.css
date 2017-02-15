@@ -684,6 +684,7 @@ li.CodeMirror-hint-active {
 }
 .onboard-selection-wrap {
 	justify-content: center;
+	align-items: center;
 }
 .onboard-selection {
 	padding: 10px;

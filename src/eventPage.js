@@ -12,10 +12,10 @@ chrome.browserAction.onClicked.addListener(function(){
 // Listen for tabs getting created.
 chrome.tabs.onCreated.addListener(function (tab) {
 	// If a new tab is opened (without any URL), check user's
-	// replace Tab setting and act accordingly.
+	// replace Tab setting and act accordingly. Default is false.
 	if (tab.url === 'chrome://newtab/') {
 		chrome.storage.sync.get({
-			replaceNewTab: true
+			replaceNewTab: false
 		}, function(items) {
 			if (items.replaceNewTab) {
 				chrome.tabs.update(tab.id, {

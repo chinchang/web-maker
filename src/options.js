@@ -2,7 +2,7 @@
 function restoreOptions() {
 	chrome.storage.sync.get({
 		preserveLastCode: true,
-		replaceNewTab: true
+		replaceNewTab: false
 	}, function(items) {
 		document.forms.optionsForm.preserveLastCode.checked = items.preserveLastCode;
 		document.forms.optionsForm.replaceNewTab.checked = items.replaceNewTab;

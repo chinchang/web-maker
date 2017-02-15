@@ -10,7 +10,7 @@ TextareaAutoComplete */
 
 /* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.3.1';
+	var version = '2.3.2';
 
 	if (window.DEBUG) {
 		window.scope = scope;

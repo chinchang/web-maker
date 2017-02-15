@@ -5,7 +5,7 @@ Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master)
 
 ### [INSTALL EXTENSION](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
 
-![Screenshot](/screenshots/ss3.png)
+![Screenshot](/screenshots/ss1.png)
 
 ### Features
 
@@ -16,6 +16,7 @@ Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master)
 * Easy addition of popular JS & CSS libraries
 * Very easily accessible. Simply open a new tab in Chrome!
 * Multiple layouts to choose from
+* Capture preview screenshot
 * Save as HTML file
 * Edit in CodePen
 

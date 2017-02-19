@@ -610,9 +610,9 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
 				if (shouldPreventInfiniteLoops !== false) {
-					utils.addInfiniteLoopProtection(ast);
+					code = utils.addInfiniteLoopProtection(code);
 				}
-				d.resolve(escodegen.generate(ast));
+				d.resolve(code);
 			}
 		} else if (jsMode === JsModes.COFFEESCRIPT) {
 			var coffeeCode;
@@ -625,13 +625,10 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			} catch (e) {
 				showErrors('js', [ { lineNumber: e.location.first_line, message: e.message } ]);
 			} finally {
-				ast = esprima.parse(coffeeCode, {
-					tolerant: true
-				});
 				if (shouldPreventInfiniteLoops !== false) {
-					utils.addInfiniteLoopProtection(ast);
+					code = utils.addInfiniteLoopProtection(code);
 				}
-				d.resolve(escodegen.generate(ast));
+				d.resolve(code);
 			}
 		} else if (jsMode === JsModes.ES6) {
 			if (!window.Babel) {
@@ -650,19 +647,18 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 					// No JSX block
 					// result = escodegen.generate(ast);
 					if (shouldPreventInfiniteLoops !== false) {
-						utils.addInfiniteLoopProtection(ast);
+						code = utils.addInfiniteLoopProtection(code);
 					}
-					d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['latest', 'stage-2', 'react'] }).code);
+					// FIX ME, add jsx for loop protection above
+					d.resolve(Babel.transform(code, { presets: ['latest', 'stage-2', 'react'] }).code);
 				} catch (e) {
 					// If we failed, means probably the AST contains JSX which cannot be parsed by escodegen.
 					code = Babel.transform(code, { presets: ['latest', 'stage-2', 'react'] }).code;
-					ast = esprima.parse(code, {
-						tolerant: true
-					});
+
 					if (shouldPreventInfiniteLoops !== false) {
-						utils.addInfiniteLoopProtection(ast);
+						code = utils.addInfiniteLoopProtection(code);
 					}
-					d.resolve(escodegen.generate(ast));
+					d.resolve(code);
 				}
 			}
 		} else if (jsMode === JsModes.TS) {
@@ -677,17 +673,10 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 					/* eslint-disable no-throw-literal */
 					throw ({ description: code.diagnostics[0].messageText, lineNumber: ts.getLineOfLocalPosition(code.diagnostics[0].file,code.diagnostics[0].start) });
 				}
-				try {
-					ast = esprima.parse(code.outputText, {
-						tolerant: true,
-						jsx: true
-					});
-				} finally {
-					if (shouldPreventInfiniteLoops !== false) {
-						utils.addInfiniteLoopProtection(ast);
-					}
-					d.resolve(escodegen.generate(ast));
+				if (shouldPreventInfiniteLoops !== false) {
+					code = utils.addInfiniteLoopProtection(ast);
 				}
+				d.resolve(code);
 			} catch (e) {
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			}

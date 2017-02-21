@@ -50,6 +50,7 @@ TextareaAutoComplete */
 
 	var updateTimer
 		, updateDelay = 500
+		, unsavedEditWarningCount = 15
 		, currentLayoutMode
 		, hasSeenNotifications = true
 		, htmlMode = HtmlModes.HTML
@@ -57,6 +58,7 @@ TextareaAutoComplete */
 		, cssMode = CssModes.CSS
 		, sass
 		, currentItem
+		, unsavedEditCount
 		, savedItems
 		, minCodeWrapSize = 33
 		, mainSplitInstance
@@ -294,6 +296,8 @@ TextareaAutoComplete */
 		utils.log('saving key', key || currentItem.id, currentItem)
 		saveSetting(key || currentItem.id, currentItem, function () {
 			alertsService.add('Item saved.');
+			unsavedEditCount = 0;
+			saveBtn.classList.remove('is-marked');
 		});
 	}
 
@@ -366,11 +370,13 @@ TextareaAutoComplete */
 			layoutMode: currentLayoutMode
 		};
 		alertsService.add('New item created');
+		unsavedEditCount = 0;
 		refreshEditor();
 	}
 	function openItem(itemId) {
 		currentItem = savedItems[itemId];
 		// codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
+		unsavedEditCount = 0;
 		refreshEditor();
 		alertsService.add('Saved item loaded');
 	}
@@ -754,6 +760,7 @@ TextareaAutoComplete */
 				createPreviewFile(result[0], result[1], result[2]);
 			});
 		}
+
 		codeInPreview.html = currentCode.html;
 		codeInPreview.css = currentCode.css;
 		codeInPreview.js = currentCode.js;
@@ -823,10 +830,21 @@ TextareaAutoComplete */
 				}
 			}
 		});
-		cm.on('change', function onChange() {
+		cm.on('change', function onChange(editor, change) {
 			clearTimeout(updateTimer);
 			updateTimer = setTimeout(function () {
 				scope.setPreviewContent();
+				if (change.origin === '+input') {
+					saveBtn.classList.add('is-marked');
+					if (++unsavedEditCount % unsavedEditWarningCount === 0 && unsavedEditCount >= unsavedEditWarningCount) {
+						saveBtn.classList.add('animated');
+						saveBtn.classList.add('wobble');
+						saveBtn.addEventListener('animationend', () => {
+							saveBtn.classList.remove('animated');
+							saveBtn.classList.remove('wobble');
+						});
+					}
+				}
 			}, updateDelay);
 		});
 		if (options.noAutocomplete) {
@@ -1234,6 +1252,7 @@ TextareaAutoComplete */
 			cssMode: 'css'
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
+				unsavedEditCount = 0;
 				if (lastCode.id) {
 					chrome.storage.local.get(lastCode.id, function (itemResult) {
 						utils.log('Load item ', lastCode.id)

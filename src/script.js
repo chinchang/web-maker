@@ -331,13 +331,19 @@ TextareaAutoComplete */
 		isSavedItemsPaneOpen = savedItemsPane.classList.contains('is-open');
 		document.body.classList[isSavedItemsPaneOpen ? 'add' : 'remove']('overlay-visible');
 	}
-	function openSavedItemsPane() {
+
+	/**
+	 * Fetches all items from storage
+	 * @param  {boolean} shouldSaveGlobally Whether to store the fetched items in global arr for later use.
+	 * @return {promise}                    Promise.
+	 */
+	function fetchItems(shouldSaveGlobally) {
+		var d = deferred();
 		chrome.storage.local.get('items', function (result) {
 			var itemIds = Object.getOwnPropertyNames(result.items || {}),
 				items = [];
 			if (!itemIds.length) {
-				populateItemsInSavedPane([]);
-				return;
+				d.resolve([]);
 			}
 
 			savedItems = savedItems || [];
@@ -346,16 +352,25 @@ TextareaAutoComplete */
 
 				/* eslint-disable no-loop-func */
 				chrome.storage.local.get(itemIds[i], function (itemResult) {
-					savedItems[itemIds[i]] = itemResult[itemIds[i]];
+					if (shouldSaveGlobally) {
+						savedItems[itemIds[i]] = itemResult[itemIds[i]];
+					}
 					items.push(itemResult[itemIds[i]]);
 					// Check if we have all items now.
 					if (itemIds.length === items.length) {
-						populateItemsInSavedPane(items);
+						d.resolve(items)
 					}
 				});
 
 				/* eslint-enable no-loop-func */
 			}
+		});
+		return d.promise;
+	}
+
+	function openSavedItemsPane() {
+		fetchItems(true).then(function (items) {
+			populateItemsInSavedPane(items);
 		});
 	}
 
@@ -404,6 +419,9 @@ TextareaAutoComplete */
 				createNewItem();
 			}
 		});
+		// Remove from cached list
+		delete savedItems[itemId];
+
 		trackEvent('fn', 'itemRemoved');
 	}
 
@@ -893,20 +911,120 @@ TextareaAutoComplete */
 		}
 	}
 
-	scope.onModalSettingsLinkClick = function () {
+	scope.onModalSettingsLinkClick = function onModalSettingsLinkClick() {
 		openSettings();
 		trackEvent('ui', 'onboardSettingsBtnClick');
 	}
 
-	scope.onShowInTabClicked = function () {
+	scope.onShowInTabClicked = function onShowInTabClicked() {
 		onboardDontShowInTabOptionBtn.classList.remove('selected');
 		onboardShowInTabOptionBtn.classList.add('selected');
 		trackEvent('ui', 'onboardShowInTabClick');
 	}
-	scope.onDontShowInTabClicked = function () {
+	scope.onDontShowInTabClicked = function onDontShowInTabClicked() {
 		onboardDontShowInTabOptionBtn.classList.add('selected');
 		onboardShowInTabOptionBtn.classList.remove('selected');
 		trackEvent('ui', 'onboardDontShowInTabClick');
+	}
+
+	scope.exportItems = function exportItems(e) {
+		fetchItems().then(function (items) {
+			utils.log(9, items);
+			var d = new Date();
+			var fileName = [ 'web-maker-export', d.getFullYear(), (d.getMonth() + 1), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
+			fileName += '.json';
+			var blob = new Blob([ JSON.stringify(items,false,2) ], { type: "application/json;charset=UTF-8" });
+			var a = document.createElement('a');
+			a.href = window.URL.createObjectURL(blob);
+			a.download = fileName;
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+			trackEvent('ui', 'exportBtnClicked');
+		});
+		e.preventDefault();
+	}
+
+	function mergeImportedItems(items) {
+		var existingItemIds = [];
+		var toMergeItems = {};
+		items.forEach((item) => {
+			if (savedItems[item.id]) {
+				// Item already exists
+				existingItemIds.push(item.id);
+			} else {
+				utils.log('merging', item.id);
+				toMergeItems[item.id] = item;
+			}
+		});
+		var mergedItemCount = items.length - existingItemIds.length;
+		if (existingItemIds.length) {
+			var shouldReplace = confirm(existingItemIds.length + ' creations already exist. Do you want to replace them?');
+			if (shouldReplace) {
+				utils.log('shouldreplace', shouldReplace);
+				items.forEach((item) => {
+					toMergeItems[item.id] = item;
+					mergedItemCount = items.length;
+				});
+			}
+		}
+		if (mergedItemCount) {
+			// save new items
+			chrome.storage.local.set(toMergeItems, function () {
+				alertsService.add(mergedItemCount + ' creations imported successfully.');
+			});
+			// Push in new item IDs
+			chrome.storage.local.get({
+				items: {}
+			}, function (result) {
+
+				/* eslint-disable guard-for-in */
+				for (var id in toMergeItems) {
+					result.items[id] = true;
+					chrome.storage.local.set({
+						items: result.items
+					});
+				}
+
+				/* eslint-enable guard-for-in */
+			});
+			alertsService.add(mergedItemCount + ' creations imported successfully.');
+		}
+		// FIXME: Move from here
+		toggleSavedItemsPane(false);
+	}
+
+	function onImportFileChange(e) {
+		var file = e.target.files[0];
+		// if (!f.type.match('image.*')) {
+			// continue;
+		// }
+
+		var reader = new FileReader();
+		reader.onload = function(progressEvent) {
+			var items;
+			try {
+				items = JSON.parse(progressEvent.target.result);
+				utils.log(items);
+				mergeImportedItems(items);
+			} catch (ex) {
+				alert('Oops! Select file is corrupted.')
+			}
+		};
+
+		reader.readAsText(file, 'utf-8');
+	}
+
+	scope.onImportBtnClicked = function exportItems(e) {
+		var input = document.createElement('input');
+		input.type = 'file';
+		input.style.display = 'none';
+		input.accept = 'accept="application/json';
+		document.body.appendChild(input)
+		input.addEventListener('change', onImportFileChange);
+		input.click();
+		e.preventDefault();
 	}
 
 	function saveScreenshot(dataURI) {
@@ -1098,7 +1216,6 @@ TextareaAutoComplete */
 				toggleSavedItemsPane();
 			}
 			if (e.target.classList.contains('js-saved-item-tile__close-btn')) {
-				utils.log('removing', e.target.parentElement)
 				removeItem(e.target.parentElement.dataset.itemId);
 			}
 		});

@@ -258,7 +258,7 @@ li.CodeMirror-hint-active {
 	background-color: rgba(0, 0, 0, 0.5);
 	color: rgba(255, 255, 255, 0.45);
 	border-top: 1px solid rgba(255,255,255,0.14);
-	line-height: 20px;
+	/*line-height: 20px;*/
 }
 .main-header {
 	border: 0;
@@ -266,16 +266,25 @@ li.CodeMirror-hint-active {
 }
 .main-header__btn-wrap > a {
 	font-size: 0.8em;
+	line-height: 20px;
+	height: 20px;
+	letter-spacing: 0.6px;
 	color: #9297B3;
 	border-radius: 3px;
-	border: 1px solid rgba(146, 151, 179, 0.33);
 	margin-left: 10px;
-	padding: 0px 5px;
+	padding: 0px 8px;
+	border: 1px solid rgba(0,0,0,.9);
+	background: linear-gradient(180deg, rgba(0,0,0,0.5) 0, rgba(255,255,255,0.1) 100%);
+	text-shadow: 0px 1px 1px rgba(0,0,0,1);
+	box-shadow: 0 -1px 0px 0 rgba(255,255,255,0.15);
 	text-transform: uppercase;
 }
 .main-header__btn-wrap > a > svg {
 	fill: #9297B3;
 	margin-right: 4px;
+}
+.main-header__btn-wrap > a.is-marked > svg {
+	fill: crimson;
 }
 .main-header__btn-wrap > a:hover {
 	border-color: rgba(146, 151, 179, 0.5);

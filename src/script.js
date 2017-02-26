@@ -523,9 +523,9 @@ TextareaAutoComplete */
 		if (htmlMode === HtmlModes.HTML) {
 			d.resolve(code);
 		} else if (htmlMode === HtmlModes.MARKDOWN) {
-			d.resolve(marked(code));
+			d.resolve(marked ? marked(code) : code);
 		} else if (htmlMode === HtmlModes.JADE) {
-			d.resolve(jade.render(code));
+			d.resolve(jade ? jade.render(code) : code);
 		}
 
 		return d.promise;
@@ -538,13 +538,17 @@ TextareaAutoComplete */
 		if (cssMode === CssModes.CSS) {
 			d.resolve(code);
 		} else if (cssMode === CssModes.SCSS || cssMode === CssModes.SASS) {
-			sass.compile(code, { indentedSyntax: cssMode === CssModes.SASS }, function(result) {
-				// Something was wrong
-				if (result.line && result.message) {
-					showErrors('css', [ { lineNumber: result.line - 1, message: result.message } ]);
-				}
-				d.resolve(result.text);
-			});
+			if (sass) {
+				sass.compile(code, { indentedSyntax: cssMode === CssModes.SASS }, function(result) {
+					// Something was wrong
+					if (result.line && result.message) {
+						showErrors('css', [ { lineNumber: result.line - 1, message: result.message } ]);
+					}
+					d.resolve(result.text);
+				});
+			} else {
+				d.resolve(code);
+			}
 		} else if (cssMode === CssModes.LESS) {
 			less.render(code).then(function (result) {
 				d.resolve(result.css);
@@ -796,7 +800,7 @@ TextareaAutoComplete */
 			var fileContent = getCompleteHtml(html, css, js);
 
 			var d = new Date();
-			var fileName = [ 'web-maker', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
+			var fileName = [ 'web-maker', d.getFullYear(), (d.getMonth() + 1), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
 			fileName += '.html';
 
 			if (currentItem.title) {
@@ -854,7 +858,8 @@ TextareaAutoComplete */
 				scope.setPreviewContent();
 				if (change.origin === '+input') {
 					saveBtn.classList.add('is-marked');
-					if (++unsavedEditCount % unsavedEditWarningCount === 0 && unsavedEditCount >= unsavedEditWarningCount) {
+					unsavedEditCount += 1;
+					if (unsavedEditCount % unsavedEditWarningCount === 0 && unsavedEditCount >= unsavedEditWarningCount) {
 						saveBtn.classList.add('animated');
 						saveBtn.classList.add('wobble');
 						saveBtn.addEventListener('animationend', () => {
@@ -1047,7 +1052,7 @@ TextareaAutoComplete */
 		var size = blob.size + (1024 / 2);
 
 		var d = new Date();
-		var fileName = [ 'web-maker-screenshot', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
+		var fileName = [ 'web-maker-screenshot', d.getFullYear(), (d.getMonth() + 1), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
 		fileName += '.png';
 
 		function onWriteEnd() {

@@ -303,30 +303,55 @@
 
 				<h3>Indentation</h3>
 				<p>
-					<label>
+					<label class="line">
 						<input type="radio" checked="true" name="indentation" value="spaces" d-change="updateSetting" data-setting="indentWith"> Spaces
 					</label>
-					<label>
-						<input type="radio" name="indentation" value="tab" d-change="updateSetting" data-setting="indentWith"> Tabs
+					<label class="line">
+						<input type="radio" name="indentation" value="tabs" d-change="updateSetting" data-setting="indentWith"> Tabs
 					</label>
-					<label>
-						<input type="range" value="2" min="1" max="10" data-setting="indentSize" d-change="updateSetting"> Size
+					<label class="line">
+						Indentation Size <input type="range" value="2" min="1" max="10" data-setting="indentSize" d-change="updateSetting">
 					</label>
 				</p>
+				<hr>
 
 				<h3>Editing</h3>
 				<p>
-					<label>
-						<input type="checkbox" d-change="updateSetting"> Save on focus lost
+					<label class="line">
+						Default Preprocessors
 					</label>
-					<label>
-						<input type="checkbox" d-change="updateSetting"> Preserve last written code
+					<div class="flex line">
+						<select style="flex:1;margin:0 20px" data-setting="htmlMode" d-change="updateSetting">
+							<option value="html">HTML</option>
+							<option value="markdown">Markdown</option>
+							<option value="jade">Pug</option>
+						</select>
+						<select style="flex:1;margin:0 20px" data-setting="cssMode" d-change="updateSetting">
+							<option value="css">CSS</option>
+							<option value="scss">SCSS</option>
+							<option value="sass">SASS</option>
+							<option value="less">LESS</option>
+							<option value="stylus">Stylus</option>
+						</select>
+						<select style="flex:1;margin:0 20px" data-setting="jsMode" d-change="updateSetting">
+							<option value="js">JS</option>
+							<option value="coffee">CoffeeScript</option>
+							<option value="es6">ES6 (Babel)</option>
+							<option value="typescript">TypeScript</option>
+						</select>
+					</div>
+					<label class="line">
+						<input type="checkbox" d-change="updateSetting" data-setting="preserveLastCode"> Preserve last written code
+					</label>
+					<label class="line">
+						<input type="checkbox" d-change="updateSetting" data-setting="replaceNewTab"> Replace new tab page
 					</label>
 				</p>
+				<hr>
 
 				<h3>Fun</h3>
 				<p>
-					<label>
+					<label class="line">
 						<input type="checkbox" d-change="updateSetting" data-setting="isCodeBlastOn"> Code blast!
 					</label>
 				</p>

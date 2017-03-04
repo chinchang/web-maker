@@ -63,7 +63,6 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		, minCodeWrapSize = 33
 		, mainSplitInstance
 		, codeSplitInstance
-		// TODO: for legacy reasons when. Will be refactored as global preferences.
 		, prefs = {}
 		, codeInPreview = { html: null, css: null, js: null }
 		, isSavedItemsPaneOpen = false
@@ -1134,18 +1133,33 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		e.preventDefault();
 	}
 
+	function updateSettingsInUi() {
+		$('[data-setting=preserveLastCode]').checked = prefs.preserveLastCode;
+		$('[data-setting=replaceNewTab]').checked = prefs.replaceNewTab;
+		$('[data-setting=htmlMode]').value = prefs.htmlMode;
+		$('[data-setting=cssMode]').value = prefs.cssMode;
+		$('[data-setting=jsMode]').value = prefs.jsMode;
+		$('[data-setting=indentSize]').value = prefs.indentSize;
+		$('[data-setting=indentWith][value=' + (prefs.indentWith || 'spaces') + ']').checked = true;
+		$('[data-setting=isCodeBlastOn]').checked = prefs.isCodeBlastOn;
+	}
+
 	scope.updateSetting = function updateSetting(e) {
-		var settingName = e.target.dataset.setting;
-		console.log(e, settingName);
-		var obj = {};
-		obj[settingName] = e.target.checked;
-		chrome.storage.sync.set(obj, function() {
-			alertsService.add('setting saved');
-		});
+		// If this was triggered from user interaction, save the setting
+		if (e) {
+			var settingName = e.target.dataset.setting;
+			var obj = {};
+			var el = e.target;
+			console.log(e, settingName, (el.type === 'checkbox') ? el.checked : el.value);
+			obj[settingName] = el.type === 'checkbox' ? el.checked : el.value;
+			chrome.storage.sync.set(obj, function() {
+				alertsService.add('setting saved');
+			});
+		}
 
 		scope.cm.js.setOption(
 			'indentWithTabs',
-			$('[data-setting=indentWith]:checked').value === 'tab'
+			$('[data-setting=indentWith]:checked').value !== 'spaces'
 		);
 
 		scope.cm.js.setOption('blastCode', $('[data-setting=isCodeBlastOn]').checked ? { effect: 2 } : false);
@@ -1410,9 +1424,13 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		// Get synced `preserveLastCode` setting to get back last code (or not).
 		chrome.storage.sync.get({
 			preserveLastCode: true,
+			replaceNewTab: false,
 			htmlMode: 'html',
 			jsMode: 'js',
-			cssMode: 'css'
+			cssMode: 'css',
+			isCodeBlastOn: false,
+			indentWith: 'spaces',
+			indentSize: 2
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
 				unsavedEditCount = 0;
@@ -1430,9 +1448,17 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			} else {
 				createNewItem();
 			}
-			prefs.htmlMode = result.htmlmode;
+			prefs.preserveLastCode = result.preserveLastCode;
+			prefs.replaceNewTab = result.replaceNewTab;
+			prefs.htmlMode = result.htmlMode;
 			prefs.cssMode = result.cssMode;
 			prefs.jsMode = result.jsMode;
+			prefs.isCodeBlastOn = result.isCodeBlastOn;
+			prefs.indentSize = result.indentSize;
+			prefs.indentWith = result.indentWith;
+
+			updateSettingsInUi();
+			scope.updateSetting();
 		});
 
 		// Check for new version notifications
@@ -1461,6 +1487,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 				hasSeenNotifications = false;
 			}
 		});
+
 
 		requestAnimationFrame(compileNodes);
 	}

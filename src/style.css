@@ -34,9 +34,16 @@ a { text-decoration: none; color: crimson; cursor: pointer; }
 .full-width { width: 100%; }
 .opacity--30 { opacity: 0.3; }
 .pointer-none { pointer-events: none; }
-
+hr {
+	background: 0;
+	border: 0;
+	border-bottom: 1px solid #dedede;
+}
 [class*="hint--"]:after {
 	text-transform: none;
+}
+.line {
+	margin-bottom: 1em;
 }
 .caret {
 	display: inline-block;

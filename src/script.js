@@ -450,6 +450,7 @@ TextareaAutoComplete */
 		notificationsModal.classList.remove('is-modal-visible');
 		addLibraryModal.classList.remove('is-modal-visible');
 		onboardModal.classList.remove('is-modal-visible');
+		settingsModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -832,6 +833,7 @@ TextareaAutoComplete */
 			keyMap: 'sublime',
 			theme: 'monokai',
 			lint: !!options.lint,
+			tabSize: 2,
 			foldGutter: true,
 			styleActiveLine: true,
 			gutters: options.gutters || [],
@@ -849,6 +851,17 @@ TextareaAutoComplete */
 				},
 				'Shift-Tab': function(editor) {
 					CodeMirror.commands.indentAuto(editor);
+				},
+				'Tab': function(editor) {
+					// FIXME: This breaks the usual tab behavior of stepping only in fixes size.
+					// Following code always puts `indentUnit` no. of spaces.
+					var input = $('[data-setting=indentWith]:checked');
+					if (!editor.somethingSelected() && (!input || input.value === 'spaces')) {
+						// softtabs adds spaces
+						CodeMirror.commands.insertSoftTab(editor);
+					} else {
+						CodeMirror.commands.defaultTab(editor);
+					}
 				}
 			}
 		});
@@ -903,6 +916,8 @@ TextareaAutoComplete */
 	Inlet(scope.cm.js);
 
 	function openSettings() {
+		settingsModal.classList.toggle('is-modal-visible');
+		return;
 		if (chrome.runtime.openOptionsPage) {
 			// New way to open options pages, if supported (Chrome 42+).
 			// Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=601997
@@ -1119,11 +1134,40 @@ TextareaAutoComplete */
 		e.preventDefault();
 	}
 
+	function getSetting(settingName) {
+		// return
+	}
+
+	scope.updateSetting = function updateSetting(e) {
+		var settingName = e.target.dataset.setting;
+		console.log(e, settingName);
+		var obj = {};
+		obj[e.target.dataset.setting] = e.target.checked;
+		chrome.storage.sync.set(obj, function() {
+			alertsService.add('setting saved');
+		});
+
+		scope.cm.js.setOption(
+			'indentWithTabs',
+			$('[data-setting=indentWith]:checked').value === 'tab'
+		);
+
+		scope.cm.js.setOption('blastCode', $('[data-setting=isCodeBlastOn]').checked ? { effect: 2 } : false);
+		scope.cm.js.setOption('indentUnit', $('[data-setting=indentSize]').value);
+		scope.cm.js.setOption('tabSize', $('[data-setting=indentSize]').value);
+	};
+
 	function compileNodes() {
 		var nodes = [].slice.call($all('[d-click]'));
 		nodes.forEach(function (el) {
 			el.addEventListener('click', function (e) {
 				scope[el.getAttribute('d-click')].call(window, e)
+			});
+		});
+		nodes = [].slice.call($all('[d-change]'));
+		nodes.forEach(function (el) {
+			el.addEventListener('change', function (e) {
+				scope[el.getAttribute('d-change')].call(window, e)
 			});
 		})
 	}

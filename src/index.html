@@ -175,7 +175,7 @@
 		</div>
 
 		<div class="modal" id="addLibraryModal">
-			<div class="modal__content" id="app">
+			<div class="modal__content">
 				<h1>Add Library</h1>
 				<h3>JavaScript</h3>
 				<textarea id="js-external-js" class="full-width" id="" cols="30" rows="5" placeholder="Start typing name of a library. Put each library in new line"></textarea>
@@ -288,6 +288,48 @@
 						<button class="btn" d-click="closeAllOverlays">Lets start!</button>
 					</p>
 				</div>
+			</div>
+		</div>
+
+	<style>
+		label {
+			display: block;
+			cursor: pointer;
+		}
+	</style>
+		<div class="modal" id="settingsModal">
+			<div class="modal__content">
+				<h1>Settings</h1>
+
+				<h3>Indentation</h3>
+				<p>
+					<label>
+						<input type="radio" checked="true" name="indentation" value="spaces" d-change="updateSetting" data-setting="indentWith"> Spaces
+					</label>
+					<label>
+						<input type="radio" name="indentation" value="tab" d-change="updateSetting" data-setting="indentWith"> Tabs
+					</label>
+					<label>
+						<input type="range" value="2" min="1" max="10" data-setting="indentSize" d-change="updateSetting"> Size
+					</label>
+				</p>
+
+				<h3>Editing</h3>
+				<p>
+					<label>
+						<input type="checkbox" d-change="updateSetting"> Save on focus lost
+					</label>
+					<label>
+						<input type="checkbox" d-change="updateSetting"> Preserve last written code
+					</label>
+				</p>
+
+				<h3>Fun</h3>
+				<p>
+					<label>
+						<input type="checkbox" d-change="updateSetting" data-setting="isCodeBlastOn"> Code blast!
+					</label>
+				</p>
 			</div>
 		</div>
 
@@ -463,6 +505,7 @@ Import
 		<script src="lib/codemirror/mode/htmlmixed/htmlmixed.js"></script>
 		<script src="lib/codemirror/keymap/sublime.js"></script>
 		<script src="lib/emmet.js"></script>
+		<script src="lib/code-blast.js"></script>
 
 		<script src="lib/split.js"></script>
 		<script src="lib/inlet.min.js"></script>

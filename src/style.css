@@ -229,7 +229,7 @@ select, input[type="text"], textarea {
 .cm-s-monokai .CodeMirror-guttermarker-subtle {
 	opacity: 0.4;
 }
-.CodeMirror-activeline-background, .CodeMirror-activeline-gutter {
+.cm-s-monokai .CodeMirror-activeline-background, .cm-s-monokai .CodeMirror-activeline-gutter {
 	background: rgba(0,0,0,0.1) !important;
 }
 .CodeMirror-guttermarker-subtle {

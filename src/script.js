@@ -1142,6 +1142,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		$('[data-setting=indentSize]').value = prefs.indentSize;
 		$('[data-setting=indentWith][value=' + (prefs.indentWith || 'spaces') + ']').checked = true;
 		$('[data-setting=isCodeBlastOn]').checked = prefs.isCodeBlastOn;
+		$('[data-setting=editorTheme]').value = prefs.editorTheme;
 	}
 
 	scope.updateSetting = function updateSetting(e) {
@@ -1157,14 +1158,17 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			});
 		}
 
-		scope.cm.js.setOption(
-			'indentWithTabs',
-			$('[data-setting=indentWith]:checked').value !== 'spaces'
-		);
+		['html', 'js', 'css'].forEach((type) => {
+			scope.cm[type].setOption(
+				'indentWithTabs',
+				$('[data-setting=indentWith]:checked').value !== 'spaces'
+			);
 
-		scope.cm.js.setOption('blastCode', $('[data-setting=isCodeBlastOn]').checked ? { effect: 2 } : false);
-		scope.cm.js.setOption('indentUnit', $('[data-setting=indentSize]').value);
-		scope.cm.js.setOption('tabSize', $('[data-setting=indentSize]').value);
+			scope.cm[type].setOption('blastCode', $('[data-setting=isCodeBlastOn]').checked ? { effect: 2 } : false);
+			scope.cm[type].setOption('indentUnit', $('[data-setting=indentSize]').value);
+			scope.cm[type].setOption('tabSize', $('[data-setting=indentSize]').value);
+			scope.cm[type].setOption('theme', $('[data-setting=editorTheme]').value);
+		});
 	};
 
 	function compileNodes() {
@@ -1430,7 +1434,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			cssMode: 'css',
 			isCodeBlastOn: false,
 			indentWith: 'spaces',
-			indentSize: 2
+			indentSize: 2,
+			editorTheme: 'monokai'
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
 				unsavedEditCount = 0;
@@ -1456,6 +1461,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			prefs.isCodeBlastOn = result.isCodeBlastOn;
 			prefs.indentSize = result.indentSize;
 			prefs.indentWith = result.indentWith;
+			prefs.editorTheme = result.editorTheme;
 
 			updateSettingsInUi();
 			scope.updateSetting();
@@ -1488,6 +1494,59 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			}
 		});
 
+		var options = '';
+		[
+			'selected>default',
+			'3024-day',
+			'3024-night',
+			'abcdef',
+			'ambiance',
+			'base16-dark',
+			'base16-light',
+			'bespin',
+			'blackboard',
+			'cobalt',
+			'colorforth',
+			'dracula',
+			'duotone-dark',
+			'duotone-light',
+			'eclipse',
+			'elegant',
+			'erlang-dark',
+			'hopscotch',
+			'icecoder',
+			'isotope',
+			'lesser-dark',
+			'liquibyte',
+			'material',
+			'mbo',
+			'mdn-like',
+			'midnight',
+			'monokai',
+			'neat',
+			'neo',
+			'night',
+			'panda-syntax',
+			'paraiso-dark',
+			'paraiso-light',
+			'pastel-on-dark',
+			'railscasts',
+			'rubyblue',
+			'seti',
+			'solarized dark',
+			'solarized light',
+			'the-matrix',
+			'tomorrow-night-bright',
+			'tomorrow-night-eighties',
+			'ttcn',
+			'twilight',
+			'vibrant-ink',
+			'xq-dark',
+			'xq-light',
+			'yeti',
+			'zenburn'
+		].forEach((theme) => { options += '<option value="' + theme + '">' + theme + '</option>'; });
+		document.querySelector('[data-setting="editorTheme"]').innerHTML = options;
 
 		requestAnimationFrame(compileNodes);
 	}

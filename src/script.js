@@ -3,8 +3,8 @@
 onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, openBtn, saveBtn, newBtn,
-settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardDontShowInTabOptionBtn
-TextareaAutoComplete */
+settingsBtn, onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn,
+onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
 
@@ -917,8 +917,8 @@ TextareaAutoComplete */
 
 	function openSettings() {
 		settingsModal.classList.toggle('is-modal-visible');
-		return;
-		if (chrome.runtime.openOptionsPage) {
+
+		/* if (chrome.runtime.openOptionsPage) {
 			// New way to open options pages, if supported (Chrome 42+).
 			// Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=601997
 			// Until this bug fixes, use the
@@ -929,7 +929,7 @@ TextareaAutoComplete */
 			chrome.tabs.create({
 				url: 'chrome://extensions?options=' + chrome.i18n.getMessage('@@extension_id')
 			});
-		}
+		} */
 	}
 
 	scope.onModalSettingsLinkClick = function onModalSettingsLinkClick() {
@@ -1134,15 +1134,11 @@ TextareaAutoComplete */
 		e.preventDefault();
 	}
 
-	function getSetting(settingName) {
-		// return
-	}
-
 	scope.updateSetting = function updateSetting(e) {
 		var settingName = e.target.dataset.setting;
 		console.log(e, settingName);
 		var obj = {};
-		obj[e.target.dataset.setting] = e.target.checked;
+		obj[settingName] = e.target.checked;
 		chrome.storage.sync.set(obj, function() {
 			alertsService.add('setting saved');
 		});

@@ -1143,6 +1143,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		$('[data-setting=indentWith][value=' + (prefs.indentWith || 'spaces') + ']').checked = true;
 		$('[data-setting=isCodeBlastOn]').checked = prefs.isCodeBlastOn;
 		$('[data-setting=editorTheme]').value = prefs.editorTheme;
+		$('[data-setting=keymap]').value = prefs.keymap;
 	}
 
 	scope.updateSetting = function updateSetting(e) {
@@ -1168,6 +1169,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			scope.cm[type].setOption('indentUnit', $('[data-setting=indentSize]').value);
 			scope.cm[type].setOption('tabSize', $('[data-setting=indentSize]').value);
 			scope.cm[type].setOption('theme', $('[data-setting=editorTheme]').value);
+			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]').value);
 		});
 	};
 
@@ -1435,7 +1437,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			isCodeBlastOn: false,
 			indentWith: 'spaces',
 			indentSize: 2,
-			editorTheme: 'monokai'
+			editorTheme: 'monokai',
+			keymap: 'sublime'
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
 				unsavedEditCount = 0;
@@ -1462,6 +1465,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			prefs.indentSize = result.indentSize;
 			prefs.indentWith = result.indentWith;
 			prefs.editorTheme = result.editorTheme;
+			prefs.keymap = result.keymap;
 
 			updateSettingsInUi();
 			scope.updateSetting();

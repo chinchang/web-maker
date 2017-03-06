@@ -393,6 +393,12 @@
 						<select style="flex:1;margin:0 20px" data-setting="editorTheme" d-change="updateSetting"></select>
 					</label>
 					<label class="line">
+						<input type="radio" checked="true" name="keymap" value="sublime" d-change="updateSetting" data-setting="keymap"> Sublime key bindings
+					</label>
+					<label class="line">
+						<input type="radio" name="keymap" value="vim" d-change="updateSetting" data-setting="keymap"> Vim key bindings
+					</label>
+					<label class="line">
 						<input type="checkbox" d-change="updateSetting" data-setting="preserveLastCode"> Preserve last written code
 					</label>
 					<label class="line">
@@ -581,6 +587,7 @@ Import
 		<script src="lib/codemirror/mode/css/css.js"></script>
 		<script src="lib/codemirror/mode/htmlmixed/htmlmixed.js"></script>
 		<script src="lib/codemirror/keymap/sublime.js"></script>
+		<script src="lib/codemirror/keymap/vim.js"></script>
 		<script src="lib/emmet.js"></script>
 		<script src="lib/code-blast.js"></script>
 

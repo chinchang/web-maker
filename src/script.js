@@ -1164,7 +1164,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 				$('[data-setting=indentWith]:checked').value !== 'spaces'
 			);
 
-			scope.cm[type].setOption('blastCode', $('[data-setting=isCodeBlastOn]').checked ? { effect: 2 } : false);
+			scope.cm[type].setOption('blastCode', $('[data-setting=isCodeBlastOn]').checked ? { effect: 2, shake: false } : false);
 			scope.cm[type].setOption('indentUnit', $('[data-setting=indentSize]').value);
 			scope.cm[type].setOption('tabSize', $('[data-setting=indentSize]').value);
 			scope.cm[type].setOption('theme', $('[data-setting=editorTheme]').value);

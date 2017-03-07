@@ -1143,7 +1143,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		$('[data-setting=indentWith][value=' + (prefs.indentWith || 'spaces') + ']').checked = true;
 		$('[data-setting=isCodeBlastOn]').checked = prefs.isCodeBlastOn;
 		$('[data-setting=editorTheme]').value = prefs.editorTheme;
-		$('[data-setting=keymap]').value = prefs.keymap;
+		$('[data-setting=keymap][value=' + (prefs.keymap || 'sublime') + ']').checked = true;
 	}
 
 	scope.updateSetting = function updateSetting(e) {

@@ -1500,7 +1500,6 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 
 		var options = '';
 		[
-			'selected>default',
 			'3024-day',
 			'3024-night',
 			'abcdef',

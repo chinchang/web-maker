@@ -2,7 +2,7 @@
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
 onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
-notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, openBtn, saveBtn, newBtn,
+notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn,
 settingsBtn, onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 /* eslint-disable no-extra-semi */
@@ -1170,7 +1170,27 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			scope.cm[type].setOption('tabSize', $('[data-setting=indentSize]').value);
 			scope.cm[type].setOption('theme', $('[data-setting=editorTheme]').value);
 			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]').value);
+			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]').value);
+			scope.cm[type].refresh();
 		});
+	};
+
+	scope.onNewBtnClick = function () {
+		trackEvent('ui', 'newBtnClick');
+		if (unsavedEditCount) {
+			var shouldDiscard = confirm('You have unsaved changes. Do you still want to create something new?');
+			if (shouldDiscard) {
+				createNewItem();
+			}
+		}
+	};
+	scope.onOpenBtnClick = function () {
+		trackEvent('ui', 'openBtnClick');
+		openSavedItemsPane();
+	};
+	scope.onSaveBtnClick = function () {
+		trackEvent('ui', 'saveBtnClick', currentItem.id ? 'saved' : 'new');
+		saveItem();
 	};
 
 	function compileNodes() {
@@ -1261,18 +1281,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			saveFile();
 			trackEvent('ui', 'saveHtmlClick');
 		});
-		utils.onButtonClick(openBtn, function () {
-			openSavedItemsPane();
-			trackEvent('ui', 'openBtnClick');
-		});
-		utils.onButtonClick(saveBtn, function () {
-			trackEvent('ui', 'saveBtnClick', currentItem.id ? 'saved' : 'new');
-			saveItem();
-		});
-		utils.onButtonClick(newBtn, function () {
-			createNewItem();
-			trackEvent('ui', 'newBtnClick');
-		});
+
 		utils.onButtonClick(savedItemsPaneCloseBtn, toggleSavedItemsPane);
 		utils.onButtonClick(savedItemsPane, function (e) {
 			if (e.target.classList.contains('js-saved-item-tile')) {

@@ -1175,6 +1175,9 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			scope.cm[type].setOption('indentUnit', $('[data-setting=indentSize]').value);
 			scope.cm[type].setOption('tabSize', $('[data-setting=indentSize]').value);
 			scope.cm[type].setOption('theme', $('[data-setting=editorTheme]').value);
+			// Replace correct css file in LINK tags's href
+			editorThemeLinkTag.href = '/lib/codemirror/theme/' + prefs.editorTheme + '.css';
+
 			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]').value);
 			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]').value);
 			scope.cm[type].refresh();

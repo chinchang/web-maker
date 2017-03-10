@@ -10,8 +10,8 @@ https://twitter.com/JoelBesada/status/670343885655293952
 		lastTime = 0,
 		particles = [],
 		particlePointer = 0,
-		MAX_PARTICLES = 500,
-		PARTICLE_NUM_RANGE = { min: 5, max: 10 },
+		MAX_PARTICLES = 100,
+		PARTICLE_NUM_RANGE = { min: 2, max: 7 },
 		PARTICLE_GRAVITY = 0.08,
 		PARTICLE_ALPHA_FADEOUT = 0.96,
 		PARTICLE_VELOCITY_RANGE = {
@@ -25,6 +25,7 @@ https://twitter.com/JoelBesada/status/670343885655293952
 
 	var codemirrors = [], cmNode;
 	var canvas, ctx;
+	var current_time, dt, magnitude, shakeX, shakeY; // loop vars
 	var throttledShake = throttle(shake, 100);
 	var throttledSpawnParticles = throttle(spawnParticles, 100);
 
@@ -147,16 +148,16 @@ https://twitter.com/JoelBesada/status/670343885655293952
 		ctx.clearRect(0, 0, w, h);
 
 		// get the time past the previous frame
-		var current_time = new Date().getTime();
+		current_time = new Date().getTime();
 		if(!lastTime) lastTime = current_time;
-		var dt = (current_time - lastTime) / 1000;
+		dt = (current_time - lastTime) / 1000;
 		lastTime = current_time;
 
 		if (shakeTime > 0) {
 			shakeTime -= dt;
-			var magnitude = (shakeTime / shakeTimeMax) * shakeIntensity;
-			var shakeX = random(-magnitude, magnitude);
-			var shakeY = random(-magnitude, magnitude);
+			magnitude = (shakeTime / shakeTimeMax) * shakeIntensity;
+			shakeX = random(-magnitude, magnitude);
+			shakeY = random(-magnitude, magnitude);
 			cmNode.style.transform = 'translate(' + shakeX + 'px,' + shakeY + 'px)';
 		}
 		drawParticles();

@@ -31,18 +31,24 @@ a { text-decoration: none; color: crimson; cursor: pointer; }
 .fr { float: right; }
 .relative { position: relative; }
 .tac { text-align: center; }
+.va-m { vertical-align: middle; }
 .full-width { width: 100%; }
 .opacity--30 { opacity: 0.3; }
 .pointer-none { pointer-events: none; }
+.ml-1 { margin-left: 1rem; }
 hr {
 	background: 0;
 	border: 0;
 	border-bottom: 1px solid #dedede;
 }
+label {
+	cursor: pointer;
+}
 [class*="hint--"]:after {
 	text-transform: none;
 }
 .line {
+	display: block;
 	margin-bottom: 1em;
 }
 .caret {
@@ -58,7 +64,7 @@ hr {
 a > svg {
 	fill: rgba(255, 255, 255, 0.2)
 }
-select, input[type="text"], textarea {
+select, input[type="text"], input[type="number"],  textarea {
 	padding: 3px 5px;
 	font-size: inherit;
 }

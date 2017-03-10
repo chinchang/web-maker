@@ -339,26 +339,31 @@
 			</div>
 		</div>
 
-	<style>
-		label {
-			display: block;
-			cursor: pointer;
-		}
-	</style>
 		<div class="modal" id="settingsModal">
 			<div class="modal__content">
 				<h1>Settings</h1>
 
 				<h3>Indentation</h3>
 				<p>
+					<div class="line">
+						<label>
+							<input type="radio" checked="true" name="indentation" value="spaces" d-change="updateSetting" data-setting="indentWith"> Spaces
+						</label>
+						<label class="ml-1">
+							<input type="radio" name="indentation" value="tabs" d-change="updateSetting" data-setting="indentWith"> Tabs
+						</label>
+					</div>
 					<label class="line">
-						<input type="radio" checked="true" name="indentation" value="spaces" d-change="updateSetting" data-setting="indentWith"> Spaces
-					</label>
-					<label class="line">
-						<input type="radio" name="indentation" value="tabs" d-change="updateSetting" data-setting="indentWith"> Tabs
-					</label>
-					<label class="line">
-						Indentation Size <input type="range" value="2" min="1" max="10" data-setting="indentSize" d-change="updateSetting">
+						Indentation Size <input type="range" class="va-m ml-1" value="2" min="1" max="7" list="indentationSizeList" data-setting="indentSize" d-change="updateSetting">
+						<datalist id="indentationSizeList">
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+							<option>6</option>
+							<option>7</option>
+						</datalist>
 					</label>
 				</p>
 				<hr>
@@ -393,11 +398,18 @@
 						<select style="flex:1;margin:0 20px" data-setting="editorTheme" d-change="updateSetting"></select>
 					</label>
 					<label class="line">
-						<input type="radio" checked="true" name="keymap" value="sublime" d-change="updateSetting" data-setting="keymap"> Sublime key bindings
+						Font Size <input type="number" value="16" data-setting="fontSize" d-change="updateSetting"> px
+
 					</label>
-					<label class="line">
-						<input type="radio" name="keymap" value="vim" d-change="updateSetting" data-setting="keymap"> Vim key bindings
-					</label>
+					<div class="line">
+						Key bindings
+						<label class="ml-1">
+							<input type="radio" checked="true" name="keymap" value="sublime" d-change="updateSetting" data-setting="keymap"> Sublime
+						</label>
+						<label class="ml-1">
+							<input type="radio" name="keymap" value="vim" d-change="updateSetting" data-setting="keymap"> Vim
+						</label>
+					</div>
 					<label class="line">
 						<input type="checkbox" d-change="updateSetting" data-setting="preserveLastCode"> Preserve last written code
 					</label>

@@ -1133,6 +1133,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		e.preventDefault();
 	}
 
+	// Populate the settings in the settings UI
 	function updateSettingsInUi() {
 		$('[data-setting=preserveLastCode]').checked = prefs.preserveLastCode;
 		$('[data-setting=replaceNewTab]').checked = prefs.replaceNewTab;
@@ -1144,6 +1145,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		$('[data-setting=isCodeBlastOn]').checked = prefs.isCodeBlastOn;
 		$('[data-setting=editorTheme]').value = prefs.editorTheme;
 		$('[data-setting=keymap][value=' + (prefs.keymap || 'sublime') + ']').checked = true;
+		$('[data-setting=fontSize]').value = prefs.fontSize || 16;
 	}
 
 	scope.updateSetting = function updateSetting(e) {
@@ -1153,12 +1155,16 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			var obj = {};
 			var el = e.target;
 			console.log(e, settingName, (el.type === 'checkbox') ? el.checked : el.value);
-			obj[settingName] = el.type === 'checkbox' ? el.checked : el.value;
+			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
+			obj[settingName] = prefs[settingName];
 			chrome.storage.sync.set(obj, function() {
 				alertsService.add('setting saved');
 			});
 		}
 
+		htmlCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		cssCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		jsCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 		['html', 'js', 'css'].forEach((type) => {
 			scope.cm[type].setOption(
 				'indentWithTabs',
@@ -1447,7 +1453,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			indentWith: 'spaces',
 			indentSize: 2,
 			editorTheme: 'monokai',
-			keymap: 'sublime'
+			keymap: 'sublime',
+			fontSize: 16
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
 				unsavedEditCount = 0;
@@ -1475,6 +1482,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			prefs.indentWith = result.indentWith;
 			prefs.editorTheme = result.editorTheme;
 			prefs.keymap = result.keymap;
+			prefs.fontSize = result.fontSize;
 
 			updateSettingsInUi();
 			scope.updateSetting();

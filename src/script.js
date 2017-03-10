@@ -2,8 +2,8 @@
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
 onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
-notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn,
-settingsBtn, onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn,
+notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
+onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {

@@ -373,8 +373,8 @@ li.CodeMirror-hint-active {
 	position: fixed;
 	top: 5vh;
 	left: 50%;
-	width: 60vw;
-	margin-left: -30vw;
+	width: 68vw;
+	margin-left: -34vw;
 	max-width: 90vw;
 	height: auto;
 	z-index: 2000;

@@ -150,7 +150,6 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		} else {
 			options.sizes = [ 33.33, 33.33, 33.33 ];
 		}
-		utils.log('reset splitting', currentItem);
 
 		codeSplitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], options);
 		mainSplitInstance = Split(['#js-code-side', '#js-demo-side' ], {
@@ -428,7 +427,15 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		titleInput.value = currentItem.title || 'Untitled';
 		externalJsTextarea.value = (currentItem.externalLibs && currentItem.externalLibs.js) || '';
 		externalCssTextarea.value = (currentItem.externalLibs && currentItem.externalLibs.css) || '';
-		externalJsTextarea.dispatchEvent(new Event('change'));
+		// FIXME
+		// externalJsTextarea.dispatchEvent(new Event('change'));
+
+		utils.log('refresh editor')
+		// Set the modes manually here, so that the preview refresh triggered by the `setValue`
+		// statements below, operate on correct modes.
+		htmlMode = currentItem.htmlMode || prefs.htmlMode || HtmlModes.HTML;
+		cssMode = currentItem.cssMode || prefs.cssMode || CssModes.CSS;
+		jsMode = currentItem.jsMode || prefs.jsMode || JsModes.JS;
 
 		scope.cm.html.setValue(currentItem.html);
 		scope.cm.css.setValue(currentItem.css);
@@ -437,9 +444,13 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		scope.cm.css.refresh();
 		scope.cm.js.refresh();
 
-		updateHtmlMode(currentItem.htmlMode || prefs.htmlMode || HtmlModes.HTML);
-		updateJsMode(currentItem.jsMode || prefs.jsMode || JsModes.JS);
-		updateCssMode(currentItem.cssMode || prefs.cssMode || CssModes.CSS);
+		// Set preview only when all modes are updated so that preview doesn't generate on partially
+		// correct modes and also doesn't happen 3 times.
+		Promise.all([
+			updateHtmlMode(htmlMode),
+			updateCssMode(cssMode),
+			updateJsMode(jsMode)
+		]).then(() => scope.setPreviewContent(true));
 
 		toggleLayout(currentItem.layoutMode || prefs.layoutMode);
 	}
@@ -459,10 +470,15 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 	 */
 	function handleModeRequirements(mode) {
 		// Exit if already loaded
-		if (modes[mode].hasLoaded) { return; }
+		var d = deferred();
+		if (modes[mode].hasLoaded) {
+			d.resolve();
+			return d.promise;
+		}
 
 		function setLoadedFlag() {
 			modes[mode].hasLoaded = true;
+			d.resolve();
 		}
 
 		if (mode === HtmlModes.JADE) {
@@ -484,35 +500,34 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			loadJS('lib/babel.min.js').then(setLoadedFlag);
 		} else if (mode === JsModes.TS) {
 			loadJS('lib/typescript.js').then(setLoadedFlag);
+		} else {
+			d.resolve();
 		}
+
+		return d.promise;
 	}
 
 	function updateHtmlMode(value) {
 		htmlMode = value;
 		htmlModelLabel.textContent = modes[value].label;
-		handleModeRequirements(value);
 		scope.cm.html.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.html, modes[value].cmPath || modes[value].cmMode);
+		return handleModeRequirements(value);
 	}
 	function updateCssMode(value) {
 		cssMode = value;
 		cssModelLabel.textContent = modes[value].label;
-		handleModeRequirements(value);
 		scope.cm.css.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.css, modes[value].cmPath || modes[value].cmMode);
+		return handleModeRequirements(value);
 	}
 	function updateJsMode(value) {
 		jsMode = value;
+		console.log('mode set', value)
 		jsModelLabel.textContent = modes[value].label;
-		handleModeRequirements(value);
 		scope.cm.js.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.js, modes[value].cmPath || modes[value].cmMode);
-		// FIXME: Will be saved as part of scope settings
-		/*
-		chrome.storage.sync.set({
-			jsMode: value
-		}, function () {});
-		*/
+		return handleModeRequirements(value);
 	}
 
 	// computeHtml, computeCss & computeJs evaluate the final code according
@@ -525,7 +540,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		} else if (htmlMode === HtmlModes.MARKDOWN) {
 			d.resolve(marked ? marked(code) : code);
 		} else if (htmlMode === HtmlModes.JADE) {
-			d.resolve(jade ? jade.render(code) : code);
+			d.resolve(window.jade ? jade.render(code) : code);
 		}
 
 		return d.promise;
@@ -575,6 +590,10 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		var code = scope.cm.js.getValue();
 
 		cleanupErrors('js');
+		if (!code) {
+			d.resolve('');
+			return d.promise;
+		}
 		var ast;
 
 		if (jsMode === JsModes.JS) {
@@ -592,6 +611,10 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			}
 		} else if (jsMode === JsModes.COFFEESCRIPT) {
 			var coffeeCode;
+			if (!window.CoffeeScript) {
+				d.resolve('');
+				return d.promise;
+			}
 			try {
 				coffeeCode = CoffeeScript.compile(code, { bare: true });
 			} catch (e) {
@@ -606,6 +629,10 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 				d.resolve(escodegen.generate(ast));
 			}
 		} else if (jsMode === JsModes.ES6) {
+			if (!window.Babel) {
+				d.resolve('');
+				return d.promise;
+			}
 			try {
 				ast = esprima.parse(code, {
 					tolerant: true,
@@ -635,6 +662,10 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			}
 		} else if (jsMode === JsModes.TS) {
 			try {
+				if (!window.ts) {
+					d.resolve('');
+					return d.promise;
+				}
 				code = ts.transpileModule(code, { reportDiagnostics: true, compilerOptions: { noEmitOnError: true, diagnostics: true, module: ts.ModuleKind.ES2015 } });
 				if (code.diagnostics.length) {
 
@@ -768,11 +799,14 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			css: scope.cm.css.getValue(),
 			js: scope.cm.js.getValue()
 		};
+		utils.log('setPreviewContent', isForced)
 		// If just CSS was changed (and everything shudn't be empty),
 		// change the styles inside the iframe.
 		if (!isForced && currentCode.html === codeInPreview.html && currentCode.js === codeInPreview.js) {
 			computeCss().then(function (css) {
-				frame.contentDocument.querySelector('#webmakerstyle').textContent = css;
+				if (frame.contentDocument.querySelector('#webmakerstyle')) {
+					frame.contentDocument.querySelector('#webmakerstyle').textContent = css;
+				}
 			});
 		} else {
 			var htmlPromise = computeHtml();
@@ -866,9 +900,12 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		});
 		cm.on('change', function onChange(editor, change) {
 			clearTimeout(updateTimer);
+
 			updateTimer = setTimeout(function () {
 				scope.setPreviewContent();
-				if (change.origin === '+input') {
+				// If this isn a user triggered change, handle unsaved changes count.
+				console.log(change.origin)
+				if (change.origin === '+input' || change.origin === '+delete') {
 					saveBtn.classList.add('is-marked');
 					unsavedEditCount += 1;
 					if (unsavedEditCount % unsavedEditWarningCount === 0 && unsavedEditCount >= unsavedEditWarningCount) {
@@ -1154,7 +1191,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			var settingName = e.target.dataset.setting;
 			var obj = {};
 			var el = e.target;
-			console.log(e, settingName, (el.type === 'checkbox') ? el.checked : el.value);
+			utils.log(e, settingName, (el.type === 'checkbox') ? el.checked : el.value);
 			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
 			obj[settingName] = prefs[settingName];
 			chrome.storage.sync.set(obj, function() {
@@ -1191,6 +1228,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			if (shouldDiscard) {
 				createNewItem();
 			}
+		} else {
+			createNewItem();
 		}
 	};
 	scope.onOpenBtnClick = function () {
@@ -1320,11 +1359,11 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 				var currentMode = type === 'html' ? htmlMode : (type === 'css' ? cssMode : jsMode);
 				if (currentMode !== mode) {
 					if (type === 'html') {
-						updateHtmlMode(mode);
+						updateHtmlMode(mode).then(() => scope.setPreviewContent(true));
 					} else if (type === 'js') {
-						updateJsMode(mode);
+						updateJsMode(mode).then(() => scope.setPreviewContent(true));
 					} else if (type === 'css') {
-						updateCssMode(mode);
+						updateCssMode(mode).then(() => scope.setPreviewContent(true));
 					}
 					trackEvent('ui', 'updateCodeMode', mode);
 				}

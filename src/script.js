@@ -4,7 +4,7 @@ onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardMo
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
-onboardDontShowInTabOptionBtn, TextareaAutoComplete */
+onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
 
@@ -311,11 +311,11 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 					+ '<a class="js-saved-item-tile__close-btn  saved-item-tile__close-btn hint--left" aria-label="Remove">X</a>'
 					+ '<h3 class="saved-item-tile__title">' + item.title + '</h3><span class="saved-item-tile__meta">Last updated: ' + utils.getHumanDate(item.updatedOn) + '</span></div>';
 			});
-			savedItemCount.textContent = '(' + items.length + ')';
-			savedItemCount.style.display = 'inline';
+			savedItemCountEl.textContent = '(' + items.length + ')';
+			savedItemCountEl.style.display = 'inline';
 		} else {
 			html += '<h2 class="opacity--30">Nothing saved here.</h2>';
-			savedItemCount.style.display = 'none';
+			savedItemCountEl.style.display = 'none';
 		}
 		savedItemsPane.querySelector('#js-saved-items-wrap').innerHTML = html;
 		toggleSavedItemsPane();

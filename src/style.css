@@ -315,9 +315,11 @@ li.CodeMirror-hint-active {
 	vertical-align: middle;
 	-webkit-filter: grayscale(0.9);
 	transition: 0.4s ease;
+	opacity: 0.3;
 }
 .footer:hover .logo {
 	-webkit-filter: grayscale(0);
+	opacity: 1;
 }
 .footer__right {
 	font-size: 0;

@@ -371,26 +371,27 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			populateItemsInSavedPane(items);
 		});
 	}
-
+	function setCurrentItem(item) {
+		currentItem = item;
+		// Reset unsaved count, in UI also.
+		unsavedEditCount = 0;
+		saveBtn.classList.remove('is-marked');
+	}
 	function createNewItem() {
 		var d = new Date();
-		currentItem = {
+		setCurrentItem({
 			title: 'Untitled ' + d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getHours() + ':' + d.getMinutes(),
 			html: '',
 			css: '',
 			js: '',
 			externalLibs: { js: '', css: '' },
 			layoutMode: currentLayoutMode
-		};
-		alertsService.add('New item created');
-		unsavedEditCount = 0;
-		saveBtn.classList.remove('is-marked');
+		});
 		refreshEditor();
+		alertsService.add('New item created');
 	}
 	function openItem(itemId) {
-		currentItem = savedItems[itemId];
-		// codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
-		unsavedEditCount = 0;
+		setCurrentItem(savedItems[itemId]);
 		refreshEditor();
 		alertsService.add('Saved item loaded');
 	}
@@ -428,8 +429,6 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		titleInput.value = currentItem.title || 'Untitled';
 		externalJsTextarea.value = (currentItem.externalLibs && currentItem.externalLibs.js) || '';
 		externalCssTextarea.value = (currentItem.externalLibs && currentItem.externalLibs.css) || '';
-		// FIXME
-		externalJsTextarea.dispatchEvent(new Event('blur'));
 
 		utils.log('refresh editor')
 		// Set the modes manually here, so that the preview refresh triggered by the `setValue`
@@ -444,6 +443,9 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		scope.cm.html.refresh();
 		scope.cm.css.refresh();
 		scope.cm.js.refresh();
+
+		// To have the library count updated
+		updateExternalLibUi();
 
 		// Set preview only when all modes are updated so that preview doesn't generate on partially
 		// correct modes and also doesn't happen 3 times.
@@ -553,7 +555,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		if (cssMode === CssModes.CSS) {
 			d.resolve(code);
 		} else if (cssMode === CssModes.SCSS || cssMode === CssModes.SASS) {
-			if (sass) {
+			if (sass && code) {
 				sass.compile(code, { indentedSyntax: cssMode === CssModes.SASS }, function(result) {
 					// Something was wrong
 					if (result.line && result.message) {
@@ -883,11 +885,11 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 					CodeMirror.commands.indentAuto(editor);
 				},
 				'Tab': function(editor) {
-					// FIXME: This breaks the usual tab behavior of stepping only in fixes size.
-					// Following code always puts `indentUnit` no. of spaces.
 					var input = $('[data-setting=indentWith]:checked');
 					if (!editor.somethingSelected() && (!input || input.value === 'spaces')) {
-						// softtabs adds spaces
+						// softtabs adds spaces. This is required because by default tab key will put tab, but we want
+						// to indent with spaces if `spaces` is preferred mode of indentation.
+						// `somethingSelected` needs to be checked otherwise, all selected code is replaced with softtab.
 						CodeMirror.commands.insertSoftTab(editor);
 					} else {
 						CodeMirror.commands.defaultTab(editor);
@@ -1028,8 +1030,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 				utils.log('shouldreplace', shouldReplace);
 				items.forEach((item) => {
 					toMergeItems[item.id] = item;
-					mergedItemCount = items.length;
 				});
+				mergedItemCount = items.length;
 			}
 		}
 		if (mergedItemCount) {
@@ -1045,10 +1047,10 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 				/* eslint-disable guard-for-in */
 				for (var id in toMergeItems) {
 					result.items[id] = true;
-					chrome.storage.local.set({
-						items: result.items
-					});
 				}
+				chrome.storage.local.set({
+					items: result.items
+				});
 
 				/* eslint-enable guard-for-in */
 			});

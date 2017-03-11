@@ -311,8 +311,11 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 					+ '<a class="js-saved-item-tile__close-btn  saved-item-tile__close-btn hint--left" aria-label="Remove">X</a>'
 					+ '<h3 class="saved-item-tile__title">' + item.title + '</h3><span class="saved-item-tile__meta">Last updated: ' + utils.getHumanDate(item.updatedOn) + '</span></div>';
 			});
+			savedItemCount.textContent = '(' + items.length + ')';
+			savedItemCount.style.display = 'inline';
 		} else {
 			html += '<h2 class="opacity--30">Nothing saved here.</h2>';
+			savedItemCount.style.display = 'none';
 		}
 		savedItemsPane.querySelector('#js-saved-items-wrap').innerHTML = html;
 		toggleSavedItemsPane();

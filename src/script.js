@@ -384,6 +384,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		};
 		alertsService.add('New item created');
 		unsavedEditCount = 0;
+		saveBtn.classList.remove('is-marked');
 		refreshEditor();
 	}
 	function openItem(itemId) {

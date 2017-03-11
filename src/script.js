@@ -1194,6 +1194,9 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl */
 		$('[data-setting=fontSize]').value = prefs.fontSize || 16;
 	}
 
+	/**
+	 * Handles all user triggered preference changes in the UI.
+	 */
 	scope.updateSetting = function updateSetting(e) {
 		// If this was triggered from user interaction, save the setting
 		if (e) {
@@ -1206,6 +1209,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl */
 			chrome.storage.sync.set(obj, function() {
 				alertsService.add('setting saved');
 			});
+			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
 
 		htmlCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
@@ -1224,7 +1228,6 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl */
 			// Replace correct css file in LINK tags's href
 			editorThemeLinkTag.href = '/lib/codemirror/theme/' + prefs.editorTheme + '.css';
 
-			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]').value);
 			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]').value);
 			scope.cm[type].refresh();
 		});

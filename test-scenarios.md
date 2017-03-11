@@ -7,6 +7,7 @@
 
 - `for`, `while` & `dowhile` loops should be instrumented in the generated JavaScript code.
 - Import should confirm the overriding of existing items.
+- Opening a smaller DOM item shouldn't show  left over HTML from a previously open bigger DOM item.
 
 ## Interface
 

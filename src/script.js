@@ -429,7 +429,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		externalJsTextarea.value = (currentItem.externalLibs && currentItem.externalLibs.js) || '';
 		externalCssTextarea.value = (currentItem.externalLibs && currentItem.externalLibs.css) || '';
 		// FIXME
-		// externalJsTextarea.dispatchEvent(new Event('change'));
+		externalJsTextarea.dispatchEvent(new Event('blur'));
 
 		utils.log('refresh editor')
 		// Set the modes manually here, so that the preview refresh triggered by the `setValue`
@@ -743,11 +743,13 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		var fileWritten = false;
 		function errorHandler() { utils.log(arguments); }
 
+		utils.log('writing file ', name);
 		window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024 * 5, function(fs){
 			fs.root.getFile(name, { create: true }, function(fileEntry) {
 				fileEntry.createWriter(function(fileWriter) {
 					function onWriteComplete() {
 						if (fileWritten) {
+							utils.log('file written ', name);
 							return cb();
 						}
 						fileWritten = true;
@@ -758,7 +760,9 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 					}
 					fileWriter.onwriteend = onWriteComplete;
 					// Empty the file contents
-					fileWriter.truncate(0)
+					fileWriter.truncate(0);
+					utils.log('truncating file ', name);
+
 				}, errorHandler);
 			}, errorHandler);
 		}, errorHandler);
@@ -792,7 +796,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			css: scope.cm.css.getValue(),
 			js: scope.cm.js.getValue()
 		};
-		utils.log('setPreviewContent', isForced)
+		utils.log('🔎 setPreviewContent', isForced)
 		// If just CSS was changed (and everything shudn't be empty),
 		// change the styles inside the iframe.
 		if (!isForced && currentCode.html === codeInPreview.html && currentCode.js === codeInPreview.js) {
@@ -895,7 +899,11 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			clearTimeout(updateTimer);
 
 			updateTimer = setTimeout(function () {
-				scope.setPreviewContent();
+				// This is done so that multiple simultaneous setValue don't trigger too many preview refreshes
+				// and in turn too many file writes on a single file (eg. preview.html).
+				if (change.origin !== 'setValue') {
+					scope.setPreviewContent();
+				}
 				// If this isn a user triggered change, handle unsaved changes count.
 				if (change.origin === '+input' || change.origin === '+delete') {
 					saveBtn.classList.add('is-marked');

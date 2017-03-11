@@ -2,9 +2,9 @@
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
 onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
-notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, openBtn, saveBtn, newBtn,
-settingsBtn, onboardModal, notificationsBtn, onboardShowInTabOptionBtn, onboardDontShowInTabOptionBtn
-TextareaAutoComplete */
+notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
+onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
+onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
 
@@ -37,7 +37,7 @@ TextareaAutoComplete */
 	var modes = {};
 	modes[HtmlModes.HTML] = { label: 'HTML', cmMode: 'htmlmixed', codepenVal: 'none' };
 	modes[HtmlModes.MARKDOWN] = { label: 'Markdown', cmMode: 'markdown', codepenVal: 'markdown' };
-	modes[HtmlModes.JADE] = { label: 'Jade', cmMode: 'jade', codepenVal: 'jade' };
+	modes[HtmlModes.JADE] = { label: 'Pug', cmMode: 'pug', codepenVal: 'pug' };
 	modes[JsModes.JS] = { label: 'JS', cmMode: 'javascript', codepenVal: 'none' };
 	modes[JsModes.COFFEESCRIPT] = { label: 'CoffeeScript', cmMode: 'coffeescript', codepenVal: 'coffeescript' };
 	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'jsx', codepenVal: 'babel' };
@@ -50,6 +50,7 @@ TextareaAutoComplete */
 
 	var updateTimer
 		, updateDelay = 500
+		, unsavedEditWarningCount = 15
 		, currentLayoutMode
 		, hasSeenNotifications = true
 		, htmlMode = HtmlModes.HTML
@@ -57,11 +58,11 @@ TextareaAutoComplete */
 		, cssMode = CssModes.CSS
 		, sass
 		, currentItem
+		, unsavedEditCount
 		, savedItems
 		, minCodeWrapSize = 33
 		, mainSplitInstance
 		, codeSplitInstance
-		// TODO: for legacy reasons when. Will be refactored as global preferences.
 		, prefs = {}
 		, codeInPreview = { html: null, css: null, js: null }
 		, isSavedItemsPaneOpen = false
@@ -149,7 +150,6 @@ TextareaAutoComplete */
 		} else {
 			options.sizes = [ 33.33, 33.33, 33.33 ];
 		}
-		utils.log('reset splitting', currentItem);
 
 		codeSplitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], options);
 		mainSplitInstance = Split(['#js-code-side', '#js-demo-side' ], {
@@ -294,6 +294,8 @@ TextareaAutoComplete */
 		utils.log('saving key', key || currentItem.id, currentItem)
 		saveSetting(key || currentItem.id, currentItem, function () {
 			alertsService.add('Item saved.');
+			unsavedEditCount = 0;
+			saveBtn.classList.remove('is-marked');
 		});
 	}
 
@@ -309,8 +311,11 @@ TextareaAutoComplete */
 					+ '<a class="js-saved-item-tile__close-btn  saved-item-tile__close-btn hint--left" aria-label="Remove">X</a>'
 					+ '<h3 class="saved-item-tile__title">' + item.title + '</h3><span class="saved-item-tile__meta">Last updated: ' + utils.getHumanDate(item.updatedOn) + '</span></div>';
 			});
+			savedItemCountEl.textContent = '(' + items.length + ')';
+			savedItemCountEl.style.display = 'inline';
 		} else {
 			html += '<h2 class="opacity--30">Nothing saved here.</h2>';
+			savedItemCountEl.style.display = 'none';
 		}
 		savedItemsPane.querySelector('#js-saved-items-wrap').innerHTML = html;
 		toggleSavedItemsPane();
@@ -327,13 +332,19 @@ TextareaAutoComplete */
 		isSavedItemsPaneOpen = savedItemsPane.classList.contains('is-open');
 		document.body.classList[isSavedItemsPaneOpen ? 'add' : 'remove']('overlay-visible');
 	}
-	function openSavedItemsPane() {
+
+	/**
+	 * Fetches all items from storage
+	 * @param  {boolean} shouldSaveGlobally Whether to store the fetched items in global arr for later use.
+	 * @return {promise}                    Promise.
+	 */
+	function fetchItems(shouldSaveGlobally) {
+		var d = deferred();
 		chrome.storage.local.get('items', function (result) {
 			var itemIds = Object.getOwnPropertyNames(result.items || {}),
 				items = [];
 			if (!itemIds.length) {
-				populateItemsInSavedPane([]);
-				return;
+				d.resolve([]);
 			}
 
 			savedItems = savedItems || [];
@@ -342,35 +353,48 @@ TextareaAutoComplete */
 
 				/* eslint-disable no-loop-func */
 				chrome.storage.local.get(itemIds[i], function (itemResult) {
-					savedItems[itemIds[i]] = itemResult[itemIds[i]];
+					if (shouldSaveGlobally) {
+						savedItems[itemIds[i]] = itemResult[itemIds[i]];
+					}
 					items.push(itemResult[itemIds[i]]);
 					// Check if we have all items now.
 					if (itemIds.length === items.length) {
-						populateItemsInSavedPane(items);
+						d.resolve(items)
 					}
 				});
 
 				/* eslint-enable no-loop-func */
 			}
 		});
+		return d.promise;
 	}
 
+	function openSavedItemsPane() {
+		fetchItems(true).then(function (items) {
+			populateItemsInSavedPane(items);
+		});
+	}
+	function setCurrentItem(item) {
+		currentItem = item;
+		// Reset unsaved count, in UI also.
+		unsavedEditCount = 0;
+		saveBtn.classList.remove('is-marked');
+	}
 	function createNewItem() {
 		var d = new Date();
-		currentItem = {
+		setCurrentItem({
 			title: 'Untitled ' + d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getHours() + ':' + d.getMinutes(),
 			html: '',
 			css: '',
 			js: '',
 			externalLibs: { js: '', css: '' },
 			layoutMode: currentLayoutMode
-		};
-		alertsService.add('New item created');
+		});
 		refreshEditor();
+		alertsService.add('New item created');
 	}
 	function openItem(itemId) {
-		currentItem = savedItems[itemId];
-		// codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
+		setCurrentItem(savedItems[itemId]);
 		refreshEditor();
 		alertsService.add('Saved item loaded');
 	}
@@ -398,6 +422,9 @@ TextareaAutoComplete */
 				createNewItem();
 			}
 		});
+		// Remove from cached list
+		delete savedItems[itemId];
+
 		trackEvent('fn', 'itemRemoved');
 	}
 
@@ -405,7 +432,13 @@ TextareaAutoComplete */
 		titleInput.value = currentItem.title || 'Untitled';
 		externalJsTextarea.value = (currentItem.externalLibs && currentItem.externalLibs.js) || '';
 		externalCssTextarea.value = (currentItem.externalLibs && currentItem.externalLibs.css) || '';
-		externalJsTextarea.dispatchEvent(new Event('change'));
+
+		utils.log('refresh editor')
+		// Set the modes manually here, so that the preview refresh triggered by the `setValue`
+		// statements below, operate on correct modes.
+		htmlMode = currentItem.htmlMode || prefs.htmlMode || HtmlModes.HTML;
+		cssMode = currentItem.cssMode || prefs.cssMode || CssModes.CSS;
+		jsMode = currentItem.jsMode || prefs.jsMode || JsModes.JS;
 
 		scope.cm.html.setValue(currentItem.html);
 		scope.cm.css.setValue(currentItem.css);
@@ -414,9 +447,16 @@ TextareaAutoComplete */
 		scope.cm.css.refresh();
 		scope.cm.js.refresh();
 
-		updateHtmlMode(currentItem.htmlMode || prefs.htmlMode || HtmlModes.HTML);
-		updateJsMode(currentItem.jsMode || prefs.jsMode || JsModes.JS);
-		updateCssMode(currentItem.cssMode || prefs.cssMode || CssModes.CSS);
+		// To have the library count updated
+		updateExternalLibUi();
+
+		// Set preview only when all modes are updated so that preview doesn't generate on partially
+		// correct modes and also doesn't happen 3 times.
+		Promise.all([
+			updateHtmlMode(htmlMode),
+			updateCssMode(cssMode),
+			updateJsMode(jsMode)
+		]).then(() => scope.setPreviewContent(true));
 
 		toggleLayout(currentItem.layoutMode || prefs.layoutMode);
 	}
@@ -426,6 +466,7 @@ TextareaAutoComplete */
 		notificationsModal.classList.remove('is-modal-visible');
 		addLibraryModal.classList.remove('is-modal-visible');
 		onboardModal.classList.remove('is-modal-visible');
+		settingsModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -435,10 +476,15 @@ TextareaAutoComplete */
 	 */
 	function handleModeRequirements(mode) {
 		// Exit if already loaded
-		if (modes[mode].hasLoaded) { return; }
+		var d = deferred();
+		if (modes[mode].hasLoaded) {
+			d.resolve();
+			return d.promise;
+		}
 
 		function setLoadedFlag() {
 			modes[mode].hasLoaded = true;
+			d.resolve();
 		}
 
 		if (mode === HtmlModes.JADE) {
@@ -460,35 +506,33 @@ TextareaAutoComplete */
 			loadJS('lib/babel.min.js').then(setLoadedFlag);
 		} else if (mode === JsModes.TS) {
 			loadJS('lib/typescript.js').then(setLoadedFlag);
+		} else {
+			d.resolve();
 		}
+
+		return d.promise;
 	}
 
 	function updateHtmlMode(value) {
 		htmlMode = value;
 		htmlModelLabel.textContent = modes[value].label;
-		handleModeRequirements(value);
 		scope.cm.html.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.html, modes[value].cmPath || modes[value].cmMode);
+		return handleModeRequirements(value);
 	}
 	function updateCssMode(value) {
 		cssMode = value;
 		cssModelLabel.textContent = modes[value].label;
-		handleModeRequirements(value);
 		scope.cm.css.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.css, modes[value].cmPath || modes[value].cmMode);
+		return handleModeRequirements(value);
 	}
 	function updateJsMode(value) {
 		jsMode = value;
 		jsModelLabel.textContent = modes[value].label;
-		handleModeRequirements(value);
 		scope.cm.js.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.js, modes[value].cmPath || modes[value].cmMode);
-		// FIXME: Will be saved as part of scope settings
-		/*
-		chrome.storage.sync.set({
-			jsMode: value
-		}, function () {});
-		*/
+		return handleModeRequirements(value);
 	}
 
 	// computeHtml, computeCss & computeJs evaluate the final code according
@@ -499,9 +543,9 @@ TextareaAutoComplete */
 		if (htmlMode === HtmlModes.HTML) {
 			d.resolve(code);
 		} else if (htmlMode === HtmlModes.MARKDOWN) {
-			d.resolve(marked(code));
+			d.resolve(marked ? marked(code) : code);
 		} else if (htmlMode === HtmlModes.JADE) {
-			d.resolve(jade.render(code));
+			d.resolve(window.jade ? jade.render(code) : code);
 		}
 
 		return d.promise;
@@ -514,13 +558,17 @@ TextareaAutoComplete */
 		if (cssMode === CssModes.CSS) {
 			d.resolve(code);
 		} else if (cssMode === CssModes.SCSS || cssMode === CssModes.SASS) {
-			sass.compile(code, { indentedSyntax: cssMode === CssModes.SASS }, function(result) {
-				// Something was wrong
-				if (result.line && result.message) {
-					showErrors('css', [ { lineNumber: result.line - 1, message: result.message } ]);
-				}
-				d.resolve(result.text);
-			});
+			if (sass && code) {
+				sass.compile(code, { indentedSyntax: cssMode === CssModes.SASS }, function(result) {
+					// Something was wrong
+					if (result.line && result.message) {
+						showErrors('css', [ { lineNumber: result.line - 1, message: result.message } ]);
+					}
+					d.resolve(result.text);
+				});
+			} else {
+				d.resolve(code);
+			}
 		} else if (cssMode === CssModes.LESS) {
 			less.render(code).then(function (result) {
 				d.resolve(result.css);
@@ -547,6 +595,10 @@ TextareaAutoComplete */
 		var code = scope.cm.js.getValue();
 
 		cleanupErrors('js');
+		if (!code) {
+			d.resolve('');
+			return d.promise;
+		}
 		var ast;
 
 		if (jsMode === JsModes.JS) {
@@ -564,6 +616,10 @@ TextareaAutoComplete */
 			}
 		} else if (jsMode === JsModes.COFFEESCRIPT) {
 			var coffeeCode;
+			if (!window.CoffeeScript) {
+				d.resolve('');
+				return d.promise;
+			}
 			try {
 				coffeeCode = CoffeeScript.compile(code, { bare: true });
 			} catch (e) {
@@ -578,6 +634,10 @@ TextareaAutoComplete */
 				d.resolve(escodegen.generate(ast));
 			}
 		} else if (jsMode === JsModes.ES6) {
+			if (!window.Babel) {
+				d.resolve('');
+				return d.promise;
+			}
 			try {
 				ast = esprima.parse(code, {
 					tolerant: true,
@@ -607,6 +667,10 @@ TextareaAutoComplete */
 			}
 		} else if (jsMode === JsModes.TS) {
 			try {
+				if (!window.ts) {
+					d.resolve('');
+					return d.promise;
+				}
 				code = ts.transpileModule(code, { reportDiagnostics: true, compilerOptions: { noEmitOnError: true, diagnostics: true, module: ts.ModuleKind.ES2015 } });
 				if (code.diagnostics.length) {
 
@@ -684,11 +748,13 @@ TextareaAutoComplete */
 		var fileWritten = false;
 		function errorHandler() { utils.log(arguments); }
 
+		// utils.log('writing file ', name);
 		window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024 * 5, function(fs){
 			fs.root.getFile(name, { create: true }, function(fileEntry) {
 				fileEntry.createWriter(function(fileWriter) {
 					function onWriteComplete() {
 						if (fileWritten) {
+							// utils.log('file written ', name);
 							return cb();
 						}
 						fileWritten = true;
@@ -699,7 +765,9 @@ TextareaAutoComplete */
 					}
 					fileWriter.onwriteend = onWriteComplete;
 					// Empty the file contents
-					fileWriter.truncate(0)
+					fileWriter.truncate(0);
+					// utils.log('truncating file ', name);
+
 				}, errorHandler);
 			}, errorHandler);
 		}, errorHandler);
@@ -716,11 +784,6 @@ TextareaAutoComplete */
 			trackEvent('fn', 'hasCode');
 			trackEvent.hasTrackedCode = true;
 		}
-		// Track when people actually are working.
-		trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
-		if (trackEvent.previewCount === 4) {
-			trackEvent('fn', 'usingPreview');
-		}
 
 		// we need to store user script in external JS file to prevent inline-script
 		// CSP from affecting it.
@@ -730,8 +793,6 @@ TextareaAutoComplete */
 					+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
 			});
 		});
-
-
 	}
 
 	scope.setPreviewContent = function (isForced) {
@@ -740,11 +801,14 @@ TextareaAutoComplete */
 			css: scope.cm.css.getValue(),
 			js: scope.cm.js.getValue()
 		};
+		utils.log('🔎 setPreviewContent', isForced)
 		// If just CSS was changed (and everything shudn't be empty),
 		// change the styles inside the iframe.
 		if (!isForced && currentCode.html === codeInPreview.html && currentCode.js === codeInPreview.js) {
 			computeCss().then(function (css) {
-				frame.contentDocument.querySelector('#webmakerstyle').textContent = css;
+				if (frame.contentDocument.querySelector('#webmakerstyle')) {
+					frame.contentDocument.querySelector('#webmakerstyle').textContent = css;
+				}
 			});
 		} else {
 			var htmlPromise = computeHtml();
@@ -754,6 +818,7 @@ TextareaAutoComplete */
 				createPreviewFile(result[0], result[1], result[2]);
 			});
 		}
+
 		codeInPreview.html = currentCode.html;
 		codeInPreview.css = currentCode.css;
 		codeInPreview.js = currentCode.js;
@@ -771,7 +836,7 @@ TextareaAutoComplete */
 			var fileContent = getCompleteHtml(html, css, js);
 
 			var d = new Date();
-			var fileName = [ 'web-maker', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
+			var fileName = [ 'web-maker', d.getFullYear(), (d.getMonth() + 1), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
 			fileName += '.html';
 
 			if (currentItem.title) {
@@ -803,6 +868,7 @@ TextareaAutoComplete */
 			keyMap: 'sublime',
 			theme: 'monokai',
 			lint: !!options.lint,
+			tabSize: 2,
 			foldGutter: true,
 			styleActiveLine: true,
 			gutters: options.gutters || [],
@@ -820,13 +886,46 @@ TextareaAutoComplete */
 				},
 				'Shift-Tab': function(editor) {
 					CodeMirror.commands.indentAuto(editor);
+				},
+				'Tab': function(editor) {
+					var input = $('[data-setting=indentWith]:checked');
+					if (!editor.somethingSelected() && (!input || input.value === 'spaces')) {
+						// softtabs adds spaces. This is required because by default tab key will put tab, but we want
+						// to indent with spaces if `spaces` is preferred mode of indentation.
+						// `somethingSelected` needs to be checked otherwise, all selected code is replaced with softtab.
+						CodeMirror.commands.insertSoftTab(editor);
+					} else {
+						CodeMirror.commands.defaultTab(editor);
+					}
 				}
 			}
 		});
-		cm.on('change', function onChange() {
+		cm.on('change', function onChange(editor, change) {
 			clearTimeout(updateTimer);
+
 			updateTimer = setTimeout(function () {
-				scope.setPreviewContent();
+				// This is done so that multiple simultaneous setValue don't trigger too many preview refreshes
+				// and in turn too many file writes on a single file (eg. preview.html).
+				if (change.origin !== 'setValue') {
+					scope.setPreviewContent();
+
+					saveBtn.classList.add('is-marked');
+					unsavedEditCount += 1;
+					if (unsavedEditCount % unsavedEditWarningCount === 0 && unsavedEditCount >= unsavedEditWarningCount) {
+						saveBtn.classList.add('animated');
+						saveBtn.classList.add('wobble');
+						saveBtn.addEventListener('animationend', () => {
+							saveBtn.classList.remove('animated');
+							saveBtn.classList.remove('wobble');
+						});
+					}
+
+					// Track when people actually are working.
+					trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
+					if (trackEvent.previewCount === 4) {
+						trackEvent('fn', 'usingPreview');
+					}
+				}
 			}, updateDelay);
 		});
 		if (options.noAutocomplete) {
@@ -853,6 +952,7 @@ TextareaAutoComplete */
 		mode: 'css',
 		gutters: [ 'error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ]
 	});
+	emmetCodeMirror(scope.cm.css);
 	Inlet(scope.cm.css);
 	scope.cm.js = initEditor(jsCode, {
 		mode: 'javascript',
@@ -861,7 +961,9 @@ TextareaAutoComplete */
 	Inlet(scope.cm.js);
 
 	function openSettings() {
-		if (chrome.runtime.openOptionsPage) {
+		settingsModal.classList.toggle('is-modal-visible');
+
+		/* if (chrome.runtime.openOptionsPage) {
 			// New way to open options pages, if supported (Chrome 42+).
 			// Bug: https://bugs.chromium.org/p/chromium/issues/detail?id=601997
 			// Until this bug fixes, use the
@@ -872,23 +974,123 @@ TextareaAutoComplete */
 			chrome.tabs.create({
 				url: 'chrome://extensions?options=' + chrome.i18n.getMessage('@@extension_id')
 			});
-		}
+		} */
 	}
 
-	scope.onModalSettingsLinkClick = function () {
+	scope.onModalSettingsLinkClick = function onModalSettingsLinkClick() {
 		openSettings();
 		trackEvent('ui', 'onboardSettingsBtnClick');
 	}
 
-	scope.onShowInTabClicked = function () {
+	scope.onShowInTabClicked = function onShowInTabClicked() {
 		onboardDontShowInTabOptionBtn.classList.remove('selected');
 		onboardShowInTabOptionBtn.classList.add('selected');
 		trackEvent('ui', 'onboardShowInTabClick');
 	}
-	scope.onDontShowInTabClicked = function () {
+	scope.onDontShowInTabClicked = function onDontShowInTabClicked() {
 		onboardDontShowInTabOptionBtn.classList.add('selected');
 		onboardShowInTabOptionBtn.classList.remove('selected');
 		trackEvent('ui', 'onboardDontShowInTabClick');
+	}
+
+	scope.exportItems = function exportItems(e) {
+		fetchItems().then(function (items) {
+			utils.log(9, items);
+			var d = new Date();
+			var fileName = [ 'web-maker-export', d.getFullYear(), (d.getMonth() + 1), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
+			fileName += '.json';
+			var blob = new Blob([ JSON.stringify(items,false,2) ], { type: "application/json;charset=UTF-8" });
+			var a = document.createElement('a');
+			a.href = window.URL.createObjectURL(blob);
+			a.download = fileName;
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+			trackEvent('ui', 'exportBtnClicked');
+		});
+		e.preventDefault();
+	}
+
+	function mergeImportedItems(items) {
+		var existingItemIds = [];
+		var toMergeItems = {};
+		items.forEach((item) => {
+			if (savedItems[item.id]) {
+				// Item already exists
+				existingItemIds.push(item.id);
+			} else {
+				utils.log('merging', item.id);
+				toMergeItems[item.id] = item;
+			}
+		});
+		var mergedItemCount = items.length - existingItemIds.length;
+		if (existingItemIds.length) {
+			var shouldReplace = confirm(existingItemIds.length + ' creations already exist. Do you want to replace them?');
+			if (shouldReplace) {
+				utils.log('shouldreplace', shouldReplace);
+				items.forEach((item) => {
+					toMergeItems[item.id] = item;
+				});
+				mergedItemCount = items.length;
+			}
+		}
+		if (mergedItemCount) {
+			// save new items
+			chrome.storage.local.set(toMergeItems, function () {
+				alertsService.add(mergedItemCount + ' creations imported successfully.');
+			});
+			// Push in new item IDs
+			chrome.storage.local.get({
+				items: {}
+			}, function (result) {
+
+				/* eslint-disable guard-for-in */
+				for (var id in toMergeItems) {
+					result.items[id] = true;
+				}
+				chrome.storage.local.set({
+					items: result.items
+				});
+
+				/* eslint-enable guard-for-in */
+			});
+			alertsService.add(mergedItemCount + ' creations imported successfully.');
+		}
+		// FIXME: Move from here
+		toggleSavedItemsPane(false);
+	}
+
+	function onImportFileChange(e) {
+		var file = e.target.files[0];
+		// if (!f.type.match('image.*')) {
+			// continue;
+		// }
+
+		var reader = new FileReader();
+		reader.onload = function(progressEvent) {
+			var items;
+			try {
+				items = JSON.parse(progressEvent.target.result);
+				utils.log(items);
+				mergeImportedItems(items);
+			} catch (ex) {
+				alert('Oops! Select file is corrupted.')
+			}
+		};
+
+		reader.readAsText(file, 'utf-8');
+	}
+
+	scope.onImportBtnClicked = function exportItems(e) {
+		var input = document.createElement('input');
+		input.type = 'file';
+		input.style.display = 'none';
+		input.accept = 'accept="application/json';
+		document.body.appendChild(input)
+		input.addEventListener('change', onImportFileChange);
+		input.click();
+		e.preventDefault();
 	}
 
 	function saveScreenshot(dataURI) {
@@ -911,7 +1113,7 @@ TextareaAutoComplete */
 		var size = blob.size + (1024 / 2);
 
 		var d = new Date();
-		var fileName = [ 'web-maker-screenshot', d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
+		var fileName = [ 'web-maker-screenshot', d.getFullYear(), (d.getMonth() + 1), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
 		fileName += '.png';
 
 		function onWriteEnd() {
@@ -977,11 +1179,91 @@ TextareaAutoComplete */
 		e.preventDefault();
 	}
 
+	// Populate the settings in the settings UI
+	function updateSettingsInUi() {
+		$('[data-setting=preserveLastCode]').checked = prefs.preserveLastCode;
+		$('[data-setting=replaceNewTab]').checked = prefs.replaceNewTab;
+		$('[data-setting=htmlMode]').value = prefs.htmlMode;
+		$('[data-setting=cssMode]').value = prefs.cssMode;
+		$('[data-setting=jsMode]').value = prefs.jsMode;
+		$('[data-setting=indentSize]').value = prefs.indentSize;
+		$('[data-setting=indentWith][value=' + (prefs.indentWith || 'spaces') + ']').checked = true;
+		$('[data-setting=isCodeBlastOn]').checked = prefs.isCodeBlastOn;
+		$('[data-setting=editorTheme]').value = prefs.editorTheme;
+		$('[data-setting=keymap][value=' + (prefs.keymap || 'sublime') + ']').checked = true;
+		$('[data-setting=fontSize]').value = prefs.fontSize || 16;
+	}
+
+	/**
+	 * Handles all user triggered preference changes in the UI.
+	 */
+	scope.updateSetting = function updateSetting(e) {
+		// If this was triggered from user interaction, save the setting
+		if (e) {
+			var settingName = e.target.dataset.setting;
+			var obj = {};
+			var el = e.target;
+			utils.log(settingName, (el.type === 'checkbox') ? el.checked : el.value);
+			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
+			obj[settingName] = prefs[settingName];
+			chrome.storage.sync.set(obj, function() {
+				alertsService.add('setting saved');
+			});
+			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
+		}
+
+		htmlCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		cssCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		jsCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		['html', 'js', 'css'].forEach((type) => {
+			scope.cm[type].setOption(
+				'indentWithTabs',
+				$('[data-setting=indentWith]:checked').value !== 'spaces'
+			);
+
+			scope.cm[type].setOption('blastCode', $('[data-setting=isCodeBlastOn]').checked ? { effect: 2, shake: false } : false);
+			scope.cm[type].setOption('indentUnit', $('[data-setting=indentSize]').value);
+			scope.cm[type].setOption('tabSize', $('[data-setting=indentSize]').value);
+			scope.cm[type].setOption('theme', $('[data-setting=editorTheme]').value);
+			// Replace correct css file in LINK tags's href
+			editorThemeLinkTag.href = '/lib/codemirror/theme/' + prefs.editorTheme + '.css';
+
+			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]').value);
+			scope.cm[type].refresh();
+		});
+	};
+
+	scope.onNewBtnClick = function () {
+		trackEvent('ui', 'newBtnClick');
+		if (unsavedEditCount) {
+			var shouldDiscard = confirm('You have unsaved changes. Do you still want to create something new?');
+			if (shouldDiscard) {
+				createNewItem();
+			}
+		} else {
+			createNewItem();
+		}
+	};
+	scope.onOpenBtnClick = function () {
+		trackEvent('ui', 'openBtnClick');
+		openSavedItemsPane();
+	};
+	scope.onSaveBtnClick = function () {
+		trackEvent('ui', 'saveBtnClick', currentItem.id ? 'saved' : 'new');
+		saveItem();
+	};
+
 	function compileNodes() {
 		var nodes = [].slice.call($all('[d-click]'));
 		nodes.forEach(function (el) {
 			el.addEventListener('click', function (e) {
 				scope[el.getAttribute('d-click')].call(window, e)
+			});
+		});
+		nodes = [].slice.call($all('[d-change]'));
+		nodes.forEach(function (el) {
+			el.addEventListener('change', function (e) {
+				scope[el.getAttribute('d-change')].call(window, e)
 			});
 		})
 	}
@@ -1059,18 +1341,7 @@ TextareaAutoComplete */
 			saveFile();
 			trackEvent('ui', 'saveHtmlClick');
 		});
-		utils.onButtonClick(openBtn, function () {
-			openSavedItemsPane();
-			trackEvent('ui', 'openBtnClick');
-		});
-		utils.onButtonClick(saveBtn, function () {
-			trackEvent('ui', 'saveBtnClick', currentItem.id ? 'saved' : 'new');
-			saveItem();
-		});
-		utils.onButtonClick(newBtn, function () {
-			createNewItem();
-			trackEvent('ui', 'newBtnClick');
-		});
+
 		utils.onButtonClick(savedItemsPaneCloseBtn, toggleSavedItemsPane);
 		utils.onButtonClick(savedItemsPane, function (e) {
 			if (e.target.classList.contains('js-saved-item-tile')) {
@@ -1080,7 +1351,6 @@ TextareaAutoComplete */
 				toggleSavedItemsPane();
 			}
 			if (e.target.classList.contains('js-saved-item-tile__close-btn')) {
-				utils.log('removing', e.target.parentElement)
 				removeItem(e.target.parentElement.dataset.itemId);
 			}
 		});
@@ -1101,11 +1371,11 @@ TextareaAutoComplete */
 				var currentMode = type === 'html' ? htmlMode : (type === 'css' ? cssMode : jsMode);
 				if (currentMode !== mode) {
 					if (type === 'html') {
-						updateHtmlMode(mode);
+						updateHtmlMode(mode).then(() => scope.setPreviewContent(true));
 					} else if (type === 'js') {
-						updateJsMode(mode);
+						updateJsMode(mode).then(() => scope.setPreviewContent(true));
 					} else if (type === 'css') {
-						updateCssMode(mode);
+						updateCssMode(mode).then(() => scope.setPreviewContent(true));
 					}
 					trackEvent('ui', 'updateCodeMode', mode);
 				}
@@ -1229,11 +1499,19 @@ TextareaAutoComplete */
 		// Get synced `preserveLastCode` setting to get back last code (or not).
 		chrome.storage.sync.get({
 			preserveLastCode: true,
+			replaceNewTab: false,
 			htmlMode: 'html',
 			jsMode: 'js',
-			cssMode: 'css'
+			cssMode: 'css',
+			isCodeBlastOn: false,
+			indentWith: 'spaces',
+			indentSize: 2,
+			editorTheme: 'monokai',
+			keymap: 'sublime',
+			fontSize: 16
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
+				unsavedEditCount = 0;
 				if (lastCode.id) {
 					chrome.storage.local.get(lastCode.id, function (itemResult) {
 						utils.log('Load item ', lastCode.id)
@@ -1248,9 +1526,20 @@ TextareaAutoComplete */
 			} else {
 				createNewItem();
 			}
-			prefs.htmlMode = result.htmlmode;
+			prefs.preserveLastCode = result.preserveLastCode;
+			prefs.replaceNewTab = result.replaceNewTab;
+			prefs.htmlMode = result.htmlMode;
 			prefs.cssMode = result.cssMode;
 			prefs.jsMode = result.jsMode;
+			prefs.isCodeBlastOn = result.isCodeBlastOn;
+			prefs.indentSize = result.indentSize;
+			prefs.indentWith = result.indentWith;
+			prefs.editorTheme = result.editorTheme;
+			prefs.keymap = result.keymap;
+			prefs.fontSize = result.fontSize;
+
+			updateSettingsInUi();
+			scope.updateSetting();
 		});
 
 		// Check for new version notifications
@@ -1279,6 +1568,59 @@ TextareaAutoComplete */
 				hasSeenNotifications = false;
 			}
 		});
+
+		var options = '';
+		[
+			'3024-day',
+			'3024-night',
+			'abcdef',
+			'ambiance',
+			'base16-dark',
+			'base16-light',
+			'bespin',
+			'blackboard',
+			'cobalt',
+			'colorforth',
+			'dracula',
+			'duotone-dark',
+			'duotone-light',
+			'eclipse',
+			'elegant',
+			'erlang-dark',
+			'hopscotch',
+			'icecoder',
+			'isotope',
+			'lesser-dark',
+			'liquibyte',
+			'material',
+			'mbo',
+			'mdn-like',
+			'midnight',
+			'monokai',
+			'neat',
+			'neo',
+			'night',
+			'panda-syntax',
+			'paraiso-dark',
+			'paraiso-light',
+			'pastel-on-dark',
+			'railscasts',
+			'rubyblue',
+			'seti',
+			'solarized dark',
+			'solarized light',
+			'the-matrix',
+			'tomorrow-night-bright',
+			'tomorrow-night-eighties',
+			'ttcn',
+			'twilight',
+			'vibrant-ink',
+			'xq-dark',
+			'xq-light',
+			'yeti',
+			'zenburn'
+		].forEach((theme) => { options += '<option value="' + theme + '">' + theme + '</option>'; });
+		document.querySelector('[data-setting="editorTheme"]').innerHTML = options;
 
 		requestAnimationFrame(compileNodes);
 	}

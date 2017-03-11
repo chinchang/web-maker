@@ -164,7 +164,9 @@ https://twitter.com/JoelBesada/status/670343885655293952
 		requestAnimationFrame(loop);
 	}
 
-	function onCodeMirrorChange(editor) {
+	function onCodeMirrorChange(editor, change) {
+		if (change.origin !== '+input' && change.origin !== '+delete') { return; }
+
 		if (editor.getOption('blastCode') === true || editor.getOption('blastCode').shake === undefined) {
 			throttledShake(editor, 0.3);
 		}

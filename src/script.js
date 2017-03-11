@@ -908,9 +908,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 				// and in turn too many file writes on a single file (eg. preview.html).
 				if (change.origin !== 'setValue') {
 					scope.setPreviewContent();
-				}
-				// If this isn a user triggered change, handle unsaved changes count.
-				if (change.origin === '+input' || change.origin === '+delete') {
+
 					saveBtn.classList.add('is-marked');
 					unsavedEditCount += 1;
 					if (unsavedEditCount % unsavedEditWarningCount === 0 && unsavedEditCount >= unsavedEditWarningCount) {

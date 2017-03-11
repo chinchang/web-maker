@@ -400,6 +400,7 @@ li.CodeMirror-hint-active {
 	opacity: 0;
 	padding: 2em;
 	font-size: 1.3em;
+	line-height: 1.4;
 	max-height: 90vh;
 	box-sizing: border-box;
 	overflow-y: auto;

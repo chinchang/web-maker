@@ -1203,7 +1203,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl */
 			var settingName = e.target.dataset.setting;
 			var obj = {};
 			var el = e.target;
-			utils.log(e, settingName, (el.type === 'checkbox') ? el.checked : el.value);
+			utils.log(settingName, (el.type === 'checkbox') ? el.checked : el.value);
 			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
 			obj[settingName] = prefs[settingName];
 			chrome.storage.sync.set(obj, function() {

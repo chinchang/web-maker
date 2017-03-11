@@ -46,6 +46,8 @@ label {
 }
 [class*="hint--"]:after {
 	text-transform: none;
+	font-weight: normal;
+	letter-spacing: 0.5px;
 }
 .line {
 	display: block;

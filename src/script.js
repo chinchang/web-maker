@@ -523,7 +523,6 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 	}
 	function updateJsMode(value) {
 		jsMode = value;
-		console.log('mode set', value)
 		jsModelLabel.textContent = modes[value].label;
 		scope.cm.js.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.js, modes[value].cmPath || modes[value].cmMode);
@@ -775,11 +774,6 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			trackEvent('fn', 'hasCode');
 			trackEvent.hasTrackedCode = true;
 		}
-		// Track when people actually are working.
-		trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
-		if (trackEvent.previewCount === 4) {
-			trackEvent('fn', 'usingPreview');
-		}
 
 		// we need to store user script in external JS file to prevent inline-script
 		// CSP from affecting it.
@@ -789,8 +783,6 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 					+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
 			});
 		});
-
-
 	}
 
 	scope.setPreviewContent = function (isForced) {
@@ -904,7 +896,6 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 			updateTimer = setTimeout(function () {
 				scope.setPreviewContent();
 				// If this isn a user triggered change, handle unsaved changes count.
-				console.log(change.origin)
 				if (change.origin === '+input' || change.origin === '+delete') {
 					saveBtn.classList.add('is-marked');
 					unsavedEditCount += 1;
@@ -915,6 +906,12 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 							saveBtn.classList.remove('animated');
 							saveBtn.classList.remove('wobble');
 						});
+					}
+
+					// Track when people actually are working.
+					trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
+					if (trackEvent.previewCount === 4) {
+						trackEvent('fn', 'usingPreview');
 					}
 				}
 			}, updateDelay);

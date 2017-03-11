@@ -743,13 +743,13 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 		var fileWritten = false;
 		function errorHandler() { utils.log(arguments); }
 
-		utils.log('writing file ', name);
+		// utils.log('writing file ', name);
 		window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024 * 5, function(fs){
 			fs.root.getFile(name, { create: true }, function(fileEntry) {
 				fileEntry.createWriter(function(fileWriter) {
 					function onWriteComplete() {
 						if (fileWritten) {
-							utils.log('file written ', name);
+							// utils.log('file written ', name);
 							return cb();
 						}
 						fileWritten = true;
@@ -761,7 +761,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete */
 					fileWriter.onwriteend = onWriteComplete;
 					// Empty the file contents
 					fileWriter.truncate(0);
-					utils.log('truncating file ', name);
+					// utils.log('truncating file ', name);
 
 				}, errorHandler);
 			}, errorHandler);

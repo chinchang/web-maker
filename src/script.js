@@ -348,7 +348,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl */
 			}
 
 			savedItems = savedItems || [];
-			trackEvent('fn', 'fetchItems', '', itemIds.length);
+			trackEvent('fn', 'fetchItems', itemIds.length);
 			for (let i = 0; i < itemIds.length; i++) {
 
 				/* eslint-disable no-loop-func */
@@ -1052,6 +1052,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl */
 				chrome.storage.local.set({
 					items: result.items
 				});
+				trackEvent('fn', 'itemsImported', mergedItemCount);
 
 				/* eslint-enable guard-for-in */
 			});
@@ -1090,6 +1091,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl */
 		document.body.appendChild(input)
 		input.addEventListener('change', onImportFileChange);
 		input.click();
+		trackEvent('ui', 'importBtnClicked');
 		e.preventDefault();
 	}
 

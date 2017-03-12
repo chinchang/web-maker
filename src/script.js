@@ -1230,7 +1230,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl */
 			// Replace correct css file in LINK tags's href
 			editorThemeLinkTag.href = '/lib/codemirror/theme/' + prefs.editorTheme + '.css';
 
-			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]').value);
+			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]:checked').value);
 			scope.cm[type].refresh();
 		});
 	};

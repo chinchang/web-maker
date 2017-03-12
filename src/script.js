@@ -4,7 +4,7 @@ onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardMo
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
-onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl */
+onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
 
@@ -1189,6 +1189,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl */
 		$('[data-setting=cssMode]').value = prefs.cssMode;
 		$('[data-setting=jsMode]').value = prefs.jsMode;
 		$('[data-setting=indentSize]').value = prefs.indentSize;
+		indentationSizeValueEl.textContent = prefs.indentSize;
 		$('[data-setting=indentWith][value=' + (prefs.indentWith || 'spaces') + ']').checked = true;
 		$('[data-setting=isCodeBlastOn]').checked = prefs.isCodeBlastOn;
 		$('[data-setting=editorTheme]').value = prefs.editorTheme;
@@ -1217,6 +1218,10 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl */
 		htmlCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 		cssCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 		jsCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+
+		// Update indentation count when slider is updated
+		indentationSizeValueEl.textContent = $('[data-setting=indentSize]').value;
+
 		['html', 'js', 'css'].forEach((type) => {
 			scope.cm[type].setOption(
 				'indentWithTabs',

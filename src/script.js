@@ -1314,7 +1314,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 					lastSeenVersion: version
 				}, function () {});
 			}
-			trackEvent('ui', 'notificationButtonClick');
+			trackEvent('ui', 'notificationButtonClick', version);
 			return false;
 		});
 

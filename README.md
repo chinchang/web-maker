@@ -14,6 +14,8 @@ Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master)
 * Save and load your creations
 * Code auto-completion
 * Easy addition of popular JS & CSS libraries
+* Import & Export all creations anytime, anywhere
+* Multiple editor themes & other configurable settings
 * Very easily accessible. Simply open a new tab in Chrome!
 * Multiple layouts to choose from
 * Capture preview screenshot
@@ -26,4 +28,4 @@ Follow [@webmakerApp](https://twitter.com/intent/follow?screen_name=webmakerApp)
 
 MIT Licensed
 
-Copyright (c) 2017 Kushagra Gour, [kushagragour.in](https://kushagragour.in)
+Copyright (c) 2017 Kushagra Gour, [kushagragour.in](https://webmakerapp.com)

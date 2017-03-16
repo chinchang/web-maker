@@ -28,4 +28,4 @@ Follow [@webmakerApp](https://twitter.com/intent/follow?screen_name=webmakerApp)
 
 MIT Licensed
 
-Copyright (c) 2017 Kushagra Gour, [kushagragour.in](https://webmakerapp.com)
+Copyright (c) 2017 Kushagra Gour, [webmakerapp.com](https://webmakerapp.com)

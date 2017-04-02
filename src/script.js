@@ -10,7 +10,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 
 /* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.4.0';
+	var version = '2.4.2';
 
 	if (window.DEBUG) {
 		window.scope = scope;

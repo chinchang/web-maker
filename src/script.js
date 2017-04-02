@@ -599,11 +599,10 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			d.resolve('');
 			return d.promise;
 		}
-		var ast;
 
 		if (jsMode === JsModes.JS) {
 			try {
-				ast = esprima.parse(code, {
+				esprima.parse(code, {
 					tolerant: true
 				});
 			} catch (e) {
@@ -636,30 +635,18 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				return d.promise;
 			}
 			try {
-				ast = esprima.parse(code, {
+				esprima.parse(code, {
 					tolerant: true,
 					jsx: true
 				});
 			} catch (e) {
 				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
 			} finally {
-				try {
-					// No JSX block
-					// result = escodegen.generate(ast);
-					if (shouldPreventInfiniteLoops !== false) {
-						code = utils.addInfiniteLoopProtection(code);
-					}
-					// FIX ME, add jsx for loop protection above
-					d.resolve(Babel.transform(code, { presets: ['latest', 'stage-2', 'react'] }).code);
-				} catch (e) {
-					// If we failed, means probably the AST contains JSX which cannot be parsed by escodegen.
-					code = Babel.transform(code, { presets: ['latest', 'stage-2', 'react'] }).code;
-
-					if (shouldPreventInfiniteLoops !== false) {
-						code = utils.addInfiniteLoopProtection(code);
-					}
-					d.resolve(code);
+				code = Babel.transform(code, { presets: ['latest', 'stage-2', 'react'] }).code;
+				if (shouldPreventInfiniteLoops !== false) {
+					code = utils.addInfiniteLoopProtection(code);
 				}
+				d.resolve(code);
 			}
 		} else if (jsMode === JsModes.TS) {
 			try {

@@ -626,7 +626,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				showErrors('js', [ { lineNumber: e.location.first_line, message: e.message } ]);
 			} finally {
 				if (shouldPreventInfiniteLoops !== false) {
-					code = utils.addInfiniteLoopProtection(code);
+					code = utils.addInfiniteLoopProtection(coffeeCode);
 				}
 				d.resolve(code);
 			}
@@ -674,7 +674,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 					throw ({ description: code.diagnostics[0].messageText, lineNumber: ts.getLineOfLocalPosition(code.diagnostics[0].file,code.diagnostics[0].start) });
 				}
 				if (shouldPreventInfiniteLoops !== false) {
-					code = utils.addInfiniteLoopProtection(ast);
+					code = utils.addInfiniteLoopProtection(code.outputText);
 				}
 				d.resolve(code);
 			} catch (e) {

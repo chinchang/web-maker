@@ -54,7 +54,7 @@
 		var varStr = 'var %d = Date.now();\n'
 		var checkStr = '\nif (Date.now() - %d > 1000) { window.top.previewException(new Error("Infinite loop")); break;}\n'
 
-		esprima.parse(code, { tolerant: true, range: true }, function (node) {
+		esprima.parse(code, { tolerant: true, range: true, jsx: true }, function (node) {
 			switch (node.type) {
 			case 'DoWhileStatement':
 			case 'ForStatement':

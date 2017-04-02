@@ -39,4 +39,4 @@ chrome.runtime.onInstalled.addListener(function callback (details) {
 	}
 });
 
-chrome.runtime.setUninstallURL('https://kushagragour.in/lab/web-maker/uninstall/');
+chrome.runtime.setUninstallURL('https://webmakerapp.com/uninstall/');

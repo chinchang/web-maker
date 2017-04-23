@@ -1205,8 +1205,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			);
 
 			scope.cm[type].setOption('blastCode', $('[data-setting=isCodeBlastOn]').checked ? { effect: 2, shake: false } : false);
-			scope.cm[type].setOption('indentUnit', $('[data-setting=indentSize]').value);
-			scope.cm[type].setOption('tabSize', $('[data-setting=indentSize]').value);
+			scope.cm[type].setOption('indentUnit', +$('[data-setting=indentSize]').value);
+			scope.cm[type].setOption('tabSize', +$('[data-setting=indentSize]').value);
 			scope.cm[type].setOption('theme', $('[data-setting=editorTheme]').value);
 			// Replace correct css file in LINK tags's href
 			editorThemeLinkTag.href = '/lib/codemirror/theme/' + prefs.editorTheme + '.css';

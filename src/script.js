@@ -158,11 +158,13 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			gutterSize: 6,
 			sizes: getMainSplitSizesToApply(),
 			onDragEnd: function () {
-				// Running preview updation in next call stack, so that error there
-				// doesn't affect this dragend listener.
-				setTimeout(function () {
-					scope.setPreviewContent(true);
-				}, 1);
+				if (prefs.refreshOnResize) {
+					// Running preview updation in next call stack, so that error there
+					// doesn't affect this dragend listener.
+					setTimeout(function () {
+						scope.setPreviewContent(true);
+					}, 1);
+				}
 			}
 		});
 	}
@@ -1171,6 +1173,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		$('[data-setting=editorTheme]').value = prefs.editorTheme;
 		$('[data-setting=keymap][value=' + (prefs.keymap || 'sublime') + ']').checked = true;
 		$('[data-setting=fontSize]').value = prefs.fontSize || 16;
+		$('[data-setting=refreshOnResize]').checked = prefs.refreshOnResize;
 	}
 
 	/**
@@ -1491,7 +1494,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			indentSize: 2,
 			editorTheme: 'monokai',
 			keymap: 'sublime',
-			fontSize: 16
+			fontSize: 16,
+			refreshOnResize: false
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
 				unsavedEditCount = 0;
@@ -1520,6 +1524,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			prefs.editorTheme = result.editorTheme;
 			prefs.keymap = result.keymap;
 			prefs.fontSize = result.fontSize;
+			prefs.refreshOnResize = result.refreshOnResize;
 
 			updateSettingsInUi();
 			scope.updateSetting();

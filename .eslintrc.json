@@ -256,6 +256,7 @@
         "Sass": true,
         "less": true,
         "stylus": true,
+        "atomizer": true,
         "marked": true,
         "jade": true,
         "loadJS": true,

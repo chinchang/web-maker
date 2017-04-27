@@ -26,7 +26,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		SCSS: 'scss',
 		SASS: 'sass',
 		LESS: 'less',
-		STYLUS: 'stylus'
+		STYLUS: 'stylus',
+		ACSS: 'acss'
 	};
 	var JsModes = {
 		JS: 'js',
@@ -47,6 +48,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 	modes[CssModes.SASS] = { label: 'SASS', cmMode: 'sass', codepenVal: 'sass' };
 	modes[CssModes.LESS] = { label: 'LESS', cmPath: 'css', cmMode: 'text/x-less', codepenVal: 'less' };
 	modes[CssModes.STYLUS] = { label: 'Stylus', cmMode: 'stylus', codepenVal: 'stylus' };
+	modes[CssModes.ACSS] = { label: 'Atomic CSS', cmPath: 'css', cmMode: 'css', codepenVal: 'notsupported', cmDisable: true };
 
 	var updateTimer
 		, updateDelay = 500
@@ -502,6 +504,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			});
 		} else if (mode === CssModes.STYLUS) {
 			loadJS('lib/stylus.min.js').then(setLoadedFlag);
+		} else if (mode === CssModes.ACSS) {
+			loadJS('lib/atomizer.browser.js').then(setLoadedFlag);
 		} else if (mode === JsModes.COFFEESCRIPT) {
 			loadJS('lib/coffee-script.js').then(setLoadedFlag);
 		} else if (mode === JsModes.ES6) {
@@ -526,6 +530,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		cssMode = value;
 		cssModelLabel.textContent = modes[value].label;
 		scope.cm.css.setOption('mode', modes[value].cmMode);
+		scope.cm.css.setOption('readOnly', modes[value].cmDisable);
 		CodeMirror.autoLoadMode(scope.cm.css, modes[value].cmPath || modes[value].cmMode);
 		return handleModeRequirements(value);
 	}
@@ -588,6 +593,13 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				}
 				d.resolve(result);
 			});
+		} else if (cssMode === CssModes.ACSS) {
+			var html = scope.cm.html.getValue();
+			var foundClasses = atomizer.findClassNames(html);
+			var finalConfig = atomizer.getConfig(foundClasses, {});
+			var acss = atomizer.getCss(finalConfig);
+			scope.cm.css.setValue(acss);
+			d.resolve(acss)
 		}
 
 		return d.promise;

@@ -25,6 +25,7 @@ h1 {
 a { text-decoration: none; color: crimson; cursor: pointer; }
 /*a:hover { text-decoration: underline; }*/
 
+.hide { display: none!important; }
 .flex { display: flex; }
 .flex-grow { flex-grow: 1; }
 .flex-v-center { align-items: center; }

@@ -17,6 +17,12 @@
 		<div class="main-container">
 			<div class="main-header">
 				<div class="main-header__btn-wrap  fr flex  flex-v-center">
+					<a id="runBtn" class="hide flex flex-v-center hint--rounded hint--bottom-left" aria-label="Run preview (Ctrl/⌘ + Shift + 5)" d-click="setPreviewContent">
+						<svg style="width: 14px; height: 14px;">
+						  <use xlink:href="#play-icon"></use>
+						</svg>Run
+					</a>
+
 					<a id="js-add-library-btn" class="fleex-v-center hint--rounded hint--bottom-left" aria-label="Add a JS/CSS library">
 						Add library <span id="js-external-lib-count" style="display:none;" class="count-label"></span>
 					</a>
@@ -371,6 +377,9 @@
 						<input type="checkbox" d-change="updateSetting" data-setting="refreshOnResize"> Refresh preview on resize
 					</label>
 					<label class="line">
+						<input type="checkbox" d-change="updateSetting" data-setting="autoPreview"> Auto-preview
+					</label>
+					<label class="line">
 						<input type="checkbox" d-change="updateSetting" data-setting="preserveLastCode"> Preserve last written code
 					</label>
 					<label class="line">
@@ -550,6 +559,11 @@
 			</symbol>
 			<symbol id="heart-icon" viewBox="0 0 24 24">
 				<path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" />
+			</symbol>
+			<symbol id="play-icon" viewBox="0 0 24 24">
+				<svg>
+					<path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+				</svg>
 			</symbol>
 		</svg>
 

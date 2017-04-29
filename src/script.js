@@ -4,7 +4,9 @@ onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardMo
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
-onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl */
+onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
+runBtn
+*/
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
 
@@ -897,7 +899,9 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				// This is done so that multiple simultaneous setValue don't trigger too many preview refreshes
 				// and in turn too many file writes on a single file (eg. preview.html).
 				if (change.origin !== 'setValue') {
-					scope.setPreviewContent();
+					if (prefs.autoPreview !== false) {
+						scope.setPreviewContent();
+					}
 
 					saveBtn.classList.add('is-marked');
 					unsavedEditCount += 1;
@@ -1186,6 +1190,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		$('[data-setting=keymap][value=' + (prefs.keymap || 'sublime') + ']').checked = true;
 		$('[data-setting=fontSize]').value = prefs.fontSize || 16;
 		$('[data-setting=refreshOnResize]').checked = prefs.refreshOnResize;
+		$('[data-setting=autoPreview]').checked = prefs.autoPreview;
 	}
 
 	/**
@@ -1205,6 +1210,9 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			});
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
+
+		// Show/hide RUN button based on autoPreview setting.
+		runBtn.classList[prefs.autoPreview ? 'add' : 'remove']('hide');
 
 		htmlCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 		cssCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
@@ -1407,6 +1415,12 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				saveItem();
 				trackEvent('ui', 'saveItemKeyboardShortcut');
 			}
+			// Ctrl/⌘ + Shift + 5
+			if (!prefs.autoPreview && (event.ctrlKey || event.metaKey) && event.shiftKey && (event.keyCode === 53)) {
+				event.preventDefault();
+				scope.setPreviewContent();
+				trackEvent('ui', 'previewKeyboardShortcut');
+			}
 			// Ctrl/⌘ + O
 			else if ((event.ctrlKey || event.metaKey) && (event.keyCode === 79)) {
 				event.preventDefault();
@@ -1507,7 +1521,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			editorTheme: 'monokai',
 			keymap: 'sublime',
 			fontSize: 16,
-			refreshOnResize: false
+			refreshOnResize: false,
+			autoPreview: true
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
 				unsavedEditCount = 0;
@@ -1537,6 +1552,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			prefs.keymap = result.keymap;
 			prefs.fontSize = result.fontSize;
 			prefs.refreshOnResize = result.refreshOnResize;
+			prefs.autoPreview = result.autoPreview;
 
 			updateSettingsInUi();
 			scope.updateSetting();

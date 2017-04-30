@@ -912,6 +912,8 @@ runBtn, searchInput
 				// This is done so that multiple simultaneous setValue don't trigger too many preview refreshes
 				// and in turn too many file writes on a single file (eg. preview.html).
 				if (change.origin !== 'setValue') {
+					// Specifically checking for false so that the condition doesn't get true even
+					// on absent key - possible when the setting key hasn't been fetched yet.
 					if (prefs.autoPreview !== false) {
 						scope.setPreviewContent();
 					}

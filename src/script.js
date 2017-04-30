@@ -12,7 +12,7 @@ runBtn, searchInput
 
 /* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.4.2';
+	var version = '2.5.0';
 
 	if (window.DEBUG) {
 		window.scope = scope;

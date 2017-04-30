@@ -14,8 +14,8 @@
 	 * @return element Next element that mathes `selector`
 	 */
 	Node.prototype.nextUntil = function (selector) {
-		var siblings = [...this.parentNode.querySelectorAll(selector)];
-		var index = siblings.indexOf(this);
+		const siblings = [...this.parentNode.querySelectorAll(selector)];
+		const index = siblings.indexOf(this);
 		return siblings[index + 1];
 	};
 
@@ -24,8 +24,8 @@
 	 * @return element Next element that mathes `selector`
 	 */
 	Node.prototype.previousUntil = function (selector) {
-		var siblings = [...this.parentNode.querySelectorAll(selector)];
-		var index = siblings.indexOf(this);
+		const siblings = [...this.parentNode.querySelectorAll(selector)];
+		const index = siblings.indexOf(this);
 		return siblings[index - 1];
 	};
 

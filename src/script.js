@@ -606,10 +606,10 @@ runBtn, searchInput
 				d.resolve(result);
 			});
 		} else if (cssMode === CssModes.ACSS) {
-			var html = scope.cm.html.getValue();
-			var foundClasses = atomizer.findClassNames(html);
-			var finalConfig = atomizer.getConfig(foundClasses, {});
-			var acss = atomizer.getCss(finalConfig);
+			const html = scope.cm.html.getValue();
+			const foundClasses = atomizer.findClassNames(html);
+			const finalConfig = atomizer.getConfig(foundClasses, {});
+			const acss = atomizer.getCss(finalConfig);
 			scope.cm.css.setValue(acss);
 			d.resolve(acss)
 		}
@@ -1289,8 +1289,7 @@ runBtn, searchInput
 	function compileNodes() {
 
 		function attachListenerForEvent(eventName) {
-			var nodes;
-			nodes = $all(`[d-${eventName}]`);
+			const nodes = $all(`[d-${eventName}]`);
 			nodes.forEach(function (el) {
 				el.addEventListener(eventName, function (e) {
 					scope[el.getAttribute(`d-${eventName}`)].call(window, e)
@@ -1482,7 +1481,7 @@ runBtn, searchInput
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
-					selectedItemElement.previousElementSibling.classList.add('selected');
+					selectedItemElement.previousUntil('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				} else {
 					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				}

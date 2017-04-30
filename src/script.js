@@ -1272,7 +1272,7 @@ runBtn, searchInput
 	scope.onSearchInputChange = function (e) {
 		const text = e.target.value;
 		let el;
-		for (let [itemId, item] of Object.entries(savedItems)) {
+		for (const [itemId, item] of Object.entries(savedItems)) {
 			el = $(`#js-saved-items-pane [data-item-id=${itemId}]`);
 			if (item.title.toLowerCase().indexOf(text) === -1) {
 				el.classList.add('hide');

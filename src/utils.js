@@ -2,7 +2,7 @@
 	window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
 
 	window.$ = document.querySelector.bind(document);
-	window.$all = (selector) => [...document.querySelectorAll(selector)] ;
+	window.$all = (selector) => [...document.querySelectorAll(selector)];
 	var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 	/**
@@ -18,6 +18,7 @@
 		var index = siblings.indexOf(this);
 		return siblings[index + 1];
 	};
+
 	/*
 	 * @param  Selector that should match for next siblings
 	 * @return element Next element that mathes `selector`

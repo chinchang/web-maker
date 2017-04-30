@@ -1393,7 +1393,7 @@ runBtn, searchInput
 		});
 
 		// Attach listeners on mode change menu items
-		var modeItems = [].slice.call($all('.js-modes-menu a'));
+		var modeItems = $all('.js-modes-menu a');
 		modeItems.forEach(function (item) {
 			item.addEventListener('click', function (e) {
 				var mode = e.currentTarget.dataset.mode;
@@ -1413,7 +1413,7 @@ runBtn, searchInput
 		});
 
 		// Collapse btn event listeners
-		var collapseBtns = [].slice.call($all('.js-code-collapse-btn'));
+		var collapseBtns = $all('.js-code-collapse-btn');
 		collapseBtns.forEach(function (btn) {
 			btn.addEventListener('click', function (e) {
 				var codeWrapParent = e.currentTarget.parentElement.parentElement.parentElement;

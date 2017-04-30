@@ -25,6 +25,7 @@ h1 {
 a { text-decoration: none; color: crimson; cursor: pointer; }
 /*a:hover { text-decoration: underline; }*/
 
+.hide { display: none!important; }
 .flex { display: flex; }
 .flex-grow { flex-grow: 1; }
 .flex-v-center { align-items: center; }
@@ -372,7 +373,16 @@ li.CodeMirror-hint-active {
 	background: none;
 	border: 0;
 	color: rgba(255,255,255,0.6);
-	width: calc(100vw - 400px);
+	width: calc(100vw - 420px);
+}
+.search-input {
+	background: rgba(255, 255, 255, 0.1);
+	padding: 10px 20px;
+	border: 0;
+	width: 100%;
+	font-size: 16px;
+	color: white;
+	border-radius: 4px;
 }
 .modal {
 	position: fixed;
@@ -647,7 +657,7 @@ li.CodeMirror-hint-active {
 }
 .dropdown__menu > li > a {
 	display: block;
-	padding: 10px 15px;
+	padding: 6px 15px;
 	color: #333;
 	cursor: pointer;
 }

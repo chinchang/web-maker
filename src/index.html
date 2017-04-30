@@ -17,6 +17,12 @@
 		<div class="main-container">
 			<div class="main-header">
 				<div class="main-header__btn-wrap  fr flex  flex-v-center">
+					<a id="runBtn" class="hide flex flex-v-center hint--rounded hint--bottom-left" aria-label="Run preview (Ctrl/⌘ + Shift + 5)" d-click="setPreviewContent">
+						<svg style="width: 14px; height: 14px;">
+						  <use xlink:href="#play-icon"></use>
+						</svg>Run
+					</a>
+
 					<a id="js-add-library-btn" class="fleex-v-center hint--rounded hint--bottom-left" aria-label="Add a JS/CSS library">
 						Add library <span id="js-external-lib-count" style="display:none;" class="count-label"></span>
 					</a>
@@ -66,6 +72,7 @@
 									<li><a data-type="css" data-mode="sass">SASS</a></li>
 									<li><a data-type="css" data-mode="less">LESS</a></li>
 									<li><a data-type="css" data-mode="stylus">Stylus</a></li>
+									<li><a data-type="css" data-mode="acss">Atomic CSS</a></li>
 								</ul>
 							</div>
 							<div class="code-wrap__header-right-options">
@@ -203,7 +210,7 @@
 
 		<div class="modal" id="helpModal">
 			<div class="modal__content">
-				<h1>Web Maker<small style="font-size:14px;"> v2.4.3</small></h1>
+				<h1>Web Maker<small style="font-size:14px;"> v2.5.0</small></h1>
 				<div>
 					<p>Made with <span style="margin-right: 8px;">💖</span> & <span style="margin-right: 8px;">🙌</span> by <a href="https://twitter.com/chinchang457" target="_blank">Kushagra Gour</a></p>
 					<p>Tweet out your feature requests, comments & suggestions to <a target="_blank" href="https://twitter.com/webmakerApp">@webmakerApp</a>.</p>
@@ -367,6 +374,12 @@
 						</label>
 					</div>
 					<label class="line">
+						<input type="checkbox" d-change="updateSetting" data-setting="refreshOnResize"> Refresh preview on resize
+					</label>
+					<label class="line">
+						<input type="checkbox" d-change="updateSetting" data-setting="autoPreview"> Auto-preview
+					</label>
+					<label class="line">
 						<input type="checkbox" d-change="updateSetting" data-setting="preserveLastCode"> Preserve last written code
 					</label>
 					<label class="line">
@@ -388,13 +401,24 @@
 			<div class="modal__content">
 				<h1>Whats new?</h1>
 				<div class="notification">
+				  <span class="notification__version">2.5.0</span>
+				  <ul>
+					<li><strong>Atomic CSS</strong>: Use can now use Atomic CSS(ACSS) in your work! <a href="https://acss.io/" target="_blank">Read more about it here</a>.</li>
+					<li><strong>Search your saved creations</strong>: Easily search through all your saved creations by title.</li>
+					<li><strong>Configurable Auto-preview</strong> - You can turn off the auto preview in settings if you don't want the preview to update as you type.</li>
+					<li><strong>Configurable refresh on resize</strong> - You can configure whether you want the preview to refresh when you resize the preview panel.</li>
+					<li><strong>Bugfix</strong> - Fix indentation <a href="https://github.com/chinchang/web-maker/issues/104" target="_blank">issue</a> with custom indentation size.</li>
+
+					<li><a href="https://github.com/chinchang/web-maker/issues" target="_blank">Suggest features or report bugs.</a></li>
+					<li>Thank you for being a part of this community of thousands of awesome developers. If you find Web Maker helpful, <a href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews" target="_blank" class="btn">Please rate Web Maker <span class="star"></span></a> & <a href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension" target="_blank" target="_blank" class="btn">share it</a>.</li>
+				  </ul>
+				</div>
+
+				<div class="notification">
 				  <span class="notification__version">2.4.2</span>
 				  <ul>
 					<li><strong>Improved infinite loop protection</strong>: Infinite loop protection is now faster and more reliable. And works without the need of Escodegen. Thanks to Ariya Hidayat!</li>
 					<li><strong>Bugfix</strong> - Default parameters not working in JavaScript is fixed.</li>
-
-					<li><a href="https://github.com/chinchang/web-maker/issues" target="_blank">Suggest features or report bugs.</a></li>
-					<li>Thank you for being a part of this community of thousands of awesome developers. If you find Web Maker helpful, <a href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews" target="_blank" class="btn">Please rate Web Maker <span class="star"></span></a> & <a href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension" target="_blank" target="_blank" class="btn">share it</a>.</li>
 				  </ul>
 				</div>
 
@@ -494,17 +518,18 @@
 		<div id="js-saved-items-pane" class="saved-items-pane">
 			<button class="btn  saved-items-pane__close-btn" id="js-saved-items-pane-close-btn">X</button>
 			<div class="flex flex-v-center" style="justify-content: space-between;">
+				<h3>My Library <span id="savedItemCountEl"></span></h3>
 
-			<h3>My Library <span id="savedItemCountEl"></span></h3>
-			<div class="main-header__btn-wrap">
-				<a d-click="exportItems" href="" class="btn btn-icon">Export
-				</a>
-				<a d-click="onImportBtnClicked" href="" class="btn btn-icon">Import
-				</a>
+				<div class="main-header__btn-wrap">
+					<a d-click="exportItems" href="" class="btn btn-icon">Export
+					</a>
+					<a d-click="onImportBtnClicked" href="" class="btn btn-icon">Import
+					</a>
+				</div>
 			</div>
-			</div>
+			<input type="" id="searchInput" class="search-input" d-input="onSearchInputChange" placeholder="Search your creations here...">
+
 			<div id="js-saved-items-wrap" class="saved-items-pane__container">
-
 			</div>
 		</div>
 
@@ -546,6 +571,11 @@
 			</symbol>
 			<symbol id="heart-icon" viewBox="0 0 24 24">
 				<path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" />
+			</symbol>
+			<symbol id="play-icon" viewBox="0 0 24 24">
+				<svg>
+					<path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+				</svg>
 			</symbol>
 		</svg>
 

@@ -4,13 +4,15 @@ onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardMo
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
-onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl */
+onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
+runBtn, searchInput
+*/
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
 
 /* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.4.2';
+	var version = '2.5.0';
 
 	if (window.DEBUG) {
 		window.scope = scope;
@@ -26,7 +28,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		SCSS: 'scss',
 		SASS: 'sass',
 		LESS: 'less',
-		STYLUS: 'stylus'
+		STYLUS: 'stylus',
+		ACSS: 'acss'
 	};
 	var JsModes = {
 		JS: 'js',
@@ -47,6 +50,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 	modes[CssModes.SASS] = { label: 'SASS', cmMode: 'sass', codepenVal: 'sass' };
 	modes[CssModes.LESS] = { label: 'LESS', cmPath: 'css', cmMode: 'text/x-less', codepenVal: 'less' };
 	modes[CssModes.STYLUS] = { label: 'Stylus', cmMode: 'stylus', codepenVal: 'stylus' };
+	modes[CssModes.ACSS] = { label: 'Atomic CSS', cmPath: 'css', cmMode: 'css', codepenVal: 'notsupported', cmDisable: true };
 
 	var updateTimer
 		, updateDelay = 500
@@ -66,6 +70,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		, prefs = {}
 		, codeInPreview = { html: null, css: null, js: null }
 		, isSavedItemsPaneOpen = false
+		, editorWithFocus
 
 		// DOM nodes
 		, frame = $('#demo-frame')
@@ -158,11 +163,13 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			gutterSize: 6,
 			sizes: getMainSplitSizesToApply(),
 			onDragEnd: function () {
-				// Running preview updation in next call stack, so that error there
-				// doesn't affect this dragend listener.
-				setTimeout(function () {
-					scope.setPreviewContent(true);
-				}, 1);
+				if (prefs.refreshOnResize) {
+					// Running preview updation in next call stack, so that error there
+					// doesn't affect this dragend listener.
+					setTimeout(function () {
+						scope.setPreviewContent(true);
+					}, 1);
+				}
 			}
 		});
 	}
@@ -330,6 +337,15 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			savedItemsPane.classList.toggle('is-open');
 		}
 		isSavedItemsPaneOpen = savedItemsPane.classList.contains('is-open');
+		if (isSavedItemsPaneOpen) {
+			searchInput.focus();
+		} else {
+			searchInput.value = '';
+			// Give last focused editor, focus again
+			if (editorWithFocus) {
+				editorWithFocus.focus();
+			}
+		}
 		document.body.classList[isSavedItemsPaneOpen ? 'add' : 'remove']('overlay-visible');
 	}
 
@@ -347,7 +363,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				d.resolve([]);
 			}
 
-			savedItems = savedItems || [];
+			savedItems = savedItems || {};
 			trackEvent('fn', 'fetchItems', itemIds.length);
 			for (let i = 0; i < itemIds.length; i++) {
 
@@ -500,6 +516,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			});
 		} else if (mode === CssModes.STYLUS) {
 			loadJS('lib/stylus.min.js').then(setLoadedFlag);
+		} else if (mode === CssModes.ACSS) {
+			loadJS('lib/atomizer.browser.js').then(setLoadedFlag);
 		} else if (mode === JsModes.COFFEESCRIPT) {
 			loadJS('lib/coffee-script.js').then(setLoadedFlag);
 		} else if (mode === JsModes.ES6) {
@@ -524,6 +542,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		cssMode = value;
 		cssModelLabel.textContent = modes[value].label;
 		scope.cm.css.setOption('mode', modes[value].cmMode);
+		scope.cm.css.setOption('readOnly', modes[value].cmDisable);
 		CodeMirror.autoLoadMode(scope.cm.css, modes[value].cmPath || modes[value].cmMode);
 		return handleModeRequirements(value);
 	}
@@ -586,6 +605,13 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				}
 				d.resolve(result);
 			});
+		} else if (cssMode === CssModes.ACSS) {
+			const html = scope.cm.html.getValue();
+			const foundClasses = atomizer.findClassNames(html);
+			const finalConfig = atomizer.getConfig(foundClasses, {});
+			const acss = atomizer.getCss(finalConfig);
+			scope.cm.css.setValue(acss);
+			d.resolve(acss)
 		}
 
 		return d.promise;
@@ -876,6 +902,9 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				}
 			}
 		});
+		cm.on('focus', (editor) => {
+			editorWithFocus = editor;
+		});
 		cm.on('change', function onChange(editor, change) {
 			clearTimeout(updateTimer);
 
@@ -883,7 +912,11 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				// This is done so that multiple simultaneous setValue don't trigger too many preview refreshes
 				// and in turn too many file writes on a single file (eg. preview.html).
 				if (change.origin !== 'setValue') {
-					scope.setPreviewContent();
+					// Specifically checking for false so that the condition doesn't get true even
+					// on absent key - possible when the setting key hasn't been fetched yet.
+					if (prefs.autoPreview !== false) {
+						scope.setPreviewContent();
+					}
 
 					saveBtn.classList.add('is-marked');
 					unsavedEditCount += 1;
@@ -1171,6 +1204,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		$('[data-setting=editorTheme]').value = prefs.editorTheme;
 		$('[data-setting=keymap][value=' + (prefs.keymap || 'sublime') + ']').checked = true;
 		$('[data-setting=fontSize]').value = prefs.fontSize || 16;
+		$('[data-setting=refreshOnResize]').checked = prefs.refreshOnResize;
+		$('[data-setting=autoPreview]').checked = prefs.autoPreview;
 	}
 
 	/**
@@ -1190,6 +1225,9 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			});
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
+
+		// Show/hide RUN button based on autoPreview setting.
+		runBtn.classList[prefs.autoPreview ? 'add' : 'remove']('hide');
 
 		htmlCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 		cssCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
@@ -1235,20 +1273,32 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		trackEvent('ui', 'saveBtnClick', currentItem.id ? 'saved' : 'new');
 		saveItem();
 	};
+	scope.onSearchInputChange = function (e) {
+		const text = e.target.value;
+		let el;
+		for (const [itemId, item] of Object.entries(savedItems)) {
+			el = $(`#js-saved-items-pane [data-item-id=${itemId}]`);
+			if (item.title.toLowerCase().indexOf(text) === -1) {
+				el.classList.add('hide');
+			} else {
+				el.classList.remove('hide');
+			}
+		}
+	};
 
 	function compileNodes() {
-		var nodes = [].slice.call($all('[d-click]'));
-		nodes.forEach(function (el) {
-			el.addEventListener('click', function (e) {
-				scope[el.getAttribute('d-click')].call(window, e)
+
+		function attachListenerForEvent(eventName) {
+			const nodes = $all(`[d-${eventName}]`);
+			nodes.forEach(function (el) {
+				el.addEventListener(eventName, function (e) {
+					scope[el.getAttribute(`d-${eventName}`)].call(window, e)
+				});
 			});
-		});
-		nodes = [].slice.call($all('[d-change]'));
-		nodes.forEach(function (el) {
-			el.addEventListener('change', function (e) {
-				scope[el.getAttribute('d-change')].call(window, e)
-			});
-		})
+		}
+		attachListenerForEvent('click');
+		attachListenerForEvent('change');
+		attachListenerForEvent('input');
 	}
 
 	function init () {
@@ -1295,6 +1345,10 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		});
 
 		codepenBtn.addEventListener('click', function (e) {
+			if (cssMode === CssModes.ACSS) {
+				alert('Oops! CodePen doesn\'t supports Atomic CSS currently.');
+				return;
+			}
 			var json = {
 				title: 'A Web Maker experiment',
 				html: scope.cm.html.getValue(),
@@ -1346,7 +1400,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		});
 
 		// Attach listeners on mode change menu items
-		var modeItems = [].slice.call($all('.js-modes-menu a'));
+		var modeItems = $all('.js-modes-menu a');
 		modeItems.forEach(function (item) {
 			item.addEventListener('click', function (e) {
 				var mode = e.currentTarget.dataset.mode;
@@ -1366,7 +1420,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		});
 
 		// Collapse btn event listeners
-		var collapseBtns = [].slice.call($all('.js-code-collapse-btn'));
+		var collapseBtns = $all('.js-code-collapse-btn');
 		collapseBtns.forEach(function (btn) {
 			btn.addEventListener('click', function (e) {
 				var codeWrapParent = e.currentTarget.parentElement.parentElement.parentElement;
@@ -1392,6 +1446,12 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				saveItem();
 				trackEvent('ui', 'saveItemKeyboardShortcut');
 			}
+			// Ctrl/⌘ + Shift + 5
+			if (!prefs.autoPreview && (event.ctrlKey || event.metaKey) && event.shiftKey && (event.keyCode === 53)) {
+				event.preventDefault();
+				scope.setPreviewContent();
+				trackEvent('ui', 'previewKeyboardShortcut');
+			}
 			// Ctrl/⌘ + O
 			else if ((event.ctrlKey || event.metaKey) && (event.keyCode === 79)) {
 				event.preventDefault();
@@ -1402,25 +1462,33 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				closeAllOverlays();
 			}
 			if (event.keyCode === 40 && isSavedItemsPaneOpen) {
+				// Return if no items present.
+				if (!$all('.js-saved-item-tile').length) {
+					return;
+				}
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
-					selectedItemElement.nextElementSibling.classList.add('selected');
+					selectedItemElement.nextUntil('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				} else {
-					$('.js-saved-item-tile:first-child').classList.add('selected');
+					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				}
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
 			} else if (event.keyCode === 38 && isSavedItemsPaneOpen) {
+				if (!$all('.js-saved-item-tile').length) {
+					return;
+				}
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
-					selectedItemElement.previousElementSibling.classList.add('selected');
+					selectedItemElement.previousUntil('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				} else {
-					$('.js-saved-item-tile:first-child').classList.add('selected');
+					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				}
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
 			} else if (event.keyCode === 13 && isSavedItemsPaneOpen) {
 				selectedItemElement = $('.js-saved-item-tile.selected');
+				if (!selectedItemElement) { return; }
 				setTimeout(function () {
 					openItem(selectedItemElement.dataset.itemId);
 				}, 350);
@@ -1491,7 +1559,9 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			indentSize: 2,
 			editorTheme: 'monokai',
 			keymap: 'sublime',
-			fontSize: 16
+			fontSize: 16,
+			refreshOnResize: false,
+			autoPreview: true
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
 				unsavedEditCount = 0;
@@ -1520,6 +1590,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			prefs.editorTheme = result.editorTheme;
 			prefs.keymap = result.keymap;
 			prefs.fontSize = result.fontSize;
+			prefs.refreshOnResize = result.refreshOnResize;
+			prefs.autoPreview = result.autoPreview;
 
 			updateSettingsInUi();
 			scope.updateSetting();

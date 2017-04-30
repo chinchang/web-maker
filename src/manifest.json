@@ -1,9 +1,9 @@
 {
 	"name": "Web Maker",
-	"version": "2.4.3",
+	"version": "2.5.0",
 	"manifest_version": 2,
 	"description": "Blazing fast & offline playground for your web experiments",
-	"homepage_url": "https://kushagragour.in/lab/web-maker",
+	"homepage_url": "https://webmakerapp.com",
 	"permissions": [
 		"storage",
 		"tabs",

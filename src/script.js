@@ -1463,6 +1463,10 @@ runBtn, searchInput
 				closeAllOverlays();
 			}
 			if (event.keyCode === 40 && isSavedItemsPaneOpen) {
+				// Return if no items present.
+				if (!$all('.js-saved-item-tile').length) {
+					return;
+				}
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
@@ -1472,6 +1476,9 @@ runBtn, searchInput
 				}
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
 			} else if (event.keyCode === 38 && isSavedItemsPaneOpen) {
+				if (!$all('.js-saved-item-tile').length) {
+					return;
+				}
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
@@ -1482,6 +1489,7 @@ runBtn, searchInput
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
 			} else if (event.keyCode === 13 && isSavedItemsPaneOpen) {
 				selectedItemElement = $('.js-saved-item-tile.selected');
+				if (!selectedItemElement) { return; }
 				setTimeout(function () {
 					openItem(selectedItemElement.dataset.itemId);
 				}, 350);

@@ -373,7 +373,7 @@ li.CodeMirror-hint-active {
 	background: none;
 	border: 0;
 	color: rgba(255,255,255,0.6);
-	width: calc(100vw - 420px);
+	width: calc(100vw - 440px);
 }
 .search-input {
 	background: rgba(255, 255, 255, 0.1);

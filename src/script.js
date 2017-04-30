@@ -342,7 +342,9 @@ runBtn, searchInput
 		} else {
 			searchInput.value = '';
 			// Give last focused editor, focus again
-			editorWithFocus.focus();
+			if (editorWithFocus) {
+				editorWithFocus.focus();
+			}
 		}
 		document.body.classList[isSavedItemsPaneOpen ? 'add' : 'remove']('overlay-visible');
 	}

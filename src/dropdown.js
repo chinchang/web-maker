@@ -11,7 +11,7 @@
 		}
 	}
 	function init() {
-		var dropdowns = [].slice.call($all('[dropdown]'));
+		var dropdowns = $all('[dropdown]');
 		dropdowns.forEach(function (dropdown) {
 			dropdown.addEventListener('click', function (e) {
 				closeOpenDropdown(e.currentTarget);

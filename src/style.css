@@ -657,7 +657,7 @@ li.CodeMirror-hint-active {
 }
 .dropdown__menu > li > a {
 	display: block;
-	padding: 10px 15px;
+	padding: 6px 15px;
 	color: #333;
 	cursor: pointer;
 }

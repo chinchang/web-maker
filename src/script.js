@@ -5,7 +5,7 @@ addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notifica
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
-runBtn
+runBtn, searchInput
 */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
@@ -70,6 +70,7 @@ runBtn
 		, prefs = {}
 		, codeInPreview = { html: null, css: null, js: null }
 		, isSavedItemsPaneOpen = false
+		, editorWithFocus
 
 		// DOM nodes
 		, frame = $('#demo-frame')
@@ -336,6 +337,13 @@ runBtn
 			savedItemsPane.classList.toggle('is-open');
 		}
 		isSavedItemsPaneOpen = savedItemsPane.classList.contains('is-open');
+		if (isSavedItemsPaneOpen) {
+			searchInput.focus();
+		} else {
+			searchInput.value = '';
+			// Give last focused editor, focus again
+			editorWithFocus.focus();
+		}
 		document.body.classList[isSavedItemsPaneOpen ? 'add' : 'remove']('overlay-visible');
 	}
 
@@ -353,7 +361,7 @@ runBtn
 				d.resolve([]);
 			}
 
-			savedItems = savedItems || [];
+			savedItems = savedItems || {};
 			trackEvent('fn', 'fetchItems', itemIds.length);
 			for (let i = 0; i < itemIds.length; i++) {
 
@@ -892,6 +900,9 @@ runBtn
 				}
 			}
 		});
+		cm.on('focus', (editor) => {
+			editorWithFocus = editor;
+		});
 		cm.on('change', function onChange(editor, change) {
 			clearTimeout(updateTimer);
 
@@ -1258,20 +1269,33 @@ runBtn
 		trackEvent('ui', 'saveBtnClick', currentItem.id ? 'saved' : 'new');
 		saveItem();
 	};
+	scope.onSearchInputChange = function (e) {
+		const text = e.target.value;
+		let el;
+		for (let [itemId, item] of Object.entries(savedItems)) {
+			el = $(`#js-saved-items-pane [data-item-id=${itemId}]`);
+			if (item.title.toLowerCase().indexOf(text) === -1) {
+				el.classList.add('hide');
+			} else {
+				el.classList.remove('hide');
+			}
+		}
+	};
 
 	function compileNodes() {
-		var nodes = [].slice.call($all('[d-click]'));
-		nodes.forEach(function (el) {
-			el.addEventListener('click', function (e) {
-				scope[el.getAttribute('d-click')].call(window, e)
+
+		function attachListenerForEvent(eventName) {
+			var nodes;
+			nodes = $all(`[d-${eventName}]`);
+			nodes.forEach(function (el) {
+				el.addEventListener(eventName, function (e) {
+					scope[el.getAttribute(`d-${eventName}`)].call(window, e)
+				});
 			});
-		});
-		nodes = [].slice.call($all('[d-change]'));
-		nodes.forEach(function (el) {
-			el.addEventListener('change', function (e) {
-				scope[el.getAttribute('d-change')].call(window, e)
-			});
-		})
+		}
+		attachListenerForEvent('click');
+		attachListenerForEvent('change');
+		attachListenerForEvent('input');
 	}
 
 	function init () {
@@ -1434,9 +1458,9 @@ runBtn
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
-					selectedItemElement.nextElementSibling.classList.add('selected');
+					selectedItemElement.nextUntil('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				} else {
-					$('.js-saved-item-tile:first-child').classList.add('selected');
+					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				}
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
 			} else if (event.keyCode === 38 && isSavedItemsPaneOpen) {
@@ -1445,7 +1469,7 @@ runBtn
 					selectedItemElement.classList.remove('selected');
 					selectedItemElement.previousElementSibling.classList.add('selected');
 				} else {
-					$('.js-saved-item-tile:first-child').classList.add('selected');
+					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				}
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
 			} else if (event.keyCode === 13 && isSavedItemsPaneOpen) {

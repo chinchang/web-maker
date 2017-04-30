@@ -373,7 +373,16 @@ li.CodeMirror-hint-active {
 	background: none;
 	border: 0;
 	color: rgba(255,255,255,0.6);
-	width: calc(100vw - 400px);
+	width: calc(100vw - 420px);
+}
+.search-input {
+	background: rgba(255, 255, 255, 0.1);
+	padding: 10px 20px;
+	border: 0;
+	width: 100%;
+	font-size: 16px;
+	color: white;
+	border-radius: 4px;
 }
 .modal {
 	position: fixed;

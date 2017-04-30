@@ -2,8 +2,31 @@
 	window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
 
 	window.$ = document.querySelector.bind(document);
-	window.$all = document.querySelectorAll.bind(document);
+	window.$all = (selector) => [...document.querySelectorAll(selector)] ;
 	var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+	/**
+	 * The following 2 functions are supposed to find the next/previous sibling until the
+	 * passed `selector` is matched. But for now it actually finds the next/previous
+	 * element of `this` element in the list of `selector` matched element inside `this`'s
+	 * parent.
+	 * @param  Selector that should match for next siblings
+	 * @return element Next element that mathes `selector`
+	 */
+	Node.prototype.nextUntil = function (selector) {
+		var siblings = [...this.parentNode.querySelectorAll(selector)];
+		var index = siblings.indexOf(this);
+		return siblings[index + 1];
+	};
+	/*
+	 * @param  Selector that should match for next siblings
+	 * @return element Next element that mathes `selector`
+	 */
+	Node.prototype.previousUntil = function (selector) {
+		var siblings = [...this.parentNode.querySelectorAll(selector)];
+		var index = siblings.indexOf(this);
+		return siblings[index - 1];
+	};
 
 	// https://github.com/substack/semver-compare/blob/master/index.js
 	function semverCompare(a, b) {

@@ -1284,6 +1284,7 @@ runBtn, searchInput
 				el.classList.remove('hide');
 			}
 		}
+		trackEvent('ui', 'searchInputType');
 	};
 
 	function compileNodes() {

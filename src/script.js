@@ -1348,6 +1348,7 @@ runBtn, searchInput
 		codepenBtn.addEventListener('click', function (e) {
 			if (cssMode === CssModes.ACSS) {
 				alert('Oops! CodePen doesn\'t supports Atomic CSS currently.');
+				e.preventDefault();
 				return;
 			}
 			var json = {

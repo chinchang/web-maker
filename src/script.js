@@ -91,7 +91,6 @@ runBtn, searchInput, consoleEl, consoleLogEl
 		;
 
 	scope.cm = {};
-	scope.consoleCm;
 	scope.frame = frame;
 	scope.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
 
@@ -1311,7 +1310,10 @@ runBtn, searchInput, consoleEl, consoleLogEl
 		scope.consoleCm.setValue('');
 	};
 	scope.evalConsoleExpr = function (e) {
-		if (e.which === 13) {
+		// Clear console on CTRL + L
+		if (((e.which === 76 || e.which === 12) && e.ctrlKey)) {
+			scope.clearConsole();
+		} else if (e.which === 13) {
 			window.onMessageFromConsole('> ' + e.target.value);
 			frame.contentWindow._wmEvaluate(e.target.value);
 			e.target.value = '';
@@ -1322,10 +1324,10 @@ runBtn, searchInput, consoleEl, consoleLogEl
 			if (arg && arg.indexOf && arg.indexOf('filesystem:chrome-extension') !== -1) {
 				arg = arg.replace(/filesystem:chrome-extension.*\.js:(\d+):(\d+)/g, 'script $1:$2');
 			}
-			scope.consoleCm.replaceRange('\n' + arg + ((arg + '').match(/\[object \w+\]/) ? JSON.stringify(arg) : '') + ' ', {line: Infinity});
+			scope.consoleCm.replaceRange('\n' + arg + ' ' + ((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : ''), { line: Infinity });
 			scope.consoleCm.scrollTo(0, Infinity);
 		});
-	}
+	};
 
 	function compileNodes() {
 		function attachListenerForEvent(eventName) {
@@ -1339,7 +1341,7 @@ runBtn, searchInput, consoleEl, consoleLogEl
 		attachListenerForEvent('click');
 		attachListenerForEvent('change');
 		attachListenerForEvent('input');
-		attachListenerForEvent('keypress');
+		attachListenerForEvent('keyup');
 	}
 
 	function init () {

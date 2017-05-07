@@ -106,7 +106,7 @@
 							<div class="js-console__header  code-wrap__header" title="Double click to toggle console">
 								<span class="code-wrap__header-label">Console</span>
 								<div class="code-wrap__header-right-options">
-									<a class="code-wrap__header-btn" title="Clear console" d-click="clearConsole">
+									<a class="code-wrap__header-btn" title="Clear console (CTRL + L)" d-click="clearConsole">
 										<svg>
 						  					<use xlink:href="#cancel-icon"></use>
 										</svg>
@@ -120,7 +120,7 @@
 							<svg width="18" height="18" fill="#346fd2">
 		  						<use xlink:href="#chevron-icon"></use>
 		  					</svg>
-							<input d-keypress="evalConsoleExpr" style="padding:3px;font-size:inherit;width:calc(100% - 30px); background: black; color: white; border:0;">
+							<input d-keyup="evalConsoleExpr" style="padding:3px;font-size:inherit;width:calc(100% - 30px); background: black; color: white; border:0;">
 						</div>
 					</div>
 				</div>

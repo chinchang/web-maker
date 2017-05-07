@@ -279,8 +279,10 @@ li.CodeMirror-hint-active {
 	background-color: rgb(18, 19, 27);
 	color: rgba(255, 255, 255, 0.45);
 	border-top: 1px solid rgba(255,255,255,0.14);
-	z-index: 1;
 	/*line-height: 20px;*/
+}
+.footer {
+	z-index: 1;
 }
 .main-header {
 	border: 0;

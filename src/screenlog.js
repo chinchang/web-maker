@@ -172,3 +172,12 @@ screenLog.init({
 		window.parent.onMessageFromConsole.apply(null, arguments);
 	}
 });
+window._wmEvaluate = function _wmEvaluate(expr) {
+	try {
+		var result = eval(expr);
+	} catch(e) {
+		window.parent.onMessageFromConsole.call(null, e);
+		return;
+	}
+	window.parent.onMessageFromConsole.call(null, result);
+}

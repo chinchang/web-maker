@@ -92,6 +92,7 @@ runBtn, searchInput, consoleEl, consoleLogEl
 
 	scope.cm = {};
 	scope.consoleCm;
+	scope.frame = frame;
 	scope.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
 
 	// Check all the code wrap if they are minimized or not
@@ -1304,23 +1305,29 @@ runBtn, searchInput, consoleEl, consoleLogEl
 	};
 
 	scope.toggleConsole = function () {
-		consoleEl.classList.toggle('is-open');
+		consoleEl.classList.toggle('is-minimized');
 	};
 	scope.clearConsole = function () {
 		scope.consoleCm.setValue('');
 	};
-
+	scope.evalConsoleExpr = function (e) {
+		if (e.which === 13) {
+			window.onMessageFromConsole('> ' + e.target.value);
+			frame.contentWindow._wmEvaluate(e.target.value);
+			e.target.value = '';
+		}
+	};
 	window.onMessageFromConsole = function() {
 		[...arguments].forEach(function(arg) {
-			if (arg.indexOf && arg.indexOf('filesystem:chrome-extension') !== -1) {
+			if (arg && arg.indexOf && arg.indexOf('filesystem:chrome-extension') !== -1) {
 				arg = arg.replace(/filesystem:chrome-extension.*\.js:(\d+):(\d+)/g, 'script $1:$2');
 			}
 			scope.consoleCm.replaceRange('\n' + arg + ((arg + '').match(/\[object \w+\]/) ? JSON.stringify(arg) : '') + ' ', {line: Infinity});
+			scope.consoleCm.scrollTo(0, Infinity);
 		});
 	}
 
 	function compileNodes() {
-
 		function attachListenerForEvent(eventName) {
 			const nodes = $all(`[d-${eventName}]`);
 			nodes.forEach(function (el) {
@@ -1332,6 +1339,7 @@ runBtn, searchInput, consoleEl, consoleLogEl
 		attachListenerForEvent('click');
 		attachListenerForEvent('change');
 		attachListenerForEvent('input');
+		attachListenerForEvent('keypress');
 	}
 
 	function init () {

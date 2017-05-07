@@ -824,13 +824,13 @@ li.CodeMirror-hint-active {
 	height: 30vh;
 	left: 0;
 	right: 0;
-	transform: translateY(calc(100% - 30px));
-	transition: transform 0.4s cubic-bezier(0.77,-0.1,0.13,0.9);
-}
-.console.is-open {
 	transform: translateY(0);
+	transition: transform 0.4s cubic-bezier(0.76, 0.01, 0.13, 0.9);
+}
+.console.is-minimized {
+	transform: translateY(calc(100% - 30px));
 }
 .console .Codemirror {
 	height: auto;
-	max-height: calc(100% - 50px);
+	max-height: calc(100% - 70px);
 }

@@ -985,7 +985,7 @@ runBtn, searchInput, consoleEl, consoleLogEl
 	});
 
 	function openSettings() {
-		settingsModal.classList.toggle('is-modal-visible');
+		scope.toggleModal(settingsModal);
 
 		/* if (chrome.runtime.openOptionsPage) {
 			// New way to open options pages, if supported (Chrome 42+).
@@ -1289,6 +1289,14 @@ runBtn, searchInput, consoleEl, consoleLogEl
 		trackEvent('ui', 'saveBtnClick', currentItem.id ? 'saved' : 'new');
 		saveItem();
 	};
+	/**
+	 * Toggles a modal and logs an event.
+	 * @param  {Node} modal     modal to be toggled
+	 */
+	scope.toggleModal = function (modal) {
+		modal.classList.toggle('is-modal-visible');
+		document.body.classList[modal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
+	};
 	scope.onSearchInputChange = function (e) {
 		const text = e.target.value;
 		let el;
@@ -1363,19 +1371,17 @@ runBtn, searchInput, consoleEl, consoleLogEl
 		layoutBtn4.addEventListener('click', getToggleLayoutButtonListener(4));
 
 		utils.onButtonClick(helpBtn, function () {
-			helpModal.classList.toggle('is-modal-visible');
-			document.body.classList[helpModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
+			scope.toggleModal(helpModal);
 			trackEvent('ui', 'helpButtonClick');
 		});
 		utils.onButtonClick(addLibraryBtn, function () {
-			addLibraryModal.classList.toggle('is-modal-visible');
-			document.body.classList[addLibraryModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
+			scope.toggleModal(addLibraryModal);
 			trackEvent('ui', 'addLibraryButtonClick');
 		});
 
 		notificationsBtn.addEventListener('click', function () {
-			notificationsModal.classList.toggle('is-modal-visible');
-			document.body.classList[notificationsModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
+			scope.toggleModal(notificationsModal);
+
 			if (notificationsModal.classList.contains('is-modal-visible') && !hasSeenNotifications) {
 				hasSeenNotifications = true;
 				notificationsBtn.classList.remove('has-new');

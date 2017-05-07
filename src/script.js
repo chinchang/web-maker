@@ -980,7 +980,6 @@ runBtn, searchInput, consoleEl, consoleLogEl
 		theme: 'monokai',
 		foldGutter: true,
 		readOnly: true,
-		viewportMargin: Infinity,
 		gutters: [ 'CodeMirror-foldgutter' ]
 	});
 
@@ -1247,6 +1246,7 @@ runBtn, searchInput, consoleEl, consoleLogEl
 		htmlCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 		cssCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 		jsCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		consoleEl.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 
 		// Update indentation count when slider is updated
 		indentationSizeValueEl.textContent = $('[data-setting=indentSize]').value;

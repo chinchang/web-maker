@@ -204,6 +204,7 @@ select, input[type="text"], input[type="number"],  textarea {
 .code-wrap__header-btn {
 	display: inline-block;
 	vertical-align: top;
+	margin-left: 8px;
 }
 .code-wrap__header-btn,
 .code-wrap__header-btn > svg  {
@@ -830,9 +831,8 @@ li.CodeMirror-hint-active {
 	transition: transform 0.4s cubic-bezier(0.76, 0.01, 0.13, 0.9);
 }
 .console.is-minimized {
-	transform: translateY(calc(100% - 30px));
+	transform: translateY(calc(100% - 29px));
 }
 .console .Codemirror {
-	height: auto;
-	max-height: calc(100% - 70px);
+	height: calc(100% - 55px);
 }

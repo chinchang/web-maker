@@ -107,6 +107,7 @@ select, input[type="text"], input[type="number"],  textarea {
 	top: 0; bottom: 0;
 	display: flex;
 	flex-direction: column;
+	overflow: hidden;
 	will-change: -webkit-filter;
 	transition: 0.10s ease 0.2s;
 }
@@ -201,9 +202,13 @@ select, input[type="text"], input[type="number"],  textarea {
 	opacity: 0;
 }
 .code-wrap__header-btn {
+	display: inline-block;
+	vertical-align: top;
+}
+.code-wrap__header-btn,
+.code-wrap__header-btn > svg  {
 	width: 18px;
 	height: 18px;
-	display: inline-block;
 }
 .code-wrap__collapse-btn:before {
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.2)" d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" /></svg>');
@@ -271,9 +276,10 @@ li.CodeMirror-hint-active {
 .main-header,
 .footer {
 	padding: 5px 10px;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgb(18, 19, 27);
 	color: rgba(255, 255, 255, 0.45);
 	border-top: 1px solid rgba(255,255,255,0.14);
+	z-index: 1;
 	/*line-height: 20px;*/
 }
 .main-header {
@@ -809,4 +815,22 @@ li.CodeMirror-hint-active {
 }
 .wobble {
 	animation-name: wobble;
+}
+.console {
+	background: var(--color-bg);
+	z-index: 1; /* bring above iframe */
+	position: absolute;
+	bottom: 0;
+	height: 30vh;
+	left: 0;
+	right: 0;
+	transform: translateY(calc(100% - 30px));
+	transition: transform 0.4s cubic-bezier(0.77,-0.1,0.13,0.9);
+}
+.console.is-open {
+	transform: translateY(0);
+}
+.console .Codemirror {
+	height: auto;
+	max-height: calc(100% - 50px);
 }

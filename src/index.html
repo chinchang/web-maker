@@ -101,6 +101,25 @@
 				</div>
 				<div class="demo-side" id="js-demo-side">
 					<iframe src="about://blank" frameborder="0" id="demo-frame"></iframe>
+					<div id="consoleEl" class="console">
+						<div id="consoleLogEl" class="console__log" class="code">
+							<div class="js-console__header  code-wrap__header" title="Double click to toggle console">
+								<span class="code-wrap__header-label">Console</span>
+								<div class="code-wrap__header-right-options">
+									<a class="code-wrap__header-btn" title="Clear console" d-click="clearConsole">
+										<svg>
+						  					<use xlink:href="#cancel-icon"></use>
+										</svg>
+									</a>
+									<a class="code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle console" d-click="toggleConsole">
+									</a>
+								</div>
+							</div>
+						</div>
+						<div id="consolePromptEl" class="console__prompt">
+							<input type="" name="" class="full-width" style="background: none;border:0;">
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="footer">
@@ -575,6 +594,11 @@
 			<symbol id="play-icon" viewBox="0 0 24 24">
 				<svg>
 					<path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+				</svg>
+			</symbol>
+			<symbol id="cancel-icon" viewBox="0 0 24 24">
+				<svg>
+					<path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12C4,13.85 4.63,15.55 5.68,16.91L16.91,5.68C15.55,4.63 13.85,4 12,4M12,20A8,8 0 0,0 20,12C20,10.15 19.37,8.45 18.32,7.09L7.09,18.32C8.45,19.37 10.15,20 12,20Z" />
 				</svg>
 			</symbol>
 		</svg>

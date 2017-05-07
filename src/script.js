@@ -5,7 +5,7 @@ addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notifica
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
-runBtn, searchInput
+runBtn, searchInput, consoleEl, consoleLogEl
 */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
@@ -91,6 +91,7 @@ runBtn, searchInput
 		;
 
 	scope.cm = {};
+	scope.consoleCm;
 	scope.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
 
 	// Check all the code wrap if they are minimized or not
@@ -734,6 +735,9 @@ runBtn, searchInput
 			+ '<body>\n' + html + '\n'
 			+ externalJs + '\n';
 
+		contents += '<script src="'
+			+ chrome.extension.getURL('screenlog.js') + '"></script>';
+
 		if (js) {
 			contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';
 		} else {
@@ -968,6 +972,17 @@ runBtn, searchInput
 		gutters: [ 'error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ]
 	});
 	Inlet(scope.cm.js);
+
+	// Initialize codemirror in console
+	scope.consoleCm = CodeMirror(consoleLogEl, {
+		mode: 'javascript',
+		lineWrapping: true,
+		theme: 'monokai',
+		foldGutter: true,
+		readOnly: true,
+		viewportMargin: Infinity,
+		gutters: [ 'CodeMirror-foldgutter' ]
+	});
 
 	function openSettings() {
 		settingsModal.classList.toggle('is-modal-visible');
@@ -1252,6 +1267,7 @@ runBtn, searchInput
 			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]:checked').value);
 			scope.cm[type].refresh();
 		});
+		scope.consoleCm.setOption('theme', $('[data-setting=editorTheme]').value);
 	};
 
 	scope.onNewBtnClick = function () {
@@ -1286,6 +1302,22 @@ runBtn, searchInput
 		}
 		trackEvent('ui', 'searchInputType');
 	};
+
+	scope.toggleConsole = function () {
+		consoleEl.classList.toggle('is-open');
+	};
+	scope.clearConsole = function () {
+		scope.consoleCm.setValue('');
+	};
+
+	window.onMessageFromConsole = function() {
+		[...arguments].forEach(function(arg) {
+			if (arg.indexOf && arg.indexOf('filesystem:chrome-extension') !== -1) {
+				arg = arg.replace(/filesystem:chrome-extension.*\.js:(\d+):(\d+)/g, 'script $1:$2');
+			}
+			scope.consoleCm.replaceRange('\n' + arg + ((arg + '').match(/\[object \w+\]/) ? JSON.stringify(arg) : '') + ' ', {line: Infinity});
+		});
+	}
 
 	function compileNodes() {
 
@@ -1505,6 +1537,9 @@ runBtn, searchInput
 		});
 		window.addEventListener('dblclick', function(e) {
 			var target = e.target;
+			if (target.classList.contains('js-console__header')) {
+				scope.toggleConsole();
+			}
 			if (target.classList.contains('js-code-wrap__header')) {
 				var codeWrapParent = target.parentElement;
 				toggleCodeWrapCollapse(codeWrapParent);

@@ -460,6 +460,7 @@ runBtn, searchInput, consoleEl, consoleLogEl
 		scope.cm.html.setValue(currentItem.html);
 		scope.cm.css.setValue(currentItem.css);
 		scope.cm.js.setValue(currentItem.js);
+		scope.consoleCm.setValue('');
 		scope.cm.html.refresh();
 		scope.cm.css.refresh();
 		scope.cm.js.refresh();
@@ -701,6 +702,7 @@ runBtn, searchInput, consoleEl, consoleLogEl
 
 	window.previewException = function (error) {
 		console.error('Possible infinite loop detected.', error.stack)
+		window.onMessageFromConsole('Possible infinite loop detected.', error.stack);
 	}
 	window.onunload = function () {
 		saveCode('code');
@@ -1330,7 +1332,7 @@ runBtn, searchInput, consoleEl, consoleLogEl
 	window.onMessageFromConsole = function() {
 		[...arguments].forEach(function(arg) {
 			if (arg && arg.indexOf && arg.indexOf('filesystem:chrome-extension') !== -1) {
-				arg = arg.replace(/filesystem:chrome-extension.*\.js:(\d+):(\d+)/g, 'script $1:$2');
+				arg = arg.replace(/filesystem:chrome-extension.*\.js:(\d+):*(\d*)/g, 'script $1:$2');
 			}
 			scope.consoleCm.replaceRange('\n' + arg + ' ' + ((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : ''), { line: Infinity });
 			scope.consoleCm.scrollTo(0, Infinity);

@@ -269,7 +269,7 @@ li.CodeMirror-hint-active {
 #demo-frame {
 	border: 0;
 	width: 100%;
-	height: 100%;
+	height: calc(100% - 29px); /*  minus minimized console height */
 	position: absolute;
 	z-index: 1;
 	background: white;

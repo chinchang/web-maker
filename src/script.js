@@ -5,7 +5,7 @@ addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notifica
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
-runBtn, searchInput, consoleEl, consoleLogEl
+runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
@@ -71,6 +71,7 @@ runBtn, searchInput, consoleEl, consoleLogEl
 		, codeInPreview = { html: null, css: null, js: null }
 		, isSavedItemsPaneOpen = false
 		, editorWithFocus
+		, logCount = 0
 
 		// DOM nodes
 		, frame = $('#demo-frame')
@@ -460,10 +461,11 @@ runBtn, searchInput, consoleEl, consoleLogEl
 		scope.cm.html.setValue(currentItem.html);
 		scope.cm.css.setValue(currentItem.css);
 		scope.cm.js.setValue(currentItem.js);
-		scope.consoleCm.setValue('');
 		scope.cm.html.refresh();
 		scope.cm.css.refresh();
 		scope.cm.js.refresh();
+
+		scope.clearConsole();
 
 		// To have the library count updated
 		updateExternalLibUi();
@@ -1318,6 +1320,8 @@ runBtn, searchInput, consoleEl, consoleLogEl
 	};
 	scope.clearConsole = function () {
 		scope.consoleCm.setValue('');
+		logCount = 0;
+		logCountEl.textContent = logCount;
 	};
 	scope.evalConsoleExpr = function (e) {
 		// Clear console on CTRL + L
@@ -1334,9 +1338,11 @@ runBtn, searchInput, consoleEl, consoleLogEl
 			if (arg && arg.indexOf && arg.indexOf('filesystem:chrome-extension') !== -1) {
 				arg = arg.replace(/filesystem:chrome-extension.*\.js:(\d+):*(\d*)/g, 'script $1:$2');
 			}
-			scope.consoleCm.replaceRange('\n' + arg + ' ' + ((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : ''), { line: Infinity });
+			scope.consoleCm.replaceRange(arg + ' ' + ((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') + '\n', { line: Infinity });
 			scope.consoleCm.scrollTo(0, Infinity);
+			logCount++;
 		});
+		logCountEl.textContent = logCount;
 	};
 
 	function compileNodes() {
@@ -1490,6 +1496,7 @@ runBtn, searchInput, consoleEl, consoleLogEl
 			});
 		});
 
+		// Editor keyboard shortucuts
 		window.addEventListener('keydown', function (event) {
 			var selectedItemElement;
 			// Ctrl/⌘ + S
@@ -1590,6 +1597,25 @@ runBtn, searchInput, consoleEl, consoleLogEl
 
 		new TextareaAutoComplete(externalJsTextarea, (obj) => obj.latest.match(/\.js$/));
 		new TextareaAutoComplete(externalCssTextarea, (obj) => obj.latest.match(/\.css$/));
+
+		var consoleHeaderDragStartY;
+		var consoleInitialHeight;
+		function onConsoleHeaderDrag(e) {
+			consoleEl.style.height = (consoleInitialHeight + consoleHeaderDragStartY - e.pageY) + 'px';
+			utils.log(e.pageY, consoleHeaderDragStartY)
+		}
+		$('.js-console__header').addEventListener('mousedown', (e) => {
+			consoleHeaderDragStartY = e.pageY;
+			consoleInitialHeight = consoleEl.getBoundingClientRect().height;
+			$('#demo-frame').style.pointerEvents = 'none';
+			window.addEventListener('mousemove', onConsoleHeaderDrag);
+			utils.log('added')
+		});
+		$('.js-console__header').addEventListener('mouseup', () => {
+			window.removeEventListener('mousemove', onConsoleHeaderDrag);
+			$('#demo-frame').style.pointerEvents = 'auto';
+			utils.log('removed')
+		});
 
 		chrome.storage.local.get({
 			layoutMode: 1,

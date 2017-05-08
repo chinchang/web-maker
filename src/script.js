@@ -1293,6 +1293,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		trackEvent('ui', 'saveBtnClick', currentItem.id ? 'saved' : 'new');
 		saveItem();
 	};
+
 	/**
 	 * Toggles a modal and logs an event.
 	 * @param  {Node} modal     modal to be toggled

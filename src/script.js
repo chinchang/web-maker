@@ -740,7 +740,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			+ externalJs + '\n';
 
 		contents += '<script src="'
-			+ chrome.extension.getURL('screenlog.js') + '"></script>';
+			+ chrome.extension.getURL('lib/screenlog.js') + '"></script>';
 
 		if (js) {
 			contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';

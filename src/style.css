@@ -849,6 +849,6 @@ li.CodeMirror-hint-active {
 	border: 0;
 	outline: 0;
 }
-.console .code-wrap__header {
+.console:not(.is-minimized) .code-wrap__header {
 	cursor: ns-resize;
 }

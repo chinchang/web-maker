@@ -1330,11 +1330,18 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			scope.clearConsole();
 		} else if (e.which === 13) {
 			window.onMessageFromConsole('> ' + e.target.value);
+
+			/* eslint-disable no-underscore-dangle */
 			frame.contentWindow._wmEvaluate(e.target.value);
+
+			/* eslint-enable no-underscore-dangle */
+
 			e.target.value = '';
 		}
 	};
 	window.onMessageFromConsole = function() {
+
+		/* eslint-disable no-param-reassign */
 		[...arguments].forEach(function(arg) {
 			if (arg && arg.indexOf && arg.indexOf('filesystem:chrome-extension') !== -1) {
 				arg = arg.replace(/filesystem:chrome-extension.*\.js:(\d+):*(\d*)/g, 'script $1:$2');
@@ -1344,6 +1351,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			logCount++;
 		});
 		logCountEl.textContent = logCount;
+
+		/* eslint-enable no-param-reassign */
 	};
 
 	function compileNodes() {

@@ -1599,6 +1599,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		new TextareaAutoComplete(externalJsTextarea, (obj) => obj.latest.match(/\.js$/));
 		new TextareaAutoComplete(externalCssTextarea, (obj) => obj.latest.match(/\.css$/));
 
+		// Console header drag resize logic
 		var consoleHeaderDragStartY;
 		var consoleInitialHeight;
 		function onConsoleHeaderDrag(e) {
@@ -1608,14 +1609,12 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		$('.js-console__header').addEventListener('mousedown', (e) => {
 			consoleHeaderDragStartY = e.pageY;
 			consoleInitialHeight = consoleEl.getBoundingClientRect().height;
-			$('#demo-frame').style.pointerEvents = 'none';
+			$('#demo-frame').classList.add('pointer-none');
 			window.addEventListener('mousemove', onConsoleHeaderDrag);
-			utils.log('added')
 		});
 		$('.js-console__header').addEventListener('mouseup', () => {
 			window.removeEventListener('mousemove', onConsoleHeaderDrag);
-			$('#demo-frame').style.pointerEvents = 'auto';
-			utils.log('removed')
+			$('#demo-frame').classList.add('pointer-none');
 		});
 
 		chrome.storage.local.get({

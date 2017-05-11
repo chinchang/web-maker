@@ -1318,16 +1318,22 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 
 	scope.toggleConsole = function () {
 		consoleEl.classList.toggle('is-minimized');
+		trackEvent('ui', 'consoleToggle');
 	};
 	scope.clearConsole = function () {
 		scope.consoleCm.setValue('');
 		logCount = 0;
 		logCountEl.textContent = logCount;
 	};
+	scope.onClearConsoleBtnClick = function () {
+		scope.clearConsole();
+		trackEvent('ui', 'consoleClearBtnClick');
+	};
 	scope.evalConsoleExpr = function (e) {
 		// Clear console on CTRL + L
 		if (((e.which === 76 || e.which === 12) && e.ctrlKey)) {
 			scope.clearConsole();
+			trackEvent('ui', 'consoleClearKeyboardShortcut');
 		} else if (e.which === 13) {
 			window.onMessageFromConsole('> ' + e.target.value);
 
@@ -1337,6 +1343,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			/* eslint-enable no-underscore-dangle */
 
 			e.target.value = '';
+			trackEvent('fn', 'evalConsoleExpr');
 		}
 	};
 	window.onMessageFromConsole = function() {
@@ -1574,6 +1581,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			var target = e.target;
 			if (target.classList.contains('js-console__header')) {
 				scope.toggleConsole();
+				trackEvent('ui', 'consoleToggleDblClick');
 			}
 			if (target.classList.contains('js-code-wrap__header')) {
 				var codeWrapParent = target.parentElement;

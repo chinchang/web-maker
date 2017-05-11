@@ -828,7 +828,8 @@ li.CodeMirror-hint-active {
 	z-index: 1; /* bring above iframe */
 	position: absolute;
 	bottom: 0;
-	height: 30vh;
+	min-height: 80px;
+	height: 35vh;
 	left: 0;
 	right: 0;
 	transform: translateY(0);

@@ -748,7 +748,10 @@ runBtn, searchInput
 
 	function writeFile(name, blob, cb) {
 		var fileWritten = false;
-		function errorHandler() { utils.log(arguments); }
+		function errorHandler() {
+			utils.log(arguments);
+			trackEvent('fn', 'error', 'writeFile');
+		}
 
 		// utils.log('writing file ', name);
 		window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024 * 5, function(fs){

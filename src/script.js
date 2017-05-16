@@ -5,7 +5,7 @@ addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notifica
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
-runBtn, searchInput
+runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
@@ -71,6 +71,7 @@ runBtn, searchInput
 		, codeInPreview = { html: null, css: null, js: null }
 		, isSavedItemsPaneOpen = false
 		, editorWithFocus
+		, logCount = 0
 
 		// DOM nodes
 		, frame = $('#demo-frame')
@@ -91,6 +92,7 @@ runBtn, searchInput
 		;
 
 	scope.cm = {};
+	scope.frame = frame;
 	scope.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
 
 	// Check all the code wrap if they are minimized or not
@@ -463,6 +465,8 @@ runBtn, searchInput
 		scope.cm.css.refresh();
 		scope.cm.js.refresh();
 
+		scope.clearConsole();
+
 		// To have the library count updated
 		updateExternalLibUi();
 
@@ -700,6 +704,7 @@ runBtn, searchInput
 
 	window.previewException = function (error) {
 		console.error('Possible infinite loop detected.', error.stack)
+		window.onMessageFromConsole('Possible infinite loop detected.', error.stack);
 	}
 	window.onunload = function () {
 		saveCode('code');
@@ -733,6 +738,9 @@ runBtn, searchInput
 			+ '</head>\n'
 			+ '<body>\n' + html + '\n'
 			+ externalJs + '\n';
+
+		contents += '<script src="'
+			+ chrome.extension.getURL('lib/screenlog.js') + '"></script>';
 
 		if (js) {
 			contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';
@@ -969,8 +977,18 @@ runBtn, searchInput
 	});
 	Inlet(scope.cm.js);
 
+	// Initialize codemirror in console
+	scope.consoleCm = CodeMirror(consoleLogEl, {
+		mode: 'javascript',
+		lineWrapping: true,
+		theme: 'monokai',
+		foldGutter: true,
+		readOnly: true,
+		gutters: [ 'CodeMirror-foldgutter' ]
+	});
+
 	function openSettings() {
-		settingsModal.classList.toggle('is-modal-visible');
+		scope.toggleModal(settingsModal);
 
 		/* if (chrome.runtime.openOptionsPage) {
 			// New way to open options pages, if supported (Chrome 42+).
@@ -1232,6 +1250,7 @@ runBtn, searchInput
 		htmlCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 		cssCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 		jsCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		consoleEl.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 
 		// Update indentation count when slider is updated
 		indentationSizeValueEl.textContent = $('[data-setting=indentSize]').value;
@@ -1252,6 +1271,7 @@ runBtn, searchInput
 			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]:checked').value);
 			scope.cm[type].refresh();
 		});
+		scope.consoleCm.setOption('theme', $('[data-setting=editorTheme]').value);
 	};
 
 	scope.onNewBtnClick = function () {
@@ -1273,6 +1293,15 @@ runBtn, searchInput
 		trackEvent('ui', 'saveBtnClick', currentItem.id ? 'saved' : 'new');
 		saveItem();
 	};
+
+	/**
+	 * Toggles a modal and logs an event.
+	 * @param  {Node} modal     modal to be toggled
+	 */
+	scope.toggleModal = function (modal) {
+		modal.classList.toggle('is-modal-visible');
+		document.body.classList[modal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
+	};
 	scope.onSearchInputChange = function (e) {
 		const text = e.target.value;
 		let el;
@@ -1287,8 +1316,53 @@ runBtn, searchInput
 		trackEvent('ui', 'searchInputType');
 	};
 
-	function compileNodes() {
+	scope.toggleConsole = function () {
+		consoleEl.classList.toggle('is-minimized');
+		trackEvent('ui', 'consoleToggle');
+	};
+	scope.clearConsole = function () {
+		scope.consoleCm.setValue('');
+		logCount = 0;
+		logCountEl.textContent = logCount;
+	};
+	scope.onClearConsoleBtnClick = function () {
+		scope.clearConsole();
+		trackEvent('ui', 'consoleClearBtnClick');
+	};
+	scope.evalConsoleExpr = function (e) {
+		// Clear console on CTRL + L
+		if (((e.which === 76 || e.which === 12) && e.ctrlKey)) {
+			scope.clearConsole();
+			trackEvent('ui', 'consoleClearKeyboardShortcut');
+		} else if (e.which === 13) {
+			window.onMessageFromConsole('> ' + e.target.value);
 
+			/* eslint-disable no-underscore-dangle */
+			frame.contentWindow._wmEvaluate(e.target.value);
+
+			/* eslint-enable no-underscore-dangle */
+
+			e.target.value = '';
+			trackEvent('fn', 'evalConsoleExpr');
+		}
+	};
+	window.onMessageFromConsole = function() {
+
+		/* eslint-disable no-param-reassign */
+		[...arguments].forEach(function(arg) {
+			if (arg && arg.indexOf && arg.indexOf('filesystem:chrome-extension') !== -1) {
+				arg = arg.replace(/filesystem:chrome-extension.*\.js:(\d+):*(\d*)/g, 'script $1:$2');
+			}
+			scope.consoleCm.replaceRange(arg + ' ' + ((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') + '\n', { line: Infinity });
+			scope.consoleCm.scrollTo(0, Infinity);
+			logCount++;
+		});
+		logCountEl.textContent = logCount;
+
+		/* eslint-enable no-param-reassign */
+	};
+
+	function compileNodes() {
 		function attachListenerForEvent(eventName) {
 			const nodes = $all(`[d-${eventName}]`);
 			nodes.forEach(function (el) {
@@ -1300,6 +1374,7 @@ runBtn, searchInput
 		attachListenerForEvent('click');
 		attachListenerForEvent('change');
 		attachListenerForEvent('input');
+		attachListenerForEvent('keyup');
 	}
 
 	function init () {
@@ -1321,19 +1396,17 @@ runBtn, searchInput
 		layoutBtn4.addEventListener('click', getToggleLayoutButtonListener(4));
 
 		utils.onButtonClick(helpBtn, function () {
-			helpModal.classList.toggle('is-modal-visible');
-			document.body.classList[helpModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
+			scope.toggleModal(helpModal);
 			trackEvent('ui', 'helpButtonClick');
 		});
 		utils.onButtonClick(addLibraryBtn, function () {
-			addLibraryModal.classList.toggle('is-modal-visible');
-			document.body.classList[addLibraryModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
+			scope.toggleModal(addLibraryModal);
 			trackEvent('ui', 'addLibraryButtonClick');
 		});
 
 		notificationsBtn.addEventListener('click', function () {
-			notificationsModal.classList.toggle('is-modal-visible');
-			document.body.classList[notificationsModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
+			scope.toggleModal(notificationsModal);
+
 			if (notificationsModal.classList.contains('is-modal-visible') && !hasSeenNotifications) {
 				hasSeenNotifications = true;
 				notificationsBtn.classList.remove('has-new');
@@ -1440,6 +1513,7 @@ runBtn, searchInput
 			});
 		});
 
+		// Editor keyboard shortucuts
 		window.addEventListener('keydown', function (event) {
 			var selectedItemElement;
 			// Ctrl/⌘ + S
@@ -1505,6 +1579,10 @@ runBtn, searchInput
 		});
 		window.addEventListener('dblclick', function(e) {
 			var target = e.target;
+			if (target.classList.contains('js-console__header')) {
+				scope.toggleConsole();
+				trackEvent('ui', 'consoleToggleDblClick');
+			}
 			if (target.classList.contains('js-code-wrap__header')) {
 				var codeWrapParent = target.parentElement;
 				toggleCodeWrapCollapse(codeWrapParent);
@@ -1537,6 +1615,24 @@ runBtn, searchInput
 
 		new TextareaAutoComplete(externalJsTextarea, (obj) => obj.latest.match(/\.js$/));
 		new TextareaAutoComplete(externalCssTextarea, (obj) => obj.latest.match(/\.css$/));
+
+		// Console header drag resize logic
+		var consoleHeaderDragStartY;
+		var consoleInitialHeight;
+		function onConsoleHeaderDrag(e) {
+			consoleEl.style.height = (consoleInitialHeight + consoleHeaderDragStartY - e.pageY) + 'px';
+			utils.log(e.pageY, consoleHeaderDragStartY)
+		}
+		$('.js-console__header').addEventListener('mousedown', (e) => {
+			consoleHeaderDragStartY = e.pageY;
+			consoleInitialHeight = consoleEl.getBoundingClientRect().height;
+			$('#demo-frame').classList.add('pointer-none');
+			window.addEventListener('mousemove', onConsoleHeaderDrag);
+		});
+		$('.js-console__header').addEventListener('mouseup', () => {
+			window.removeEventListener('mousemove', onConsoleHeaderDrag);
+			$('#demo-frame').classList.add('pointer-none');
+		});
 
 		chrome.storage.local.get({
 			layoutMode: 1,

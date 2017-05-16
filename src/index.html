@@ -23,7 +23,7 @@
 						</svg>Run
 					</a>
 
-					<a id="js-add-library-btn" class="fleex-v-center hint--rounded hint--bottom-left" aria-label="Add a JS/CSS library">
+					<a id="js-add-library-btn" class="flex-v-center hint--rounded hint--bottom-left" aria-label="Add a JS/CSS library">
 						Add library <span id="js-external-lib-count" style="display:none;" class="count-label"></span>
 					</a>
 
@@ -101,6 +101,28 @@
 				</div>
 				<div class="demo-side" id="js-demo-side">
 					<iframe src="about://blank" frameborder="0" id="demo-frame"></iframe>
+					<div id="consoleEl" class="console is-minimized">
+						<div id="consoleLogEl" class="console__log" class="code">
+							<div class="js-console__header  code-wrap__header" title="Double click to toggle console">
+								<span class="code-wrap__header-label">Console (<span id="logCountEl">0</span>)</span>
+								<div class="code-wrap__header-right-options">
+									<a class="code-wrap__header-btn" title="Clear console (CTRL + L)" d-click="onClearConsoleBtnClick">
+										<svg>
+						  					<use xlink:href="#cancel-icon"></use>
+										</svg>
+									</a>
+									<a class="code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle console" d-click="toggleConsole">
+									</a>
+								</div>
+							</div>
+						</div>
+						<div id="consolePromptEl" class="console__prompt flex flex-v-center">
+							<svg width="18" height="18" fill="#346fd2">
+		  						<use xlink:href="#chevron-icon"></use>
+		  					</svg>
+							<input d-keyup="evalConsoleExpr" class="console-exec-input">
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="footer">
@@ -224,7 +246,7 @@
 					<p>
 						<h3>Awesome libraries used</h3>
 						<ul>
-							<li><a target="_blank" href="http://kushagragour.in/lab/hint/">Hint.css</a> - By me :)</li>
+							<li><a target="_blank" href="https://kushagragour.in/lab/hint/">Hint.css</a> & <a target="_blank" href="https://github.com/chinchang/screenlog.js">Screenlog.js</a> - By me :)</li>
 							<li><a target="_blank" href="https://nathancahill.github.io/Split.js/">Split.js</a> - Nathan Cahill</li>
 							<li><a target="_blank" href="https://codemirror.net/">Codemirror</a> - Marijn Haverbeke</li>
 							<li><a target="_blank" href="https://emmet.io/">Emmet</a> - Sergey Chikuyonok</li>
@@ -575,6 +597,16 @@
 			<symbol id="play-icon" viewBox="0 0 24 24">
 				<svg>
 					<path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+				</svg>
+			</symbol>
+			<symbol id="cancel-icon" viewBox="0 0 24 24">
+				<svg>
+					<path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12C4,13.85 4.63,15.55 5.68,16.91L16.91,5.68C15.55,4.63 13.85,4 12,4M12,20A8,8 0 0,0 20,12C20,10.15 19.37,8.45 18.32,7.09L7.09,18.32C8.45,19.37 10.15,20 12,20Z" />
+				</svg>
+			</symbol>
+			<symbol id="chevron-icon" viewBox="0 0 24 24">
+				<svg>
+				<path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
 				</svg>
 			</symbol>
 		</svg>

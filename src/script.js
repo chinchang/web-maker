@@ -177,8 +177,6 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 	}
 	function toggleLayout(mode) {
 		if (currentLayoutMode === mode) {
-			utils.log('setMainsize', currentItem.mainSizes || [ 50, 50 ]);
-			utils.log('setsize', currentItem.sizes || [ 33.33, 33.33, 33.33 ]);
 			mainSplitInstance.setSizes(getMainSplitSizesToApply());
 			codeSplitInstance.setSizes(currentItem.sizes || [ 33.33, 33.33, 33.33 ]);
 			currentLayoutMode = mode;
@@ -1022,7 +1020,6 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 
 	scope.exportItems = function exportItems(e) {
 		fetchItems().then(function (items) {
-			utils.log(9, items);
 			var d = new Date();
 			var fileName = [ 'web-maker-export', d.getFullYear(), (d.getMonth() + 1), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
 			fileName += '.json';
@@ -1621,7 +1618,6 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		var consoleInitialHeight;
 		function onConsoleHeaderDrag(e) {
 			consoleEl.style.height = (consoleInitialHeight + consoleHeaderDragStartY - e.pageY) + 'px';
-			utils.log(e.pageY, consoleHeaderDragStartY)
 		}
 		$('.js-console__header').addEventListener('mousedown', (e) => {
 			consoleHeaderDragStartY = e.pageY;

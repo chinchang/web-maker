@@ -1,7 +1,7 @@
 Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master)
 ======
 
-**Web-Maker** is a chrome extension that converts your Chrome tabs into an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and works offline being local on your system.
+**Web-Maker** is a chrome extension that converts your Chrome tab into an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and works offline being local on your system.
 
 ### [INSTALL EXTENSION](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
 
@@ -11,6 +11,7 @@ Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master)
 
 * Supports Preprocessors: HTML (Jade & Markdown), CSS (SCSS, LESS & Stylus) & JavaScript (ES6, TypeScript & CoffeeScript)
 * Works offline
+* Inbuilt Console
 * Save and load your creations
 * Code auto-completion
 * Easy addition of popular JS & CSS libraries
@@ -23,6 +24,10 @@ Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master)
 * Edit in CodePen
 
 Follow [@webmakerApp](https://twitter.com/intent/follow?screen_name=webmakerApp) for updates or tweet out feature requests and suggestions.
+
+### Support Web Maker
+
+Web Maker is completely free and open-source. If you find it useful, you can show your support by sharing it in your social network or by donating on [Gratipay](https://gratipay.com/Web-Maker/) or by simply letting me know how much you 💖 it by tweeting to [@webmakerapp](https://twitter.com/webmakerApp).
 
 ### License
 

@@ -23,7 +23,7 @@
 						</svg>Run
 					</a>
 
-					<a id="js-add-library-btn" class="fleex-v-center hint--rounded hint--bottom-left" aria-label="Add a JS/CSS library">
+					<a id="js-add-library-btn" class="flex-v-center hint--rounded hint--bottom-left" aria-label="Add a JS/CSS library">
 						Add library <span id="js-external-lib-count" style="display:none;" class="count-label"></span>
 					</a>
 
@@ -101,6 +101,28 @@
 				</div>
 				<div class="demo-side" id="js-demo-side">
 					<iframe src="about://blank" frameborder="0" id="demo-frame"></iframe>
+					<div id="consoleEl" class="console is-minimized">
+						<div id="consoleLogEl" class="console__log" class="code">
+							<div class="js-console__header  code-wrap__header" title="Double click to toggle console">
+								<span class="code-wrap__header-label">Console (<span id="logCountEl">0</span>)</span>
+								<div class="code-wrap__header-right-options">
+									<a class="code-wrap__header-btn" title="Clear console (CTRL + L)" d-click="onClearConsoleBtnClick">
+										<svg>
+						  					<use xlink:href="#cancel-icon"></use>
+										</svg>
+									</a>
+									<a class="code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle console" d-click="toggleConsole">
+									</a>
+								</div>
+							</div>
+						</div>
+						<div id="consolePromptEl" class="console__prompt flex flex-v-center">
+							<svg width="18" height="18" fill="#346fd2">
+		  						<use xlink:href="#chevron-icon"></use>
+		  					</svg>
+							<input d-keyup="evalConsoleExpr" class="console-exec-input">
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="footer">
@@ -224,7 +246,7 @@
 					<p>
 						<h3>Awesome libraries used</h3>
 						<ul>
-							<li><a target="_blank" href="http://kushagragour.in/lab/hint/">Hint.css</a> - By me :)</li>
+							<li><a target="_blank" href="https://kushagragour.in/lab/hint/">Hint.css</a> & <a target="_blank" href="https://github.com/chinchang/screenlog.js">Screenlog.js</a> - By me :)</li>
 							<li><a target="_blank" href="https://nathancahill.github.io/Split.js/">Split.js</a> - Nathan Cahill</li>
 							<li><a target="_blank" href="https://codemirror.net/">Codemirror</a> - Marijn Haverbeke</li>
 							<li><a target="_blank" href="https://emmet.io/">Emmet</a> - Sergey Chikuyonok</li>
@@ -401,6 +423,18 @@
 			<div class="modal__content">
 				<h1>Whats new?</h1>
 				<div class="notification">
+				  <span class="notification__version">2.6.0</span>
+				  <ul>
+					<li><strong>The "Console"</strong>: The most awaited feature is here! There is now an inbuilt console to see your logs, errors and for quickly evaluating JavaScript code inside your preview. Enjoy! I also a <a href="https://kushagragour.in/blog/2017/05/web-maker-console-is-here/?utm_source=webmakerapp&utm_medium=referral" target="_blank">blog post about it</a>.</li>
+					<li>Number slider which popped on clicking any number in the code has been removed due to poor user experience.</li>
+					<li>Minor usability improvements.</li>
+
+					<li><a href="https://github.com/chinchang/web-maker/issues" target="_blank">Suggest features or report bugs.</a></li>
+					<li>Thank you for being a part of this community of thousands of awesome developers. If you find Web Maker helpful, <a href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews" target="_blank" class="btn">Please rate Web Maker <span class="star"></span></a> & <a href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension" target="_blank" target="_blank" class="btn">share it</a>.</li>
+				  </ul>
+				</div>
+
+				<div class="notification">
 				  <span class="notification__version">2.5.0</span>
 				  <ul>
 					<li><strong>Atomic CSS</strong>: Use can now use Atomic CSS(ACSS) in your work! <a href="https://acss.io/" target="_blank">Read more about it here</a>.</li>
@@ -408,9 +442,6 @@
 					<li><strong>Configurable Auto-preview</strong> - You can turn off the auto preview in settings if you don't want the preview to update as you type.</li>
 					<li><strong>Configurable refresh on resize</strong> - You can configure whether you want the preview to refresh when you resize the preview panel.</li>
 					<li><strong>Bugfix</strong> - Fix indentation <a href="https://github.com/chinchang/web-maker/issues/104" target="_blank">issue</a> with custom indentation size.</li>
-
-					<li><a href="https://github.com/chinchang/web-maker/issues" target="_blank">Suggest features or report bugs.</a></li>
-					<li>Thank you for being a part of this community of thousands of awesome developers. If you find Web Maker helpful, <a href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews" target="_blank" class="btn">Please rate Web Maker <span class="star"></span></a> & <a href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension" target="_blank" target="_blank" class="btn">share it</a>.</li>
 				  </ul>
 				</div>
 
@@ -521,9 +552,9 @@
 				<h3>My Library <span id="savedItemCountEl"></span></h3>
 
 				<div class="main-header__btn-wrap">
-					<a d-click="exportItems" href="" class="btn btn-icon">Export
+					<a d-click="exportItems" href="" class="btn btn-icon hint--bottom-left hint--rounded hint--medium" aria-label="Export all your creations into a single importable file.">Export
 					</a>
-					<a d-click="onImportBtnClicked" href="" class="btn btn-icon">Import
+					<a d-click="onImportBtnClicked" href="" class="btn btn-icon hint--bottom-left hint--rounded hint--medium" aria-label="Only the file that you export through the 'Export' button can be imported.">Import
 					</a>
 				</div>
 			</div>
@@ -575,6 +606,16 @@
 			<symbol id="play-icon" viewBox="0 0 24 24">
 				<svg>
 					<path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+				</svg>
+			</symbol>
+			<symbol id="cancel-icon" viewBox="0 0 24 24">
+				<svg>
+					<path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12C4,13.85 4.63,15.55 5.68,16.91L16.91,5.68C15.55,4.63 13.85,4 12,4M12,20A8,8 0 0,0 20,12C20,10.15 19.37,8.45 18.32,7.09L7.09,18.32C8.45,19.37 10.15,20 12,20Z" />
+				</svg>
+			</symbol>
+			<symbol id="chevron-icon" viewBox="0 0 24 24">
+				<svg>
+				<path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
 				</svg>
 			</symbol>
 		</svg>

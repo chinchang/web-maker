@@ -1627,7 +1627,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		});
 		$('.js-console__header').addEventListener('mouseup', () => {
 			window.removeEventListener('mousemove', onConsoleHeaderDrag);
-			$('#demo-frame').classList.add('pointer-none');
+			$('#demo-frame').classList.remove('pointer-none');
 		});
 
 		chrome.storage.local.get({

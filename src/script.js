@@ -12,7 +12,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 
 /* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.5.0';
+	var version = '2.6.0';
 
 	if (window.DEBUG) {
 		window.scope = scope;

@@ -1434,7 +1434,10 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 				/* eslint-disable camelcase */
 				html_pre_processor: modes[htmlMode].codepenVal,
 				css_pre_processor: modes[cssMode].codepenVal,
-				js_pre_processor: modes[jsMode].codepenVal
+				js_pre_processor: modes[jsMode].codepenVal,
+
+				css_external: externalCssTextarea.value.split('\n').join(';'),
+				js_external: externalJsTextarea.value.split('\n').join(';')
 
 				/* eslint-enable camelcase */
 			};

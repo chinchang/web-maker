@@ -1440,9 +1440,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			if (!currentItem.title.match(/Untitled\s\d\d*-\d/)) {
 				json.title = currentItem.title;
 			}
-			json = JSON.stringify(json)
-				.replace(/"/g, "&​quot;")
-				.replace(/'/g, "&apos;")
+			json = JSON.stringify(json);
 			codepenForm.querySelector('input').value = json;
 			codepenForm.submit();
 			trackEvent('ui', 'openInCodepen');

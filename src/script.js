@@ -1320,7 +1320,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		consoleEl.classList.toggle('is-minimized');
 		trackEvent('ui', 'consoleToggle');
 	};
-	scope.clearConsole = function () {
+	// `clearConsole` is on window because it gets called from inside iframe also.
+	scope.clearConsole = window.clearConsole = function () {
 		scope.consoleCm.setValue('');
 		logCount = 0;
 		logCountEl.textContent = logCount;

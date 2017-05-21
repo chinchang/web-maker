@@ -50,6 +50,10 @@
 	}
 
 	function clear() {
+		if (_options.noUi) {
+			window.parent.clearConsole();
+			return;
+		}
 		logEl.innerHTML = '';
 	}
 

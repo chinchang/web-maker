@@ -13,7 +13,8 @@ window.jsLibs = [
 window.cssLibs = [
 	{ url: 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', label: 'Bootstrap', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/foundation.min.css', label: 'Foundation', type: 'css' },
-	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css', label: 'Animate.css', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.5.0/hint.min.css', label: 'Hint.css', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.4/css/uikit.min.css', label: 'UIkit', type: 'css' },
+	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css', label: 'Animate.css', type: 'css' },
+	{ url: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', label: 'FontAwesome', type: 'css' },
 ]

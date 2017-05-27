@@ -1527,7 +1527,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			// Ctrl/⌘ + Shift + 5
 			if (!prefs.autoPreview && (event.ctrlKey || event.metaKey) && event.shiftKey && (event.keyCode === 53)) {
 				event.preventDefault();
-				scope.setPreviewContent();
+				scope.setPreviewContent(true);
 				trackEvent('ui', 'previewKeyboardShortcut');
 			}
 			// Ctrl/⌘ + O

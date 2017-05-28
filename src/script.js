@@ -21,7 +21,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 	var HtmlModes = {
 		HTML: 'html',
 		MARKDOWN: 'markdown',
-		JADE: 'jade' // unsafe eval is put in manifest for this file
+		JADE: 'jade', // unsafe eval is put in manifest for this file
+		HAML: 'haml'
 	};
 	var CssModes = {
 		CSS: 'css',
@@ -41,6 +42,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 	modes[HtmlModes.HTML] = { label: 'HTML', cmMode: 'htmlmixed', codepenVal: 'none' };
 	modes[HtmlModes.MARKDOWN] = { label: 'Markdown', cmMode: 'markdown', codepenVal: 'markdown' };
 	modes[HtmlModes.JADE] = { label: 'Pug', cmMode: 'pug', codepenVal: 'pug' };
+	modes[HtmlModes.HAML] = { label: 'Haml', cmMode: 'haml', codepenVal: 'haml' };
 	modes[JsModes.JS] = { label: 'JS', cmMode: 'javascript', codepenVal: 'none' };
 	modes[JsModes.COFFEESCRIPT] = { label: 'CoffeeScript', cmMode: 'coffeescript', codepenVal: 'coffeescript' };
 	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'jsx', codepenVal: 'babel' };
@@ -520,6 +522,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			loadJS('lib/jade.js').then(setLoadedFlag);
 		} else if (mode === HtmlModes.MARKDOWN) {
 			loadJS('lib/marked.js').then(setLoadedFlag);
+		} else if (mode === HtmlModes.HAML) {
+			loadJS('lib/haml.min.js').then(setLoadedFlag);
 		} else if (mode === CssModes.LESS) {
 			loadJS('lib/less.min.js').then(setLoadedFlag);
 		} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
@@ -578,6 +582,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			d.resolve(marked ? marked(code) : code);
 		} else if (htmlMode === HtmlModes.JADE) {
 			d.resolve(window.jade ? jade.render(code) : code);
+		} else if (htmlMode === HtmlModes.HAML) {
+			d.resolve(window.haml ? haml.compileHaml({source: code})() : code);
 		}
 
 		return d.promise;

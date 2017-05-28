@@ -315,7 +315,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			});
 			items.forEach(function (item) {
 				html += '<div class="js-saved-item-tile saved-item-tile" data-item-id="' + item.id + '">'
-					+ '<a class="js-saved-item-tile__close-btn  saved-item-tile__close-btn hint--left" aria-label="Remove">X</a>'
+					+ '<div class="saved-item-tile__btns"><a class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium" aria-label="Creates a duplicate of this creation (Ctrl/⌘ + F)">Fork<span class="show-when-selected">(Ctrl/⌘ + F)</span></a><a class="js-saved-item-tile__remove-btn  saved-item-tile__btn hint--left" aria-label="Remove">X</a></div>'
 					+ '<h3 class="saved-item-tile__title">' + item.title + '</h3><span class="saved-item-tile__meta">Last updated: ' + utils.getHumanDate(item.updatedOn) + '</span></div>';
 			});
 			savedItemCountEl.textContent = '(' + items.length + ')';
@@ -395,6 +395,17 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		// Reset unsaved count, in UI also.
 		unsavedEditCount = 0;
 		saveBtn.classList.remove('is-marked');
+	}
+	// Creates a new item with passed item's contents
+	function forkItem(sourceItem) {
+		const fork = JSON.parse(JSON.stringify(sourceItem));
+		delete fork.id;
+		fork.title = '(Forked) ' + sourceItem.title;
+		fork.updatedOn = Date.now();
+		setCurrentItem(fork);
+		refreshEditor();
+		alertsService.add(`"${sourceItem.title}" was forked`);
+		trackEvent('fn', 'itemForked');
 	}
 	function createNewItem() {
 		var d = new Date();
@@ -1458,14 +1469,20 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 
 		utils.onButtonClick(savedItemsPaneCloseBtn, toggleSavedItemsPane);
 		utils.onButtonClick(savedItemsPane, function (e) {
+			// TODO: warn about unsaved changes in current item
 			if (e.target.classList.contains('js-saved-item-tile')) {
 				setTimeout(function () {
 					openItem(e.target.dataset.itemId);
 				}, 350);
 				toggleSavedItemsPane();
 			}
-			if (e.target.classList.contains('js-saved-item-tile__close-btn')) {
-				removeItem(e.target.parentElement.dataset.itemId);
+			if (e.target.classList.contains('js-saved-item-tile__remove-btn')) {
+				removeItem(e.target.parentElement.parentElement.dataset.itemId);
+			} else if (e.target.classList.contains('js-saved-item-tile__fork-btn')) {
+				toggleSavedItemsPane();
+				setTimeout(function () {
+					forkItem(savedItems[e.target.parentElement.parentElement.dataset.itemId]);
+				}, 350);
 			}
 		});
 
@@ -1518,6 +1535,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		// Editor keyboard shortucuts
 		window.addEventListener('keydown', function (event) {
 			var selectedItemElement;
+			// TODO: refactor common listener code
 			// Ctrl/⌘ + S
 			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)) {
 				event.preventDefault();
@@ -1571,6 +1589,18 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 					openItem(selectedItemElement.dataset.itemId);
 				}, 350);
 				toggleSavedItemsPane();
+			}
+			console.log(event.keyCode)
+
+			// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
+			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 70)) {
+				event.preventDefault();
+				selectedItemElement = $('.js-saved-item-tile.selected');
+				setTimeout(function () {
+					forkItem(savedItems[selectedItemElement.dataset.itemId]);
+				}, 350);
+				toggleSavedItemsPane();
+				trackEvent('ui', 'forkKeyboardShortcut');
 			}
 		});
 

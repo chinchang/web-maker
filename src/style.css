@@ -101,6 +101,10 @@ select, input[type="text"], input[type="number"],  textarea {
 	content: '★';
 	color: #eee333;
 }
+/* used to show keyboard specific content when something is keyboard focused */
+.show-when-selected { display: none; }
+.selected .show-when-selected { display: inline-block; }
+
 .main-container {
 	position: absolute;
 	left: 0; right: 0;
@@ -456,7 +460,7 @@ li.CodeMirror-hint-active {
 	right: 0;
 	top: 0;
 	bottom: 0;
-	width: 400px;
+	width: 450px;
 	padding: 20px 30px;
 	z-index: 6;
 	background-color: var(--color-sidebar);
@@ -535,17 +539,29 @@ li.CodeMirror-hint-active {
 .saved-item-tile.selected {
 	background: rgba(255,255,255,0.1);
 }
-.saved-item-tile__close-btn {
-	padding: 7px 10px;
+.saved-item-tile__btns {
 	position: absolute;
-	right: 8px;
 	top: 6px;
 	z-index: 1;
-	color: rgba(255,255,255,0.3);
-	border-radius: 50%;
-	background: rgba(255,255,255,0.05);
+	right: 8px;
+	opacity: 0;
+	pointer-events: none;
+	transition: 0.25s ease;
 }
-.saved-item-tile__close-btn:hover {
+.saved-item-tile.selected .saved-item-tile__btns,
+.saved-item-tile:hover .saved-item-tile__btns {
+	opacity: 1;
+	pointer-events: auto;
+}
+.saved-item-tile__btn {
+	padding: 7px 10px;
+	color: rgba(255,255,255,0.3);
+	border-radius: 20px;
+	margin-left: 2px;
+	background: rgba(255,255,255,0.05);
+	text-transform: uppercase;
+}
+.saved-item-tile__btn:hover {
 	background: rgba(255,255,255,0.8);
 	color: #555;
 }

@@ -702,9 +702,14 @@ li.CodeMirror-hint-active {
 	position: fixed;
 	will-change: transform;
 	left: 50%;
-	top: 0;
+	top: -3px;
 	padding: 10px;
-	background: var(--color-sidebar);
+	background: white;
+	border: 1px solid #eee;
+	color: #333;
+	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+	/*color: #333;*/
+	font-size: 1rem;
 	border-radius: 3px;
 	z-index: 6;
 	transform: translateY(-100%);

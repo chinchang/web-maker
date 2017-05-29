@@ -5,7 +5,7 @@ addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notifica
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
-runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
+runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate
 */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
@@ -1235,6 +1235,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		$('[data-setting=fontSize]').value = prefs.fontSize || 16;
 		$('[data-setting=refreshOnResize]').checked = prefs.refreshOnResize;
 		$('[data-setting=autoPreview]').checked = prefs.autoPreview;
+		$('[data-setting=editorFont]').value = prefs.editorFont;
 	}
 
 	/**
@@ -1266,18 +1267,19 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		// Update indentation count when slider is updated
 		indentationSizeValueEl.textContent = $('[data-setting=indentSize]').value;
 
+		// Replace correct css file in LINK tags's href
+		editorThemeLinkTag.href = '/lib/codemirror/theme/' + prefs.editorTheme + '.css';
+		fontStyleTag.textContent = fontStyleTemplate.textContent.replace(/fontname/g, prefs.editorFont || 'FiraCode');
+
 		['html', 'js', 'css'].forEach((type) => {
 			scope.cm[type].setOption(
 				'indentWithTabs',
 				$('[data-setting=indentWith]:checked').value !== 'spaces'
 			);
-
 			scope.cm[type].setOption('blastCode', $('[data-setting=isCodeBlastOn]').checked ? { effect: 2, shake: false } : false);
 			scope.cm[type].setOption('indentUnit', +$('[data-setting=indentSize]').value);
 			scope.cm[type].setOption('tabSize', +$('[data-setting=indentSize]').value);
 			scope.cm[type].setOption('theme', $('[data-setting=editorTheme]').value);
-			// Replace correct css file in LINK tags's href
-			editorThemeLinkTag.href = '/lib/codemirror/theme/' + prefs.editorTheme + '.css';
 
 			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]:checked').value);
 			scope.cm[type].refresh();
@@ -1590,7 +1592,6 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 				}, 350);
 				toggleSavedItemsPane();
 			}
-			console.log(event.keyCode)
 
 			// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
 			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 70)) {
@@ -1690,7 +1691,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			keymap: 'sublime',
 			fontSize: 16,
 			refreshOnResize: false,
-			autoPreview: true
+			autoPreview: true,
+			editorFont: 'FiraCode'
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
 				unsavedEditCount = 0;
@@ -1721,6 +1723,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			prefs.fontSize = result.fontSize;
 			prefs.refreshOnResize = result.refreshOnResize;
 			prefs.autoPreview = result.autoPreview;
+			prefs.editorFont = result.editorFont;
 
 			updateSettingsInUi();
 			scope.updateSetting();

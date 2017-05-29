@@ -11,6 +11,30 @@
 		<link rel="stylesheet" href="lib/hint.min.css">
 		<link rel="stylesheet" href="lib/inlet.css">
 		<link rel="stylesheet" href="style.css">
+		<style id="fontStyleTemplate" type="template">
+			@font-face {
+				font-family: 'fontname';
+				font-style: normal;
+				font-weight: 400;
+				src: url(../fontname.ttf) format('truetype');
+				unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+			}
+			.Codemirror pre {
+				font-family: 'fontname', monospace;
+			}
+		</style>
+		<style type="text/css" id="fontStyleTag">
+			@font-face {
+				font-family: 'FiraCode';
+				font-style: normal;
+				font-weight: 400;
+				src: url(../FiraCode.ttf) format('truetype');
+				unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+			}
+			.Codemirror pre {
+				font-family: 'FiraCode', monospace;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -381,6 +405,15 @@
 					<label class="line">
 						Theme
 						<select style="flex:1;margin:0 20px" data-setting="editorTheme" d-change="updateSetting"></select>
+					</label>
+					<label class="line">
+						Font
+						<select style="flex:1;margin:0 20px" data-setting="editorFont" d-change="updateSetting">
+							<option value="FiraCode">Fira Code</option>
+							<option value="Inconsolata">Inconsolata</option>
+							<option value="Monoid">Monoid</option>
+							<option value="FixedSys">FixedSys</option>
+						</select>
 					</label>
 					<label class="line">
 						Font Size <input type="number" value="16" data-setting="fontSize" d-change="updateSetting"> px

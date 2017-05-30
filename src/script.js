@@ -398,6 +398,10 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 	}
 	// Creates a new item with passed item's contents
 	function forkItem(sourceItem) {
+		if (unsavedEditCount) {
+			var shouldDiscard = confirm('You have unsaved changes in your current work. Do you want to discard unsaved changes and continue?');
+			if (!shouldDiscard) { return; }
+		}
 		const fork = JSON.parse(JSON.stringify(sourceItem));
 		delete fork.id;
 		fork.title = '(Forked) ' + sourceItem.title;
@@ -1594,7 +1598,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 			}
 
 			// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
-			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 70)) {
+			if (isSavedItemsPaneOpen && (event.ctrlKey || event.metaKey) && (event.keyCode === 70)) {
 				event.preventDefault();
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				setTimeout(function () {

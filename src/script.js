@@ -772,6 +772,13 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 		function errorHandler() {
 			utils.log(arguments);
 			trackEvent('fn', 'error', 'writeFile');
+			// When there are too many write errors, show a message.
+			writeFile.errorCount = (writeFile.errorCount || 0) + 1;
+			if (writeFile.errorCount === 10) {
+				setTimeout(function () {
+					alert('Oops! Seems like your preview isn\'t updating. Please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart Chrome browser\n - Reinstall Web Maker (don\'t forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp.');
+				}, 1000)
+			}
 		}
 
 		// utils.log('writing file ', name);

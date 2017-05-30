@@ -5,7 +5,7 @@ addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notifica
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
-runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
+runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate
 */
 /* eslint-disable no-extra-semi */
 ;(function (alertsService) {
@@ -315,7 +315,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			});
 			items.forEach(function (item) {
 				html += '<div class="js-saved-item-tile saved-item-tile" data-item-id="' + item.id + '">'
-					+ '<a class="js-saved-item-tile__close-btn  saved-item-tile__close-btn hint--left" aria-label="Remove">X</a>'
+					+ '<div class="saved-item-tile__btns"><a class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium" aria-label="Creates a duplicate of this creation (Ctrl/⌘ + F)">Fork<span class="show-when-selected">(Ctrl/⌘ + F)</span></a><a class="js-saved-item-tile__remove-btn  saved-item-tile__btn hint--left" aria-label="Remove">X</a></div>'
 					+ '<h3 class="saved-item-tile__title">' + item.title + '</h3><span class="saved-item-tile__meta">Last updated: ' + utils.getHumanDate(item.updatedOn) + '</span></div>';
 			});
 			savedItemCountEl.textContent = '(' + items.length + ')';
@@ -395,6 +395,21 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		// Reset unsaved count, in UI also.
 		unsavedEditCount = 0;
 		saveBtn.classList.remove('is-marked');
+	}
+	// Creates a new item with passed item's contents
+	function forkItem(sourceItem) {
+		if (unsavedEditCount) {
+			var shouldDiscard = confirm('You have unsaved changes in your current work. Do you want to discard unsaved changes and continue?');
+			if (!shouldDiscard) { return; }
+		}
+		const fork = JSON.parse(JSON.stringify(sourceItem));
+		delete fork.id;
+		fork.title = '(Forked) ' + sourceItem.title;
+		fork.updatedOn = Date.now();
+		setCurrentItem(fork);
+		refreshEditor();
+		alertsService.add(`"${sourceItem.title}" was forked`);
+		trackEvent('fn', 'itemForked');
 	}
 	function createNewItem() {
 		var d = new Date();
@@ -757,6 +772,14 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		function errorHandler() {
 			utils.log(arguments);
 			trackEvent('fn', 'error', 'writeFile');
+			// When there are too many write errors, show a message.
+			writeFile.errorCount = (writeFile.errorCount || 0) + 1;
+			if (writeFile.errorCount === 10) {
+				setTimeout(function () {
+					alert('Oops! Seems like your preview isn\'t updating. Please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart Chrome browser\n - Reinstall Web Maker (don\'t forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp.');
+					trackEvent('ui', 'writeFileMessageSeen');
+				}, 1000)
+			}
 		}
 
 		// utils.log('writing file ', name);
@@ -1224,6 +1247,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		$('[data-setting=fontSize]').value = prefs.fontSize || 16;
 		$('[data-setting=refreshOnResize]').checked = prefs.refreshOnResize;
 		$('[data-setting=autoPreview]').checked = prefs.autoPreview;
+		$('[data-setting=editorFont]').value = prefs.editorFont;
 	}
 
 	/**
@@ -1255,18 +1279,19 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		// Update indentation count when slider is updated
 		indentationSizeValueEl.textContent = $('[data-setting=indentSize]').value;
 
+		// Replace correct css file in LINK tags's href
+		editorThemeLinkTag.href = '/lib/codemirror/theme/' + prefs.editorTheme + '.css';
+		fontStyleTag.textContent = fontStyleTemplate.textContent.replace(/fontname/g, prefs.editorFont || 'FiraCode');
+
 		['html', 'js', 'css'].forEach((type) => {
 			scope.cm[type].setOption(
 				'indentWithTabs',
 				$('[data-setting=indentWith]:checked').value !== 'spaces'
 			);
-
 			scope.cm[type].setOption('blastCode', $('[data-setting=isCodeBlastOn]').checked ? { effect: 2, shake: false } : false);
 			scope.cm[type].setOption('indentUnit', +$('[data-setting=indentSize]').value);
 			scope.cm[type].setOption('tabSize', +$('[data-setting=indentSize]').value);
 			scope.cm[type].setOption('theme', $('[data-setting=editorTheme]').value);
-			// Replace correct css file in LINK tags's href
-			editorThemeLinkTag.href = '/lib/codemirror/theme/' + prefs.editorTheme + '.css';
 
 			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]:checked').value);
 			scope.cm[type].refresh();
@@ -1458,14 +1483,20 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 
 		utils.onButtonClick(savedItemsPaneCloseBtn, toggleSavedItemsPane);
 		utils.onButtonClick(savedItemsPane, function (e) {
+			// TODO: warn about unsaved changes in current item
 			if (e.target.classList.contains('js-saved-item-tile')) {
 				setTimeout(function () {
 					openItem(e.target.dataset.itemId);
 				}, 350);
 				toggleSavedItemsPane();
 			}
-			if (e.target.classList.contains('js-saved-item-tile__close-btn')) {
-				removeItem(e.target.parentElement.dataset.itemId);
+			if (e.target.classList.contains('js-saved-item-tile__remove-btn')) {
+				removeItem(e.target.parentElement.parentElement.dataset.itemId);
+			} else if (e.target.classList.contains('js-saved-item-tile__fork-btn')) {
+				toggleSavedItemsPane();
+				setTimeout(function () {
+					forkItem(savedItems[e.target.parentElement.parentElement.dataset.itemId]);
+				}, 350);
 			}
 		});
 
@@ -1518,6 +1549,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 		// Editor keyboard shortucuts
 		window.addEventListener('keydown', function (event) {
 			var selectedItemElement;
+			// TODO: refactor common listener code
 			// Ctrl/⌘ + S
 			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)) {
 				event.preventDefault();
@@ -1527,7 +1559,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			// Ctrl/⌘ + Shift + 5
 			if (!prefs.autoPreview && (event.ctrlKey || event.metaKey) && event.shiftKey && (event.keyCode === 53)) {
 				event.preventDefault();
-				scope.setPreviewContent();
+				scope.setPreviewContent(true);
 				trackEvent('ui', 'previewKeyboardShortcut');
 			}
 			// Ctrl/⌘ + O
@@ -1571,6 +1603,17 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 					openItem(selectedItemElement.dataset.itemId);
 				}, 350);
 				toggleSavedItemsPane();
+			}
+
+			// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
+			if (isSavedItemsPaneOpen && (event.ctrlKey || event.metaKey) && (event.keyCode === 70)) {
+				event.preventDefault();
+				selectedItemElement = $('.js-saved-item-tile.selected');
+				setTimeout(function () {
+					forkItem(savedItems[selectedItemElement.dataset.itemId]);
+				}, 350);
+				toggleSavedItemsPane();
+				trackEvent('ui', 'forkKeyboardShortcut');
 			}
 		});
 
@@ -1660,7 +1703,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			keymap: 'sublime',
 			fontSize: 16,
 			refreshOnResize: false,
-			autoPreview: true
+			autoPreview: true,
+			editorFont: 'FiraCode'
 		}, function syncGetCallback(result) {
 			if (result.preserveLastCode && lastCode) {
 				unsavedEditCount = 0;
@@ -1691,6 +1735,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl
 			prefs.fontSize = result.fontSize;
 			prefs.refreshOnResize = result.refreshOnResize;
 			prefs.autoPreview = result.autoPreview;
+			prefs.editorFont = result.editorFont;
 
 			updateSettingsInUi();
 			scope.updateSetting();

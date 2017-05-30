@@ -1,10 +1,3 @@
-@font-face {
-	font-family: 'Inconsolata';
-	font-style: normal;
-	font-weight: 400;
-	src: local('Inconsolata'), url(../Inconsolata-Regular.ttf) format('truetype');
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
 :root {
 	--color-bg: #252637;
 	--color-sidebar: #3A2B63;
@@ -17,7 +10,7 @@ body {
 	background: var(--color-bg);
 	color: rgba(255,255,255,0.9);
 	min-height: 100vh;
-	font-family: Helvetica, arial;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
 }
 h1 {
 	margin-top: 0;
@@ -101,6 +94,10 @@ select, input[type="text"], input[type="number"],  textarea {
 	content: '★';
 	color: #eee333;
 }
+/* used to show keyboard specific content when something is keyboard focused */
+.show-when-selected { display: none; }
+.selected .show-when-selected { display: inline-block; }
+
 .main-container {
 	position: absolute;
 	left: 0; right: 0;
@@ -236,7 +233,7 @@ select, input[type="text"], input[type="number"],  textarea {
 	height: calc(100%);
 }
 .Codemirror pre {
-	font-family: 'Inconsolata', monospace;
+	font-variant-ligatures: contextual;
 }
 .cm-s-monokai .CodeMirror-linenumber {
 	color:rgba(255,255,255,0.2);
@@ -451,12 +448,19 @@ li.CodeMirror-hint-active {
 	background: rgba(0,0,0,0.6);
 	transition: all 0.3s;
 }
+/* Make settings modal smaller */
+@media screen and (min-width: 600px) {
+	.modal--settings {
+		width: 600px;
+		margin-left: -300px;
+	}
+}
 .saved-items-pane {
 	position: fixed;
 	right: 0;
 	top: 0;
 	bottom: 0;
-	width: 400px;
+	width: 450px;
 	padding: 20px 30px;
 	z-index: 6;
 	background-color: var(--color-sidebar);
@@ -535,17 +539,29 @@ li.CodeMirror-hint-active {
 .saved-item-tile.selected {
 	background: rgba(255,255,255,0.1);
 }
-.saved-item-tile__close-btn {
-	padding: 7px 10px;
+.saved-item-tile__btns {
 	position: absolute;
-	right: 8px;
 	top: 6px;
 	z-index: 1;
-	color: rgba(255,255,255,0.3);
-	border-radius: 50%;
-	background: rgba(255,255,255,0.05);
+	right: 8px;
+	opacity: 0;
+	pointer-events: none;
+	transition: 0.25s ease;
 }
-.saved-item-tile__close-btn:hover {
+.saved-item-tile.selected .saved-item-tile__btns,
+.saved-item-tile:hover .saved-item-tile__btns {
+	opacity: 1;
+	pointer-events: auto;
+}
+.saved-item-tile__btn {
+	padding: 7px 10px;
+	color: rgba(255,255,255,0.3);
+	border-radius: 20px;
+	margin-left: 2px;
+	background: rgba(255,255,255,0.05);
+	text-transform: uppercase;
+}
+.saved-item-tile__btn:hover {
 	background: rgba(255,255,255,0.8);
 	color: #555;
 }
@@ -693,16 +709,21 @@ li.CodeMirror-hint-active {
 	position: fixed;
 	will-change: transform;
 	left: 50%;
-	top: 0;
+	top: -5px;
 	padding: 10px;
-	background: var(--color-sidebar);
+	background: white;
+	border: 1px solid #eee;
+	color: #333;
+	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+	/*color: #333;*/
+	font-size: 1rem;
 	border-radius: 3px;
 	z-index: 6;
-	transform: translateY(-100%);
+	transform: translateX(-50%) translateY(-100%);
 	transition: 0.3s ease;
 }
 .alerts-container.is-active {
-	transform: translateY(0);
+	transform: translateX(-50%) translateY(0);
 }
 
 .error-gutter {

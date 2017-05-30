@@ -448,6 +448,13 @@ li.CodeMirror-hint-active {
 	background: rgba(0,0,0,0.6);
 	transition: all 0.3s;
 }
+/* Make settings modal smaller */
+@media screen and (min-width: 600px) {
+	.modal--settings {
+		width: 600px;
+		margin-left: -300px;
+	}
+}
 .saved-items-pane {
 	position: fixed;
 	right: 0;

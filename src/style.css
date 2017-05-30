@@ -702,7 +702,7 @@ li.CodeMirror-hint-active {
 	position: fixed;
 	will-change: transform;
 	left: 50%;
-	top: -3px;
+	top: -5px;
 	padding: 10px;
 	background: white;
 	border: 1px solid #eee;
@@ -712,11 +712,11 @@ li.CodeMirror-hint-active {
 	font-size: 1rem;
 	border-radius: 3px;
 	z-index: 6;
-	transform: translateY(-100%);
+	transform: translateX(-50%) translateY(-100%);
 	transition: 0.3s ease;
 }
 .alerts-container.is-active {
-	transform: translateY(0);
+	transform: translateX(-50%) translateY(0);
 }
 
 .error-gutter {

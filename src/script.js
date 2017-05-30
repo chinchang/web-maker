@@ -777,6 +777,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 			if (writeFile.errorCount === 10) {
 				setTimeout(function () {
 					alert('Oops! Seems like your preview isn\'t updating. Please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart Chrome browser\n - Reinstall Web Maker (don\'t forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp.');
+					trackEvent('ui', 'writeFileMessageSeen');
 				}, 1000)
 			}
 		}

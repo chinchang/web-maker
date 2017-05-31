@@ -6,7 +6,7 @@ window.jsLibs = [
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.min.js', label: 'React', type: 'js' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.min.js', label: 'React DOM', type: 'js' },
 	{ url: 'https://unpkg.com/vue@2.3.3/dist/vue.min.js', label: 'Vue.js', type: 'js' },
-	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r85/three.min.js', label: 'Three.js', type: 'js' },
+	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/three.js/85/three.min.js', label: 'Three.js', type: 'js' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/d3/4.9.1/d3.min.js', label: 'D3', type: 'js' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js', label: 'Underscore', type: 'js' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js', label: 'Greensock TweenMax', type: 'js' },

@@ -1,5 +1,7 @@
 window.jsLibs = [
 	{ url: 'https://code.jquery.com/jquery-3.2.1.min.js', label: 'jQuery', type: 'js' },
+	{ url: 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', label: 'Bootstrap 3', type: 'js'},
+	{ url: 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js', label: 'Bootstrap 4α', type: 'js'},
 	{ url: 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js', label: 'Angular', type: 'js' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.min.js', label: 'React', type: 'js' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.min.js', label: 'React DOM', type: 'js' },
@@ -13,6 +15,7 @@ window.jsLibs = [
 ]
 window.cssLibs = [
 	{ url: 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', label: 'Bootstrap 3', type: 'css' },
+	{ url: 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css', label: 'Bootstrap 4α', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/foundation.min.css', label: 'Foundation', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.5.0/hint.min.css', label: 'Hint.css', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.4/css/uikit.min.css', label: 'UIkit 2', type: 'css' },

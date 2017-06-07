@@ -16,6 +16,7 @@ window.jsLibs = [
 window.cssLibs = [
 	{ url: 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', label: 'Bootstrap 3', type: 'css' },
 	{ url: 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css', label: 'Bootstrap 4α', type: 'css' },
+	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.2/css/bulma.min.css', label: 'Bulma', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/foundation.min.css', label: 'Foundation', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.5.0/hint.min.css', label: 'Hint.css', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.4/css/uikit.min.css', label: 'UIkit 2', type: 'css' },

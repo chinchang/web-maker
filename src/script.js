@@ -1651,9 +1651,12 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 		addLibrarySelect.children[2].innerHTML = libOptions;
 		addLibrarySelect.addEventListener('change', function onSelectChange(e) {
 			var target = e.target;
+			if (!target.value) { return; }
 			$('#js-external-' + target.selectedOptions[0].dataset.type).value += '\n' + target.value;
 			trackEvent('ui', 'addLibrarySelect', target.selectedOptions[0].label);
 			onExternalLibChange();
+			// Reset the select to the default value
+			target.value = '';
 		});
 		externalJsTextarea.addEventListener('blur', onExternalLibChange);
 		externalCssTextarea.addEventListener('blur', onExternalLibChange);

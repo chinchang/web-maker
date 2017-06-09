@@ -975,7 +975,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 			});
 		} else {
 			cm.on('inputRead', function onChange(editor, input) {
-				if (input.text[0] === ';' || input.text[0] === ' ') { return; }
+				if (input.origin !== '+input' || input.text[0] === ';' || input.text[0] === ' ') { return; }
 				CodeMirror.commands.autocomplete(cm, null, { completeSingle: false })
 			});
 		}

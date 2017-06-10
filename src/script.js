@@ -551,6 +551,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 	function updateHtmlMode(value) {
 		htmlMode = value;
 		htmlModelLabel.textContent = modes[value].label;
+		// FIXME - use a better selector for the mode selectbox
+		htmlModelLabel.parentElement.querySelector('select').value = value;
 		scope.cm.html.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.html, modes[value].cmPath || modes[value].cmMode);
 		return handleModeRequirements(value);
@@ -558,6 +560,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 	function updateCssMode(value) {
 		cssMode = value;
 		cssModelLabel.textContent = modes[value].label;
+		// FIXME - use a better selector for the mode selectbox
+		cssModelLabel.parentElement.querySelector('select').value = value;
 		scope.cm.css.setOption('mode', modes[value].cmMode);
 		scope.cm.css.setOption('readOnly', modes[value].cmDisable);
 		CodeMirror.autoLoadMode(scope.cm.css, modes[value].cmPath || modes[value].cmMode);
@@ -566,6 +570,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 	function updateJsMode(value) {
 		jsMode = value;
 		jsModelLabel.textContent = modes[value].label;
+		// FIXME - use a better selector for the mode selectbox
+		jsModelLabel.parentElement.querySelector('select').value = value;
 		scope.cm.js.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(scope.cm.js, modes[value].cmPath || modes[value].cmMode);
 		return handleModeRequirements(value);
@@ -1508,11 +1514,10 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 		});
 
 		// Attach listeners on mode change menu items
-		var modeItems = $all('.js-modes-menu a');
-		modeItems.forEach(function (item) {
-			item.addEventListener('click', function (e) {
-				var mode = e.currentTarget.dataset.mode;
-				var type = e.currentTarget.dataset.type;
+		$all('.js-mode-select').forEach((selectBox) => {
+			selectBox.addEventListener('change', function (e) {
+				var mode = e.target.value;
+				var type = e.target.dataset.type;
 				var currentMode = type === 'html' ? htmlMode : (type === 'css' ? cssMode : jsMode);
 				if (currentMode !== mode) {
 					if (type === 'html') {

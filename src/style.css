@@ -10,6 +10,7 @@ body {
 	background: var(--color-bg);
 	color: rgba(255,255,255,0.9);
 	min-height: 100vh;
+	font-size: 87.5%;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
 }
 h1 {
@@ -63,6 +64,14 @@ a > svg {
 select, input[type="text"], input[type="number"],  textarea {
 	padding: 3px 5px;
 	font-size: inherit;
+}
+.hidden-select {
+	opacity: 0;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
 }
 .btn {
 	display: inline-block;
@@ -188,7 +197,7 @@ select, input[type="text"], input[type="number"],  textarea {
 .code-wrap__header-label {
 	/*transform: translate(0px) scale(1.2);*/
 	display: inline-block;
-	font-size: 1.3em;
+	font-size: 1.1em;
 	opacity: 0.5;
 	/*transform-origin: left center;*/
 }
@@ -287,6 +296,8 @@ li.CodeMirror-hint-active {
 	z-index: 1;
 }
 .main-header {
+	display: flex;
+	flex-wrap: nowrap;
 	border: 0;
 	border-bottom: 1px solid rgba(255,255,255,0.14);
 }
@@ -383,7 +394,7 @@ li.CodeMirror-hint-active {
 	background: none;
 	border: 0;
 	color: rgba(255,255,255,0.6);
-	width: calc(100vw - 440px);
+	flex: 1;
 }
 .search-input {
 	background: rgba(255, 255, 255, 0.1);
@@ -419,7 +430,7 @@ li.CodeMirror-hint-active {
 	margin: 0 auto;
 	opacity: 0;
 	padding: 2em;
-	font-size: 1.3em;
+	font-size: 1.1em;
 	line-height: 1.4;
 	max-height: 90vh;
 	box-sizing: border-box;
@@ -567,7 +578,7 @@ li.CodeMirror-hint-active {
 }
 .saved-item-tile__title {
 	pointer-events: none;
-	font-size: 1.6em;
+	font-size: 1.4em;
 	margin: 0 0 1em 0;
 	opacity: 0.8;
 }

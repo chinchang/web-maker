@@ -40,7 +40,8 @@
 	<body>
 		<div class="main-container">
 			<div class="main-header">
-				<div class="main-header__btn-wrap  fr flex  flex-v-center">
+				<input type="text" id="js-title-input" title="Click to edit" class="item-title-input" value="Untitled Work">
+				<div class="main-header__btn-wrap  flex  flex-v-center">
 					<a id="runBtn" class="hide flex flex-v-center hint--rounded hint--bottom-left" aria-label="Run preview (Ctrl/⌘ + Shift + 5)" d-click="setPreviewContent">
 						<svg style="width: 14px; height: 14px;">
 						  <use xlink:href="#play-icon"></use>
@@ -66,20 +67,19 @@
 						</svg>Open
 					</a>
 				</div>
-				<input type="text" id="js-title-input" title="Click to edit" class="item-title-input" value="Untitled Work">
 			</div>
 			<div class="content-wrap  flex  flex-grow">
 				<div class="code-side" id="js-code-side">
 					<div data-code-wrap-id="0" id="js-html-code" data-type="html" class="code-wrap">
 						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle code pane">
-							<div class="btn-group" dropdown title="Click to change">
+							<label class="btn-group" dropdow title="Click to change">
 								<span id="js-html-mode-label" class="code-wrap__header-label">HTML</span><span class="caret"></span>
-								<ul class="js-modes-menu  dropdown__menu">
-									<li><a data-type="html" data-mode="html">HTML</a></li>
-									<li><a data-type="html" data-mode="markdown">Markdown</a></li>
-									<li><a data-type="html" data-mode="jade">Pug</a></li>
-								</ul>
-							</div>
+								<select data-type="html" class="js-mode-select  hidden-select" name="">
+									<option value="html">HTML</option>
+									<option value="markdown">Markdown</option>
+									<option value="jade">Pug</option>
+								</select>
+							</label>
 							<div class="code-wrap__header-right-options">
 								<a class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle code pane">
 								</a>
@@ -88,17 +88,17 @@
 					</div>
 					<div data-code-wrap-id="1" id="js-css-code" data-type="css" class="code-wrap">
 						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle code pane">
-							<div class="btn-group" dropdown title="Click to change">
+							<label class="btn-group" title="Click to change">
 								<span id="js-css-mode-label" class="code-wrap__header-label">CSS</span><span class="caret"></span>
-								<ul class="js-modes-menu  dropdown__menu">
-									<li><a data-type="css" data-mode="css">CSS</a></li>
-									<li><a data-type="css" data-mode="scss">SCSS</a></li>
-									<li><a data-type="css" data-mode="sass">SASS</a></li>
-									<li><a data-type="css" data-mode="less">LESS</a></li>
-									<li><a data-type="css" data-mode="stylus">Stylus</a></li>
-									<li><a data-type="css" data-mode="acss">Atomic CSS</a></li>
-								</ul>
-							</div>
+								<select data-type="css" class="js-mode-select  hidden-select" name="">
+									<option value="css">CSS</option>
+									<option value="scss">SCSS</option>
+									<option value="sass">SASS</option>
+									<option value="less">LESS</option>
+									<option value="stylus">Stylus</option>
+									<option value="acss">Atomic CSS</option>
+								</select>
+							</label>
 							<div class="code-wrap__header-right-options">
 								<a class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle code pane">
 								</a>
@@ -107,15 +107,15 @@
 					</div>
 					<div data-code-wrap-id="2" id="js-js-code" data-type="js" class="code-wrap">
 						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle code pane">
-							<div class="btn-group" dropdown title="Click to change">
+							<label class="btn-group" title="Click to change">
 								<span id="js-js-mode-label" class="code-wrap__header-label">JS</span><span class="caret"></span>
-								<ul class="js-modes-menu  dropdown__menu">
-									<li><a data-type="js" data-mode="js">JS</a></li>
-									<li><a data-type="js" data-mode="coffee">CoffeeScript</a></li>
-									<li><a data-type="js" data-mode="es6">ES6 (Babel)</a></li>
-									<li><a data-type="js" data-mode="typescript">TypeScript</a></li>
-								</ul>
-							</div>
+								<select data-type="js" class="js-mode-select  hidden-select">
+									<option value="js">JS</option>
+									<option value="coffee">CoffeeScript</option>
+									<option value="es6">ES6 (Babel)</option>
+									<option value="typescript">TypeScript</option>
+								</select>
+							</label>
 							<div class="code-wrap__header-right-options">
 								<a class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle code pane">
 								</a>

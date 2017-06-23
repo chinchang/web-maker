@@ -1121,7 +1121,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 	function onImportFileChange(e) {
 		var file = e.target.files[0];
 		// if (!f.type.match('image.*')) {
-			// continue;
+		// 		continue;
 		// }
 
 		var reader = new FileReader();

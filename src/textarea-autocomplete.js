@@ -50,9 +50,9 @@
 		getList(input) {
 			var url = 'https://api.cdnjs.com/libraries?search=';
 			return fetch(url + input)
-			.then((response) => {
-				return response.json().then((json) => json.results);
-			});
+				.then((response) => {
+					return response.json().then((json) => json.results);
+				});
 		}
 		replaceCurrentLine(val) {
 			var lines = this.t.value.split('\n');

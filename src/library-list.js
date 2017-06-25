@@ -21,7 +21,7 @@ window.cssLibs = [
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/css/foundation.min.css', label: 'Foundation', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.5.0/hint.min.css', label: 'Hint.css', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.4/css/uikit.min.css', label: 'UIkit 2', type: 'css' },
-	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.25/css/uikit.min.css', label: 'UIkit3', type: 'css' },
+	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.25/css/uikit.min.css', label: 'UIkit 3', type: 'css' },
 	{ url: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css', label: 'Animate.css', type: 'css' },
 	{ url: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', label: 'FontAwesome', type: 'css' },
 ]

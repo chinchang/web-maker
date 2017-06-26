@@ -1411,14 +1411,11 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 		// Compile d-html directive
 		const dHtmlNodes = $all(`[d-html]`);
 		dHtmlNodes.forEach(function (el) {
-			console.log(Date.now())
 			fetch(el.getAttribute('d-html')).then((response) => {
 				// Stop further compilation because of future recursion by removing attribute.
 				el.removeAttribute('d-html');
 				response.text().then((html) => {
-					console.log(Date.now())
 					requestIdleCallback(() => {
-						console.log(Date.now())
 						el.innerHTML = html;
 					})
 				})

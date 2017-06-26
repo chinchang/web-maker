@@ -885,3 +885,44 @@ li.CodeMirror-hint-active {
 .console:not(.is-minimized) .code-wrap__header {
 	cursor: ns-resize;
 }
+
+/* Codemirror themes basic bg styles. This is here so that there is no big FOUC
+while the theme CSS file is loading */
+.cm-s-paraiso-dark.CodeMirror { background: #2f1e2e; color: #b9b6b0; }
+.cm-s-paraiso-dark .CodeMirror-gutters { background: #2f1e2e; border-right: 0px; }
+.cm-s-paraiso-dark .CodeMirror-activeline-background { background: #4D344A; }
+
+.cm-s-monokai.CodeMirror { background: #272822; color: #f8f8f2; }
+.cm-s-monokai .CodeMirror-gutters { background: #272822; border-right: 0px; }
+.cm-s-monokai .CodeMirror-activeline-background { background: #373831; }
+
+.cm-s-3024-day.CodeMirror { background: #f7f7f7; color: #3a3432; }
+.cm-s-3024-day .CodeMirror-gutters { background: #f7f7f7; border-right: 0px; }
+.cm-s-3024-day .CodeMirror-activeline-background { background: #e8f2ff; }
+
+.cm-s-material.CodeMirror {
+  background-color: #263238;
+  color: rgba(233, 237, 237, 1);
+}
+.cm-s-material .CodeMirror-gutters {
+  background: #263238;
+  color: rgb(83,127,126);
+}
+.cm-s-material .CodeMirror-activeline-background { background: rgba(0, 0, 0, 0); }
+
+.cm-s-dracula.CodeMirror, .cm-s-dracula .CodeMirror-gutters {
+  background-color: #282a36 !important;
+  color: #f8f8f2 !important;
+}
+.cm-s-dracula .CodeMirror-activeline-background { background: rgba(255,255,255,0.1); }
+
+.cm-s-blackboard.CodeMirror { background: #0C1021; color: #F8F8F8; }
+.cm-s-blackboard .CodeMirror-gutters { background: #0C1021; border-right: 0; }
+.cm-s-blackboard .CodeMirror-activeline-background { background: #3C3636; }
+
+.cm-s-midnight.CodeMirror {
+    background: #0F192A;
+    color: #D1EDFF;
+}
+.cm-s-midnight .CodeMirror-gutters { background: #0F192A; border-right: 1px solid; }
+.cm-s-midnight .CodeMirror-activeline-background { background: #253540; }

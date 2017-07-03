@@ -1,7 +1,7 @@
 (function() {
-	window.deferred = function () {
+	window.deferred = function() {
 		var d = {};
-		var promise = new Promise(function (resolve, reject) {
+		var promise = new Promise(function(resolve, reject) {
 			d.resolve = resolve;
 			d.reject = reject;
 		});

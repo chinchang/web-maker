@@ -1,5 +1,4 @@
-(function () {
-
+(function() {
 	var noticationContainerEL = $('#js-alerts-container');
 
 	function addNotification(msg) {
@@ -9,12 +8,12 @@
 		noticationContainerEL.textContent = msg;
 		noticationContainerEL.classList.add('is-active');
 
-		setTimeout(function () {
+		setTimeout(function() {
 			noticationContainerEL.classList.remove('is-active');
-		}, 2000)
+		}, 2000);
 	}
 
 	window.alertsService = {
 		add: addNotification
-	}
+	};
 })();

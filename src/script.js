@@ -1090,6 +1090,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 			autoCloseBrackets: true,
 			autoCloseTags: true,
 			matchBrackets: true,
+			matchTags: options.matchTags || false,
 			tabMode: 'indent',
 			keyMap: 'sublime',
 			theme: 'monokai',
@@ -1194,7 +1195,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 		mode: 'htmlmixed',
 		profile: 'xhtml',
 		gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-		noAutocomplete: true
+		noAutocomplete: true,
+		matchTags: { bothTags: true }
 	});
 	emmetCodeMirror(scope.cm.html);
 	scope.cm.css = initEditor(cssCode, {

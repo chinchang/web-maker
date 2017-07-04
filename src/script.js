@@ -1451,50 +1451,82 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 		);
 	}
 
-	scope.takeScreenshot = function(e) {
-		// Hide tooltips so that they don't show in the screenshot
-		var s = document.createElement('style');
-		s.textContent =
-			'[class*="hint"]:after, [class*="hint"]:before { display: none!important; }';
-		document.body.appendChild(s);
-
-		function onImgLoad(image) {
-			var c = document.createElement('canvas');
-			var iframeBounds = frame.getBoundingClientRect();
-			c.width = iframeBounds.width;
-			c.height = iframeBounds.height;
-			var ctx = c.getContext('2d');
-			ctx.drawImage(
-				image,
-				iframeBounds.left,
-				iframeBounds.top,
-				iframeBounds.width,
-				iframeBounds.height,
-				0,
-				0,
-				iframeBounds.width,
-				iframeBounds.height
-			);
-			image.removeEventListener('load', onImgLoad);
-			saveScreenshot(c.toDataURL());
-		}
-
-		setTimeout(() => {
-			chrome.tabs.captureVisibleTab(
-				null,
-				{ format: 'png', quality: 100 },
-				function(dataURI) {
-					s.remove();
-					if (dataURI) {
-						var image = new Image();
-						image.src = dataURI;
-						image.addEventListener('load', () => onImgLoad(image, dataURI));
-					}
+	function handleDownloadsPermission() {
+		var d = deferred();
+		chrome.permissions.contains(
+			{
+				permissions: ['downloads']
+			},
+			function(result) {
+				if (result) {
+					d.resolve();
+				} else {
+					chrome.permissions.request(
+						{
+							permissions: ['downloads']
+						},
+						function(granted) {
+							if (granted) {
+								trackEvent('fn', 'downloadsPermGiven');
+								d.resolve();
+							} else {
+								d.reject();
+							}
+						}
+					);
 				}
-			);
-		}, 50);
+			}
+		);
+		return d.promise;
+	}
 
-		trackEvent('ui', 'takeScreenshotBtnClick');
+	scope.takeScreenshot = function(e) {
+		handleDownloadsPermission().then(() => {
+			// Hide tooltips so that they don't show in the screenshot
+			var s = document.createElement('style');
+			s.textContent =
+				'[class*="hint"]:after, [class*="hint"]:before { display: none!important; }';
+			document.body.appendChild(s);
+
+			function onImgLoad(image) {
+				var c = document.createElement('canvas');
+				var iframeBounds = frame.getBoundingClientRect();
+				c.width = iframeBounds.width;
+				c.height = iframeBounds.height;
+				var ctx = c.getContext('2d');
+				ctx.drawImage(
+					image,
+					iframeBounds.left,
+					iframeBounds.top,
+					iframeBounds.width,
+					iframeBounds.height,
+					0,
+					0,
+					iframeBounds.width,
+					iframeBounds.height
+				);
+				image.removeEventListener('load', onImgLoad);
+				saveScreenshot(c.toDataURL());
+			}
+
+			setTimeout(() => {
+				chrome.tabs.captureVisibleTab(
+					null,
+					{ format: 'png', quality: 100 },
+					function(dataURI) {
+						s.remove();
+						if (dataURI) {
+							var image = new Image();
+							image.src = dataURI;
+							image.addEventListener('load', () => onImgLoad(image, dataURI));
+						}
+					}
+				);
+			}, 50);
+
+			trackEvent('ui', 'takeScreenshotBtnClick');
+		});
+
 		e.preventDefault();
 	};
 

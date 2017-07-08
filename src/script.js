@@ -916,6 +916,13 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 			chrome.extension.getURL('lib/screenlog.js') +
 			'"></script>';
 
+		if (jsMode === JsModes.ES6) {
+			contents +=
+				'<script src="' +
+				chrome.extension.getURL('lib/babel-polyfill.min.js') +
+				'"></script>';
+		}
+
 		if (js) {
 			contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';
 		} else {

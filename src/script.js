@@ -2198,6 +2198,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 			'3024-night',
 			'abcdef',
 			'ambiance',
+			'base2tone-meadow-dark',
 			'base16-dark',
 			'base16-light',
 			'bespin',

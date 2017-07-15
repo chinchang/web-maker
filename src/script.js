@@ -966,19 +966,21 @@ customEditorFontInput
 
 	function writeFile(name, blob, cb) {
 		var fileWritten = false;
-		function errorHandler() {
-			utils.log(arguments);
-			trackEvent('fn', 'error', 'writeFile');
-			// When there are too many write errors, show a message.
-			writeFile.errorCount = (writeFile.errorCount || 0) + 1;
-			if (writeFile.errorCount === 4) {
-				setTimeout(function() {
-					alert(
-						"Oops! Seems like your preview isn't updating. Please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart browser\n - Update browser\n - Reinstall Web Maker (don't forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp."
-					);
-					trackEvent('ui', 'writeFileMessageSeen');
-				}, 1000);
-			}
+		function getErrorHandler(type) {
+			return function() {
+				utils.log(arguments);
+				trackEvent('fn', 'error', type);
+				// When there are too many write errors, show a message.
+				writeFile.errorCount = (writeFile.errorCount || 0) + 1;
+				if (writeFile.errorCount === 4) {
+					setTimeout(function() {
+						alert(
+							"Oops! Seems like your preview isn't updating. Please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart browser\n - Update browser\n - Reinstall Web Maker (don't forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp."
+						);
+						trackEvent('ui', 'writeFileMessageSeen');
+					}, 1000);
+				}
+			};
 		}
 
 		// utils.log('writing file ', name);
@@ -990,7 +992,7 @@ customEditorFontInput
 					name,
 					{ create: true },
 					function(fileEntry) {
-						fileEntry.createWriter(function(fileWriter) {
+						fileEntry.createWriter(fileWriter => {
 							function onWriteComplete() {
 								if (fileWritten) {
 									// utils.log('file written ', name);
@@ -1006,12 +1008,12 @@ customEditorFontInput
 							// Empty the file contents
 							fileWriter.truncate(0);
 							// utils.log('truncating file ', name);
-						}, errorHandler);
+						}, getErrorHandler('createWriterFail'));
 					},
-					errorHandler
+					getErrorHandler('getFileFail')
 				);
 			},
-			errorHandler
+			getErrorHandler('webkitRequestFileSystemFail')
 		);
 	}
 

@@ -22,7 +22,7 @@
 	"bugs": {
 		"url": "https://github.com/chinchang/web-maker/issues"
 	},
-	"homepage": "https://github.com/chinchang/web-maker#readme",
+	"homepage": "https://webmakerapp.com",
 	"dependencies": {
 		"babel-polyfill": "^6.23.0",
 		"babel-standalone": "^6.25.0"

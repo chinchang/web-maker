@@ -419,7 +419,10 @@
 							<option value="Inconsolata">Inconsolata</option>
 							<option value="Monoid">Monoid</option>
 							<option value="FixedSys">FixedSys</option>
+							<option disabled="disabled">----</option>
+							<option value="other">Other font from system</option>
 						</select>
+						<input id="customEditorFontInput" type="text" value="" placeholder="Custom font name here" data-setting="editorCustomFont" d-change="updateSetting">
 					</label>
 					<label class="line">
 						Font Size <input type="number" value="16" data-setting="fontSize" d-change="updateSetting"> px

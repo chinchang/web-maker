@@ -5,7 +5,8 @@ addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notifica
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
-runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate
+runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
+customEditorFontInput
 */
 /* eslint-disable no-extra-semi */
 (function(alertsService) {
@@ -1582,6 +1583,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 		$('[data-setting=refreshOnResize]').checked = prefs.refreshOnResize;
 		$('[data-setting=autoPreview]').checked = prefs.autoPreview;
 		$('[data-setting=editorFont]').value = prefs.editorFont;
+		$('[data-setting=editorCustomFont]').value = prefs.editorCustomFont;
 		$('[data-setting=autoSave]').checked = prefs.autoSave;
 		$('[data-setting=autoComplete]').checked = prefs.autoComplete;
 	}
@@ -1620,8 +1622,13 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 			'/lib/codemirror/theme/' + prefs.editorTheme + '.css';
 		fontStyleTag.textContent = fontStyleTemplate.textContent.replace(
 			/fontname/g,
-			prefs.editorFont || 'FiraCode'
+			(prefs.editorFont === 'other'
+				? prefs.editorCustomFont
+				: prefs.editorFont) || 'FiraCode'
 		);
+		customEditorFontInput.classList[
+			prefs.editorFont === 'other' ? 'remove' : 'add'
+		]('hide');
 
 		['html', 'js', 'css'].forEach(type => {
 			scope.cm[type].setOption(
@@ -2143,6 +2150,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 				refreshOnResize: false,
 				autoPreview: true,
 				editorFont: 'FiraCode',
+				editorCustomFont: '',
 				autoSave: true,
 				autoComplete: true
 			},
@@ -2177,6 +2185,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 				prefs.refreshOnResize = result.refreshOnResize;
 				prefs.autoPreview = result.autoPreview;
 				prefs.editorFont = result.editorFont;
+				prefs.editorCustomFont = result.editorCustomFont;
 				prefs.autoSave = result.autoSave;
 				prefs.autoComplete = result.autoComplete;
 

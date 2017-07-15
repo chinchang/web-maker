@@ -1203,13 +1203,13 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 				}
 			}, updateDelay);
 		});
-		if (options.noAutocomplete) {
-			cm.addKeyMap({
-				'Ctrl-Space': 'autocomplete'
-			});
-		} else {
+		cm.addKeyMap({
+			'Ctrl-Space': 'autocomplete'
+		});
+		if (!options.noAutocomplete) {
 			cm.on('inputRead', function onChange(editor, input) {
 				if (
+					!prefs.autoComplete ||
 					input.origin !== '+input' ||
 					input.text[0] === ';' ||
 					input.text[0] === ' '
@@ -1583,6 +1583,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 		$('[data-setting=autoPreview]').checked = prefs.autoPreview;
 		$('[data-setting=editorFont]').value = prefs.editorFont;
 		$('[data-setting=autoSave]').checked = prefs.autoSave;
+		$('[data-setting=autoComplete]').checked = prefs.autoComplete;
 	}
 
 	/**
@@ -2142,7 +2143,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 				refreshOnResize: false,
 				autoPreview: true,
 				editorFont: 'FiraCode',
-				autoSave: true
+				autoSave: true,
+				autoComplete: true
 			},
 			function syncGetCallback(result) {
 				if (result.preserveLastCode && lastCode) {
@@ -2176,6 +2178,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 				prefs.autoPreview = result.autoPreview;
 				prefs.editorFont = result.editorFont;
 				prefs.autoSave = result.autoSave;
+				prefs.autoComplete = result.autoComplete;
 
 				updateSettingsInUi();
 				scope.updateSetting();

@@ -97,8 +97,11 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 		cmDisable: true
 	};
 
+	const AUTO_SAVE_INTERVAL = 15000; // 15 seconds
+
 	var updateTimer,
 		updateDelay = 500,
+		autoSaveInterval,
 		unsavedEditWarningCount = 15,
 		currentLayoutMode,
 		hasSeenNotifications = true,
@@ -117,6 +120,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 		isSavedItemsPaneOpen = false,
 		editorWithFocus,
 		logCount = 0,
+		isAutoSavingEnabled,
 		// DOM nodes
 		frame = $('#demo-frame'),
 		htmlCode = $('#js-html-code'),
@@ -271,18 +275,28 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 		}
 	}
 
-	function saveSetting(setting, value, cb) {
+	function saveSetting(setting, value) {
+		const d = deferred();
 		var obj = {};
 		obj[setting] = value;
-		chrome.storage.local.set(obj, cb || function() {});
+		chrome.storage.local.set(obj, d.resolve);
+		return d.promise;
 	}
 
 	// Save current item to storage
 	function saveItem() {
 		var isNewItem = !currentItem.id;
 		currentItem.id = currentItem.id || 'item-' + utils.generateRandomId();
-		saveCode();
-
+		saveCode().then(() => {
+			// If this is the first save, and auto-saving settings is enabled,
+			// then start auto-saving from now on.
+			// This is done in `saveCode()` completion so that the
+			// auto-save notification overrides the `saveCode` function's notification.
+			if (!isAutoSavingEnabled && prefs.autoSave) {
+				isAutoSavingEnabled = true;
+				alertsService.add('Auto-save enabled.');
+			}
+		});
 		// Push into the items hash if its a new item being saved
 		if (isNewItem) {
 			chrome.storage.local.get(
@@ -296,6 +310,14 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 					});
 				}
 			);
+		}
+	}
+
+	// Keeps getting called after certain interval to auto-save current creation
+	// if it needs to be.
+	function autoSaveLoop() {
+		if (isAutoSavingEnabled && unsavedEditCount) {
+			saveItem();
 		}
 	}
 
@@ -357,7 +379,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 		currentItem.mainSizes = getMainPaneSizes();
 
 		utils.log('saving key', key || currentItem.id, currentItem);
-		saveSetting(key || currentItem.id, currentItem, function() {
+		return saveSetting(key || currentItem.id, currentItem).then(() => {
 			alertsService.add('Item saved.');
 			unsavedEditCount = 0;
 			saveBtn.classList.remove('is-marked');
@@ -458,6 +480,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 	}
 	function setCurrentItem(item) {
 		currentItem = item;
+		// Reset auto-saving flag
+		isAutoSavingEnabled = false;
 		// Reset unsaved count, in UI also.
 		unsavedEditCount = 0;
 		saveBtn.classList.remove('is-marked');
@@ -1558,6 +1582,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 		$('[data-setting=refreshOnResize]').checked = prefs.refreshOnResize;
 		$('[data-setting=autoPreview]').checked = prefs.autoPreview;
 		$('[data-setting=editorFont]').value = prefs.editorFont;
+		$('[data-setting=autoSave]').checked = prefs.autoSave;
 	}
 
 	/**
@@ -1573,7 +1598,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
 			obj[settingName] = prefs[settingName];
 			chrome.storage.sync.set(obj, function() {
-				alertsService.add('setting saved');
+				alertsService.add('Setting saved');
 			});
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
@@ -1625,6 +1650,14 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 			scope.cm[type].refresh();
 		});
 		scope.consoleCm.setOption('theme', $('[data-setting=editorTheme]').value);
+		if (prefs.autoSave) {
+			if (!autoSaveInterval) {
+				autoSaveInterval = setInterval(autoSaveLoop, AUTO_SAVE_INTERVAL);
+			}
+		} else {
+			clearInterval(autoSaveInterval);
+			autoSaveInterval = null;
+		}
 	};
 
 	scope.onNewBtnClick = function() {
@@ -2108,7 +2141,8 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 				fontSize: 16,
 				refreshOnResize: false,
 				autoPreview: true,
-				editorFont: 'FiraCode'
+				editorFont: 'FiraCode',
+				autoSave: true
 			},
 			function syncGetCallback(result) {
 				if (result.preserveLastCode && lastCode) {
@@ -2141,6 +2175,7 @@ runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyl
 				prefs.refreshOnResize = result.refreshOnResize;
 				prefs.autoPreview = result.autoPreview;
 				prefs.editorFont = result.editorFont;
+				prefs.autoSave = result.autoSave;
 
 				updateSettingsInUi();
 				scope.updateSetting();

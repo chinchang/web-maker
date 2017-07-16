@@ -12,7 +12,7 @@ customEditorFontInput
 (function(alertsService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.7.2';
+	var version = '2.8.0';
 
 	if (window.DEBUG) {
 		window.scope = scope;

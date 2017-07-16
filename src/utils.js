@@ -1,9 +1,10 @@
-(function () {
+(function() {
 	window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
 
 	window.$ = document.querySelector.bind(document);
-	window.$all = (selector) => [...document.querySelectorAll(selector)];
-	var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+	window.$all = selector => [...document.querySelectorAll(selector)];
+	var alphaNum =
+		'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 	/**
 	 * The following 2 functions are supposed to find the next/previous sibling until the
@@ -13,7 +14,7 @@
 	 * @param  Selector that should match for next siblings
 	 * @return element Next element that mathes `selector`
 	 */
-	Node.prototype.nextUntil = function (selector) {
+	Node.prototype.nextUntil = function(selector) {
 		const siblings = [...this.parentNode.querySelectorAll(selector)];
 		const index = siblings.indexOf(this);
 		return siblings[index + 1];
@@ -23,7 +24,7 @@
 	 * @param  Selector that should match for next siblings
 	 * @return element Next element that mathes `selector`
 	 */
-	Node.prototype.previousUntil = function (selector) {
+	Node.prototype.previousUntil = function(selector) {
 		const siblings = [...this.parentNode.querySelectorAll(selector)];
 		const index = siblings.indexOf(this);
 		return siblings[index - 1];
@@ -36,10 +37,18 @@
 		for (var i = 0; i < 3; i++) {
 			var na = Number(pa[i]);
 			var nb = Number(pb[i]);
-			if (na > nb) { return 1; }
-			if (nb > na) { return -1; }
-			if (!isNaN(na) && isNaN(nb)) { return 1; }
-			if (isNaN(na) && !isNaN(nb)) { return -1; }
+			if (na > nb) {
+				return 1;
+			}
+			if (nb > na) {
+				return -1;
+			}
+			if (!isNaN(na) && isNaN(nb)) {
+				return 1;
+			}
+			if (isNaN(na) && !isNaN(nb)) {
+				return -1;
+			}
 		}
 		return 0;
 	}
@@ -47,7 +56,7 @@
 	function generateRandomId(len) {
 		var length = len || 10;
 		var id = '';
-		for (var i = length; i--;) {
+		for (var i = length; i--; ) {
 			id += alphaNum[~~(Math.random() * alphaNum.length)];
 		}
 		return id;
@@ -75,43 +84,53 @@
 		var loopId = 1;
 		var patches = [];
 		var varPrefix = '_wmloopvar';
-		var varStr = 'var %d = Date.now();\n'
-		var checkStr = '\nif (Date.now() - %d > 1000) { window.top.previewException(new Error("Infinite loop")); break;}\n'
+		var varStr = 'var %d = Date.now();\n';
+		var checkStr =
+			'\nif (Date.now() - %d > 1000) { window.top.previewException(new Error("Infinite loop")); break;}\n';
 
-		esprima.parse(code, { tolerant: true, range: true, jsx: true }, function (node) {
+		esprima.parse(code, { tolerant: true, range: true, jsx: true }, function(
+			node
+		) {
 			switch (node.type) {
-			case 'DoWhileStatement':
-			case 'ForStatement':
-			case 'ForInStatement':
-			case 'ForOfStatement':
-			case 'WhileStatement':
-				var start = 1 + node.body.range[0];
-				var end = node.body.range[1];
-				var prolog = checkStr.replace('%d', varPrefix + loopId);
-				var epilog = '';
+				case 'DoWhileStatement':
+				case 'ForStatement':
+				case 'ForInStatement':
+				case 'ForOfStatement':
+				case 'WhileStatement':
+					var start = 1 + node.body.range[0];
+					var end = node.body.range[1];
+					var prolog = checkStr.replace('%d', varPrefix + loopId);
+					var epilog = '';
 
-				if (node.body.type !== 'BlockStatement') {
-					// `while(1) doThat()` becomes `while(1) {doThat()}`
-					prolog = '{' + prolog;
-					epilog = '}';
-					--start;
-				}
+					if (node.body.type !== 'BlockStatement') {
+						// `while(1) doThat()` becomes `while(1) {doThat()}`
+						prolog = '{' + prolog;
+						epilog = '}';
+						--start;
+					}
 
-				patches.push({ pos: start, str: prolog });
-				patches.push({ pos: end, str: epilog });
-				patches.push({ pos: node.range[0], str: varStr.replace('%d', varPrefix + loopId) });
-				++loopId;
-				break;
+					patches.push({ pos: start, str: prolog });
+					patches.push({ pos: end, str: epilog });
+					patches.push({
+						pos: node.range[0],
+						str: varStr.replace('%d', varPrefix + loopId)
+					});
+					++loopId;
+					break;
 
-			default:
-				break;
+				default:
+					break;
 			}
 		});
 
 		/* eslint-disable no-param-reassign */
-		patches.sort(function (a, b) { return b.pos - a.pos }).forEach(function (patch) {
-			code = code.slice(0, patch.pos) + patch.str + code.slice(patch.pos);
-		});
+		patches
+			.sort(function(a, b) {
+				return b.pos - a.pos;
+			})
+			.forEach(function(patch) {
+				code = code.slice(0, patch.pos) + patch.str + code.slice(patch.pos);
+			});
 
 		/* eslint-disable no-param-reassign */
 		return code;
@@ -119,9 +138,25 @@
 
 	function getHumanDate(timestamp) {
 		var d = new Date(timestamp);
-		var retVal = d.getDate() + ' '
-			+ [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][d.getMonth()] + ' '
-			+ d.getFullYear();
+		var retVal =
+			d.getDate() +
+			' ' +
+			[
+				'January',
+				'February',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December'
+			][d.getMonth()] +
+			' ' +
+			d.getFullYear();
 		return retVal;
 	}
 
@@ -134,7 +169,6 @@
 			// call handler
 			return callback(e);
 		});
-
 	}
 
 	window.utils = {

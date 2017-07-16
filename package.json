@@ -1,0 +1,30 @@
+{
+	"name": "web-maker",
+	"version": "2.7.2",
+	"description": "A blazing fast & offline web playground",
+	"main": "index.html",
+	"devDependencies": {
+		"babel-eslint": "^7.2.3",
+		"eslint": "^4.1.1",
+		"eslint-config-prettier": "^2.3.0",
+		"prettier": "^1.5.2"
+	},
+	"scripts": {
+		"install": "ln -s ../../git-hooks/pre-commit .git/hooks/pre-commit"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/chinchang/web-maker.git"
+	},
+	"keywords": ["frontend", "playground", "web", "editor"],
+	"author": "Kushagra Gour",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/chinchang/web-maker/issues"
+	},
+	"homepage": "https://webmakerapp.com",
+	"dependencies": {
+		"babel-polyfill": "^6.23.0",
+		"babel-standalone": "^6.25.0"
+	}
+}

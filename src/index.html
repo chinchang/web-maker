@@ -419,7 +419,10 @@
 							<option value="Inconsolata">Inconsolata</option>
 							<option value="Monoid">Monoid</option>
 							<option value="FixedSys">FixedSys</option>
+							<option disabled="disabled">----</option>
+							<option value="other">Other font from system</option>
 						</select>
+						<input id="customEditorFontInput" type="text" value="" placeholder="Custom font name here" data-setting="editorCustomFont" d-change="updateSetting">
 					</label>
 					<label class="line">
 						Font Size <input type="number" value="16" data-setting="fontSize" d-change="updateSetting"> px
@@ -438,7 +441,13 @@
 						<input type="checkbox" d-change="updateSetting" data-setting="refreshOnResize"> Refresh preview on resize
 					</label>
 					<label class="line">
+						<input type="checkbox" d-change="updateSetting" data-setting="autoComplete"> Auto-complete suggestions
+					</label>
+					<label class="line">
 						<input type="checkbox" d-change="updateSetting" data-setting="autoPreview"> Auto-preview
+					</label>
+					<label class="line">
+						<input type="checkbox" d-change="updateSetting" data-setting="autoSave"> Auto-save
 					</label>
 					<label class="line">
 						<input type="checkbox" d-change="updateSetting" data-setting="preserveLastCode"> Preserve last written code
@@ -545,6 +554,7 @@
 
 		<script src="lib/codemirror/lib/codemirror.js"></script>
 		<script src="lib/codemirror/addon/edit/matchbrackets.js"></script>
+		<script src="lib/codemirror/addon/edit/matchtags.js"></script>
 		<script src="lib/codemirror/addon/edit/closebrackets.js"></script>
 		<script src="lib/codemirror/addon/edit/closetag.js"></script>
 		<script src="lib/codemirror/addon/comment/comment.js"></script>

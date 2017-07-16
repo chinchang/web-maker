@@ -9,14 +9,16 @@ Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master) 
 
 ### Features
 
-* Supports Preprocessors: HTML (Jade & Markdown), CSS (SCSS, LESS & Stylus) & JavaScript (ES6, TypeScript & CoffeeScript)
+* Supports Preprocessors: HTML (Pug & Markdown), CSS (SCSS, LESS & Stylus, Atomic CSS) & JavaScript (ES6, TypeScript & CoffeeScript)
 * Works offline
 * Inbuilt Console
 * Save and load your creations
+* Auto-save feture
 * Code auto-completion
 * Easy addition of popular JS & CSS libraries
 * Import & Export all creations anytime, anywhere
 * Multiple editor themes & other configurable settings
+* Font options + use any system font!
 * Very easily accessible. Simply open a new tab in Chrome!
 * Multiple layouts to choose from
 * Capture preview screenshot

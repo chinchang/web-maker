@@ -69,7 +69,7 @@ window.jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.26/js/uikit.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.27/js/uikit.min.js',
 		label: 'UIkit 3',
 		type: 'js'
 	}
@@ -111,7 +111,7 @@ window.cssLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.26/css/uikit.min.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.27/css/uikit.min.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},

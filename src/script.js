@@ -1588,6 +1588,11 @@ customEditorFontInput
 		$('[data-setting=editorCustomFont]').value = prefs.editorCustomFont;
 		$('[data-setting=autoSave]').checked = prefs.autoSave;
 		$('[data-setting=autoComplete]').checked = prefs.autoComplete;
+		$('[data-setting=useBlur]').checked = prefs.useBlur;
+
+		if (prefs.useBlur) {
+			document.body.classList.add('blur');
+		}
 	}
 
 	/**
@@ -2154,7 +2159,8 @@ customEditorFontInput
 				editorFont: 'FiraCode',
 				editorCustomFont: '',
 				autoSave: true,
-				autoComplete: true
+				autoComplete: true,
+				useBlur: true
 			},
 			function syncGetCallback(result) {
 				if (result.preserveLastCode && lastCode) {
@@ -2190,6 +2196,7 @@ customEditorFontInput
 				prefs.editorCustomFont = result.editorCustomFont;
 				prefs.autoSave = result.autoSave;
 				prefs.autoComplete = result.autoComplete;
+				prefs.useBlur = result.useBlur;
 
 				updateSettingsInUi();
 				scope.updateSetting();

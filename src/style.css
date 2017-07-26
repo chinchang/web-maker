@@ -117,7 +117,7 @@ select, input[type="text"], input[type="number"],  textarea {
 	will-change: -webkit-filter;
 	transition: 0.10s ease 0.2s;
 }
-.overlay-visible .main-container {
+.blur.overlay-visible .main-container {
 	transition-duration: 0.5s;
 	transition-delay: 0.4s;
 	-webkit-filter: blur(3px);

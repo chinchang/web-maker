@@ -87,6 +87,8 @@
 		var varStr = 'var %d = Date.now();\n';
 		var checkStr =
 			'\nif (Date.now() - %d > 1000) { window.top.previewException(new Error("Infinite loop")); break;}\n';
+        var infoForEachLoop = [];
+        var popupStatements = [];
 
 		esprima.parse(code, { tolerant: true, range: true, jsx: true }, function(
 			node
@@ -109,6 +111,8 @@
 						--start;
 					}
 
+                    infoForEachLoop.push({start: start, end: end, varName: varPrefix + loopId});
+
 					patches.push({ pos: start, str: prolog });
 					patches.push({ pos: end, str: epilog });
 					patches.push({
@@ -118,10 +122,33 @@
 					++loopId;
 					break;
 
+                case 'ExpressionStatement':
+                    [
+                        "alert",
+                        "confirm",
+                        "prompt"
+                    ].forEach(function(functionName){
+                        if (node.expression.callee.name === functionName || (node.expression.callee.hasOwnProperty("object") && node.expression.callee.object.name === 'window' && node.expression.callee.property.name === functionName)){
+                            popupStatements.push(node);
+                        }
+                    });
+                    break;
+
 				default:
 					break;
 			}
 		});
+
+        popupStatements.forEach(function(node){
+            infoForEachLoop.forEach(function(loop){
+                if (node.range[0]>=loop.start && node.range[0]<=loop.end){
+                    patches.push({
+                        pos: node.range[1],
+                        str: '\n%d = Date.now();\n'.replace('%d', loop.varName)
+                    });
+                }
+            });
+        });
 
 		/* eslint-disable no-param-reassign */
 		patches

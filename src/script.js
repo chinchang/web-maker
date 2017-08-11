@@ -1042,6 +1042,10 @@ customEditorFontInput
 	}
 
 	scope.setPreviewContent = function(isForced) {
+		if( !prefs.preserveConsoleLogs ) {
+			scope.clearConsole();
+		}
+
 		var currentCode = {
 			html: scope.cm.html.getValue(),
 			css: scope.cm.css.getValue(),
@@ -1588,6 +1592,7 @@ customEditorFontInput
 		$('[data-setting=editorCustomFont]').value = prefs.editorCustomFont;
 		$('[data-setting=autoSave]').checked = prefs.autoSave;
 		$('[data-setting=autoComplete]').checked = prefs.autoComplete;
+		$('[data-setting=preserveConsoleLogs]').checked = prefs.preserveConsoleLogs;
 	}
 
 	/**
@@ -2154,7 +2159,8 @@ customEditorFontInput
 				editorFont: 'FiraCode',
 				editorCustomFont: '',
 				autoSave: true,
-				autoComplete: true
+				autoComplete: true,
+				preserveConsoleLogs: true
 			},
 			function syncGetCallback(result) {
 				if (result.preserveLastCode && lastCode) {
@@ -2190,6 +2196,7 @@ customEditorFontInput
 				prefs.editorCustomFont = result.editorCustomFont;
 				prefs.autoSave = result.autoSave;
 				prefs.autoComplete = result.autoComplete;
+				prefs.preserveConsoleLogs = result.preserveConsoleLogs;
 
 				updateSettingsInUi();
 				scope.updateSetting();

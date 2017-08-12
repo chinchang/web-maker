@@ -18,8 +18,8 @@ customEditorFontInput
 		window.scope = scope;
 	}
 
-	if( typeof __filename == typeof undefined && typeof process != typeof undefined) {
-		window.__filename = process.execPath;
+	if( typeof __filename === "undefined" && typeof process !== "undefined") {
+		window.__filename = process.execPath; /*eslint no-underscore-dangle: "off"*/ /*global process*/
 	}
 
 	var HtmlModes = {
@@ -855,58 +855,56 @@ customEditorFontInput
 				return d.promise;
 			}
 
-			// Credits to https://gist.github.com/teppeis/6e0f2d823a94de4ae442
-			if( !window.TSLibSource ) {
-				function errorHandler(e) {
-					utils.log(e);
-				}
+			const compileCode = () => {
+				// Credits to https://gist.github.com/teppeis/6e0f2d823a94de4ae442
+				if( !window.TSLibSource ) {
+					const errorHandler = e => utils.log(e);
 
-				chrome.runtime.getPackageDirectoryEntry(function(root) {
-					root.getFile("lib/typescript/lib.d.ts", {}, function(fileEntry) {
-						fileEntry.file(function(file) {
-						var reader = new FileReader();
-						reader.onloadend = function(e) {
-							window.TSLibSource = this.result;
-							compileCode();
-						};
-						reader.readAsText(file);
+					chrome.runtime.getPackageDirectoryEntry(function(root) {
+						root.getFile("lib/typescript/lib.d.ts", {}, function(fileEntry) {
+							fileEntry.file(function(file) {
+							var reader = new FileReader();
+							reader.onloadend = function() {
+								window.TSLibSource = this.result;
+								compileCode();
+							};
+							reader.readAsText(file);
+							}, errorHandler);
 						}, errorHandler);
-					}, errorHandler);
 					});
 
 					return;
-			}
+				}
 
-			const compilerOptions = {
-				noEmitOnError: true,
-				diagnostics: true,
-				module: ts.ModuleKind.ES2015
-			};
+				const compilerOptions = {
+					noEmitOnError: true,
+					diagnostics: true,
+					module: ts.ModuleKind.ES2015
+				};
 
-			var output = '';
-			var compilerHost = {
-				getSourceFile: function (filename, languageVersion) {
-					if (filename === "file.ts")
-						return ts.createSourceFile(filename, source, compilerOptions.target, "0");
-					if (filename === "lib.d.ts")
-						return ts.createSourceFile(filename, window.TSLibSource, compilerOptions.target, "0");
-					return undefined;
-				},
-				writeFile: function (name, text, writeByteOrderMark) {
-					output = text;
-				},
-				getDefaultLibFileName: function () { return "lib.d.ts"; },
-				useCaseSensitiveFileNames: function () { return false; },
-				getCanonicalFileName: function (filename) { return filename; },
-				getCurrentDirectory: function () { return ""; },
-				getNewLine: function () { return "\n"; }
-			};
+				var output = '';
+				var compilerHost = {
+					getSourceFile: function (filename) {
+						if (filename === "file.ts") {
+							return ts.createSourceFile(filename, source, compilerOptions.target, "0");
+						}
+						if (filename === "lib.d.ts") {
+							return ts.createSourceFile(filename, window.TSLibSource, compilerOptions.target, "0");
+						}
+						return null;
+					},
+					writeFile: function (name, text) {
+						output = text;
+					},
+					getDefaultLibFileName: function () { return "lib.d.ts"; },
+					useCaseSensitiveFileNames: function () { return false; },
+					getCanonicalFileName: function (filename) { return filename; },
+					getCurrentDirectory: function () { return ""; },
+					getNewLine: function () { return "\n"; }
+				};
 
-			const source = code;
+				const source = code;
 
-			compileCode();
-
-			function compileCode() {
 				try {
 					// code = ts.transpileModule(code, {
 					// 	reportDiagnostics: true,
@@ -919,23 +917,27 @@ customEditorFontInput
 
 					if (code.diagnostics && code.diagnostics.length) {
 						/* eslint-disable no-throw-literal */
-						throw code.diagnostics.map(d => ({
-							message: d.messageText,
+						throw code.diagnostics.map(e => ({
+							message: e.messageText,
 							lineNumber: ts.getLineOfLocalPosition(
-								d.file,
-								d.start
+								e.file,
+								e.start
 							)
 						}));
 					}
+
 					if (shouldPreventInfiniteLoops !== false) {
 						code = utils.addInfiniteLoopProtection(code.outputText);
 					}
+
 					d.resolve(code);
 				}
 				catch (e) {
 					showErrors('js', e);
 				}
 			}
+
+			compileCode();
 		}
 
 		return d.promise;

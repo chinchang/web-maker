@@ -1588,9 +1588,9 @@ customEditorFontInput
 		$('[data-setting=editorCustomFont]').value = prefs.editorCustomFont;
 		$('[data-setting=autoSave]').checked = prefs.autoSave;
 		$('[data-setting=autoComplete]').checked = prefs.autoComplete;
-		$('[data-setting=useBlur]').checked = prefs.useBlur;
+		$('[data-setting=lightVersion]').checked = prefs.lightVersion;
 
-		if (prefs.useBlur) {
+		if (!prefs.lightVersion) {
 			document.body.classList.add('blur');
 		}
 	}
@@ -2160,7 +2160,7 @@ customEditorFontInput
 				editorCustomFont: '',
 				autoSave: true,
 				autoComplete: true,
-				useBlur: true
+				lightVersion: true
 			},
 			function syncGetCallback(result) {
 				if (result.preserveLastCode && lastCode) {
@@ -2196,7 +2196,7 @@ customEditorFontInput
 				prefs.editorCustomFont = result.editorCustomFont;
 				prefs.autoSave = result.autoSave;
 				prefs.autoComplete = result.autoComplete;
-				prefs.useBlur = result.useBlur;
+				prefs.lightVersion = result.lightVersion;
 
 				updateSettingsInUi();
 				scope.updateSetting();

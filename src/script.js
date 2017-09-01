@@ -2206,15 +2206,14 @@ customEditorFontInput
 				if (!result.lastSeenVersion) {
 					onboardModal.classList.add('is-modal-visible');
 					trackEvent('ui', 'onboardModalSeen');
-					// set the current version as seen on closing the onboard modal
+					chrome.storage.sync.set(
+						{
+							lastSeenVersion: version
+						},
+						function() {}
+					);
+					// set some initial preferences on closing the onboard modal
 					utils.once(document, 'overlaysClosed', function() {
-						chrome.storage.sync.set(
-							{
-								lastSeenVersion: version
-							},
-							function() {}
-						);
-
 						chrome.storage.sync.set(
 							{
 								replaceNewTab: onboardShowInTabOptionBtn.classList.contains(

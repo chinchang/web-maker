@@ -924,6 +924,7 @@ customEditorFontInput
 			}, '');
 		var contents =
 			'<html>\n<head>\n' +
+			'<meta charset="UTF-8" />\n' +
 			externalCss +
 			'\n' +
 			'<style id="webmakerstyle">\n' +

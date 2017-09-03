@@ -886,6 +886,25 @@ li.CodeMirror-hint-active {
 	cursor: ns-resize;
 }
 
+.is-detached-mode .demo-side {
+	display: none;
+}
+
+.is-detached-mode .code-side {
+	width: 100% !important;
+}
+
+.layout-4 .code-side {
+	display: none;
+}
+.layout-4 .code-side + .gutter {
+	display: none;
+}
+.layout-4 .demo-side {
+	width: 100% !important;
+}
+
+
 /* Codemirror themes basic bg styles. This is here so that there is no big FOUC
 while the theme CSS file is loading */
 .cm-s-paraiso-dark.CodeMirror { background: #2f1e2e; color: #b9b6b0; }

@@ -1038,6 +1038,9 @@ customEditorFontInput
 					chrome.i18n.getMessage('@@extension_id') +
 					'/temporary/' +
 					'preview.html';
+				if (scope.detachedWindow) {
+					scope.detachedWindow.postMessage(frame.src, '*');
+				}
 			});
 		});
 	}
@@ -1804,6 +1807,25 @@ customEditorFontInput
 			});
 		});
 	}
+
+	scope.openDetachedPreview = function() {
+		document.body.classList.add('is-detached-mode');
+		scope.detachedWindow = window.open(
+			'./preview.html',
+			'Web Maker',
+			'width=420,height=230,resizable,scrollbars=yes,status=1'
+		);
+		setTimeout(() => {
+			scope.detachedWindow.postMessage(frame.src, '*');
+		}, 1000);
+		function checkWindow() {
+			if (scope.detachedWindow && scope.detachedWindow.closed) {
+				clearInterval(intervalID);
+				document.body.classList.remove('is-detached-mode');
+			}
+		}
+		var intervalID = window.setInterval(checkWindow, 500);
+	};
 
 	function init() {
 		var lastCode;

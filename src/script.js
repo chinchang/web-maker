@@ -1690,6 +1690,10 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 			scope.cm[type].refresh();
 		});
 		scope.consoleCm.setOption('theme', $('[data-setting=editorTheme]').value);
+		scope.acssSettingsCm.setOption(
+			'theme',
+			$('[data-setting=editorTheme]').value
+		);
 		if (prefs.autoSave) {
 			if (!autoSaveInterval) {
 				autoSaveInterval = setInterval(autoSaveLoop, AUTO_SAVE_INTERVAL);
@@ -2296,7 +2300,7 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 		);
 
 		scope.acssSettingsCm = CodeMirror.fromTextArea(acssSettingsTextarea, {
-			mode: 'json'
+			mode: 'application/ld+json'
 		});
 		scope.acssSettingsCm.on('blur', () => {
 			scope.setPreviewContent(true);

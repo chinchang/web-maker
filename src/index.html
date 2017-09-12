@@ -101,6 +101,11 @@
 								</select>
 							</label>
 							<div class="code-wrap__header-right-options">
+								<a href="#" id="cssSettingsBtn" title="Atomic CSS configuration" d-click="openCssSettingsModal" class="code-wrap__header-btn hide">
+									<svg>
+										<use xlink:href="#settings-icon"></use>
+									</svg>
+								</a>
 								<a class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle code pane">
 								</a>
 							</div>
@@ -257,6 +262,16 @@
 
 						</optgroup>
 					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal" id="cssSettingsModal">
+			<div class="modal__content">
+				<h1>Atomic CSS Settings</h1>
+				<h3>Configure Atomizer settings. <a href="https://github.com/acss-io/atomizer#api" target="_blank">Read more</a> about available settings.</h3>
+				<div style="height: calc(100vh - 350px);">
+					<textarea id="acssSettingsTextarea" cols="30" rows="10"></textarea>
 				</div>
 			</div>
 		</div>

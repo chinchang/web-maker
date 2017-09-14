@@ -17,6 +17,13 @@ window.jsLibs = [
 	},
 	{
 		url:
+			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js',
+		label: 'Bootstrap 4β',
+		type: 'js'
+	},
+	
+	{
+		url:
 			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/js/foundation.min.js',
 		label: 'Foundation',
 		type: 'js'
@@ -85,6 +92,12 @@ window.cssLibs = [
 		url:
 			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css',
 		label: 'Bootstrap 4α',
+		type: 'css'
+	},
+	{
+		url:
+			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css',
+		label: 'Bootstrap 4β',
 		type: 'css'
 	},
 	{

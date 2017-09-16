@@ -11,11 +11,11 @@ window.jsLibs = [
 	},
 	{
 		url:
-		'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js',
+			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js',
 		label: 'Bootstrap 4β',
 		type: 'js'
 	},
-  {
+	{
 		url:
 			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js',
 		label: 'Foundation',
@@ -92,19 +92,19 @@ window.cssLibs = [
 		label: 'Bootstrap 4β',
 		type: 'css'
 	},
-  {
+	{
 		url:
 			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css',
 		label: 'Foundation',
 		type: 'css'
 	},
-  {
-		url:'https://semantic-ui.com/dist/semantic.min.css',
+	{
+		url: 'https://semantic-ui.com/dist/semantic.min.css',
 		label: 'Semantic UI',
 		type: 'css'
 	},
 	{
-    url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.5.2/css/bulma.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.5.2/css/bulma.min.css',
 		label: 'Bulma',
 		type: 'css'
 	},

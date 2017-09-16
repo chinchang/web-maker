@@ -11,13 +11,18 @@ window.jsLibs = [
 	},
 	{
 		url:
+		'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js',
+		label: 'Bootstrap 4β',
+		type: 'js'
+	},
+  {
+		url:
 			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js',
 		label: 'Foundation',
 		type: 'js'
 	},
 	{
-		url:
-			'https://semantic-ui.com/dist/semantic.min.js',
+		url: 'https://semantic-ui.com/dist/semantic.min.js',
 		label: 'Semantic UI',
 		type: 'js'
 	},
@@ -82,24 +87,31 @@ window.cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.5.2/css/bulma.min.css',
-		label: 'Bulma',
+		url:
+			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css',
+		label: 'Bootstrap 4β',
 		type: 'css'
 	},
-	{
+  {
 		url:
 			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css',
 		label: 'Foundation',
 		type: 'css'
 	},
-	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.5.0/hint.min.css',
-		label: 'Hint.css',
+  {
+		url:'https://semantic-ui.com/dist/semantic.min.css',
+		label: 'Semantic UI',
 		type: 'css'
 	},
 	{
-		url:'https://semantic-ui.com/dist/semantic.min.css',
-		label: 'Semantic UI',
+    url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.5.2/css/bulma.min.css',
+		label: 'Bulma',
+		type: 'css'
+	},
+
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.5.0/hint.min.css',
+		label: 'Hint.css',
 		type: 'css'
 	},
 	{

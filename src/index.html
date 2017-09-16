@@ -8,6 +8,7 @@
 
 		<link rel="stylesheet" href="lib/codemirror/addon/hint/show-hint.css">
 		<link rel="stylesheet" href="lib/codemirror/addon/fold/foldgutter.css">
+		<link rel="stylesheet" href="lib/codemirror/addon/dialog/dialog.css">
 		<link rel="stylesheet" href="lib/hint.min.css">
 		<link rel="stylesheet" href="lib/inlet.css">
 		<link rel="stylesheet" href="style.css">
@@ -100,6 +101,11 @@
 								</select>
 							</label>
 							<div class="code-wrap__header-right-options">
+								<a href="#" id="cssSettingsBtn" title="Atomic CSS configuration" d-click="openCssSettingsModal" class="code-wrap__header-btn hide">
+									<svg>
+										<use xlink:href="#settings-icon"></use>
+									</svg>
+								</a>
 								<a class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle code pane">
 								</a>
 							</div>
@@ -194,6 +200,12 @@
 							<rect x="0" y="0" width="100" height="100" />
 						</svg>
 					</a>
+					<a class="mode-btn hint--top-left hint--rounded" aria-label="Detach Preview" d-click="openDetachedPreview">
+						<svg viewBox="0 0 24 24">
+							<path d="M22,17V7H6V17H22M22,5A2,2 0 0,1 24,7V17C24,18.11 23.1,19 22,19H16V21H18V23H10V21H12V19H6C4.89,19 4,18.11 4,17V7A2,2 0 0,1 6,5H22M2,3V15H0V3A2,2 0 0,1 2,1H20V3H2Z" />
+						</svg>
+					</a>
+				
 
 					<div class="footer__separator"></div>
 
@@ -250,6 +262,16 @@
 
 						</optgroup>
 					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal" id="cssSettingsModal">
+			<div class="modal__content">
+				<h1>Atomic CSS Settings</h1>
+				<h3>Configure Atomizer settings. <a href="https://github.com/acss-io/atomizer#api" target="_blank">Read more</a> about available settings.</h3>
+				<div style="height: calc(100vh - 350px);">
+					<textarea id="acssSettingsTextarea" cols="30" rows="10"></textarea>
 				</div>
 			</div>
 		</div>
@@ -357,110 +379,117 @@
 				<h1>Settings</h1>
 
 				<h3>Indentation</h3>
-				<p>
-					<div class="line">
-						<label>
-							<input type="radio" checked="true" name="indentation" value="spaces" d-change="updateSetting" data-setting="indentWith"> Spaces
-						</label>
-						<label class="ml-1">
-							<input type="radio" name="indentation" value="tabs" d-change="updateSetting" data-setting="indentWith"> Tabs
-						</label>
-					</div>
-					<label class="line">
-						Indentation Size <input type="range" class="va-m ml-1" value="2" min="1" max="7" list="indentationSizeList" data-setting="indentSize" d-change="updateSetting">
-						<span id="indentationSizeValueEl"></span>
-						<datalist id="indentationSizeList">
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-							<option>5</option>
-							<option>6</option>
-							<option>7</option>
-						</datalist>
+				<div class="line" title="I know this is tough, but you have to decide one!">
+					<label>
+						<input type="radio" checked="true" name="indentation" value="spaces" d-change="updateSetting" data-setting="indentWith"> Spaces
 					</label>
-				</p>
+					<label class="ml-1">
+						<input type="radio" name="indentation" value="tabs" d-change="updateSetting" data-setting="indentWith"> Tabs
+					</label>
+				</div>
+				<label class="line" title="">
+					Indentation Size <input type="range" class="va-m ml-1" value="2" min="1" max="7" list="indentationSizeList" data-setting="indentSize" d-change="updateSetting">
+					<span id="indentationSizeValueEl"></span>
+					<datalist id="indentationSizeList">
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+						<option>6</option>
+						<option>7</option>
+					</datalist>
+				</label>
 				<hr>
 
 				<h3>Editor</h3>
-				<p>
-					<label class="line">
-						Default Preprocessors
-					</label>
-					<div class="flex line">
-						<select style="flex:1;margin:0 20px" data-setting="htmlMode" d-change="updateSetting">
-							<option value="html">HTML</option>
-							<option value="markdown">Markdown</option>
-							<option value="jade">Pug</option>
-						</select>
-						<select style="flex:1;margin:0 20px" data-setting="cssMode" d-change="updateSetting">
-							<option value="css">CSS</option>
-							<option value="scss">SCSS</option>
-							<option value="sass">SASS</option>
-							<option value="less">LESS</option>
-							<option value="stylus">Stylus</option>
-							<option value="acss">Atomic CSS</option>
-						</select>
-						<select style="flex:1;margin:0 20px" data-setting="jsMode" d-change="updateSetting">
-							<option value="js">JS</option>
-							<option value="coffee">CoffeeScript</option>
-							<option value="es6">ES6 (Babel)</option>
-							<option value="typescript">TypeScript</option>
-						</select>
-					</div>
-					<label class="line">
-						Theme
-						<select style="flex:1;margin:0 20px" data-setting="editorTheme" d-change="updateSetting"></select>
-					</label>
-					<label class="line">
-						Font
-						<select style="flex:1;margin:0 20px" data-setting="editorFont" d-change="updateSetting">
-							<option value="FiraCode">Fira Code</option>
-							<option value="Inconsolata">Inconsolata</option>
-							<option value="Monoid">Monoid</option>
-							<option value="FixedSys">FixedSys</option>
-							<option disabled="disabled">----</option>
-							<option value="other">Other font from system</option>
-						</select>
-						<input id="customEditorFontInput" type="text" value="" placeholder="Custom font name here" data-setting="editorCustomFont" d-change="updateSetting">
-					</label>
-					<label class="line">
-						Font Size <input type="number" value="16" data-setting="fontSize" d-change="updateSetting"> px
+				<div class="flex">
 
-					</label>
-					<div class="line">
-						Key bindings
-						<label class="ml-1">
-							<input type="radio" checked="true" name="keymap" value="sublime" d-change="updateSetting" data-setting="keymap"> Sublime
+					<div>
+						<label class="line">
+							Default Preprocessors
 						</label>
-						<label class="ml-1">
-							<input type="radio" name="keymap" value="vim" d-change="updateSetting" data-setting="keymap"> Vim
+						<div class="flex line">
+							<select style="flex:1;margin:0 20px" data-setting="htmlMode" d-change="updateSetting">
+								<option value="html">HTML</option>
+								<option value="markdown">Markdown</option>
+								<option value="jade">Pug</option>
+							</select>
+							<select style="flex:1;margin:0 20px" data-setting="cssMode" d-change="updateSetting">
+								<option value="css">CSS</option>
+								<option value="scss">SCSS</option>
+								<option value="sass">SASS</option>
+								<option value="less">LESS</option>
+								<option value="stylus">Stylus</option>
+								<option value="acss">Atomic CSS</option>
+							</select>
+							<select style="flex:1;margin:0 20px" data-setting="jsMode" d-change="updateSetting">
+								<option value="js">JS</option>
+								<option value="coffee">CoffeeScript</option>
+								<option value="es6">ES6 (Babel)</option>
+								<option value="typescript">TypeScript</option>
+							</select>
+						</div>
+						<label class="line">
+							Theme
+							<select style="flex:1;margin:0 20px" data-setting="editorTheme" d-change="updateSetting"></select>
+						</label>
+						<label class="line">
+							Font
+							<select style="flex:1;margin:0 20px" data-setting="editorFont" d-change="updateSetting">
+								<option value="FiraCode">Fira Code</option>
+								<option value="Inconsolata">Inconsolata</option>
+								<option value="Monoid">Monoid</option>
+								<option value="FixedSys">FixedSys</option>
+								<option disabled="disabled">----</option>
+								<option value="other">Other font from system</option>
+							</select>
+							<input id="customEditorFontInput" type="text" value="" placeholder="Custom font name here" data-setting="editorCustomFont" d-change="updateSetting">
+						</label>
+						<label class="line">
+							Font Size <input type="number" value="16" data-setting="fontSize" d-change="updateSetting"> px
+
+						</label>
+						<div class="line">
+							Key bindings
+							<label class="ml-1">
+								<input type="radio" checked="true" name="keymap" value="sublime" d-change="updateSetting" data-setting="keymap"> Sublime
+							</label>
+							<label class="ml-1">
+								<input type="radio" name="keymap" value="vim" d-change="updateSetting" data-setting="keymap"> Vim
+							</label>
+						</div>
+					</div>
+					<div class="ml-2">
+						<label class="line" title="Your Preview will refresh when you resize the preview split">
+							<input type="checkbox" d-change="updateSetting" data-setting="refreshOnResize"> Refresh preview on resize
+						</label>
+						<label class="line" title="Turns on the auto-completion suggestions as you type">
+							<input type="checkbox" d-change="updateSetting" data-setting="autoComplete"> Auto-complete suggestions
+						</label>
+						<label class="line" title="Refreshes the preview as you code. Otherwise use the Run button">
+							<input type="checkbox" d-change="updateSetting" data-setting="autoPreview"> Auto-preview
+						</label>
+						<label class="line" title="Auto-save keeps saving your code at regular intervals after you hit the first save manually">
+							<input type="checkbox" d-change="updateSetting" data-setting="autoSave"> Auto-save
+						</label>
+						<label class="line" title="Loads the last open creation when app starts">
+							<input type="checkbox" d-change="updateSetting" data-setting="preserveLastCode"> Preserve last written code
+						</label>
+						<label class="line" title="Turning this on will start showing Web Maker in every new tab you open">
+							<input type="checkbox" d-change="updateSetting" data-setting="replaceNewTab"> Replace new tab page
+						</label>
+						<label class="line" title="Preserves the console logs across your preview refreshes">
+							<input type="checkbox" d-change="updateSetting" data-setting="preserveConsoleLogs"> Preserve console logs
 						</label>
 					</div>
-					<label class="line">
-						<input type="checkbox" d-change="updateSetting" data-setting="refreshOnResize"> Refresh preview on resize
-					</label>
-					<label class="line">
-						<input type="checkbox" d-change="updateSetting" data-setting="autoComplete"> Auto-complete suggestions
-					</label>
-					<label class="line">
-						<input type="checkbox" d-change="updateSetting" data-setting="autoPreview"> Auto-preview
-					</label>
-					<label class="line">
-						<input type="checkbox" d-change="updateSetting" data-setting="autoSave"> Auto-save
-					</label>
-					<label class="line">
-						<input type="checkbox" d-change="updateSetting" data-setting="preserveLastCode"> Preserve last written code
-					</label>
-					<label class="line">
-						<input type="checkbox" d-change="updateSetting" data-setting="replaceNewTab"> Replace new tab page
-					</label>
-				</p>
+				</div>
+				
 				<hr>
 
 				<h3>Fun</h3>
 				<p>
-					<label class="line">
+					<label class="line" title="Enjoy wonderful particle blasts while you type">
 						<input type="checkbox" d-change="updateSetting" data-setting="isCodeBlastOn"> Code blast!
 					</label>
 				</p>
@@ -571,6 +600,9 @@
 		<script src="lib/codemirror/addon/hint/html-hint.js"></script>
 		<script src="lib/codemirror/addon/hint/css-hint.js"></script>
 		<script src="lib/codemirror/addon/selection/active-line.js"></script>
+		<script src="lib/codemirror/addon/search/search.js"></script>
+		<script src="lib/codemirror/addon/dialog/dialog.js"></script>
+		<script src="lib/codemirror/addon/search/jump-to-line.js"></script>
 
 		<script src="lib/codemirror/mode/xml/xml.js"></script>
 		<script src="lib/codemirror/mode/javascript/javascript.js"></script>

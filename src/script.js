@@ -1856,11 +1856,19 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 	}
 
 	scope.openDetachedPreview = function() {
+		if (scope.detachedWindow) {
+			scope.detachedWindow.focus();
+			return;
+		}
+		var iframeBounds = frame.getBoundingClientRect();
+		const iframeWidth = iframeBounds.width;
+		const iframeHeight = iframeBounds.height;
 		document.body.classList.add('is-detached-mode');
+
 		scope.detachedWindow = window.open(
 			'./preview.html',
 			'Web Maker',
-			'width=420,height=230,resizable,scrollbars=yes,status=1'
+			`width=${iframeWidth},height=${iframeHeight},resizable,scrollbars=yes,status=1`
 		);
 		setTimeout(() => {
 			scope.detachedWindow.postMessage(frame.src, '*');

@@ -1618,6 +1618,11 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 		$('[data-setting=autoSave]').checked = prefs.autoSave;
 		$('[data-setting=autoComplete]').checked = prefs.autoComplete;
 		$('[data-setting=preserveConsoleLogs]').checked = prefs.preserveConsoleLogs;
+		$('[data-setting=lightVersion]').checked = prefs.lightVersion;
+
+		if (!prefs.lightVersion) {
+			document.body.classList.add('blur');
+		}
 	}
 
 	/**
@@ -2212,7 +2217,8 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 				editorCustomFont: '',
 				autoSave: true,
 				autoComplete: true,
-				preserveConsoleLogs: true
+				preserveConsoleLogs: true,
+				lightVersion: true
 			},
 			function syncGetCallback(result) {
 				if (result.preserveLastCode && lastCode) {
@@ -2249,6 +2255,7 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 				prefs.autoSave = result.autoSave;
 				prefs.autoComplete = result.autoComplete;
 				prefs.preserveConsoleLogs = result.preserveConsoleLogs;
+				prefs.lightVersion = result.lightVersion;
 
 				updateSettingsInUi();
 				scope.updateSetting();

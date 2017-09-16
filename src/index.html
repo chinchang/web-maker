@@ -460,7 +460,7 @@
 							</label>
 						</div>
 					</div>
-					<div class="ml-2">
+          <div class="ml-2">
 						<label class="line" title="Your Preview will refresh when you resize the preview split">
 							<input type="checkbox" d-change="updateSetting" data-setting="refreshOnResize"> Refresh preview on resize
 						</label>
@@ -482,9 +482,12 @@
 						<label class="line" title="Preserves the console logs across your preview refreshes">
 							<input type="checkbox" d-change="updateSetting" data-setting="preserveConsoleLogs"> Preserve console logs
 						</label>
+            <label class="line">
+						  <input type="checkbox" d-change="updateSetting" data-setting="lightVersion"> Toggle fast/light version (needs restart)
+					  </label>
 					</div>
 				</div>
-				
+        
 				<hr>
 
 				<h3>Fun</h3>

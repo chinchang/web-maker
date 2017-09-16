@@ -371,9 +371,11 @@ globalConsoleContainerEl
 		currentItem.htmlMode = htmlMode;
 		currentItem.cssMode = cssMode;
 		currentItem.jsMode = jsMode;
-		currentItem.cssSettings = {
-			acssConfig: scope.acssSettingsCm.getValue()
-		};
+		if (modes[cssMode].hasSettings) {
+			currentItem.cssSettings = {
+				acssConfig: scope.acssSettingsCm.getValue()
+			};
+		}
 		currentItem.updatedOn = Date.now();
 		currentItem.layoutMode = currentLayoutMode;
 		currentItem.externalLibs = {

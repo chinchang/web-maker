@@ -31,6 +31,7 @@ a { text-decoration: none; color: crimson; cursor: pointer; }
 .opacity--30 { opacity: 0.3; }
 .pointer-none { pointer-events: none; }
 .ml-1 { margin-left: 1rem; }
+.ml-2 { margin-left: 2rem; }
 hr {
 	background: 0;
 	border: 0;
@@ -462,8 +463,8 @@ li.CodeMirror-hint-active {
 /* Make settings modal smaller */
 @media screen and (min-width: 600px) {
 	.modal--settings {
-		width: 600px;
-		margin-left: -300px;
+		/* width: 600px; */
+		/* margin-left: -300px; */
 	}
 }
 .saved-items-pane {
@@ -885,6 +886,25 @@ li.CodeMirror-hint-active {
 .console:not(.is-minimized) .code-wrap__header {
 	cursor: ns-resize;
 }
+
+.is-detached-mode .demo-side {
+	display: none;
+}
+
+.is-detached-mode .code-side {
+	width: 100% !important;
+}
+
+.layout-4 .code-side {
+	display: none;
+}
+.layout-4 .code-side + .gutter {
+	display: none;
+}
+.layout-4 .demo-side {
+	width: 100% !important;
+}
+
 
 /* Codemirror themes basic bg styles. This is here so that there is no big FOUC
 while the theme CSS file is loading */

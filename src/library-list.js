@@ -11,14 +11,19 @@ window.jsLibs = [
 	},
 	{
 		url:
-			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js',
-		label: 'Bootstrap 4α',
+		'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js',
+		label: 'Bootstrap 4β',
+		type: 'js'
+	},
+  {
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js',
+		label: 'Foundation',
 		type: 'js'
 	},
 	{
-		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/js/foundation.min.js',
-		label: 'Foundation',
+		url: 'https://semantic-ui.com/dist/semantic.min.js',
+		label: 'Semantic UI',
 		type: 'js'
 	},
 	{
@@ -32,12 +37,12 @@ window.jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react-dom.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.min.js',
 		label: 'React DOM',
 		type: 'js'
 	},
 	{
-		url: 'https://unpkg.com/vue@2.4.1/dist/vue.min.js',
+		url: 'https://unpkg.com/vue@2.4.4/dist/vue.min.js',
 		label: 'Vue.js',
 		type: 'js'
 	},
@@ -47,7 +52,7 @@ window.jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/d3/4.9.1/d3.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.min.js',
 		label: 'D3',
 		type: 'js'
 	},
@@ -69,7 +74,7 @@ window.jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.28/js/uikit.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/js/uikit.min.js',
 		label: 'UIkit 3',
 		type: 'js'
 	}
@@ -83,21 +88,27 @@ window.cssLibs = [
 	},
 	{
 		url:
-			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css',
-		label: 'Bootstrap 4α',
+			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css',
+		label: 'Bootstrap 4β',
 		type: 'css'
 	},
-	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.2/css/bulma.min.css',
-		label: 'Bulma',
-		type: 'css'
-	},
-	{
+  {
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/css/foundation.min.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css',
 		label: 'Foundation',
 		type: 'css'
 	},
+  {
+		url:'https://semantic-ui.com/dist/semantic.min.css',
+		label: 'Semantic UI',
+		type: 'css'
+	},
+	{
+    url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.5.2/css/bulma.min.css',
+		label: 'Bulma',
+		type: 'css'
+	},
+
 	{
 		url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.5.0/hint.min.css',
 		label: 'Hint.css',
@@ -111,7 +122,7 @@ window.cssLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.28/css/uikit.min.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/css/uikit.min.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},

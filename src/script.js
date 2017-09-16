@@ -6,13 +6,13 @@ notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settings
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
-customEditorFontInput
+customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 */
 /* eslint-disable no-extra-semi */
 (function(alertsService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.8.0';
+	var version = '2.8.1';
 
 	if (window.DEBUG) {
 		window.scope = scope;
@@ -95,7 +95,8 @@ customEditorFontInput
 		cmPath: 'css',
 		cmMode: 'css',
 		codepenVal: 'notsupported',
-		cmDisable: true
+		cmDisable: true,
+		hasSettings: true
 	};
 
 	const AUTO_SAVE_INTERVAL = 15000; // 15 seconds
@@ -369,6 +370,9 @@ customEditorFontInput
 		currentItem.htmlMode = htmlMode;
 		currentItem.cssMode = cssMode;
 		currentItem.jsMode = jsMode;
+		currentItem.cssSettings = {
+			acssConfig: scope.acssSettingsCm.getValue()
+		};
 		currentItem.updatedOn = Date.now();
 		currentItem.layoutMode = currentLayoutMode;
 		currentItem.externalLibs = {
@@ -592,6 +596,11 @@ customEditorFontInput
 		scope.cm.css.refresh();
 		scope.cm.js.refresh();
 
+		scope.acssSettingsCm.setValue(
+			currentItem.cssSettings ? currentItem.cssSettings.acssConfig : ''
+		);
+		scope.acssSettingsCm.refresh();
+
 		scope.clearConsole();
 
 		// To have the library count updated
@@ -614,6 +623,7 @@ customEditorFontInput
 		addLibraryModal.classList.remove('is-modal-visible');
 		onboardModal.classList.remove('is-modal-visible');
 		settingsModal.classList.remove('is-modal-visible');
+		cssSettingsModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -681,6 +691,9 @@ customEditorFontInput
 		cssModelLabel.parentElement.querySelector('select').value = value;
 		scope.cm.css.setOption('mode', modes[value].cmMode);
 		scope.cm.css.setOption('readOnly', modes[value].cmDisable);
+		cssSettingsBtn.classList[modes[value].hasSettings ? 'remove' : 'add'](
+			'hide'
+		);
 		CodeMirror.autoLoadMode(
 			scope.cm.css,
 			modes[value].cmPath || modes[value].cmMode
@@ -770,7 +783,15 @@ customEditorFontInput
 		} else if (cssMode === CssModes.ACSS) {
 			const html = scope.cm.html.getValue();
 			const foundClasses = atomizer.findClassNames(html);
-			const finalConfig = atomizer.getConfig(foundClasses, {});
+			var finalConfig;
+			try {
+				finalConfig = atomizer.getConfig(
+					foundClasses,
+					JSON.parse(scope.acssSettingsCm.getValue())
+				);
+			} catch (e) {
+				finalConfig = atomizer.getConfig(foundClasses, {});
+			}
 			const acss = atomizer.getCss(finalConfig);
 			scope.cm.css.setValue(acss);
 			d.resolve(acss);
@@ -924,6 +945,7 @@ customEditorFontInput
 			}, '');
 		var contents =
 			'<html>\n<head>\n' +
+			'<meta charset="UTF-8" />\n' +
 			externalCss +
 			'\n' +
 			'<style id="webmakerstyle">\n' +
@@ -1037,11 +1059,18 @@ customEditorFontInput
 					chrome.i18n.getMessage('@@extension_id') +
 					'/temporary/' +
 					'preview.html';
+				if (scope.detachedWindow) {
+					scope.detachedWindow.postMessage(frame.src, '*');
+				}
 			});
 		});
 	}
 
 	scope.setPreviewContent = function(isForced) {
+		if (!prefs.preserveConsoleLogs) {
+			scope.clearConsole();
+		}
+
 		var currentCode = {
 			html: scope.cm.html.getValue(),
 			css: scope.cm.css.getValue(),
@@ -1588,6 +1617,7 @@ customEditorFontInput
 		$('[data-setting=editorCustomFont]').value = prefs.editorCustomFont;
 		$('[data-setting=autoSave]').checked = prefs.autoSave;
 		$('[data-setting=autoComplete]').checked = prefs.autoComplete;
+		$('[data-setting=preserveConsoleLogs]').checked = prefs.preserveConsoleLogs;
 		$('[data-setting=lightVersion]').checked = prefs.lightVersion;
 
 		if (!prefs.lightVersion) {
@@ -1665,6 +1695,10 @@ customEditorFontInput
 			scope.cm[type].refresh();
 		});
 		scope.consoleCm.setOption('theme', $('[data-setting=editorTheme]').value);
+		scope.acssSettingsCm.setOption(
+			'theme',
+			$('[data-setting=editorTheme]').value
+		);
 		if (prefs.autoSave) {
 			if (!autoSaveInterval) {
 				autoSaveInterval = setInterval(autoSaveLoop, AUTO_SAVE_INTERVAL);
@@ -1808,6 +1842,29 @@ customEditorFontInput
 			});
 		});
 	}
+
+	scope.openDetachedPreview = function() {
+		document.body.classList.add('is-detached-mode');
+		scope.detachedWindow = window.open(
+			'./preview.html',
+			'Web Maker',
+			'width=420,height=230,resizable,scrollbars=yes,status=1'
+		);
+		setTimeout(() => {
+			scope.detachedWindow.postMessage(frame.src, '*');
+		}, 1000);
+		function checkWindow() {
+			if (scope.detachedWindow && scope.detachedWindow.closed) {
+				clearInterval(intervalID);
+				document.body.classList.remove('is-detached-mode');
+			}
+		}
+		var intervalID = window.setInterval(checkWindow, 500);
+	};
+
+	scope.openCssSettingsModal = function() {
+		scope.toggleModal(cssSettingsModal);
+	};
 
 	function init() {
 		var lastCode;
@@ -2160,6 +2217,7 @@ customEditorFontInput
 				editorCustomFont: '',
 				autoSave: true,
 				autoComplete: true,
+				preserveConsoleLogs: true,
 				lightVersion: true
 			},
 			function syncGetCallback(result) {
@@ -2196,6 +2254,7 @@ customEditorFontInput
 				prefs.editorCustomFont = result.editorCustomFont;
 				prefs.autoSave = result.autoSave;
 				prefs.autoComplete = result.autoComplete;
+				prefs.preserveConsoleLogs = result.preserveConsoleLogs;
 				prefs.lightVersion = result.lightVersion;
 
 				updateSettingsInUi();
@@ -2213,15 +2272,14 @@ customEditorFontInput
 				if (!result.lastSeenVersion) {
 					onboardModal.classList.add('is-modal-visible');
 					trackEvent('ui', 'onboardModalSeen');
-					// set the current version as seen on closing the onboard modal
+					chrome.storage.sync.set(
+						{
+							lastSeenVersion: version
+						},
+						function() {}
+					);
+					// set some initial preferences on closing the onboard modal
 					utils.once(document, 'overlaysClosed', function() {
-						chrome.storage.sync.set(
-							{
-								lastSeenVersion: version
-							},
-							function() {}
-						);
-
 						chrome.storage.sync.set(
 							{
 								replaceNewTab: onboardShowInTabOptionBtn.classList.contains(
@@ -2247,6 +2305,13 @@ customEditorFontInput
 				}
 			}
 		);
+
+		scope.acssSettingsCm = CodeMirror.fromTextArea(acssSettingsTextarea, {
+			mode: 'application/ld+json'
+		});
+		scope.acssSettingsCm.on('blur', () => {
+			scope.setPreviewContent(true);
+		});
 
 		var options = '';
 		[

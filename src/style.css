@@ -156,6 +156,16 @@ body:not(.light-version).overlay-visible .main-container {
 .layout-4 .demo-side {
 	width: 100% !important;
 }
+.is-detached-mode .demo-side {
+	display: none;
+}
+.is-detached-mode .code-side {
+	width: 100% !important;
+}
+.is-detached-mode.layout-2 .code-side {
+	height: auto !important;
+}
+
 .code-wrap {
 	display: flex;
 	flex-direction: column;
@@ -886,24 +896,6 @@ li.CodeMirror-hint-active {
 }
 .console:not(.is-minimized) .code-wrap__header {
 	cursor: ns-resize;
-}
-
-.is-detached-mode .demo-side {
-	display: none;
-}
-
-.is-detached-mode .code-side {
-	width: 100% !important;
-}
-
-.layout-4 .code-side {
-	display: none;
-}
-.layout-4 .code-side + .gutter {
-	display: none;
-}
-.layout-4 .demo-side {
-	width: 100% !important;
 }
 
 

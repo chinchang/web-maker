@@ -912,6 +912,9 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 	};
 	window.onunload = function() {
 		saveCode('code');
+		if (scope.detachedWindow) {
+			scope.detachedWindow.close();
+		}
 	};
 
 	function cleanupErrors(lang) {

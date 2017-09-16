@@ -1,20 +1,19 @@
-(function () {
-
+(function() {
 	var logEl,
 		isInitialized = false,
 		_console = {}; // backup console obj to contain references of overridden fns.
-		_options = {
-			bgColor: 'black',
-			logColor: 'lightgreen',
-			infoColor: 'blue',
-			warnColor: 'orange',
-			errorColor: 'red',
-			freeConsole: false,
-			css: '',
-			autoScroll: true,
-			proxyCallback: null,
-			noUi: false
-		};
+	_options = {
+		bgColor: 'black',
+		logColor: 'lightgreen',
+		infoColor: 'blue',
+		warnColor: 'orange',
+		errorColor: 'red',
+		freeConsole: false,
+		css: '',
+		autoScroll: true,
+		proxyCallback: null,
+		noUi: false
+	};
 
 	function createElement(tag, css) {
 		var element = document.createElement(tag);
@@ -23,7 +22,13 @@
 	}
 
 	function createPanel() {
-		var div = createElement('div', 'z-index:2147483647;font-family:Helvetica,Arial,sans-serif;font-size:10px;font-weight:bold;padding:5px;text-align:left;opacity:0.8;position:fixed;right:0;top:0;min-width:200px;max-height:50vh;overflow:auto;background:' + _options.bgColor + ';' + _options.css);
+		var div = createElement(
+			'div',
+			'z-index:2147483647;font-family:Helvetica,Arial,sans-serif;font-size:10px;font-weight:bold;padding:5px;text-align:left;opacity:0.8;position:fixed;right:0;top:0;min-width:200px;max-height:50vh;overflow:auto;background:' +
+				_options.bgColor +
+				';' +
+				_options.css
+		);
 		return div;
 	}
 
@@ -170,18 +175,19 @@
 		destroy: checkInitDecorator(destroy)
 	};
 })();
+var mainWindow = window.parent.onMessageFromConsole ? window.parent : window.parent.opener;
 screenLog.init({
 	noUi: true,
 	proxyCallback: function () {
-		window.parent.onMessageFromConsole.apply(null, arguments);
+		mainWindow.onMessageFromConsole.apply(null, arguments);
 	}
 });
 window._wmEvaluate = function _wmEvaluate(expr) {
 	try {
 		var result = eval(expr);
 	} catch(e) {
-		window.parent.onMessageFromConsole.call(null, e);
+		mainWindow.onMessageFromConsole.call(null, e);
 		return;
 	}
-	window.parent.onMessageFromConsole.call(null, result);
+	mainWindow.onMessageFromConsole.call(null, result);
 }

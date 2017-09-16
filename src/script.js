@@ -1619,6 +1619,7 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 		$('[data-setting=autoComplete]').checked = prefs.autoComplete;
 		$('[data-setting=preserveConsoleLogs]').checked = prefs.preserveConsoleLogs;
 		$('[data-setting=lightVersion]').checked = prefs.lightVersion;
+		$('[data-setting=lineWrap]').checked = prefs.lineWrap;
 	}
 
 	/**
@@ -1687,6 +1688,10 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 			scope.cm[type].setOption(
 				'keyMap',
 				$('[data-setting=keymap]:checked').value
+			);
+			scope.cm[type].setOption(
+				'lineWrapping',
+				$('[data-setting=lineWrap]').checked
 			);
 			scope.cm[type].refresh();
 		});
@@ -2030,7 +2035,6 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 			}
 			// Ctrl/⌘ + Shift + 5
 			if (
-				!prefs.autoPreview &&
 				(event.ctrlKey || event.metaKey) &&
 				event.shiftKey &&
 				event.keyCode === 53
@@ -2218,7 +2222,8 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 				autoSave: true,
 				autoComplete: true,
 				preserveConsoleLogs: true,
-				lightVersion: true
+				lightVersion: true,
+				lineWrap: true
 			},
 			function syncGetCallback(result) {
 				if (result.preserveLastCode && lastCode) {
@@ -2256,6 +2261,7 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 				prefs.autoComplete = result.autoComplete;
 				prefs.preserveConsoleLogs = result.preserveConsoleLogs;
 				prefs.lightVersion = result.lightVersion;
+				prefs.lineWrap = result.lineWrap;
 
 				updateSettingsInUi();
 				scope.updateSetting();

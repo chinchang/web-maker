@@ -1619,10 +1619,6 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 		$('[data-setting=autoComplete]').checked = prefs.autoComplete;
 		$('[data-setting=preserveConsoleLogs]').checked = prefs.preserveConsoleLogs;
 		$('[data-setting=lightVersion]').checked = prefs.lightVersion;
-
-		if (!prefs.lightVersion) {
-			document.body.classList.add('blur');
-		}
 	}
 
 	/**
@@ -1707,6 +1703,10 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 			clearInterval(autoSaveInterval);
 			autoSaveInterval = null;
 		}
+
+		document.body.classList[prefs.lightVersion ? 'add' : 'false'](
+			'light-version'
+		);
 	};
 
 	scope.onNewBtnClick = function() {

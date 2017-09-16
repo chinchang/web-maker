@@ -1709,7 +1709,7 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 			autoSaveInterval = null;
 		}
 
-		document.body.classList[prefs.lightVersion ? 'add' : 'false'](
+		document.body.classList[prefs.lightVersion ? 'add' : 'remove'](
 			'light-version'
 		);
 	};

@@ -6,7 +6,8 @@ notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settings
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
-customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
+customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
+globalConsoleContainerEl
 */
 /* eslint-disable no-extra-semi */
 (function(alertsService) {
@@ -1864,6 +1865,7 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 		const iframeWidth = iframeBounds.width;
 		const iframeHeight = iframeBounds.height;
 		document.body.classList.add('is-detached-mode');
+		globalConsoleContainerEl.insertBefore(consoleEl, null);
 
 		scope.detachedWindow = window.open(
 			'./preview.html',
@@ -1877,6 +1879,8 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea
 			if (scope.detachedWindow && scope.detachedWindow.closed) {
 				clearInterval(intervalID);
 				document.body.classList.remove('is-detached-mode');
+				$('#js-demo-side').insertBefore(consoleEl, null);
+				scope.detachedWindow = null;
 			}
 		}
 		var intervalID = window.setInterval(checkWindow, 500);

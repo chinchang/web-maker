@@ -296,6 +296,10 @@ li.CodeMirror-hint-active {
 	z-index: 1;
 	background: white;
 }
+/* When demo frame is in detached window */
+body > #demo-frame {
+	height: 100%; /* Because console is no more here */
+}
 .main-header,
 .footer {
 	padding: 5px 10px;
@@ -897,7 +901,19 @@ li.CodeMirror-hint-active {
 .console:not(.is-minimized) .code-wrap__header {
 	cursor: ns-resize;
 }
-
+.global-console-container {
+	display: none;
+	position: relative;
+	height: 35px;
+}
+/* Detached mode */
+.is-detached-mode .console,
+.is-detached-mode .footer {
+	z-index: 4;
+}
+.is-detached-mode .global-console-container {
+	display: block;
+}
 
 /* Codemirror themes basic bg styles. This is here so that there is no big FOUC
 while the theme CSS file is loading */

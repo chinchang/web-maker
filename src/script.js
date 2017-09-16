@@ -2248,7 +2248,7 @@ globalConsoleContainerEl
 				autoSave: true,
 				autoComplete: true,
 				preserveConsoleLogs: true,
-				lightVersion: true,
+				lightVersion: false,
 				lineWrap: true
 			},
 			function syncGetCallback(result) {

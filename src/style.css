@@ -31,6 +31,7 @@ a { text-decoration: none; color: crimson; cursor: pointer; }
 .opacity--30 { opacity: 0.3; }
 .pointer-none { pointer-events: none; }
 .ml-1 { margin-left: 1rem; }
+.ml-2 { margin-left: 2rem; }
 hr {
 	background: 0;
 	border: 0;
@@ -117,10 +118,11 @@ select, input[type="text"], input[type="number"],  textarea {
 	will-change: -webkit-filter;
 	transition: 0.10s ease 0.2s;
 }
-.overlay-visible .main-container {
+body:not(.light-version).overlay-visible .main-container {
 	transition-duration: 0.5s;
 	transition-delay: 0.4s;
 	-webkit-filter: blur(3px);
+	filter: blur(3px);
 }
 .code-side,
 .demo-side {
@@ -154,6 +156,16 @@ select, input[type="text"], input[type="number"],  textarea {
 .layout-4 .demo-side {
 	width: 100% !important;
 }
+.is-detached-mode .demo-side {
+	display: none;
+}
+.is-detached-mode .code-side {
+	width: 100% !important;
+}
+.is-detached-mode.layout-2 .code-side {
+	height: auto !important;
+}
+
 .code-wrap {
 	display: flex;
 	flex-direction: column;
@@ -283,6 +295,10 @@ li.CodeMirror-hint-active {
 	position: absolute;
 	z-index: 1;
 	background: white;
+}
+/* When demo frame is in detached window */
+body > #demo-frame {
+	height: 100%; /* Because console is no more here */
 }
 .main-header,
 .footer {
@@ -462,8 +478,8 @@ li.CodeMirror-hint-active {
 /* Make settings modal smaller */
 @media screen and (min-width: 600px) {
 	.modal--settings {
-		width: 600px;
-		margin-left: -300px;
+		/* width: 600px; */
+		/* margin-left: -300px; */
 	}
 }
 .saved-items-pane {
@@ -884,6 +900,19 @@ li.CodeMirror-hint-active {
 }
 .console:not(.is-minimized) .code-wrap__header {
 	cursor: ns-resize;
+}
+.global-console-container {
+	display: none;
+	position: relative;
+	height: 35px;
+}
+/* Detached mode */
+.is-detached-mode .console,
+.is-detached-mode .footer {
+	z-index: 4;
+}
+.is-detached-mode .global-console-container {
+	display: block;
 }
 
 /* Codemirror themes basic bg styles. This is here so that there is no big FOUC

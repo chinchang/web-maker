@@ -254,6 +254,9 @@
 		<h2 style="margin-bottom:0.4em;">A blazing fast & offline web playground in your browser</h2>
 		<div style="margin-top: 30px;" id="cta">
 			<script>
+			if (navigator.userAgent.indexOf('Chrome') === -1) {
+				document.write('<img src="chrome-logo.png" height="30" alt="" style="vertical-align:middle"> Available only on Chrome currently.');
+			}
 			if (chrome.app.isInstalled) {
 				document.write('You have this extension already installed!')
 			}

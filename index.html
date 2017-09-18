@@ -68,7 +68,7 @@
 			display: inline-block;
 			border-radius: 8px;
 			text-transform: uppercase;
-			transition: 0.3s ease;
+			transition: 0.25s ease;
 			color: rgba(0,0,0,0.7);
 		}
 		.btn:hover {
@@ -134,12 +134,12 @@
 		.people-say-bottom {
 			align-items: flex-start;
 		}
-		.people-say:hover .say {
+		/* .people-say:hover .say {
 			flex-shrink: initial;
-		}
-		.people-say:hover .people-say-bottom {
+		} */
+		/* .people-say:hover .people-say-bottom {
 			transform: translateX(0);
-		}
+		} */
 		.say {
 			color: inherit;
 			padding: 10px 20px;
@@ -216,9 +216,8 @@
 			.people-say-top,
 			.people-say-bottom {
 				display: flex;
-			}
-			.people-say-bottom {
-				transform: translateX(-6vw);
+				/* max-width: 100vw; */
+				overflow: scroll;
 			}
 			.say {
 				width: 18vw;
@@ -353,7 +352,7 @@
 				<a target="_blank" href="https://twitter.com/fedorloenko/status/835186942354534400" class="say">
 					<div class="say__name">
 						<img src="https://pbs.twimg.com/profile_images/826890665070059520/CfQ5_lSz_bigger.jpg" alt="">
-						<div>Fedor Loenko<div class="say__handle">@@fedorloenko</div></div>
+						<div>Fedor Loenko<div class="say__handle">@fedorloenko</div></div>
 					</div>
 					<p>Great Chrome extension via @chinchang457. I need offline CodePen from time to time.</p>
 				</a>
@@ -374,7 +373,7 @@
 				</a>
 				<a target="_blank" href="https://twitter.com/labnol/status/816576061622235136" class="say say--twitter">
 					<div class="say__name">
-						<img src="https://pbs.twimg.com/profile_images/641572075321229312/3f_9iwzr_400x400.jpg" alt="">
+						<img src="https://pbs.twimg.com/profile_images/905692103883104256/J0feWkQe_normal.jpg" alt="">
 						<div>Amit Agarwal <div class="say__handle">@labnol</div></div>
 					</div>
 					<p>This is like having your own copy of Codepen that also works offline.</p>

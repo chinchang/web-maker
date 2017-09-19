@@ -10,7 +10,7 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
 globalConsoleContainerEl
 */
 /* eslint-disable no-extra-semi */
-(function(alertsService) {
+(function(alertsService, db) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
 	var version = '2.9.0';
@@ -282,7 +282,7 @@ globalConsoleContainerEl
 		const d = deferred();
 		var obj = {};
 		obj[setting] = value;
-		chrome.storage.local.set(obj, d.resolve);
+		db.local.set(obj, d.resolve);
 		return d.promise;
 	}
 
@@ -302,13 +302,13 @@ globalConsoleContainerEl
 		});
 		// Push into the items hash if its a new item being saved
 		if (isNewItem) {
-			chrome.storage.local.get(
+			db.local.get(
 				{
 					items: {}
 				},
 				function(result) {
 					result.items[currentItem.id] = true;
-					chrome.storage.local.set({
+					db.local.set({
 						items: result.items
 					});
 				}
@@ -453,7 +453,7 @@ globalConsoleContainerEl
 	 */
 	function fetchItems(shouldSaveGlobally) {
 		var d = deferred();
-		chrome.storage.local.get('items', function(result) {
+		db.local.get('items', function(result) {
 			var itemIds = Object.getOwnPropertyNames(result.items || {}),
 				items = [];
 			if (!itemIds.length) {
@@ -464,7 +464,7 @@ globalConsoleContainerEl
 			trackEvent('fn', 'fetchItems', itemIds.length);
 			for (let i = 0; i < itemIds.length; i++) {
 				/* eslint-disable no-loop-func */
-				chrome.storage.local.get(itemIds[i], function(itemResult) {
+				db.local.get(itemIds[i], function(itemResult) {
 					if (shouldSaveGlobally) {
 						savedItems[itemIds[i]] = itemResult[itemIds[i]];
 					}
@@ -552,20 +552,20 @@ globalConsoleContainerEl
 
 		itemTile.remove();
 		// Remove from items list
-		chrome.storage.local.get(
+		db.local.get(
 			{
 				items: {}
 			},
 			function(result) {
 				delete result.items[itemId];
-				chrome.storage.local.set({
+				db.local.set({
 					items: result.items
 				});
 			}
 		);
 
 		// Remove individual item too.
-		chrome.storage.local.remove(itemId, function() {
+		db.local.remove(itemId, function() {
 			alertsService.add('Item removed.');
 			// This item is open in the editor. Lets open a new one.
 			if (currentItem.id === itemId) {
@@ -599,10 +599,8 @@ globalConsoleContainerEl
 		scope.cm.css.refresh();
 		scope.cm.js.refresh();
 
-		scope.acssSettingsCm.setValue(
-			currentItem.cssSettings ? currentItem.cssSettings.acssConfig : ''
-		);
-		scope.acssSettingsCm.refresh();
+		
+		// scope.acssSettingsCm.refresh();
 
 		scope.clearConsole();
 
@@ -970,13 +968,13 @@ globalConsoleContainerEl
 
 		contents +=
 			'<script src="' +
-			chrome.extension.getURL('lib/screenlog.js') +
+			utils.getURL('lib/screenlog.js') +
 			'"></script>';
 
 		if (jsMode === JsModes.ES6) {
 			contents +=
 				'<script src="' +
-				chrome.extension.getURL('lib/babel-polyfill.min.js') +
+				utils.getURL('lib/babel-polyfill.min.js') +
 				'"></script>';
 		}
 
@@ -1383,13 +1381,13 @@ globalConsoleContainerEl
 		}
 		if (mergedItemCount) {
 			// save new items
-			chrome.storage.local.set(toMergeItems, function() {
+			db.local.set(toMergeItems, function() {
 				alertsService.add(
 					mergedItemCount + ' creations imported successfully.'
 				);
 			});
 			// Push in new item IDs
-			chrome.storage.local.get(
+			db.local.get(
 				{
 					items: {}
 				},
@@ -1398,7 +1396,7 @@ globalConsoleContainerEl
 					for (var id in toMergeItems) {
 						result.items[id] = true;
 					}
-					chrome.storage.local.set({
+					db.local.set({
 						items: result.items
 					});
 					trackEvent('fn', 'itemsImported', mergedItemCount);
@@ -1644,7 +1642,7 @@ globalConsoleContainerEl
 			utils.log(settingName, el.type === 'checkbox' ? el.checked : el.value);
 			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
 			obj[settingName] = prefs[settingName];
-			chrome.storage.sync.set(obj, function() {
+			db.sync.set(obj, function() {
 				alertsService.add('Setting saved');
 			});
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
@@ -1706,10 +1704,10 @@ globalConsoleContainerEl
 			scope.cm[type].refresh();
 		});
 		scope.consoleCm.setOption('theme', $('[data-setting=editorTheme]').value);
-		scope.acssSettingsCm.setOption(
-			'theme',
-			$('[data-setting=editorTheme]').value
-		);
+		// scope.acssSettingsCm.setOption(
+		// 	'theme',
+		// 	$('[data-setting=editorTheme]').value
+		// );
 		if (prefs.autoSave) {
 			if (!autoSaveInterval) {
 				autoSaveInterval = setInterval(autoSaveLoop, AUTO_SAVE_INTERVAL);
@@ -1933,7 +1931,7 @@ globalConsoleContainerEl
 			) {
 				hasSeenNotifications = true;
 				notificationsBtn.classList.remove('has-new');
-				chrome.storage.sync.set(
+				db.sync.set(
 					{
 						lastSeenVersion: version
 					},
@@ -2213,7 +2211,7 @@ globalConsoleContainerEl
 			$('#demo-frame').classList.remove('pointer-none');
 		});
 
-		chrome.storage.local.get(
+		db.local.get(
 			{
 				layoutMode: 1,
 				code: ''
@@ -2228,7 +2226,7 @@ globalConsoleContainerEl
 		);
 
 		// Get synced `preserveLastCode` setting to get back last code (or not).
-		chrome.storage.sync.get(
+		db.sync.get(
 			{
 				preserveLastCode: true,
 				replaceNewTab: false,
@@ -2255,7 +2253,7 @@ globalConsoleContainerEl
 				if (result.preserveLastCode && lastCode) {
 					unsavedEditCount = 0;
 					if (lastCode.id) {
-						chrome.storage.local.get(lastCode.id, function(itemResult) {
+						db.local.get(lastCode.id, function(itemResult) {
 							utils.log('Load item ', lastCode.id);
 							currentItem = itemResult[lastCode.id];
 							refreshEditor();
@@ -2295,7 +2293,7 @@ globalConsoleContainerEl
 		);
 
 		// Check for new version notifications
-		chrome.storage.sync.get(
+		db.sync.get(
 			{
 				lastSeenVersion: ''
 			},
@@ -2304,7 +2302,7 @@ globalConsoleContainerEl
 				if (!result.lastSeenVersion) {
 					onboardModal.classList.add('is-modal-visible');
 					trackEvent('ui', 'onboardModalSeen');
-					chrome.storage.sync.set(
+					db.sync.set(
 						{
 							lastSeenVersion: version
 						},
@@ -2312,7 +2310,7 @@ globalConsoleContainerEl
 					);
 					// set some initial preferences on closing the onboard modal
 					utils.once(document, 'overlaysClosed', function() {
-						chrome.storage.sync.set(
+						db.sync.set(
 							{
 								replaceNewTab: onboardShowInTabOptionBtn.classList.contains(
 									'selected'
@@ -2408,4 +2406,4 @@ globalConsoleContainerEl
 	scope.closeAllOverlays = closeAllOverlays;
 
 	init();
-})(window.alertsService);
+})(window.alertsService, window.db);

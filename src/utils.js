@@ -171,6 +171,18 @@
 		});
 	}
 
+	function getUrl(path) {
+		if (chrome && chrome.storage) {
+			return chrome.extension.getURL(path);
+		} else{
+			return location.protocol +'//'+location.host+'/'+path;
+		}
+	}
+
+	chrome.i18n = chrome.i18n || {
+		getMessage: (str) => str
+	}
+
 	window.utils = {
 		semverCompare: semverCompare,
 		generateRandomId: generateRandomId,
@@ -178,6 +190,7 @@
 		addInfiniteLoopProtection: addInfiniteLoopProtection,
 		getHumanDate: getHumanDate,
 		log: log,
-		once: once
+		once: once,
+		getURL: getUrl
 	};
 })();

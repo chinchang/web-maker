@@ -1859,6 +1859,8 @@ globalConsoleContainerEl
 	}
 
 	scope.openDetachedPreview = function() {
+		trackEvent('ui', 'detachPreviewBtnClick');
+
 		if (scope.detachedWindow) {
 			scope.detachedWindow.focus();
 			return;
@@ -1895,6 +1897,7 @@ globalConsoleContainerEl
 			scope.acssSettingsCm.refresh();
 			scope.acssSettingsCm.focus();
 		}, 500);
+		trackEvent('ui', 'cssSettingsBtnClick');
 	};
 
 	function init() {

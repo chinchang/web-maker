@@ -2306,7 +2306,10 @@ globalConsoleContainerEl
 				// Check if new user
 				if (!result.lastSeenVersion) {
 					onboardModal.classList.add('is-modal-visible');
-					trackEvent('ui', 'onboardModalSeen');
+					if (document.cookie.indexOf('onboarded') !== -1) {
+						trackEvent('ui', 'onboardModalSeen');
+						document.cookie = 'onboarded=1';
+					}
 					chrome.storage.sync.set(
 						{
 							lastSeenVersion: version

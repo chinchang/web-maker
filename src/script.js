@@ -2306,7 +2306,7 @@ globalConsoleContainerEl
 				// Check if new user
 				if (!result.lastSeenVersion) {
 					onboardModal.classList.add('is-modal-visible');
-					if (document.cookie.indexOf('onboarded') !== -1) {
+					if (document.cookie.indexOf('onboarded') === -1) {
 						trackEvent('ui', 'onboardModalSeen', version);
 						document.cookie = 'onboarded=1';
 					}

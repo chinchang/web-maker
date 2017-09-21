@@ -1859,6 +1859,8 @@ globalConsoleContainerEl
 	}
 
 	scope.openDetachedPreview = function() {
+		trackEvent('ui', 'detachPreviewBtnClick');
+
 		if (scope.detachedWindow) {
 			scope.detachedWindow.focus();
 			return;
@@ -1895,6 +1897,7 @@ globalConsoleContainerEl
 			scope.acssSettingsCm.refresh();
 			scope.acssSettingsCm.focus();
 		}, 500);
+		trackEvent('ui', 'cssSettingsBtnClick');
 	};
 
 	function init() {
@@ -2303,7 +2306,10 @@ globalConsoleContainerEl
 				// Check if new user
 				if (!result.lastSeenVersion) {
 					onboardModal.classList.add('is-modal-visible');
-					trackEvent('ui', 'onboardModalSeen');
+					if (document.cookie.indexOf('onboarded') !== -1) {
+						trackEvent('ui', 'onboardModalSeen', version);
+						document.cookie = 'onboarded=1';
+					}
 					chrome.storage.sync.set(
 						{
 							lastSeenVersion: version

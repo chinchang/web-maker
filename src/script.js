@@ -2307,7 +2307,7 @@ globalConsoleContainerEl
 				if (!result.lastSeenVersion) {
 					onboardModal.classList.add('is-modal-visible');
 					if (document.cookie.indexOf('onboarded') !== -1) {
-						trackEvent('ui', 'onboardModalSeen');
+						trackEvent('ui', 'onboardModalSeen', version);
 						document.cookie = 'onboarded=1';
 					}
 					chrome.storage.sync.set(

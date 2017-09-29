@@ -808,107 +808,25 @@ globalConsoleContainerEl
 
 		return d.promise;
 	}
-	function computeJs(shouldPreventInfiniteLoops) {
+
+	function escape(str) {
+		return str
+			.replace(/[\\]/g, '\\\\')
+			.replace(/[\"]/g, '\\\"')
+			.replace(/[\/]/g, '\\/')
+			.replace(/[\b]/g, '\\b')
+			.replace(/[\f]/g, '\\f')
+			.replace(/[\n]/g, '\\n')
+			.replace(/[\r]/g, '\\r')
+			.replace(/[\t]/g, '\\t');
+	}
+
+	function computeJs() {
 		var d = deferred();
-		var code = scope.cm.js.getValue();
+		var code = 'app.$store.commit(\'code\', ' + '\'' + escape(scope.cm.js.getValue()) + '\');';
 
 		cleanupErrors('js');
-		if (!code) {
-			d.resolve('');
-			return d.promise;
-		}
-
-		if (jsMode === JsModes.JS) {
-			try {
-				esprima.parse(code, {
-					tolerant: true
-				});
-			} catch (e) {
-				showErrors('js', [
-					{ lineNumber: e.lineNumber - 1, message: e.description }
-				]);
-			} finally {
-				if (shouldPreventInfiniteLoops !== false) {
-					code = utils.addInfiniteLoopProtection(code);
-				}
-				d.resolve(code);
-			}
-		} else if (jsMode === JsModes.COFFEESCRIPT) {
-			var coffeeCode;
-			if (!window.CoffeeScript) {
-				d.resolve('');
-				return d.promise;
-			}
-			try {
-				coffeeCode = CoffeeScript.compile(code, { bare: true });
-			} catch (e) {
-				showErrors('js', [
-					{ lineNumber: e.location.first_line, message: e.message }
-				]);
-			} finally {
-				if (shouldPreventInfiniteLoops !== false) {
-					code = utils.addInfiniteLoopProtection(coffeeCode);
-				}
-				d.resolve(code);
-			}
-		} else if (jsMode === JsModes.ES6) {
-			if (!window.Babel) {
-				d.resolve('');
-				return d.promise;
-			}
-			try {
-				esprima.parse(code, {
-					tolerant: true,
-					jsx: true
-				});
-			} catch (e) {
-				showErrors('js', [
-					{ lineNumber: e.lineNumber - 1, message: e.description }
-				]);
-			} finally {
-				code = Babel.transform(code, {
-					presets: ['latest', 'stage-2', 'react']
-				}).code;
-				if (shouldPreventInfiniteLoops !== false) {
-					code = utils.addInfiniteLoopProtection(code);
-				}
-				d.resolve(code);
-			}
-		} else if (jsMode === JsModes.TS) {
-			try {
-				if (!window.ts) {
-					d.resolve('');
-					return d.promise;
-				}
-				code = ts.transpileModule(code, {
-					reportDiagnostics: true,
-					compilerOptions: {
-						noEmitOnError: true,
-						diagnostics: true,
-						module: ts.ModuleKind.ES2015
-					}
-				});
-				if (code.diagnostics.length) {
-					/* eslint-disable no-throw-literal */
-					throw {
-						description: code.diagnostics[0].messageText,
-						lineNumber: ts.getLineOfLocalPosition(
-							code.diagnostics[0].file,
-							code.diagnostics[0].start
-						)
-					};
-				}
-				if (shouldPreventInfiniteLoops !== false) {
-					code = utils.addInfiniteLoopProtection(code.outputText);
-				}
-				d.resolve(code);
-			} catch (e) {
-				showErrors('js', [
-					{ lineNumber: e.lineNumber - 1, message: e.description }
-				]);
-			}
-		}
-
+		d.resolve(code);
 		return d.promise;
 	}
 
@@ -1128,7 +1046,7 @@ globalConsoleContainerEl
 	function saveFile() {
 		var htmlPromise = computeHtml();
 		var cssPromise = computeCss();
-		var jsPromise = computeJs(false);
+		var jsPromise = computeJs();
 		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function(result) {
 			var html = result[0],
 				css = result[1],

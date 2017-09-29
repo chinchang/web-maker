@@ -720,7 +720,8 @@ globalConsoleContainerEl
 	// to whatever mode is selected and resolve the returned promise with the code.
 	function computeHtml() {
 		var d = deferred();
-		var code = 'SEQ';
+		var code =
+			'<main id="demo">\n' + '    <seq-diagram></seq-diagram>\n' + '  </main>';
 		// var code = scope.cm.html.getValue();
 		if (htmlMode === HtmlModes.HTML) {
 			d.resolve(code);
@@ -946,18 +947,22 @@ globalConsoleContainerEl
 			.reduce(function(scripts, url) {
 				return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
 			}, '');
-		var externalCss = externalCssTextarea.value
-			.split('\n')
-			.reduce(function(links, url) {
-				return (
-					links +
-					(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
-				);
-			}, '');
+		// var externalCss = externalCssTextarea.value
+		// 	.split('\n')
+		// 	.reduce(function(links, url) {
+		// 		return (
+		// 			links +
+		// 			(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
+		// 		);
+		// 	}, '');
+		var vueSequenceCss =
+			'<link rel="stylesheet" href="' +
+			chrome.extension.getURL('lib/vue-sequence.css') +
+			'"></link>';
 		var contents =
 			'<html>\n<head>\n' +
 			'<meta charset="UTF-8" />\n' +
-			externalCss +
+			vueSequenceCss +
 			'\n' +
 			'<style id="webmakerstyle">\n' +
 			css +
@@ -972,6 +977,10 @@ globalConsoleContainerEl
 		contents +=
 			'<script src="' +
 			chrome.extension.getURL('lib/screenlog.js') +
+			'"></script>';
+		contents +=
+			'<script src="' +
+			chrome.extension.getURL('lib/vue-sequence.demo.js') +
 			'"></script>';
 
 		if (jsMode === JsModes.ES6) {

@@ -720,7 +720,8 @@ globalConsoleContainerEl
 	// to whatever mode is selected and resolve the returned promise with the code.
 	function computeHtml() {
 		var d = deferred();
-		var code = scope.cm.html.getValue();
+		var code = 'SEQ';
+		// var code = scope.cm.html.getValue();
 		if (htmlMode === HtmlModes.HTML) {
 			d.resolve(code);
 		} else if (htmlMode === HtmlModes.MARKDOWN) {
@@ -1453,7 +1454,10 @@ globalConsoleContainerEl
 		var byteString = atob(dataURI.split(',')[1]);
 
 		// separate out the mime component
-		var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+		var mimeString = dataURI
+			.split(',')[0]
+			.split(':')[1]
+			.split(';')[0];
 
 		// write the bytes of the string to an ArrayBuffer
 		var ab = new ArrayBuffer(byteString.length);

@@ -1,9 +1,9 @@
 {
-	"name": "Web Maker",
-	"version": "2.9.2",
+	"name": "Web Sequence",
+	"version": "0.9.0",
 	"manifest_version": 2,
-	"description": "Blazing fast & offline playground for your web experiments",
-	"homepage_url": "https://webmakerapp.com",
+	"description": "Blazing fast & offline playground for sequence diagram generating",
+	"homepage_url": "https://zenuml.com",
 	"permissions": ["storage", "tabs", "<all_urls>"],
 	"optional_permissions": ["downloads"],
 	"content_security_policy": "script-src 'self' filesystem: http://localhost:* https://localhost:* https://ajax.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://unpkg.com https://maxcdn.com https://cdn77.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net/ https://*.stripe.com/ https://builds.framerjs.com/ https://rawgit.com https://wzrd.in https://semantic-ui.com https://www.google-analytics.com 'unsafe-eval'; object-src 'self'",
@@ -12,7 +12,7 @@
 		"chrome_style": true
 	},
 	"browser_action": {
-		"default_title": "Start Web Maker",
+		"default_title": "Start Web Sequence",
 		"default_icon": "icon-16.png"
 	},
 	"background": {

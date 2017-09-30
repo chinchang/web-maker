@@ -251,7 +251,7 @@ globalConsoleContainerEl
 		document.body.classList.remove('layout-4');
 		document.body.classList.add('layout-' + mode);
 
-		// resetSplitting();
+		resetSplitting();
 		scope.setPreviewContent(true);
 	}
 

@@ -33,4 +33,4 @@ Web Sequence is completely free and open-source. If you find it useful, you can 
 
 MIT Licensed
 
-Copyright (c) 2017 Peng Xiao, [ZenUml.com](https://ZenUml.com)
+Copyright (c) 2017 Peng Xiao, [ZenUml.com](http://ZenUml.com)

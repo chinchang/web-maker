@@ -13,7 +13,7 @@ globalConsoleContainerEl
 (function(alertsService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.9.1';
+	var version = '0.9.0';
 
 	if (window.DEBUG) {
 		window.scope = scope;

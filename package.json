@@ -1,7 +1,7 @@
 {
-	"name": "web-maker",
-	"version": "2.8.1",
-	"description": "A blazing fast & offline web playground",
+	"name": "web-sequence",
+	"version": "0.9.1",
+	"description": "A blazing fast & offline sequence diagram generator",
 	"main": "index.html",
 	"devDependencies": {
 		"babel-eslint": "^7.2.3",
@@ -14,15 +14,15 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/chinchang/web-maker.git"
+		"url": "git+https://github.com/ZenUml/web-sequence.git"
 	},
-	"keywords": ["frontend", "playground", "web", "editor"],
-	"author": "Kushagra Gour",
+	"keywords": ["uml", "sequence diagram", "web", "editor"],
+	"author": "Peng Xiao",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/chinchang/web-maker/issues"
+		"url": "https://github.com/ZenUml/web-sequence/issues"
 	},
-	"homepage": "https://webmakerapp.com",
+	"homepage": "http://zenuml.com",
 	"dependencies": {
 		"babel-polyfill": "^6.23.0",
 		"babel-standalone": "^6.25.0"

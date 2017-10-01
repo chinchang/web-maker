@@ -3,8 +3,6 @@ Web Sequence  [![Gitter](https://badges.gitter.im/zenuml/Lobby.svg)](https://git
 
 **Web Sequence** is a chrome extension that converts your Chrome tab into a sequence diagram generator. Something like CodePen or JSFiddle, but for sequence diagram generation.
 
-### [INSTALL EXTENSION](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
-
 ![Screenshot](/screenshots/ss1.png)
 
 ### Features
@@ -22,9 +20,14 @@ Web Sequence  [![Gitter](https://badges.gitter.im/zenuml/Lobby.svg)](https://git
 
 Follow [@ZenUml](https://twitter.com/intent/follow?screen_name=ZenUml) for updates or tweet out feature requests and suggestions.
 
-### Support Web Maker
+### Support Web Sequence
 
 Web Sequence is completely free and open-source. If you find it useful, you can show your support by sharing it in your social network or by simply letting me know how much you 💖 it by tweeting to [@ZenUml](https://twitter.com/ZenUml).
+
+### Awesome libraries used
+
+* This project is a fork of [Web Maker](https://github.com/chinchang/web-maker)
+* The diagram generator is built on top of [VueJs](https://vuejs.org/)
 
 ### License
 

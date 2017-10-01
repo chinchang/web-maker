@@ -355,6 +355,15 @@ body > #demo-frame {
 	transition: 0.4s ease;
 	opacity: 0.3;
 }
+
+.logo.small {
+	height: 20px;
+	width: 20px;
+	margin-right: 0px;
+	background: url(icon-16.png) 0px 0px;
+	-webkit-filter: grayscale(0);
+	opacity: 1;
+}
 .footer:hover .logo {
 	-webkit-filter: grayscale(0);
 	opacity: 1;

@@ -1493,21 +1493,31 @@ globalConsoleContainerEl
 			document.body.appendChild(s);
 
 			function onImgLoad(image) {
+				var ratio = window.devicePixelRatio || 1;
 				var c = document.createElement('canvas');
 				var iframeBounds = frame.getBoundingClientRect();
-				c.width = iframeBounds.width;
-				c.height = iframeBounds.height;
+				var scaled = {
+					left: iframeBounds.left * ratio,
+					top: iframeBounds.top * ratio,
+					width: iframeBounds.width * ratio,
+					height: iframeBounds.height * ratio
+				};
+				c.width = scaled.width;
+				c.height = scaled.height;
+				// The size of the element won't matter here.
+				// c.style.width = iframeBounds.width + 'px';
+				// c.style.height = iframeBounds.height + 'px';
 				var ctx = c.getContext('2d');
 				ctx.drawImage(
 					image,
-					iframeBounds.left,
-					iframeBounds.top,
-					iframeBounds.width,
-					iframeBounds.height,
+					scaled.left,
+					scaled.top,
+					scaled.width,
+					scaled.height,
 					0,
 					0,
-					iframeBounds.width,
-					iframeBounds.height
+					scaled.width,
+					scaled.height
 				);
 				image.removeEventListener('load', onImgLoad);
 				saveScreenshot(c.toDataURL());

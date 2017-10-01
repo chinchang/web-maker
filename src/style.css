@@ -364,6 +364,11 @@ body > #demo-frame {
 	-webkit-filter: grayscale(0);
 	opacity: 1;
 }
+
+.logo.small.gray {
+	-webkit-filter: grayscale(0.9);
+}
+
 .footer:hover .logo {
 	-webkit-filter: grayscale(0);
 	opacity: 1;

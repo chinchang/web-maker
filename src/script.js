@@ -181,7 +181,7 @@ globalConsoleContainerEl
 					? [currentItem.mainSizes[1], currentItem.mainSizes[0]]
 					: currentItem.mainSizes;
 		} else {
-			mainSplitSizes = [50, 50];
+			mainSplitSizes = [30, 70];
 		}
 		return mainSplitSizes;
 	}
@@ -354,7 +354,7 @@ globalConsoleContainerEl
 				+$('#js-demo-side').style[dimensionProperty].match(/([\d.]+)%/)[1]
 			];
 		} catch (e) {
-			sizes = [50, 50];
+			sizes = [30, 70];
 		} finally {
 			/* eslint-disable no-unsafe-finally */
 			return sizes;

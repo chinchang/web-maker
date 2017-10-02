@@ -954,6 +954,7 @@ globalConsoleContainerEl
 				);
 			}, '');
 		var contents =
+			'<!DOCTYPE html>\n' +
 			'<html>\n<head>\n' +
 			'<meta charset="UTF-8" />\n' +
 			externalCss +

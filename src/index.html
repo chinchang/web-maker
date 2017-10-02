@@ -49,7 +49,7 @@
 						</svg>Run
 					</a>
 
-					<a id="js-add-library-btn" class="flex-v-center hint--rounded hint--bottom-left" aria-label="Add a JS/CSS library">
+					<a d-open-modal="addLibraryModal" data-event-category="ui" data-event-action="addLibraryButtonClick" class="flex-v-center hint--rounded hint--bottom-left" aria-label="Add a JS/CSS library">
 						Add library <span id="js-external-lib-count" style="display:none;" class="count-label"></span>
 					</a>
 
@@ -216,7 +216,7 @@
 						</svg>
 						<span class="notifications-btn__dot"></span>
 					</a>
-					<a id="settingsBtn" class="mode-btn  hint--top-left  hint--rounded" aria-label="Settings">
+					<a d-open-modal="settingsModal" data-event-category="ui" data-event-action="settingsBtnClick" class="mode-btn  hint--top-left  hint--rounded" aria-label="Settings">
 						<svg>
 							<use xlink:href="#settings-icon"></use>
 						</svg>
@@ -226,7 +226,7 @@
 
 				<a href="https://webmakerapp.com/" target="_blank"><div class="logo"></div></a>
 				&copy; Web Maker &nbsp;&nbsp;
-				<a id="helpBtn" class="footer__link  hint--rounded  hint--top-right" data-hint="Help">
+				<a d-open-modal="helpModal" data-event-category="ui" data-event-action="helpButtonClick" class="footer__link  hint--rounded  hint--top-right" data-hint="Help">
 					<svg style="width:20px; height:20px; vertical-align:text-bottom" viewBox="0 0 24 24">
 						<path d="M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z" />
 					</svg>

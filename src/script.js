@@ -1,8 +1,8 @@
 /* global trackEvent */
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
-onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardModal, onboardModal,
+onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
-notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
+notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
@@ -137,7 +137,6 @@ globalConsoleContainerEl
 		jsModelLabel = $('#js-js-mode-label'),
 		titleInput = $('#js-title-input'),
 		addLibrarySelect = $('#js-add-library-select'),
-		addLibraryBtn = $('#js-add-library-btn'),
 		externalJsTextarea = $('#js-external-js'),
 		externalCssTextarea = $('#js-external-css');
 
@@ -1295,6 +1294,7 @@ globalConsoleContainerEl
 		gutters: ['CodeMirror-foldgutter']
 	});
 
+	// DEPRECATED
 	function openSettings() {
 		scope.toggleModal(settingsModal);
 
@@ -1844,6 +1844,18 @@ globalConsoleContainerEl
 		attachListenerForEvent('input');
 		attachListenerForEvent('keyup');
 
+		// Compile d-open-modal directive
+		const modalTriggers = $all(`[d-open-modal]`);
+		modalTriggers.forEach(function(el) {
+			utils.onButtonClick(el, function() {
+				scope.toggleModal(window[el.getAttribute('d-open-modal')]);
+				trackEvent(
+					el.getAttribute('data-event-category'),
+					el.getAttribute('data-event-action')
+				);
+			});
+		});
+
 		// Compile d-html directive
 		const dHtmlNodes = $all(`[d-html]`);
 		dHtmlNodes.forEach(function(el) {
@@ -1918,15 +1930,6 @@ globalConsoleContainerEl
 		layoutBtn2.addEventListener('click', getToggleLayoutButtonListener(2));
 		layoutBtn3.addEventListener('click', getToggleLayoutButtonListener(3));
 		layoutBtn4.addEventListener('click', getToggleLayoutButtonListener(4));
-
-		utils.onButtonClick(helpBtn, function() {
-			scope.toggleModal(helpModal);
-			trackEvent('ui', 'helpButtonClick');
-		});
-		utils.onButtonClick(addLibraryBtn, function() {
-			scope.toggleModal(addLibraryModal);
-			trackEvent('ui', 'addLibraryButtonClick');
-		});
 
 		notificationsBtn.addEventListener('click', function() {
 			scope.toggleModal(notificationsModal);
@@ -2155,11 +2158,6 @@ globalConsoleContainerEl
 				toggleCodeWrapCollapse(codeWrapParent);
 				trackEvent('ui', 'paneHeaderDblClick', codeWrapParent.dataset.type);
 			}
-		});
-
-		utils.onButtonClick(settingsBtn, function() {
-			openSettings();
-			trackEvent('ui', 'settingsBtnClick');
 		});
 
 		// Initialize add library select box

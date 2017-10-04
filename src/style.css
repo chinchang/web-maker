@@ -882,7 +882,7 @@ body > #demo-frame {
 }
 .console {
 	background: var(--color-bg);
-	z-index: 5; /* bring above iframe */
+	z-index: 6; /* bring above iframe */
 	position: absolute;
 	bottom: 0;
 	min-height: 80px;

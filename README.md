@@ -5,6 +5,9 @@ Web Sequence  [![Gitter](https://badges.gitter.im/zenuml/Lobby.svg)](https://git
 
 ![Screenshot](/screenshots/ss1.png)
 
+### Install
+Install it from [Chrome Web Store - Web Sequence](https://chrome.google.com/webstore/detail/web-sequence/kcpganeflmhffnlofpdmcjklmdpbbmef). You can also search "Web Sequence" or "Sequence Diagram" to find it.
+
 ### Features
 
 * Supports method call, internal method, alt (if/else) and loop (for, foreach, while) keywords

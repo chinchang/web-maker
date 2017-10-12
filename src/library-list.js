@@ -104,7 +104,7 @@ window.cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.5.2/css/bulma.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css',
 		label: 'Bulma',
 		type: 'css'
 	},

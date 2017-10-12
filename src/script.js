@@ -258,6 +258,7 @@ globalConsoleContainerEl
 		utils.log('onExternalLibChange');
 		updateExternalLibUi();
 		scope.setPreviewContent(true);
+		alertsService.add('Libraries updated.');
 	}
 
 	function updateExternalLibUi() {

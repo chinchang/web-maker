@@ -1913,6 +1913,11 @@ globalConsoleContainerEl
 		trackEvent('ui', 'cssSettingsBtnClick');
 	};
 
+	scope.onModalCloseBtnClick = function(e) {
+		closeAllOverlays();
+		e.preventDefault();
+	};
+
 	function init() {
 		var lastCode;
 
@@ -2140,10 +2145,10 @@ globalConsoleContainerEl
 		});
 
 		window.addEventListener('click', function(e) {
-			if (
-				typeof e.target.className === 'string' &&
-				e.target.className.indexOf('modal-overlay') !== -1
-			) {
+			if (typeof e.target.className !== 'string') {
+				return;
+			}
+			if (e.target.className.indexOf('modal-overlay') !== -1) {
 				closeAllOverlays();
 			}
 		});

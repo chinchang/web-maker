@@ -42,7 +42,7 @@ window.jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://unpkg.com/vue@2.4.4/dist/vue.min.js',
+		url: 'https://unpkg.com/vue@2.5.0/dist/vue.min.js',
 		label: 'Vue.js',
 		type: 'js'
 	},

@@ -13,7 +13,7 @@ Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master) 
 * Works offline
 * Inbuilt Console
 * Save and load your creations
-* Auto-save feture
+* Auto-save feature
 * Code auto-completion
 * Easy addition of popular JS & CSS libraries
 * Import & Export all creations anytime, anywhere

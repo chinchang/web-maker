@@ -1569,12 +1569,14 @@ globalConsoleContainerEl
 				c.width = iframeBounds.width;
 				c.height = iframeBounds.height;
 				var ctx = c.getContext('2d');
+				var devicePixelRatio = window.devicePixelRatio || 1;
+
 				ctx.drawImage(
 					image,
-					iframeBounds.left,
-					iframeBounds.top,
-					iframeBounds.width,
-					iframeBounds.height,
+					iframeBounds.left * devicePixelRatio,
+					iframeBounds.top * devicePixelRatio,
+					iframeBounds.width * devicePixelRatio,
+					iframeBounds.height * devicePixelRatio,
 					0,
 					0,
 					iframeBounds.width,

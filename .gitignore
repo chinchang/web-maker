@@ -5,7 +5,7 @@
 .idea/
 *.iml
 
-### Dependencies ###
+### Misc ###
 node_modules/
 *.map
 .sass-cache

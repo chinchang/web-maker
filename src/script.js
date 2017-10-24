@@ -1065,13 +1065,15 @@ globalConsoleContainerEl
 		// CSP from affecting it.
 		writeFile('script.js', blobjs, function() {
 			writeFile('preview.html', blob, function() {
-				frame.src =
+				const frameSrc =
 					'filesystem:chrome-extension://' +
 					chrome.i18n.getMessage('@@extension_id') +
 					'/temporary/' +
 					'preview.html';
 				if (scope.detachedWindow) {
 					scope.detachedWindow.postMessage(frame.src, '*');
+				} else {
+					frame.src = frameSrc;
 				}
 			});
 		});

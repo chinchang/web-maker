@@ -1090,7 +1090,9 @@ globalConsoleContainerEl
 			js: scope.cm.js.getValue()
 		};
 		utils.log('🔎 setPreviewContent', isForced);
-		const targetFrame = scope.detachedWindow ? scope.detachedWindow : frame;
+		const targetFrame = scope.detachedWindow
+			? scope.detachedWindow.document.querySelector('iframe')
+			: frame;
 
 		// If just CSS was changed (and everything shudn't be empty),
 		// change the styles inside the iframe.

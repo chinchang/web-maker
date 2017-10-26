@@ -1090,6 +1090,8 @@ globalConsoleContainerEl
 			js: scope.cm.js.getValue()
 		};
 		utils.log('🔎 setPreviewContent', isForced);
+		const targetFrame = scope.detachedWindow ? scope.detachedWindow : frame;
+
 		// If just CSS was changed (and everything shudn't be empty),
 		// change the styles inside the iframe.
 		if (
@@ -1098,8 +1100,8 @@ globalConsoleContainerEl
 			currentCode.js === codeInPreview.js
 		) {
 			computeCss().then(function(css) {
-				if (frame.contentDocument.querySelector('#webmakerstyle')) {
-					frame.contentDocument.querySelector(
+				if (targetFrame.contentDocument.querySelector('#webmakerstyle')) {
+					targetFrame.contentDocument.querySelector(
 						'#webmakerstyle'
 					).textContent = css;
 				}
@@ -1903,6 +1905,8 @@ globalConsoleContainerEl
 				document.body.classList.remove('is-detached-mode');
 				$('#js-demo-side').insertBefore(consoleEl, null);
 				scope.detachedWindow = null;
+				// Update main frame preview
+				scope.setPreviewContent(true);
 			}
 		}
 		var intervalID = window.setInterval(checkWindow, 500);

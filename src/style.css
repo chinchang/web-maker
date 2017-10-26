@@ -438,6 +438,20 @@ body > #demo-frame {
 		margin-left: -45vw;
 	}
 }
+.modal__close-btn {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	opacity: 0.3;
+transition: 0.25s ease;
+}
+.modal__close-btn > svg {
+	fill: black;
+	width:30px; height:30px;
+}
+.modal__close-btn:hover {
+	opacity: 0.7;
+}
 .modal__content {
 	background: #fdfdfd;
 	color: #444;

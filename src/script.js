@@ -1,8 +1,8 @@
 /* global trackEvent */
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
-onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardModal, onboardModal,
+onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
-notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
+notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
@@ -137,7 +137,6 @@ globalConsoleContainerEl
 		jsModelLabel = $('#js-js-mode-label'),
 		titleInput = $('#js-title-input'),
 		addLibrarySelect = $('#js-add-library-select'),
-		addLibraryBtn = $('#js-add-library-btn'),
 		externalJsTextarea = $('#js-external-js'),
 		externalCssTextarea = $('#js-external-css');
 
@@ -259,6 +258,7 @@ globalConsoleContainerEl
 		utils.log('onExternalLibChange');
 		updateExternalLibUi();
 		scope.setPreviewContent(true);
+		alertsService.add('Libraries updated.');
 	}
 
 	function updateExternalLibUi() {
@@ -954,6 +954,7 @@ globalConsoleContainerEl
 				);
 			}, '');
 		var contents =
+			'<!DOCTYPE html>\n' +
 			'<html>\n<head>\n' +
 			'<meta charset="UTF-8" />\n' +
 			externalCss +
@@ -1064,13 +1065,15 @@ globalConsoleContainerEl
 		// CSP from affecting it.
 		writeFile('script.js', blobjs, function() {
 			writeFile('preview.html', blob, function() {
-				frame.src =
+				const frameSrc =
 					'filesystem:chrome-extension://' +
 					chrome.i18n.getMessage('@@extension_id') +
 					'/temporary/' +
 					'preview.html';
 				if (scope.detachedWindow) {
 					scope.detachedWindow.postMessage(frame.src, '*');
+				} else {
+					frame.src = frameSrc;
 				}
 			});
 		});
@@ -1087,6 +1090,10 @@ globalConsoleContainerEl
 			js: scope.cm.js.getValue()
 		};
 		utils.log('🔎 setPreviewContent', isForced);
+		const targetFrame = scope.detachedWindow
+			? scope.detachedWindow.document.querySelector('iframe')
+			: frame;
+
 		// If just CSS was changed (and everything shudn't be empty),
 		// change the styles inside the iframe.
 		if (
@@ -1095,8 +1102,8 @@ globalConsoleContainerEl
 			currentCode.js === codeInPreview.js
 		) {
 			computeCss().then(function(css) {
-				if (frame.contentDocument.querySelector('#webmakerstyle')) {
-					frame.contentDocument.querySelector(
+				if (targetFrame.contentDocument.querySelector('#webmakerstyle')) {
+					targetFrame.contentDocument.querySelector(
 						'#webmakerstyle'
 					).textContent = css;
 				}
@@ -1294,6 +1301,7 @@ globalConsoleContainerEl
 		gutters: ['CodeMirror-foldgutter']
 	});
 
+	// DEPRECATED
 	function openSettings() {
 		scope.toggleModal(settingsModal);
 
@@ -1328,29 +1336,45 @@ globalConsoleContainerEl
 	};
 
 	scope.exportItems = function exportItems(e) {
-		fetchItems().then(function(items) {
-			var d = new Date();
-			var fileName = [
-				'web-maker-export',
-				d.getFullYear(),
-				d.getMonth() + 1,
-				d.getDate(),
-				d.getHours(),
-				d.getMinutes(),
-				d.getSeconds()
-			].join('-');
-			fileName += '.json';
-			var blob = new Blob([JSON.stringify(items, false, 2)], {
-				type: 'application/json;charset=UTF-8'
+		handleDownloadsPermission().then(() => {
+			fetchItems().then(function(items) {
+				var d = new Date();
+				var fileName = [
+					'web-maker-export',
+					d.getFullYear(),
+					d.getMonth() + 1,
+					d.getDate(),
+					d.getHours(),
+					d.getMinutes(),
+					d.getSeconds()
+				].join('-');
+				fileName += '.json';
+				var blob = new Blob([JSON.stringify(items, false, 2)], {
+					type: 'application/json;charset=UTF-8'
+				});
+
+				chrome.downloads.download(
+					{
+						url: window.URL.createObjectURL(blob),
+						filename: fileName,
+						saveAs: true
+					},
+					function() {
+						// If there was an error, just download the file using ANCHOR method.
+						if (chrome.runtime.lastError) {
+							var a = document.createElement('a');
+							a.href = window.URL.createObjectURL(blob);
+							a.download = fileName;
+							a.style.display = 'none';
+							document.body.appendChild(a);
+							a.click();
+							a.remove();
+						}
+					}
+				);
+
+				trackEvent('ui', 'exportBtnClicked');
 			});
-			var a = document.createElement('a');
-			a.href = window.URL.createObjectURL(blob);
-			a.download = fileName;
-			a.style.display = 'none';
-			document.body.appendChild(a);
-			a.click();
-			a.remove();
-			trackEvent('ui', 'exportBtnClicked');
 		});
 		e.preventDefault();
 	};
@@ -1567,12 +1591,14 @@ globalConsoleContainerEl
 				c.width = iframeBounds.width;
 				c.height = iframeBounds.height;
 				var ctx = c.getContext('2d');
+				var devicePixelRatio = window.devicePixelRatio || 1;
+
 				ctx.drawImage(
 					image,
-					iframeBounds.left,
-					iframeBounds.top,
-					iframeBounds.width,
-					iframeBounds.height,
+					iframeBounds.left * devicePixelRatio,
+					iframeBounds.top * devicePixelRatio,
+					iframeBounds.width * devicePixelRatio,
+					iframeBounds.height * devicePixelRatio,
 					0,
 					0,
 					iframeBounds.width,
@@ -1843,6 +1869,18 @@ globalConsoleContainerEl
 		attachListenerForEvent('input');
 		attachListenerForEvent('keyup');
 
+		// Compile d-open-modal directive
+		const modalTriggers = $all(`[d-open-modal]`);
+		modalTriggers.forEach(function(el) {
+			utils.onButtonClick(el, function() {
+				scope.toggleModal(window[el.getAttribute('d-open-modal')]);
+				trackEvent(
+					el.getAttribute('data-event-category'),
+					el.getAttribute('data-event-action')
+				);
+			});
+		});
+
 		// Compile d-html directive
 		const dHtmlNodes = $all(`[d-html]`);
 		dHtmlNodes.forEach(function(el) {
@@ -1885,6 +1923,8 @@ globalConsoleContainerEl
 				document.body.classList.remove('is-detached-mode');
 				$('#js-demo-side').insertBefore(consoleEl, null);
 				scope.detachedWindow = null;
+				// Update main frame preview
+				scope.setPreviewContent(true);
 			}
 		}
 		var intervalID = window.setInterval(checkWindow, 500);
@@ -1898,6 +1938,11 @@ globalConsoleContainerEl
 			scope.acssSettingsCm.focus();
 		}, 500);
 		trackEvent('ui', 'cssSettingsBtnClick');
+	};
+
+	scope.onModalCloseBtnClick = function(e) {
+		closeAllOverlays();
+		e.preventDefault();
 	};
 
 	function init() {
@@ -1917,15 +1962,6 @@ globalConsoleContainerEl
 		layoutBtn2.addEventListener('click', getToggleLayoutButtonListener(2));
 		layoutBtn3.addEventListener('click', getToggleLayoutButtonListener(3));
 		layoutBtn4.addEventListener('click', getToggleLayoutButtonListener(4));
-
-		utils.onButtonClick(helpBtn, function() {
-			scope.toggleModal(helpModal);
-			trackEvent('ui', 'helpButtonClick');
-		});
-		utils.onButtonClick(addLibraryBtn, function() {
-			scope.toggleModal(addLibraryModal);
-			trackEvent('ui', 'addLibraryButtonClick');
-		});
 
 		notificationsBtn.addEventListener('click', function() {
 			scope.toggleModal(notificationsModal);
@@ -2136,10 +2172,10 @@ globalConsoleContainerEl
 		});
 
 		window.addEventListener('click', function(e) {
-			if (
-				typeof e.target.className === 'string' &&
-				e.target.className.indexOf('modal-overlay') !== -1
-			) {
+			if (typeof e.target.className !== 'string') {
+				return;
+			}
+			if (e.target.className.indexOf('modal-overlay') !== -1) {
 				closeAllOverlays();
 			}
 		});
@@ -2154,11 +2190,6 @@ globalConsoleContainerEl
 				toggleCodeWrapCollapse(codeWrapParent);
 				trackEvent('ui', 'paneHeaderDblClick', codeWrapParent.dataset.type);
 			}
-		});
-
-		utils.onButtonClick(settingsBtn, function() {
-			openSettings();
-			trackEvent('ui', 'settingsBtnClick');
 		});
 
 		// Initialize add library select box

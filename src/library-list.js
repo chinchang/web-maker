@@ -42,7 +42,7 @@ window.jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://unpkg.com/vue@2.4.4/dist/vue.min.js',
+		url: 'https://unpkg.com/vue@2.5.0/dist/vue.min.js',
 		label: 'Vue.js',
 		type: 'js'
 	},
@@ -74,7 +74,7 @@ window.jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/js/uikit.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.31/js/uikit.min.js',
 		label: 'UIkit 3',
 		type: 'js'
 	}
@@ -104,7 +104,7 @@ window.cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.5.2/css/bulma.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css',
 		label: 'Bulma',
 		type: 'css'
 	},
@@ -122,7 +122,7 @@ window.cssLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.30/css/uikit.min.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.31/css/uikit.min.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},

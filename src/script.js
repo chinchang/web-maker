@@ -1334,29 +1334,45 @@ globalConsoleContainerEl
 	};
 
 	scope.exportItems = function exportItems(e) {
-		fetchItems().then(function(items) {
-			var d = new Date();
-			var fileName = [
-				'web-maker-export',
-				d.getFullYear(),
-				d.getMonth() + 1,
-				d.getDate(),
-				d.getHours(),
-				d.getMinutes(),
-				d.getSeconds()
-			].join('-');
-			fileName += '.json';
-			var blob = new Blob([JSON.stringify(items, false, 2)], {
-				type: 'application/json;charset=UTF-8'
+		handleDownloadsPermission().then(() => {
+			fetchItems().then(function(items) {
+				var d = new Date();
+				var fileName = [
+					'web-maker-export',
+					d.getFullYear(),
+					d.getMonth() + 1,
+					d.getDate(),
+					d.getHours(),
+					d.getMinutes(),
+					d.getSeconds()
+				].join('-');
+				fileName += '.json';
+				var blob = new Blob([JSON.stringify(items, false, 2)], {
+					type: 'application/json;charset=UTF-8'
+				});
+
+				chrome.downloads.download(
+					{
+						url: window.URL.createObjectURL(blob),
+						filename: fileName,
+						saveAs: true
+					},
+					function() {
+						// If there was an error, just download the file using ANCHOR method.
+						if (chrome.runtime.lastError) {
+							var a = document.createElement('a');
+							a.href = window.URL.createObjectURL(blob);
+							a.download = fileName;
+							a.style.display = 'none';
+							document.body.appendChild(a);
+							a.click();
+							a.remove();
+						}
+					}
+				);
+
+				trackEvent('ui', 'exportBtnClicked');
 			});
-			var a = document.createElement('a');
-			a.href = window.URL.createObjectURL(blob);
-			a.download = fileName;
-			a.style.display = 'none';
-			document.body.appendChild(a);
-			a.click();
-			a.remove();
-			trackEvent('ui', 'exportBtnClicked');
 		});
 		e.preventDefault();
 	};

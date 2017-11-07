@@ -7,8 +7,10 @@
 		"babel-eslint": "^7.2.3",
 		"eslint": "^4.1.1",
 		"eslint-config-prettier": "^2.3.0",
+		"gulp": "^3.9.1",
 		"gulp-useref": "^3.1.3",
-		"prettier": "^1.5.2"
+		"prettier": "^1.5.2",
+		"sw-precache": "^5.2.0"
 	},
 	"scripts": {
 		"install": "ln -sf ../../git-hooks/pre-commit .git/hooks/pre-commit"
@@ -17,7 +19,12 @@
 		"type": "git",
 		"url": "git+https://github.com/chinchang/web-maker.git"
 	},
-	"keywords": ["frontend", "playground", "web", "editor"],
+	"keywords": [
+		"frontend",
+		"playground",
+		"web",
+		"editor"
+	],
 	"author": "Kushagra Gour",
 	"license": "MIT",
 	"bugs": {

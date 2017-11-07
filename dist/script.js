@@ -1,3 +1,660 @@
+/**
+ * Copyright 2015 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* eslint-env browser */
+'use strict';
+
+if ('serviceWorker' in navigator) {
+  // Delay registration until after the page has loaded, to ensure that our
+  // precaching requests don't degrade the first visit experience.
+  // See https://developers.google.com/web/fundamentals/instant-and-offline/service-worker/registration
+  window.addEventListener('load', function() {
+    // Your service-worker.js *must* be located at the top-level directory relative to your site.
+    // It won't be able to control pages unless it's located at the same level or higher than them.
+    // *Don't* register service worker file in, e.g., a scripts/ sub-directory!
+    // See https://github.com/slightlyoff/ServiceWorker/issues/468
+    navigator.serviceWorker.register('service-worker.js').then(function(reg) {
+      // updatefound is fired if service-worker.js changes.
+      reg.onupdatefound = function() {
+        // The updatefound event implies that reg.installing is set; see
+        // https://w3c.github.io/ServiceWorker/#service-worker-registration-updatefound-event
+        var installingWorker = reg.installing;
+
+        installingWorker.onstatechange = function() {
+          switch (installingWorker.state) {
+            case 'installed':
+              if (navigator.serviceWorker.controller) {
+                // At this point, the old content will have been purged and the fresh content will
+                // have been added to the cache.
+                // It's the perfect time to display a "New content is available; please refresh."
+                // message in the page's interface.
+                console.log('New or updated content is available.');
+              } else {
+                // At this point, everything has been precached.
+                // It's the perfect time to display a "Content is cached for offline use." message.
+                console.log('Content is now available offline!');
+              }
+              break;
+
+            case 'redundant':
+              console.error('The installing service worker became redundant.');
+              break;
+          }
+        };
+      };
+    }).catch(function(e) {
+      console.error('Error during service worker registration:', e);
+    });
+  });
+}
+
+(function() {
+	window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
+
+	window.$ = document.querySelector.bind(document);
+	window.$all = selector => [...document.querySelectorAll(selector)];
+	var alphaNum =
+		'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+	/**
+	 * The following 2 functions are supposed to find the next/previous sibling until the
+	 * passed `selector` is matched. But for now it actually finds the next/previous
+	 * element of `this` element in the list of `selector` matched element inside `this`'s
+	 * parent.
+	 * @param  Selector that should match for next siblings
+	 * @return element Next element that mathes `selector`
+	 */
+	Node.prototype.nextUntil = function(selector) {
+		const siblings = [...this.parentNode.querySelectorAll(selector)];
+		const index = siblings.indexOf(this);
+		return siblings[index + 1];
+	};
+
+	/*
+	 * @param  Selector that should match for next siblings
+	 * @return element Next element that mathes `selector`
+	 */
+	Node.prototype.previousUntil = function(selector) {
+		const siblings = [...this.parentNode.querySelectorAll(selector)];
+		const index = siblings.indexOf(this);
+		return siblings[index - 1];
+	};
+
+	// https://github.com/substack/semver-compare/blob/master/index.js
+	function semverCompare(a, b) {
+		var pa = a.split('.');
+		var pb = b.split('.');
+		for (var i = 0; i < 3; i++) {
+			var na = Number(pa[i]);
+			var nb = Number(pb[i]);
+			if (na > nb) {
+				return 1;
+			}
+			if (nb > na) {
+				return -1;
+			}
+			if (!isNaN(na) && isNaN(nb)) {
+				return 1;
+			}
+			if (isNaN(na) && !isNaN(nb)) {
+				return -1;
+			}
+		}
+		return 0;
+	}
+
+	function generateRandomId(len) {
+		var length = len || 10;
+		var id = '';
+		for (var i = length; i--; ) {
+			id += alphaNum[~~(Math.random() * alphaNum.length)];
+		}
+		return id;
+	}
+
+	function onButtonClick(btn, listener) {
+		btn.addEventListener('click', function buttonClickListener(e) {
+			listener(e);
+			return false;
+		});
+	}
+
+	function log() {
+		if (window.DEBUG) {
+			console.log(...arguments);
+		}
+	}
+
+	/**
+	 * Adds timed limit on the loops found in the passed code.
+	 * Contributed by Ariya Hidayat!
+	 * @param code {string}	Code to be protected from infinite loops.
+	 */
+	function addInfiniteLoopProtection(code) {
+		var loopId = 1;
+		var patches = [];
+		var varPrefix = '_wmloopvar';
+		var varStr = 'var %d = Date.now();\n';
+		var checkStr =
+			'\nif (Date.now() - %d > 1000) { window.top.previewException(new Error("Infinite loop")); break;}\n';
+
+		esprima.parse(code, { tolerant: true, range: true, jsx: true }, function(
+			node
+		) {
+			switch (node.type) {
+				case 'DoWhileStatement':
+				case 'ForStatement':
+				case 'ForInStatement':
+				case 'ForOfStatement':
+				case 'WhileStatement':
+					var start = 1 + node.body.range[0];
+					var end = node.body.range[1];
+					var prolog = checkStr.replace('%d', varPrefix + loopId);
+					var epilog = '';
+
+					if (node.body.type !== 'BlockStatement') {
+						// `while(1) doThat()` becomes `while(1) {doThat()}`
+						prolog = '{' + prolog;
+						epilog = '}';
+						--start;
+					}
+
+					patches.push({ pos: start, str: prolog });
+					patches.push({ pos: end, str: epilog });
+					patches.push({
+						pos: node.range[0],
+						str: varStr.replace('%d', varPrefix + loopId)
+					});
+					++loopId;
+					break;
+
+				default:
+					break;
+			}
+		});
+
+		/* eslint-disable no-param-reassign */
+		patches
+			.sort(function(a, b) {
+				return b.pos - a.pos;
+			})
+			.forEach(function(patch) {
+				code = code.slice(0, patch.pos) + patch.str + code.slice(patch.pos);
+			});
+
+		/* eslint-disable no-param-reassign */
+		return code;
+	}
+
+	function getHumanDate(timestamp) {
+		var d = new Date(timestamp);
+		var retVal =
+			d.getDate() +
+			' ' +
+			[
+				'January',
+				'February',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December'
+			][d.getMonth()] +
+			' ' +
+			d.getFullYear();
+		return retVal;
+	}
+
+	// create a one-time event
+	function once(node, type, callback) {
+		// create event
+		node.addEventListener(type, function(e) {
+			// remove event
+			e.target.removeEventListener(type, arguments.callee);
+			// call handler
+			return callback(e);
+		});
+	}
+
+	window.utils = {
+		semverCompare: semverCompare,
+		generateRandomId: generateRandomId,
+		onButtonClick: onButtonClick,
+		addInfiniteLoopProtection: addInfiniteLoopProtection,
+		getHumanDate: getHumanDate,
+		log: log,
+		once: once
+	};
+
+	window.chrome = window.chrome || {};
+	window.chrome.i18n = { getMessage: () => {} };
+})();
+
+(() => {
+	const FAUX_DELAY = 1;
+	var local = {
+		get: (obj, cb) => {
+			if (typeof obj === 'string') {
+				const retVal = {};
+				retVal[obj] = JSON.parse(window.localStorage.getItem(obj));
+				setTimeout(() => cb(retVal), FAUX_DELAY);
+			} else {
+				const retVal = {};
+				Object.keys(obj).forEach(key => {
+					let val = window.localStorage.getItem(key);
+					retVal[key] =
+						val === undefined || val === null ? obj[key] : JSON.parse(val);
+				});
+				setTimeout(() => cb(retVal), FAUX_DELAY);
+			}
+		},
+		set: (obj, cb) => {
+			Object.keys(obj).forEach(key => {
+				window.localStorage.setItem(key, JSON.stringify(obj[key]));
+			});
+			setTimeout(() => {
+				if (cb) cb();
+			}, FAUX_DELAY);
+		}
+	};
+	window.db = {
+		local: chrome && chrome.storage ? chrome.storage.local : local,
+		sync: chrome && chrome.storage ? chrome.storage.sync : local
+	};
+})();
+
+/* global ga */
+// eslint-disable-next-line max-params
+window.trackEvent = function(category, action, label, value) {
+	if (window.DEBUG) {
+		utils.log('trackevent', category, action, label, value);
+		return;
+	}
+	if (window.ga) {
+		ga('send', 'event', category, action, label, value);
+	}
+};
+
+// if online, load after sometime
+if (navigator.onLine && !window.DEBUG) {
+	/* eslint-disable */
+
+	// prettier-ignore
+	setTimeout(function() {
+		(function(i,s,o,g,r,a,m){
+			i['GoogleAnalyticsObject']=r;
+			i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-87786708-1', {'cookieDomain': 'none'});
+		// required for chrome extension protocol
+		ga('set', 'checkProtocolTask', function(){ /* nothing */ });
+		ga('send', 'pageview');
+	}, 100);
+
+	/* eslint-enable */
+}
+
+(function() {
+	window.deferred = function() {
+		var d = {};
+		var promise = new Promise(function(resolve, reject) {
+			d.resolve = resolve;
+			d.reject = reject;
+		});
+
+		// Add the native promise as a key on deferred object.
+		d.promise = promise;
+		// Also move all props/methods of native promise on the deferred obj.
+		return Object.assign(d, promise);
+	};
+})();
+
+(function(w) {
+	window.loadJS = function(src) {
+		var d = deferred();
+		var ref = w.document.getElementsByTagName('script')[0];
+		var script = w.document.createElement('script');
+		script.src = src;
+		script.async = true;
+		ref.parentNode.insertBefore(script, ref);
+		script.onload = function() {
+			d.resolve();
+		};
+		return d.promise;
+	};
+})(window);
+
+(function() {
+	const noticationContainerEL = $('#js-alerts-container');
+	var hideTimeout;
+
+	function addNotification(msg) {
+		// var n = document.createElement('div');
+		// div.textContent = msg;
+		// noticationContainerEL.appendChild(n);
+		noticationContainerEL.textContent = msg;
+		noticationContainerEL.classList.add('is-active');
+
+		clearTimeout(hideTimeout);
+		hideTimeout = setTimeout(function() {
+			noticationContainerEL.classList.remove('is-active');
+		}, 2000);
+	}
+
+	window.alertsService = {
+		add: addNotification
+	};
+})();
+
+window.jsLibs = [
+	{
+		url: 'https://code.jquery.com/jquery-3.2.1.min.js',
+		label: 'jQuery',
+		type: 'js'
+	},
+	{
+		url: 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+		label: 'Bootstrap 3',
+		type: 'js'
+	},
+	{
+		url:
+			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js',
+		label: 'Bootstrap 4β',
+		type: 'js'
+	},
+	{
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js',
+		label: 'Foundation',
+		type: 'js'
+	},
+	{
+		url: 'https://semantic-ui.com/dist/semantic.min.js',
+		label: 'Semantic UI',
+		type: 'js'
+	},
+	{
+		url: 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js',
+		label: 'Angular',
+		type: 'js'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.min.js',
+		label: 'React',
+		type: 'js'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.min.js',
+		label: 'React DOM',
+		type: 'js'
+	},
+	{
+		url: 'https://unpkg.com/vue@2.5.0/dist/vue.min.js',
+		label: 'Vue.js',
+		type: 'js'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/three.js/85/three.min.js',
+		label: 'Three.js',
+		type: 'js'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.min.js',
+		label: 'D3',
+		type: 'js'
+	},
+	{
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js',
+		label: 'Underscore',
+		type: 'js'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js',
+		label: 'Greensock TweenMax',
+		type: 'js'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.4/js/uikit.min.js',
+		label: 'UIkit 2',
+		type: 'js'
+	},
+	{
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.31/js/uikit.min.js',
+		label: 'UIkit 3',
+		type: 'js'
+	}
+];
+window.cssLibs = [
+	{
+		url:
+			'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
+		label: 'Bootstrap 3',
+		type: 'css'
+	},
+	{
+		url:
+			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css',
+		label: 'Bootstrap 4β',
+		type: 'css'
+	},
+	{
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css',
+		label: 'Foundation',
+		type: 'css'
+	},
+	{
+		url: 'https://semantic-ui.com/dist/semantic.min.css',
+		label: 'Semantic UI',
+		type: 'css'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css',
+		label: 'Bulma',
+		type: 'css'
+	},
+
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.5.0/hint.min.css',
+		label: 'Hint.css',
+		type: 'css'
+	},
+	{
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.4/css/uikit.min.css',
+		label: 'UIkit 2',
+		type: 'css'
+	},
+	{
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.31/css/uikit.min.css',
+		label: 'UIkit 3',
+		type: 'css'
+	},
+	{
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css',
+		label: 'Animate.css',
+		type: 'css'
+	},
+	{
+		url:
+			'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+		label: 'FontAwesome',
+		type: 'css'
+	}
+];
+
+// textarea-autocomplete.js
+(function() {
+	class TextareaAutoComplete {
+		constructor(textarea, filter) {
+			this.t = textarea;
+			this.filter = filter;
+			var wrap = document.createElement('div');
+			wrap.classList.add('btn-group');
+			textarea.parentElement.insertBefore(wrap, textarea);
+			wrap.insertBefore(textarea, null);
+			this.list = document.createElement('ul');
+			this.list.classList.add('dropdown__menu');
+			this.list.classList.add('autocomplete-dropdown');
+			wrap.insertBefore(this.list, null);
+
+			this.loader = document.createElement('div');
+			this.loader.classList.add('loader');
+			this.loader.classList.add('autocomplete__loader');
+			this.loader.style.display = 'none';
+			wrap.insertBefore(this.loader, null);
+
+			// after list is insrted into the DOM, we put it in the body
+			// fixed at same position
+			setTimeout(() => {
+				requestIdleCallback(() => {
+					document.body.appendChild(this.list);
+					this.list.style.position = 'fixed';
+				});
+			}, 100);
+
+			this.t.addEventListener('input', e => this.onInput(e));
+			this.t.addEventListener('keydown', e => this.onKeyDown(e));
+			this.t.addEventListener('blur', e => this.closeSuggestions(e));
+			this.list.addEventListener('mousedown', e => this.onListMouseDown(e));
+		}
+
+		get currentLineNumber() {
+			return this.t.value.substr(0, this.t.selectionStart).split('\n').length;
+		}
+		get currentLine() {
+			var line = this.currentLineNumber;
+			return this.t.value.split('\n')[line - 1];
+		}
+		closeSuggestions() {
+			this.list.classList.remove('is-open');
+			this.isShowingSuggestions = false;
+		}
+		getList(input) {
+			var url = 'https://api.cdnjs.com/libraries?search=';
+			return fetch(url + input).then(response => {
+				return response.json().then(json => json.results);
+			});
+		}
+		replaceCurrentLine(val) {
+			var lines = this.t.value.split('\n');
+			lines.splice(this.currentLineNumber - 1, 1, val);
+			this.t.value = lines.join('\n');
+		}
+		onInput() {
+			var currentLine = this.currentLine;
+			if (currentLine) {
+				if (
+					currentLine.indexOf('/') !== -1 ||
+					currentLine.match(/https*:\/\//)
+				) {
+					return;
+				}
+				clearTimeout(this.timeout);
+				this.timeout = setTimeout(() => {
+					this.loader.style.display = 'block';
+					this.getList(currentLine).then(arr => {
+						this.loader.style.display = 'none';
+						if (!arr.length) {
+							this.closeSuggestions();
+							return;
+						}
+						this.list.innerHTML = '';
+						if (this.filter) {
+							/* eslint-disable no-param-reassign */
+							arr = arr.filter(this.filter);
+						}
+						for (var i = 0; i < Math.min(arr.length, 10); i++) {
+							this.list.innerHTML += `<li data-url="${arr[i].latest}"><a>${arr[
+								i
+							].name}</a></li>`;
+						}
+						this.isShowingSuggestions = true;
+						if (!this.textareaBounds) {
+							this.textareaBounds = this.t.getBoundingClientRect();
+							this.list.style.top = this.textareaBounds.bottom + 'px';
+							this.list.style.left = this.textareaBounds.left + 'px';
+							this.list.style.width = this.textareaBounds.width + 'px';
+						}
+						this.list.classList.add('is-open');
+					});
+				}, 500);
+			}
+		}
+		onKeyDown(event) {
+			var selectedItemElement;
+			if (!this.isShowingSuggestions) {
+				return;
+			}
+
+			if (event.keyCode === 27) {
+				this.closeSuggestions();
+				event.stopPropagation();
+			}
+			if (event.keyCode === 40 && this.isShowingSuggestions) {
+				selectedItemElement = this.list.querySelector('.selected');
+				if (selectedItemElement) {
+					selectedItemElement.classList.remove('selected');
+					selectedItemElement.nextElementSibling.classList.add('selected');
+				} else {
+					this.list.querySelector('li:first-child').classList.add('selected');
+				}
+				this.list.querySelector('.selected').scrollIntoView(false);
+				event.preventDefault();
+			} else if (event.keyCode === 38 && this.isShowingSuggestions) {
+				selectedItemElement = this.list.querySelector('.selected');
+				if (selectedItemElement) {
+					selectedItemElement.classList.remove('selected');
+					selectedItemElement.previousElementSibling.classList.add('selected');
+				} else {
+					this.list.querySelector('li:first-child').classList.add('selected');
+				}
+				this.list.querySelector('.selected').scrollIntoView(false);
+				event.preventDefault();
+			} else if (event.keyCode === 13 && this.isShowingSuggestions) {
+				selectedItemElement = this.list.querySelector('.selected');
+				this.replaceCurrentLine(selectedItemElement.dataset.url);
+				this.closeSuggestions();
+			}
+		}
+		onListMouseDown(event) {
+			var target = event.target;
+			if (target.parentElement.dataset.url) {
+				this.replaceCurrentLine(target.parentElement.dataset.url);
+				this.closeSuggestions();
+			}
+		}
+	}
+
+	window.TextareaAutoComplete = TextareaAutoComplete;
+})();
+
 /* global trackEvent */
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
 onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, onboardModal, onboardModal,
@@ -7,13 +664,13 @@ onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editor
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
 customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
-globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
+globalConsoleContainerEl
 */
 /* eslint-disable no-extra-semi */
 (function(alertsService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.9.6';
+	var version = '2.9.3';
 
 	if (window.DEBUG) {
 		window.scope = scope;
@@ -145,48 +802,28 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 	scope.demoFrameDocument =
 		frame.contentDocument || frame.contentWindow.document;
 
-	// Check all the code wrap if they are minimized or maximized
+	// Check all the code wrap if they are minimized or not
 	function updateCodeWrapCollapseStates() {
-		// This is debounced!
 		clearTimeout(updateCodeWrapCollapseStates.timeout);
 		updateCodeWrapCollapseStates.timeout = setTimeout(function() {
-			const prop = currentLayoutMode === 2 ? 'width' : 'height';
 			[htmlCode, cssCode, jsCode].forEach(function(el) {
-				const bounds = el.getBoundingClientRect();
-				const size = bounds[prop];
-				if (size < 100) {
+				var bounds = el.getBoundingClientRect();
+				if (bounds[currentLayoutMode === 2 ? 'width' : 'height'] < 100) {
 					el.classList.add('is-minimized');
 				} else {
 					el.classList.remove('is-minimized');
-				}
-				if (el.style[prop].indexOf(`100% - ${minCodeWrapSize * 2}px`) !== -1) {
-					el.classList.add('is-maximized');
-				} else {
-					el.classList.remove('is-maximized');
 				}
 			});
 		}, 50);
 	}
 
 	function toggleCodeWrapCollapse(codeWrapEl) {
-		if (
-			codeWrapEl.classList.contains('is-minimized') ||
-			codeWrapEl.classList.contains('is-maximized')
-		) {
+		if (codeWrapEl.classList.contains('is-minimized')) {
 			codeWrapEl.classList.remove('is-minimized');
-			codeWrapEl.classList.remove('is-maximized');
 			codeSplitInstance.setSizes([33.3, 33.3, 33.3]);
 		} else {
-			const id = parseInt(codeWrapEl.dataset.codeWrapId, 10);
-			var arr = [
-				`${minCodeWrapSize}px`,
-				`${minCodeWrapSize}px`,
-				`${minCodeWrapSize}px`
-			];
-			arr[id] = `calc(100% - ${minCodeWrapSize * 2}px)`;
-
-			codeSplitInstance.setSizes(arr);
-			codeWrapEl.classList.add('is-maximized');
+			codeSplitInstance.collapse(parseInt(codeWrapEl.dataset.codeWrapId, 10));
+			codeWrapEl.classList.add('is-minimized');
 		}
 	}
 	// Returns the sizes of main code & preview panes.
@@ -350,9 +987,9 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
 		try {
 			sizes = [
-				htmlCode.style[dimensionProperty],
-				cssCode.style[dimensionProperty],
-				jsCode.style[dimensionProperty]
+				+htmlCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
+				+cssCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
+				+jsCode.style[dimensionProperty].match(/([\d.]+)%/)[1]
 			];
 		} catch (e) {
 			sizes = [33.33, 33.33, 33.33];
@@ -647,7 +1284,6 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		onboardModal.classList.remove('is-modal-visible');
 		settingsModal.classList.remove('is-modal-visible');
 		cssSettingsModal.classList.remove('is-modal-visible');
-		keyboardShortcutsModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -960,8 +1596,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		});
 	}
 
-	/* eslint max-params: ["error", 4] */
-	function getCompleteHtml(html, css, js, isForExport) {
+	function getCompleteHtml(html, css, js) {
 		var externalJs = externalJsTextarea.value
 			.split('\n')
 			.reduce(function(scripts, url) {
@@ -991,12 +1626,10 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			externalJs +
 			'\n';
 
-		if (!isForExport) {
-			contents +=
-				'<script src="' +
-				chrome.extension.getURL('lib/screenlog.js') +
-				'"></script>';
-		}
+		contents +=
+			'<script src="' +
+			// chrome.extension.getURL('lib/screenlog.js') +
+			'"></script>';
 
 		if (jsMode === JsModes.ES6) {
 			contents +=
@@ -1152,7 +1785,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				css = result[1],
 				js = result[2];
 
-			var fileContent = getCompleteHtml(html, css, js, true);
+			var fileContent = getCompleteHtml(html, css, js);
 
 			var d = new Date();
 			var fileName = [
@@ -1861,17 +2494,13 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 					'script $1:$2'
 				);
 			}
-			try {
-				scope.consoleCm.replaceRange(
-					arg +
-						' ' +
-						((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
-						'\n',
-					{ line: Infinity }
-				);
-			} catch (e) {
-				scope.consoleCm.replaceRange('🌀\n', { line: Infinity });
-			}
+			scope.consoleCm.replaceRange(
+				arg +
+					' ' +
+					((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
+					'\n',
+				{ line: Infinity }
+			);
 			scope.consoleCm.scrollTo(0, Infinity);
 			logCount++;
 		});
@@ -1880,21 +2509,9 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		/* eslint-enable no-param-reassign */
 	};
 
-	/**
-	 * Compiles directives on the given node
-	 * @param {Node} root The element on which compilation is required
-	 */
-	function compileNodes(root) {
-		if (!(root instanceof Node)) {
-			/* eslint-disable no-param-reassign */
-			root = document;
-			/* eslint-enable no-param-reassign */
-		}
-		// Create a querySelectorAll function bound to the passed `root` Node
-		const query = selector => [...root.querySelectorAll(selector)];
-
+	function compileNodes() {
 		function attachListenerForEvent(eventName) {
-			const nodes = query(`[d-${eventName}]`);
+			const nodes = $all(`[d-${eventName}]`);
 			nodes.forEach(function(el) {
 				el.addEventListener(eventName, function(e) {
 					scope[el.getAttribute(`d-${eventName}`)].call(window, e);
@@ -1907,7 +2524,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		attachListenerForEvent('keyup');
 
 		// Compile d-open-modal directive
-		const modalTriggers = query(`[d-open-modal]`);
+		const modalTriggers = $all(`[d-open-modal]`);
 		modalTriggers.forEach(function(el) {
 			utils.onButtonClick(el, function() {
 				scope.toggleModal(window[el.getAttribute('d-open-modal')]);
@@ -1919,7 +2536,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		});
 
 		// Compile d-html directive
-		const dHtmlNodes = query(`[d-html]`);
+		const dHtmlNodes = $all(`[d-html]`);
 		dHtmlNodes.forEach(function(el) {
 			fetch(el.getAttribute('d-html')).then(response => {
 				// Stop further compilation because of future recursion by removing attribute.
@@ -1927,8 +2544,6 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				response.text().then(html => {
 					requestIdleCallback(() => {
 						el.innerHTML = html;
-						// Now compile this newly inserted HTML also.
-						compileNodes(el);
 					});
 				});
 			});
@@ -2151,15 +2766,6 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				event.preventDefault();
 				openSavedItemsPane();
 				trackEvent('ui', 'openCreationKeyboardShortcut');
-			} else if (
-				(event.ctrlKey || event.metaKey) &&
-				event.shiftKey &&
-				event.keyCode === 191
-			) {
-				// Ctrl/⌘ + Shift + ?
-				event.preventDefault();
-				scope.toggleModal(keyboardShortcutsModal);
-				trackEvent('ui', 'showKeyboardShortcutsShortcut');
 			} else if (event.keyCode === 27) {
 				closeAllOverlays();
 			}
@@ -2270,21 +2876,12 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		externalJsTextarea.addEventListener('blur', onExternalLibChange);
 		externalCssTextarea.addEventListener('blur', onExternalLibChange);
 
-		new TextareaAutoComplete(externalJsTextarea, {
-			filter: obj => obj.latest.match(/\.js$/)
-		});
-		new TextareaAutoComplete(externalCssTextarea, {
-			filter: obj => obj.latest.match(/\.css$/)
-		});
-		new TextareaAutoComplete(externalLibrarySearchInput, {
-			selectedCallback: value => {
-				const textarea = value.match(/\.js$/)
-					? externalJsTextarea
-					: externalCssTextarea;
-				textarea.value = `${textarea.value}\n${value}`;
-				externalLibrarySearchInput.value = '';
-			}
-		});
+		new TextareaAutoComplete(externalJsTextarea, obj =>
+			obj.latest.match(/\.js$/)
+		);
+		new TextareaAutoComplete(externalCssTextarea, obj =>
+			obj.latest.match(/\.css$/)
+		);
 
 		// Console header drag resize logic
 		var consoleHeaderDragStartY;
@@ -2352,7 +2949,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 							refreshEditor();
 						});
 					} else {
-						utils.log('Load last unsaved item', lastCode);
+						utils.log('Load last unsaved item');
 						currentItem = lastCode;
 						refreshEditor();
 					}
@@ -2503,3 +3100,34 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 
 	init();
 })(window.alertsService);
+
+// Dropdown.js
+
+(function($all) {
+	var openDropdown;
+
+	// Closes all dropdowns except the passed one.
+	function closeOpenDropdown(except) {
+		if (openDropdown && (!except || except !== openDropdown)) {
+			openDropdown.classList.remove('open');
+			openDropdown = null;
+		}
+	}
+	function init() {
+		var dropdowns = $all('[dropdown]');
+		dropdowns.forEach(function(dropdown) {
+			dropdown.addEventListener('click', function(e) {
+				closeOpenDropdown(e.currentTarget);
+				e.currentTarget.classList.toggle('open');
+				openDropdown = e.currentTarget;
+				e.stopPropagation();
+			});
+		});
+
+		document.addEventListener('click', function() {
+			closeOpenDropdown();
+		});
+	}
+
+	init();
+})($all);

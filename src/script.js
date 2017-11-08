@@ -1840,13 +1840,17 @@ globalConsoleContainerEl
 					'script $1:$2'
 				);
 			}
-			scope.consoleCm.replaceRange(
-				arg +
-					' ' +
-					((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
-					'\n',
-				{ line: Infinity }
-			);
+			try {
+				scope.consoleCm.replaceRange(
+					arg +
+						' ' +
+						((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
+						'\n',
+					{ line: Infinity }
+				);
+			} catch (e) {
+				scope.consoleCm.replaceRange('🌀\n', { line: Infinity });
+			}
 			scope.consoleCm.scrollTo(0, Infinity);
 			logCount++;
 		});

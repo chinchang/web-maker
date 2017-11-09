@@ -29,7 +29,7 @@ Follow [@webmakerApp](https://twitter.com/intent/follow?screen_name=webmakerApp)
 
 ### Support Web Maker
 
-Web Maker is completely free and open-source. If you find it useful, you can show your support by sharing it in your social network or by donating on [Gratipay](https://gratipay.com/Web-Maker/) or by simply letting me know how much you 💖 it by tweeting to [@webmakerapp](https://twitter.com/webmakerApp).
+Web Maker is completely free and open-source. If you find it useful, you can show your support by sharing it in your social network or by [donating](https://www.paypal.me/kushagragour) or by simply letting me know how much you 💖 it by tweeting to [@webmakerapp](https://twitter.com/webmakerApp).
 
 ### License
 

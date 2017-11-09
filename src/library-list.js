@@ -122,7 +122,7 @@ window.cssLibs = [
 	},
 	{
 		url:
-			'https://unpkg.com/uikit@3.0.0-beta.33/dist/css/uikit.css',
+			'https://unpkg.com/uikit@3.0.0-beta.34/dist/css/uikit.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},

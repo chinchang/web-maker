@@ -111,7 +111,7 @@
 						--start;
 					}
 
-                    infoForEachLoop.push({start: start, end: end, varName: varPrefix + loopId});
+                    infoForEachLoop.push({ start: start, end: end, varName: varPrefix + loopId });
 
 					patches.push({ pos: start, str: prolog });
 					patches.push({ pos: end, str: epilog });
@@ -128,7 +128,7 @@
                         "confirm",
                         "prompt"
                     ].forEach(function(functionName){
-                        if (node.expression.callee.name === functionName || (node.expression.callee.hasOwnProperty("object") && node.expression.callee.object.name === 'window' && node.expression.callee.property.name === functionName)){
+                        if (node.expression.callee.name === functionName || (Object.prototype.hasOwnProperty.call(node.expression.callee, "object") && node.expression.callee.object.name === 'window' && node.expression.callee.property.name === functionName)){
                             popupStatements.push(node);
                         }
                     });

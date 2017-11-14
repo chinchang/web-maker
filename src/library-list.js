@@ -122,7 +122,7 @@ window.cssLibs = [
 	},
 	{
 		url:
-			'https://unpkg.com/uikit@3.0.0-beta.34/dist/css/uikit.css',
+			'https://unpkg.com/uikit@3.0.0-beta.35/dist/css/uikit.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},
@@ -135,7 +135,7 @@ window.cssLibs = [
 	{
 		url:
 			'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-		label: 'FontAwesome',
+		label: 'Font Awesome',
 		type: 'css'
 	}
 ];

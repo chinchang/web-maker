@@ -994,7 +994,9 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		if (!isForExport) {
 			contents +=
 				'<script src="' +
-				chrome.extension.getURL('lib/screenlog.js') +
+				(chrome.extension
+					? chrome.extension.getURL('lib/screenlog.js')
+					: `${location.origin}/lib/screenlog.js`) +
 				'"></script>';
 		}
 
@@ -1073,7 +1075,8 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 	}
 
 	function createPreviewFile(html, css, js) {
-		var contents = getCompleteHtml(html, css);
+		const shouldInlineJs = !window.webkitRequestFileSystem;
+		var contents = getCompleteHtml(html, css, shouldInlineJs ? js : '');
 		var blob = new Blob([contents], { type: 'text/plain;charset=UTF-8' });
 		var blobjs = new Blob([js], { type: 'text/plain;charset=UTF-8' });
 
@@ -1083,21 +1086,30 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			trackEvent.hasTrackedCode = true;
 		}
 
-		// we need to store user script in external JS file to prevent inline-script
-		// CSP from affecting it.
-		writeFile('script.js', blobjs, function() {
-			writeFile('preview.html', blob, function() {
-				var origin = chrome.i18n.getMessage()
-					? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
-					: `${location.origin}`;
-				var src = `filesystem:${origin}/temporary/preview.html`;
-				if (scope.detachedWindow) {
-					scope.detachedWindow.postMessage(src, '*');
-				} else {
-					frame.src = src;
-				}
+		if (shouldInlineJs) {
+			frame.src = frame.src;
+			setTimeout(() => {
+				frame.contentDocument.open();
+				frame.contentDocument.write(contents);
+				frame.contentDocument.close();
+			}, 10);
+		} else {
+			// we need to store user script in external JS file to prevent inline-script
+			// CSP from affecting it.
+			writeFile('script.js', blobjs, function() {
+				writeFile('preview.html', blob, function() {
+					var origin = chrome.i18n.getMessage()
+						? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
+						: `${location.origin}`;
+					var src = `filesystem:${origin}/temporary/preview.html`;
+					if (scope.detachedWindow) {
+						scope.detachedWindow.postMessage(src, '*');
+					} else {
+						frame.src = src;
+					}
+				});
 			});
-		});
+		}
 	}
 
 	scope.setPreviewContent = function(isForced) {

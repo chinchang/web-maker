@@ -200,6 +200,7 @@
 		"escodegen": true,
 		"utils": true,
 		"Promise": true,
-		"Inlet": true
+		"Inlet": true,
+		"db": true
 	}
 }

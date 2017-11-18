@@ -977,4 +977,4 @@ while the theme CSS file is loading */
     color: #D1EDFF;
 }
 .cm-s-midnight .CodeMirror-gutters { background: #0F192A; border-right: 1px solid; }
-.cm-s-midnight .CodeMirror-activeline-background { background: #253540; color: blue; }
+.cm-s-midnight .CodeMirror-activeline-background { background: #253540; }

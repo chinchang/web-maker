@@ -997,7 +997,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				'<script src="' +
 				(chrome.extension
 					? chrome.extension.getURL('lib/screenlog.js')
-					: `${location.origin}/${BASE_PATH}/lib/screenlog.js`) +
+					: `${location.origin}${BASE_PATH}/lib/screenlog.js`) +
 				'"></script>';
 		}
 
@@ -1999,7 +1999,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 	function init() {
 		var lastCode;
 
-		CodeMirror.modeURL = `${BASE_PATH}/lib/codemirror/mode/%N/%N.js`;
+		CodeMirror.modeURL = `lib/codemirror/mode/%N/%N.js`;
 
 		function getToggleLayoutButtonListener(mode) {
 			return function() {

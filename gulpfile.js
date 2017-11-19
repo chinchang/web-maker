@@ -32,7 +32,6 @@ gulp.task('generate-service-worker', ['useRef'], function(callback) {
 			staticFileGlobs: [
 				rootDir + '/**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'
 			],
-			stripPrefix: rootDir
 		},
 		callback
 	);

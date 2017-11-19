@@ -101,7 +101,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 	};
 
 	const AUTO_SAVE_INTERVAL = 15000; // 15 seconds
-	const BASE_PATH = chrome.extension ? '/' : '/dist/';
+	const BASE_PATH = chrome.extension ? '/' : '/app/';
 
 	var updateTimer,
 		updateDelay = 500,

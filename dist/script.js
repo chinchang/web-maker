@@ -607,7 +607,7 @@ globalConsoleContainerEl
 (function(alertsService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.9.3';
+	var version = '2.9.4';
 
 	if (window.DEBUG) {
 		window.scope = scope;
@@ -1578,7 +1578,7 @@ globalConsoleContainerEl
 				'"></script>';
 		}
 
-		if (js !== undefined) {
+		if (typeof js === 'string') {
 			contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';
 		} else {
 			var origin = chrome.i18n.getMessage()
@@ -1647,7 +1647,7 @@ globalConsoleContainerEl
 
 	function createPreviewFile(html, css, js) {
 		const shouldInlineJs = !window.webkitRequestFileSystem;
-		var contents = getCompleteHtml(html, css, shouldInlineJs ? js : '');
+		var contents = getCompleteHtml(html, css, shouldInlineJs ? js : null);
 		var blob = new Blob([contents], { type: 'text/plain;charset=UTF-8' });
 		var blobjs = new Blob([js], { type: 'text/plain;charset=UTF-8' });
 
@@ -2292,8 +2292,7 @@ globalConsoleContainerEl
 		indentationSizeValueEl.textContent = $('[data-setting=indentSize]').value;
 
 		// Replace correct css file in LINK tags's href
-		editorThemeLinkTag.href =
-			`lib/codemirror/theme/${prefs.editorTheme}.css`;
+		editorThemeLinkTag.href = `lib/codemirror/theme/${prefs.editorTheme}.css`;
 		fontStyleTag.textContent = fontStyleTemplate.textContent.replace(
 			/fontname/g,
 			(prefs.editorFont === 'other'
@@ -2444,13 +2443,17 @@ globalConsoleContainerEl
 					'script $1:$2'
 				);
 			}
-			scope.consoleCm.replaceRange(
-				arg +
-					' ' +
-					((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
-					'\n',
-				{ line: Infinity }
-			);
+			try {
+				scope.consoleCm.replaceRange(
+					arg +
+						' ' +
+						((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
+						'\n',
+					{ line: Infinity }
+				);
+			} catch (e) {
+				scope.consoleCm.replaceRange('🌀\n', { line: Infinity });
+			}
 			scope.consoleCm.scrollTo(0, Infinity);
 			logCount++;
 		});

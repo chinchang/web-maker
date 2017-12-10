@@ -145,28 +145,48 @@ globalConsoleContainerEl
 	scope.demoFrameDocument =
 		frame.contentDocument || frame.contentWindow.document;
 
-	// Check all the code wrap if they are minimized or not
+	// Check all the code wrap if they are minimized or maximized
 	function updateCodeWrapCollapseStates() {
+		// This is debounced!
 		clearTimeout(updateCodeWrapCollapseStates.timeout);
 		updateCodeWrapCollapseStates.timeout = setTimeout(function() {
+			const prop = currentLayoutMode === 2 ? 'width' : 'height';
 			[htmlCode, cssCode, jsCode].forEach(function(el) {
-				var bounds = el.getBoundingClientRect();
-				if (bounds[currentLayoutMode === 2 ? 'width' : 'height'] < 100) {
+				const bounds = el.getBoundingClientRect();
+				const size = bounds[prop];
+				if (size < 100) {
 					el.classList.add('is-minimized');
 				} else {
 					el.classList.remove('is-minimized');
+				}
+				if (el.style[prop].indexOf(`100% - ${minCodeWrapSize * 2}px`) !== -1) {
+					el.classList.add('is-maximized');
+				} else {
+					el.classList.remove('is-maximized');
 				}
 			});
 		}, 50);
 	}
 
 	function toggleCodeWrapCollapse(codeWrapEl) {
-		if (codeWrapEl.classList.contains('is-minimized')) {
+		if (
+			codeWrapEl.classList.contains('is-minimized') ||
+			codeWrapEl.classList.contains('is-maximized')
+		) {
 			codeWrapEl.classList.remove('is-minimized');
+			codeWrapEl.classList.remove('is-maximized');
 			codeSplitInstance.setSizes([33.3, 33.3, 33.3]);
 		} else {
-			codeSplitInstance.collapse(parseInt(codeWrapEl.dataset.codeWrapId, 10));
-			codeWrapEl.classList.add('is-minimized');
+			const id = parseInt(codeWrapEl.dataset.codeWrapId, 10);
+			var arr = [
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`
+			];
+			arr[id] = `calc(100% - ${minCodeWrapSize * 2}px)`;
+
+			codeSplitInstance.setSizes(arr);
+			codeWrapEl.classList.add('is-maximized');
 		}
 	}
 	// Returns the sizes of main code & preview panes.
@@ -330,9 +350,9 @@ globalConsoleContainerEl
 		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
 		try {
 			sizes = [
-				+htmlCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+cssCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+jsCode.style[dimensionProperty].match(/([\d.]+)%/)[1]
+				htmlCode.style[dimensionProperty],
+				cssCode.style[dimensionProperty],
+				jsCode.style[dimensionProperty]
 			];
 		} catch (e) {
 			sizes = [33.33, 33.33, 33.33];
@@ -2299,7 +2319,7 @@ globalConsoleContainerEl
 							refreshEditor();
 						});
 					} else {
-						utils.log('Load last unsaved item');
+						utils.log('Load last unsaved item', lastCode);
 						currentItem = lastCode;
 						refreshEditor();
 					}

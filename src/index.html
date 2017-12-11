@@ -249,14 +249,12 @@
 					</svg>
 				</a>
 				<h1>Add Library</h1>
-				<h3>JavaScript</h3>
-				<p style="font-size: 0.8em;opacity: 0.7;">Note: You can load external scripts from following domains: localhost, https://ajax.googleapis.com, https://code.jquery.com, https://cdnjs.cloudflare.com, https://unpkg.com, https://maxcdn.com, https://cdn77.com, https://maxcdn.bootstrapcdn.com, https://cdn.jsdelivr.net/, https://rawgit.com, https://wzrd.in</p>
-				<textarea id="js-external-js" class="full-width" id="" cols="30" rows="5" placeholder="Start typing name of a library. Put each library in new line"></textarea>
 
-				<h3>CSS</h3>
-				<textarea id="js-external-css" class="full-width" id="" cols="30" rows="5" placeholder="Start typing name of a library. Put each library in new line"></textarea>
-
-				<div style="margin-top:20px;">
+				<input type="text" id="externalLibrarySearchInput" class="full-width" placeholder="Type here to search libraries">
+				<div class="tar opacity--70">
+					<small>Powered by cdnjs</small>
+				</div>
+				<div style="margin:20px 0;">
 					Choose from popular libraries:
 					<select name="" id="js-add-library-select">
 						<option value="">-------</option>
@@ -268,6 +266,14 @@
 						</optgroup>
 					</select>
 				</div>
+
+				<h3>JavaScript</h3>
+				<p style="font-size: 0.8em;" class="opacity--70">Note: You can load external scripts from following domains: localhost, https://ajax.googleapis.com, https://code.jquery.com, https://cdnjs.cloudflare.com, https://unpkg.com, https://maxcdn.com, https://cdn77.com, https://maxcdn.bootstrapcdn.com, https://cdn.jsdelivr.net/, https://rawgit.com, https://wzrd.in</p>
+				<textarea id="js-external-js" class="full-width" id="" cols="30" rows="5" placeholder="Start typing name of a library. Put each library in new line"></textarea>
+
+				<h3>CSS</h3>
+				<textarea id="js-external-css" class="full-width" id="" cols="30" rows="5" placeholder="Start typing name of a library. Put each library in new line"></textarea>
+
 			</div>
 		</div>
 

@@ -7,7 +7,7 @@ onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editor
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
 customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
-globalConsoleContainerEl
+globalConsoleContainerEl, externalLibrarySearchInput
 */
 /* eslint-disable no-extra-semi */
 (function(alertsService) {
@@ -2249,12 +2249,21 @@ globalConsoleContainerEl
 		externalJsTextarea.addEventListener('blur', onExternalLibChange);
 		externalCssTextarea.addEventListener('blur', onExternalLibChange);
 
-		new TextareaAutoComplete(externalJsTextarea, obj =>
-			obj.latest.match(/\.js$/)
-		);
-		new TextareaAutoComplete(externalCssTextarea, obj =>
-			obj.latest.match(/\.css$/)
-		);
+		new TextareaAutoComplete(externalJsTextarea, {
+			filter: obj => obj.latest.match(/\.js$/)
+		});
+		new TextareaAutoComplete(externalCssTextarea, {
+			filter: obj => obj.latest.match(/\.css$/)
+		});
+		new TextareaAutoComplete(externalLibrarySearchInput, {
+			selectedCallback: value => {
+				const textarea = value.match(/\.js$/)
+					? externalJsTextarea
+					: externalCssTextarea;
+				textarea.value = `${textarea.value}\n${value}`;
+				externalLibrarySearchInput.value = '';
+			}
+		});
 
 		// Console header drag resize logic
 		var consoleHeaderDragStartY;

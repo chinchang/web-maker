@@ -26,9 +26,11 @@ a { text-decoration: none; color: crimson; cursor: pointer; }
 .fr { float: right; }
 .relative { position: relative; }
 .tac { text-align: center; }
+.tar { text-align: right; }
 .va-m { vertical-align: middle; }
 .full-width { width: 100%; }
 .opacity--30 { opacity: 0.3; }
+.opacity--70 { opacity: 0.7; }
 .pointer-none { pointer-events: none; }
 .ml-1 { margin-left: 1rem; }
 .ml-2 { margin-left: 2rem; }
@@ -858,8 +860,8 @@ transition: 0.25s ease;
 }
 .autocomplete__loader {
 	position: absolute;
-	right: 10px;
-	bottom: 10px;
+	right: 3px;
+	bottom: 1px;
 }
 @keyframes wobble {
 	from {

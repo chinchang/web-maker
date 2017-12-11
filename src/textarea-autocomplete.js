@@ -1,9 +1,10 @@
 // textarea-autocomplete.js
 (function() {
 	class TextareaAutoComplete {
-		constructor(textarea, filter) {
+		constructor(textarea, options) {
 			this.t = textarea;
-			this.filter = filter;
+			this.filter = options.filter;
+			this.selectedCallback = options.selectedCallback;
 			var wrap = document.createElement('div');
 			wrap.classList.add('btn-group');
 			textarea.parentElement.insertBefore(wrap, textarea);
@@ -128,16 +129,24 @@
 				event.preventDefault();
 			} else if (event.keyCode === 13 && this.isShowingSuggestions) {
 				selectedItemElement = this.list.querySelector('.selected');
-				this.replaceCurrentLine(selectedItemElement.dataset.url);
+				this.selectSuggestion(selectedItemElement.dataset.url);
 				this.closeSuggestions();
 			}
 		}
 		onListMouseDown(event) {
 			var target = event.target;
 			if (target.parentElement.dataset.url) {
-				this.replaceCurrentLine(target.parentElement.dataset.url);
-				this.closeSuggestions();
+				this.selectSuggestion(target.parentElement.dataset.url);
 			}
+		}
+
+		selectSuggestion(value) {
+			if (this.selectedCallback) {
+				this.selectedCallback.call(null, value);
+			} else {
+				this.replaceCurrentLine(value);
+			}
+			this.closeSuggestions();
 		}
 	}
 

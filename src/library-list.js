@@ -27,32 +27,32 @@ window.jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js',
+		url: 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js',
 		label: 'Angular',
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.min.js',
+		url: 'https://unpkg.com/react',
 		label: 'React',
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.min.js',
+		url: 'https://unpkg.com/react-dom',
 		label: 'React DOM',
 		type: 'js'
 	},
 	{
-		url: 'https://unpkg.com/vue@2.5.0/dist/vue.min.js',
+		url: 'https://unpkg.com/vue',
 		label: 'Vue.js',
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/three.js/85/three.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js',
 		label: 'Three.js',
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.min.js',
 		label: 'D3',
 		type: 'js'
 	},
@@ -63,7 +63,7 @@ window.jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js',
 		label: 'Greensock TweenMax',
 		type: 'js'
 	},
@@ -74,7 +74,7 @@ window.jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.31/js/uikit.min.js',
+			'https://unpkg.com/uikit',
 		label: 'UIkit 3',
 		type: 'js'
 	}
@@ -104,7 +104,7 @@ window.cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css',
 		label: 'Bulma',
 		type: 'css'
 	},
@@ -122,7 +122,7 @@ window.cssLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.31/css/uikit.min.css',
+			'https://unpkg.com/uikit@3.0.0-beta.35/dist/css/uikit.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},
@@ -135,7 +135,7 @@ window.cssLibs = [
 	{
 		url:
 			'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-		label: 'FontAwesome',
+		label: 'Font Awesome',
 		type: 'css'
 	}
 ];

@@ -1,8 +1,8 @@
 /* global trackEvent */
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
-onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardModal, onboardModal,
+onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
-notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
+notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
@@ -13,7 +13,7 @@ globalConsoleContainerEl
 (function(alertsService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.9.1';
+	var version = '2.9.4';
 
 	if (window.DEBUG) {
 		window.scope = scope;
@@ -137,7 +137,6 @@ globalConsoleContainerEl
 		jsModelLabel = $('#js-js-mode-label'),
 		titleInput = $('#js-title-input'),
 		addLibrarySelect = $('#js-add-library-select'),
-		addLibraryBtn = $('#js-add-library-btn'),
 		externalJsTextarea = $('#js-external-js'),
 		externalCssTextarea = $('#js-external-css');
 
@@ -146,28 +145,48 @@ globalConsoleContainerEl
 	scope.demoFrameDocument =
 		frame.contentDocument || frame.contentWindow.document;
 
-	// Check all the code wrap if they are minimized or not
+	// Check all the code wrap if they are minimized or maximized
 	function updateCodeWrapCollapseStates() {
+		// This is debounced!
 		clearTimeout(updateCodeWrapCollapseStates.timeout);
 		updateCodeWrapCollapseStates.timeout = setTimeout(function() {
+			const prop = currentLayoutMode === 2 ? 'width' : 'height';
 			[htmlCode, cssCode, jsCode].forEach(function(el) {
-				var bounds = el.getBoundingClientRect();
-				if (bounds[currentLayoutMode === 2 ? 'width' : 'height'] < 100) {
+				const bounds = el.getBoundingClientRect();
+				const size = bounds[prop];
+				if (size < 100) {
 					el.classList.add('is-minimized');
 				} else {
 					el.classList.remove('is-minimized');
+				}
+				if (el.style[prop].indexOf(`100% - ${minCodeWrapSize * 2}px`) !== -1) {
+					el.classList.add('is-maximized');
+				} else {
+					el.classList.remove('is-maximized');
 				}
 			});
 		}, 50);
 	}
 
 	function toggleCodeWrapCollapse(codeWrapEl) {
-		if (codeWrapEl.classList.contains('is-minimized')) {
+		if (
+			codeWrapEl.classList.contains('is-minimized') ||
+			codeWrapEl.classList.contains('is-maximized')
+		) {
 			codeWrapEl.classList.remove('is-minimized');
+			codeWrapEl.classList.remove('is-maximized');
 			codeSplitInstance.setSizes([33.3, 33.3, 33.3]);
 		} else {
-			codeSplitInstance.collapse(parseInt(codeWrapEl.dataset.codeWrapId, 10));
-			codeWrapEl.classList.add('is-minimized');
+			const id = parseInt(codeWrapEl.dataset.codeWrapId, 10);
+			var arr = [
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`
+			];
+			arr[id] = `calc(100% - ${minCodeWrapSize * 2}px)`;
+
+			codeSplitInstance.setSizes(arr);
+			codeWrapEl.classList.add('is-maximized');
 		}
 	}
 	// Returns the sizes of main code & preview panes.
@@ -259,6 +278,7 @@ globalConsoleContainerEl
 		utils.log('onExternalLibChange');
 		updateExternalLibUi();
 		scope.setPreviewContent(true);
+		alertsService.add('Libraries updated.');
 	}
 
 	function updateExternalLibUi() {
@@ -330,9 +350,9 @@ globalConsoleContainerEl
 		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
 		try {
 			sizes = [
-				+htmlCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+cssCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+jsCode.style[dimensionProperty].match(/([\d.]+)%/)[1]
+				htmlCode.style[dimensionProperty],
+				cssCode.style[dimensionProperty],
+				jsCode.style[dimensionProperty]
 			];
 		} catch (e) {
 			sizes = [33.33, 33.33, 33.33];
@@ -954,6 +974,7 @@ globalConsoleContainerEl
 				);
 			}, '');
 		var contents =
+			'<!DOCTYPE html>\n' +
 			'<html>\n<head>\n' +
 			'<meta charset="UTF-8" />\n' +
 			externalCss +
@@ -1064,13 +1085,15 @@ globalConsoleContainerEl
 		// CSP from affecting it.
 		writeFile('script.js', blobjs, function() {
 			writeFile('preview.html', blob, function() {
-				frame.src =
+				const frameSrc =
 					'filesystem:chrome-extension://' +
 					chrome.i18n.getMessage('@@extension_id') +
 					'/temporary/' +
 					'preview.html';
 				if (scope.detachedWindow) {
 					scope.detachedWindow.postMessage(frame.src, '*');
+				} else {
+					frame.src = frameSrc;
 				}
 			});
 		});
@@ -1087,6 +1110,10 @@ globalConsoleContainerEl
 			js: scope.cm.js.getValue()
 		};
 		utils.log('🔎 setPreviewContent', isForced);
+		const targetFrame = scope.detachedWindow
+			? scope.detachedWindow.document.querySelector('iframe')
+			: frame;
+
 		// If just CSS was changed (and everything shudn't be empty),
 		// change the styles inside the iframe.
 		if (
@@ -1095,8 +1122,8 @@ globalConsoleContainerEl
 			currentCode.js === codeInPreview.js
 		) {
 			computeCss().then(function(css) {
-				if (frame.contentDocument.querySelector('#webmakerstyle')) {
-					frame.contentDocument.querySelector(
+				if (targetFrame.contentDocument.querySelector('#webmakerstyle')) {
+					targetFrame.contentDocument.querySelector(
 						'#webmakerstyle'
 					).textContent = css;
 				}
@@ -1294,6 +1321,7 @@ globalConsoleContainerEl
 		gutters: ['CodeMirror-foldgutter']
 	});
 
+	// DEPRECATED
 	function openSettings() {
 		scope.toggleModal(settingsModal);
 
@@ -1328,29 +1356,45 @@ globalConsoleContainerEl
 	};
 
 	scope.exportItems = function exportItems(e) {
-		fetchItems().then(function(items) {
-			var d = new Date();
-			var fileName = [
-				'web-maker-export',
-				d.getFullYear(),
-				d.getMonth() + 1,
-				d.getDate(),
-				d.getHours(),
-				d.getMinutes(),
-				d.getSeconds()
-			].join('-');
-			fileName += '.json';
-			var blob = new Blob([JSON.stringify(items, false, 2)], {
-				type: 'application/json;charset=UTF-8'
+		handleDownloadsPermission().then(() => {
+			fetchItems().then(function(items) {
+				var d = new Date();
+				var fileName = [
+					'web-maker-export',
+					d.getFullYear(),
+					d.getMonth() + 1,
+					d.getDate(),
+					d.getHours(),
+					d.getMinutes(),
+					d.getSeconds()
+				].join('-');
+				fileName += '.json';
+				var blob = new Blob([JSON.stringify(items, false, 2)], {
+					type: 'application/json;charset=UTF-8'
+				});
+
+				chrome.downloads.download(
+					{
+						url: window.URL.createObjectURL(blob),
+						filename: fileName,
+						saveAs: true
+					},
+					function() {
+						// If there was an error, just download the file using ANCHOR method.
+						if (chrome.runtime.lastError) {
+							var a = document.createElement('a');
+							a.href = window.URL.createObjectURL(blob);
+							a.download = fileName;
+							a.style.display = 'none';
+							document.body.appendChild(a);
+							a.click();
+							a.remove();
+						}
+					}
+				);
+
+				trackEvent('ui', 'exportBtnClicked');
 			});
-			var a = document.createElement('a');
-			a.href = window.URL.createObjectURL(blob);
-			a.download = fileName;
-			a.style.display = 'none';
-			document.body.appendChild(a);
-			a.click();
-			a.remove();
-			trackEvent('ui', 'exportBtnClicked');
 		});
 		e.preventDefault();
 	};
@@ -1567,12 +1611,14 @@ globalConsoleContainerEl
 				c.width = iframeBounds.width;
 				c.height = iframeBounds.height;
 				var ctx = c.getContext('2d');
+				var devicePixelRatio = window.devicePixelRatio || 1;
+
 				ctx.drawImage(
 					image,
-					iframeBounds.left,
-					iframeBounds.top,
-					iframeBounds.width,
-					iframeBounds.height,
+					iframeBounds.left * devicePixelRatio,
+					iframeBounds.top * devicePixelRatio,
+					iframeBounds.width * devicePixelRatio,
+					iframeBounds.height * devicePixelRatio,
 					0,
 					0,
 					iframeBounds.width,
@@ -1814,13 +1860,17 @@ globalConsoleContainerEl
 					'script $1:$2'
 				);
 			}
-			scope.consoleCm.replaceRange(
-				arg +
-					' ' +
-					((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
-					'\n',
-				{ line: Infinity }
-			);
+			try {
+				scope.consoleCm.replaceRange(
+					arg +
+						' ' +
+						((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
+						'\n',
+					{ line: Infinity }
+				);
+			} catch (e) {
+				scope.consoleCm.replaceRange('🌀\n', { line: Infinity });
+			}
 			scope.consoleCm.scrollTo(0, Infinity);
 			logCount++;
 		});
@@ -1842,6 +1892,18 @@ globalConsoleContainerEl
 		attachListenerForEvent('change');
 		attachListenerForEvent('input');
 		attachListenerForEvent('keyup');
+
+		// Compile d-open-modal directive
+		const modalTriggers = $all(`[d-open-modal]`);
+		modalTriggers.forEach(function(el) {
+			utils.onButtonClick(el, function() {
+				scope.toggleModal(window[el.getAttribute('d-open-modal')]);
+				trackEvent(
+					el.getAttribute('data-event-category'),
+					el.getAttribute('data-event-action')
+				);
+			});
+		});
 
 		// Compile d-html directive
 		const dHtmlNodes = $all(`[d-html]`);
@@ -1885,6 +1947,8 @@ globalConsoleContainerEl
 				document.body.classList.remove('is-detached-mode');
 				$('#js-demo-side').insertBefore(consoleEl, null);
 				scope.detachedWindow = null;
+				// Update main frame preview
+				scope.setPreviewContent(true);
 			}
 		}
 		var intervalID = window.setInterval(checkWindow, 500);
@@ -1898,6 +1962,11 @@ globalConsoleContainerEl
 			scope.acssSettingsCm.focus();
 		}, 500);
 		trackEvent('ui', 'cssSettingsBtnClick');
+	};
+
+	scope.onModalCloseBtnClick = function(e) {
+		closeAllOverlays();
+		e.preventDefault();
 	};
 
 	function init() {
@@ -1917,15 +1986,6 @@ globalConsoleContainerEl
 		layoutBtn2.addEventListener('click', getToggleLayoutButtonListener(2));
 		layoutBtn3.addEventListener('click', getToggleLayoutButtonListener(3));
 		layoutBtn4.addEventListener('click', getToggleLayoutButtonListener(4));
-
-		utils.onButtonClick(helpBtn, function() {
-			scope.toggleModal(helpModal);
-			trackEvent('ui', 'helpButtonClick');
-		});
-		utils.onButtonClick(addLibraryBtn, function() {
-			scope.toggleModal(addLibraryModal);
-			trackEvent('ui', 'addLibraryButtonClick');
-		});
 
 		notificationsBtn.addEventListener('click', function() {
 			scope.toggleModal(notificationsModal);
@@ -2136,10 +2196,10 @@ globalConsoleContainerEl
 		});
 
 		window.addEventListener('click', function(e) {
-			if (
-				typeof e.target.className === 'string' &&
-				e.target.className.indexOf('modal-overlay') !== -1
-			) {
+			if (typeof e.target.className !== 'string') {
+				return;
+			}
+			if (e.target.className.indexOf('modal-overlay') !== -1) {
 				closeAllOverlays();
 			}
 		});
@@ -2154,11 +2214,6 @@ globalConsoleContainerEl
 				toggleCodeWrapCollapse(codeWrapParent);
 				trackEvent('ui', 'paneHeaderDblClick', codeWrapParent.dataset.type);
 			}
-		});
-
-		utils.onButtonClick(settingsBtn, function() {
-			openSettings();
-			trackEvent('ui', 'settingsBtnClick');
 		});
 
 		// Initialize add library select box
@@ -2264,7 +2319,7 @@ globalConsoleContainerEl
 							refreshEditor();
 						});
 					} else {
-						utils.log('Load last unsaved item');
+						utils.log('Load last unsaved item', lastCode);
 						currentItem = lastCode;
 						refreshEditor();
 					}

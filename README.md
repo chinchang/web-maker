@@ -13,7 +13,7 @@ Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master) 
 * Works offline
 * Inbuilt Console
 * Save and load your creations
-* Auto-save feture
+* Auto-save feature
 * Code auto-completion
 * Easy addition of popular JS & CSS libraries
 * Import & Export all creations anytime, anywhere
@@ -29,7 +29,7 @@ Follow [@webmakerApp](https://twitter.com/intent/follow?screen_name=webmakerApp)
 
 ### Support Web Maker
 
-Web Maker is completely free and open-source. If you find it useful, you can show your support by sharing it in your social network or by donating on [Gratipay](https://gratipay.com/Web-Maker/) or by simply letting me know how much you 💖 it by tweeting to [@webmakerapp](https://twitter.com/webmakerApp).
+Web Maker is completely free and open-source. If you find it useful, you can show your support by sharing it in your social network or by [donating](https://www.paypal.me/kushagragour) or by simply letting me know how much you 💖 it by tweeting to [@webmakerapp](https://twitter.com/webmakerApp).
 
 ### License
 

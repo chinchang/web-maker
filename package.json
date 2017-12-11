@@ -1,6 +1,6 @@
 {
 	"name": "web-maker",
-	"version": "2.8.1",
+	"version": "2.9.4",
 	"description": "A blazing fast & offline web playground",
 	"main": "index.html",
 	"devDependencies": {
@@ -10,7 +10,7 @@
 		"prettier": "^1.5.2"
 	},
 	"scripts": {
-		"install": "ln -s ../../git-hooks/pre-commit .git/hooks/pre-commit"
+		"install": "ln -sf ../../git-hooks/pre-commit .git/hooks/pre-commit"
 	},
 	"repository": {
 		"type": "git",

@@ -1,3 +1,6 @@
+var mainWindow = window.parent.onMessageFromConsole
+	? window.parent
+	: window.parent.opener;
 (function() {
 	var logEl,
 		isInitialized = false,
@@ -37,18 +40,27 @@
 			if (_options.proxyCallback) {
 				_options.proxyCallback.apply(null, arguments);
 			}
-			if (_options.noUi) { return; }
-			var el = createElement('div', 'line-height:18px;min-height:18px;background:' +
-				(logEl.children.length % 2 ? 'rgba(255,255,255,0.1)' : '') + ';color:' + color); // zebra lines
+			if (_options.noUi) {
+				return;
+			}
+			var el = createElement(
+				'div',
+				'line-height:18px;min-height:18px;background:' +
+					(logEl.children.length % 2 ? 'rgba(255,255,255,0.1)' : '') +
+					';color:' +
+					color
+			); // zebra lines
 			var val = [].slice.call(arguments).reduce(function(prev, arg) {
-				return prev + ' ' + (typeof arg === "object" ? JSON.stringify(arg) : arg);
+				return (
+					prev + ' ' + (typeof arg === 'object' ? JSON.stringify(arg) : arg)
+				);
 			}, '');
 			el.textContent = val;
 
 			logEl.appendChild(el);
 
 			// Scroll to last element, if autoScroll option is set.
-			if(_options.autoScroll) {
+			if (_options.autoScroll) {
 				logEl.scrollTop = logEl.scrollHeight - logEl.clientHeight;
 			}
 		};
@@ -56,7 +68,7 @@
 
 	function clear() {
 		if (_options.noUi) {
-			window.parent.clearConsole();
+			mainWindow.clearConsole();
 			return;
 		}
 		logEl.innerHTML = '';
@@ -79,18 +91,20 @@
 	}
 
 	function setOptions(options) {
-		for(var i in options)
-			if(options.hasOwnProperty(i) && _options.hasOwnProperty(i)) {
+		for (var i in options)
+			if (options.hasOwnProperty(i) && _options.hasOwnProperty(i)) {
 				_options[i] = options[i];
 			}
 	}
 
 	function init(options) {
-		if (isInitialized) { return; }
+		if (isInitialized) {
+			return;
+		}
 
 		isInitialized = true;
 
-		if(options) {
+		if (options) {
 			setOptions(options);
 		}
 
@@ -175,19 +189,18 @@
 		destroy: checkInitDecorator(destroy)
 	};
 })();
-var mainWindow = window.parent.onMessageFromConsole ? window.parent : window.parent.opener;
 screenLog.init({
 	noUi: true,
-	proxyCallback: function () {
+	proxyCallback: function() {
 		mainWindow.onMessageFromConsole.apply(null, arguments);
 	}
 });
 window._wmEvaluate = function _wmEvaluate(expr) {
 	try {
 		var result = eval(expr);
-	} catch(e) {
+	} catch (e) {
 		mainWindow.onMessageFromConsole.call(null, e);
 		return;
 	}
 	mainWindow.onMessageFromConsole.call(null, result);
-}
+};

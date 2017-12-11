@@ -959,7 +959,8 @@ globalConsoleContainerEl
 		});
 	}
 
-	function getCompleteHtml(html, css, js) {
+	/* eslint max-params: ["error", 4] */
+	function getCompleteHtml(html, css, js, isForExport) {
 		var externalJs = externalJsTextarea.value
 			.split('\n')
 			.reduce(function(scripts, url) {
@@ -989,10 +990,12 @@ globalConsoleContainerEl
 			externalJs +
 			'\n';
 
-		contents +=
-			'<script src="' +
-			chrome.extension.getURL('lib/screenlog.js') +
-			'"></script>';
+		if (!isForExport) {
+			contents +=
+				'<script src="' +
+				chrome.extension.getURL('lib/screenlog.js') +
+				'"></script>';
+		}
 
 		if (jsMode === JsModes.ES6) {
 			contents +=
@@ -1151,7 +1154,7 @@ globalConsoleContainerEl
 				css = result[1],
 				js = result[2];
 
-			var fileContent = getCompleteHtml(html, css, js);
+			var fileContent = getCompleteHtml(html, css, js, true);
 
 			var d = new Date();
 			var fileName = [

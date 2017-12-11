@@ -943,6 +943,19 @@ transition: 0.25s ease;
 	display: block;
 }
 
+.kbd-shortcut__keys {
+	background: rgba(0,0,0,0.1);
+	border-radius: 3px;
+	padding: 3px 8px;
+	margin-right: 5px;
+	display: inline-block;
+	font-size: 0.9rem;
+	font-weight: bold;
+}
+.kbd-shortcut__details {
+	display: inline-block;
+}
+
 /* Codemirror themes basic bg styles. This is here so that there is no big FOUC
 while the theme CSS file is loading */
 .cm-s-paraiso-dark.CodeMirror { background: #2f1e2e; color: #b9b6b0; }

@@ -7,7 +7,7 @@ onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editor
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
 customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
-globalConsoleContainerEl, externalLibrarySearchInput
+globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 */
 /* eslint-disable no-extra-semi */
 (function(alertsService) {
@@ -647,6 +647,7 @@ globalConsoleContainerEl, externalLibrarySearchInput
 		onboardModal.classList.remove('is-modal-visible');
 		settingsModal.classList.remove('is-modal-visible');
 		cssSettingsModal.classList.remove('is-modal-visible');
+		keyboardShortcutsModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -2139,6 +2140,11 @@ globalConsoleContainerEl, externalLibrarySearchInput
 				event.preventDefault();
 				openSavedItemsPane();
 				trackEvent('ui', 'openCreationKeyboardShortcut');
+			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 191) {
+				// Ctrl/⌘ + Shift + ?
+				event.preventDefault();
+				scope.toggleModal(keyboardShortcutsModal);
+				trackEvent('ui', 'showKeyboardShortcutsShortcut');
 			} else if (event.keyCode === 27) {
 				closeAllOverlays();
 			}

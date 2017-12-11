@@ -226,13 +226,18 @@
 
 				<a href="https://webmakerapp.com/" target="_blank"><div class="logo"></div></a>
 				&copy; Web Maker &nbsp;&nbsp;
-				<a d-open-modal="helpModal" data-event-category="ui" data-event-action="helpButtonClick" class="footer__link  hint--rounded  hint--top-right" data-hint="Help">
+				<a d-open-modal="helpModal" data-event-category="ui" data-event-action="helpButtonClick" class="footer__link  hint--rounded  hint--top-right" aria-label="Help">
 					<svg style="width:20px; height:20px; vertical-align:text-bottom" viewBox="0 0 24 24">
 						<path d="M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z" />
 					</svg>
 				</a>
+				<a d-open-modal="keyboardShortcutsModal" data-event-category="ui" data-event-action="keyboardShortcutButtonClick" class="footer__link  hint--rounded  hint--top-right" aria-label="Keyboard shortcuts">
+					<svg style="width:20px; height:20px; vertical-align:text-bottom">
+						<use xlink:href="#keyboard-icon"></use>
+					</svg>
+				</a>
 				<!-- #00ACED -->
-				<a class="footer__link  hint--rounded  hint--top-right" data-hint="Tweet about 'Web Maker'" href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,playground,chrome,extension" target="_blank">
+				<a class="footer__link  hint--rounded  hint--top-right" aria-label="Tweet about 'Web Maker'" href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,playground,chrome,extension" target="_blank">
 					<svg style="width:20px; height:20px; vertical-align:text-bottom">
 						<use xlink:href="#twitter-icon"></use>
 					</svg>
@@ -329,6 +334,11 @@
 						"Web Maker" is <a target="_blank" href="https://github.com/chinchang/web-maker">open-source</a> under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.
 					</p>
 				</div>
+			</div>
+		</div>
+
+		<div class="modal" id="keyboardShortcutsModal">
+			<div class="modal__content" d-html="keyboard-shortcuts.html">
 			</div>
 		</div>
 
@@ -613,6 +623,9 @@
 			</symbol>
 			<symbol id="cross-icon" viewBox="0 0 24 24">
 				<path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+			</symbol>
+			<symbol id="keyboard-icon" viewBox="0 0 24 24">
+				<path d="M19,10H17V8H19M19,13H17V11H19M16,10H14V8H16M16,13H14V11H16M16,17H8V15H16M7,10H5V8H7M7,13H5V11H7M8,11H10V13H8M8,8H10V10H8M11,11H13V13H11M11,8H13V10H11M20,5H4C2.89,5 2,5.89 2,7V17A2,2 0 0,0 4,19H20A2,2 0 0,0 22,17V7C22,5.89 21.1,5 20,5Z" />
 			</symbol>
 		</svg>
 

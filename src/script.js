@@ -2154,7 +2154,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				event.preventDefault();
 				openSavedItemsPane();
 				trackEvent('ui', 'openCreationKeyboardShortcut');
-			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 191) {
+			} else if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.keyCode === 191) {
 				// Ctrl/⌘ + Shift + ?
 				event.preventDefault();
 				scope.toggleModal(keyboardShortcutsModal);

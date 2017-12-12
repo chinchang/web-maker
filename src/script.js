@@ -13,7 +13,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 (function(alertsService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.9.4';
+	var version = '2.9.6';
 
 	if (window.DEBUG) {
 		window.scope = scope;
@@ -2154,7 +2154,11 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				event.preventDefault();
 				openSavedItemsPane();
 				trackEvent('ui', 'openCreationKeyboardShortcut');
-			} else if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.keyCode === 191) {
+			} else if (
+				(event.ctrlKey || event.metaKey) &&
+				event.shiftKey &&
+				event.keyCode === 191
+			) {
 				// Ctrl/⌘ + Shift + ?
 				event.preventDefault();
 				scope.toggleModal(keyboardShortcutsModal);

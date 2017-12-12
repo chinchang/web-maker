@@ -298,106 +298,15 @@
 		</div>
 
 		<div class="modal" id="helpModal">
-			<div class="modal__content">
-				<a d-click="onModalCloseBtnClick" href="" aria-label="Close help modal" title="Close" class="js-modal__close-btn  modal__close-btn">
-					<svg>
-						<use xlink:href="#cross-icon"></use>
-					</svg>
-				</a>
-				<h1>Web Maker<small style="font-size:14px;"> v2.9.5</small></h1>
-				<div>
-					<p>Made with <span style="margin-right: 8px;">💖</span> & <span style="margin-right: 8px;">🙌</span> by <a href="https://twitter.com/chinchang457" target="_blank">Kushagra Gour</a></p>
-					<p>Tweet out your feature requests, comments & suggestions to <a target="_blank" href="https://twitter.com/webmakerApp">@webmakerApp</a>.</p>
-					<p>Like this extension? Please <a href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews" target="_blank">rate it here</a>.</p>
-					<p>
-						<a aria-label="Rate Web Maker" href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews" target="_blank" class="btn btn-icon"><svg><use xlink:href="#heart-icon"></use></svg>Show some love</a>
-						<a aria-label="Chat" href="https://gitter.im/web-maker-app/Lobby" target="_blank" class="btn btn-icon"><svg><use xlink:href="#chat-icon"></use></svg>Chat</a>
-						<a aria-label="Report a Bug" href="https://github.com/chinchang/web-maker/issues" target="_blank" class="btn btn-icon"><svg><use xlink:href="#bug-icon"></use></svg>Report a bug</a>
-						<a aria-label="Support the developer" href="https://www.paypal.me/kushagragour" target="_blank" class="btn btn-icon"><svg><use xlink:href="#gift-icon"></use></svg>Support the developer</a>
-					</p>
-
-					<p>
-						<h3>Awesome libraries used</h3>
-						<ul>
-							<li><a target="_blank" href="https://kushagragour.in/lab/hint/">Hint.css</a> & <a target="_blank" href="https://github.com/chinchang/screenlog.js">Screenlog.js</a> - By me :)</li>
-							<li><a target="_blank" href="https://nathancahill.github.io/Split.js/">Split.js</a> - Nathan Cahill</li>
-							<li><a target="_blank" href="https://codemirror.net/">Codemirror</a> - Marijn Haverbeke</li>
-							<li><a target="_blank" href="https://emmet.io/">Emmet</a> - Sergey Chikuyonok</li>
-							<li><a target="_blank" href="http://esprima.org/">Esprima</a> - Ariya Hidayat</li>
-							<li><a target="_blank" href="https://github.com/enjalot/Inlet">Inlet</a> - Ian Johnson</li>
-							<li><a target="_blank" href="https://webmakerapp.com/">Web Maker!</a> - whhat!</li>
-						</ul>
-					</p>
-
-					<p>
-						<h3>License</h3>
-						"Web Maker" is <a target="_blank" href="https://github.com/chinchang/web-maker">open-source</a> under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.
-					</p>
-				</div>
-			</div>
+			<div class="modal__content" d-html="partials/help-modal.html"></div>
 		</div>
 
 		<div class="modal" id="keyboardShortcutsModal">
-			<div class="modal__content" d-html="keyboard-shortcuts.html">
-			</div>
+			<div class="modal__content" d-html="partials/keyboard-shortcuts.html"></div>
 		</div>
 
 		<div class="modal" id="onboardModal">
-			<div class="modal__content">
-
-			<div class="tac">
-				<svg width="130px" height="50px">
-					<use xlink:href="#logo" />
-				</svg>
-				<h1 style="margin-top:20px">Welcome to Web Maker</h1>
-			</div>
-			<div class="flex" style="margin-top;: 100px;">
-				<div class="onboard-step">
-					<div class="tac">
-						<svg class="onboard-step__icon" viewBox="0 0 24 24">
-							<path d="M13.64,21.97C13.14,22.21 12.54,22 12.31,21.5L10.13,16.76L7.62,18.78C7.45,18.92 7.24,19 7,19A1,1 0 0,1 6,18V3A1,1 0 0,1 7,2C7.24,2 7.47,2.09 7.64,2.23L7.65,2.22L19.14,11.86C19.57,12.22 19.62,12.85 19.27,13.27C19.12,13.45 18.91,13.57 18.7,13.61L15.54,14.23L17.74,18.96C18,19.46 17.76,20.05 17.26,20.28L13.64,21.97Z"
-							/>
-						</svg>
-					</div>
-					<p>
-						Open Web Maker anytime by clicking the
-						<svg class="relative" style="top:5px;" width="40" height="30">
-							<use xlink:href="#logo" />
-						</svg> button in top-right side of your browser.
-					</p>
-				</div>
-				<div class="onboard-step">
-					<div class="tac">
-						<svg class="onboard-step__icon" viewBox="0 0 24 24">
-							<use xlink:href="#settings-icon"></use>
-						</svg>
-					</div>
-					<p>
-						Configure and customize settings by clicking the gear icon (
-						<svg style="width:18px;height:18px;position:relative;top:3px;fill:#888"
-						viewBox="0 0 24 24">
-							<use xlink:href="#settings-icon"></use>
-						</svg>) in bottom right of the app.
-					</p>
-				</div>
-				<div class="onboard-step">
-					<div class="tac">
-						<svg class="onboard-step__icon" style="stroke-width:0.2px;">
-							<use xlink:href="#twitter-icon"></use>
-						</svg>
-					</div>
-					<p>
-						Follow <a href="https://twitter.com/intent/follow?screen_name=webmakerApp">@webmakerApp</a> to know about the new upcoming
-						features!
-					</p>
-				</div>
-			</div>
-
-
-				<p class="tac">
-					<button class="btn" d-click="closeAllOverlays">Lets start!</button>
-				</p>
-			</div>
+			<div class="modal__content" d-html="partials/onboard-modal.html"></div>
 		</div>
 
 		<div class="modal modal--settings" id="settingsModal">
@@ -534,8 +443,7 @@
 		</div>
 
 		<div class="modal" id="notificationsModal">
-			<div class="modal__content" d-html="changelog.html">
-			</div>
+			<div class="modal__content" d-html="partials/changelog.html"></div>
 		</div>
 
 		<div id="js-saved-items-pane" class="saved-items-pane">

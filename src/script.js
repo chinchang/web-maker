@@ -1883,9 +1883,21 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		/* eslint-enable no-param-reassign */
 	};
 
-	function compileNodes() {
+	/**
+	 * Compiles directives on the given node
+	 * @param {Node} root The element on which compilation is required
+	 */
+	function compileNodes(root) {
+		if (!(root instanceof Node)) {
+			/* eslint-disable no-param-reassign */
+			root = document;
+			/* eslint-enable no-param-reassign */
+		}
+		// Create a querySelectorAll function bound to the passed `root` Node
+		const query = selector => [...root.querySelectorAll(selector)];
+
 		function attachListenerForEvent(eventName) {
-			const nodes = $all(`[d-${eventName}]`);
+			const nodes = query(`[d-${eventName}]`);
 			nodes.forEach(function(el) {
 				el.addEventListener(eventName, function(e) {
 					scope[el.getAttribute(`d-${eventName}`)].call(window, e);
@@ -1898,7 +1910,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		attachListenerForEvent('keyup');
 
 		// Compile d-open-modal directive
-		const modalTriggers = $all(`[d-open-modal]`);
+		const modalTriggers = query(`[d-open-modal]`);
 		modalTriggers.forEach(function(el) {
 			utils.onButtonClick(el, function() {
 				scope.toggleModal(window[el.getAttribute('d-open-modal')]);
@@ -1910,7 +1922,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		});
 
 		// Compile d-html directive
-		const dHtmlNodes = $all(`[d-html]`);
+		const dHtmlNodes = query(`[d-html]`);
 		dHtmlNodes.forEach(function(el) {
 			fetch(el.getAttribute('d-html')).then(response => {
 				// Stop further compilation because of future recursion by removing attribute.
@@ -1918,6 +1930,8 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				response.text().then(html => {
 					requestIdleCallback(() => {
 						el.innerHTML = html;
+						// Now compile this newly inserted HTML also.
+						compileNodes(el);
 					});
 				});
 			});

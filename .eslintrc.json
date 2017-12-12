@@ -26,7 +26,7 @@
 		"eol-last": "off",
 		"eqeqeq": "error",
 		"func-names": "off",
-		"func-style": ["error", "declaration"],
+		"func-style": ["error", "declaration", { "allowArrowFunctions": true }],
 		"generator-star-spacing": "error",
 		"global-require": "error",
 		"guard-for-in": "error",

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# RUN PRETTIER
+jsjsonfiles=$(git diff --staged --name-only | grep ".*\.\(js\|json\)")
+echo "$jsjsonfiles" | xargs ./node_modules/.bin/prettier --single-quote --use-tabs --write
+echo "$jsjsonfiles" | xargs git add
+
+# Fetch .js or .json filed from staged files
+jsfiles=$(git diff --staged --name-only --diff-filter=ACM | grep '\.js$')
+
+[ -z "$jsfiles" ] && exit 0
+
+# ESLINT CHECK
+eslintresult=$(./node_modules/.bin/eslint --ignore-pattern '/src/lib/*' --color $jsfiles --quiet)
+
+if [[ $eslintresult != "" ]]; then
+	echo "$eslintresult"
+	exit 1 # reject
+fi
+
+echo "\033[32m✔ ESlint passed\033[0m"
+
+exit 0

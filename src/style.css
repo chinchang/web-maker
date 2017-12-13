@@ -1,10 +1,3 @@
-@font-face {
-	font-family: 'Inconsolata';
-	font-style: normal;
-	font-weight: 400;
-	src: local('Inconsolata'), url(../Inconsolata-Regular.ttf) format('truetype');
-	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
 :root {
 	--color-bg: #252637;
 	--color-sidebar: #3A2B63;
@@ -17,7 +10,8 @@ body {
 	background: var(--color-bg);
 	color: rgba(255,255,255,0.9);
 	min-height: 100vh;
-	font-family: Helvetica, arial;
+	font-size: 87.5%;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
 }
 h1 {
 	margin-top: 0;
@@ -25,17 +19,21 @@ h1 {
 a { text-decoration: none; color: crimson; cursor: pointer; }
 /*a:hover { text-decoration: underline; }*/
 
+.hide { display: none!important; }
 .flex { display: flex; }
 .flex-grow { flex-grow: 1; }
 .flex-v-center { align-items: center; }
 .fr { float: right; }
 .relative { position: relative; }
 .tac { text-align: center; }
+.tar { text-align: right; }
 .va-m { vertical-align: middle; }
 .full-width { width: 100%; }
 .opacity--30 { opacity: 0.3; }
+.opacity--70 { opacity: 0.7; }
 .pointer-none { pointer-events: none; }
 .ml-1 { margin-left: 1rem; }
+.ml-2 { margin-left: 2rem; }
 hr {
 	background: 0;
 	border: 0;
@@ -70,6 +68,14 @@ select, input[type="text"], input[type="number"],  textarea {
 	padding: 3px 5px;
 	font-size: inherit;
 }
+.hidden-select {
+	opacity: 0;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
 .btn {
 	display: inline-block;
 	border: 0;
@@ -100,24 +106,31 @@ select, input[type="text"], input[type="number"],  textarea {
 	content: '★';
 	color: #eee333;
 }
+/* used to show keyboard specific content when something is keyboard focused */
+.show-when-selected { display: none; }
+.selected .show-when-selected { display: inline-block; }
+
 .main-container {
 	position: absolute;
 	left: 0; right: 0;
 	top: 0; bottom: 0;
 	display: flex;
 	flex-direction: column;
+	overflow: hidden;
 	will-change: -webkit-filter;
 	transition: 0.10s ease 0.2s;
 }
-.overlay-visible .main-container {
+body:not(.light-version).overlay-visible .main-container {
 	transition-duration: 0.5s;
 	transition-delay: 0.4s;
 	-webkit-filter: blur(3px);
+	filter: blur(3px);
 }
 .code-side,
 .demo-side {
 	flex-basis: inherit;
 	position: relative;
+	width: 50%;
 }
 .layout-3 .content-wrap {
 	flex-direction: row-reverse;
@@ -125,13 +138,15 @@ select, input[type="text"], input[type="number"],  textarea {
 .code-side {
 	display: flex;
 	flex-direction: column;
-	width: 50%;
 }
 .layout-2 .content-wrap {
 	flex-direction: column;
 }
 .layout-2 .code-side {
 	flex-direction: row;
+	width: auto;
+}
+.layout-2 .demo-side {
 	width: auto;
 }
 .layout-4 .code-side {
@@ -143,6 +158,16 @@ select, input[type="text"], input[type="number"],  textarea {
 .layout-4 .demo-side {
 	width: 100% !important;
 }
+.is-detached-mode .demo-side {
+	display: none;
+}
+.is-detached-mode .code-side {
+	width: 100% !important;
+}
+.is-detached-mode.layout-2 .code-side {
+	height: auto !important;
+}
+
 .code-wrap {
 	display: flex;
 	flex-direction: column;
@@ -181,15 +206,16 @@ select, input[type="text"], input[type="number"],  textarea {
 	color: #888;
 	border-bottom: 1px solid rgba(0,0,0,0.3);
 	font-weight: bold;
+	user-select: none;
 }
 .code-wrap__header-label {
 	/*transform: translate(0px) scale(1.2);*/
 	display: inline-block;
-	font-size: 1.3em;
+	font-size: 1.1em;
 	opacity: 0.5;
 	/*transform-origin: left center;*/
 }
-.layout-2 .is-minimized .code-wrap__header {
+.layout-2 .code-side .is-minimized .code-wrap__header {
 	writing-mode: vertical-lr;
 	padding: 10px 5px;
 }
@@ -200,15 +226,23 @@ select, input[type="text"], input[type="number"],  textarea {
 	opacity: 0;
 }
 .code-wrap__header-btn {
+	display: inline-block;
+	vertical-align: top;
+	margin-left: 8px;
+}
+.code-wrap__header-btn,
+.code-wrap__header-btn > svg  {
 	width: 18px;
 	height: 18px;
-	display: inline-block;
 }
 .code-wrap__collapse-btn:before {
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.2)" d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" /></svg>');
-}
-.is-minimized .code-wrap__collapse-btn:before {
+
+	/* maximize icon */
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.2)" d="M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z" /></svg>');
+}
+.is-maximized .code-wrap__collapse-btn:before {
+	/* minimize icon */
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.2)" d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" /></svg>');
 }
 @keyframes pop-in {
 	from { transform: scale(0.9); opacity: 0; }
@@ -225,7 +259,7 @@ select, input[type="text"], input[type="number"],  textarea {
 	height: calc(100%);
 }
 .Codemirror pre {
-	font-family: 'Inconsolata', monospace;
+	font-variant-ligatures: contextual;
 }
 .cm-s-monokai .CodeMirror-linenumber {
 	color:rgba(255,255,255,0.2);
@@ -262,20 +296,29 @@ li.CodeMirror-hint-active {
 #demo-frame {
 	border: 0;
 	width: 100%;
-	height: 100%;
+	height: calc(100% - 29px); /*  minus minimized console height */
 	position: absolute;
 	z-index: 1;
 	background: white;
 }
+/* When demo frame is in detached window */
+body > #demo-frame {
+	height: 100%; /* Because console is no more here */
+}
 .main-header,
 .footer {
 	padding: 5px 10px;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgb(18, 19, 27);
 	color: rgba(255, 255, 255, 0.45);
 	border-top: 1px solid rgba(255,255,255,0.14);
 	/*line-height: 20px;*/
 }
+.footer {
+	z-index: 6; // Because .console is 6
+}
 .main-header {
+	display: flex;
+	flex-wrap: nowrap;
 	border: 0;
 	border-bottom: 1px solid rgba(255,255,255,0.14);
 }
@@ -372,7 +415,16 @@ li.CodeMirror-hint-active {
 	background: none;
 	border: 0;
 	color: rgba(255,255,255,0.6);
-	width: calc(100vw - 400px);
+	flex: 1;
+}
+.search-input {
+	background: rgba(255, 255, 255, 0.1);
+	padding: 10px 20px;
+	border: 0;
+	width: 100%;
+	font-size: 16px;
+	color: white;
+	border-radius: 4px;
 }
 .modal {
 	position: fixed;
@@ -391,6 +443,20 @@ li.CodeMirror-hint-active {
 		margin-left: -45vw;
 	}
 }
+.modal__close-btn {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	opacity: 0.3;
+transition: 0.25s ease;
+}
+.modal__close-btn > svg {
+	fill: black;
+	width:30px; height:30px;
+}
+.modal__close-btn:hover {
+	opacity: 0.7;
+}
 .modal__content {
 	background: #fdfdfd;
 	color: #444;
@@ -399,7 +465,7 @@ li.CodeMirror-hint-active {
 	margin: 0 auto;
 	opacity: 0;
 	padding: 2em;
-	font-size: 1.3em;
+	font-size: 1.1em;
 	line-height: 1.4;
 	max-height: 90vh;
 	box-sizing: border-box;
@@ -428,12 +494,19 @@ li.CodeMirror-hint-active {
 	background: rgba(0,0,0,0.6);
 	transition: all 0.3s;
 }
+/* Make settings modal smaller */
+@media screen and (min-width: 600px) {
+	.modal--settings {
+		/* width: 600px; */
+		/* margin-left: -300px; */
+	}
+}
 .saved-items-pane {
 	position: fixed;
 	right: 0;
 	top: 0;
 	bottom: 0;
-	width: 400px;
+	width: 450px;
 	padding: 20px 30px;
 	z-index: 6;
 	background-color: var(--color-sidebar);
@@ -512,23 +585,35 @@ li.CodeMirror-hint-active {
 .saved-item-tile.selected {
 	background: rgba(255,255,255,0.1);
 }
-.saved-item-tile__close-btn {
-	padding: 7px 10px;
+.saved-item-tile__btns {
 	position: absolute;
-	right: 8px;
 	top: 6px;
 	z-index: 1;
-	color: rgba(255,255,255,0.3);
-	border-radius: 50%;
-	background: rgba(255,255,255,0.05);
+	right: 8px;
+	opacity: 0;
+	pointer-events: none;
+	transition: 0.25s ease;
 }
-.saved-item-tile__close-btn:hover {
+.saved-item-tile.selected .saved-item-tile__btns,
+.saved-item-tile:hover .saved-item-tile__btns {
+	opacity: 1;
+	pointer-events: auto;
+}
+.saved-item-tile__btn {
+	padding: 7px 10px;
+	color: rgba(255,255,255,0.3);
+	border-radius: 20px;
+	margin-left: 2px;
+	background: rgba(255,255,255,0.05);
+	text-transform: uppercase;
+}
+.saved-item-tile__btn:hover {
 	background: rgba(255,255,255,0.8);
 	color: #555;
 }
 .saved-item-tile__title {
 	pointer-events: none;
-	font-size: 1.6em;
+	font-size: 1.4em;
 	margin: 0 0 1em 0;
 	opacity: 0.8;
 }
@@ -647,7 +732,7 @@ li.CodeMirror-hint-active {
 }
 .dropdown__menu > li > a {
 	display: block;
-	padding: 10px 15px;
+	padding: 6px 15px;
 	color: #333;
 	cursor: pointer;
 }
@@ -670,16 +755,21 @@ li.CodeMirror-hint-active {
 	position: fixed;
 	will-change: transform;
 	left: 50%;
-	top: 0;
+	top: -5px;
 	padding: 10px;
-	background: var(--color-sidebar);
+	background: white;
+	border: 1px solid #eee;
+	color: #333;
+	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+	/*color: #333;*/
+	font-size: 1rem;
 	border-radius: 3px;
 	z-index: 6;
-	transform: translateY(-100%);
+	transform: translateX(-50%) translateY(-100%);
 	transition: 0.3s ease;
 }
 .alerts-container.is-active {
-	transform: translateY(0);
+	transform: translateX(-50%) translateY(0);
 }
 
 .error-gutter {
@@ -721,33 +811,42 @@ li.CodeMirror-hint-active {
 	padding: 1px 6px;
 	font-weight: bold;
 }
-.onboard-selection-wrap {
-	justify-content: center;
-	align-items: center;
+.onboard-step {
+	background: #f7f2f1;
+	border: 1px solid #ecdede;
+	margin: 15px;
+	padding: 20px 30px;
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: 0 16px 22px rgba(0, 0, 0, 0.1);
+	flex: 1;
+	opacity: 0;
+	animation: onboard-step-show 0.6s ease forwards;
+	animation-delay: 0.1s;
 }
-.onboard-selection {
-	padding: 10px;
-	margin: 0 40px;
-	border-radius: 5px;
-	transition: 0.25s ease;
-	position: relative;
-	border: 1px solid transparent;
+.onboard-step:nth-child(2) {
+	animation-delay: 0.2s;
 }
-.onboard-selection:hover {
-	cursor: pointer;
-	/*background-color: rgba(0,0,0,0.3);*/
-	transform: scale(1.15);
-	/*border-color: rgba(0,0,0,0.4);*/
+.onboard-step:nth-child(3) {
+	animation-delay: 0.4s;
 }
-.onboard-selection.selected:after {
-	content: '';
-	position: absolute;
-	right: -20px;
-	bottom: 40px;
-	width: 80px;
-	height: 80px;
-	border-radius: 50%;
-	background: white url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width:32px;height:32px" viewBox="0 0 24 24"><path fill="limegreen" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z" /></svg>');
+.onboard-step__icon {
+	fill: transparent!important;
+	stroke-width: 0.3px;
+	stroke: #eeb096;
+	width: 150px;
+	height: 150px;
+}
+
+@keyframes onboard-step-show {
+	from {
+		transform: translateY(10px);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
 }
 
 .autocomplete-dropdown {
@@ -761,8 +860,8 @@ li.CodeMirror-hint-active {
 }
 .autocomplete__loader {
 	position: absolute;
-	right: 10px;
-	bottom: 10px;
+	right: 3px;
+	bottom: 1px;
 }
 @keyframes wobble {
 	from {
@@ -800,3 +899,100 @@ li.CodeMirror-hint-active {
 .wobble {
 	animation-name: wobble;
 }
+.console {
+	background: var(--color-bg);
+	z-index: 6; /* bring above iframe & codemirror and also scrollbar in codemirror */
+	position: absolute;
+	bottom: 0;
+	min-height: 80px;
+	height: 35vh;
+	left: 0;
+	right: 0;
+	transform: translateY(0);
+	transition: transform 0.4s cubic-bezier(0.76, 0.01, 0.13, 0.9);
+}
+.console.is-minimized {
+	transform: translateY(calc(100% - 29px));
+}
+.console .Codemirror {
+	height: calc(100% - 55px);
+}
+.console-exec-input {
+	padding: 5px;
+	font-size: 1.3em;
+	flex: 1;
+	background: rgba(0,0,0,0.3);
+	color: white;
+	border: 0;
+	outline: 0;
+}
+.console:not(.is-minimized) .code-wrap__header {
+	cursor: ns-resize;
+}
+.global-console-container {
+	display: none;
+	position: relative;
+	height: 35px;
+}
+/* Detached mode */
+.is-detached-mode .console,
+.is-detached-mode .footer {
+	z-index: 4;
+}
+.is-detached-mode .global-console-container {
+	display: block;
+}
+
+.kbd-shortcut__keys {
+	background: rgba(0,0,0,0.1);
+	border-radius: 3px;
+	padding: 3px 8px;
+	margin-right: 5px;
+	display: inline-block;
+	font-size: 0.9rem;
+	font-weight: bold;
+}
+.kbd-shortcut__details {
+	display: inline-block;
+}
+
+/* Codemirror themes basic bg styles. This is here so that there is no big FOUC
+while the theme CSS file is loading */
+.cm-s-paraiso-dark.CodeMirror { background: #2f1e2e; color: #b9b6b0; }
+.cm-s-paraiso-dark .CodeMirror-gutters { background: #2f1e2e; border-right: 0px; }
+.cm-s-paraiso-dark .CodeMirror-activeline-background { background: #4D344A; }
+
+.cm-s-monokai.CodeMirror { background: #272822; color: #f8f8f2; }
+.cm-s-monokai .CodeMirror-gutters { background: #272822; border-right: 0px; }
+.cm-s-monokai .CodeMirror-activeline-background { background: #373831; }
+
+.cm-s-3024-day.CodeMirror { background: #f7f7f7; color: #3a3432; }
+.cm-s-3024-day .CodeMirror-gutters { background: #f7f7f7; border-right: 0px; }
+.cm-s-3024-day .CodeMirror-activeline-background { background: #e8f2ff; }
+
+.cm-s-material.CodeMirror {
+  background-color: #263238;
+  color: rgba(233, 237, 237, 1);
+}
+.cm-s-material .CodeMirror-gutters {
+  background: #263238;
+  color: rgb(83,127,126);
+}
+.cm-s-material .CodeMirror-activeline-background { background: rgba(0, 0, 0, 0); }
+
+.cm-s-dracula.CodeMirror, .cm-s-dracula .CodeMirror-gutters {
+  background-color: #282a36 !important;
+  color: #f8f8f2 !important;
+}
+.cm-s-dracula .CodeMirror-activeline-background { background: rgba(255,255,255,0.1); }
+
+.cm-s-blackboard.CodeMirror { background: #0C1021; color: #F8F8F8; }
+.cm-s-blackboard .CodeMirror-gutters { background: #0C1021; border-right: 0; }
+.cm-s-blackboard .CodeMirror-activeline-background { background: #3C3636; }
+
+.cm-s-midnight.CodeMirror {
+    background: #0F192A;
+    color: #D1EDFF;
+}
+.cm-s-midnight .CodeMirror-gutters { background: #0F192A; border-right: 1px solid; }
+.cm-s-midnight .CodeMirror-activeline-background { background: #253540; }

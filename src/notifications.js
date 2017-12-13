@@ -1,6 +1,6 @@
-(function () {
-
-	var noticationContainerEL = $('#js-alerts-container');
+(function() {
+	const noticationContainerEL = $('#js-alerts-container');
+	var hideTimeout;
 
 	function addNotification(msg) {
 		// var n = document.createElement('div');
@@ -9,12 +9,13 @@
 		noticationContainerEL.textContent = msg;
 		noticationContainerEL.classList.add('is-active');
 
-		setTimeout(function () {
+		clearTimeout(hideTimeout);
+		hideTimeout = setTimeout(function() {
 			noticationContainerEL.classList.remove('is-active');
-		}, 2000)
+		}, 2000);
 	}
 
 	window.alertsService = {
 		add: addNotification
-	}
+	};
 })();

@@ -11,9 +11,9 @@
 		}
 	}
 	function init() {
-		var dropdowns = [].slice.call($all('[dropdown]'));
-		dropdowns.forEach(function (dropdown) {
-			dropdown.addEventListener('click', function (e) {
+		var dropdowns = $all('[dropdown]');
+		dropdowns.forEach(function(dropdown) {
+			dropdown.addEventListener('click', function(e) {
 				closeOpenDropdown(e.currentTarget);
 				e.currentTarget.classList.toggle('open');
 				openDropdown = e.currentTarget;
@@ -21,7 +21,7 @@
 			});
 		});
 
-		document.addEventListener('click', function () {
+		document.addEventListener('click', function() {
 			closeOpenDropdown();
 		});
 	}

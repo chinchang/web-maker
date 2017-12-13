@@ -1,16 +1,19 @@
 /* global trackEvent */
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
-onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardModal, onboardModal,
+onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, onboardModal, onboardModal,
 addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
-notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
+notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
-onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl */
+onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
+runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
+customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
+globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
+*/
 /* eslint-disable no-extra-semi */
-;(function (alertsService) {
-
-/* eslint-enable no-extra-semi */
+(function(alertsService) {
+	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.4.0';
+	var version = '2.9.6';
 
 	if (window.DEBUG) {
 		window.scope = scope;
@@ -26,7 +29,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		SCSS: 'scss',
 		SASS: 'sass',
 		LESS: 'less',
-		STYLUS: 'stylus'
+		STYLUS: 'stylus',
+		ACSS: 'acss'
 	};
 	var JsModes = {
 		JS: 'js',
@@ -35,81 +39,154 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		TS: 'typescript'
 	};
 	var modes = {};
-	modes[HtmlModes.HTML] = { label: 'HTML', cmMode: 'htmlmixed', codepenVal: 'none' };
-	modes[HtmlModes.MARKDOWN] = { label: 'Markdown', cmMode: 'markdown', codepenVal: 'markdown' };
+	modes[HtmlModes.HTML] = {
+		label: 'HTML',
+		cmMode: 'htmlmixed',
+		codepenVal: 'none'
+	};
+	modes[HtmlModes.MARKDOWN] = {
+		label: 'Markdown',
+		cmMode: 'markdown',
+		codepenVal: 'markdown'
+	};
 	modes[HtmlModes.JADE] = { label: 'Pug', cmMode: 'pug', codepenVal: 'pug' };
 	modes[JsModes.JS] = { label: 'JS', cmMode: 'javascript', codepenVal: 'none' };
-	modes[JsModes.COFFEESCRIPT] = { label: 'CoffeeScript', cmMode: 'coffeescript', codepenVal: 'coffeescript' };
-	modes[JsModes.ES6] = { label: 'ES6 (Babel)', cmMode: 'jsx', codepenVal: 'babel' };
-	modes[JsModes.TS] = { label: 'TypeScript', cmPath: 'jsx', cmMode: 'text/typescript-jsx', codepenVal: 'typescript' };
-	modes[CssModes.CSS] = { label: 'CSS', cmPath: 'css', cmMode: 'css', codepenVal: 'none' };
-	modes[CssModes.SCSS] = { label: 'SCSS', cmPath: 'css', cmMode: 'text/x-scss', codepenVal: 'scss' };
+	modes[JsModes.COFFEESCRIPT] = {
+		label: 'CoffeeScript',
+		cmMode: 'coffeescript',
+		codepenVal: 'coffeescript'
+	};
+	modes[JsModes.ES6] = {
+		label: 'ES6 (Babel)',
+		cmMode: 'jsx',
+		codepenVal: 'babel'
+	};
+	modes[JsModes.TS] = {
+		label: 'TypeScript',
+		cmPath: 'jsx',
+		cmMode: 'text/typescript-jsx',
+		codepenVal: 'typescript'
+	};
+	modes[CssModes.CSS] = {
+		label: 'CSS',
+		cmPath: 'css',
+		cmMode: 'css',
+		codepenVal: 'none'
+	};
+	modes[CssModes.SCSS] = {
+		label: 'SCSS',
+		cmPath: 'css',
+		cmMode: 'text/x-scss',
+		codepenVal: 'scss'
+	};
 	modes[CssModes.SASS] = { label: 'SASS', cmMode: 'sass', codepenVal: 'sass' };
-	modes[CssModes.LESS] = { label: 'LESS', cmPath: 'css', cmMode: 'text/x-less', codepenVal: 'less' };
-	modes[CssModes.STYLUS] = { label: 'Stylus', cmMode: 'stylus', codepenVal: 'stylus' };
+	modes[CssModes.LESS] = {
+		label: 'LESS',
+		cmPath: 'css',
+		cmMode: 'text/x-less',
+		codepenVal: 'less'
+	};
+	modes[CssModes.STYLUS] = {
+		label: 'Stylus',
+		cmMode: 'stylus',
+		codepenVal: 'stylus'
+	};
+	modes[CssModes.ACSS] = {
+		label: 'Atomic CSS',
+		cmPath: 'css',
+		cmMode: 'css',
+		codepenVal: 'notsupported',
+		cmDisable: true,
+		hasSettings: true
+	};
 
-	var updateTimer
-		, updateDelay = 500
-		, unsavedEditWarningCount = 15
-		, currentLayoutMode
-		, hasSeenNotifications = true
-		, htmlMode = HtmlModes.HTML
-		, jsMode = JsModes.JS
-		, cssMode = CssModes.CSS
-		, sass
-		, currentItem
-		, unsavedEditCount
-		, savedItems
-		, minCodeWrapSize = 33
-		, mainSplitInstance
-		, codeSplitInstance
-		, prefs = {}
-		, codeInPreview = { html: null, css: null, js: null }
-		, isSavedItemsPaneOpen = false
+	const AUTO_SAVE_INTERVAL = 15000; // 15 seconds
 
+	var updateTimer,
+		updateDelay = 500,
+		autoSaveInterval,
+		unsavedEditWarningCount = 15,
+		currentLayoutMode,
+		hasSeenNotifications = true,
+		htmlMode = HtmlModes.HTML,
+		jsMode = JsModes.JS,
+		cssMode = CssModes.CSS,
+		sass,
+		currentItem,
+		unsavedEditCount,
+		savedItems,
+		minCodeWrapSize = 33,
+		mainSplitInstance,
+		codeSplitInstance,
+		prefs = {},
+		codeInPreview = { html: null, css: null, js: null },
+		isSavedItemsPaneOpen = false,
+		editorWithFocus,
+		logCount = 0,
+		isAutoSavingEnabled,
 		// DOM nodes
-		, frame = $('#demo-frame')
-		, htmlCode = $('#js-html-code')
-		, cssCode = $('#js-css-code')
-		, jsCode = $('#js-js-code')
-		, codepenForm = $('#js-codepen-form')
-		, savedItemsPane = $('#js-saved-items-pane')
-		, savedItemsPaneCloseBtn = $('#js-saved-items-pane-close-btn')
-		, htmlModelLabel = $('#js-html-mode-label')
-		, cssModelLabel = $('#js-css-mode-label')
-		, jsModelLabel = $('#js-js-mode-label')
-		, titleInput = $('#js-title-input')
-		, addLibrarySelect = $('#js-add-library-select')
-		, addLibraryBtn = $('#js-add-library-btn')
-		, externalJsTextarea = $('#js-external-js')
-		, externalCssTextarea = $('#js-external-css')
-		;
+		frame = $('#demo-frame'),
+		htmlCode = $('#js-html-code'),
+		cssCode = $('#js-css-code'),
+		jsCode = $('#js-js-code'),
+		codepenForm = $('#js-codepen-form'),
+		savedItemsPane = $('#js-saved-items-pane'),
+		savedItemsPaneCloseBtn = $('#js-saved-items-pane-close-btn'),
+		htmlModelLabel = $('#js-html-mode-label'),
+		cssModelLabel = $('#js-css-mode-label'),
+		jsModelLabel = $('#js-js-mode-label'),
+		titleInput = $('#js-title-input'),
+		addLibrarySelect = $('#js-add-library-select'),
+		externalJsTextarea = $('#js-external-js'),
+		externalCssTextarea = $('#js-external-css');
 
 	scope.cm = {};
-	scope.demoFrameDocument = frame.contentDocument || frame.contentWindow.document;
+	scope.frame = frame;
+	scope.demoFrameDocument =
+		frame.contentDocument || frame.contentWindow.document;
 
-	// Check all the code wrap if they are minimized or not
+	// Check all the code wrap if they are minimized or maximized
 	function updateCodeWrapCollapseStates() {
+		// This is debounced!
 		clearTimeout(updateCodeWrapCollapseStates.timeout);
-		updateCodeWrapCollapseStates.timeout = setTimeout(function () {
-			[ htmlCode, cssCode, jsCode ].forEach(function (el) {
-				var bounds = el.getBoundingClientRect();
-				if (bounds[currentLayoutMode === 2 ? 'width' : 'height'] < 100) {
+		updateCodeWrapCollapseStates.timeout = setTimeout(function() {
+			const prop = currentLayoutMode === 2 ? 'width' : 'height';
+			[htmlCode, cssCode, jsCode].forEach(function(el) {
+				const bounds = el.getBoundingClientRect();
+				const size = bounds[prop];
+				if (size < 100) {
 					el.classList.add('is-minimized');
 				} else {
 					el.classList.remove('is-minimized');
+				}
+				if (el.style[prop].indexOf(`100% - ${minCodeWrapSize * 2}px`) !== -1) {
+					el.classList.add('is-maximized');
+				} else {
+					el.classList.remove('is-maximized');
 				}
 			});
 		}, 50);
 	}
 
 	function toggleCodeWrapCollapse(codeWrapEl) {
-		if (codeWrapEl.classList.contains('is-minimized')) {
+		if (
+			codeWrapEl.classList.contains('is-minimized') ||
+			codeWrapEl.classList.contains('is-maximized')
+		) {
 			codeWrapEl.classList.remove('is-minimized');
-			codeSplitInstance.setSizes([ 33.3, 33.3, 33.3 ]);
+			codeWrapEl.classList.remove('is-maximized');
+			codeSplitInstance.setSizes([33.3, 33.3, 33.3]);
 		} else {
-			codeSplitInstance.collapse(parseInt(codeWrapEl.dataset.codeWrapId, 10));
-			codeWrapEl.classList.add('is-minimized');
+			const id = parseInt(codeWrapEl.dataset.codeWrapId, 10);
+			var arr = [
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`
+			];
+			arr[id] = `calc(100% - ${minCodeWrapSize * 2}px)`;
+
+			codeSplitInstance.setSizes(arr);
+			codeWrapEl.classList.add('is-maximized');
 		}
 	}
 	// Returns the sizes of main code & preview panes.
@@ -118,9 +195,12 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		if (currentItem && currentItem.mainSizes) {
 			// For layout mode 3, main panes are reversed using flex-direction.
 			// So we need to apply the saved sizes in reverse order.
-			mainSplitSizes = currentLayoutMode === 3 ? [ currentItem.mainSizes[1], currentItem.mainSizes[0] ] : currentItem.mainSizes;
+			mainSplitSizes =
+				currentLayoutMode === 3
+					? [currentItem.mainSizes[1], currentItem.mainSizes[0]]
+					: currentItem.mainSizes;
 		} else {
-			mainSplitSizes = [ 50, 50];
+			mainSplitSizes = [50, 50];
 		}
 		return mainSplitSizes;
 	}
@@ -134,13 +214,13 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		}
 
 		var options = {
-			direction: (currentLayoutMode === 2 ? 'horizontal' : 'vertical'),
+			direction: currentLayoutMode === 2 ? 'horizontal' : 'vertical',
 			minSize: minCodeWrapSize,
 			gutterSize: 6,
-			onDragStart: function () {
+			onDragStart: function() {
 				document.body.classList.add('is-dragging');
 			},
-			onDragEnd: function () {
+			onDragEnd: function() {
 				updateCodeWrapCollapseStates();
 				document.body.classList.remove('is-dragging');
 			}
@@ -148,30 +228,33 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		if (currentItem && currentItem.sizes) {
 			options.sizes = currentItem.sizes;
 		} else {
-			options.sizes = [ 33.33, 33.33, 33.33 ];
+			options.sizes = [33.33, 33.33, 33.33];
 		}
 
-		codeSplitInstance = Split(['#js-html-code', '#js-css-code', '#js-js-code'], options);
-		mainSplitInstance = Split(['#js-code-side', '#js-demo-side' ], {
-			direction: (currentLayoutMode === 2 ? 'vertical' : 'horizontal'),
+		codeSplitInstance = Split(
+			['#js-html-code', '#js-css-code', '#js-js-code'],
+			options
+		);
+		mainSplitInstance = Split(['#js-code-side', '#js-demo-side'], {
+			direction: currentLayoutMode === 2 ? 'vertical' : 'horizontal',
 			minSize: 150,
 			gutterSize: 6,
 			sizes: getMainSplitSizesToApply(),
-			onDragEnd: function () {
-				// Running preview updation in next call stack, so that error there
-				// doesn't affect this dragend listener.
-				setTimeout(function () {
-					scope.setPreviewContent(true);
-				}, 1);
+			onDragEnd: function() {
+				if (prefs.refreshOnResize) {
+					// Running preview updation in next call stack, so that error there
+					// doesn't affect this dragend listener.
+					setTimeout(function() {
+						scope.setPreviewContent(true);
+					}, 1);
+				}
 			}
 		});
 	}
 	function toggleLayout(mode) {
 		if (currentLayoutMode === mode) {
-			utils.log('setMainsize', currentItem.mainSizes || [ 50, 50 ]);
-			utils.log('setsize', currentItem.sizes || [ 33.33, 33.33, 33.33 ]);
 			mainSplitInstance.setSizes(getMainSplitSizesToApply());
-			codeSplitInstance.setSizes(currentItem.sizes || [ 33.33, 33.33, 33.33 ]);
+			codeSplitInstance.setSizes(currentItem.sizes || [33.33, 33.33, 33.33]);
 			currentLayoutMode = mode;
 			return;
 		}
@@ -195,13 +278,18 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		utils.log('onExternalLibChange');
 		updateExternalLibUi();
 		scope.setPreviewContent(true);
+		alertsService.add('Libraries updated.');
 	}
 
 	function updateExternalLibUi() {
 		// Calculate no. of external libs
 		var noOfExternalLibs = 0;
-		noOfExternalLibs += externalJsTextarea.value.split('\n').filter((lib) => !!lib).length;
-		noOfExternalLibs += externalCssTextarea.value.split('\n').filter((lib) => !!lib).length;
+		noOfExternalLibs += externalJsTextarea.value
+			.split('\n')
+			.filter(lib => !!lib).length;
+		noOfExternalLibs += externalCssTextarea.value
+			.split('\n')
+			.filter(lib => !!lib).length;
 		if (noOfExternalLibs) {
 			$('#js-external-lib-count').textContent = noOfExternalLibs;
 			$('#js-external-lib-count').style.display = 'inline';
@@ -210,28 +298,49 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		}
 	}
 
-	function saveSetting(setting, value, cb) {
+	function saveSetting(setting, value) {
+		const d = deferred();
 		var obj = {};
 		obj[setting] = value;
-		chrome.storage.local.set(obj, cb || function(){});
+		chrome.storage.local.set(obj, d.resolve);
+		return d.promise;
 	}
 
 	// Save current item to storage
 	function saveItem() {
 		var isNewItem = !currentItem.id;
-		currentItem.id = currentItem.id || ('item-' + utils.generateRandomId());
-		saveCode();
-
+		currentItem.id = currentItem.id || 'item-' + utils.generateRandomId();
+		saveCode().then(() => {
+			// If this is the first save, and auto-saving settings is enabled,
+			// then start auto-saving from now on.
+			// This is done in `saveCode()` completion so that the
+			// auto-save notification overrides the `saveCode` function's notification.
+			if (!isAutoSavingEnabled && prefs.autoSave) {
+				isAutoSavingEnabled = true;
+				alertsService.add('Auto-save enabled.');
+			}
+		});
 		// Push into the items hash if its a new item being saved
 		if (isNewItem) {
-			chrome.storage.local.get({
-				items: {}
-			}, function (result) {
-				result.items[currentItem.id] = true;
-				chrome.storage.local.set({
-					items: result.items
-				});
-			});
+			chrome.storage.local.get(
+				{
+					items: {}
+				},
+				function(result) {
+					result.items[currentItem.id] = true;
+					chrome.storage.local.set({
+						items: result.items
+					});
+				}
+			);
+		}
+	}
+
+	// Keeps getting called after certain interval to auto-save current creation
+	// if it needs to be.
+	function autoSaveLoop() {
+		if (isAutoSavingEnabled && unsavedEditCount) {
+			saveItem();
 		}
 	}
 
@@ -241,14 +350,13 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
 		try {
 			sizes = [
-				+htmlCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+cssCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+jsCode.style[dimensionProperty].match(/([\d.]+)%/)[1]
+				htmlCode.style[dimensionProperty],
+				cssCode.style[dimensionProperty],
+				jsCode.style[dimensionProperty]
 			];
 		} catch (e) {
-			sizes = [ 33.33, 33.33, 33.33 ]
+			sizes = [33.33, 33.33, 33.33];
 		} finally {
-
 			/* eslint-disable no-unsafe-finally */
 			return sizes;
 
@@ -266,9 +374,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				+$('#js-demo-side').style[dimensionProperty].match(/([\d.]+)%/)[1]
 			];
 		} catch (e) {
-			sizes = [ 50, 50 ]
+			sizes = [50, 50];
 		} finally {
-
 			/* eslint-disable no-unsafe-finally */
 			return sizes;
 
@@ -284,15 +391,23 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		currentItem.htmlMode = htmlMode;
 		currentItem.cssMode = cssMode;
 		currentItem.jsMode = jsMode;
+		if (modes[cssMode].hasSettings) {
+			currentItem.cssSettings = {
+				acssConfig: scope.acssSettingsCm.getValue()
+			};
+		}
 		currentItem.updatedOn = Date.now();
 		currentItem.layoutMode = currentLayoutMode;
-		currentItem.externalLibs = { js: externalJsTextarea.value, css: externalCssTextarea.value };
+		currentItem.externalLibs = {
+			js: externalJsTextarea.value,
+			css: externalCssTextarea.value
+		};
 
 		currentItem.sizes = getCodePaneSizes();
 		currentItem.mainSizes = getMainPaneSizes();
 
-		utils.log('saving key', key || currentItem.id, currentItem)
-		saveSetting(key || currentItem.id, currentItem, function () {
+		utils.log('saving key', key || currentItem.id, currentItem);
+		return saveSetting(key || currentItem.id, currentItem).then(() => {
 			alertsService.add('Item saved.');
 			unsavedEditCount = 0;
 			saveBtn.classList.remove('is-marked');
@@ -303,13 +418,20 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		var html = '';
 		if (items.length) {
 			// TODO: sort desc. by updation date
-			items.sort(function (a, b) {
+			items.sort(function(a, b) {
 				return b.updatedOn - a.updatedOn;
 			});
-			items.forEach(function (item) {
-				html += '<div class="js-saved-item-tile saved-item-tile" data-item-id="' + item.id + '">'
-					+ '<a class="js-saved-item-tile__close-btn  saved-item-tile__close-btn hint--left" aria-label="Remove">X</a>'
-					+ '<h3 class="saved-item-tile__title">' + item.title + '</h3><span class="saved-item-tile__meta">Last updated: ' + utils.getHumanDate(item.updatedOn) + '</span></div>';
+			items.forEach(function(item) {
+				html +=
+					'<div class="js-saved-item-tile saved-item-tile" data-item-id="' +
+					item.id +
+					'">' +
+					'<div class="saved-item-tile__btns"><a class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium" aria-label="Creates a duplicate of this creation (Ctrl/⌘ + F)">Fork<span class="show-when-selected">(Ctrl/⌘ + F)</span></a><a class="js-saved-item-tile__remove-btn  saved-item-tile__btn hint--left" aria-label="Remove">X</a></div>' +
+					'<h3 class="saved-item-tile__title">' +
+					item.title +
+					'</h3><span class="saved-item-tile__meta">Last updated: ' +
+					utils.getHumanDate(item.updatedOn) +
+					'</span></div>';
 			});
 			savedItemCountEl.textContent = '(' + items.length + ')';
 			savedItemCountEl.style.display = 'inline';
@@ -330,7 +452,18 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			savedItemsPane.classList.toggle('is-open');
 		}
 		isSavedItemsPaneOpen = savedItemsPane.classList.contains('is-open');
-		document.body.classList[isSavedItemsPaneOpen ? 'add' : 'remove']('overlay-visible');
+		if (isSavedItemsPaneOpen) {
+			searchInput.focus();
+		} else {
+			searchInput.value = '';
+			// Give last focused editor, focus again
+			if (editorWithFocus) {
+				editorWithFocus.focus();
+			}
+		}
+		document.body.classList[isSavedItemsPaneOpen ? 'add' : 'remove'](
+			'overlay-visible'
+		);
 	}
 
 	/**
@@ -340,26 +473,25 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 	 */
 	function fetchItems(shouldSaveGlobally) {
 		var d = deferred();
-		chrome.storage.local.get('items', function (result) {
+		chrome.storage.local.get('items', function(result) {
 			var itemIds = Object.getOwnPropertyNames(result.items || {}),
 				items = [];
 			if (!itemIds.length) {
 				d.resolve([]);
 			}
 
-			savedItems = savedItems || [];
+			savedItems = savedItems || {};
 			trackEvent('fn', 'fetchItems', itemIds.length);
 			for (let i = 0; i < itemIds.length; i++) {
-
 				/* eslint-disable no-loop-func */
-				chrome.storage.local.get(itemIds[i], function (itemResult) {
+				chrome.storage.local.get(itemIds[i], function(itemResult) {
 					if (shouldSaveGlobally) {
 						savedItems[itemIds[i]] = itemResult[itemIds[i]];
 					}
 					items.push(itemResult[itemIds[i]]);
 					// Check if we have all items now.
 					if (itemIds.length === items.length) {
-						d.resolve(items)
+						d.resolve(items);
 					}
 				});
 
@@ -370,20 +502,49 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 	}
 
 	function openSavedItemsPane() {
-		fetchItems(true).then(function (items) {
+		fetchItems(true).then(function(items) {
 			populateItemsInSavedPane(items);
 		});
 	}
 	function setCurrentItem(item) {
 		currentItem = item;
+		// Reset auto-saving flag
+		isAutoSavingEnabled = false;
 		// Reset unsaved count, in UI also.
 		unsavedEditCount = 0;
 		saveBtn.classList.remove('is-marked');
 	}
+	// Creates a new item with passed item's contents
+	function forkItem(sourceItem) {
+		if (unsavedEditCount) {
+			var shouldDiscard = confirm(
+				'You have unsaved changes in your current work. Do you want to discard unsaved changes and continue?'
+			);
+			if (!shouldDiscard) {
+				return;
+			}
+		}
+		const fork = JSON.parse(JSON.stringify(sourceItem));
+		delete fork.id;
+		fork.title = '(Forked) ' + sourceItem.title;
+		fork.updatedOn = Date.now();
+		setCurrentItem(fork);
+		refreshEditor();
+		alertsService.add(`"${sourceItem.title}" was forked`);
+		trackEvent('fn', 'itemForked');
+	}
 	function createNewItem() {
 		var d = new Date();
 		setCurrentItem({
-			title: 'Untitled ' + d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getHours() + ':' + d.getMinutes(),
+			title:
+				'Untitled ' +
+				d.getDate() +
+				'-' +
+				(d.getMonth() + 1) +
+				'-' +
+				d.getHours() +
+				':' +
+				d.getMinutes(),
 			html: '',
 			css: '',
 			js: '',
@@ -399,23 +560,32 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		alertsService.add('Saved item loaded');
 	}
 	function removeItem(itemId) {
-		var itemTile = document.querySelector('.js-saved-item-tile[data-item-id="' + itemId + '"]');
-		var answer = confirm(`Are you sure you want to delete "${savedItems[itemId].title}"?`);
-		if (!answer) { return; }
+		var itemTile = document.querySelector(
+			'.js-saved-item-tile[data-item-id="' + itemId + '"]'
+		);
+		var answer = confirm(
+			`Are you sure you want to delete "${savedItems[itemId].title}"?`
+		);
+		if (!answer) {
+			return;
+		}
 
 		itemTile.remove();
 		// Remove from items list
-		chrome.storage.local.get({
-			items: {}
-		}, function (result) {
-			delete result.items[itemId]
-			chrome.storage.local.set({
-				items: result.items
-			});
-		});
+		chrome.storage.local.get(
+			{
+				items: {}
+			},
+			function(result) {
+				delete result.items[itemId];
+				chrome.storage.local.set({
+					items: result.items
+				});
+			}
+		);
 
 		// Remove individual item too.
-		chrome.storage.local.remove(itemId, function () {
+		chrome.storage.local.remove(itemId, function() {
 			alertsService.add('Item removed.');
 			// This item is open in the editor. Lets open a new one.
 			if (currentItem.id === itemId) {
@@ -430,10 +600,12 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 
 	function refreshEditor() {
 		titleInput.value = currentItem.title || 'Untitled';
-		externalJsTextarea.value = (currentItem.externalLibs && currentItem.externalLibs.js) || '';
-		externalCssTextarea.value = (currentItem.externalLibs && currentItem.externalLibs.css) || '';
+		externalJsTextarea.value =
+			(currentItem.externalLibs && currentItem.externalLibs.js) || '';
+		externalCssTextarea.value =
+			(currentItem.externalLibs && currentItem.externalLibs.css) || '';
 
-		utils.log('refresh editor')
+		utils.log('refresh editor');
 		// Set the modes manually here, so that the preview refresh triggered by the `setValue`
 		// statements below, operate on correct modes.
 		htmlMode = currentItem.htmlMode || prefs.htmlMode || HtmlModes.HTML;
@@ -446,6 +618,13 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		scope.cm.html.refresh();
 		scope.cm.css.refresh();
 		scope.cm.js.refresh();
+
+		scope.acssSettingsCm.setValue(
+			currentItem.cssSettings ? currentItem.cssSettings.acssConfig : ''
+		);
+		scope.acssSettingsCm.refresh();
+
+		scope.clearConsole();
 
 		// To have the library count updated
 		updateExternalLibUi();
@@ -467,6 +646,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		addLibraryModal.classList.remove('is-modal-visible');
 		onboardModal.classList.remove('is-modal-visible');
 		settingsModal.classList.remove('is-modal-visible');
+		cssSettingsModal.classList.remove('is-modal-visible');
+		keyboardShortcutsModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -494,12 +675,14 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		} else if (mode === CssModes.LESS) {
 			loadJS('lib/less.min.js').then(setLoadedFlag);
 		} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
-			loadJS('lib/sass.js').then(function () {
+			loadJS('lib/sass.js').then(function() {
 				sass = new Sass('lib/sass.worker.js');
 				setLoadedFlag();
 			});
 		} else if (mode === CssModes.STYLUS) {
 			loadJS('lib/stylus.min.js').then(setLoadedFlag);
+		} else if (mode === CssModes.ACSS) {
+			loadJS('lib/atomizer.browser.js').then(setLoadedFlag);
 		} else if (mode === JsModes.COFFEESCRIPT) {
 			loadJS('lib/coffee-script.js').then(setLoadedFlag);
 		} else if (mode === JsModes.ES6) {
@@ -516,22 +699,41 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 	function updateHtmlMode(value) {
 		htmlMode = value;
 		htmlModelLabel.textContent = modes[value].label;
+		// FIXME - use a better selector for the mode selectbox
+		htmlModelLabel.parentElement.querySelector('select').value = value;
 		scope.cm.html.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(scope.cm.html, modes[value].cmPath || modes[value].cmMode);
+		CodeMirror.autoLoadMode(
+			scope.cm.html,
+			modes[value].cmPath || modes[value].cmMode
+		);
 		return handleModeRequirements(value);
 	}
 	function updateCssMode(value) {
 		cssMode = value;
 		cssModelLabel.textContent = modes[value].label;
+		// FIXME - use a better selector for the mode selectbox
+		cssModelLabel.parentElement.querySelector('select').value = value;
 		scope.cm.css.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(scope.cm.css, modes[value].cmPath || modes[value].cmMode);
+		scope.cm.css.setOption('readOnly', modes[value].cmDisable);
+		cssSettingsBtn.classList[modes[value].hasSettings ? 'remove' : 'add'](
+			'hide'
+		);
+		CodeMirror.autoLoadMode(
+			scope.cm.css,
+			modes[value].cmPath || modes[value].cmMode
+		);
 		return handleModeRequirements(value);
 	}
 	function updateJsMode(value) {
 		jsMode = value;
 		jsModelLabel.textContent = modes[value].label;
+		// FIXME - use a better selector for the mode selectbox
+		jsModelLabel.parentElement.querySelector('select').value = value;
 		scope.cm.js.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(scope.cm.js, modes[value].cmPath || modes[value].cmMode);
+		CodeMirror.autoLoadMode(
+			scope.cm.js,
+			modes[value].cmPath || modes[value].cmMode
+		);
 		return handleModeRequirements(value);
 	}
 
@@ -559,33 +761,68 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			d.resolve(code);
 		} else if (cssMode === CssModes.SCSS || cssMode === CssModes.SASS) {
 			if (sass && code) {
-				sass.compile(code, { indentedSyntax: cssMode === CssModes.SASS }, function(result) {
-					// Something was wrong
-					if (result.line && result.message) {
-						showErrors('css', [ { lineNumber: result.line - 1, message: result.message } ]);
+				sass.compile(
+					code,
+					{ indentedSyntax: cssMode === CssModes.SASS },
+					function(result) {
+						// Something was wrong
+						if (result.line && result.message) {
+							showErrors('css', [
+								{ lineNumber: result.line - 1, message: result.message }
+							]);
+						}
+						d.resolve(result.text);
 					}
-					d.resolve(result.text);
-				});
+				);
 			} else {
 				d.resolve(code);
 			}
 		} else if (cssMode === CssModes.LESS) {
-			less.render(code).then(function (result) {
-				d.resolve(result.css);
-			}, function (error) {
-				showErrors('css', [ { lineNumber: error.line, message: error.message } ]);
-			});
+			less.render(code).then(
+				function(result) {
+					d.resolve(result.css);
+				},
+				function(error) {
+					showErrors('css', [
+						{ lineNumber: error.line, message: error.message }
+					]);
+				}
+			);
 		} else if (cssMode === CssModes.STYLUS) {
-			stylus(code).render(function (error, result) {
+			stylus(code).render(function(error, result) {
 				if (error) {
 					window.err = error;
 					// Last line of message is the actual message
 					var tempArr = error.message.split('\n');
 					tempArr.pop(); // This is empty string in the end
-					showErrors('css', [ { lineNumber: +error.message.match(/stylus:(\d+):/)[1] - 298, message: tempArr.pop() } ]);
+					showErrors('css', [
+						{
+							lineNumber: +error.message.match(/stylus:(\d+):/)[1] - 298,
+							message: tempArr.pop()
+						}
+					]);
 				}
 				d.resolve(result);
 			});
+		} else if (cssMode === CssModes.ACSS) {
+			if (!window.atomizer) {
+				d.resolve('');
+			} else {
+				const html = scope.cm.html.getValue();
+				const foundClasses = atomizer.findClassNames(html);
+				var finalConfig;
+				try {
+					finalConfig = atomizer.getConfig(
+						foundClasses,
+						JSON.parse(scope.acssSettingsCm.getValue())
+					);
+				} catch (e) {
+					finalConfig = atomizer.getConfig(foundClasses, {});
+				}
+				const acss = atomizer.getCss(finalConfig);
+				scope.cm.css.setValue(acss);
+				d.resolve(acss);
+			}
 		}
 
 		return d.promise;
@@ -599,20 +836,21 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			d.resolve('');
 			return d.promise;
 		}
-		var ast;
 
 		if (jsMode === JsModes.JS) {
 			try {
-				ast = esprima.parse(code, {
+				esprima.parse(code, {
 					tolerant: true
 				});
 			} catch (e) {
-				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
+				showErrors('js', [
+					{ lineNumber: e.lineNumber - 1, message: e.description }
+				]);
 			} finally {
 				if (shouldPreventInfiniteLoops !== false) {
-					utils.addInfiniteLoopProtection(ast);
+					code = utils.addInfiniteLoopProtection(code);
 				}
-				d.resolve(escodegen.generate(ast));
+				d.resolve(code);
 			}
 		} else if (jsMode === JsModes.COFFEESCRIPT) {
 			var coffeeCode;
@@ -623,15 +861,14 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			try {
 				coffeeCode = CoffeeScript.compile(code, { bare: true });
 			} catch (e) {
-				showErrors('js', [ { lineNumber: e.location.first_line, message: e.message } ]);
+				showErrors('js', [
+					{ lineNumber: e.location.first_line, message: e.message }
+				]);
 			} finally {
-				ast = esprima.parse(coffeeCode, {
-					tolerant: true
-				});
 				if (shouldPreventInfiniteLoops !== false) {
-					utils.addInfiniteLoopProtection(ast);
+					code = utils.addInfiniteLoopProtection(coffeeCode);
 				}
-				d.resolve(escodegen.generate(ast));
+				d.resolve(code);
 			}
 		} else if (jsMode === JsModes.ES6) {
 			if (!window.Babel) {
@@ -639,31 +876,22 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				return d.promise;
 			}
 			try {
-				ast = esprima.parse(code, {
+				esprima.parse(code, {
 					tolerant: true,
 					jsx: true
 				});
 			} catch (e) {
-				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
+				showErrors('js', [
+					{ lineNumber: e.lineNumber - 1, message: e.description }
+				]);
 			} finally {
-				try {
-					// No JSX block
-					// result = escodegen.generate(ast);
-					if (shouldPreventInfiniteLoops !== false) {
-						utils.addInfiniteLoopProtection(ast);
-					}
-					d.resolve(Babel.transform(escodegen.generate(ast), { presets: ['latest', 'stage-2', 'react'] }).code);
-				} catch (e) {
-					// If we failed, means probably the AST contains JSX which cannot be parsed by escodegen.
-					code = Babel.transform(code, { presets: ['latest', 'stage-2', 'react'] }).code;
-					ast = esprima.parse(code, {
-						tolerant: true
-					});
-					if (shouldPreventInfiniteLoops !== false) {
-						utils.addInfiniteLoopProtection(ast);
-					}
-					d.resolve(escodegen.generate(ast));
+				code = Babel.transform(code, {
+					presets: ['latest', 'stage-2', 'react']
+				}).code;
+				if (shouldPreventInfiniteLoops !== false) {
+					code = utils.addInfiniteLoopProtection(code);
 				}
+				d.resolve(code);
 			}
 		} else if (jsMode === JsModes.TS) {
 			try {
@@ -671,36 +899,50 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 					d.resolve('');
 					return d.promise;
 				}
-				code = ts.transpileModule(code, { reportDiagnostics: true, compilerOptions: { noEmitOnError: true, diagnostics: true, module: ts.ModuleKind.ES2015 } });
-				if (code.diagnostics.length) {
-
-					/* eslint-disable no-throw-literal */
-					throw ({ description: code.diagnostics[0].messageText, lineNumber: ts.getLineOfLocalPosition(code.diagnostics[0].file,code.diagnostics[0].start) });
-				}
-				try {
-					ast = esprima.parse(code.outputText, {
-						tolerant: true,
-						jsx: true
-					});
-				} finally {
-					if (shouldPreventInfiniteLoops !== false) {
-						utils.addInfiniteLoopProtection(ast);
+				code = ts.transpileModule(code, {
+					reportDiagnostics: true,
+					compilerOptions: {
+						noEmitOnError: true,
+						diagnostics: true,
+						module: ts.ModuleKind.ES2015
 					}
-					d.resolve(escodegen.generate(ast));
+				});
+				if (code.diagnostics.length) {
+					/* eslint-disable no-throw-literal */
+					throw {
+						description: code.diagnostics[0].messageText,
+						lineNumber: ts.getLineOfLocalPosition(
+							code.diagnostics[0].file,
+							code.diagnostics[0].start
+						)
+					};
 				}
+				if (shouldPreventInfiniteLoops !== false) {
+					code = utils.addInfiniteLoopProtection(code.outputText);
+				}
+				d.resolve(code);
 			} catch (e) {
-				showErrors('js', [ { lineNumber: e.lineNumber - 1, message: e.description } ]);
+				showErrors('js', [
+					{ lineNumber: e.lineNumber - 1, message: e.description }
+				]);
 			}
 		}
 
 		return d.promise;
 	}
 
-	window.previewException = function (error) {
-		console.error('Possible infinite loop detected.', error.stack)
-	}
-	window.onunload = function () {
+	window.previewException = function(error) {
+		console.error('Possible infinite loop detected.', error.stack);
+		window.onMessageFromConsole(
+			'Possible infinite loop detected.',
+			error.stack
+		);
+	};
+	window.onunload = function() {
 		saveCode('code');
+		if (scope.detachedWindow) {
+			scope.detachedWindow.close();
+		}
 	};
 
 	function cleanupErrors(lang) {
@@ -708,8 +950,8 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 	}
 	function showErrors(lang, errors) {
 		var editor = scope.cm[lang];
-		errors.forEach(function (e) {
-			editor.operation(function () {
+		errors.forEach(function(e) {
+			editor.operation(function() {
 				var n = document.createElement('div');
 				n.setAttribute('data-title', e.message);
 				n.classList.add('gutter-error-marker');
@@ -718,26 +960,61 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		});
 	}
 
-	function getCompleteHtml(html, css, js) {
-		var externalJs = externalJsTextarea.value.split('\n').reduce(function (scripts, url) {
-			return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
-		}, '');
-		var externalCss = externalCssTextarea.value.split('\n').reduce(function (links, url) {
-			return links + (url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '');
-		}, '');
-		var contents = '<html>\n<head>\n'
-			+ externalCss + '\n'
-			+ '<style id="webmakerstyle">\n' + css + '\n</style>\n'
-			+ '</head>\n'
-			+ '<body>\n' + html + '\n'
-			+ externalJs + '\n';
+	/* eslint max-params: ["error", 4] */
+	function getCompleteHtml(html, css, js, isForExport) {
+		var externalJs = externalJsTextarea.value
+			.split('\n')
+			.reduce(function(scripts, url) {
+				return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
+			}, '');
+		var externalCss = externalCssTextarea.value
+			.split('\n')
+			.reduce(function(links, url) {
+				return (
+					links +
+					(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
+				);
+			}, '');
+		var contents =
+			'<!DOCTYPE html>\n' +
+			'<html>\n<head>\n' +
+			'<meta charset="UTF-8" />\n' +
+			externalCss +
+			'\n' +
+			'<style id="webmakerstyle">\n' +
+			css +
+			'\n</style>\n' +
+			'</head>\n' +
+			'<body>\n' +
+			html +
+			'\n' +
+			externalJs +
+			'\n';
+
+		if (!isForExport) {
+			contents +=
+				'<script src="' +
+				chrome.extension.getURL('lib/screenlog.js') +
+				'"></script>';
+		}
+
+		if (jsMode === JsModes.ES6) {
+			contents +=
+				'<script src="' +
+				chrome.extension.getURL('lib/babel-polyfill.min.js') +
+				'"></script>';
+		}
 
 		if (js) {
 			contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';
 		} else {
-			contents += '<script src="'
-				+ 'filesystem:chrome-extension://'
-				+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'script.js' + '">'
+			contents +=
+				'<script src="' +
+				'filesystem:chrome-extension://' +
+				chrome.i18n.getMessage('@@extension_id') +
+				'/temporary/' +
+				'script.js' +
+				'">';
 		}
 		contents += '\n</script>\n</body>\n</html>';
 
@@ -746,38 +1023,61 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 
 	function writeFile(name, blob, cb) {
 		var fileWritten = false;
-		function errorHandler() { utils.log(arguments); }
+		function getErrorHandler(type) {
+			return function() {
+				utils.log(arguments);
+				trackEvent('fn', 'error', type);
+				// When there are too many write errors, show a message.
+				writeFile.errorCount = (writeFile.errorCount || 0) + 1;
+				if (writeFile.errorCount === 4) {
+					setTimeout(function() {
+						alert(
+							"Oops! Seems like your preview isn't updating. Please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart browser\n - Update browser\n - Reinstall Web Maker (don't forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp."
+						);
+						trackEvent('ui', 'writeFileMessageSeen');
+					}, 1000);
+				}
+			};
+		}
 
 		// utils.log('writing file ', name);
-		window.webkitRequestFileSystem(window.TEMPORARY, 1024 * 1024 * 5, function(fs){
-			fs.root.getFile(name, { create: true }, function(fileEntry) {
-				fileEntry.createWriter(function(fileWriter) {
-					function onWriteComplete() {
-						if (fileWritten) {
-							// utils.log('file written ', name);
-							return cb();
-						}
-						fileWritten = true;
-						// Set the write pointer to starting of file
-						fileWriter.seek(0);
-						fileWriter.write(blob);
-						return false;
-					}
-					fileWriter.onwriteend = onWriteComplete;
-					// Empty the file contents
-					fileWriter.truncate(0);
-					// utils.log('truncating file ', name);
-
-				}, errorHandler);
-			}, errorHandler);
-		}, errorHandler);
-
+		window.webkitRequestFileSystem(
+			window.TEMPORARY,
+			1024 * 1024 * 5,
+			function(fs) {
+				fs.root.getFile(
+					name,
+					{ create: true },
+					function(fileEntry) {
+						fileEntry.createWriter(fileWriter => {
+							function onWriteComplete() {
+								if (fileWritten) {
+									// utils.log('file written ', name);
+									return cb();
+								}
+								fileWritten = true;
+								// Set the write pointer to starting of file
+								fileWriter.seek(0);
+								fileWriter.write(blob);
+								return false;
+							}
+							fileWriter.onwriteend = onWriteComplete;
+							// Empty the file contents
+							fileWriter.truncate(0);
+							// utils.log('truncating file ', name);
+						}, getErrorHandler('createWriterFail'));
+					},
+					getErrorHandler('getFileFail')
+				);
+			},
+			getErrorHandler('webkitRequestFileSystemFail')
+		);
 	}
 
 	function createPreviewFile(html, css, js) {
 		var contents = getCompleteHtml(html, css);
-		var blob = new Blob([ contents ], { type: "text/plain;charset=UTF-8" });
-		var blobjs = new Blob([ js ], { type: "text/plain;charset=UTF-8" });
+		var blob = new Blob([contents], { type: 'text/plain;charset=UTF-8' });
+		var blobjs = new Blob([js], { type: 'text/plain;charset=UTF-8' });
 
 		// Track if people have written code.
 		if (!trackEvent.hasTrackedCode && (html || css || js)) {
@@ -787,34 +1087,56 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 
 		// we need to store user script in external JS file to prevent inline-script
 		// CSP from affecting it.
-		writeFile('script.js', blobjs, function () {
-			writeFile('preview.html', blob, function () {
-				frame.src = 'filesystem:chrome-extension://'
-					+ chrome.i18n.getMessage('@@extension_id') + '/temporary/' + 'preview.html';
+		writeFile('script.js', blobjs, function() {
+			writeFile('preview.html', blob, function() {
+				const frameSrc =
+					'filesystem:chrome-extension://' +
+					chrome.i18n.getMessage('@@extension_id') +
+					'/temporary/' +
+					'preview.html';
+				if (scope.detachedWindow) {
+					scope.detachedWindow.postMessage(frame.src, '*');
+				} else {
+					frame.src = frameSrc;
+				}
 			});
 		});
 	}
 
-	scope.setPreviewContent = function (isForced) {
+	scope.setPreviewContent = function(isForced) {
+		if (!prefs.preserveConsoleLogs) {
+			scope.clearConsole();
+		}
+
 		var currentCode = {
 			html: scope.cm.html.getValue(),
 			css: scope.cm.css.getValue(),
 			js: scope.cm.js.getValue()
 		};
-		utils.log('🔎 setPreviewContent', isForced)
+		utils.log('🔎 setPreviewContent', isForced);
+		const targetFrame = scope.detachedWindow
+			? scope.detachedWindow.document.querySelector('iframe')
+			: frame;
+
 		// If just CSS was changed (and everything shudn't be empty),
 		// change the styles inside the iframe.
-		if (!isForced && currentCode.html === codeInPreview.html && currentCode.js === codeInPreview.js) {
-			computeCss().then(function (css) {
-				if (frame.contentDocument.querySelector('#webmakerstyle')) {
-					frame.contentDocument.querySelector('#webmakerstyle').textContent = css;
+		if (
+			!isForced &&
+			currentCode.html === codeInPreview.html &&
+			currentCode.js === codeInPreview.js
+		) {
+			computeCss().then(function(css) {
+				if (targetFrame.contentDocument.querySelector('#webmakerstyle')) {
+					targetFrame.contentDocument.querySelector(
+						'#webmakerstyle'
+					).textContent = css;
 				}
 			});
 		} else {
 			var htmlPromise = computeHtml();
 			var cssPromise = computeCss();
 			var jsPromise = computeJs();
-			Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
+			Promise.all([htmlPromise, cssPromise, jsPromise]).then(function(result) {
 				createPreviewFile(result[0], result[1], result[2]);
 			});
 		}
@@ -828,15 +1150,23 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		var htmlPromise = computeHtml();
 		var cssPromise = computeCss();
 		var jsPromise = computeJs(false);
-		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
+		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function(result) {
 			var html = result[0],
 				css = result[1],
 				js = result[2];
 
-			var fileContent = getCompleteHtml(html, css, js);
+			var fileContent = getCompleteHtml(html, css, js, true);
 
 			var d = new Date();
-			var fileName = [ 'web-maker', d.getFullYear(), (d.getMonth() + 1), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
+			var fileName = [
+				'web-maker',
+				d.getFullYear(),
+				d.getMonth() + 1,
+				d.getDate(),
+				d.getHours(),
+				d.getMinutes(),
+				d.getSeconds()
+			].join('-');
 			fileName += '.html';
 
 			if (currentItem.title) {
@@ -844,7 +1174,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			}
 
 			var a = document.createElement('a');
-			var blob = new Blob([ fileContent ], { type: "text/html;charset=UTF-8" });
+			var blob = new Blob([fileContent], { type: 'text/html;charset=UTF-8' });
 			a.href = window.URL.createObjectURL(blob);
 			a.download = fileName;
 			a.style.display = 'none';
@@ -864,6 +1194,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			autoCloseBrackets: true,
 			autoCloseTags: true,
 			matchBrackets: true,
+			matchTags: options.matchTags || false,
 			tabMode: 'indent',
 			keyMap: 'sublime',
 			theme: 'monokai',
@@ -875,21 +1206,28 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			// cursorScrollMargin: '20', has issue with scrolling
 			profile: options.profile || '',
 			extraKeys: {
-				'Up': function (editor) {
+				Up: function(editor) {
 					// Stop up/down keys default behavior when saveditempane is open
-					if (isSavedItemsPaneOpen) { return; }
+					if (isSavedItemsPaneOpen) {
+						return;
+					}
 					CodeMirror.commands.goLineUp(editor);
 				},
-				'Down': function (editor) {
-					if (isSavedItemsPaneOpen) { return; }
+				Down: function(editor) {
+					if (isSavedItemsPaneOpen) {
+						return;
+					}
 					CodeMirror.commands.goLineDown(editor);
 				},
 				'Shift-Tab': function(editor) {
 					CodeMirror.commands.indentAuto(editor);
 				},
-				'Tab': function(editor) {
+				Tab: function(editor) {
 					var input = $('[data-setting=indentWith]:checked');
-					if (!editor.somethingSelected() && (!input || input.value === 'spaces')) {
+					if (
+						!editor.somethingSelected() &&
+						(!input || input.value === 'spaces')
+					) {
 						// softtabs adds spaces. This is required because by default tab key will put tab, but we want
 						// to indent with spaces if `spaces` is preferred mode of indentation.
 						// `somethingSelected` needs to be checked otherwise, all selected code is replaced with softtab.
@@ -900,18 +1238,28 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				}
 			}
 		});
+		cm.on('focus', editor => {
+			editorWithFocus = editor;
+		});
 		cm.on('change', function onChange(editor, change) {
 			clearTimeout(updateTimer);
 
-			updateTimer = setTimeout(function () {
+			updateTimer = setTimeout(function() {
 				// This is done so that multiple simultaneous setValue don't trigger too many preview refreshes
 				// and in turn too many file writes on a single file (eg. preview.html).
 				if (change.origin !== 'setValue') {
-					scope.setPreviewContent();
+					// Specifically checking for false so that the condition doesn't get true even
+					// on absent key - possible when the setting key hasn't been fetched yet.
+					if (prefs.autoPreview !== false) {
+						scope.setPreviewContent();
+					}
 
 					saveBtn.classList.add('is-marked');
 					unsavedEditCount += 1;
-					if (unsavedEditCount % unsavedEditWarningCount === 0 && unsavedEditCount >= unsavedEditWarningCount) {
+					if (
+						unsavedEditCount % unsavedEditWarningCount === 0 &&
+						unsavedEditCount >= unsavedEditWarningCount
+					) {
 						saveBtn.classList.add('animated');
 						saveBtn.classList.add('wobble');
 						saveBtn.addEventListener('animationend', () => {
@@ -928,14 +1276,20 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				}
 			}, updateDelay);
 		});
-		if (options.noAutocomplete) {
-			cm.addKeyMap({
-				'Ctrl-Space': 'autocomplete'
-			});
-		} else {
+		cm.addKeyMap({
+			'Ctrl-Space': 'autocomplete'
+		});
+		if (!options.noAutocomplete) {
 			cm.on('inputRead', function onChange(editor, input) {
-				if (input.text[0] === ';' || input.text[0] === ' ') { return; }
-				CodeMirror.commands.autocomplete(cm, null, { completeSingle: false })
+				if (
+					!prefs.autoComplete ||
+					input.origin !== '+input' ||
+					input.text[0] === ';' ||
+					input.text[0] === ' '
+				) {
+					return;
+				}
+				CodeMirror.commands.autocomplete(cm, null, { completeSingle: false });
 			});
 		}
 		return cm;
@@ -944,24 +1298,36 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 	scope.cm.html = initEditor(htmlCode, {
 		mode: 'htmlmixed',
 		profile: 'xhtml',
-		gutters: [ 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ],
-		noAutocomplete: true
+		gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+		noAutocomplete: true,
+		matchTags: { bothTags: true }
 	});
 	emmetCodeMirror(scope.cm.html);
 	scope.cm.css = initEditor(cssCode, {
 		mode: 'css',
-		gutters: [ 'error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ]
+		gutters: ['error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter']
 	});
 	emmetCodeMirror(scope.cm.css);
 	Inlet(scope.cm.css);
 	scope.cm.js = initEditor(jsCode, {
 		mode: 'javascript',
-		gutters: [ 'error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter' ]
+		gutters: ['error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter']
 	});
 	Inlet(scope.cm.js);
 
+	// Initialize codemirror in console
+	scope.consoleCm = CodeMirror(consoleLogEl, {
+		mode: 'javascript',
+		lineWrapping: true,
+		theme: 'monokai',
+		foldGutter: true,
+		readOnly: true,
+		gutters: ['CodeMirror-foldgutter']
+	});
+
+	// DEPRECATED
 	function openSettings() {
-		settingsModal.classList.toggle('is-modal-visible');
+		scope.toggleModal(settingsModal);
 
 		/* if (chrome.runtime.openOptionsPage) {
 			// New way to open options pages, if supported (Chrome 42+).
@@ -980,42 +1346,67 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 	scope.onModalSettingsLinkClick = function onModalSettingsLinkClick() {
 		openSettings();
 		trackEvent('ui', 'onboardSettingsBtnClick');
-	}
+	};
 
 	scope.onShowInTabClicked = function onShowInTabClicked() {
 		onboardDontShowInTabOptionBtn.classList.remove('selected');
 		onboardShowInTabOptionBtn.classList.add('selected');
 		trackEvent('ui', 'onboardShowInTabClick');
-	}
+	};
 	scope.onDontShowInTabClicked = function onDontShowInTabClicked() {
 		onboardDontShowInTabOptionBtn.classList.add('selected');
 		onboardShowInTabOptionBtn.classList.remove('selected');
 		trackEvent('ui', 'onboardDontShowInTabClick');
-	}
+	};
 
 	scope.exportItems = function exportItems(e) {
-		fetchItems().then(function (items) {
-			utils.log(9, items);
-			var d = new Date();
-			var fileName = [ 'web-maker-export', d.getFullYear(), (d.getMonth() + 1), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
-			fileName += '.json';
-			var blob = new Blob([ JSON.stringify(items,false,2) ], { type: "application/json;charset=UTF-8" });
-			var a = document.createElement('a');
-			a.href = window.URL.createObjectURL(blob);
-			a.download = fileName;
-			a.style.display = 'none';
-			document.body.appendChild(a);
-			a.click();
-			a.remove();
-			trackEvent('ui', 'exportBtnClicked');
+		handleDownloadsPermission().then(() => {
+			fetchItems().then(function(items) {
+				var d = new Date();
+				var fileName = [
+					'web-maker-export',
+					d.getFullYear(),
+					d.getMonth() + 1,
+					d.getDate(),
+					d.getHours(),
+					d.getMinutes(),
+					d.getSeconds()
+				].join('-');
+				fileName += '.json';
+				var blob = new Blob([JSON.stringify(items, false, 2)], {
+					type: 'application/json;charset=UTF-8'
+				});
+
+				chrome.downloads.download(
+					{
+						url: window.URL.createObjectURL(blob),
+						filename: fileName,
+						saveAs: true
+					},
+					function() {
+						// If there was an error, just download the file using ANCHOR method.
+						if (chrome.runtime.lastError) {
+							var a = document.createElement('a');
+							a.href = window.URL.createObjectURL(blob);
+							a.download = fileName;
+							a.style.display = 'none';
+							document.body.appendChild(a);
+							a.click();
+							a.remove();
+						}
+					}
+				);
+
+				trackEvent('ui', 'exportBtnClicked');
+			});
 		});
 		e.preventDefault();
-	}
+	};
 
 	function mergeImportedItems(items) {
 		var existingItemIds = [];
 		var toMergeItems = {};
-		items.forEach((item) => {
+		items.forEach(item => {
 			if (savedItems[item.id]) {
 				// Item already exists
 				existingItemIds.push(item.id);
@@ -1026,10 +1417,13 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		});
 		var mergedItemCount = items.length - existingItemIds.length;
 		if (existingItemIds.length) {
-			var shouldReplace = confirm(existingItemIds.length + ' creations already exist. Do you want to replace them?');
+			var shouldReplace = confirm(
+				existingItemIds.length +
+					' creations already exist. Do you want to replace them?'
+			);
 			if (shouldReplace) {
 				utils.log('shouldreplace', shouldReplace);
-				items.forEach((item) => {
+				items.forEach(item => {
 					toMergeItems[item.id] = item;
 				});
 				mergedItemCount = items.length;
@@ -1037,25 +1431,29 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		}
 		if (mergedItemCount) {
 			// save new items
-			chrome.storage.local.set(toMergeItems, function () {
-				alertsService.add(mergedItemCount + ' creations imported successfully.');
+			chrome.storage.local.set(toMergeItems, function() {
+				alertsService.add(
+					mergedItemCount + ' creations imported successfully.'
+				);
 			});
 			// Push in new item IDs
-			chrome.storage.local.get({
-				items: {}
-			}, function (result) {
+			chrome.storage.local.get(
+				{
+					items: {}
+				},
+				function(result) {
+					/* eslint-disable guard-for-in */
+					for (var id in toMergeItems) {
+						result.items[id] = true;
+					}
+					chrome.storage.local.set({
+						items: result.items
+					});
+					trackEvent('fn', 'itemsImported', mergedItemCount);
 
-				/* eslint-disable guard-for-in */
-				for (var id in toMergeItems) {
-					result.items[id] = true;
+					/* eslint-enable guard-for-in */
 				}
-				chrome.storage.local.set({
-					items: result.items
-				});
-				trackEvent('fn', 'itemsImported', mergedItemCount);
-
-				/* eslint-enable guard-for-in */
-			});
+			);
 			alertsService.add(mergedItemCount + ' creations imported successfully.');
 		}
 		// FIXME: Move from here
@@ -1065,7 +1463,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 	function onImportFileChange(e) {
 		var file = e.target.files[0];
 		// if (!f.type.match('image.*')) {
-			// continue;
+		// 		continue;
 		// }
 
 		var reader = new FileReader();
@@ -1076,7 +1474,9 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				utils.log(items);
 				mergeImportedItems(items);
 			} catch (ex) {
-				alert('Oops! Select file is corrupted.')
+				alert(
+					'Oops! Selected file is corrupted. Please select a file that was generated by clicking the "Export" button.'
+				);
 			}
 		};
 
@@ -1088,12 +1488,12 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		input.type = 'file';
 		input.style.display = 'none';
 		input.accept = 'accept="application/json';
-		document.body.appendChild(input)
+		document.body.appendChild(input);
 		input.addEventListener('change', onImportFileChange);
 		input.click();
 		trackEvent('ui', 'importBtnClicked');
 		e.preventDefault();
-	}
+	};
 
 	function saveScreenshot(dataURI) {
 		// convert base64 to raw binary data held in a string
@@ -1112,24 +1512,39 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 
 		// create a blob for writing to a file
 		var blob = new Blob([ab], { type: mimeString });
-		var size = blob.size + (1024 / 2);
+		var size = blob.size + 1024 / 2;
 
 		var d = new Date();
-		var fileName = [ 'web-maker-screenshot', d.getFullYear(), (d.getMonth() + 1), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds() ].join('-');
+		var fileName = [
+			'web-maker-screenshot',
+			d.getFullYear(),
+			d.getMonth() + 1,
+			d.getDate(),
+			d.getHours(),
+			d.getMinutes(),
+			d.getSeconds()
+		].join('-');
 		fileName += '.png';
 
 		function onWriteEnd() {
-			var filePath = 'filesystem:chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/temporary/' + fileName;
+			var filePath =
+				'filesystem:chrome-extension://' +
+				chrome.i18n.getMessage('@@extension_id') +
+				'/temporary/' +
+				fileName;
 
-			chrome.downloads.download({
-				url: filePath
-			}, function() {
-				// If there was an error, just open the screenshot in a tab.
-				// This happens in incognito mode where extension cannot access filesystem.
-				if (chrome.runtime.lastError) {
-					window.open(filePath);
+			chrome.downloads.download(
+				{
+					url: filePath
+				},
+				function() {
+					// If there was an error, just open the screenshot in a tab.
+					// This happens in incognito mode where extension cannot access filesystem.
+					if (chrome.runtime.lastError) {
+						window.open(filePath);
+					}
 				}
-			});
+			);
 		}
 
 		function errorHandler(e) {
@@ -1137,49 +1552,106 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		}
 
 		// create a blob for writing to a file
-		window.webkitRequestFileSystem(window.TEMPORARY, size, (fs) => {
-			fs.root.getFile(fileName, { create: true }, (fileEntry) => {
-				fileEntry.createWriter((fileWriter) => {
-					fileWriter.onwriteend = onWriteEnd;
-					fileWriter.write(blob);
-				}, errorHandler);
-			}, errorHandler);
-		}, errorHandler);
+		window.webkitRequestFileSystem(
+			window.TEMPORARY,
+			size,
+			fs => {
+				fs.root.getFile(
+					fileName,
+					{ create: true },
+					fileEntry => {
+						fileEntry.createWriter(fileWriter => {
+							fileWriter.onwriteend = onWriteEnd;
+							fileWriter.write(blob);
+						}, errorHandler);
+					},
+					errorHandler
+				);
+			},
+			errorHandler
+		);
 	}
 
-	scope.takeScreenshot = function (e) {
-		// Hide tooltips so that they don't show in the screenshot
-		var s = document.createElement('style');
-		s.textContent = '[class*="hint"]:after, [class*="hint"]:before { display: none!important; }';
-		document.body.appendChild(s);
-
-		function onImgLoad(image) {
-			var c = document.createElement('canvas');
-			var iframeBounds = frame.getBoundingClientRect();
-			c.width = iframeBounds.width;
-			c.height = iframeBounds.height;
-			var ctx = c.getContext('2d');
-			ctx.drawImage(image,
-				iframeBounds.left, iframeBounds.top, iframeBounds.width, iframeBounds.height,
-				0, 0, iframeBounds.width, iframeBounds.height);
-			image.removeEventListener('load', onImgLoad);
-			saveScreenshot(c.toDataURL());
-		}
-
-		setTimeout(() => {
-			chrome.tabs.captureVisibleTab(null, { format: 'png', quality: 100 }, function(dataURI) {
-				s.remove();
-				if (dataURI) {
-					var image = new Image();
-					image.src = dataURI;
-					image.addEventListener('load', () => onImgLoad(image, dataURI));
+	function handleDownloadsPermission() {
+		var d = deferred();
+		chrome.permissions.contains(
+			{
+				permissions: ['downloads']
+			},
+			function(result) {
+				if (result) {
+					d.resolve();
+				} else {
+					chrome.permissions.request(
+						{
+							permissions: ['downloads']
+						},
+						function(granted) {
+							if (granted) {
+								trackEvent('fn', 'downloadsPermGiven');
+								d.resolve();
+							} else {
+								d.reject();
+							}
+						}
+					);
 				}
-			});
-		}, 50);
-
-		trackEvent('ui', 'takeScreenshotBtnClick');
-		e.preventDefault();
+			}
+		);
+		return d.promise;
 	}
+
+	scope.takeScreenshot = function(e) {
+		handleDownloadsPermission().then(() => {
+			// Hide tooltips so that they don't show in the screenshot
+			var s = document.createElement('style');
+			s.textContent =
+				'[class*="hint"]:after, [class*="hint"]:before { display: none!important; }';
+			document.body.appendChild(s);
+
+			function onImgLoad(image) {
+				var c = document.createElement('canvas');
+				var iframeBounds = frame.getBoundingClientRect();
+				c.width = iframeBounds.width;
+				c.height = iframeBounds.height;
+				var ctx = c.getContext('2d');
+				var devicePixelRatio = window.devicePixelRatio || 1;
+
+				ctx.drawImage(
+					image,
+					iframeBounds.left * devicePixelRatio,
+					iframeBounds.top * devicePixelRatio,
+					iframeBounds.width * devicePixelRatio,
+					iframeBounds.height * devicePixelRatio,
+					0,
+					0,
+					iframeBounds.width,
+					iframeBounds.height
+				);
+				image.removeEventListener('load', onImgLoad);
+				saveScreenshot(c.toDataURL());
+			}
+
+			setTimeout(() => {
+				chrome.tabs.captureVisibleTab(
+					null,
+					{ format: 'png', quality: 100 },
+					function(dataURI) {
+						s.remove();
+						if (dataURI) {
+							var image = new Image();
+							image.src = dataURI;
+							image.addEventListener('load', () => onImgLoad(image, dataURI));
+						}
+					}
+				);
+			}, 50);
+
+			trackEvent('ui', 'takeScreenshotBtnClick');
+		});
+
+		e.preventDefault();
+	};
 
 	// Populate the settings in the settings UI
 	function updateSettingsInUi() {
@@ -1190,11 +1662,24 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		$('[data-setting=jsMode]').value = prefs.jsMode;
 		$('[data-setting=indentSize]').value = prefs.indentSize;
 		indentationSizeValueEl.textContent = prefs.indentSize;
-		$('[data-setting=indentWith][value=' + (prefs.indentWith || 'spaces') + ']').checked = true;
+		$(
+			'[data-setting=indentWith][value=' + (prefs.indentWith || 'spaces') + ']'
+		).checked = true;
 		$('[data-setting=isCodeBlastOn]').checked = prefs.isCodeBlastOn;
 		$('[data-setting=editorTheme]').value = prefs.editorTheme;
-		$('[data-setting=keymap][value=' + (prefs.keymap || 'sublime') + ']').checked = true;
+		$(
+			'[data-setting=keymap][value=' + (prefs.keymap || 'sublime') + ']'
+		).checked = true;
 		$('[data-setting=fontSize]').value = prefs.fontSize || 16;
+		$('[data-setting=refreshOnResize]').checked = prefs.refreshOnResize;
+		$('[data-setting=autoPreview]').checked = prefs.autoPreview;
+		$('[data-setting=editorFont]').value = prefs.editorFont;
+		$('[data-setting=editorCustomFont]').value = prefs.editorCustomFont;
+		$('[data-setting=autoSave]').checked = prefs.autoSave;
+		$('[data-setting=autoComplete]').checked = prefs.autoComplete;
+		$('[data-setting=preserveConsoleLogs]').checked = prefs.preserveConsoleLogs;
+		$('[data-setting=lightVersion]').checked = prefs.lightVersion;
+		$('[data-setting=lineWrap]').checked = prefs.lineWrap;
 	}
 
 	/**
@@ -1206,44 +1691,95 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			var settingName = e.target.dataset.setting;
 			var obj = {};
 			var el = e.target;
-			utils.log(settingName, (el.type === 'checkbox') ? el.checked : el.value);
+			utils.log(settingName, el.type === 'checkbox' ? el.checked : el.value);
 			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
 			obj[settingName] = prefs[settingName];
 			chrome.storage.sync.set(obj, function() {
-				alertsService.add('setting saved');
+				alertsService.add('Setting saved');
 			});
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
 
+		// Show/hide RUN button based on autoPreview setting.
+		runBtn.classList[prefs.autoPreview ? 'add' : 'remove']('hide');
+
 		htmlCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 		cssCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 		jsCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		consoleEl.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 
 		// Update indentation count when slider is updated
 		indentationSizeValueEl.textContent = $('[data-setting=indentSize]').value;
 
-		['html', 'js', 'css'].forEach((type) => {
+		// Replace correct css file in LINK tags's href
+		editorThemeLinkTag.href =
+			'/lib/codemirror/theme/' + prefs.editorTheme + '.css';
+		fontStyleTag.textContent = fontStyleTemplate.textContent.replace(
+			/fontname/g,
+			(prefs.editorFont === 'other'
+				? prefs.editorCustomFont
+				: prefs.editorFont) || 'FiraCode'
+		);
+		customEditorFontInput.classList[
+			prefs.editorFont === 'other' ? 'remove' : 'add'
+		]('hide');
+
+		['html', 'js', 'css'].forEach(type => {
 			scope.cm[type].setOption(
 				'indentWithTabs',
 				$('[data-setting=indentWith]:checked').value !== 'spaces'
 			);
-
-			scope.cm[type].setOption('blastCode', $('[data-setting=isCodeBlastOn]').checked ? { effect: 2, shake: false } : false);
-			scope.cm[type].setOption('indentUnit', $('[data-setting=indentSize]').value);
-			scope.cm[type].setOption('tabSize', $('[data-setting=indentSize]').value);
+			scope.cm[type].setOption(
+				'blastCode',
+				$('[data-setting=isCodeBlastOn]').checked
+					? { effect: 2, shake: false }
+					: false
+			);
+			scope.cm[type].setOption(
+				'indentUnit',
+				+$('[data-setting=indentSize]').value
+			);
+			scope.cm[type].setOption(
+				'tabSize',
+				+$('[data-setting=indentSize]').value
+			);
 			scope.cm[type].setOption('theme', $('[data-setting=editorTheme]').value);
-			// Replace correct css file in LINK tags's href
-			editorThemeLinkTag.href = '/lib/codemirror/theme/' + prefs.editorTheme + '.css';
 
-			scope.cm[type].setOption('keyMap', $('[data-setting=keymap]:checked').value);
+			scope.cm[type].setOption(
+				'keyMap',
+				$('[data-setting=keymap]:checked').value
+			);
+			scope.cm[type].setOption(
+				'lineWrapping',
+				$('[data-setting=lineWrap]').checked
+			);
 			scope.cm[type].refresh();
 		});
+		scope.consoleCm.setOption('theme', $('[data-setting=editorTheme]').value);
+		scope.acssSettingsCm.setOption(
+			'theme',
+			$('[data-setting=editorTheme]').value
+		);
+		if (prefs.autoSave) {
+			if (!autoSaveInterval) {
+				autoSaveInterval = setInterval(autoSaveLoop, AUTO_SAVE_INTERVAL);
+			}
+		} else {
+			clearInterval(autoSaveInterval);
+			autoSaveInterval = null;
+		}
+
+		document.body.classList[prefs.lightVersion ? 'add' : 'remove'](
+			'light-version'
+		);
 	};
 
-	scope.onNewBtnClick = function () {
+	scope.onNewBtnClick = function() {
 		trackEvent('ui', 'newBtnClick');
 		if (unsavedEditCount) {
-			var shouldDiscard = confirm('You have unsaved changes. Do you still want to create something new?');
+			var shouldDiscard = confirm(
+				'You have unsaved changes. Do you still want to create something new?'
+			);
 			if (shouldDiscard) {
 				createNewItem();
 			}
@@ -1251,37 +1787,213 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			createNewItem();
 		}
 	};
-	scope.onOpenBtnClick = function () {
+	scope.onOpenBtnClick = function() {
 		trackEvent('ui', 'openBtnClick');
 		openSavedItemsPane();
 	};
-	scope.onSaveBtnClick = function () {
+	scope.onSaveBtnClick = function() {
 		trackEvent('ui', 'saveBtnClick', currentItem.id ? 'saved' : 'new');
 		saveItem();
 	};
 
-	function compileNodes() {
-		var nodes = [].slice.call($all('[d-click]'));
-		nodes.forEach(function (el) {
-			el.addEventListener('click', function (e) {
-				scope[el.getAttribute('d-click')].call(window, e)
+	/**
+	 * Toggles a modal and logs an event.
+	 * @param  {Node} modal     modal to be toggled
+	 */
+	scope.toggleModal = function(modal) {
+		modal.classList.toggle('is-modal-visible');
+		document.body.classList[
+			modal.classList.contains('is-modal-visible') ? 'add' : 'remove'
+		]('overlay-visible');
+	};
+	scope.onSearchInputChange = function(e) {
+		const text = e.target.value;
+		let el;
+		for (const [itemId, item] of Object.entries(savedItems)) {
+			el = $(`#js-saved-items-pane [data-item-id=${itemId}]`);
+			if (item.title.toLowerCase().indexOf(text) === -1) {
+				el.classList.add('hide');
+			} else {
+				el.classList.remove('hide');
+			}
+		}
+		trackEvent('ui', 'searchInputType');
+	};
+
+	scope.toggleConsole = function() {
+		consoleEl.classList.toggle('is-minimized');
+		trackEvent('ui', 'consoleToggle');
+	};
+	// `clearConsole` is on window because it gets called from inside iframe also.
+	scope.clearConsole = window.clearConsole = function() {
+		scope.consoleCm.setValue('');
+		logCount = 0;
+		logCountEl.textContent = logCount;
+	};
+	scope.onClearConsoleBtnClick = function() {
+		scope.clearConsole();
+		trackEvent('ui', 'consoleClearBtnClick');
+	};
+	scope.evalConsoleExpr = function(e) {
+		// Clear console on CTRL + L
+		if ((e.which === 76 || e.which === 12) && e.ctrlKey) {
+			scope.clearConsole();
+			trackEvent('ui', 'consoleClearKeyboardShortcut');
+		} else if (e.which === 13) {
+			window.onMessageFromConsole('> ' + e.target.value);
+
+			/* eslint-disable no-underscore-dangle */
+			frame.contentWindow._wmEvaluate(e.target.value);
+
+			/* eslint-enable no-underscore-dangle */
+
+			e.target.value = '';
+			trackEvent('fn', 'evalConsoleExpr');
+		}
+	};
+	window.onMessageFromConsole = function() {
+		/* eslint-disable no-param-reassign */
+		[...arguments].forEach(function(arg) {
+			if (
+				arg &&
+				arg.indexOf &&
+				arg.indexOf('filesystem:chrome-extension') !== -1
+			) {
+				arg = arg.replace(
+					/filesystem:chrome-extension.*\.js:(\d+):*(\d*)/g,
+					'script $1:$2'
+				);
+			}
+			try {
+				scope.consoleCm.replaceRange(
+					arg +
+						' ' +
+						((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
+						'\n',
+					{ line: Infinity }
+				);
+			} catch (e) {
+				scope.consoleCm.replaceRange('🌀\n', { line: Infinity });
+			}
+			scope.consoleCm.scrollTo(0, Infinity);
+			logCount++;
+		});
+		logCountEl.textContent = logCount;
+
+		/* eslint-enable no-param-reassign */
+	};
+
+	/**
+	 * Compiles directives on the given node
+	 * @param {Node} root The element on which compilation is required
+	 */
+	function compileNodes(root) {
+		if (!(root instanceof Node)) {
+			/* eslint-disable no-param-reassign */
+			root = document;
+			/* eslint-enable no-param-reassign */
+		}
+		// Create a querySelectorAll function bound to the passed `root` Node
+		const query = selector => [...root.querySelectorAll(selector)];
+
+		function attachListenerForEvent(eventName) {
+			const nodes = query(`[d-${eventName}]`);
+			nodes.forEach(function(el) {
+				el.addEventListener(eventName, function(e) {
+					scope[el.getAttribute(`d-${eventName}`)].call(window, e);
+				});
+			});
+		}
+		attachListenerForEvent('click');
+		attachListenerForEvent('change');
+		attachListenerForEvent('input');
+		attachListenerForEvent('keyup');
+
+		// Compile d-open-modal directive
+		const modalTriggers = query(`[d-open-modal]`);
+		modalTriggers.forEach(function(el) {
+			utils.onButtonClick(el, function() {
+				scope.toggleModal(window[el.getAttribute('d-open-modal')]);
+				trackEvent(
+					el.getAttribute('data-event-category'),
+					el.getAttribute('data-event-action')
+				);
 			});
 		});
-		nodes = [].slice.call($all('[d-change]'));
-		nodes.forEach(function (el) {
-			el.addEventListener('change', function (e) {
-				scope[el.getAttribute('d-change')].call(window, e)
+
+		// Compile d-html directive
+		const dHtmlNodes = query(`[d-html]`);
+		dHtmlNodes.forEach(function(el) {
+			fetch(el.getAttribute('d-html')).then(response => {
+				// Stop further compilation because of future recursion by removing attribute.
+				el.removeAttribute('d-html');
+				response.text().then(html => {
+					requestIdleCallback(() => {
+						el.innerHTML = html;
+						// Now compile this newly inserted HTML also.
+						compileNodes(el);
+					});
+				});
 			});
-		})
+		});
 	}
 
-	function init () {
+	scope.openDetachedPreview = function() {
+		trackEvent('ui', 'detachPreviewBtnClick');
+
+		if (scope.detachedWindow) {
+			scope.detachedWindow.focus();
+			return;
+		}
+		var iframeBounds = frame.getBoundingClientRect();
+		const iframeWidth = iframeBounds.width;
+		const iframeHeight = iframeBounds.height;
+		document.body.classList.add('is-detached-mode');
+		globalConsoleContainerEl.insertBefore(consoleEl, null);
+
+		scope.detachedWindow = window.open(
+			'./preview.html',
+			'Web Maker',
+			`width=${iframeWidth},height=${iframeHeight},resizable,scrollbars=yes,status=1`
+		);
+		setTimeout(() => {
+			scope.detachedWindow.postMessage(frame.src, '*');
+		}, 1000);
+		function checkWindow() {
+			if (scope.detachedWindow && scope.detachedWindow.closed) {
+				clearInterval(intervalID);
+				document.body.classList.remove('is-detached-mode');
+				$('#js-demo-side').insertBefore(consoleEl, null);
+				scope.detachedWindow = null;
+				// Update main frame preview
+				scope.setPreviewContent(true);
+			}
+		}
+		var intervalID = window.setInterval(checkWindow, 500);
+	};
+
+	scope.openCssSettingsModal = function() {
+		scope.toggleModal(cssSettingsModal);
+		setTimeout(() => {
+			// Refresh is required because codemirror gets scaled inside modal and loses alignement.
+			scope.acssSettingsCm.refresh();
+			scope.acssSettingsCm.focus();
+		}, 500);
+		trackEvent('ui', 'cssSettingsBtnClick');
+	};
+
+	scope.onModalCloseBtnClick = function(e) {
+		closeAllOverlays();
+		e.preventDefault();
+	};
+
+	function init() {
 		var lastCode;
 
-		CodeMirror.modeURL = "lib/codemirror/mode/%N/%N.js";
+		CodeMirror.modeURL = 'lib/codemirror/mode/%N/%N.js';
 
 		function getToggleLayoutButtonListener(mode) {
-			return function () {
+			return function() {
 				saveSetting('layoutMode', mode);
 				trackEvent('ui', 'toggleLayoutClick', mode);
 				toggleLayout(mode);
@@ -1293,32 +2005,32 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		layoutBtn3.addEventListener('click', getToggleLayoutButtonListener(3));
 		layoutBtn4.addEventListener('click', getToggleLayoutButtonListener(4));
 
-		utils.onButtonClick(helpBtn, function () {
-			helpModal.classList.toggle('is-modal-visible');
-			document.body.classList[helpModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
-			trackEvent('ui', 'helpButtonClick');
-		});
-		utils.onButtonClick(addLibraryBtn, function () {
-			addLibraryModal.classList.toggle('is-modal-visible');
-			document.body.classList[addLibraryModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
-			trackEvent('ui', 'addLibraryButtonClick');
-		});
+		notificationsBtn.addEventListener('click', function() {
+			scope.toggleModal(notificationsModal);
 
-		notificationsBtn.addEventListener('click', function () {
-			notificationsModal.classList.toggle('is-modal-visible');
-			document.body.classList[notificationsModal.classList.contains('is-modal-visible') ? 'add' : 'remove']('overlay-visible');
-			if (notificationsModal.classList.contains('is-modal-visible') && !hasSeenNotifications) {
+			if (
+				notificationsModal.classList.contains('is-modal-visible') &&
+				!hasSeenNotifications
+			) {
 				hasSeenNotifications = true;
 				notificationsBtn.classList.remove('has-new');
-				chrome.storage.sync.set({
-					lastSeenVersion: version
-				}, function () {});
+				chrome.storage.sync.set(
+					{
+						lastSeenVersion: version
+					},
+					function() {}
+				);
 			}
 			trackEvent('ui', 'notificationButtonClick', version);
 			return false;
 		});
 
-		codepenBtn.addEventListener('click', function (e) {
+		codepenBtn.addEventListener('click', function(e) {
+			if (cssMode === CssModes.ACSS) {
+				alert("Oops! CodePen doesn't supports Atomic CSS currently.");
+				e.preventDefault();
+				return;
+			}
 			var json = {
 				title: 'A Web Maker experiment',
 				html: scope.cm.html.getValue(),
@@ -1328,41 +2040,50 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 				/* eslint-disable camelcase */
 				html_pre_processor: modes[htmlMode].codepenVal,
 				css_pre_processor: modes[cssMode].codepenVal,
-				js_pre_processor: modes[jsMode].codepenVal
+				js_pre_processor: modes[jsMode].codepenVal,
+
+				css_external: externalCssTextarea.value.split('\n').join(';'),
+				js_external: externalJsTextarea.value.split('\n').join(';')
 
 				/* eslint-enable camelcase */
 			};
 			if (!currentItem.title.match(/Untitled\s\d\d*-\d/)) {
 				json.title = currentItem.title;
 			}
-			json = JSON.stringify(json)
-				.replace(/"/g, "&​quot;")
-				.replace(/'/g, "&apos;")
+			json = JSON.stringify(json);
 			codepenForm.querySelector('input').value = json;
 			codepenForm.submit();
 			trackEvent('ui', 'openInCodepen');
 			e.preventDefault();
 		});
 
-		utils.onButtonClick(saveHtmlBtn, function () {
+		utils.onButtonClick(saveHtmlBtn, function() {
 			saveFile();
 			trackEvent('ui', 'saveHtmlClick');
 		});
 
 		utils.onButtonClick(savedItemsPaneCloseBtn, toggleSavedItemsPane);
-		utils.onButtonClick(savedItemsPane, function (e) {
+		utils.onButtonClick(savedItemsPane, function(e) {
+			// TODO: warn about unsaved changes in current item
 			if (e.target.classList.contains('js-saved-item-tile')) {
-				setTimeout(function () {
+				setTimeout(function() {
 					openItem(e.target.dataset.itemId);
 				}, 350);
 				toggleSavedItemsPane();
 			}
-			if (e.target.classList.contains('js-saved-item-tile__close-btn')) {
-				removeItem(e.target.parentElement.dataset.itemId);
+			if (e.target.classList.contains('js-saved-item-tile__remove-btn')) {
+				removeItem(e.target.parentElement.parentElement.dataset.itemId);
+			} else if (e.target.classList.contains('js-saved-item-tile__fork-btn')) {
+				toggleSavedItemsPane();
+				setTimeout(function() {
+					forkItem(
+						savedItems[e.target.parentElement.parentElement.dataset.itemId]
+					);
+				}, 350);
 			}
 		});
 
-		titleInput.addEventListener('blur', function () {
+		titleInput.addEventListener('blur', function() {
 			if (currentItem.id) {
 				saveItem();
 				trackEvent('ui', 'titleChanged');
@@ -1370,12 +2091,12 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		});
 
 		// Attach listeners on mode change menu items
-		var modeItems = [].slice.call($all('.js-modes-menu a'));
-		modeItems.forEach(function (item) {
-			item.addEventListener('click', function (e) {
-				var mode = e.currentTarget.dataset.mode;
-				var type = e.currentTarget.dataset.type;
-				var currentMode = type === 'html' ? htmlMode : (type === 'css' ? cssMode : jsMode);
+		$all('.js-mode-select').forEach(selectBox => {
+			selectBox.addEventListener('change', function(e) {
+				var mode = e.target.value;
+				var type = e.target.dataset.type;
+				var currentMode =
+					type === 'html' ? htmlMode : type === 'css' ? cssMode : jsMode;
 				if (currentMode !== mode) {
 					if (type === 'html') {
 						updateHtmlMode(mode).then(() => scope.setPreviewContent(true));
@@ -1390,10 +2111,11 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 		});
 
 		// Collapse btn event listeners
-		var collapseBtns = [].slice.call($all('.js-code-collapse-btn'));
-		collapseBtns.forEach(function (btn) {
-			btn.addEventListener('click', function (e) {
-				var codeWrapParent = e.currentTarget.parentElement.parentElement.parentElement;
+		var collapseBtns = $all('.js-code-collapse-btn');
+		collapseBtns.forEach(function(btn) {
+			btn.addEventListener('click', function(e) {
+				var codeWrapParent =
+					e.currentTarget.parentElement.parentElement.parentElement;
 				toggleCodeWrapCollapse(codeWrapParent);
 				trackEvent('ui', 'paneCollapseBtnClick', codeWrapParent.dataset.type);
 				return false;
@@ -1402,63 +2124,118 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 
 		// Update code wrap collapse states whenever any of them transitions due to any
 		// reason.
-		[ htmlCode, cssCode, jsCode ].forEach(function (el) {
+		[htmlCode, cssCode, jsCode].forEach(function(el) {
 			el.addEventListener('transitionend', function() {
 				updateCodeWrapCollapseStates();
 			});
 		});
 
-		window.addEventListener('keydown', function (event) {
+		// Editor keyboard shortucuts
+		window.addEventListener('keydown', function(event) {
 			var selectedItemElement;
+			// TODO: refactor common listener code
 			// Ctrl/⌘ + S
-			if ((event.ctrlKey || event.metaKey) && (event.keyCode === 83)) {
+			if ((event.ctrlKey || event.metaKey) && event.keyCode === 83) {
 				event.preventDefault();
 				saveItem();
 				trackEvent('ui', 'saveItemKeyboardShortcut');
 			}
-			// Ctrl/⌘ + O
-			else if ((event.ctrlKey || event.metaKey) && (event.keyCode === 79)) {
+			// Ctrl/⌘ + Shift + 5
+			if (
+				(event.ctrlKey || event.metaKey) &&
+				event.shiftKey &&
+				event.keyCode === 53
+			) {
+				event.preventDefault();
+				scope.setPreviewContent(true);
+				trackEvent('ui', 'previewKeyboardShortcut');
+			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 79) {
+				// Ctrl/⌘ + O
 				event.preventDefault();
 				openSavedItemsPane();
 				trackEvent('ui', 'openCreationKeyboardShortcut');
-			}
-			else if (event.keyCode === 27) {
+			} else if (
+				(event.ctrlKey || event.metaKey) &&
+				event.shiftKey &&
+				event.keyCode === 191
+			) {
+				// Ctrl/⌘ + Shift + ?
+				event.preventDefault();
+				scope.toggleModal(keyboardShortcutsModal);
+				trackEvent('ui', 'showKeyboardShortcutsShortcut');
+			} else if (event.keyCode === 27) {
 				closeAllOverlays();
 			}
 			if (event.keyCode === 40 && isSavedItemsPaneOpen) {
+				// Return if no items present.
+				if (!$all('.js-saved-item-tile').length) {
+					return;
+				}
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
-					selectedItemElement.nextElementSibling.classList.add('selected');
+					selectedItemElement
+						.nextUntil('.js-saved-item-tile:not(.hide)')
+						.classList.add('selected');
 				} else {
-					$('.js-saved-item-tile:first-child').classList.add('selected');
+					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				}
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
 			} else if (event.keyCode === 38 && isSavedItemsPaneOpen) {
+				if (!$all('.js-saved-item-tile').length) {
+					return;
+				}
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
-					selectedItemElement.previousElementSibling.classList.add('selected');
+					selectedItemElement
+						.previousUntil('.js-saved-item-tile:not(.hide)')
+						.classList.add('selected');
 				} else {
-					$('.js-saved-item-tile:first-child').classList.add('selected');
+					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				}
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
 			} else if (event.keyCode === 13 && isSavedItemsPaneOpen) {
 				selectedItemElement = $('.js-saved-item-tile.selected');
-				setTimeout(function () {
+				if (!selectedItemElement) {
+					return;
+				}
+				setTimeout(function() {
 					openItem(selectedItemElement.dataset.itemId);
 				}, 350);
 				toggleSavedItemsPane();
 			}
+
+			// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
+			if (
+				isSavedItemsPaneOpen &&
+				(event.ctrlKey || event.metaKey) &&
+				event.keyCode === 70
+			) {
+				event.preventDefault();
+				selectedItemElement = $('.js-saved-item-tile.selected');
+				setTimeout(function() {
+					forkItem(savedItems[selectedItemElement.dataset.itemId]);
+				}, 350);
+				toggleSavedItemsPane();
+				trackEvent('ui', 'forkKeyboardShortcut');
+			}
 		});
 
 		window.addEventListener('click', function(e) {
-			if (typeof e.target.className === 'string' && e.target.className.indexOf('modal-overlay') !== -1) {
+			if (typeof e.target.className !== 'string') {
+				return;
+			}
+			if (e.target.className.indexOf('modal-overlay') !== -1) {
 				closeAllOverlays();
 			}
 		});
 		window.addEventListener('dblclick', function(e) {
 			var target = e.target;
+			if (target.classList.contains('js-console__header')) {
+				scope.toggleConsole();
+				trackEvent('ui', 'consoleToggleDblClick');
+			}
 			if (target.classList.contains('js-code-wrap__header')) {
 				var codeWrapParent = target.parentElement;
 				toggleCodeWrapCollapse(codeWrapParent);
@@ -1466,114 +2243,203 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			}
 		});
 
-		utils.onButtonClick(settingsBtn, function() {
-			openSettings();
-			trackEvent('ui', 'settingsBtnClick');
-		});
-
 		// Initialize add library select box
 		var libOptions = window.jsLibs.reduce(
-			(html, lib) => html + `<option data-type="${lib.type}" value="${lib.url}">${lib.label}</option>`,
-			'');
+			(html, lib) =>
+				html +
+				`<option data-type="${lib.type}" value="${lib.url}">${lib.label}</option>`,
+			''
+		);
 		addLibrarySelect.children[1].innerHTML = libOptions;
 		libOptions = window.cssLibs.reduce(
-			(html, lib) => html + `<option data-type="${lib.type}" value="${lib.url}">${lib.label}</option>`,
-			'');
+			(html, lib) =>
+				html +
+				`<option data-type="${lib.type}" value="${lib.url}">${lib.label}</option>`,
+			''
+		);
 		addLibrarySelect.children[2].innerHTML = libOptions;
 		addLibrarySelect.addEventListener('change', function onSelectChange(e) {
 			var target = e.target;
-			$('#js-external-' + target.selectedOptions[0].dataset.type).value += '\n' + target.value;
+			if (!target.value) {
+				return;
+			}
+			$('#js-external-' + target.selectedOptions[0].dataset.type).value +=
+				'\n' + target.value;
 			trackEvent('ui', 'addLibrarySelect', target.selectedOptions[0].label);
 			onExternalLibChange();
+			// Reset the select to the default value
+			target.value = '';
 		});
 		externalJsTextarea.addEventListener('blur', onExternalLibChange);
 		externalCssTextarea.addEventListener('blur', onExternalLibChange);
 
-		new TextareaAutoComplete(externalJsTextarea, (obj) => obj.latest.match(/\.js$/));
-		new TextareaAutoComplete(externalCssTextarea, (obj) => obj.latest.match(/\.css$/));
-
-		chrome.storage.local.get({
-			layoutMode: 1,
-			code: ''
-		}, function localGetCallback(result) {
-			toggleLayout(result.layoutMode);
-			prefs.layoutMode = result.layoutMode;
-			if (result.code) {
-				lastCode = result.code;
+		new TextareaAutoComplete(externalJsTextarea, {
+			filter: obj => obj.latest.match(/\.js$/)
+		});
+		new TextareaAutoComplete(externalCssTextarea, {
+			filter: obj => obj.latest.match(/\.css$/)
+		});
+		new TextareaAutoComplete(externalLibrarySearchInput, {
+			selectedCallback: value => {
+				const textarea = value.match(/\.js$/)
+					? externalJsTextarea
+					: externalCssTextarea;
+				textarea.value = `${textarea.value}\n${value}`;
+				externalLibrarySearchInput.value = '';
 			}
 		});
+
+		// Console header drag resize logic
+		var consoleHeaderDragStartY;
+		var consoleInitialHeight;
+		function onConsoleHeaderDrag(e) {
+			consoleEl.style.height =
+				consoleInitialHeight + consoleHeaderDragStartY - e.pageY + 'px';
+		}
+		$('.js-console__header').addEventListener('mousedown', e => {
+			consoleHeaderDragStartY = e.pageY;
+			consoleInitialHeight = consoleEl.getBoundingClientRect().height;
+			$('#demo-frame').classList.add('pointer-none');
+			window.addEventListener('mousemove', onConsoleHeaderDrag);
+		});
+		$('.js-console__header').addEventListener('mouseup', () => {
+			window.removeEventListener('mousemove', onConsoleHeaderDrag);
+			$('#demo-frame').classList.remove('pointer-none');
+		});
+
+		chrome.storage.local.get(
+			{
+				layoutMode: 1,
+				code: ''
+			},
+			function localGetCallback(result) {
+				toggleLayout(result.layoutMode);
+				prefs.layoutMode = result.layoutMode;
+				if (result.code) {
+					lastCode = result.code;
+				}
+			}
+		);
 
 		// Get synced `preserveLastCode` setting to get back last code (or not).
-		chrome.storage.sync.get({
-			preserveLastCode: true,
-			replaceNewTab: false,
-			htmlMode: 'html',
-			jsMode: 'js',
-			cssMode: 'css',
-			isCodeBlastOn: false,
-			indentWith: 'spaces',
-			indentSize: 2,
-			editorTheme: 'monokai',
-			keymap: 'sublime',
-			fontSize: 16
-		}, function syncGetCallback(result) {
-			if (result.preserveLastCode && lastCode) {
-				unsavedEditCount = 0;
-				if (lastCode.id) {
-					chrome.storage.local.get(lastCode.id, function (itemResult) {
-						utils.log('Load item ', lastCode.id)
-						currentItem = itemResult[lastCode.id];
+		chrome.storage.sync.get(
+			{
+				preserveLastCode: true,
+				replaceNewTab: false,
+				htmlMode: 'html',
+				jsMode: 'js',
+				cssMode: 'css',
+				isCodeBlastOn: false,
+				indentWith: 'spaces',
+				indentSize: 2,
+				editorTheme: 'monokai',
+				keymap: 'sublime',
+				fontSize: 16,
+				refreshOnResize: false,
+				autoPreview: true,
+				editorFont: 'FiraCode',
+				editorCustomFont: '',
+				autoSave: true,
+				autoComplete: true,
+				preserveConsoleLogs: true,
+				lightVersion: false,
+				lineWrap: true
+			},
+			function syncGetCallback(result) {
+				if (result.preserveLastCode && lastCode) {
+					unsavedEditCount = 0;
+					if (lastCode.id) {
+						chrome.storage.local.get(lastCode.id, function(itemResult) {
+							utils.log('Load item ', lastCode.id);
+							currentItem = itemResult[lastCode.id];
+							refreshEditor();
+						});
+					} else {
+						utils.log('Load last unsaved item', lastCode);
+						currentItem = lastCode;
 						refreshEditor();
-					});
+					}
 				} else {
-					utils.log('Load last unsaved item');
-					currentItem = lastCode;
-					refreshEditor();
+					createNewItem();
 				}
-			} else {
-				createNewItem();
-			}
-			prefs.preserveLastCode = result.preserveLastCode;
-			prefs.replaceNewTab = result.replaceNewTab;
-			prefs.htmlMode = result.htmlMode;
-			prefs.cssMode = result.cssMode;
-			prefs.jsMode = result.jsMode;
-			prefs.isCodeBlastOn = result.isCodeBlastOn;
-			prefs.indentSize = result.indentSize;
-			prefs.indentWith = result.indentWith;
-			prefs.editorTheme = result.editorTheme;
-			prefs.keymap = result.keymap;
-			prefs.fontSize = result.fontSize;
+				prefs.preserveLastCode = result.preserveLastCode;
+				prefs.replaceNewTab = result.replaceNewTab;
+				prefs.htmlMode = result.htmlMode;
+				prefs.cssMode = result.cssMode;
+				prefs.jsMode = result.jsMode;
+				prefs.isCodeBlastOn = result.isCodeBlastOn;
+				prefs.indentSize = result.indentSize;
+				prefs.indentWith = result.indentWith;
+				prefs.editorTheme = result.editorTheme;
+				prefs.keymap = result.keymap;
+				prefs.fontSize = result.fontSize;
+				prefs.refreshOnResize = result.refreshOnResize;
+				prefs.autoPreview = result.autoPreview;
+				prefs.editorFont = result.editorFont;
+				prefs.editorCustomFont = result.editorCustomFont;
+				prefs.autoSave = result.autoSave;
+				prefs.autoComplete = result.autoComplete;
+				prefs.preserveConsoleLogs = result.preserveConsoleLogs;
+				prefs.lightVersion = result.lightVersion;
+				prefs.lineWrap = result.lineWrap;
 
-			updateSettingsInUi();
-			scope.updateSetting();
-		});
+				updateSettingsInUi();
+				scope.updateSetting();
+			}
+		);
 
 		// Check for new version notifications
-		chrome.storage.sync.get({
-			lastSeenVersion: ''
-		}, function syncGetCallback(result) {
-			// Check if new user
-			if (!result.lastSeenVersion) {
-				onboardModal.classList.add('is-modal-visible');
-				trackEvent('ui', 'onboardModalSeen');
-				// set the current version as seen on closing the onboard modal
-				utils.once(document, 'overlaysClosed', function () {
-					chrome.storage.sync.set({
-						lastSeenVersion: version
-					}, function () {});
-
-					chrome.storage.sync.set({
-						replaceNewTab: onboardShowInTabOptionBtn.classList.contains('selected')
-					}, function () {
-						trackEvent('fn', 'setReplaceNewTabFromOnboard', onboardShowInTabOptionBtn.classList.contains('selected'));
+		chrome.storage.sync.get(
+			{
+				lastSeenVersion: ''
+			},
+			function syncGetCallback(result) {
+				// Check if new user
+				if (!result.lastSeenVersion) {
+					onboardModal.classList.add('is-modal-visible');
+					if (document.cookie.indexOf('onboarded') === -1) {
+						trackEvent('ui', 'onboardModalSeen', version);
+						document.cookie = 'onboarded=1';
+					}
+					chrome.storage.sync.set(
+						{
+							lastSeenVersion: version
+						},
+						function() {}
+					);
+					// set some initial preferences on closing the onboard modal
+					utils.once(document, 'overlaysClosed', function() {
+						chrome.storage.sync.set(
+							{
+								replaceNewTab: onboardShowInTabOptionBtn.classList.contains(
+									'selected'
+								)
+							},
+							function() {
+								trackEvent(
+									'fn',
+									'setReplaceNewTabFromOnboard',
+									onboardShowInTabOptionBtn.classList.contains('selected')
+								);
+							}
+						);
 					});
-				});
+				}
+				if (
+					!result.lastSeenVersion ||
+					utils.semverCompare(result.lastSeenVersion, version) === -1
+				) {
+					notificationsBtn.classList.add('has-new');
+					hasSeenNotifications = false;
+				}
 			}
-			if (!result.lastSeenVersion || utils.semverCompare(result.lastSeenVersion, version) === -1) {
-				notificationsBtn.classList.add('has-new');
-				hasSeenNotifications = false;
-			}
+		);
+
+		scope.acssSettingsCm = CodeMirror.fromTextArea(acssSettingsTextarea, {
+			mode: 'application/ld+json'
+		});
+		scope.acssSettingsCm.on('blur', () => {
+			scope.setPreviewContent(true);
 		});
 
 		var options = '';
@@ -1582,6 +2448,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			'3024-night',
 			'abcdef',
 			'ambiance',
+			'base2tone-meadow-dark',
 			'base16-dark',
 			'base16-light',
 			'bespin',
@@ -1626,7 +2493,9 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 			'xq-light',
 			'yeti',
 			'zenburn'
-		].forEach((theme) => { options += '<option value="' + theme + '">' + theme + '</option>'; });
+		].forEach(theme => {
+			options += '<option value="' + theme + '">' + theme + '</option>';
+		});
 		document.querySelector('[data-setting="editorTheme"]').innerHTML = options;
 
 		requestAnimationFrame(compileNodes);
@@ -1636,5 +2505,4 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 	scope.closeAllOverlays = closeAllOverlays;
 
 	init();
-
 })(window.alertsService);

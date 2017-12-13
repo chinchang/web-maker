@@ -8,48 +8,79 @@
 
 		<link rel="stylesheet" href="lib/codemirror/addon/hint/show-hint.css">
 		<link rel="stylesheet" href="lib/codemirror/addon/fold/foldgutter.css">
+		<link rel="stylesheet" href="lib/codemirror/addon/dialog/dialog.css">
 		<link rel="stylesheet" href="lib/hint.min.css">
 		<link rel="stylesheet" href="lib/inlet.css">
 		<link rel="stylesheet" href="style.css">
+		<style id="fontStyleTemplate" type="template">
+			@font-face {
+				font-family: 'fontname';
+				font-style: normal;
+				font-weight: 400;
+				src: url(../fontname.ttf) format('truetype');
+				unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+			}
+			.Codemirror pre {
+				font-family: 'fontname', monospace;
+			}
+		</style>
+		<style type="text/css" id="fontStyleTag">
+			@font-face {
+				font-family: 'FiraCode';
+				font-style: normal;
+				font-weight: 400;
+				src: url(../FiraCode.ttf) format('truetype');
+				unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+			}
+			.Codemirror pre {
+				font-family: 'FiraCode', monospace;
+			}
+		</style>
 	</head>
 
 	<body>
 		<div class="main-container">
 			<div class="main-header">
-				<div class="main-header__btn-wrap  fr flex  flex-v-center">
-					<a id="js-add-library-btn" class="fleex-v-center hint--bottom-left" aria-label="Add a JS/CSS library">
+				<input type="text" id="js-title-input" title="Click to edit" class="item-title-input" value="Untitled Work">
+				<div class="main-header__btn-wrap  flex  flex-v-center">
+					<a id="runBtn" class="hide flex flex-v-center hint--rounded hint--bottom-left" aria-label="Run preview (Ctrl/⌘ + Shift + 5)" d-click="setPreviewContent">
+						<svg style="width: 14px; height: 14px;">
+						  <use xlink:href="#play-icon"></use>
+						</svg>Run
+					</a>
+
+					<a d-open-modal="addLibraryModal" data-event-category="ui" data-event-action="addLibraryButtonClick" class="flex-v-center hint--rounded hint--bottom-left" aria-label="Add a JS/CSS library">
 						Add library <span id="js-external-lib-count" style="display:none;" class="count-label"></span>
 					</a>
 
-					<a class="flex  flex-v-center hint--bottom-left" aria-label="Start a new creation" d-click="onNewBtnClick">
+					<a class="flex  flex-v-center hint--rounded hint--bottom-left" aria-label="Start a new creation" d-click="onNewBtnClick">
 						<svg style="vertical-align:middle;width:14px;height:14px" viewBox="0 0 24 24">
     						<path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
 						</svg>New
 					</a>
-					<a id="saveBtn" class="flex  flex-v-center hint--bottom-left" aria-label="Save current creation (Ctrl/⌘ + S)" d-click="onSaveBtnClick">
+					<a id="saveBtn" class="flex  flex-v-center hint--rounded hint--bottom-left" aria-label="Save current creation (Ctrl/⌘ + S)" d-click="onSaveBtnClick">
 						<svg style="vertical-align:middle;width:14px;height:14px" viewBox="0 0 24 24">
     						<path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" />
 						</svg>Save</a>
-					<a class="flex  flex-v-center  hint--bottom-left" aria-label="Open a saved creation (Ctrl/⌘ + O)" d-click="onOpenBtnClick">
+					<a class="flex  flex-v-center hint--rounded hint--bottom-left" aria-label="Open a saved creation (Ctrl/⌘ + O)" d-click="onOpenBtnClick">
 						<svg style="width:14px;height:14px;vertical-align:middle;" viewBox="0 0 24 24">
 						    <path d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
 						</svg>Open
 					</a>
 				</div>
-				<input type="text" id="js-title-input" title="Click to edit" class="item-title-input" value="Untitled Work">
 			</div>
 			<div class="content-wrap  flex  flex-grow">
 				<div class="code-side" id="js-code-side">
 					<div data-code-wrap-id="0" id="js-html-code" data-type="html" class="code-wrap">
 						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle code pane">
-							<div class="btn-group" dropdown title="Click to change">
+							<label class="btn-group" dropdow title="Click to change">
 								<span id="js-html-mode-label" class="code-wrap__header-label">HTML</span><span class="caret"></span>
-								<ul class="js-modes-menu  dropdown__menu">
-									<li><a data-type="html" data-mode="html">HTML</a></li>
-									<li><a data-type="html" data-mode="markdown">Markdown</a></li>
-									<li><a data-type="html" data-mode="jade">Pug</a></li>
-								</ul>
-							</div>
+								<select data-type="html" class="js-mode-select  hidden-select" name="">
+									<option value="html">HTML</option>
+									<option value="markdown">Markdown</option>
+									<option value="jade">Pug</option>
+								</select>
+							</label>
 							<div class="code-wrap__header-right-options">
 								<a class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle code pane">
 								</a>
@@ -58,17 +89,23 @@
 					</div>
 					<div data-code-wrap-id="1" id="js-css-code" data-type="css" class="code-wrap">
 						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle code pane">
-							<div class="btn-group" dropdown title="Click to change">
+							<label class="btn-group" title="Click to change">
 								<span id="js-css-mode-label" class="code-wrap__header-label">CSS</span><span class="caret"></span>
-								<ul class="js-modes-menu  dropdown__menu">
-									<li><a data-type="css" data-mode="css">CSS</a></li>
-									<li><a data-type="css" data-mode="scss">SCSS</a></li>
-									<li><a data-type="css" data-mode="sass">SASS</a></li>
-									<li><a data-type="css" data-mode="less">LESS</a></li>
-									<li><a data-type="css" data-mode="stylus">Stylus</a></li>
-								</ul>
-							</div>
+								<select data-type="css" class="js-mode-select  hidden-select" name="">
+									<option value="css">CSS</option>
+									<option value="scss">SCSS</option>
+									<option value="sass">SASS</option>
+									<option value="less">LESS</option>
+									<option value="stylus">Stylus</option>
+									<option value="acss">Atomic CSS</option>
+								</select>
+							</label>
 							<div class="code-wrap__header-right-options">
+								<a href="#" id="cssSettingsBtn" title="Atomic CSS configuration" d-click="openCssSettingsModal" class="code-wrap__header-btn hide">
+									<svg>
+										<use xlink:href="#settings-icon"></use>
+									</svg>
+								</a>
 								<a class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle code pane">
 								</a>
 							</div>
@@ -76,15 +113,15 @@
 					</div>
 					<div data-code-wrap-id="2" id="js-js-code" data-type="js" class="code-wrap">
 						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle code pane">
-							<div class="btn-group" dropdown title="Click to change">
+							<label class="btn-group" title="Click to change">
 								<span id="js-js-mode-label" class="code-wrap__header-label">JS</span><span class="caret"></span>
-								<ul class="js-modes-menu  dropdown__menu">
-									<li><a data-type="js" data-mode="js">JS</a></li>
-									<li><a data-type="js" data-mode="coffee">CoffeeScript</a></li>
-									<li><a data-type="js" data-mode="es6">ES6 (Babel)</a></li>
-									<li><a data-type="js" data-mode="typescript">TypeScript</a></li>
-								</ul>
-							</div>
+								<select data-type="js" class="js-mode-select  hidden-select">
+									<option value="js">JS</option>
+									<option value="coffee">CoffeeScript</option>
+									<option value="es6">ES6 (Babel)</option>
+									<option value="typescript">TypeScript</option>
+								</select>
+							</label>
 							<div class="code-wrap__header-right-options">
 								<a class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle code pane">
 								</a>
@@ -93,10 +130,33 @@
 					</div>
 				</div>
 				<div class="demo-side" id="js-demo-side">
-					<iframe src="about://blank" frameborder="0" id="demo-frame"></iframe>
+					<iframe src="about://blank" frameborder="0" id="demo-frame" allowfullscreen></iframe>
+					<div id="consoleEl" class="console is-minimized">
+						<div id="consoleLogEl" class="console__log" class="code">
+							<div class="js-console__header  code-wrap__header" title="Double click to toggle console">
+								<span class="code-wrap__header-label">Console (<span id="logCountEl">0</span>)</span>
+								<div class="code-wrap__header-right-options">
+									<a class="code-wrap__header-btn" title="Clear console (CTRL + L)" d-click="onClearConsoleBtnClick">
+										<svg>
+						  					<use xlink:href="#cancel-icon"></use>
+										</svg>
+									</a>
+									<a class="code-wrap__header-btn  code-wrap__collapse-btn" title="Toggle console" d-click="toggleConsole">
+									</a>
+								</div>
+							</div>
+						</div>
+						<div id="consolePromptEl" class="console__prompt flex flex-v-center">
+							<svg width="18" height="18" fill="#346fd2">
+		  						<use xlink:href="#chevron-icon"></use>
+		  					</svg>
+							<input d-keyup="evalConsoleExpr" class="console-exec-input">
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="footer">
+			<div class="global-console-container" id="globalConsoleContainerEl"></div>
+			<div id="footer" class="footer">
 				<div class="footer__right  fr">
 					<a id="saveHtmlBtn" class="mode-btn  hint--rounded  hint--top-left" data-hint="Save as HTML file">
 						<svg viewBox="0 0 24 24">
@@ -141,6 +201,12 @@
 							<rect x="0" y="0" width="100" height="100" />
 						</svg>
 					</a>
+					<a class="mode-btn hint--top-left hint--rounded" aria-label="Detach Preview" d-click="openDetachedPreview">
+						<svg viewBox="0 0 24 24">
+							<path d="M22,17V7H6V17H22M22,5A2,2 0 0,1 24,7V17C24,18.11 23.1,19 22,19H16V21H18V23H10V21H12V19H6C4.89,19 4,18.11 4,17V7A2,2 0 0,1 6,5H22M2,3V15H0V3A2,2 0 0,1 2,1H20V3H2Z" />
+						</svg>
+					</a>
+
 
 					<div class="footer__separator"></div>
 
@@ -150,7 +216,7 @@
 						</svg>
 						<span class="notifications-btn__dot"></span>
 					</a>
-					<a id="settingsBtn" class="mode-btn  hint--top-left  hint--rounded" aria-label="Settings">
+					<a d-open-modal="settingsModal" data-event-category="ui" data-event-action="settingsBtnClick" class="mode-btn  hint--top-left  hint--rounded" aria-label="Settings">
 						<svg>
 							<use xlink:href="#settings-icon"></use>
 						</svg>
@@ -158,18 +224,22 @@
 
 				</div>
 
-				<a href="http://kushagragour.in/lab/web-maker/" target="_blank"><div class="logo"></div></a>
+				<a href="https://webmakerapp.com/" target="_blank"><div class="logo"></div></a>
 				&copy; Web Maker &nbsp;&nbsp;
-				<a id="helpBtn" class="footer__link  hint--rounded  hint--top-right" data-hint="Help">
+				<a d-open-modal="helpModal" data-event-category="ui" data-event-action="helpButtonClick" class="footer__link  hint--rounded  hint--top-right" aria-label="Help">
 					<svg style="width:20px; height:20px; vertical-align:text-bottom" viewBox="0 0 24 24">
-						<path d="M11,18H13V16H11V18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4 0 0,0 8,10H10A2,2 0 0,1 12,8A2,2 0 0,1 14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4 0 0,0 12,6Z" />
+						<path d="M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z" />
+					</svg>
+				</a>
+				<a d-open-modal="keyboardShortcutsModal" data-event-category="ui" data-event-action="keyboardShortcutButtonClick" class="footer__link  hint--rounded  hint--top-right" aria-label="Keyboard shortcuts">
+					<svg style="width:20px; height:20px; vertical-align:text-bottom">
+						<use xlink:href="#keyboard-icon"></use>
 					</svg>
 				</a>
 				<!-- #00ACED -->
-				<a class="footer__link  hint--rounded  hint--top-right" data-hint="Tweet about 'Web Maker'" href="http://twitter.com/share?url=https://kushagragour.in/lab/web-maker/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,playground,chrome,extension" target="_blank">
-					<svg viewBox="0 0 16 16" style="width:20px; height:20px; vertical-align:text-bottom">
-						<path id="twitter-icon" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
-					c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+				<a class="footer__link  hint--rounded  hint--top-right" aria-label="Tweet about 'Web Maker'" href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,playground,chrome,extension" target="_blank">
+					<svg style="width:20px; height:20px; vertical-align:text-bottom">
+						<use xlink:href="#twitter-icon"></use>
 					</svg>
 				</a>
 
@@ -178,15 +248,18 @@
 
 		<div class="modal" id="addLibraryModal">
 			<div class="modal__content">
+				<a d-click="onModalCloseBtnClick" href="" aria-label="Close add library modal" title="Close" class="js-modal__close-btn  modal__close-btn">
+					<svg>
+						<use xlink:href="#cross-icon"></use>
+					</svg>
+				</a>
 				<h1>Add Library</h1>
-				<h3>JavaScript</h3>
-				<p style="font-size: 0.8em;opacity: 0.7;">Note: You can load external scripts from following domains: localhost, https://ajax.googleapis.com, https://code.jquery.com, https://cdnjs.cloudflare.com, https://unpkg.com, https://maxcdn.com, https://cdn77.com, https://maxcdn.bootstrapcdn.com, https://cdn.jsdelivr.net/</p>
-				<textarea id="js-external-js" class="full-width" id="" cols="30" rows="5" placeholder="Start typing name of a library. Put each library in new line"></textarea>
 
-				<h3>CSS</h3>
-				<textarea id="js-external-css" class="full-width" id="" cols="30" rows="5" placeholder="Start typing name of a library. Put each library in new line"></textarea>
-
-				<div style="margin-top:20px;">
+				<input type="text" id="externalLibrarySearchInput" class="full-width" placeholder="Type here to search libraries">
+				<div class="tar opacity--70">
+					<small>Powered by cdnjs</small>
+				</div>
+				<div style="margin:20px 0;">
 					Choose from popular libraries:
 					<select name="" id="js-add-library-select">
 						<option value="">-------</option>
@@ -198,187 +271,171 @@
 						</optgroup>
 					</select>
 				</div>
+
+				<h3>JavaScript</h3>
+				<p style="font-size: 0.8em;" class="opacity--70">Note: You can load external scripts from following domains: localhost, https://ajax.googleapis.com, https://code.jquery.com, https://cdnjs.cloudflare.com, https://unpkg.com, https://maxcdn.com, https://cdn77.com, https://maxcdn.bootstrapcdn.com, https://cdn.jsdelivr.net/, https://rawgit.com, https://wzrd.in</p>
+				<textarea id="js-external-js" class="full-width" id="" cols="30" rows="5" placeholder="Start typing name of a library. Put each library in new line"></textarea>
+
+				<h3>CSS</h3>
+				<textarea id="js-external-css" class="full-width" id="" cols="30" rows="5" placeholder="Start typing name of a library. Put each library in new line"></textarea>
+
+			</div>
+		</div>
+
+		<div class="modal" id="cssSettingsModal">
+			<div class="modal__content">
+				<a d-click="onModalCloseBtnClick" href="" aria-label="Close CSS settings modal" title="Close" class="js-modal__close-btn  modal__close-btn">
+					<svg>
+						<use xlink:href="#cross-icon"></use>
+					</svg>
+				</a>
+				<h1>Atomic CSS Settings</h1>
+				<h3>Configure Atomizer settings. <a href="https://github.com/acss-io/atomizer#api" target="_blank">Read more</a> about available settings.</h3>
+				<div style="height: calc(100vh - 350px);">
+					<textarea id="acssSettingsTextarea" cols="30" rows="10"></textarea>
+				</div>
 			</div>
 		</div>
 
 		<div class="modal" id="helpModal">
-			<div class="modal__content">
-				<h1>Web Maker<small style="font-size:14px;"> v2.4.1</small></h1>
-				<div>
-					<p>Made with <span style="margin-right: 8px;">💖</span> & <span style="margin-right: 8px;">🙌</span> by <a href="https://twitter.com/chinchang457" target="_blank">Kushagra Gour</a></p>
-					<p>Tweet out your feature requests, comments & suggestions to <a target="_blank" href="https://twitter.com/webmakerApp">@webmakerApp</a>.</p>
-					<p>Like this extension? Please <a href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews" target="_blank">rate it here</a>.</p>
-					<p>
-						<a aria-label="Rate Web Maker" href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews" target="_blank" class="btn btn-icon"><svg><use xlink:href="#heart-icon"></use></svg>Show some love</a>
-						<a aria-label="Report a Bug" href="https://github.com/chinchang/web-maker/issues" target="_blank" class="btn btn-icon"><svg><use xlink:href="#bug-icon"></use></svg>Report a Bug</a>
-						<a aria-label="Contribute on Github" href="https://github.com/chinchang/web-maker" target="_blank" class="btn btn-icon"><svg><use xlink:href="#github-icon"></use></svg>Contribute on Github</a>.
-					</p>
+			<div class="modal__content" d-html="partials/help-modal.html"></div>
+		</div>
 
-					<p>
-						<h3>Awesome libraries used</h3>
-						<ul>
-							<li><a target="_blank" href="http://kushagragour.in/lab/hint/">Hint.css</a> - By me :)</li>
-							<li><a target="_blank" href="https://nathancahill.github.io/Split.js/">Split.js</a> - Nathan Cahill</li>
-							<li><a target="_blank" href="https://codemirror.net/">Codemirror</a> - Marijn Haverbeke</li>
-							<li><a target="_blank" href="https://emmet.io/">Emmet</a> - Sergey Chikuyonok</li>
-							<li><a target="_blank" href="http://esprima.org/">Esprima</a> - Ariya Hidayat</li>
-							<li><a target="_blank" href="https://github.com/estools/escodegen">Escodegen</a> - Yusuke Suzuki</li>
-							<li><a target="_blank" href="https://github.com/enjalot/Inlet">Inlet</a> - Ian Johnson</li>
-							<li><a target="_blank" href="https://kushagragour.in/lab/web-maker">Web Maker!</a> - whhat!</li>
-						</ul>
-					</p>
-
-					<p>
-						<h3>License</h3>
-						"Web Maker" is open-source under the <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.
-					</p>
-				</div>
-			</div>
+		<div class="modal" id="keyboardShortcutsModal">
+			<div class="modal__content" d-html="partials/keyboard-shortcuts.html"></div>
 		</div>
 
 		<div class="modal" id="onboardModal">
-			<div class="modal__content">
-
-				<div class="tac">
-					<svg width="130px" height="50px">
-					    <use xlink:href="#logo" />
-					</svg>
-					<h1 style="margin-top:20px">Welcome to Web Maker</h1>
-				</div>
-				<div class="tac">
-					<!-- <p>Web Maker lets you do web experiments quickly and even when you are offline.</p> -->
-
-					<p>
-						By default, Web Maker can be started by clicking the <svg class="relative" style="top:5px;" width="40" height="30"><use xlink:href="#logo" /></svg> button in top-right side of your browser. But you can choose to make Web Maker show in every new tab that you open:
-					</p>
-
-					<h2 style="text-decoration: underline;">Choose one:</h2>
-					<div class="onboard-selection-wrap flex">
-						<div class="onboard-selection" id="onboardShowInTabOptionBtn" d-click="onShowInTabClicked">
-							<!-- Awesome free vector from freepik.com -->
-							<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="200" viewBox="180 200 340 320" xml:space="preserve">
-							<path style="fill:#A5A5A5;stroke: #555;stroke-width: 11px;" d="M503.916,256v43.116H191.326V256c0-11.906,9.651-21.558,21.558-21.558h269.474
-							C494.264,234.442,503.916,244.094,503.916,256z"></path>
-							<path style="fill:#FED766;stroke-width: 11px;stroke: #555;" d="M503.916,288.337v194.021c0,11.906-9.651,21.558-21.558,21.558H212.884
-							c-11.906,0-21.558-9.651-21.558-21.558V288.337h43.116v-64.674c0-5.953,4.826-10.779,10.779-10.779h64.674
-							c5.953,0,10.779,4.826,10.779,10.779v64.674H503.916z"></path>
-							<rect width="120px" height="50px" rx="5" ry="5" x="210" y="315px" style="fill:rgba(0,0,0,0.25);"></rect>
-							<rect width="120px" height="50px" rx="5" ry="5" x="210" y="372px" style="fill:rgba(0,0,0,0.25);"></rect>
-							<rect width="120px" height="50px" rx="5" ry="5" x="210" y="430px" style="fill:rgba(0,0,0,0.25);"></rect>
-							<rect width="140px" height="165px" rx="5" ry="5" x="345" y="315px" style="fill:#f3f3f3;"></rect>
-							</svg>
-							<div class="onboard-selection-text">Show in new tab</div>
-						</div>
-						<div style="opacity:0.7;">OR</div>
-
-						<div class="onboard-selection selected" id="onboardDontShowInTabOptionBtn" d-click="onDontShowInTabClicked">
-							<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="200" viewBox="180 200 340 320" xml:space="preserve">
-							<path style="fill:#A5A5A5;stroke: #555;stroke-width: 11px;" d="M503.916,256v43.116H191.326V256c0-11.906,9.651-21.558,21.558-21.558h269.474
-								C494.264,234.442,503.916,244.094,503.916,256z"></path>
-							<path style="fill:#FED766;stroke-width: 11px;stroke: #555;" d="M503.916,288.337v194.021c0,11.906-9.651,21.558-21.558,21.558H212.884
-								c-11.906,0-21.558-9.651-21.558-21.558V288.337h43.116v-64.674c0-5.953,4.826-10.779,10.779-10.779h64.674
-								c5.953,0,10.779,4.826,10.779,10.779v64.674H503.916z"></path>
-							  <rect width="200px" height="20px" rx="5" ry="5" x="250" y="365px" style="fill:#f3f3f3;"></rect>
-							</svg>
-							<div class="onboard-selection-text">Don't show in new tab</div>
-						</div>
-					</div>
-
-					<p>
-						You can change this later from Settings (<svg style="width:18px;height:18px;position:relative;top:3px;fill:#888" viewBox="0 0 24 24"><use xlink:href="#settings-icon"></use></svg>) in bottom right of the app.
-					</p>
-
-					<p class="tac">
-						<button class="btn" d-click="closeAllOverlays">Lets start!</button>
-					</p>
-				</div>
-			</div>
+			<div class="modal__content" d-html="partials/onboard-modal.html"></div>
 		</div>
 
-		<div class="modal" id="settingsModal">
+		<div class="modal modal--settings" id="settingsModal">
 			<div class="modal__content">
+				<a d-click="onModalCloseBtnClick" href="" aria-label="Close Settings" title="Close" class="js-modal__close-btn  modal__close-btn">
+					<svg>
+						<use xlink:href="#cross-icon"></use>
+					</svg>
+				</a>
 				<h1>Settings</h1>
 
 				<h3>Indentation</h3>
-				<p>
-					<div class="line">
-						<label>
-							<input type="radio" checked="true" name="indentation" value="spaces" d-change="updateSetting" data-setting="indentWith"> Spaces
-						</label>
-						<label class="ml-1">
-							<input type="radio" name="indentation" value="tabs" d-change="updateSetting" data-setting="indentWith"> Tabs
-						</label>
-					</div>
-					<label class="line">
-						Indentation Size <input type="range" class="va-m ml-1" value="2" min="1" max="7" list="indentationSizeList" data-setting="indentSize" d-change="updateSetting">
-						<span id="indentationSizeValueEl"></span>
-						<datalist id="indentationSizeList">
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-							<option>5</option>
-							<option>6</option>
-							<option>7</option>
-						</datalist>
+				<div class="line" title="I know this is tough, but you have to decide one!">
+					<label>
+						<input type="radio" checked="true" name="indentation" value="spaces" d-change="updateSetting" data-setting="indentWith"> Spaces
 					</label>
-				</p>
+					<label class="ml-1">
+						<input type="radio" name="indentation" value="tabs" d-change="updateSetting" data-setting="indentWith"> Tabs
+					</label>
+				</div>
+				<label class="line" title="">
+					Indentation Size <input type="range" class="va-m ml-1" value="2" min="1" max="7" list="indentationSizeList" data-setting="indentSize" d-change="updateSetting">
+					<span id="indentationSizeValueEl"></span>
+					<datalist id="indentationSizeList">
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+						<option>6</option>
+						<option>7</option>
+					</datalist>
+				</label>
 				<hr>
 
 				<h3>Editor</h3>
-				<p>
-					<label class="line">
-						Default Preprocessors
-					</label>
-					<div class="flex line">
-						<select style="flex:1;margin:0 20px" data-setting="htmlMode" d-change="updateSetting">
-							<option value="html">HTML</option>
-							<option value="markdown">Markdown</option>
-							<option value="jade">Pug</option>
-						</select>
-						<select style="flex:1;margin:0 20px" data-setting="cssMode" d-change="updateSetting">
-							<option value="css">CSS</option>
-							<option value="scss">SCSS</option>
-							<option value="sass">SASS</option>
-							<option value="less">LESS</option>
-							<option value="stylus">Stylus</option>
-						</select>
-						<select style="flex:1;margin:0 20px" data-setting="jsMode" d-change="updateSetting">
-							<option value="js">JS</option>
-							<option value="coffee">CoffeeScript</option>
-							<option value="es6">ES6 (Babel)</option>
-							<option value="typescript">TypeScript</option>
-						</select>
-					</div>
-					<label class="line">
-						Theme
-						<select style="flex:1;margin:0 20px" data-setting="editorTheme" d-change="updateSetting"></select>
-					</label>
-					<label class="line">
-						Font Size <input type="number" value="16" data-setting="fontSize" d-change="updateSetting"> px
+				<div class="flex">
 
-					</label>
-					<div class="line">
-						Key bindings
-						<label class="ml-1">
-							<input type="radio" checked="true" name="keymap" value="sublime" d-change="updateSetting" data-setting="keymap"> Sublime
+					<div>
+						<label class="line">
+							Default Preprocessors
 						</label>
-						<label class="ml-1">
-							<input type="radio" name="keymap" value="vim" d-change="updateSetting" data-setting="keymap"> Vim
+						<div class="flex line">
+							<select style="flex:1;margin:0 20px" data-setting="htmlMode" d-change="updateSetting">
+								<option value="html">HTML</option>
+								<option value="markdown">Markdown</option>
+								<option value="jade">Pug</option>
+							</select>
+							<select style="flex:1;margin:0 20px" data-setting="cssMode" d-change="updateSetting">
+								<option value="css">CSS</option>
+								<option value="scss">SCSS</option>
+								<option value="sass">SASS</option>
+								<option value="less">LESS</option>
+								<option value="stylus">Stylus</option>
+								<option value="acss">Atomic CSS</option>
+							</select>
+							<select style="flex:1;margin:0 20px" data-setting="jsMode" d-change="updateSetting">
+								<option value="js">JS</option>
+								<option value="coffee">CoffeeScript</option>
+								<option value="es6">ES6 (Babel)</option>
+								<option value="typescript">TypeScript</option>
+							</select>
+						</div>
+						<label class="line">
+							Theme
+							<select style="flex:1;margin:0 20px" data-setting="editorTheme" d-change="updateSetting"></select>
+						</label>
+						<label class="line">
+							Font
+							<select style="flex:1;margin:0 20px" data-setting="editorFont" d-change="updateSetting">
+								<option value="FiraCode">Fira Code</option>
+								<option value="Inconsolata">Inconsolata</option>
+								<option value="Monoid">Monoid</option>
+								<option value="FixedSys">FixedSys</option>
+								<option disabled="disabled">----</option>
+								<option value="other">Other font from system</option>
+							</select>
+							<input id="customEditorFontInput" type="text" value="" placeholder="Custom font name here" data-setting="editorCustomFont" d-change="updateSetting">
+						</label>
+						<label class="line">
+							Font Size <input type="number" value="16" data-setting="fontSize" d-change="updateSetting"> px
+
+						</label>
+						<div class="line">
+							Key bindings
+							<label class="ml-1">
+								<input type="radio" checked="true" name="keymap" value="sublime" d-change="updateSetting" data-setting="keymap"> Sublime
+							</label>
+							<label class="ml-1">
+								<input type="radio" name="keymap" value="vim" d-change="updateSetting" data-setting="keymap"> Vim
+							</label>
+						</div>
+					</div>
+          			<div class="ml-2">
+						<label class="line" title="Toggle wrapping of long sentences onto new line">
+							<input type="checkbox" d-change="updateSetting" data-setting="lineWrap"> Line wrap
+						</label>
+						<label class="line" title="Your Preview will refresh when you resize the preview split">
+							<input type="checkbox" d-change="updateSetting" data-setting="refreshOnResize"> Refresh preview on resize
+						</label>
+						<label class="line" title="Turns on the auto-completion suggestions as you type">
+							<input type="checkbox" d-change="updateSetting" data-setting="autoComplete"> Auto-complete suggestions
+						</label>
+						<label class="line" title="Refreshes the preview as you code. Otherwise use the Run button">
+							<input type="checkbox" d-change="updateSetting" data-setting="autoPreview"> Auto-preview
+						</label>
+						<label class="line" title="Auto-save keeps saving your code at regular intervals after you hit the first save manually">
+							<input type="checkbox" d-change="updateSetting" data-setting="autoSave"> Auto-save
+						</label>
+						<label class="line" title="Loads the last open creation when app starts">
+							<input type="checkbox" d-change="updateSetting" data-setting="preserveLastCode"> Preserve last written code
+						</label>
+						<label class="line" title="Turning this on will start showing Web Maker in every new tab you open">
+							<input type="checkbox" d-change="updateSetting" data-setting="replaceNewTab"> Replace new tab page
+						</label>
+						<label class="line" title="Preserves the console logs across your preview refreshes">
+							<input type="checkbox" d-change="updateSetting" data-setting="preserveConsoleLogs"> Preserve console logs
+						</label>
+						<label class="line" title="Switch to lighter version for better performance. Removes things like blur etc.">
+						  <input type="checkbox" d-change="updateSetting" data-setting="lightVersion"> Fast/light version
 						</label>
 					</div>
-					<label class="line">
-						<input type="checkbox" d-change="updateSetting" data-setting="preserveLastCode"> Preserve last written code
-					</label>
-					<label class="line">
-						<input type="checkbox" d-change="updateSetting" data-setting="replaceNewTab"> Replace new tab page
-					</label>
-				</p>
+				</div>
+
 				<hr>
 
 				<h3>Fun</h3>
 				<p>
-					<label class="line">
+					<label class="line" title="Enjoy wonderful particle blasts while you type">
 						<input type="checkbox" d-change="updateSetting" data-setting="isCodeBlastOn"> Code blast!
 					</label>
 				</p>
@@ -386,118 +443,24 @@
 		</div>
 
 		<div class="modal" id="notificationsModal">
-			<div class="modal__content">
-				<h1>Whats new?</h1>
-				<div class="notification">
-				  <span class="notification__version">2.4.0</span>
-				  <ul>
-					<li><strong>Import/Export</strong>: Your creations are most important. Now export all your creations into a single file as a backup that can be imported anytime & anywhere.</li>
-					<li><strong>Editor themes</strong>: You have been heard. Now you can choose from a huge list of wonderful editor themes!</li>
-					<li><strong>Identation settings</strong>: Not a spaces fan? Switch to tabs and set your indentation size.</li>
-					<li><strong>Vim key bindings</strong>: Rejoice Vim lovers!</li>
-					<li><strong>Code blast</strong>: Why don't you try coding with this switched on from the settings? Go on...</li>
-					<li><strong>Important</strong>: Due to security policy changes from Chrome 57 onwards, Web Maker now allows loading external JavaScript libraries only from certain whitelisted domains (localhost, https://ajax.googleapis.com, https://code.jquery.com, https://cdnjs.cloudflare.com, https://unpkg.com, https://maxcdn.com, https://cdn77.com, https://maxcdn.bootstrapcdn.com, https://cdn.jsdelivr.net/)</li>
-					<li>Save button now highlights when you have unsaved changes.</li>
-					<li>Jade is now called Pug. Just a name change.</li>
-
-					<li><a href="https://github.com/chinchang/web-maker/issues" target="_blank">Suggest features or report bugs.</a></li>
-					<li>Thank you for being a part of this community of thousands of awesome developers. If you find Web Maker helpful, <a href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews" target="_blank" class="btn">Please rate Web Maker <span class="star"></span></a> & <a href="http://twitter.com/share?url=https://kushagragour.in/lab/web-maker/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension" target="_blank" target="_blank" class="btn">share it</a>.</li>
-				  </ul>
-				</div>
-
-				<div class="notification">
-				  <span class="notification__version">2.3.2</span>
-				  <ul>
-					<li>Update Babel to support latest and coolest ES6 features.</li>
-					<li>Improve onboarding experience at first install.</li>
-				  </ul>
-				</div>
-				<div class="notification">
-				  <span class="notification__version">2.3.1</span>
-				  <ul>
-					<li><strong>Bugfix</strong> - Splitting of code and preview panes is remembered by the editor.</li>
-					<li>Title of the creation is used for the file name when saving as HTML.</li>
-				  </ul>
-				</div>
-				<div class="notification">
-				  <span class="notification__version">2.3.0</span>
-				  <ul>
-					<li><strong>Add Library Autocompletion</strong> - Just start typing the name of library and you'll be shown matching libraries from cdnjs.</li>
-					<li><strong>Preview Screenshot Capture</strong> - Want to grab a nice screenshot of your creation. You have it! Click and capture.</li>
-					<li><strong>Auto Indent Code</strong> - Select your code and hit Shift-Tab to auto-indent it!</li>
-					<li><strong>Keyboard Navigation in Saved List</strong> - Now select your creation using arrow keys and hit ENTER to open it.</li>
-					<li>Highlight active line in code panes.</li>
-					<li><strong>Bugfix</strong> - Fix in generated title of new creation.</li>
-					<li><strong>Bugfix</strong> - HTML autocompletion is manual triggered now with Ctrl+Space.</li>
-				  </ul>
-				</div>
-
-				<div class="notification">
-				  <span class="notification__version">2.2.0</span>
-				  <ul>
-					<li><strong>Code Autocompletion</strong> - See code suggestions while you type!</li>
-					<li><strong>Full Screen Preview</strong> - Checkout your creation in a full-screen layout.</li>
-					<li><strong>SASS</strong> - SASS support added for CSS.</li>
-					<li><strong>Faster CSS update</strong> - Preview updates instantly without refresh when just CSS is changed.</li>
-					<li><strong>Bugfix</strong> - Indentation fixed while going on new line.</li>
-					<li><strong>Bugfix</strong> - Works even in Chrome Canary now. Though libraries can be added only through CDNs.</li>
-				  </ul>
-				</div>
-
-				<div class="notification">
-				  <span class="notification__version">2.1.0</span>
-				  <ul>
-					<li><strong>TypeScript</strong> - Now you can code in TypeScript too!</li>
-					<li><strong>Stylus Preprocessor</strong> - Stylus supported adding for CSS.</li>
-					<li><strong>Code Folding</strong> - Collapse large code blocks for easy editing.</li>
-					<li><strong>Bugfix</strong> - Support JSX in JavaScript.</li>
-					<li>Better onboarding for first time users.</li>
-				  </ul>
-				</div>
-				<div class="notification">
-				  <span class="notification__version">2.0.0</span>
-				  <ul>
-					<li><strong>Save and Load</strong> - Long pending and super-useful, now you can save your creations and resume them anytime later.</li>
-					<li><strong>Insert JS & CSS</strong> - Load popular JavaScript & CSS libraries in your work without writing any code.</li>
-					<li><strong>Collapsed Panes</strong> - Collapse/uncollapse code panes with a single click. Your pane configuration is even saved with every creation!</li>
-					<li><strong>Quick color & number change</strong> - Click on any color or number and experiment with quick values using a slider.</li>
-					<li><strong>Linting</strong> - See your code errors right where you are coding.</li>
-					<li>No more browser hang due to infinite loops!</li>
-					<!-- <li><a href="https://kushagragour.in/blog/web-maker-2">Read more about this big release</a></li> -->
-				  </ul>
-				</div>
-				<div class="notification">
-				  <span class="notification__version">1.7.0</span>
-				  <ul>
-					<li><strong>Preprocessors!</strong> - Enjoy a whole list of preprocessors for HTML(Jade & markdown), CSS(SCSS & LESS) and JavaScript(CoffeeScript & Babel).</li>
-					<li>More awesome font for code.</li>
-				  </ul>
-				</div>
-				<div class="notification">
-				  <span class="notification__version">1.6.0</span>
-				  <ul>
-					<li>You can now configure Web-Maker to not replace new tab page from the settings. It is always accessible from the icon in the top-right.</li>
-					<li>Download current code as HTML file with Ctrl/⌘ + S keyboard shortcut.</li>
-					<li>New notifications panel added so you are always aware of the new changes in Web-Maker.</li>
-				  </ul>
-				</div>
-			</div>
+			<div class="modal__content" d-html="partials/changelog.html"></div>
 		</div>
 
 		<div id="js-saved-items-pane" class="saved-items-pane">
 			<button class="btn  saved-items-pane__close-btn" id="js-saved-items-pane-close-btn">X</button>
 			<div class="flex flex-v-center" style="justify-content: space-between;">
+				<h3>My Library <span id="savedItemCountEl"></span></h3>
 
-			<h3>My Library <span id="savedItemCountEl"></span></h3>
-			<div class="main-header__btn-wrap">
-				<a d-click="exportItems" href="" class="btn btn-icon">Export
-				</a>
-				<a d-click="onImportBtnClicked" href="" class="btn btn-icon">Import
-				</a>
+				<div class="main-header__btn-wrap">
+					<a d-click="exportItems" href="" class="btn btn-icon hint--bottom-left hint--rounded hint--medium" aria-label="Export all your creations into a single importable file.">Export
+					</a>
+					<a d-click="onImportBtnClicked" href="" class="btn btn-icon hint--bottom-left hint--rounded hint--medium" aria-label="Only the file that you export through the 'Export' button can be imported.">Import
+					</a>
+				</div>
 			</div>
-			</div>
+			<input type="" id="searchInput" class="search-input" d-input="onSearchInputChange" placeholder="Search your creations here...">
+
 			<div id="js-saved-items-wrap" class="saved-items-pane__container">
-
 			</div>
 		</div>
 
@@ -515,7 +478,7 @@
 		</svg>
 
 		<div class="alerts-container" id="js-alerts-container"></div>
-		<form style="display:none;" action="http://codepen.io/pen/define" method="POST" target="_blank" id="js-codepen-form">
+		<form style="display:none;" action="https://codepen.io/pen/define" method="POST" target="_blank" id="js-codepen-form">
 		  <input type="hidden" name="data" value='{"title": "New Pen!", "html": "<div>Hello, World!</div>"}'>
 		</form>
 
@@ -537,13 +500,46 @@
 			<symbol id="settings-icon" viewBox="0 0 24 24">
 				<path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"></path>
 			</symbol>
+			<symbol	id="twitter-icon" viewBox="0 0 16 16">
+				<path d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+			c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+			</symbol>
 			<symbol id="heart-icon" viewBox="0 0 24 24">
 				<path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" />
+			</symbol>
+			<symbol id="play-icon" viewBox="0 0 24 24">
+				<svg>
+					<path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+				</svg>
+			</symbol>
+			<symbol id="cancel-icon" viewBox="0 0 24 24">
+				<svg>
+					<path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12C4,13.85 4.63,15.55 5.68,16.91L16.91,5.68C15.55,4.63 13.85,4 12,4M12,20A8,8 0 0,0 20,12C20,10.15 19.37,8.45 18.32,7.09L7.09,18.32C8.45,19.37 10.15,20 12,20Z" />
+				</svg>
+			</symbol>
+			<symbol id="chevron-icon" viewBox="0 0 24 24">
+				<svg>
+				<path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
+				</svg>
+			</symbol>
+			<symbol id="chat-icon" viewBox="0 0 24 24">
+					<path d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M8,14H6V12H8V14M8,11H6V9H8V11M8,8H6V6H8V8M15,14H10V12H15V14M18,11H10V9H18V11M18,8H10V6H18V8Z" />
+			</symbol>
+			<symbol id="gift-icon" viewBox="0 0 24 24">
+				<path d="M22,12V20A2,2 0 0,1 20,22H4A2,2 0 0,1 2,20V12A1,1 0 0,1 1,11V8A2,2 0 0,1 3,6H6.17C6.06,5.69 6,5.35 6,5A3,3 0 0,1 9,2C10,2 10.88,2.5 11.43,3.24V3.23L12,4L12.57,3.23V3.24C13.12,2.5 14,2 15,2A3,3 0 0,1 18,5C18,5.35 17.94,5.69 17.83,6H21A2,2 0 0,1 23,8V11A1,1 0 0,1 22,12M4,20H11V12H4V20M20,20V12H13V20H20M9,4A1,1 0 0,0 8,5A1,1 0 0,0 9,6A1,1 0 0,0 10,5A1,1 0 0,0 9,4M15,4A1,1 0 0,0 14,5A1,1 0 0,0 15,6A1,1 0 0,0 16,5A1,1 0 0,0 15,4M3,8V10H11V8H3M13,8V10H21V8H13Z" />
+			<symbol id="gift-icon" viewBox="0 0 24 24">
+			</symbol>
+			<symbol id="cross-icon" viewBox="0 0 24 24">
+				<path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+			</symbol>
+			<symbol id="keyboard-icon" viewBox="0 0 24 24">
+				<path d="M19,10H17V8H19M19,13H17V11H19M16,10H14V8H16M16,13H14V11H16M16,17H8V15H16M7,10H5V8H7M7,13H5V11H7M8,11H10V13H8M8,8H10V10H8M11,11H13V13H11M11,8H13V10H11M20,5H4C2.89,5 2,5.89 2,7V17A2,2 0 0,0 4,19H20A2,2 0 0,0 22,17V7C22,5.89 21.1,5 20,5Z" />
 			</symbol>
 		</svg>
 
 		<script src="lib/codemirror/lib/codemirror.js"></script>
 		<script src="lib/codemirror/addon/edit/matchbrackets.js"></script>
+		<script src="lib/codemirror/addon/edit/matchtags.js"></script>
 		<script src="lib/codemirror/addon/edit/closebrackets.js"></script>
 		<script src="lib/codemirror/addon/edit/closetag.js"></script>
 		<script src="lib/codemirror/addon/comment/comment.js"></script>
@@ -560,6 +556,10 @@
 		<script src="lib/codemirror/addon/hint/html-hint.js"></script>
 		<script src="lib/codemirror/addon/hint/css-hint.js"></script>
 		<script src="lib/codemirror/addon/selection/active-line.js"></script>
+		<script src="lib/codemirror/addon/search/searchcursor.js"></script>
+		<script src="lib/codemirror/addon/search/search.js"></script>
+		<script src="lib/codemirror/addon/dialog/dialog.js"></script>
+		<script src="lib/codemirror/addon/search/jump-to-line.js"></script>
 
 		<script src="lib/codemirror/mode/xml/xml.js"></script>
 		<script src="lib/codemirror/mode/javascript/javascript.js"></script>
@@ -573,7 +573,6 @@
 		<script src="lib/split.js"></script>
 		<script src="lib/inlet.min.js"></script>
 		<script src="lib/esprima.js"></script>
-		<script src="lib/escodegen.browser.min.js"></script>
 
 		<script src="utils.js"></script>
 		<script src="analytics.js"></script>

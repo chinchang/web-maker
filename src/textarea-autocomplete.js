@@ -1,11 +1,10 @@
 // textarea-autocomplete.js
 (function() {
-
 	class TextareaAutoComplete {
-
-		constructor (textarea, filter) {
+		constructor(textarea, options) {
 			this.t = textarea;
-			this.filter = filter;
+			this.filter = options.filter;
+			this.selectedCallback = options.selectedCallback;
 			var wrap = document.createElement('div');
 			wrap.classList.add('btn-group');
 			textarea.parentElement.insertBefore(wrap, textarea);
@@ -28,12 +27,12 @@
 					document.body.appendChild(this.list);
 					this.list.style.position = 'fixed';
 				});
-			},100);
+			}, 100);
 
-			this.t.addEventListener('input', (e) => this.onInput(e));
-			this.t.addEventListener('keydown', (e) => this.onKeyDown(e));
-			this.t.addEventListener('blur', (e) => this.closeSuggestions(e));
-			this.list.addEventListener('mousedown', (e) => this.onListMouseDown(e));
+			this.t.addEventListener('input', e => this.onInput(e));
+			this.t.addEventListener('keydown', e => this.onKeyDown(e));
+			this.t.addEventListener('blur', e => this.closeSuggestions(e));
+			this.list.addEventListener('mousedown', e => this.onListMouseDown(e));
 		}
 
 		get currentLineNumber() {
@@ -49,24 +48,28 @@
 		}
 		getList(input) {
 			var url = 'https://api.cdnjs.com/libraries?search=';
-			return fetch(url + input)
-			.then((response) => {
-				return response.json().then((json) => json.results);
+			return fetch(url + input).then(response => {
+				return response.json().then(json => json.results);
 			});
 		}
 		replaceCurrentLine(val) {
 			var lines = this.t.value.split('\n');
-			lines.splice(this.currentLineNumber - 1, 1, val)
+			lines.splice(this.currentLineNumber - 1, 1, val);
 			this.t.value = lines.join('\n');
 		}
 		onInput() {
 			var currentLine = this.currentLine;
 			if (currentLine) {
-				if (currentLine.indexOf('/') !== -1 || currentLine.match(/https*:\/\//)) { return; }
+				if (
+					currentLine.indexOf('/') !== -1 ||
+					currentLine.match(/https*:\/\//)
+				) {
+					return;
+				}
 				clearTimeout(this.timeout);
 				this.timeout = setTimeout(() => {
 					this.loader.style.display = 'block';
-					this.getList(currentLine).then((arr) => {
+					this.getList(currentLine).then(arr => {
 						this.loader.style.display = 'none';
 						if (!arr.length) {
 							this.closeSuggestions();
@@ -74,12 +77,13 @@
 						}
 						this.list.innerHTML = '';
 						if (this.filter) {
-
 							/* eslint-disable no-param-reassign */
 							arr = arr.filter(this.filter);
 						}
 						for (var i = 0; i < Math.min(arr.length, 10); i++) {
-							this.list.innerHTML += `<li data-url="${arr[i].latest}"><a>${arr[i].name}</a></li>`;
+							this.list.innerHTML += `<li data-url="${arr[i].latest}"><a>${arr[
+								i
+							].name}</a></li>`;
 						}
 						this.isShowingSuggestions = true;
 						if (!this.textareaBounds) {
@@ -95,7 +99,9 @@
 		}
 		onKeyDown(event) {
 			var selectedItemElement;
-			if (!this.isShowingSuggestions) { return; }
+			if (!this.isShowingSuggestions) {
+				return;
+			}
 
 			if (event.keyCode === 27) {
 				this.closeSuggestions();
@@ -123,19 +129,26 @@
 				event.preventDefault();
 			} else if (event.keyCode === 13 && this.isShowingSuggestions) {
 				selectedItemElement = this.list.querySelector('.selected');
-				this.replaceCurrentLine(selectedItemElement.dataset.url)
+				this.selectSuggestion(selectedItemElement.dataset.url);
 				this.closeSuggestions();
 			}
 		}
 		onListMouseDown(event) {
 			var target = event.target;
 			if (target.parentElement.dataset.url) {
-				this.replaceCurrentLine(target.parentElement.dataset.url)
-				this.closeSuggestions();
+				this.selectSuggestion(target.parentElement.dataset.url);
 			}
+		}
+
+		selectSuggestion(value) {
+			if (this.selectedCallback) {
+				this.selectedCallback.call(null, value);
+			} else {
+				this.replaceCurrentLine(value);
+			}
+			this.closeSuggestions();
 		}
 	}
 
 	window.TextareaAutoComplete = TextareaAutoComplete;
-
 })();

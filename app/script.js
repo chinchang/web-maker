@@ -380,7 +380,7 @@ window.jsLibs = [
 	},
 	{
 		url:
-			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js',
+			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js',
 		label: 'Bootstrap 4β',
 		type: 'js'
 	},
@@ -401,7 +401,8 @@ window.jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/react/15.5.4/react.min.js',
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/react/16.2.0/cjs/react.production.min.js',
 		label: 'React',
 		type: 'js'
 	},
@@ -432,7 +433,7 @@ window.jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js',
 		label: 'Greensock TweenMax',
 		type: 'js'
 	},
@@ -457,7 +458,7 @@ window.cssLibs = [
 	},
 	{
 		url:
-			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css',
+			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css',
 		label: 'Bootstrap 4β',
 		type: 'css'
 	},
@@ -512,9 +513,10 @@ window.cssLibs = [
 // textarea-autocomplete.js
 (function() {
 	class TextareaAutoComplete {
-		constructor(textarea, filter) {
+		constructor(textarea, options) {
 			this.t = textarea;
-			this.filter = filter;
+			this.filter = options.filter;
+			this.selectedCallback = options.selectedCallback;
 			var wrap = document.createElement('div');
 			wrap.classList.add('btn-group');
 			textarea.parentElement.insertBefore(wrap, textarea);
@@ -639,16 +641,24 @@ window.cssLibs = [
 				event.preventDefault();
 			} else if (event.keyCode === 13 && this.isShowingSuggestions) {
 				selectedItemElement = this.list.querySelector('.selected');
-				this.replaceCurrentLine(selectedItemElement.dataset.url);
+				this.selectSuggestion(selectedItemElement.dataset.url);
 				this.closeSuggestions();
 			}
 		}
 		onListMouseDown(event) {
 			var target = event.target;
 			if (target.parentElement.dataset.url) {
-				this.replaceCurrentLine(target.parentElement.dataset.url);
-				this.closeSuggestions();
+				this.selectSuggestion(target.parentElement.dataset.url);
 			}
+		}
+
+		selectSuggestion(value) {
+			if (this.selectedCallback) {
+				this.selectedCallback.call(null, value);
+			} else {
+				this.replaceCurrentLine(value);
+			}
+			this.closeSuggestions();
 		}
 	}
 
@@ -664,7 +674,7 @@ onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editor
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
 customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
-globalConsoleContainerEl
+globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 */
 /* eslint-disable no-extra-semi */
 (function(alertsService) {
@@ -803,28 +813,48 @@ globalConsoleContainerEl
 	scope.demoFrameDocument =
 		frame.contentDocument || frame.contentWindow.document;
 
-	// Check all the code wrap if they are minimized or not
+	// Check all the code wrap if they are minimized or maximized
 	function updateCodeWrapCollapseStates() {
+		// This is debounced!
 		clearTimeout(updateCodeWrapCollapseStates.timeout);
 		updateCodeWrapCollapseStates.timeout = setTimeout(function() {
+			const prop = currentLayoutMode === 2 ? 'width' : 'height';
 			[htmlCode, cssCode, jsCode].forEach(function(el) {
-				var bounds = el.getBoundingClientRect();
-				if (bounds[currentLayoutMode === 2 ? 'width' : 'height'] < 100) {
+				const bounds = el.getBoundingClientRect();
+				const size = bounds[prop];
+				if (size < 100) {
 					el.classList.add('is-minimized');
 				} else {
 					el.classList.remove('is-minimized');
+				}
+				if (el.style[prop].indexOf(`100% - ${minCodeWrapSize * 2}px`) !== -1) {
+					el.classList.add('is-maximized');
+				} else {
+					el.classList.remove('is-maximized');
 				}
 			});
 		}, 50);
 	}
 
 	function toggleCodeWrapCollapse(codeWrapEl) {
-		if (codeWrapEl.classList.contains('is-minimized')) {
+		if (
+			codeWrapEl.classList.contains('is-minimized') ||
+			codeWrapEl.classList.contains('is-maximized')
+		) {
 			codeWrapEl.classList.remove('is-minimized');
+			codeWrapEl.classList.remove('is-maximized');
 			codeSplitInstance.setSizes([33.3, 33.3, 33.3]);
 		} else {
-			codeSplitInstance.collapse(parseInt(codeWrapEl.dataset.codeWrapId, 10));
-			codeWrapEl.classList.add('is-minimized');
+			const id = parseInt(codeWrapEl.dataset.codeWrapId, 10);
+			var arr = [
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`
+			];
+			arr[id] = `calc(100% - ${minCodeWrapSize * 2}px)`;
+
+			codeSplitInstance.setSizes(arr);
+			codeWrapEl.classList.add('is-maximized');
 		}
 	}
 	// Returns the sizes of main code & preview panes.
@@ -988,9 +1018,9 @@ globalConsoleContainerEl
 		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
 		try {
 			sizes = [
-				+htmlCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+cssCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+jsCode.style[dimensionProperty].match(/([\d.]+)%/)[1]
+				htmlCode.style[dimensionProperty],
+				cssCode.style[dimensionProperty],
+				jsCode.style[dimensionProperty]
 			];
 		} catch (e) {
 			sizes = [33.33, 33.33, 33.33];
@@ -1285,6 +1315,7 @@ globalConsoleContainerEl
 		onboardModal.classList.remove('is-modal-visible');
 		settingsModal.classList.remove('is-modal-visible');
 		cssSettingsModal.classList.remove('is-modal-visible');
+		keyboardShortcutsModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -1597,7 +1628,8 @@ globalConsoleContainerEl
 		});
 	}
 
-	function getCompleteHtml(html, css, js) {
+	/* eslint max-params: ["error", 4] */
+	function getCompleteHtml(html, css, js, isForExport) {
 		var externalJs = externalJsTextarea.value
 			.split('\n')
 			.reduce(function(scripts, url) {
@@ -1627,12 +1659,14 @@ globalConsoleContainerEl
 			externalJs +
 			'\n';
 
-		contents +=
-			'<script src="' +
-			(chrome.extension
-				? chrome.extension.getURL('lib/screenlog.js')
-				: `${location.origin}${BASE_PATH}/lib/screenlog.js`) +
-			'"></script>';
+		if (!isForExport) {
+			contents +=
+				'<script src="' +
+				(chrome.extension
+					? chrome.extension.getURL('lib/screenlog.js')
+					: `${location.origin}${BASE_PATH}/lib/screenlog.js`) +
+				'"></script>';
+		}
 
 		if (jsMode === JsModes.ES6) {
 			contents +=
@@ -1798,7 +1832,7 @@ globalConsoleContainerEl
 				css = result[1],
 				js = result[2];
 
-			var fileContent = getCompleteHtml(html, css, js);
+			var fileContent = getCompleteHtml(html, css, js, true);
 
 			var d = new Date();
 			var fileName = [
@@ -2782,6 +2816,11 @@ globalConsoleContainerEl
 				event.preventDefault();
 				openSavedItemsPane();
 				trackEvent('ui', 'openCreationKeyboardShortcut');
+			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 191) {
+				// Ctrl/⌘ + Shift + ?
+				event.preventDefault();
+				scope.toggleModal(keyboardShortcutsModal);
+				trackEvent('ui', 'showKeyboardShortcutsShortcut');
 			} else if (event.keyCode === 27) {
 				closeAllOverlays();
 			}
@@ -2892,12 +2931,21 @@ globalConsoleContainerEl
 		externalJsTextarea.addEventListener('blur', onExternalLibChange);
 		externalCssTextarea.addEventListener('blur', onExternalLibChange);
 
-		new TextareaAutoComplete(externalJsTextarea, obj =>
-			obj.latest.match(/\.js$/)
-		);
-		new TextareaAutoComplete(externalCssTextarea, obj =>
-			obj.latest.match(/\.css$/)
-		);
+		new TextareaAutoComplete(externalJsTextarea, {
+			filter: obj => obj.latest.match(/\.js$/)
+		});
+		new TextareaAutoComplete(externalCssTextarea, {
+			filter: obj => obj.latest.match(/\.css$/)
+		});
+		new TextareaAutoComplete(externalLibrarySearchInput, {
+			selectedCallback: value => {
+				const textarea = value.match(/\.js$/)
+					? externalJsTextarea
+					: externalCssTextarea;
+				textarea.value = `${textarea.value}\n${value}`;
+				externalLibrarySearchInput.value = '';
+			}
+		});
 
 		// Console header drag resize logic
 		var consoleHeaderDragStartY;
@@ -2965,7 +3013,7 @@ globalConsoleContainerEl
 							refreshEditor();
 						});
 					} else {
-						utils.log('Load last unsaved item');
+						utils.log('Load last unsaved item', lastCode);
 						currentItem = lastCode;
 						refreshEditor();
 					}

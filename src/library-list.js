@@ -33,12 +33,12 @@ window.jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/react/16.2.0/cjs/react.production.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/react/16.2.0/umd/react.production.min.js',
 		label: 'React',
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.2.0/umd/react-dom.production.min.js',
 		label: 'React DOM',
 		type: 'js'
 	},

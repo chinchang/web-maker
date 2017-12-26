@@ -2135,17 +2135,13 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 
 		// Editor keyboard shortucuts
 		window.addEventListener('keydown', function(event) {
-			const CTRL_META				= event.ctrlKey || event.metaKey;
-			const CTRL_META_SHIFT		= CTRL_META && event.shiftKey;
-			const CTRL_META_S			= CTRL_META && event.code === 'KeyS';
-			const CTRL_META_F			= CTRL_META && event.code === 'KeyF';
-			const CTRL_META_O			= CTRL_META && event.code === 'KeyO';
-			const CTRL_META_SHIFT_5		= CTRL_META_SHIFT && event.code === 'Digit5';
+			const CTRL_META = event.ctrlKey || event.metaKey;
+			const CTRL_META_SHIFT = CTRL_META && event.shiftKey;
+			const CTRL_META_S = CTRL_META && event.code === 'KeyS';
+			const CTRL_META_O = CTRL_META && event.code === 'KeyO';
+			const CTRL_META_SHIFT_5 = CTRL_META_SHIFT && event.code === 'Digit5';
 			const CTRL_META_SHIFT_SLASH = CTRL_META_SHIFT && event.code === 'Slash';
-			const ESCAPE				= event.code === 'Escape';
-			const ARROW_DOWN			= event.code === 'ArrowDown';
-			const ARROW_UP				= event.code === 'ArrowUp';
-			const ENTER					= event.code === 'Enter';
+			const ESCAPE = event.code === 'Escape';
 
 			// TODO: refactor common listener code
 
@@ -2176,41 +2172,51 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			if (ESCAPE) {
 				closeAllOverlays();
 			}
+		});
 
-			if (isSavedItemsPaneOpen) {
+		savedItemsPane.addEventListener('keydown', function(event) {
+			if (!isSavedItemsPaneOpen) {
+				return;
+			}
 
-				const selectedItemElement = $('.js-saved-item-tile.selected');
-				const HAVE_PANE_ITEMS = $all('.js-saved-item-tile').length !== 0
+			const CTRL_META = event.ctrlKey || event.metaKey;
+			const CTRL_META_F = CTRL_META && event.code === 'KeyF';
+			const ARROW_DOWN = event.code === 'ArrowDown';
+			const ARROW_UP = event.code === 'ArrowUp';
+			const ENTER = event.code === 'Enter';
 
-				if ((ARROW_DOWN || ARROW_UP) && HAVE_PANE_ITEMS) {
-					const method = ARROW_DOWN ? 'nextUntil' : 'previousUntil'
+			const selectedItemElement = $('.js-saved-item-tile.selected');
+			const HAVE_PANE_ITEMS = $all('.js-saved-item-tile').length !== 0;
 
-					if (selectedItemElement) {
-						selectedItemElement.classList.remove('selected');
-						selectedItemElement[method]('.js-saved-item-tile:not(.hide)')
-							.classList.add('selected');
-					} else {
-						$('.js-saved-item-tile:not(.hide)').classList.add('selected');
-					}
-					$('.js-saved-item-tile.selected').scrollIntoView(false);
+			if ((ARROW_DOWN || ARROW_UP) && HAVE_PANE_ITEMS) {
+				const method = ARROW_DOWN ? 'nextUntil' : 'previousUntil';
+
+				if (selectedItemElement) {
+					selectedItemElement.classList.remove('selected');
+					selectedItemElement[method](
+						'.js-saved-item-tile:not(.hide)'
+					).classList.add('selected');
+				} else {
+					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				}
+				$('.js-saved-item-tile.selected').scrollIntoView(false);
+			}
 
-				if (ENTER && selectedItemElement) {
-					setTimeout(function() {
-						openItem(selectedItemElement.dataset.itemId);
-					}, 350);
-					toggleSavedItemsPane();
-				}
+			if (ENTER && selectedItemElement) {
+				setTimeout(function() {
+					openItem(selectedItemElement.dataset.itemId);
+				}, 350);
+				toggleSavedItemsPane();
+			}
 
-				// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
-				if (CTRL_META_F) {
-					event.preventDefault();
-					setTimeout(function() {
-						forkItem(savedItems[selectedItemElement.dataset.itemId]);
-					}, 350);
-					toggleSavedItemsPane();
-					trackEvent('ui', 'forkKeyboardShortcut');
-				}
+			// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
+			if (CTRL_META_F) {
+				event.preventDefault();
+				setTimeout(function() {
+					forkItem(savedItems[selectedItemElement.dataset.itemId]);
+				}, 350);
+				toggleSavedItemsPane();
+				trackEvent('ui', 'forkKeyboardShortcut');
 			}
 		});
 

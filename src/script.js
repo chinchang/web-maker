@@ -2174,30 +2174,18 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				closeAllOverlays();
 			}
 
-			if (ARROW_DOWN && isSavedItemsPaneOpen) {
+			if (isSavedItemsPaneOpen && (ARROW_DOWN || ARROW_UP)) {
 				// Return if no items present.
 				if (!$all('.js-saved-item-tile').length) {
 					return;
 				}
+
+				const method = ARROW_DOWN ? 'nextUntil' : 'previousUntil'
+
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
-					selectedItemElement
-						.nextUntil('.js-saved-item-tile:not(.hide)')
-						.classList.add('selected');
-				} else {
-					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
-				}
-				$('.js-saved-item-tile.selected').scrollIntoView(false);
-			} else if (ARROW_UP && isSavedItemsPaneOpen) {
-				if (!$all('.js-saved-item-tile').length) {
-					return;
-				}
-				selectedItemElement = $('.js-saved-item-tile.selected');
-				if (selectedItemElement) {
-					selectedItemElement.classList.remove('selected');
-					selectedItemElement
-						.previousUntil('.js-saved-item-tile:not(.hide)')
+					selectedItemElement[method]('.js-saved-item-tile:not(.hide)')
 						.classList.add('selected');
 				} else {
 					$('.js-saved-item-tile:not(.hide)').classList.add('selected');

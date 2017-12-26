@@ -2147,8 +2147,6 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			const ARROW_UP				= event.code === 'ArrowUp';
 			const ENTER					= event.code === 'Enter';
 
-			let selectedItemElement;
-
 			// TODO: refactor common listener code
 
 			if (CTRL_META_S) {
@@ -2181,15 +2179,12 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 
 			if (isSavedItemsPaneOpen) {
 
-				if (ARROW_DOWN || ARROW_UP) {
-					// Return if no items present.
-					if (!$all('.js-saved-item-tile').length) {
-						return;
-					}
+				const selectedItemElement = $('.js-saved-item-tile.selected');
+				const HAVE_PANE_ITEMS = $all('.js-saved-item-tile').length !== 0
 
+				if ((ARROW_DOWN || ARROW_UP) && HAVE_PANE_ITEMS) {
 					const method = ARROW_DOWN ? 'nextUntil' : 'previousUntil'
 
-					selectedItemElement = $('.js-saved-item-tile.selected');
 					if (selectedItemElement) {
 						selectedItemElement.classList.remove('selected');
 						selectedItemElement[method]('.js-saved-item-tile:not(.hide)')
@@ -2200,11 +2195,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 					$('.js-saved-item-tile.selected').scrollIntoView(false);
 				}
 
-				if (ENTER) {
-					selectedItemElement = $('.js-saved-item-tile.selected');
-					if (!selectedItemElement) {
-						return;
-					}
+				if (ENTER && selectedItemElement) {
 					setTimeout(function() {
 						openItem(selectedItemElement.dataset.itemId);
 					}, 350);
@@ -2214,7 +2205,6 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
 				if (CTRL_META_F) {
 					event.preventDefault();
-					selectedItemElement = $('.js-saved-item-tile.selected');
 					setTimeout(function() {
 						forkItem(savedItems[selectedItemElement.dataset.itemId]);
 					}, 350);

@@ -1501,7 +1501,10 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		var byteString = atob(dataURI.split(',')[1]);
 
 		// separate out the mime component
-		var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+		var mimeString = dataURI
+			.split(',')[0]
+			.split(':')[1]
+			.split(';')[0];
 
 		// write the bytes of the string to an ArrayBuffer
 		var ab = new ArrayBuffer(byteString.length);
@@ -2132,41 +2135,46 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 
 		// Editor keyboard shortucuts
 		window.addEventListener('keydown', function(event) {
-			var selectedItemElement;
+			const CTRL_META_PRESSED = event.ctrlKey || event.metaKey;
+			const CTRL_META_S = CTRL_META_PRESSED && event.code === 'KeyS';
+			const CTRL_META_F = CTRL_META_PRESSED && event.code === 'KeyF';
+			const CTRL_META_O = CTRL_META_PRESSED && event.code === 'KeyO';
+			const CTRL_META_SHIFT_5 =
+				CTRL_META_PRESSED && event.shiftKey && event.code === 'Digit5';
+			const CTRL_META_SHIFT_SLASH =
+				CTRL_META_PRESSED && event.shiftKey && event.code === 'Slash';
+			const ESCAPE = event.code === 'Escape';
+			const ARROW_DOWN = event.code === 'ArrowDown';
+			const ARROW_UP = event.code === 'ArrowUp';
+			const ENTER = event.code === 'Enter';
+
+			let selectedItemElement;
+
 			// TODO: refactor common listener code
-			// Ctrl/⌘ + S
-			if ((event.ctrlKey || event.metaKey) && event.keyCode === 83) {
+
+			if (CTRL_META_S) {
 				event.preventDefault();
 				saveItem();
 				trackEvent('ui', 'saveItemKeyboardShortcut');
 			}
-			// Ctrl/⌘ + Shift + 5
-			if (
-				(event.ctrlKey || event.metaKey) &&
-				event.shiftKey &&
-				event.keyCode === 53
-			) {
+
+			if (CTRL_META_SHIFT_5) {
 				event.preventDefault();
 				scope.setPreviewContent(true);
 				trackEvent('ui', 'previewKeyboardShortcut');
-			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 79) {
-				// Ctrl/⌘ + O
+			} else if (CTRL_META_O) {
 				event.preventDefault();
 				openSavedItemsPane();
 				trackEvent('ui', 'openCreationKeyboardShortcut');
-			} else if (
-				(event.ctrlKey || event.metaKey) &&
-				event.shiftKey &&
-				event.keyCode === 191
-			) {
-				// Ctrl/⌘ + Shift + ?
+			} else if (CTRL_META_SHIFT_SLASH) {
 				event.preventDefault();
 				scope.toggleModal(keyboardShortcutsModal);
 				trackEvent('ui', 'showKeyboardShortcutsShortcut');
-			} else if (event.keyCode === 27) {
+			} else if (ESCAPE) {
 				closeAllOverlays();
 			}
-			if (event.keyCode === 40 && isSavedItemsPaneOpen) {
+
+			if (ARROW_DOWN && isSavedItemsPaneOpen) {
 				// Return if no items present.
 				if (!$all('.js-saved-item-tile').length) {
 					return;
@@ -2181,7 +2189,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				}
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
-			} else if (event.keyCode === 38 && isSavedItemsPaneOpen) {
+			} else if (ARROW_UP && isSavedItemsPaneOpen) {
 				if (!$all('.js-saved-item-tile').length) {
 					return;
 				}
@@ -2195,7 +2203,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				}
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
-			} else if (event.keyCode === 13 && isSavedItemsPaneOpen) {
+			} else if (ENTER && isSavedItemsPaneOpen) {
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				if (!selectedItemElement) {
 					return;
@@ -2207,11 +2215,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			}
 
 			// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
-			if (
-				isSavedItemsPaneOpen &&
-				(event.ctrlKey || event.metaKey) &&
-				event.keyCode === 70
-			) {
+			if (isSavedItemsPaneOpen && CTRL_META_F) {
 				event.preventDefault();
 				selectedItemElement = $('.js-saved-item-tile.selected');
 				setTimeout(function() {
@@ -2247,14 +2251,18 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		var libOptions = window.jsLibs.reduce(
 			(html, lib) =>
 				html +
-				`<option data-type="${lib.type}" value="${lib.url}">${lib.label}</option>`,
+				`<option data-type="${lib.type}" value="${lib.url}">${
+					lib.label
+				}</option>`,
 			''
 		);
 		addLibrarySelect.children[1].innerHTML = libOptions;
 		libOptions = window.cssLibs.reduce(
 			(html, lib) =>
 				html +
-				`<option data-type="${lib.type}" value="${lib.url}">${lib.label}</option>`,
+				`<option data-type="${lib.type}" value="${lib.url}">${
+					lib.label
+				}</option>`,
 			''
 		);
 		addLibrarySelect.children[2].innerHTML = libOptions;

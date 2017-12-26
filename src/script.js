@@ -2135,18 +2135,17 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 
 		// Editor keyboard shortucuts
 		window.addEventListener('keydown', function(event) {
-			const CTRL_META_PRESSED = event.ctrlKey || event.metaKey;
-			const CTRL_META_S = CTRL_META_PRESSED && event.code === 'KeyS';
-			const CTRL_META_F = CTRL_META_PRESSED && event.code === 'KeyF';
-			const CTRL_META_O = CTRL_META_PRESSED && event.code === 'KeyO';
-			const CTRL_META_SHIFT_5 =
-				CTRL_META_PRESSED && event.shiftKey && event.code === 'Digit5';
-			const CTRL_META_SHIFT_SLASH =
-				CTRL_META_PRESSED && event.shiftKey && event.code === 'Slash';
-			const ESCAPE = event.code === 'Escape';
-			const ARROW_DOWN = event.code === 'ArrowDown';
-			const ARROW_UP = event.code === 'ArrowUp';
-			const ENTER = event.code === 'Enter';
+			const CTRL_META				= event.ctrlKey || event.metaKey;
+			const CTRL_META_SHIFT		= CTRL_META && event.shiftKey;
+			const CTRL_META_S			= CTRL_META && event.code === 'KeyS';
+			const CTRL_META_F			= CTRL_META && event.code === 'KeyF';
+			const CTRL_META_O			= CTRL_META && event.code === 'KeyO';
+			const CTRL_META_SHIFT_5		= CTRL_META_SHIFT && event.code === 'Digit5';
+			const CTRL_META_SHIFT_SLASH = CTRL_META_SHIFT && event.code === 'Slash';
+			const ESCAPE				= event.code === 'Escape';
+			const ARROW_DOWN			= event.code === 'ArrowDown';
+			const ARROW_UP				= event.code === 'ArrowUp';
+			const ENTER					= event.code === 'Enter';
 
 			let selectedItemElement;
 
@@ -2162,55 +2161,66 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				event.preventDefault();
 				scope.setPreviewContent(true);
 				trackEvent('ui', 'previewKeyboardShortcut');
-			} else if (CTRL_META_O) {
+			}
+
+			if (CTRL_META_O) {
 				event.preventDefault();
 				openSavedItemsPane();
 				trackEvent('ui', 'openCreationKeyboardShortcut');
-			} else if (CTRL_META_SHIFT_SLASH) {
+			}
+
+			if (CTRL_META_SHIFT_SLASH) {
 				event.preventDefault();
 				scope.toggleModal(keyboardShortcutsModal);
 				trackEvent('ui', 'showKeyboardShortcutsShortcut');
-			} else if (ESCAPE) {
+			}
+
+			if (ESCAPE) {
 				closeAllOverlays();
 			}
 
-			if (isSavedItemsPaneOpen && (ARROW_DOWN || ARROW_UP)) {
-				// Return if no items present.
-				if (!$all('.js-saved-item-tile').length) {
-					return;
+			if (isSavedItemsPaneOpen) {
+
+				if (ARROW_DOWN || ARROW_UP) {
+					// Return if no items present.
+					if (!$all('.js-saved-item-tile').length) {
+						return;
+					}
+
+					const method = ARROW_DOWN ? 'nextUntil' : 'previousUntil'
+
+					selectedItemElement = $('.js-saved-item-tile.selected');
+					if (selectedItemElement) {
+						selectedItemElement.classList.remove('selected');
+						selectedItemElement[method]('.js-saved-item-tile:not(.hide)')
+							.classList.add('selected');
+					} else {
+						$('.js-saved-item-tile:not(.hide)').classList.add('selected');
+					}
+					$('.js-saved-item-tile.selected').scrollIntoView(false);
 				}
 
-				const method = ARROW_DOWN ? 'nextUntil' : 'previousUntil'
-
-				selectedItemElement = $('.js-saved-item-tile.selected');
-				if (selectedItemElement) {
-					selectedItemElement.classList.remove('selected');
-					selectedItemElement[method]('.js-saved-item-tile:not(.hide)')
-						.classList.add('selected');
-				} else {
-					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
+				if (ENTER) {
+					selectedItemElement = $('.js-saved-item-tile.selected');
+					if (!selectedItemElement) {
+						return;
+					}
+					setTimeout(function() {
+						openItem(selectedItemElement.dataset.itemId);
+					}, 350);
+					toggleSavedItemsPane();
 				}
-				$('.js-saved-item-tile.selected').scrollIntoView(false);
-			} else if (ENTER && isSavedItemsPaneOpen) {
-				selectedItemElement = $('.js-saved-item-tile.selected');
-				if (!selectedItemElement) {
-					return;
-				}
-				setTimeout(function() {
-					openItem(selectedItemElement.dataset.itemId);
-				}, 350);
-				toggleSavedItemsPane();
-			}
 
-			// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
-			if (isSavedItemsPaneOpen && CTRL_META_F) {
-				event.preventDefault();
-				selectedItemElement = $('.js-saved-item-tile.selected');
-				setTimeout(function() {
-					forkItem(savedItems[selectedItemElement.dataset.itemId]);
-				}, 350);
-				toggleSavedItemsPane();
-				trackEvent('ui', 'forkKeyboardShortcut');
+				// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
+				if (CTRL_META_F) {
+					event.preventDefault();
+					selectedItemElement = $('.js-saved-item-tile.selected');
+					setTimeout(function() {
+						forkItem(savedItems[selectedItemElement.dataset.itemId]);
+					}, 350);
+					toggleSavedItemsPane();
+					trackEvent('ui', 'forkKeyboardShortcut');
+				}
 			}
 		});
 

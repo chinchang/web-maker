@@ -360,7 +360,7 @@ body > #demo-frame {
 	height: 20px;
 	width: 20px;
 	margin-right: 0px;
-	background: url(icon-16.png) 0px 0px;
+	background: url(icon-16.png) 0px 0px no-repeat;
 	-webkit-filter: grayscale(0);
 	opacity: 1;
 }

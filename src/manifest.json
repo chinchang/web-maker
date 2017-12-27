@@ -1,6 +1,6 @@
 {
 	"name": "Web Sequence",
-	"version": "0.9.12",
+	"version": "0.9.13",
 	"manifest_version": 2,
 	"description": "Blazing fast & offline playground for sequence diagram generating",
 	"homepage_url": "http://zenuml.com",
@@ -13,7 +13,7 @@
 	},
 	"browser_action": {
 		"default_title": "Start Web Sequence",
-		"default_icon": "icon-16.png"
+		"default_icon": "icon-48.png"
 	},
 	"background": {
 		"scripts": ["eventPage.js"],

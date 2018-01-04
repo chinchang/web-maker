@@ -209,7 +209,7 @@ globalConsoleContainerEl
 		if (currentItem && currentItem.sizes) {
 			options.sizes = currentItem.sizes;
 		} else {
-			options.sizes = [0, 0, 100];
+			options.sizes = [0, 30, 70];
 		}
 
 		codeSplitInstance = Split(
@@ -235,7 +235,7 @@ globalConsoleContainerEl
 	function toggleLayout(mode) {
 		if (currentLayoutMode === mode) {
 			mainSplitInstance.setSizes(getMainSplitSizesToApply());
-			codeSplitInstance.setSizes(currentItem.sizes || [0, 0, 100]);
+			codeSplitInstance.setSizes(currentItem.sizes || [0, 30, 70]);
 			currentLayoutMode = mode;
 			return;
 		}
@@ -335,7 +335,7 @@ globalConsoleContainerEl
 				+jsCode.style[dimensionProperty].match(/([\d.]+)%/)[1]
 			];
 		} catch (e) {
-			sizes = [0, 0, 100];
+			sizes = [0, 30, 70];
 		} finally {
 			/* eslint-disable no-unsafe-finally */
 			return sizes;
@@ -877,10 +877,19 @@ globalConsoleContainerEl
 			'<link rel="stylesheet" href="' +
 			chrome.extension.getURL('lib/vue-sequence.css') +
 			'"></link>';
+		var vueSequenceExtCss =
+			'<link rel="stylesheet" href="' +
+			chrome.extension.getURL('lib/vue-sequence-ext.css') +
+			'"></link>';
+		var fontIndieFlower =
+			'<link rel="stylesheet" href="' +
+			'https://fonts.googleapis.com/css?family=Indie+Flower' +
+			'"></link>';
 		var contents =
+			'<!DOCTYPE html>\n' +
 			'<html>\n<head>\n' +
 			'<meta charset="UTF-8" />\n' +
-			vueSequenceCss +
+			vueSequenceCss + vueSequenceExtCss + fontIndieFlower +
 			'\n' +
 			'<style id="webmakerstyle">\n' +
 			css +

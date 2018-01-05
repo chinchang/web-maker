@@ -10,7 +10,7 @@ customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
 globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 */
 /* eslint-disable no-extra-semi */
-(function(alertsService) {
+(function(alertsService, itemService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
 	var version = '2.9.6';
@@ -323,6 +323,10 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		});
 		// Push into the items hash if its a new item being saved
 		if (isNewItem) {
+			if (!window.IS_EXTENSION) {
+				itemService.setItemForUser(currentItem.id);
+				return;
+			}
 			db.local.get(
 				{
 					items: {}
@@ -408,7 +412,8 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		currentItem.mainSizes = getMainPaneSizes();
 
 		utils.log('saving key', key || currentItem.id, currentItem);
-		return saveSetting(key || currentItem.id, currentItem).then(() => {
+		saveSetting(key || currentItem.id, currentItem);
+		return itemService.setItem(key || currentItem.id, currentItem).then(() => {
 			alertsService.add('Item saved.');
 			unsavedEditCount = 0;
 			saveBtn.classList.remove('is-marked');
@@ -472,16 +477,26 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 	 * @param  {boolean} shouldSaveGlobally Whether to store the fetched items in global arr for later use.
 	 * @return {promise}                    Promise.
 	 */
-	function fetchItems(shouldSaveGlobally) {
+	async function fetchItems(shouldSaveGlobally) {
 		var d = deferred();
+		savedItems = savedItems || {};
+		var items = [];
+		if (!window.IS_EXTENSION) {
+			items = await itemService.getAllItems();
+			if (shouldSaveGlobally) {
+				items.forEach(item => {
+					savedItems[item.id] = item;
+				});
+			}
+			d.resolve(items);
+			return d.promise;
+		}
 		db.local.get('items', function(result) {
-			var itemIds = Object.getOwnPropertyNames(result.items || {}),
-				items = [];
+			var itemIds = Object.getOwnPropertyNames(result.items || {});
 			if (!itemIds.length) {
 				d.resolve([]);
 			}
 
-			savedItems = savedItems || {};
 			trackEvent('fn', 'fetchItems', itemIds.length);
 			for (let i = 0; i < itemIds.length; i++) {
 				/* eslint-disable no-loop-func */
@@ -1996,7 +2011,43 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		e.preventDefault();
 	};
 
+	scope.login = function(e) {
+		var config = {
+			apiKey: 'AIzaSyBl8Dz7ZOE7aP75mipYl2zKdLSRzBU2fFc',
+			authDomain: 'web-maker-app.firebaseapp.com',
+			databaseURL: 'https://web-maker-app.firebaseio.com',
+			projectId: 'web-maker-app',
+			storageBucket: 'web-maker-app.appspot.com',
+			messagingSenderId: '560473480645'
+		};
+		firebase.initializeApp(config);
+
+		firebase.auth().onAuthStateChanged(function(user) {
+			if (user) {
+				utils.log(user);
+				scope.user = window.user = user;
+				//   itemService.setUser();
+				// ...
+			} else {
+				// User is signed out.
+				// ...
+			}
+			// ...
+		});
+
+		firebase.auth().signInAnonymously().then().catch(function(error) {
+			// Handle Errors here.
+			utils.log(error);
+		});
+
+		if (e) {
+			e.preventDefault();
+		}
+	};
+
 	function init() {
+		scope.login();
+
 		var lastCode;
 
 		CodeMirror.modeURL = `lib/codemirror/mode/%N/%N.js`;
@@ -2514,4 +2565,4 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 	scope.closeAllOverlays = closeAllOverlays;
 
 	init();
-})(window.alertsService);
+})(window.alertsService, window.itemService);

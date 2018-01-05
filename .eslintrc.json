@@ -46,7 +46,7 @@
 		"new-parens": "error",
 		"newline-after-var": "off",
 		"newline-before-return": "off",
-		"newline-per-chained-call": "error",
+		"newline-per-chained-call": "off",
 		"no-alert": "off",
 		"no-array-constructor": "error",
 		"no-bitwise": "off",
@@ -201,6 +201,7 @@
 		"utils": true,
 		"Promise": true,
 		"Inlet": true,
-		"db": true
+		"db": true,
+		"firebase": true
 	}
 }

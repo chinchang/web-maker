@@ -2073,12 +2073,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			) {
 				hasSeenNotifications = true;
 				notificationsBtn.classList.remove('has-new');
-				db.sync.set(
-					{
-						lastSeenVersion: version
-					},
-					function() {}
-				);
+				window.db.setUserLastSeenVersion(window.user.uid, version);
 			}
 			trackEvent('ui', 'notificationButtonClick', version);
 			return false;
@@ -2385,6 +2380,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			if (result.preserveLastCode && lastCode) {
 				unsavedEditCount = 0;
 				if (lastCode.id) {
+					// Ignore for remote db
 					db.local.get(lastCode.id, function(itemResult) {
 						utils.log('Load item ', lastCode.id);
 						currentItem = itemResult[lastCode.id];
@@ -2405,37 +2401,27 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		});
 
 		// Check for new version notifications
-		db.sync.get(
-			{
-				lastSeenVersion: ''
-			},
-			function syncGetCallback(result) {
-				// Check if new user
-				if (!result.lastSeenVersion) {
-					onboardModal.classList.add('is-modal-visible');
-					if (document.cookie.indexOf('onboarded') === -1) {
-						trackEvent('ui', 'onboardModalSeen', version);
-						document.cookie = 'onboarded=1';
-					}
-					db.sync.set(
-						{
-							lastSeenVersion: version
-						},
-						function() {}
-					);
-					// set some initial preferences on closing the onboard modal
-					// Old onboarding.
-					// utils.once(document, 'overlaysClosed', function() {});
+		db.getUserLastSeenVersion().then(lastSeenVersion => {
+			// Check if new user
+			if (!lastSeenVersion) {
+				onboardModal.classList.add('is-modal-visible');
+				if (document.cookie.indexOf('onboarded') === -1) {
+					trackEvent('ui', 'onboardModalSeen', version);
+					document.cookie = 'onboarded=1';
 				}
-				if (
-					!result.lastSeenVersion ||
-					utils.semverCompare(result.lastSeenVersion, version) === -1
-				) {
-					notificationsBtn.classList.add('has-new');
-					hasSeenNotifications = false;
-				}
+				window.db.setUserLastSeenVersion(window.user, version);
+				// set some initial preferences on closing the onboard modal
+				// Old onboarding.
+				// utils.once(document, 'overlaysClosed', function() {});
 			}
-		);
+			if (
+				!lastSeenVersion ||
+				utils.semverCompare(lastSeenVersion, version) === -1
+			) {
+				notificationsBtn.classList.add('has-new');
+				hasSeenNotifications = false;
+			}
+		});
 
 		scope.acssSettingsCm = CodeMirror.fromTextArea(acssSettingsTextarea, {
 			mode: 'application/ld+json'

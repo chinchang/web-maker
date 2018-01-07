@@ -4,6 +4,33 @@
 	var db;
 	var dbPromise;
 
+	var local = {
+		get: (obj, cb) => {
+			const retVal = {};
+			if (typeof obj === 'string') {
+				retVal[obj] = JSON.parse(window.localStorage.getItem(obj));
+				setTimeout(() => cb(retVal), FAUX_DELAY);
+			} else {
+				Object.keys(obj).forEach(key => {
+					const val = window.localStorage.getItem(key);
+					retVal[key] =
+						val === undefined || val === null ? obj[key] : JSON.parse(val);
+				});
+				setTimeout(() => cb(retVal), FAUX_DELAY);
+			}
+		},
+		set: (obj, cb) => {
+			Object.keys(obj).forEach(key => {
+				window.localStorage.setItem(key, JSON.stringify(obj[key]));
+			});
+			setTimeout(() => {
+				if (cb) {
+					return cb();
+				}
+			}, FAUX_DELAY);
+		}
+	};
+
 	async function getDb() {
 		if (dbPromise) {
 			return dbPromise;
@@ -38,6 +65,44 @@
 		return dbPromise;
 	}
 
+	async function getUserLastSeenVersion() {
+		const d = deferred();
+		if (window.IS_EXTENSION) {
+			chrome.storage.sync.get(
+				{
+					lastSeenVersion: ''
+				},
+				function syncGetCallback(result) {
+					d.resolve(result.lastSeenVersion);
+				}
+			);
+		}
+		local.get('lastSeenVersion', result => {
+			d.resolve(result.lastSeenVersion);
+		});
+		// Might consider getting actual value from remote db.
+		// Not critical right now.
+	}
+
+	async function setUserLastSeenVersion(user, version) {
+		if (window.IS_EXTENSION) {
+			chrome.storage.sync.set(
+				{
+					lastSeenVersion: version
+				},
+				function() {}
+			);
+			return;
+		}
+		// Settings the lastSeenVersion in localStorage also because next time we need
+		// to fetch it irrespective of the user being logged in or out
+		local.set({ lastSeenVersion: version });
+		if (user) {
+			const remoteDb = await getDb();
+			remoteDb.doc(`users/${user.uid}`).update({ lastSeenVersion: version });
+		}
+	}
+
 	async function getUser(userId) {
 		const remoteDb = await getDb();
 		return remoteDb.doc(`users/${userId}`).get().then(doc => {
@@ -46,35 +111,11 @@
 		});
 	}
 
-	var local = {
-		get: (obj, cb) => {
-			const retVal = {};
-			if (typeof obj === 'string') {
-				retVal[obj] = JSON.parse(window.localStorage.getItem(obj));
-				setTimeout(() => cb(retVal), FAUX_DELAY);
-			} else {
-				Object.keys(obj).forEach(key => {
-					const val = window.localStorage.getItem(key);
-					retVal[key] =
-						val === undefined || val === null ? obj[key] : JSON.parse(val);
-				});
-				setTimeout(() => cb(retVal), FAUX_DELAY);
-			}
-		},
-		set: (obj, cb) => {
-			Object.keys(obj).forEach(key => {
-				window.localStorage.setItem(key, JSON.stringify(obj[key]));
-			});
-			setTimeout(() => {
-				if (cb) {
-					return cb();
-				}
-			}, FAUX_DELAY);
-		}
-	};
 	window.db = {
 		getDb,
 		getUser,
+		getUserLastSeenVersion,
+		setUserLastSeenVersion,
 		local: chrome && chrome.storage ? chrome.storage.local : local,
 		sync: chrome && chrome.storage ? chrome.storage.sync : local
 	};

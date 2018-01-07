@@ -1710,7 +1710,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			db.sync.set(obj, function() {
 				alertsService.add('Setting saved');
 			});
-			window.db.getDb(remoteDb => {
+			window.db.getDb().then(remoteDb => {
 				remoteDb
 					.collection('users')
 					.doc(window.user.uid)
@@ -2376,7 +2376,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		);
 
 		// Get synced `preserveLastCode` setting to get back last code (or not).
-		db.sync.get(defaultSettings, function syncGetCallback(result) {
+		db.getSettings(defaultSettings).then(result => {
 			if (result.preserveLastCode && lastCode) {
 				unsavedEditCount = 0;
 				if (lastCode.id) {

@@ -23,13 +23,17 @@
 			Object.keys(obj).forEach(key => {
 				window.localStorage.setItem(key, JSON.stringify(obj[key]));
 			});
+			/* eslint-disable consistent-return */
 			setTimeout(() => {
 				if (cb) {
 					return cb();
 				}
 			}, FAUX_DELAY);
+			/* eslint-enable consistent-return */
 		}
 	};
+	const dbLocalAlias = chrome && chrome.storage ? chrome.storage.local : local;
+	const dbSyncAlias = chrome && chrome.storage ? chrome.storage.sync : local;
 
 	async function getDb() {
 		if (dbPromise) {
@@ -67,19 +71,17 @@
 
 	async function getUserLastSeenVersion() {
 		const d = deferred();
-		if (window.IS_EXTENSION) {
-			chrome.storage.sync.get(
-				{
-					lastSeenVersion: ''
-				},
-				function syncGetCallback(result) {
-					d.resolve(result.lastSeenVersion);
-				}
-			);
-		}
-		local.get('lastSeenVersion', result => {
-			d.resolve(result.lastSeenVersion);
-		});
+		// Will be chrome.storage.sync in extension environment,
+		// otherwise will fallback to localstorage
+		dbSyncAlias.get(
+			{
+				lastSeenVersion: ''
+			},
+			result => {
+				d.resolve(result.lastSeenVersion);
+			}
+		);
+		return d.promise;
 		// Might consider getting actual value from remote db.
 		// Not critical right now.
 	}
@@ -111,12 +113,23 @@
 		});
 	}
 
+	function getSettings(defaultSettings) {
+		const d = deferred();
+		// Will be chrome.storage.sync in extension environment,
+		// otherwise will fallback to localstorage
+		dbSyncAlias.get(defaultSettings, result => {
+			d.resolve(result);
+		});
+		return d.promise;
+	}
+
 	window.db = {
 		getDb,
 		getUser,
 		getUserLastSeenVersion,
 		setUserLastSeenVersion,
-		local: chrome && chrome.storage ? chrome.storage.local : local,
-		sync: chrome && chrome.storage ? chrome.storage.sync : local
+		getSettings,
+		local: dbLocalAlias,
+		sync: dbSyncAlias
 	};
 })();

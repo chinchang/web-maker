@@ -348,6 +348,9 @@ body > #demo-frame {
 .main-header__btn-wrap > a:hover {
 	border-color: rgba(146, 151, 179, 0.5);
 }
+.main-header__avatar-img {
+	border-radius: 50%;
+}
 .logo {
 	display: inline-block;
 	height: 25px;

@@ -483,6 +483,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		var items = [];
 		if (!window.IS_EXTENSION) {
 			items = await itemService.getAllItems();
+
 			if (shouldSaveGlobally) {
 				items.forEach(item => {
 					savedItems[item.id] = item;
@@ -524,6 +525,8 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 	}
 	function setCurrentItem(item) {
 		currentItem = item;
+		utils.log('Current Item set', item);
+
 		// Reset auto-saving flag
 		isAutoSavingEnabled = false;
 		// Reset unsaved count, in UI also.
@@ -588,26 +591,17 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 
 		itemTile.remove();
 		// Remove from items list
-		db.local.get(
-			{
-				items: {}
-			},
-			function(result) {
-				delete result.items[itemId];
-				db.local.set({
-					items: result.items
-				});
-			}
-		);
+		itemService.unsetItemForUser(itemId);
 
 		// Remove individual item too.
-		db.local.remove(itemId, function() {
+		itemService.removeItem(itemId).then(() => {
 			alertsService.add('Item removed.');
 			// This item is open in the editor. Lets open a new one.
 			if (currentItem.id === itemId) {
 				createNewItem();
 			}
 		});
+
 		// Remove from cached list
 		delete savedItems[itemId];
 

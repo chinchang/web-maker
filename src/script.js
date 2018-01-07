@@ -19,6 +19,28 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		window.scope = scope;
 	}
 
+	const defaultSettings = {
+		preserveLastCode: true,
+		replaceNewTab: false,
+		htmlMode: 'html',
+		jsMode: 'js',
+		cssMode: 'css',
+		isCodeBlastOn: false,
+		indentWith: 'spaces',
+		indentSize: 2,
+		editorTheme: 'monokai',
+		keymap: 'sublime',
+		fontSize: 16,
+		refreshOnResize: false,
+		autoPreview: true,
+		editorFont: 'FiraCode',
+		editorCustomFont: '',
+		autoSave: true,
+		autoComplete: true,
+		preserveConsoleLogs: true,
+		lightVersion: false,
+		lineWrap: true
+	};
 	var HtmlModes = {
 		HTML: 'html',
 		MARKDOWN: 'markdown',
@@ -301,8 +323,9 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 
 	function saveSetting(setting, value) {
 		const d = deferred();
-		var obj = {};
-		obj[setting] = value;
+		const obj = {
+			[setting]: value
+		};
 		db.local.set(obj, d.resolve);
 		return d.promise;
 	}
@@ -323,21 +346,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		});
 		// Push into the items hash if its a new item being saved
 		if (isNewItem) {
-			if (!window.IS_EXTENSION) {
-				itemService.setItemForUser(currentItem.id);
-				return;
-			}
-			db.local.get(
-				{
-					items: {}
-				},
-				function(result) {
-					result.items[currentItem.id] = true;
-					db.local.set({
-						items: result.items
-					});
-				}
-			);
+			itemService.setItemForUser(currentItem.id);
 		}
 	}
 
@@ -1716,6 +1725,18 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			db.sync.set(obj, function() {
 				alertsService.add('Setting saved');
 			});
+			window.db.getDb(remoteDb => {
+				remoteDb
+					.collection('users')
+					.doc(window.user.uid)
+					.update({
+						[`settings.${settingName}`]: prefs[settingName]
+					})
+					.then(arg => {
+						console.log(`Setting "${settingName}" for user`, arg);
+					})
+					.catch(error => console.log(error));
+			});
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
 
@@ -2006,6 +2027,17 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 	};
 
 	scope.login = function(e) {
+		firebase.auth().signInAnonymously().then().catch(function(error) {
+			// Handle Errors here.
+			utils.log(error);
+		});
+
+		if (e) {
+			e.preventDefault();
+		}
+	};
+
+	function init() {
 		var config = {
 			apiKey: 'AIzaSyBl8Dz7ZOE7aP75mipYl2zKdLSRzBU2fFc',
 			authDomain: 'web-maker-app.firebaseapp.com',
@@ -2018,29 +2050,17 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
-				utils.log(user);
+				utils.log('You are -> ', user);
 				scope.user = window.user = user;
-				//   itemService.setUser();
-				// ...
+				window.db.getUser(user.uid).then(() => {
+					Object.assign(prefs, user.settings);
+					updateSettingsInUi();
+					scope.updateSetting();
+				});
 			} else {
 				// User is signed out.
-				// ...
 			}
-			// ...
 		});
-
-		firebase.auth().signInAnonymously().then().catch(function(error) {
-			// Handle Errors here.
-			utils.log(error);
-		});
-
-		if (e) {
-			e.preventDefault();
-		}
-	};
-
-	function init() {
-		scope.login();
 
 		var lastCode;
 
@@ -2376,71 +2396,28 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		);
 
 		// Get synced `preserveLastCode` setting to get back last code (or not).
-		db.sync.get(
-			{
-				preserveLastCode: true,
-				replaceNewTab: false,
-				htmlMode: 'html',
-				jsMode: 'js',
-				cssMode: 'css',
-				isCodeBlastOn: false,
-				indentWith: 'spaces',
-				indentSize: 2,
-				editorTheme: 'monokai',
-				keymap: 'sublime',
-				fontSize: 16,
-				refreshOnResize: false,
-				autoPreview: true,
-				editorFont: 'FiraCode',
-				editorCustomFont: '',
-				autoSave: true,
-				autoComplete: true,
-				preserveConsoleLogs: true,
-				lightVersion: false,
-				lineWrap: true
-			},
-			function syncGetCallback(result) {
-				if (result.preserveLastCode && lastCode) {
-					unsavedEditCount = 0;
-					if (lastCode.id) {
-						db.local.get(lastCode.id, function(itemResult) {
-							utils.log('Load item ', lastCode.id);
-							currentItem = itemResult[lastCode.id];
-							refreshEditor();
-						});
-					} else {
-						utils.log('Load last unsaved item', lastCode);
-						currentItem = lastCode;
+		db.sync.get(defaultSettings, function syncGetCallback(result) {
+			if (result.preserveLastCode && lastCode) {
+				unsavedEditCount = 0;
+				if (lastCode.id) {
+					db.local.get(lastCode.id, function(itemResult) {
+						utils.log('Load item ', lastCode.id);
+						currentItem = itemResult[lastCode.id];
 						refreshEditor();
-					}
+					});
 				} else {
-					createNewItem();
+					utils.log('Load last unsaved item', lastCode);
+					currentItem = lastCode;
+					refreshEditor();
 				}
-				prefs.preserveLastCode = result.preserveLastCode;
-				prefs.replaceNewTab = result.replaceNewTab;
-				prefs.htmlMode = result.htmlMode;
-				prefs.cssMode = result.cssMode;
-				prefs.jsMode = result.jsMode;
-				prefs.isCodeBlastOn = result.isCodeBlastOn;
-				prefs.indentSize = result.indentSize;
-				prefs.indentWith = result.indentWith;
-				prefs.editorTheme = result.editorTheme;
-				prefs.keymap = result.keymap;
-				prefs.fontSize = result.fontSize;
-				prefs.refreshOnResize = result.refreshOnResize;
-				prefs.autoPreview = result.autoPreview;
-				prefs.editorFont = result.editorFont;
-				prefs.editorCustomFont = result.editorCustomFont;
-				prefs.autoSave = result.autoSave;
-				prefs.autoComplete = result.autoComplete;
-				prefs.preserveConsoleLogs = result.preserveConsoleLogs;
-				prefs.lightVersion = result.lightVersion;
-				prefs.lineWrap = result.lineWrap;
-
-				updateSettingsInUi();
-				scope.updateSetting();
+			} else {
+				createNewItem();
 			}
-		);
+			Object.assign(prefs, result);
+
+			updateSettingsInUi();
+			scope.updateSetting();
+		});
 
 		// Check for new version notifications
 		db.sync.get(

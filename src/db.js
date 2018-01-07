@@ -8,11 +8,12 @@
 		if (dbPromise) {
 			return dbPromise;
 		}
+		utils.log('Initializing firestore');
 		dbPromise = new Promise((resolve, reject) => {
 			if (db) {
 				return resolve(db);
 			}
-			firebase
+			return firebase
 				.firestore()
 				.enablePersistence()
 				.then(function() {
@@ -37,6 +38,14 @@
 		return dbPromise;
 	}
 
+	async function getUser(userId) {
+		const remoteDb = await getDb();
+		return remoteDb.doc(`users/${userId}`).get().then(doc => {
+			const user = doc.data();
+			Object.assign(window.user, user);
+		});
+	}
+
 	var local = {
 		get: (obj, cb) => {
 			const retVal = {};
@@ -58,13 +67,14 @@
 			});
 			setTimeout(() => {
 				if (cb) {
-					cb();
+					return cb();
 				}
 			}, FAUX_DELAY);
 		}
 	};
 	window.db = {
 		getDb,
+		getUser,
 		local: chrome && chrome.storage ? chrome.storage.local : local,
 		sync: chrome && chrome.storage ? chrome.storage.sync : local
 	};

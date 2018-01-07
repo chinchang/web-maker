@@ -1,44 +1,45 @@
 (() => {
 	window.itemService = {
 		async getItem(id) {
-			var db = await window.db.getDb();
-			return db.doc(`items/${id}`).get().then(doc => {
+			var remoteDb = await window.db.getDb();
+			return remoteDb.doc(`items/${id}`).get().then(doc => {
 				return doc.data();
+			});
+		},
+		async getUserItemIds() {
+			if (window.user && window.user.items) {
+				return new Promise(resolve => {
+					resolve(window.user.items);
+				});
+			}
+			var remoteDb = await window.db.getDb();
+			return remoteDb.doc(`users/${window.user.uid}`).get().then(doc => {
+				return doc.data().items;
 			});
 		},
 
 		async getAllItems() {
 			var d = deferred();
-			var remoteDb = await window.db.getDb();
+			let itemIds = await this.getUserItemIds();
+			itemIds = Object.getOwnPropertyNames(itemIds || {});
+			console.log('itemids', itemIds);
 
-			remoteDb
-				.doc(`users/${window.user.uid}`)
-				.get()
-				.then(doc => {
-					return doc.data().items;
-				})
-				.then(itemIdsObj => {
-					var itemIds = Object.getOwnPropertyNames(itemIdsObj || {});
-					console.log('itemids', itemIds);
+			if (!itemIds.length) {
+				d.resolve([]);
+			}
 
-					if (!itemIds.length) {
-						d.resolve([]);
+			const items = [];
+			for (let i = 0; i < itemIds.length; i++) {
+				const id = itemIds[i];
+				utils.log('Starting to fetch item ', id);
+				this.getItem(id).then(item => {
+					items.push(item);
+					// Check if we have all items now.
+					if (itemIds.length === items.length) {
+						d.resolve(items);
 					}
-
-					var items = [];
-					for (let i = 0; i < itemIds.length; i++) {
-						const id = itemIds[i];
-						utils.log('Starting to fetch item ', id);
-						this.getItem(id).then(item => {
-							items.push(item);
-							// Check if we have all items now.
-							if (itemIds.length === items.length) {
-								d.resolve(items);
-							}
-						});
-					}
-					return items;
 				});
+			}
 			return d.promise;
 		},
 
@@ -83,7 +84,20 @@
 		},
 
 		async setItemForUser(itemId) {
-			var remoteDb = await window.db.getDb();
+			if (window.IS_EXTENSION) {
+				return window.db.local.get(
+					{
+						items: {}
+					},
+					function(result) {
+						result.items[itemId] = true;
+						window.db.local.set({
+							items: result.items
+						});
+					}
+				);
+			}
+			const remoteDb = await window.db.getDb();
 			return remoteDb
 				.collection('users')
 				.doc(window.user.uid)

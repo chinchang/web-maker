@@ -1431,49 +1431,6 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		e.preventDefault();
 	};
 
-	/**
-	 * Saves the passed items in the database.
-	 * @param {Array} items to be saved in DB
-	 */
-	function saveItemsToBeMerged(items) {
-		var d = deferred();
-		if (window.IS_EXTENSION) {
-			// save new items
-			db.local.set(items, d.resolve);
-			// Push in new item IDs
-			db.local.get(
-				{
-					items: {}
-				},
-				function(result) {
-					/* eslint-disable guard-for-in */
-					for (var id in items) {
-						result.items[id] = true;
-					}
-					db.local.set({
-						items: result.items
-					});
-					/* eslint-enable guard-for-in */
-				}
-			);
-		} else {
-			window.db.getDb().then(remoteDb => {
-				const batch = remoteDb.batch();
-				/* eslint-disable guard-for-in */
-				for (var id in items) {
-					batch.set(remoteDb.doc(`items/${id}`), items[id]);
-					batch.update(remoteDb.doc(`users/${window.user.uid}`), {
-						[`items.${id}`]: true
-					});
-					// Set these items on out cached user object too
-					window.user.items[id] = true;
-				}
-				batch.commit().then(d.resolve);
-				/* eslint-enable guard-for-in */
-			});
-		}
-		return d.promise;
-	}
 	function mergeImportedItems(items) {
 		var existingItemIds = [];
 		var toMergeItems = {};
@@ -1504,7 +1461,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			}
 		}
 		if (mergedItemCount) {
-			saveItemsToBeMerged(toMergeItems).then(() => {
+			itemService.saveItems(toMergeItems).then(() => {
 				alertsService.add(
 					mergedItemCount + ' creations imported successfully.'
 				);

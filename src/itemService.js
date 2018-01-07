@@ -53,6 +53,7 @@
 		async setItem(id, item) {
 			var remoteDb = await window.db.getDb();
 			console.log(`Starting to save item ${id}`);
+			item.createdBy = window.user.uid;
 			return remoteDb
 				.collection('items')
 				.doc(id)
@@ -95,6 +96,7 @@
 					const batch = remoteDb.batch();
 					/* eslint-disable guard-for-in */
 					for (var id in items) {
+						items[id].createdBy = window.user.uid;
 						batch.set(remoteDb.doc(`items/${id}`), items[id]);
 						batch.update(remoteDb.doc(`users/${window.user.uid}`), {
 							[`items.${id}`]: true

@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 109);
+/******/ 	return __webpack_require__(__webpack_require__.s = 116);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -175,285 +175,6 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var store = __webpack_require__(29)('wks');
-var uid = __webpack_require__(32);
-var Symbol = __webpack_require__(2).Symbol;
-var USE_SYMBOL = typeof Symbol == 'function';
-
-var $exports = module.exports = function (name) {
-  return store[name] || (store[name] =
-    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
-};
-
-$exports.store = store;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
-var global = module.exports = typeof window != 'undefined' && window.Math == Math
-  ? window : typeof self != 'undefined' && self.Math == Math ? self
-  // eslint-disable-next-line no-new-func
-  : Function('return this')();
-if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isObject = __webpack_require__(13);
-module.exports = function (it) {
-  if (!isObject(it)) throw TypeError(it + ' is not an object!');
-  return it;
-};
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-var core = module.exports = { version: '2.5.1' };
-if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// Thank's IE8 for his funny defineProperty
-module.exports = !__webpack_require__(12)(function () {
-  return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
-});
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-var hasOwnProperty = {}.hasOwnProperty;
-module.exports = function (it, key) {
-  return hasOwnProperty.call(it, key);
-};
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var dP = __webpack_require__(8);
-var createDesc = __webpack_require__(15);
-module.exports = __webpack_require__(5) ? function (object, key, value) {
-  return dP.f(object, key, createDesc(1, value));
-} : function (object, key, value) {
-  object[key] = value;
-  return object;
-};
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var anObject = __webpack_require__(3);
-var IE8_DOM_DEFINE = __webpack_require__(58);
-var toPrimitive = __webpack_require__(75);
-var dP = Object.defineProperty;
-
-exports.f = __webpack_require__(5) ? Object.defineProperty : function defineProperty(O, P, Attributes) {
-  anObject(O);
-  P = toPrimitive(P, true);
-  anObject(Attributes);
-  if (IE8_DOM_DEFINE) try {
-    return dP(O, P, Attributes);
-  } catch (e) { /* empty */ }
-  if ('get' in Attributes || 'set' in Attributes) throw TypeError('Accessors not supported!');
-  if ('value' in Attributes) O[P] = Attributes.value;
-  return O;
-};
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(0)(
-  /* script */
-  __webpack_require__(39),
-  /* template */
-  __webpack_require__(106),
-  /* styles */
-  null,
-  /* scopeId */
-  null,
-  /* moduleIdentifier (server only) */
-  null
-)
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports) {
-
-// 7.2.1 RequireObjectCoercible(argument)
-module.exports = function (it) {
-  if (it == undefined) throw TypeError("Can't call method on  " + it);
-  return it;
-};
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var global = __webpack_require__(2);
-var core = __webpack_require__(4);
-var ctx = __webpack_require__(23);
-var hide = __webpack_require__(7);
-var PROTOTYPE = 'prototype';
-
-var $export = function (type, name, source) {
-  var IS_FORCED = type & $export.F;
-  var IS_GLOBAL = type & $export.G;
-  var IS_STATIC = type & $export.S;
-  var IS_PROTO = type & $export.P;
-  var IS_BIND = type & $export.B;
-  var IS_WRAP = type & $export.W;
-  var exports = IS_GLOBAL ? core : core[name] || (core[name] = {});
-  var expProto = exports[PROTOTYPE];
-  var target = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE];
-  var key, own, out;
-  if (IS_GLOBAL) source = name;
-  for (key in source) {
-    // contains in native
-    own = !IS_FORCED && target && target[key] !== undefined;
-    if (own && key in exports) continue;
-    // export native or passed
-    out = own ? target[key] : source[key];
-    // prevent global pollution for namespaces
-    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
-    // bind timers to global for call from export context
-    : IS_BIND && own ? ctx(out, global)
-    // wrap global constructors for prevent change them in library
-    : IS_WRAP && target[key] == out ? (function (C) {
-      var F = function (a, b, c) {
-        if (this instanceof C) {
-          switch (arguments.length) {
-            case 0: return new C();
-            case 1: return new C(a);
-            case 2: return new C(a, b);
-          } return new C(a, b, c);
-        } return C.apply(this, arguments);
-      };
-      F[PROTOTYPE] = C[PROTOTYPE];
-      return F;
-    // make static versions for prototype methods
-    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
-    // export proto methods to core.%CONSTRUCTOR%.methods.%NAME%
-    if (IS_PROTO) {
-      (exports.virtual || (exports.virtual = {}))[key] = out;
-      // export proto methods to core.%CONSTRUCTOR%.prototype.%NAME%
-      if (type & $export.R && expProto && !expProto[key]) hide(expProto, key, out);
-    }
-  }
-};
-// type bitmap
-$export.F = 1;   // forced
-$export.G = 2;   // global
-$export.S = 4;   // static
-$export.P = 8;   // proto
-$export.B = 16;  // bind
-$export.W = 32;  // wrap
-$export.U = 64;  // safe
-$export.R = 128; // real proto method for `library`
-module.exports = $export;
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports) {
-
-module.exports = function (exec) {
-  try {
-    return !!exec();
-  } catch (e) {
-    return true;
-  }
-};
-
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports) {
-
-module.exports = function (it) {
-  return typeof it === 'object' ? it !== null : typeof it === 'function';
-};
-
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports) {
-
-module.exports = {};
-
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports) {
-
-module.exports = function (bitmap, value) {
-  return {
-    enumerable: !(bitmap & 1),
-    configurable: !(bitmap & 2),
-    writable: !(bitmap & 4),
-    value: value
-  };
-};
-
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var shared = __webpack_require__(29)('keys');
-var uid = __webpack_require__(32);
-module.exports = function (key) {
-  return shared[key] || (shared[key] = uid(key));
-};
-
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports) {
-
-// 7.1.4 ToInteger
-var ceil = Math.ceil;
-var floor = Math.floor;
-module.exports = function (it) {
-  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
-};
-
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 7.1.13 ToObject(argument)
-var defined = __webpack_require__(10);
-module.exports = function (it) {
-  return Object(defined(it));
-};
-
-
-/***/ }),
-/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -8497,6 +8218,15 @@ sequenceListener.prototype.exitMessage = function(ctx) {
 };
 
 
+// Enter a parse tree produced by sequenceParser#assignment.
+sequenceListener.prototype.enterAssignment = function(ctx) {
+};
+
+// Exit a parse tree produced by sequenceParser#assignment.
+sequenceListener.prototype.exitAssignment = function(ctx) {
+};
+
+
 // Enter a parse tree produced by sequenceParser#type.
 sequenceListener.prototype.enterType = function(ctx) {
 };
@@ -8834,6 +8564,10 @@ ChildFragmentDetector.prototype.depth = function (me) {
 }
 
 var childFragmentDetector = new ChildFragmentDetector()
+
+antlr4.ParserRuleContext.prototype.getCode = function() {
+  return this.parser.getTokenStream().getText(this.getSourceInterval())
+};
 
 module.exports=  {
   RootContext: rootContext,
@@ -13480,10 +13214,10 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u0002\u00fa\u00fb\u0003\u0002\u0002\u0002\u00fb\u00fd\u0003\u0002\u0002",
     "\u0002\u00fc\u00fa\u0003\u0002\u0002\u0002\u00fd\u00fe\b\'\u0002\u0002",
     "\u00feN\u0003\u0002\u0002\u0002\u00ff\u0100\t\u0007\u0002\u0002\u0100",
-    "\u0101\u0003\u0002\u0002\u0002\u0101\u0102\b(\u0002\u0002\u0102P\u0003",
+    "\u0101\u0003\u0002\u0002\u0002\u0101\u0102\b(\u0003\u0002\u0102P\u0003",
     "\u0002\u0002\u0002\u0103\u0104\u000b\u0002\u0002\u0002\u0104R\u0003",
     "\u0002\u0002\u0002\r\u0002\u00c0\u00cd\u00d3\u00d8\u00de\u00e5\u00e7",
-    "\u00ed\u00ef\u00fa\u0003\b\u0002\u0002"].join("");
+    "\u00ed\u00ef\u00fa\u0004\b\u0002\u0002\u0002\u0003\u0002"].join("");
 
 
 var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
@@ -13594,139 +13328,141 @@ var sequenceListener = __webpack_require__(31).sequenceListener;
 var grammarFileName = "sequence.g4";
 
 var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
-    "\u0003*\u00d7\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
+    "\u0003*\u00da\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
     "\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t\u0007\u0004",
     "\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004\f\t\f\u0004",
     "\r\t\r\u0004\u000e\t\u000e\u0004\u000f\t\u000f\u0004\u0010\t\u0010\u0004",
     "\u0011\t\u0011\u0004\u0012\t\u0012\u0004\u0013\t\u0013\u0004\u0014\t",
-    "\u0014\u0004\u0015\t\u0015\u0004\u0016\t\u0016\u0004\u0017\t\u0017\u0003",
-    "\u0002\u0005\u00020\n\u0002\u0003\u0002\u0003\u0002\u0003\u0002\u0003",
-    "\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0005\u00039\n\u0003\u0003",
-    "\u0003\u0003\u0003\u0003\u0004\u0003\u0004\u0003\u0005\u0007\u0005@",
-    "\n\u0005\f\u0005\u000e\u0005C\u000b\u0005\u0003\u0005\u0005\u0005F\n",
-    "\u0005\u0003\u0006\u0003\u0006\u0003\u0006\u0005\u0006K\n\u0006\u0003",
-    "\u0006\u0005\u0006N\n\u0006\u0003\u0007\u0003\u0007\u0003\u0007\u0003",
-    "\u0007\u0003\u0007\u0005\u0007U\n\u0007\u0003\b\u0005\bX\n\b\u0003\b",
-    "\u0003\b\u0003\b\u0005\b]\n\b\u0003\b\u0003\b\u0003\b\u0005\bb\n\b\u0003",
-    "\b\u0003\b\u0003\b\u0005\bg\n\b\u0003\b\u0007\bj\n\b\f\b\u000e\bm\u000b",
-    "\b\u0003\b\u0003\b\u0003\b\u0003\b\u0003\b\u0005\bt\n\b\u0003\t\u0003",
-    "\t\u0003\n\u0003\n\u0003\u000b\u0003\u000b\u0003\u000b\u0005\u000b}",
-    "\n\u000b\u0003\u000b\u0003\u000b\u0003\f\u0003\f\u0003\r\u0003\r\u0003",
-    "\r\u0007\r\u0086\n\r\f\r\u000e\r\u0089\u000b\r\u0003\u000e\u0003\u000e",
-    "\u0005\u000e\u008d\n\u000e\u0003\u000f\u0003\u000f\u0007\u000f\u0091",
-    "\n\u000f\f\u000f\u000e\u000f\u0094\u000b\u000f\u0003\u000f\u0005\u000f",
-    "\u0097\n\u000f\u0003\u0010\u0003\u0010\u0003\u0010\u0003\u0010\u0003",
-    "\u0011\u0003\u0011\u0003\u0011\u0003\u0011\u0003\u0011\u0003\u0012\u0003",
-    "\u0012\u0003\u0012\u0003\u0013\u0003\u0013\u0003\u0013\u0003\u0013\u0003",
-    "\u0014\u0003\u0014\u0003\u0014\u0003\u0014\u0003\u0015\u0003\u0015\u0003",
-    "\u0015\u0003\u0015\u0003\u0015\u0003\u0015\u0005\u0015\u00b3\n\u0015",
-    "\u0003\u0015\u0003\u0015\u0003\u0015\u0003\u0015\u0003\u0015\u0003\u0015",
-    "\u0003\u0015\u0003\u0015\u0003\u0015\u0003\u0015\u0003\u0015\u0003\u0015",
-    "\u0003\u0015\u0003\u0015\u0003\u0015\u0003\u0015\u0003\u0015\u0003\u0015",
-    "\u0007\u0015\u00c7\n\u0015\f\u0015\u000e\u0015\u00ca\u000b\u0015\u0003",
-    "\u0016\u0003\u0016\u0003\u0016\u0003\u0016\u0003\u0016\u0005\u0016\u00d1",
-    "\n\u0016\u0003\u0017\u0003\u0017\u0003\u0017\u0003\u0017\u0003\u0017",
-    "\u0002\u0003(\u0018\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014",
-    "\u0016\u0018\u001a\u001c\u001e \"$&(*,\u0002\b\u0003\u0002\u0011\u0013",
-    "\u0003\u0002\u000f\u0010\u0003\u0002\u000b\u000e\u0003\u0002\t\n\u0003",
-    "\u0002%&\u0003\u0002\u001d\u001e\u0002\u00e2\u0002/\u0003\u0002\u0002",
-    "\u0002\u00044\u0003\u0002\u0002\u0002\u0006<\u0003\u0002\u0002\u0002",
-    "\bA\u0003\u0002\u0002\u0002\nG\u0003\u0002\u0002\u0002\fT\u0003\u0002",
-    "\u0002\u0002\u000e\\\u0003\u0002\u0002\u0002\u0010u\u0003\u0002\u0002",
-    "\u0002\u0012w\u0003\u0002\u0002\u0002\u0014|\u0003\u0002\u0002\u0002",
-    "\u0016\u0080\u0003\u0002\u0002\u0002\u0018\u0082\u0003\u0002\u0002\u0002",
-    "\u001a\u008c\u0003\u0002\u0002\u0002\u001c\u008e\u0003\u0002\u0002\u0002",
-    "\u001e\u0098\u0003\u0002\u0002\u0002 \u009c\u0003\u0002\u0002\u0002",
-    "\"\u00a1\u0003\u0002\u0002\u0002$\u00a4\u0003\u0002\u0002\u0002&\u00a8",
-    "\u0003\u0002\u0002\u0002(\u00b2\u0003\u0002\u0002\u0002*\u00d0\u0003",
-    "\u0002\u0002\u0002,\u00d2\u0003\u0002\u0002\u0002.0\u0005\u0004\u0003",
-    "\u0002/.\u0003\u0002\u0002\u0002/0\u0003\u0002\u0002\u000201\u0003\u0002",
-    "\u0002\u000212\u0005\b\u0005\u000223\u0007\u0002\u0002\u00033\u0003",
-    "\u0003\u0002\u0002\u000245\u0007\u0006\u0002\u000256\u0007\u0003\u0002",
-    "\u000268\u0007\u0019\u0002\u000279\u0005\u0006\u0004\u000287\u0003\u0002",
-    "\u0002\u000289\u0003\u0002\u0002\u00029:\u0003\u0002\u0002\u0002:;\u0007",
-    "\u001a\u0002\u0002;\u0005\u0003\u0002\u0002\u0002<=\u0007$\u0002\u0002",
-    "=\u0007\u0003\u0002\u0002\u0002>@\u0005\f\u0007\u0002?>\u0003\u0002",
-    "\u0002\u0002@C\u0003\u0002\u0002\u0002A?\u0003\u0002\u0002\u0002AB\u0003",
-    "\u0002\u0002\u0002BE\u0003\u0002\u0002\u0002CA\u0003\u0002\u0002\u0002",
-    "DF\u0005\n\u0006\u0002ED\u0003\u0002\u0002\u0002EF\u0003\u0002\u0002",
-    "\u0002F\t\u0003\u0002\u0002\u0002GJ\u0007#\u0002\u0002HK\u0005*\u0016",
-    "\u0002IK\u0007$\u0002\u0002JH\u0003\u0002\u0002\u0002JI\u0003\u0002",
-    "\u0002\u0002KM\u0003\u0002\u0002\u0002LN\u0007\u0017\u0002\u0002ML\u0003",
-    "\u0002\u0002\u0002MN\u0003\u0002\u0002\u0002N\u000b\u0003\u0002\u0002",
-    "\u0002OU\u0005\u001c\u000f\u0002PU\u0005&\u0014\u0002QU\u0005\u000e",
-    "\b\u0002RS\u0007*\u0002\u0002SU\b\u0007\u0001\u0002TO\u0003\u0002\u0002",
-    "\u0002TP\u0003\u0002\u0002\u0002TQ\u0003\u0002\u0002\u0002TR\u0003\u0002",
-    "\u0002\u0002U\r\u0003\u0002\u0002\u0002VX\u0005\u0010\t\u0002WV\u0003",
-    "\u0002\u0002\u0002WX\u0003\u0002\u0002\u0002XY\u0003\u0002\u0002\u0002",
-    "YZ\u0005\u0012\n\u0002Z[\u0007\u0018\u0002\u0002[]\u0003\u0002\u0002",
-    "\u0002\\W\u0003\u0002\u0002\u0002\\]\u0003\u0002\u0002\u0002]a\u0003",
-    "\u0002\u0002\u0002^_\u0005\u0014\u000b\u0002_`\u0007\u0004\u0002\u0002",
-    "`b\u0003\u0002\u0002\u0002a^\u0003\u0002\u0002\u0002ab\u0003\u0002\u0002",
-    "\u0002bc\u0003\u0002\u0002\u0002ck\u0005\u0016\f\u0002df\u0007\u0019",
-    "\u0002\u0002eg\u0005\u0018\r\u0002fe\u0003\u0002\u0002\u0002fg\u0003",
-    "\u0002\u0002\u0002gh\u0003\u0002\u0002\u0002hj\u0007\u001a\u0002\u0002",
-    "id\u0003\u0002\u0002\u0002jm\u0003\u0002\u0002\u0002ki\u0003\u0002\u0002",
-    "\u0002kl\u0003\u0002\u0002\u0002ls\u0003\u0002\u0002\u0002mk\u0003\u0002",
-    "\u0002\u0002nt\u0007\u0017\u0002\u0002op\u0007\u001b\u0002\u0002pq\u0005",
-    "\b\u0005\u0002qr\u0007\u001c\u0002\u0002rt\u0003\u0002\u0002\u0002s",
-    "n\u0003\u0002\u0002\u0002so\u0003\u0002\u0002\u0002st\u0003\u0002\u0002",
-    "\u0002t\u000f\u0003\u0002\u0002\u0002uv\u0007$\u0002\u0002v\u0011\u0003",
-    "\u0002\u0002\u0002wx\u0007$\u0002\u0002x\u0013\u0003\u0002\u0002\u0002",
-    "yz\u0007$\u0002\u0002z}\u0007\u0016\u0002\u0002{}\u0007\u0016\u0002",
-    "\u0002|y\u0003\u0002\u0002\u0002|{\u0003\u0002\u0002\u0002|}\u0003\u0002",
-    "\u0002\u0002}~\u0003\u0002\u0002\u0002~\u007f\u0007$\u0002\u0002\u007f",
-    "\u0015\u0003\u0002\u0002\u0002\u0080\u0081\u0007$\u0002\u0002\u0081",
-    "\u0017\u0003\u0002\u0002\u0002\u0082\u0087\u0005\u001a\u000e\u0002\u0083",
-    "\u0084\u0007\u0005\u0002\u0002\u0084\u0086\u0005\u001a\u000e\u0002\u0085",
-    "\u0083\u0003\u0002\u0002\u0002\u0086\u0089\u0003\u0002\u0002\u0002\u0087",
-    "\u0085\u0003\u0002\u0002\u0002\u0087\u0088\u0003\u0002\u0002\u0002\u0088",
-    "\u0019\u0003\u0002\u0002\u0002\u0089\u0087\u0003\u0002\u0002\u0002\u008a",
-    "\u008d\u0007$\u0002\u0002\u008b\u008d\u0005*\u0016\u0002\u008c\u008a",
-    "\u0003\u0002\u0002\u0002\u008c\u008b\u0003\u0002\u0002\u0002\u008d\u001b",
-    "\u0003\u0002\u0002\u0002\u008e\u0092\u0005\u001e\u0010\u0002\u008f\u0091",
-    "\u0005 \u0011\u0002\u0090\u008f\u0003\u0002\u0002\u0002\u0091\u0094",
-    "\u0003\u0002\u0002\u0002\u0092\u0090\u0003\u0002\u0002\u0002\u0092\u0093",
-    "\u0003\u0002\u0002\u0002\u0093\u0096\u0003\u0002\u0002\u0002\u0094\u0092",
-    "\u0003\u0002\u0002\u0002\u0095\u0097\u0005\"\u0012\u0002\u0096\u0095",
-    "\u0003\u0002\u0002\u0002\u0096\u0097\u0003\u0002\u0002\u0002\u0097\u001d",
-    "\u0003\u0002\u0002\u0002\u0098\u0099\u0007 \u0002\u0002\u0099\u009a",
-    "\u0005,\u0017\u0002\u009a\u009b\u0005$\u0013\u0002\u009b\u001f\u0003",
-    "\u0002\u0002\u0002\u009c\u009d\u0007!\u0002\u0002\u009d\u009e\u0007",
-    " \u0002\u0002\u009e\u009f\u0005,\u0017\u0002\u009f\u00a0\u0005$\u0013",
-    "\u0002\u00a0!\u0003\u0002\u0002\u0002\u00a1\u00a2\u0007!\u0002\u0002",
-    "\u00a2\u00a3\u0005$\u0013\u0002\u00a3#\u0003\u0002\u0002\u0002\u00a4",
-    "\u00a5\u0007\u001b\u0002\u0002\u00a5\u00a6\u0005\b\u0005\u0002\u00a6",
-    "\u00a7\u0007\u001c\u0002\u0002\u00a7%\u0003\u0002\u0002\u0002\u00a8",
-    "\u00a9\u0007\"\u0002\u0002\u00a9\u00aa\u0005,\u0017\u0002\u00aa\u00ab",
-    "\u0005$\u0013\u0002\u00ab\'\u0003\u0002\u0002\u0002\u00ac\u00ad\b\u0015",
-    "\u0001\u0002\u00ad\u00ae\u0007\u0010\u0002\u0002\u00ae\u00b3\u0005(",
-    "\u0015\u000b\u00af\u00b0\u0007\u0015\u0002\u0002\u00b0\u00b3\u0005(",
-    "\u0015\n\u00b1\u00b3\u0005*\u0016\u0002\u00b2\u00ac\u0003\u0002\u0002",
-    "\u0002\u00b2\u00af\u0003\u0002\u0002\u0002\u00b2\u00b1\u0003\u0002\u0002",
-    "\u0002\u00b3\u00c8\u0003\u0002\u0002\u0002\u00b4\u00b5\f\t\u0002\u0002",
-    "\u00b5\u00b6\t\u0002\u0002\u0002\u00b6\u00c7\u0005(\u0015\n\u00b7\u00b8",
-    "\f\b\u0002\u0002\u00b8\u00b9\t\u0003\u0002\u0002\u00b9\u00c7\u0005(",
-    "\u0015\t\u00ba\u00bb\f\u0007\u0002\u0002\u00bb\u00bc\t\u0004\u0002\u0002",
-    "\u00bc\u00c7\u0005(\u0015\b\u00bd\u00be\f\u0006\u0002\u0002\u00be\u00bf",
-    "\t\u0005\u0002\u0002\u00bf\u00c7\u0005(\u0015\u0007\u00c0\u00c1\f\u0005",
-    "\u0002\u0002\u00c1\u00c2\u0007\b\u0002\u0002\u00c2\u00c7\u0005(\u0015",
-    "\u0006\u00c3\u00c4\f\u0004\u0002\u0002\u00c4\u00c5\u0007\u0007\u0002",
-    "\u0002\u00c5\u00c7\u0005(\u0015\u0005\u00c6\u00b4\u0003\u0002\u0002",
-    "\u0002\u00c6\u00b7\u0003\u0002\u0002\u0002\u00c6\u00ba\u0003\u0002\u0002",
-    "\u0002\u00c6\u00bd\u0003\u0002\u0002\u0002\u00c6\u00c0\u0003\u0002\u0002",
-    "\u0002\u00c6\u00c3\u0003\u0002\u0002\u0002\u00c7\u00ca\u0003\u0002\u0002",
-    "\u0002\u00c8\u00c6\u0003\u0002\u0002\u0002\u00c8\u00c9\u0003\u0002\u0002",
-    "\u0002\u00c9)\u0003\u0002\u0002\u0002\u00ca\u00c8\u0003\u0002\u0002",
-    "\u0002\u00cb\u00d1\t\u0006\u0002\u0002\u00cc\u00d1\t\u0007\u0002\u0002",
-    "\u00cd\u00d1\u0007$\u0002\u0002\u00ce\u00d1\u0007\'\u0002\u0002\u00cf",
-    "\u00d1\u0007\u001f\u0002\u0002\u00d0\u00cb\u0003\u0002\u0002\u0002\u00d0",
-    "\u00cc\u0003\u0002\u0002\u0002\u00d0\u00cd\u0003\u0002\u0002\u0002\u00d0",
-    "\u00ce\u0003\u0002\u0002\u0002\u00d0\u00cf\u0003\u0002\u0002\u0002\u00d1",
-    "+\u0003\u0002\u0002\u0002\u00d2\u00d3\u0007\u0019\u0002\u0002\u00d3",
-    "\u00d4\u0005(\u0015\u0002\u00d4\u00d5\u0007\u001a\u0002\u0002\u00d5",
-    "-\u0003\u0002\u0002\u0002\u0018/8AEJMTW\\afks|\u0087\u008c\u0092\u0096",
-    "\u00b2\u00c6\u00c8\u00d0"].join("");
+    "\u0014\u0004\u0015\t\u0015\u0004\u0016\t\u0016\u0004\u0017\t\u0017\u0004",
+    "\u0018\t\u0018\u0003\u0002\u0005\u00022\n\u0002\u0003\u0002\u0003\u0002",
+    "\u0003\u0002\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0005\u0003",
+    ";\n\u0003\u0003\u0003\u0003\u0003\u0003\u0004\u0003\u0004\u0003\u0005",
+    "\u0007\u0005B\n\u0005\f\u0005\u000e\u0005E\u000b\u0005\u0003\u0005\u0005",
+    "\u0005H\n\u0005\u0003\u0006\u0003\u0006\u0003\u0006\u0005\u0006M\n\u0006",
+    "\u0003\u0006\u0005\u0006P\n\u0006\u0003\u0007\u0003\u0007\u0003\u0007",
+    "\u0003\u0007\u0003\u0007\u0005\u0007W\n\u0007\u0003\b\u0005\bZ\n\b\u0003",
+    "\b\u0003\b\u0003\b\u0005\b_\n\b\u0003\b\u0003\b\u0003\b\u0005\bd\n\b",
+    "\u0003\b\u0007\bg\n\b\f\b\u000e\bj\u000b\b\u0003\b\u0003\b\u0003\b\u0003",
+    "\b\u0003\b\u0005\bq\n\b\u0003\t\u0005\tt\n\t\u0003\t\u0003\t\u0003\t",
+    "\u0003\n\u0003\n\u0003\u000b\u0003\u000b\u0003\f\u0003\f\u0003\f\u0005",
+    "\f\u0080\n\f\u0003\f\u0003\f\u0003\r\u0003\r\u0003\u000e\u0003\u000e",
+    "\u0003\u000e\u0007\u000e\u0089\n\u000e\f\u000e\u000e\u000e\u008c\u000b",
+    "\u000e\u0003\u000f\u0003\u000f\u0005\u000f\u0090\n\u000f\u0003\u0010",
+    "\u0003\u0010\u0007\u0010\u0094\n\u0010\f\u0010\u000e\u0010\u0097\u000b",
+    "\u0010\u0003\u0010\u0005\u0010\u009a\n\u0010\u0003\u0011\u0003\u0011",
+    "\u0003\u0011\u0003\u0011\u0003\u0012\u0003\u0012\u0003\u0012\u0003\u0012",
+    "\u0003\u0012\u0003\u0013\u0003\u0013\u0003\u0013\u0003\u0014\u0003\u0014",
+    "\u0003\u0014\u0003\u0014\u0003\u0015\u0003\u0015\u0003\u0015\u0003\u0015",
+    "\u0003\u0016\u0003\u0016\u0003\u0016\u0003\u0016\u0003\u0016\u0003\u0016",
+    "\u0005\u0016\u00b6\n\u0016\u0003\u0016\u0003\u0016\u0003\u0016\u0003",
+    "\u0016\u0003\u0016\u0003\u0016\u0003\u0016\u0003\u0016\u0003\u0016\u0003",
+    "\u0016\u0003\u0016\u0003\u0016\u0003\u0016\u0003\u0016\u0003\u0016\u0003",
+    "\u0016\u0003\u0016\u0003\u0016\u0007\u0016\u00ca\n\u0016\f\u0016\u000e",
+    "\u0016\u00cd\u000b\u0016\u0003\u0017\u0003\u0017\u0003\u0017\u0003\u0017",
+    "\u0003\u0017\u0005\u0017\u00d4\n\u0017\u0003\u0018\u0003\u0018\u0003",
+    "\u0018\u0003\u0018\u0003\u0018\u0002\u0003*\u0019\u0002\u0004\u0006",
+    "\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018\u001a\u001c\u001e \"$&(*",
+    ",.\u0002\b\u0003\u0002\u0011\u0013\u0003\u0002\u000f\u0010\u0003\u0002",
+    "\u000b\u000e\u0003\u0002\t\n\u0003\u0002%&\u0003\u0002\u001d\u001e\u0002",
+    "\u00e4\u00021\u0003\u0002\u0002\u0002\u00046\u0003\u0002\u0002\u0002",
+    "\u0006>\u0003\u0002\u0002\u0002\bC\u0003\u0002\u0002\u0002\nI\u0003",
+    "\u0002\u0002\u0002\fV\u0003\u0002\u0002\u0002\u000eY\u0003\u0002\u0002",
+    "\u0002\u0010s\u0003\u0002\u0002\u0002\u0012x\u0003\u0002\u0002\u0002",
+    "\u0014z\u0003\u0002\u0002\u0002\u0016\u007f\u0003\u0002\u0002\u0002",
+    "\u0018\u0083\u0003\u0002\u0002\u0002\u001a\u0085\u0003\u0002\u0002\u0002",
+    "\u001c\u008f\u0003\u0002\u0002\u0002\u001e\u0091\u0003\u0002\u0002\u0002",
+    " \u009b\u0003\u0002\u0002\u0002\"\u009f\u0003\u0002\u0002\u0002$\u00a4",
+    "\u0003\u0002\u0002\u0002&\u00a7\u0003\u0002\u0002\u0002(\u00ab\u0003",
+    "\u0002\u0002\u0002*\u00b5\u0003\u0002\u0002\u0002,\u00d3\u0003\u0002",
+    "\u0002\u0002.\u00d5\u0003\u0002\u0002\u000202\u0005\u0004\u0003\u0002",
+    "10\u0003\u0002\u0002\u000212\u0003\u0002\u0002\u000223\u0003\u0002\u0002",
+    "\u000234\u0005\b\u0005\u000245\u0007\u0002\u0002\u00035\u0003\u0003",
+    "\u0002\u0002\u000267\u0007\u0006\u0002\u000278\u0007\u0003\u0002\u0002",
+    "8:\u0007\u0019\u0002\u00029;\u0005\u0006\u0004\u0002:9\u0003\u0002\u0002",
+    "\u0002:;\u0003\u0002\u0002\u0002;<\u0003\u0002\u0002\u0002<=\u0007\u001a",
+    "\u0002\u0002=\u0005\u0003\u0002\u0002\u0002>?\u0007$\u0002\u0002?\u0007",
+    "\u0003\u0002\u0002\u0002@B\u0005\f\u0007\u0002A@\u0003\u0002\u0002\u0002",
+    "BE\u0003\u0002\u0002\u0002CA\u0003\u0002\u0002\u0002CD\u0003\u0002\u0002",
+    "\u0002DG\u0003\u0002\u0002\u0002EC\u0003\u0002\u0002\u0002FH\u0005\n",
+    "\u0006\u0002GF\u0003\u0002\u0002\u0002GH\u0003\u0002\u0002\u0002H\t",
+    "\u0003\u0002\u0002\u0002IL\u0007#\u0002\u0002JM\u0005,\u0017\u0002K",
+    "M\u0007$\u0002\u0002LJ\u0003\u0002\u0002\u0002LK\u0003\u0002\u0002\u0002",
+    "MO\u0003\u0002\u0002\u0002NP\u0007\u0017\u0002\u0002ON\u0003\u0002\u0002",
+    "\u0002OP\u0003\u0002\u0002\u0002P\u000b\u0003\u0002\u0002\u0002QW\u0005",
+    "\u001e\u0010\u0002RW\u0005(\u0015\u0002SW\u0005\u000e\b\u0002TU\u0007",
+    "*\u0002\u0002UW\b\u0007\u0001\u0002VQ\u0003\u0002\u0002\u0002VR\u0003",
+    "\u0002\u0002\u0002VS\u0003\u0002\u0002\u0002VT\u0003\u0002\u0002\u0002",
+    "W\r\u0003\u0002\u0002\u0002XZ\u0005\u0010\t\u0002YX\u0003\u0002\u0002",
+    "\u0002YZ\u0003\u0002\u0002\u0002Z^\u0003\u0002\u0002\u0002[\\\u0005",
+    "\u0016\f\u0002\\]\u0007\u0004\u0002\u0002]_\u0003\u0002\u0002\u0002",
+    "^[\u0003\u0002\u0002\u0002^_\u0003\u0002\u0002\u0002_`\u0003\u0002\u0002",
+    "\u0002`h\u0005\u0018\r\u0002ac\u0007\u0019\u0002\u0002bd\u0005\u001a",
+    "\u000e\u0002cb\u0003\u0002\u0002\u0002cd\u0003\u0002\u0002\u0002de\u0003",
+    "\u0002\u0002\u0002eg\u0007\u001a\u0002\u0002fa\u0003\u0002\u0002\u0002",
+    "gj\u0003\u0002\u0002\u0002hf\u0003\u0002\u0002\u0002hi\u0003\u0002\u0002",
+    "\u0002ip\u0003\u0002\u0002\u0002jh\u0003\u0002\u0002\u0002kq\u0007\u0017",
+    "\u0002\u0002lm\u0007\u001b\u0002\u0002mn\u0005\b\u0005\u0002no\u0007",
+    "\u001c\u0002\u0002oq\u0003\u0002\u0002\u0002pk\u0003\u0002\u0002\u0002",
+    "pl\u0003\u0002\u0002\u0002pq\u0003\u0002\u0002\u0002q\u000f\u0003\u0002",
+    "\u0002\u0002rt\u0005\u0012\n\u0002sr\u0003\u0002\u0002\u0002st\u0003",
+    "\u0002\u0002\u0002tu\u0003\u0002\u0002\u0002uv\u0005\u0014\u000b\u0002",
+    "vw\u0007\u0018\u0002\u0002w\u0011\u0003\u0002\u0002\u0002xy\u0007$\u0002",
+    "\u0002y\u0013\u0003\u0002\u0002\u0002z{\u0007$\u0002\u0002{\u0015\u0003",
+    "\u0002\u0002\u0002|}\u0007$\u0002\u0002}\u0080\u0007\u0016\u0002\u0002",
+    "~\u0080\u0007\u0016\u0002\u0002\u007f|\u0003\u0002\u0002\u0002\u007f",
+    "~\u0003\u0002\u0002\u0002\u007f\u0080\u0003\u0002\u0002\u0002\u0080",
+    "\u0081\u0003\u0002\u0002\u0002\u0081\u0082\u0007$\u0002\u0002\u0082",
+    "\u0017\u0003\u0002\u0002\u0002\u0083\u0084\u0007$\u0002\u0002\u0084",
+    "\u0019\u0003\u0002\u0002\u0002\u0085\u008a\u0005\u001c\u000f\u0002\u0086",
+    "\u0087\u0007\u0005\u0002\u0002\u0087\u0089\u0005\u001c\u000f\u0002\u0088",
+    "\u0086\u0003\u0002\u0002\u0002\u0089\u008c\u0003\u0002\u0002\u0002\u008a",
+    "\u0088\u0003\u0002\u0002\u0002\u008a\u008b\u0003\u0002\u0002\u0002\u008b",
+    "\u001b\u0003\u0002\u0002\u0002\u008c\u008a\u0003\u0002\u0002\u0002\u008d",
+    "\u0090\u0007$\u0002\u0002\u008e\u0090\u0005,\u0017\u0002\u008f\u008d",
+    "\u0003\u0002\u0002\u0002\u008f\u008e\u0003\u0002\u0002\u0002\u0090\u001d",
+    "\u0003\u0002\u0002\u0002\u0091\u0095\u0005 \u0011\u0002\u0092\u0094",
+    "\u0005\"\u0012\u0002\u0093\u0092\u0003\u0002\u0002\u0002\u0094\u0097",
+    "\u0003\u0002\u0002\u0002\u0095\u0093\u0003\u0002\u0002\u0002\u0095\u0096",
+    "\u0003\u0002\u0002\u0002\u0096\u0099\u0003\u0002\u0002\u0002\u0097\u0095",
+    "\u0003\u0002\u0002\u0002\u0098\u009a\u0005$\u0013\u0002\u0099\u0098",
+    "\u0003\u0002\u0002\u0002\u0099\u009a\u0003\u0002\u0002\u0002\u009a\u001f",
+    "\u0003\u0002\u0002\u0002\u009b\u009c\u0007 \u0002\u0002\u009c\u009d",
+    "\u0005.\u0018\u0002\u009d\u009e\u0005&\u0014\u0002\u009e!\u0003\u0002",
+    "\u0002\u0002\u009f\u00a0\u0007!\u0002\u0002\u00a0\u00a1\u0007 \u0002",
+    "\u0002\u00a1\u00a2\u0005.\u0018\u0002\u00a2\u00a3\u0005&\u0014\u0002",
+    "\u00a3#\u0003\u0002\u0002\u0002\u00a4\u00a5\u0007!\u0002\u0002\u00a5",
+    "\u00a6\u0005&\u0014\u0002\u00a6%\u0003\u0002\u0002\u0002\u00a7\u00a8",
+    "\u0007\u001b\u0002\u0002\u00a8\u00a9\u0005\b\u0005\u0002\u00a9\u00aa",
+    "\u0007\u001c\u0002\u0002\u00aa\'\u0003\u0002\u0002\u0002\u00ab\u00ac",
+    "\u0007\"\u0002\u0002\u00ac\u00ad\u0005.\u0018\u0002\u00ad\u00ae\u0005",
+    "&\u0014\u0002\u00ae)\u0003\u0002\u0002\u0002\u00af\u00b0\b\u0016\u0001",
+    "\u0002\u00b0\u00b1\u0007\u0010\u0002\u0002\u00b1\u00b6\u0005*\u0016",
+    "\u000b\u00b2\u00b3\u0007\u0015\u0002\u0002\u00b3\u00b6\u0005*\u0016",
+    "\n\u00b4\u00b6\u0005,\u0017\u0002\u00b5\u00af\u0003\u0002\u0002\u0002",
+    "\u00b5\u00b2\u0003\u0002\u0002\u0002\u00b5\u00b4\u0003\u0002\u0002\u0002",
+    "\u00b6\u00cb\u0003\u0002\u0002\u0002\u00b7\u00b8\f\t\u0002\u0002\u00b8",
+    "\u00b9\t\u0002\u0002\u0002\u00b9\u00ca\u0005*\u0016\n\u00ba\u00bb\f",
+    "\b\u0002\u0002\u00bb\u00bc\t\u0003\u0002\u0002\u00bc\u00ca\u0005*\u0016",
+    "\t\u00bd\u00be\f\u0007\u0002\u0002\u00be\u00bf\t\u0004\u0002\u0002\u00bf",
+    "\u00ca\u0005*\u0016\b\u00c0\u00c1\f\u0006\u0002\u0002\u00c1\u00c2\t",
+    "\u0005\u0002\u0002\u00c2\u00ca\u0005*\u0016\u0007\u00c3\u00c4\f\u0005",
+    "\u0002\u0002\u00c4\u00c5\u0007\b\u0002\u0002\u00c5\u00ca\u0005*\u0016",
+    "\u0006\u00c6\u00c7\f\u0004\u0002\u0002\u00c7\u00c8\u0007\u0007\u0002",
+    "\u0002\u00c8\u00ca\u0005*\u0016\u0005\u00c9\u00b7\u0003\u0002\u0002",
+    "\u0002\u00c9\u00ba\u0003\u0002\u0002\u0002\u00c9\u00bd\u0003\u0002\u0002",
+    "\u0002\u00c9\u00c0\u0003\u0002\u0002\u0002\u00c9\u00c3\u0003\u0002\u0002",
+    "\u0002\u00c9\u00c6\u0003\u0002\u0002\u0002\u00ca\u00cd\u0003\u0002\u0002",
+    "\u0002\u00cb\u00c9\u0003\u0002\u0002\u0002\u00cb\u00cc\u0003\u0002\u0002",
+    "\u0002\u00cc+\u0003\u0002\u0002\u0002\u00cd\u00cb\u0003\u0002\u0002",
+    "\u0002\u00ce\u00d4\t\u0006\u0002\u0002\u00cf\u00d4\t\u0007\u0002\u0002",
+    "\u00d0\u00d4\u0007$\u0002\u0002\u00d1\u00d4\u0007\'\u0002\u0002\u00d2",
+    "\u00d4\u0007\u001f\u0002\u0002\u00d3\u00ce\u0003\u0002\u0002\u0002\u00d3",
+    "\u00cf\u0003\u0002\u0002\u0002\u00d3\u00d0\u0003\u0002\u0002\u0002\u00d3",
+    "\u00d1\u0003\u0002\u0002\u0002\u00d3\u00d2\u0003\u0002\u0002\u0002\u00d4",
+    "-\u0003\u0002\u0002\u0002\u00d5\u00d6\u0007\u0019\u0002\u0002\u00d6",
+    "\u00d7\u0005*\u0016\u0002\u00d7\u00d8\u0007\u001a\u0002\u0002\u00d8",
+    "/\u0003\u0002\u0002\u0002\u00181:CGLOVY^chps\u007f\u008a\u008f\u0095",
+    "\u0099\u00b5\u00c9\u00cb\u00d3"].join("");
 
 
 var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
@@ -13749,9 +13485,9 @@ var symbolicNames = [ null, null, null, null, "AT", "OR", "AND", "EQ", "NEQ",
                       "FLOAT", "STRING", "COMMENT", "SPACE", "OTHER" ];
 
 var ruleNames =  [ "prog", "starterExp", "starter", "block", "ret", "stat", 
-                   "message", "type", "assignee", "to", "methodName", "parameters", 
-                   "parameter", "alt", "ifBlock", "elseIfBlock", "elseBlock", 
-                   "braceBlock", "loop", "expr", "atom", "parExpr" ];
+                   "message", "assignment", "type", "assignee", "to", "methodName", 
+                   "parameters", "parameter", "alt", "ifBlock", "elseIfBlock", 
+                   "elseBlock", "braceBlock", "loop", "expr", "atom", "parExpr" ];
 
 function sequenceParser (input) {
 	antlr4.Parser.call(this, input);
@@ -13820,21 +13556,22 @@ sequenceParser.RULE_block = 3;
 sequenceParser.RULE_ret = 4;
 sequenceParser.RULE_stat = 5;
 sequenceParser.RULE_message = 6;
-sequenceParser.RULE_type = 7;
-sequenceParser.RULE_assignee = 8;
-sequenceParser.RULE_to = 9;
-sequenceParser.RULE_methodName = 10;
-sequenceParser.RULE_parameters = 11;
-sequenceParser.RULE_parameter = 12;
-sequenceParser.RULE_alt = 13;
-sequenceParser.RULE_ifBlock = 14;
-sequenceParser.RULE_elseIfBlock = 15;
-sequenceParser.RULE_elseBlock = 16;
-sequenceParser.RULE_braceBlock = 17;
-sequenceParser.RULE_loop = 18;
-sequenceParser.RULE_expr = 19;
-sequenceParser.RULE_atom = 20;
-sequenceParser.RULE_parExpr = 21;
+sequenceParser.RULE_assignment = 7;
+sequenceParser.RULE_type = 8;
+sequenceParser.RULE_assignee = 9;
+sequenceParser.RULE_to = 10;
+sequenceParser.RULE_methodName = 11;
+sequenceParser.RULE_parameters = 12;
+sequenceParser.RULE_parameter = 13;
+sequenceParser.RULE_alt = 14;
+sequenceParser.RULE_ifBlock = 15;
+sequenceParser.RULE_elseIfBlock = 16;
+sequenceParser.RULE_elseBlock = 17;
+sequenceParser.RULE_braceBlock = 18;
+sequenceParser.RULE_loop = 19;
+sequenceParser.RULE_expr = 20;
+sequenceParser.RULE_atom = 21;
+sequenceParser.RULE_parExpr = 22;
 
 function ProgContext(parser, parent, invokingState) {
 	if(parent===undefined) {
@@ -13888,17 +13625,17 @@ sequenceParser.prototype.prog = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 45;
+        this.state = 47;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===sequenceParser.AT) {
-            this.state = 44;
+            this.state = 46;
             this.starterExp();
         }
 
-        this.state = 47;
+        this.state = 49;
         this.block();
-        this.state = 48;
+        this.state = 50;
         this.match(sequenceParser.EOF);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -13962,21 +13699,21 @@ sequenceParser.prototype.starterExp = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 50;
-        this.match(sequenceParser.AT);
-        this.state = 51;
-        this.match(sequenceParser.T__0);
         this.state = 52;
-        this.match(sequenceParser.OPAR);
+        this.match(sequenceParser.AT);
+        this.state = 53;
+        this.match(sequenceParser.T__0);
         this.state = 54;
+        this.match(sequenceParser.OPAR);
+        this.state = 56;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===sequenceParser.ID) {
-            this.state = 53;
+            this.state = 55;
             this.starter();
         }
 
-        this.state = 56;
+        this.state = 58;
         this.match(sequenceParser.CPAR);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -14035,7 +13772,7 @@ sequenceParser.prototype.starter = function() {
     this.enterRule(localctx, 4, sequenceParser.RULE_starter);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 58;
+        this.state = 60;
         this.match(sequenceParser.ID);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -14106,21 +13843,21 @@ sequenceParser.prototype.block = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 63;
+        this.state = 65;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         while(((((_la - 20)) & ~0x1f) == 0 && ((1 << (_la - 20)) & ((1 << (sequenceParser.COL - 20)) | (1 << (sequenceParser.IF - 20)) | (1 << (sequenceParser.WHILE - 20)) | (1 << (sequenceParser.ID - 20)) | (1 << (sequenceParser.OTHER - 20)))) !== 0)) {
-            this.state = 60;
+            this.state = 62;
             this.stat();
-            this.state = 65;
+            this.state = 67;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
         }
-        this.state = 67;
+        this.state = 69;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===sequenceParser.RETURN) {
-            this.state = 66;
+            this.state = 68;
             this.ret();
         }
 
@@ -14194,28 +13931,28 @@ sequenceParser.prototype.ret = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 69;
+        this.state = 71;
         this.match(sequenceParser.RETURN);
-        this.state = 72;
+        this.state = 74;
         this._errHandler.sync(this);
         var la_ = this._interp.adaptivePredict(this._input,4,this._ctx);
         switch(la_) {
         case 1:
-            this.state = 70;
+            this.state = 72;
             this.atom();
             break;
 
         case 2:
-            this.state = 71;
+            this.state = 73;
             this.match(sequenceParser.ID);
             break;
 
         }
-        this.state = 75;
+        this.state = 77;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===sequenceParser.SCOL) {
-            this.state = 74;
+            this.state = 76;
             this.match(sequenceParser.SCOL);
         }
 
@@ -14288,28 +14025,28 @@ sequenceParser.prototype.stat = function() {
     var localctx = new StatContext(this, this._ctx, this.state);
     this.enterRule(localctx, 10, sequenceParser.RULE_stat);
     try {
-        this.state = 82;
+        this.state = 84;
         this._errHandler.sync(this);
         switch(this._input.LA(1)) {
         case sequenceParser.IF:
             this.enterOuterAlt(localctx, 1);
-            this.state = 77;
+            this.state = 79;
             this.alt();
             break;
         case sequenceParser.WHILE:
             this.enterOuterAlt(localctx, 2);
-            this.state = 78;
+            this.state = 80;
             this.loop();
             break;
         case sequenceParser.COL:
         case sequenceParser.ID:
             this.enterOuterAlt(localctx, 3);
-            this.state = 79;
+            this.state = 81;
             this.message();
             break;
         case sequenceParser.OTHER:
             this.enterOuterAlt(localctx, 4);
-            this.state = 80;
+            this.state = 82;
             localctx._OTHER = this.match(sequenceParser.OTHER);
             console.log("unknown char: " + (localctx._OTHER===null ? null : localctx._OTHER.text));
             break;
@@ -14350,12 +14087,8 @@ MessageContext.prototype.methodName = function() {
     return this.getTypedRuleContext(MethodNameContext,0);
 };
 
-MessageContext.prototype.assignee = function() {
-    return this.getTypedRuleContext(AssigneeContext,0);
-};
-
-MessageContext.prototype.ASSIGN = function() {
-    return this.getToken(sequenceParser.ASSIGN, 0);
+MessageContext.prototype.assignment = function() {
+    return this.getTypedRuleContext(AssignmentContext,0);
 };
 
 MessageContext.prototype.to = function() {
@@ -14376,10 +14109,6 @@ MessageContext.prototype.block = function() {
 
 MessageContext.prototype.CBRACE = function() {
     return this.getToken(sequenceParser.CBRACE, 0);
-};
-
-MessageContext.prototype.type = function() {
-    return this.getTypedRuleContext(TypeContext,0);
 };
 
 MessageContext.prototype.parameters = function(i) {
@@ -14417,69 +14146,59 @@ sequenceParser.prototype.message = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 90;
+        this.state = 87;
+        this._errHandler.sync(this);
+        var la_ = this._interp.adaptivePredict(this._input,7,this._ctx);
+        if(la_===1) {
+            this.state = 86;
+            this.assignment();
+
+        }
+        this.state = 92;
         this._errHandler.sync(this);
         var la_ = this._interp.adaptivePredict(this._input,8,this._ctx);
         if(la_===1) {
-            this.state = 85;
-            this._errHandler.sync(this);
-            var la_ = this._interp.adaptivePredict(this._input,7,this._ctx);
-            if(la_===1) {
-                this.state = 84;
-                this.type();
-
-            }
-            this.state = 87;
-            this.assignee();
-            this.state = 88;
-            this.match(sequenceParser.ASSIGN);
-
-        }
-        this.state = 95;
-        this._errHandler.sync(this);
-        var la_ = this._interp.adaptivePredict(this._input,9,this._ctx);
-        if(la_===1) {
-            this.state = 92;
+            this.state = 89;
             this.to();
-            this.state = 93;
+            this.state = 90;
             this.match(sequenceParser.T__1);
 
         }
-        this.state = 97;
+        this.state = 94;
         this.methodName();
-        this.state = 105;
+        this.state = 102;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         while(_la===sequenceParser.OPAR) {
-            this.state = 98;
+            this.state = 95;
             this.match(sequenceParser.OPAR);
-            this.state = 100;
+            this.state = 97;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
             if(((((_la - 27)) & ~0x1f) == 0 && ((1 << (_la - 27)) & ((1 << (sequenceParser.TRUE - 27)) | (1 << (sequenceParser.FALSE - 27)) | (1 << (sequenceParser.NIL - 27)) | (1 << (sequenceParser.ID - 27)) | (1 << (sequenceParser.INT - 27)) | (1 << (sequenceParser.FLOAT - 27)) | (1 << (sequenceParser.STRING - 27)))) !== 0)) {
-                this.state = 99;
+                this.state = 96;
                 this.parameters();
             }
 
-            this.state = 102;
+            this.state = 99;
             this.match(sequenceParser.CPAR);
-            this.state = 107;
+            this.state = 104;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
         }
-        this.state = 113;
+        this.state = 110;
         this._errHandler.sync(this);
         switch (this._input.LA(1)) {
         case sequenceParser.SCOL:
-        	this.state = 108;
+        	this.state = 105;
         	this.match(sequenceParser.SCOL);
         	break;
         case sequenceParser.OBRACE:
-        	this.state = 109;
+        	this.state = 106;
         	this.match(sequenceParser.OBRACE);
-        	this.state = 110;
+        	this.state = 107;
         	this.block();
-        	this.state = 111;
+        	this.state = 108;
         	this.match(sequenceParser.CBRACE);
         	break;
         case sequenceParser.EOF:
@@ -14494,6 +14213,83 @@ sequenceParser.prototype.message = function() {
         default:
         	break;
         }
+    } catch (re) {
+    	if(re instanceof antlr4.error.RecognitionException) {
+	        localctx.exception = re;
+	        this._errHandler.reportError(this, re);
+	        this._errHandler.recover(this, re);
+	    } else {
+	    	throw re;
+	    }
+    } finally {
+        this.exitRule();
+    }
+    return localctx;
+};
+
+function AssignmentContext(parser, parent, invokingState) {
+	if(parent===undefined) {
+	    parent = null;
+	}
+	if(invokingState===undefined || invokingState===null) {
+		invokingState = -1;
+	}
+	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    this.parser = parser;
+    this.ruleIndex = sequenceParser.RULE_assignment;
+    return this;
+}
+
+AssignmentContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
+AssignmentContext.prototype.constructor = AssignmentContext;
+
+AssignmentContext.prototype.assignee = function() {
+    return this.getTypedRuleContext(AssigneeContext,0);
+};
+
+AssignmentContext.prototype.ASSIGN = function() {
+    return this.getToken(sequenceParser.ASSIGN, 0);
+};
+
+AssignmentContext.prototype.type = function() {
+    return this.getTypedRuleContext(TypeContext,0);
+};
+
+AssignmentContext.prototype.enterRule = function(listener) {
+    if(listener instanceof sequenceListener ) {
+        listener.enterAssignment(this);
+	}
+};
+
+AssignmentContext.prototype.exitRule = function(listener) {
+    if(listener instanceof sequenceListener ) {
+        listener.exitAssignment(this);
+	}
+};
+
+
+
+
+sequenceParser.AssignmentContext = AssignmentContext;
+
+sequenceParser.prototype.assignment = function() {
+
+    var localctx = new AssignmentContext(this, this._ctx, this.state);
+    this.enterRule(localctx, 14, sequenceParser.RULE_assignment);
+    try {
+        this.enterOuterAlt(localctx, 1);
+        this.state = 113;
+        this._errHandler.sync(this);
+        var la_ = this._interp.adaptivePredict(this._input,12,this._ctx);
+        if(la_===1) {
+            this.state = 112;
+            this.type();
+
+        }
+        this.state = 115;
+        this.assignee();
+        this.state = 116;
+        this.match(sequenceParser.ASSIGN);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;
@@ -14548,10 +14344,10 @@ sequenceParser.TypeContext = TypeContext;
 sequenceParser.prototype.type = function() {
 
     var localctx = new TypeContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 14, sequenceParser.RULE_type);
+    this.enterRule(localctx, 16, sequenceParser.RULE_type);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 115;
+        this.state = 118;
         this.match(sequenceParser.ID);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -14607,10 +14403,10 @@ sequenceParser.AssigneeContext = AssigneeContext;
 sequenceParser.prototype.assignee = function() {
 
     var localctx = new AssigneeContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 16, sequenceParser.RULE_assignee);
+    this.enterRule(localctx, 18, sequenceParser.RULE_assignee);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 117;
+        this.state = 120;
         this.match(sequenceParser.ID);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -14678,24 +14474,24 @@ sequenceParser.ToContext = ToContext;
 sequenceParser.prototype.to = function() {
 
     var localctx = new ToContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 18, sequenceParser.RULE_to);
+    this.enterRule(localctx, 20, sequenceParser.RULE_to);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 122;
+        this.state = 125;
         this._errHandler.sync(this);
         var la_ = this._interp.adaptivePredict(this._input,13,this._ctx);
         if(la_===1) {
-            this.state = 119;
+            this.state = 122;
             this.match(sequenceParser.ID);
-            this.state = 120;
+            this.state = 123;
             this.match(sequenceParser.COL);
 
         } else if(la_===2) {
-            this.state = 121;
+            this.state = 124;
             this.match(sequenceParser.COL);
 
         }
-        this.state = 124;
+        this.state = 127;
         this.match(sequenceParser.ID);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -14751,10 +14547,10 @@ sequenceParser.MethodNameContext = MethodNameContext;
 sequenceParser.prototype.methodName = function() {
 
     var localctx = new MethodNameContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 20, sequenceParser.RULE_methodName);
+    this.enterRule(localctx, 22, sequenceParser.RULE_methodName);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 126;
+        this.state = 129;
         this.match(sequenceParser.ID);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -14817,21 +14613,21 @@ sequenceParser.ParametersContext = ParametersContext;
 sequenceParser.prototype.parameters = function() {
 
     var localctx = new ParametersContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 22, sequenceParser.RULE_parameters);
+    this.enterRule(localctx, 24, sequenceParser.RULE_parameters);
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 128;
+        this.state = 131;
         this.parameter();
-        this.state = 133;
+        this.state = 136;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         while(_la===sequenceParser.T__2) {
-            this.state = 129;
+            this.state = 132;
             this.match(sequenceParser.T__2);
-            this.state = 130;
+            this.state = 133;
             this.parameter();
-            this.state = 135;
+            this.state = 138;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
         }
@@ -14893,21 +14689,21 @@ sequenceParser.ParameterContext = ParameterContext;
 sequenceParser.prototype.parameter = function() {
 
     var localctx = new ParameterContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 24, sequenceParser.RULE_parameter);
+    this.enterRule(localctx, 26, sequenceParser.RULE_parameter);
     try {
-        this.state = 138;
+        this.state = 141;
         this._errHandler.sync(this);
         var la_ = this._interp.adaptivePredict(this._input,15,this._ctx);
         switch(la_) {
         case 1:
             this.enterOuterAlt(localctx, 1);
-            this.state = 136;
+            this.state = 139;
             this.match(sequenceParser.ID);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
-            this.state = 137;
+            this.state = 140;
             this.atom();
             break;
 
@@ -14981,30 +14777,30 @@ sequenceParser.AltContext = AltContext;
 sequenceParser.prototype.alt = function() {
 
     var localctx = new AltContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 26, sequenceParser.RULE_alt);
+    this.enterRule(localctx, 28, sequenceParser.RULE_alt);
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 140;
+        this.state = 143;
         this.ifBlock();
-        this.state = 144;
+        this.state = 147;
         this._errHandler.sync(this);
         var _alt = this._interp.adaptivePredict(this._input,16,this._ctx)
         while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
             if(_alt===1) {
-                this.state = 141;
+                this.state = 144;
                 this.elseIfBlock(); 
             }
-            this.state = 146;
+            this.state = 149;
             this._errHandler.sync(this);
             _alt = this._interp.adaptivePredict(this._input,16,this._ctx);
         }
 
-        this.state = 148;
+        this.state = 151;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===sequenceParser.ELSE) {
-            this.state = 147;
+            this.state = 150;
             this.elseBlock();
         }
 
@@ -15070,14 +14866,14 @@ sequenceParser.IfBlockContext = IfBlockContext;
 sequenceParser.prototype.ifBlock = function() {
 
     var localctx = new IfBlockContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 28, sequenceParser.RULE_ifBlock);
+    this.enterRule(localctx, 30, sequenceParser.RULE_ifBlock);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 150;
+        this.state = 153;
         this.match(sequenceParser.IF);
-        this.state = 151;
+        this.state = 154;
         this.parExpr();
-        this.state = 152;
+        this.state = 155;
         this.braceBlock();
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -15145,16 +14941,16 @@ sequenceParser.ElseIfBlockContext = ElseIfBlockContext;
 sequenceParser.prototype.elseIfBlock = function() {
 
     var localctx = new ElseIfBlockContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 30, sequenceParser.RULE_elseIfBlock);
+    this.enterRule(localctx, 32, sequenceParser.RULE_elseIfBlock);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 154;
-        this.match(sequenceParser.ELSE);
-        this.state = 155;
-        this.match(sequenceParser.IF);
-        this.state = 156;
-        this.parExpr();
         this.state = 157;
+        this.match(sequenceParser.ELSE);
+        this.state = 158;
+        this.match(sequenceParser.IF);
+        this.state = 159;
+        this.parExpr();
+        this.state = 160;
         this.braceBlock();
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -15214,12 +15010,12 @@ sequenceParser.ElseBlockContext = ElseBlockContext;
 sequenceParser.prototype.elseBlock = function() {
 
     var localctx = new ElseBlockContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 32, sequenceParser.RULE_elseBlock);
+    this.enterRule(localctx, 34, sequenceParser.RULE_elseBlock);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 159;
+        this.state = 162;
         this.match(sequenceParser.ELSE);
-        this.state = 160;
+        this.state = 163;
         this.braceBlock();
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -15283,14 +15079,14 @@ sequenceParser.BraceBlockContext = BraceBlockContext;
 sequenceParser.prototype.braceBlock = function() {
 
     var localctx = new BraceBlockContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 34, sequenceParser.RULE_braceBlock);
+    this.enterRule(localctx, 36, sequenceParser.RULE_braceBlock);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 162;
+        this.state = 165;
         this.match(sequenceParser.OBRACE);
-        this.state = 163;
+        this.state = 166;
         this.block();
-        this.state = 164;
+        this.state = 167;
         this.match(sequenceParser.CBRACE);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -15354,14 +15150,14 @@ sequenceParser.LoopContext = LoopContext;
 sequenceParser.prototype.loop = function() {
 
     var localctx = new LoopContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 36, sequenceParser.RULE_loop);
+    this.enterRule(localctx, 38, sequenceParser.RULE_loop);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 166;
+        this.state = 169;
         this.match(sequenceParser.WHILE);
-        this.state = 167;
+        this.state = 170;
         this.parExpr();
-        this.state = 168;
+        this.state = 171;
         this.braceBlock();
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -15757,12 +15553,12 @@ sequenceParser.prototype.expr = function(_p) {
     var _parentState = this.state;
     var localctx = new ExprContext(this, this._ctx, _parentState);
     var _prevctx = localctx;
-    var _startState = 38;
-    this.enterRecursionRule(localctx, 38, sequenceParser.RULE_expr, _p);
+    var _startState = 40;
+    this.enterRecursionRule(localctx, 40, sequenceParser.RULE_expr, _p);
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 176;
+        this.state = 179;
         this._errHandler.sync(this);
         switch(this._input.LA(1)) {
         case sequenceParser.MINUS:
@@ -15770,18 +15566,18 @@ sequenceParser.prototype.expr = function(_p) {
             this._ctx = localctx;
             _prevctx = localctx;
 
-            this.state = 171;
+            this.state = 174;
             this.match(sequenceParser.MINUS);
-            this.state = 172;
+            this.state = 175;
             this.expr(9);
             break;
         case sequenceParser.NOT:
             localctx = new NotExprContext(this, localctx);
             this._ctx = localctx;
             _prevctx = localctx;
-            this.state = 173;
+            this.state = 176;
             this.match(sequenceParser.NOT);
-            this.state = 174;
+            this.state = 177;
             this.expr(8);
             break;
         case sequenceParser.TRUE:
@@ -15794,14 +15590,14 @@ sequenceParser.prototype.expr = function(_p) {
             localctx = new AtomExprContext(this, localctx);
             this._ctx = localctx;
             _prevctx = localctx;
-            this.state = 175;
+            this.state = 178;
             this.atom();
             break;
         default:
             throw new antlr4.error.NoViableAltException(this);
         }
         this._ctx.stop = this._input.LT(-1);
-        this.state = 198;
+        this.state = 201;
         this._errHandler.sync(this);
         var _alt = this._interp.adaptivePredict(this._input,20,this._ctx)
         while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
@@ -15810,18 +15606,18 @@ sequenceParser.prototype.expr = function(_p) {
                     this.triggerExitRuleEvent();
                 }
                 _prevctx = localctx;
-                this.state = 196;
+                this.state = 199;
                 this._errHandler.sync(this);
                 var la_ = this._interp.adaptivePredict(this._input,19,this._ctx);
                 switch(la_) {
                 case 1:
                     localctx = new MultiplicationExprContext(this, new ExprContext(this, _parentctx, _parentState));
                     this.pushNewRecursionContext(localctx, _startState, sequenceParser.RULE_expr);
-                    this.state = 178;
+                    this.state = 181;
                     if (!( this.precpred(this._ctx, 7))) {
                         throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 7)");
                     }
-                    this.state = 179;
+                    this.state = 182;
                     localctx.op = this._input.LT(1);
                     _la = this._input.LA(1);
                     if(!((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << sequenceParser.MULT) | (1 << sequenceParser.DIV) | (1 << sequenceParser.MOD))) !== 0))) {
@@ -15831,18 +15627,18 @@ sequenceParser.prototype.expr = function(_p) {
                     	this._errHandler.reportMatch(this);
                         this.consume();
                     }
-                    this.state = 180;
+                    this.state = 183;
                     this.expr(8);
                     break;
 
                 case 2:
                     localctx = new AdditiveExprContext(this, new ExprContext(this, _parentctx, _parentState));
                     this.pushNewRecursionContext(localctx, _startState, sequenceParser.RULE_expr);
-                    this.state = 181;
+                    this.state = 184;
                     if (!( this.precpred(this._ctx, 6))) {
                         throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 6)");
                     }
-                    this.state = 182;
+                    this.state = 185;
                     localctx.op = this._input.LT(1);
                     _la = this._input.LA(1);
                     if(!(_la===sequenceParser.PLUS || _la===sequenceParser.MINUS)) {
@@ -15852,18 +15648,18 @@ sequenceParser.prototype.expr = function(_p) {
                     	this._errHandler.reportMatch(this);
                         this.consume();
                     }
-                    this.state = 183;
+                    this.state = 186;
                     this.expr(7);
                     break;
 
                 case 3:
                     localctx = new RelationalExprContext(this, new ExprContext(this, _parentctx, _parentState));
                     this.pushNewRecursionContext(localctx, _startState, sequenceParser.RULE_expr);
-                    this.state = 184;
+                    this.state = 187;
                     if (!( this.precpred(this._ctx, 5))) {
                         throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 5)");
                     }
-                    this.state = 185;
+                    this.state = 188;
                     localctx.op = this._input.LT(1);
                     _la = this._input.LA(1);
                     if(!((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << sequenceParser.GT) | (1 << sequenceParser.LT) | (1 << sequenceParser.GTEQ) | (1 << sequenceParser.LTEQ))) !== 0))) {
@@ -15873,18 +15669,18 @@ sequenceParser.prototype.expr = function(_p) {
                     	this._errHandler.reportMatch(this);
                         this.consume();
                     }
-                    this.state = 186;
+                    this.state = 189;
                     this.expr(6);
                     break;
 
                 case 4:
                     localctx = new EqualityExprContext(this, new ExprContext(this, _parentctx, _parentState));
                     this.pushNewRecursionContext(localctx, _startState, sequenceParser.RULE_expr);
-                    this.state = 187;
+                    this.state = 190;
                     if (!( this.precpred(this._ctx, 4))) {
                         throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 4)");
                     }
-                    this.state = 188;
+                    this.state = 191;
                     localctx.op = this._input.LT(1);
                     _la = this._input.LA(1);
                     if(!(_la===sequenceParser.EQ || _la===sequenceParser.NEQ)) {
@@ -15894,39 +15690,39 @@ sequenceParser.prototype.expr = function(_p) {
                     	this._errHandler.reportMatch(this);
                         this.consume();
                     }
-                    this.state = 189;
+                    this.state = 192;
                     this.expr(5);
                     break;
 
                 case 5:
                     localctx = new AndExprContext(this, new ExprContext(this, _parentctx, _parentState));
                     this.pushNewRecursionContext(localctx, _startState, sequenceParser.RULE_expr);
-                    this.state = 190;
+                    this.state = 193;
                     if (!( this.precpred(this._ctx, 3))) {
                         throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 3)");
                     }
-                    this.state = 191;
+                    this.state = 194;
                     this.match(sequenceParser.AND);
-                    this.state = 192;
+                    this.state = 195;
                     this.expr(4);
                     break;
 
                 case 6:
                     localctx = new OrExprContext(this, new ExprContext(this, _parentctx, _parentState));
                     this.pushNewRecursionContext(localctx, _startState, sequenceParser.RULE_expr);
-                    this.state = 193;
+                    this.state = 196;
                     if (!( this.precpred(this._ctx, 2))) {
                         throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 2)");
                     }
-                    this.state = 194;
+                    this.state = 197;
                     this.match(sequenceParser.OR);
-                    this.state = 195;
+                    this.state = 198;
                     this.expr(3);
                     break;
 
                 } 
             }
-            this.state = 200;
+            this.state = 203;
             this._errHandler.sync(this);
             _alt = this._interp.adaptivePredict(this._input,20,this._ctx);
         }
@@ -16117,17 +15913,17 @@ sequenceParser.AtomContext = AtomContext;
 sequenceParser.prototype.atom = function() {
 
     var localctx = new AtomContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 40, sequenceParser.RULE_atom);
+    this.enterRule(localctx, 42, sequenceParser.RULE_atom);
     var _la = 0; // Token type
     try {
-        this.state = 206;
+        this.state = 209;
         this._errHandler.sync(this);
         switch(this._input.LA(1)) {
         case sequenceParser.INT:
         case sequenceParser.FLOAT:
             localctx = new NumberAtomContext(this, localctx);
             this.enterOuterAlt(localctx, 1);
-            this.state = 201;
+            this.state = 204;
             _la = this._input.LA(1);
             if(!(_la===sequenceParser.INT || _la===sequenceParser.FLOAT)) {
             this._errHandler.recoverInline(this);
@@ -16141,7 +15937,7 @@ sequenceParser.prototype.atom = function() {
         case sequenceParser.FALSE:
             localctx = new BooleanAtomContext(this, localctx);
             this.enterOuterAlt(localctx, 2);
-            this.state = 202;
+            this.state = 205;
             _la = this._input.LA(1);
             if(!(_la===sequenceParser.TRUE || _la===sequenceParser.FALSE)) {
             this._errHandler.recoverInline(this);
@@ -16154,19 +15950,19 @@ sequenceParser.prototype.atom = function() {
         case sequenceParser.ID:
             localctx = new IdAtomContext(this, localctx);
             this.enterOuterAlt(localctx, 3);
-            this.state = 203;
+            this.state = 206;
             this.match(sequenceParser.ID);
             break;
         case sequenceParser.STRING:
             localctx = new StringAtomContext(this, localctx);
             this.enterOuterAlt(localctx, 4);
-            this.state = 204;
+            this.state = 207;
             this.match(sequenceParser.STRING);
             break;
         case sequenceParser.NIL:
             localctx = new NilAtomContext(this, localctx);
             this.enterOuterAlt(localctx, 5);
-            this.state = 205;
+            this.state = 208;
             this.match(sequenceParser.NIL);
             break;
         default:
@@ -16234,14 +16030,14 @@ sequenceParser.ParExprContext = ParExprContext;
 sequenceParser.prototype.parExpr = function() {
 
     var localctx = new ParExprContext(this, this._ctx, this.state);
-    this.enterRule(localctx, 42, sequenceParser.RULE_parExpr);
+    this.enterRule(localctx, 44, sequenceParser.RULE_parExpr);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 208;
+        this.state = 211;
         this.match(sequenceParser.OPAR);
-        this.state = 209;
+        this.state = 212;
         this.expr(0);
-        this.state = 210;
+        this.state = 213;
         this.match(sequenceParser.CPAR);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -16260,7 +16056,7 @@ sequenceParser.prototype.parExpr = function() {
 
 sequenceParser.prototype.sempred = function(localctx, ruleIndex, predIndex) {
 	switch(ruleIndex) {
-	case 19:
+	case 20:
 			return this.expr_sempred(localctx, predIndex);
     default:
         throw "No predicate with index:" + ruleIndex;
@@ -16293,6 +16089,285 @@ exports.sequenceParser = sequenceParser;
 /***/ })
 /******/ ]);
 });
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var store = __webpack_require__(29)('wks');
+var uid = __webpack_require__(32);
+var Symbol = __webpack_require__(3).Symbol;
+var USE_SYMBOL = typeof Symbol == 'function';
+
+var $exports = module.exports = function (name) {
+  return store[name] || (store[name] =
+    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
+};
+
+$exports.store = store;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+var global = module.exports = typeof window != 'undefined' && window.Math == Math
+  ? window : typeof self != 'undefined' && self.Math == Math ? self
+  // eslint-disable-next-line no-new-func
+  : Function('return this')();
+if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var isObject = __webpack_require__(14);
+module.exports = function (it) {
+  if (!isObject(it)) throw TypeError(it + ' is not an object!');
+  return it;
+};
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+var core = module.exports = { version: '2.5.1' };
+if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Thank's IE8 for his funny defineProperty
+module.exports = !__webpack_require__(13)(function () {
+  return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
+});
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+var hasOwnProperty = {}.hasOwnProperty;
+module.exports = function (it, key) {
+  return hasOwnProperty.call(it, key);
+};
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var dP = __webpack_require__(9);
+var createDesc = __webpack_require__(16);
+module.exports = __webpack_require__(6) ? function (object, key, value) {
+  return dP.f(object, key, createDesc(1, value));
+} : function (object, key, value) {
+  object[key] = value;
+  return object;
+};
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var anObject = __webpack_require__(4);
+var IE8_DOM_DEFINE = __webpack_require__(59);
+var toPrimitive = __webpack_require__(76);
+var dP = Object.defineProperty;
+
+exports.f = __webpack_require__(6) ? Object.defineProperty : function defineProperty(O, P, Attributes) {
+  anObject(O);
+  P = toPrimitive(P, true);
+  anObject(Attributes);
+  if (IE8_DOM_DEFINE) try {
+    return dP(O, P, Attributes);
+  } catch (e) { /* empty */ }
+  if ('get' in Attributes || 'set' in Attributes) throw TypeError('Accessors not supported!');
+  if ('value' in Attributes) O[P] = Attributes.value;
+  return O;
+};
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(0)(
+  /* script */
+  __webpack_require__(39),
+  /* template */
+  __webpack_require__(113),
+  /* styles */
+  null,
+  /* scopeId */
+  null,
+  /* moduleIdentifier (server only) */
+  null
+)
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+// 7.2.1 RequireObjectCoercible(argument)
+module.exports = function (it) {
+  if (it == undefined) throw TypeError("Can't call method on  " + it);
+  return it;
+};
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var global = __webpack_require__(3);
+var core = __webpack_require__(5);
+var ctx = __webpack_require__(23);
+var hide = __webpack_require__(8);
+var PROTOTYPE = 'prototype';
+
+var $export = function (type, name, source) {
+  var IS_FORCED = type & $export.F;
+  var IS_GLOBAL = type & $export.G;
+  var IS_STATIC = type & $export.S;
+  var IS_PROTO = type & $export.P;
+  var IS_BIND = type & $export.B;
+  var IS_WRAP = type & $export.W;
+  var exports = IS_GLOBAL ? core : core[name] || (core[name] = {});
+  var expProto = exports[PROTOTYPE];
+  var target = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE];
+  var key, own, out;
+  if (IS_GLOBAL) source = name;
+  for (key in source) {
+    // contains in native
+    own = !IS_FORCED && target && target[key] !== undefined;
+    if (own && key in exports) continue;
+    // export native or passed
+    out = own ? target[key] : source[key];
+    // prevent global pollution for namespaces
+    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
+    // bind timers to global for call from export context
+    : IS_BIND && own ? ctx(out, global)
+    // wrap global constructors for prevent change them in library
+    : IS_WRAP && target[key] == out ? (function (C) {
+      var F = function (a, b, c) {
+        if (this instanceof C) {
+          switch (arguments.length) {
+            case 0: return new C();
+            case 1: return new C(a);
+            case 2: return new C(a, b);
+          } return new C(a, b, c);
+        } return C.apply(this, arguments);
+      };
+      F[PROTOTYPE] = C[PROTOTYPE];
+      return F;
+    // make static versions for prototype methods
+    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+    // export proto methods to core.%CONSTRUCTOR%.methods.%NAME%
+    if (IS_PROTO) {
+      (exports.virtual || (exports.virtual = {}))[key] = out;
+      // export proto methods to core.%CONSTRUCTOR%.prototype.%NAME%
+      if (type & $export.R && expProto && !expProto[key]) hide(expProto, key, out);
+    }
+  }
+};
+// type bitmap
+$export.F = 1;   // forced
+$export.G = 2;   // global
+$export.S = 4;   // static
+$export.P = 8;   // proto
+$export.B = 16;  // bind
+$export.W = 32;  // wrap
+$export.U = 64;  // safe
+$export.R = 128; // real proto method for `library`
+module.exports = $export;
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+module.exports = function (exec) {
+  try {
+    return !!exec();
+  } catch (e) {
+    return true;
+  }
+};
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+module.exports = function (it) {
+  return typeof it === 'object' ? it !== null : typeof it === 'function';
+};
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports) {
+
+module.exports = {};
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+module.exports = function (bitmap, value) {
+  return {
+    enumerable: !(bitmap & 1),
+    configurable: !(bitmap & 2),
+    writable: !(bitmap & 4),
+    value: value
+  };
+};
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var shared = __webpack_require__(29)('keys');
+var uid = __webpack_require__(32);
+module.exports = function (key) {
+  return shared[key] || (shared[key] = uid(key));
+};
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports) {
+
+// 7.1.4 ToInteger
+var ceil = Math.ceil;
+var floor = Math.floor;
+module.exports = function (it) {
+  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
+};
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 7.1.13 ToObject(argument)
+var defined = __webpack_require__(11);
+module.exports = function (it) {
+  return Object(defined(it));
+};
+
 
 /***/ }),
 /* 20 */
@@ -26365,34 +26440,33 @@ Vue$3.compile = compileToFunctions;
 
 /* harmony default export */ __webpack_exports__["a"] = (Vue$3);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(107)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(114)))
 
 /***/ }),
 /* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray__ = __webpack_require__(51);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_sequence_parser__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_sequence_parser__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_sequence_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_sequence_parser__);
 
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   computed: {
-    participants: function participants() {
-      return [this.from].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(__WEBPACK_IMPORTED_MODULE_1_sequence_parser___default.a.Participants(this.context)));
-    },
     boundary: function boundary() {
       var that = this;
-      var arr = this.participants.map(function (participant) {
+      var arr = [this.from].concat(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(__WEBPACK_IMPORTED_MODULE_1_sequence_parser___default.a.Participants(this.context))).map(function (participant) {
         return that.$store.getters.centerOf(participant);
       });
-
+      var min = Math.min.apply(Math, __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(arr));
+      var max = Math.max.apply(Math, __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(arr));
       return {
-        min: Math.min.apply(Math, __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(arr)),
-        max: Math.max.apply(Math, __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_toConsumableArray___default()(arr))
+        min: min,
+        max: max,
+        width: Math.max(max - min, 100)
       };
     },
     depth: function depth() {
@@ -26401,30 +26475,20 @@ Vue$3.compile = compileToFunctions;
     centerOfFrom: function centerOfFrom() {
       return this.$store.getters.centerOf(this.from);
     },
-    left: function left() {
-      var offset = -10 * this.depth;
-      return this.boundary.min + offset;
-    },
-    right: function right() {
-      // the 3 10px - offset margin-left, half width of left bar and half width of right bar
-      var offset = 10 * this.depth + 10 + 10 + 10;
-      return this.boundary.max + offset;
+    offsetX: function offsetX() {
+      var extra = 10 * this.depth + 15;
+      return this.centerOfFrom - this.boundary.min + extra;
     },
     fragmentStyle: function fragmentStyle() {
-      if (this.boundary.min === this.boundary.max) {
-        return {
-          transform: 'translateX(' + (this.left - this.centerOfFrom) + 'px)',
-          width: 20 * this.depth + 100 + 'px'
-        };
-      }
       return {
-        transform: 'translateX(' + (this.left - this.centerOfFrom) + 'px)',
-        width: this.right - this.left + 'px'
+        transform: 'translateX(' + this.offsetX * -1 + 'px)',
+        width: this.boundary.width + 20 * this.depth + 30 + 'px'
       };
     },
     blockStyle: function blockStyle() {
       return {
-        marginLeft: (this.left - this.centerOfFrom) * -1 + 'px'
+        // 1px for the border of alt fragment
+        marginLeft: this.offsetX - 1 + 'px'
       };
     }
   }
@@ -26446,7 +26510,7 @@ module.exports = function (it) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // optional / simple context binding
-var aFunction = __webpack_require__(53);
+var aFunction = __webpack_require__(54);
 module.exports = function (fn, that, length) {
   aFunction(fn);
   if (that === undefined) return fn;
@@ -26471,8 +26535,8 @@ module.exports = function (fn, that, length) {
 /* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(13);
-var document = __webpack_require__(2).document;
+var isObject = __webpack_require__(14);
+var document = __webpack_require__(3).document;
 // typeof document.createElement is 'object' in old IE
 var is = isObject(document) && isObject(document.createElement);
 module.exports = function (it) {
@@ -26507,7 +26571,7 @@ module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.14 / 15.2.3.14 Object.keys(O)
-var $keys = __webpack_require__(70);
+var $keys = __webpack_require__(71);
 var enumBugKeys = __webpack_require__(25);
 
 module.exports = Object.keys || function keys(O) {
@@ -26519,9 +26583,9 @@ module.exports = Object.keys || function keys(O) {
 /* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var def = __webpack_require__(8).f;
-var has = __webpack_require__(6);
-var TAG = __webpack_require__(1)('toStringTag');
+var def = __webpack_require__(9).f;
+var has = __webpack_require__(7);
+var TAG = __webpack_require__(2)('toStringTag');
 
 module.exports = function (it, tag, stat) {
   if (it && !has(it = stat ? it : it.prototype, TAG)) def(it, TAG, { configurable: true, value: tag });
@@ -26532,7 +26596,7 @@ module.exports = function (it, tag, stat) {
 /* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var global = __webpack_require__(2);
+var global = __webpack_require__(3);
 var SHARED = '__core-js_shared__';
 var store = global[SHARED] || (global[SHARED] = {});
 module.exports = function (key) {
@@ -26546,7 +26610,7 @@ module.exports = function (key) {
 
 // to indexed object, toObject with fallback for non-array-like ES3 strings
 var IObject = __webpack_require__(26);
-var defined = __webpack_require__(10);
+var defined = __webpack_require__(11);
 module.exports = function (it) {
   return IObject(defined(it));
 };
@@ -26557,7 +26621,7 @@ module.exports = function (it) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.15 ToLength
-var toInteger = __webpack_require__(17);
+var toInteger = __webpack_require__(18);
 var min = Math.min;
 module.exports = function (it) {
   return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
@@ -26580,13 +26644,13 @@ module.exports = function (key) {
 /***/ (function(module, exports, __webpack_require__) {
 
 function injectStyle (ssrContext) {
-  __webpack_require__(88)
+  __webpack_require__(91)
 }
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(46),
+  __webpack_require__(47),
   /* template */
-  __webpack_require__(104),
+  __webpack_require__(111),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -26608,18 +26672,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_assign__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_assign___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_object_assign__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_sequence_parser__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_sequence_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_sequence_parser__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_SeqDiagram_vue__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_SeqDiagram_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_SeqDiagram_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_Cosmetic_css__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_Cosmetic_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_Cosmetic_css__);
-/* harmony reexport (default from non-hamory) */ __webpack_require__.d(__webpack_exports__, "SeqDiagram", function() { return __WEBPACK_IMPORTED_MODULE_4__components_SeqDiagram_vue___default.a; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_sequence_parser__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_sequence_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_sequence_parser__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_SeqDiagram_vue__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_SeqDiagram_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_SeqDiagram_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Cosmetic_css__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Cosmetic_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_Cosmetic_css__);
+/* harmony reexport (default from non-hamory) */ __webpack_require__.d(__webpack_exports__, "SeqDiagram", function() { return __WEBPACK_IMPORTED_MODULE_3__components_SeqDiagram_vue___default.a; });
 
 
-
+// import createLogger from 'vuex/dist/logger'
 
 
 
@@ -26638,16 +26700,16 @@ var Store = {
     },
     starter: function starter(state, getters) {
       var starterExp = getters.rootContext.starterExp();
-      return starterExp && starterExp.starter() && starterExp.starter().getText() || 'Starter';
+      return starterExp && starterExp.starter() && starterExp.starter().getCode() || 'Starter';
     },
     rootContext: function rootContext(state) {
-      return __WEBPACK_IMPORTED_MODULE_3_sequence_parser___default.a.RootContext(state.code);
+      return __WEBPACK_IMPORTED_MODULE_2_sequence_parser___default.a.RootContext(state.code);
     },
     block: function block(state, getters) {
       return getters.rootContext.block();
     },
     participants: function participants(state, getters) {
-      var participants = __WEBPACK_IMPORTED_MODULE_3_sequence_parser___default.a.Participants(getters.rootContext);
+      var participants = __WEBPACK_IMPORTED_MODULE_2_sequence_parser___default.a.Participants(getters.rootContext);
       participants.splice(0, 0, getters.starter);
       return participants;
     },
@@ -26686,8 +26748,8 @@ var Store = {
     }
   },
   // TODO: Enable strict for development?
-  strict: false,
-  plugins: [__WEBPACK_IMPORTED_MODULE_2_vuex_dist_logger___default()()]
+  strict: false
+  // plugins: [createLogger()]
 };
 
 
@@ -26696,7 +26758,7 @@ var Store = {
 /* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(52), __esModule: true };
+module.exports = { "default": __webpack_require__(53), __esModule: true };
 
 /***/ }),
 /* 36 */
@@ -26709,14 +26771,14 @@ module.exports = { "default": __webpack_require__(52), __esModule: true };
 /***/ (function(module, exports, __webpack_require__) {
 
 function injectStyle (ssrContext) {
+  __webpack_require__(86)
   __webpack_require__(85)
-  __webpack_require__(84)
 }
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(48),
+  __webpack_require__(49),
   /* template */
-  __webpack_require__(101),
+  __webpack_require__(106),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -26730,130 +26792,33 @@ module.exports = Component.exports
 
 /***/ }),
 /* 38 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-(function (global, factory) {
-	 true ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.createVuexLogger = factory());
-}(this, (function () { 'use strict';
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-/**
- * Get the first item that pass the test
- * by second argument function
- *
- * @param {Array} list
- * @param {Function} f
- * @return {*}
- */
-function find (list, f) {
-  return list.filter(f)[0]
-}
-
-/**
- * Deep copy the given object considering circular structure.
- * This function caches all nested objects and its copies.
- * If it detects circular structure, use cached copy to avoid infinite loop.
- *
- * @param {*} obj
- * @param {Array<Object>} cache
- * @return {*}
- */
-function deepCopy (obj, cache) {
-  if ( cache === void 0 ) cache = [];
-
-  // just return if obj is immutable value
-  if (obj === null || typeof obj !== 'object') {
-    return obj
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'assignment',
+  props: ['width', 'rtl', 'assignee'],
+  computed: {
+    returnArrow: function returnArrow() {
+      var rtl = '0,7 10,13 0,19';
+      var ltr = '10,7 0,13 10,19';
+      return this.rtl ? rtl : ltr;
+    }
   }
-
-  // if obj is hit, it is in circular structure
-  var hit = find(cache, function (c) { return c.original === obj; });
-  if (hit) {
-    return hit.copy
-  }
-
-  var copy = Array.isArray(obj) ? [] : {};
-  // put the copy into cache at first
-  // because we want to refer it in recursive deepCopy
-  cache.push({
-    original: obj,
-    copy: copy
-  });
-
-  Object.keys(obj).forEach(function (key) {
-    copy[key] = deepCopy(obj[key], cache);
-  });
-
-  return copy
-}
-
-/**
- * forEach for object
- */
-
-// Credits: borrowed code from fcomb/redux-logger
-
-function createLogger (ref) {
-  if ( ref === void 0 ) ref = {};
-  var collapsed = ref.collapsed; if ( collapsed === void 0 ) collapsed = true;
-  var filter = ref.filter; if ( filter === void 0 ) filter = function (mutation, stateBefore, stateAfter) { return true; };
-  var transformer = ref.transformer; if ( transformer === void 0 ) transformer = function (state) { return state; };
-  var mutationTransformer = ref.mutationTransformer; if ( mutationTransformer === void 0 ) mutationTransformer = function (mut) { return mut; };
-
-  return function (store) {
-    var prevState = deepCopy(store.state);
-
-    store.subscribe(function (mutation, state) {
-      if (typeof console === 'undefined') {
-        return
-      }
-      var nextState = deepCopy(state);
-
-      if (filter(mutation, prevState, nextState)) {
-        var time = new Date();
-        var formattedTime = " @ " + (pad(time.getHours(), 2)) + ":" + (pad(time.getMinutes(), 2)) + ":" + (pad(time.getSeconds(), 2)) + "." + (pad(time.getMilliseconds(), 3));
-        var formattedMutation = mutationTransformer(mutation);
-        var message = "mutation " + (mutation.type) + formattedTime;
-        var startMessage = collapsed
-          ? console.groupCollapsed
-          : console.group;
-
-        // render
-        try {
-          startMessage.call(console, message);
-        } catch (e) {
-          console.log(message);
-        }
-
-        console.log('%c prev state', 'color: #9E9E9E; font-weight: bold', transformer(prevState));
-        console.log('%c mutation', 'color: #03A9F4; font-weight: bold', formattedMutation);
-        console.log('%c next state', 'color: #4CAF50; font-weight: bold', transformer(nextState));
-
-        try {
-          console.groupEnd();
-        } catch (e) {
-          console.log('—— log end ——');
-        }
-      }
-
-      prevState = nextState;
-    });
-  }
-}
-
-function repeat (str, times) {
-  return (new Array(times + 1)).join(str)
-}
-
-function pad (num, maxLength) {
-  return repeat('0', maxLength - num.toString().length) + num
-}
-
-return createLogger;
-
-})));
-
+});
 
 /***/ }),
 /* 39 */
@@ -26861,14 +26826,16 @@ return createLogger;
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Interaction_vue__ = __webpack_require__(92);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Interaction_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Interaction_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__SelfInteraction_vue__ = __webpack_require__(96);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__SelfInteraction_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__SelfInteraction_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__FragmentAlt_vue__ = __webpack_require__(90);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__FragmentAlt_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__FragmentAlt_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__FragmentLoop_vue__ = __webpack_require__(91);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__FragmentLoop_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__FragmentLoop_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_sequence_parser__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_sequence_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_sequence_parser__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Interaction_vue__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Interaction_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Interaction_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__SelfInteraction_vue__ = __webpack_require__(101);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__SelfInteraction_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__SelfInteraction_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__FragmentAlt_vue__ = __webpack_require__(94);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__FragmentAlt_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__FragmentAlt_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FragmentLoop_vue__ = __webpack_require__(95);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FragmentLoop_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__FragmentLoop_vue__);
 //
 //
 //
@@ -26897,6 +26864,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 
 
@@ -26905,17 +26873,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'block',
-  props: ['from', 'context'],
+  props: ['from', 'code'],
   computed: {
+    context: function context() {
+      return __WEBPACK_IMPORTED_MODULE_0_sequence_parser___default.a.RootContext(this.code).block();
+    },
     statements: function statements() {
       return this.context.stat();
     }
   },
   components: {
-    Interaction: __WEBPACK_IMPORTED_MODULE_0__Interaction_vue___default.a,
-    SelfInteraction: __WEBPACK_IMPORTED_MODULE_1__SelfInteraction_vue___default.a,
-    FragmentAlt: __WEBPACK_IMPORTED_MODULE_2__FragmentAlt_vue___default.a,
-    FragmentLoop: __WEBPACK_IMPORTED_MODULE_3__FragmentLoop_vue___default.a
+    Interaction: __WEBPACK_IMPORTED_MODULE_1__Interaction_vue___default.a,
+    SelfInteraction: __WEBPACK_IMPORTED_MODULE_2__SelfInteraction_vue___default.a,
+    FragmentAlt: __WEBPACK_IMPORTED_MODULE_3__FragmentAlt_vue___default.a,
+    FragmentLoop: __WEBPACK_IMPORTED_MODULE_4__FragmentLoop_vue___default.a
   }
 });
 
@@ -26925,7 +26896,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__FragmentMixin__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_sequence_parser__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_sequence_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_sequence_parser__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__FragmentMixin__ = __webpack_require__(21);
 //
 //
 //
@@ -26946,19 +26919,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'fragment-alt',
-  props: ['from', 'context'],
-  mixins: [__WEBPACK_IMPORTED_MODULE_0__FragmentMixin__["a" /* default */]],
+  props: ['from', 'code'],
+  mixins: [__WEBPACK_IMPORTED_MODULE_1__FragmentMixin__["a" /* default */]],
   computed: {
+    context: function context() {
+      return __WEBPACK_IMPORTED_MODULE_0_sequence_parser___default.a.RootContext(this.code).block().stat()[0].alt();
+    },
     condition: function condition() {
-      return this.context.ifBlock().parExpr().expr().getText();
+      return this.context.ifBlock().parExpr().expr().getCode();
     }
   },
   beforeCreate: function beforeCreate() {
-    this.$options.components.Block = __webpack_require__(9);
+    this.$options.components.Block = __webpack_require__(10);
   }
 });
 
@@ -26968,7 +26951,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__FragmentMixin__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_sequence_parser__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_sequence_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_sequence_parser__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__FragmentMixin__ = __webpack_require__(21);
 //
 //
 //
@@ -26979,20 +26964,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'fragment-loop',
-  props: ['from', 'context'],
-  mixins: [__WEBPACK_IMPORTED_MODULE_0__FragmentMixin__["a" /* default */]],
+  props: ['from', 'code'],
+  mixins: [__WEBPACK_IMPORTED_MODULE_1__FragmentMixin__["a" /* default */]],
   computed: {
+    context: function context() {
+      return __WEBPACK_IMPORTED_MODULE_0_sequence_parser___default.a.RootContext(this.code).block().stat()[0].loop();
+    },
     condition: function condition() {
-      return this.context.parExpr().expr().getText();
+      return this.context.parExpr().expr().getCode();
     }
   },
   beforeCreate: function beforeCreate() {
-    this.$options.components.Block = __webpack_require__(9);
+    this.$options.components.Block = __webpack_require__(10);
   }
 });
 
@@ -27002,8 +26993,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Occurrence_vue__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Occurrence_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Occurrence_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_sequence_parser__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_sequence_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_sequence_parser__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Invocation__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Invocation___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Invocation__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Occurrence_vue__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Occurrence_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Occurrence_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Assignment__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Assignment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Assignment__);
 //
 //
 //
@@ -27013,40 +27010,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'interaction',
-  props: ['from', 'context'],
+  props: ['from', 'code'],
   computed: {
-    messageArrow: function messageArrow() {
-      return {
-        top: 10,
-        length: this.messageWidth - 15,
-        rightToLeft: this.rightToLeft
-      };
-    },
-    returnArrow: function returnArrow() {
-      return {
-        top: 10,
-        length: this.messageWidth - 15,
-        rightToLeft: !this.rightToLeft
-      };
+    context: function context() {
+      return __WEBPACK_IMPORTED_MODULE_0_sequence_parser___default.a.RootContext(this.code).block().stat()[0].message();
     },
     centerOfTo: function centerOfTo() {
       return this.$store.getters.centerOf(this.to);
@@ -27054,60 +27029,80 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     centerOfFrom: function centerOfFrom() {
       return this.$store.getters.centerOf(this.from);
     },
-    messageWidth: function messageWidth() {
-      var defaultWidth = Math.abs(this.centerOfTo - this.centerOfFrom);
-      return this.root ? defaultWidth + 8 : defaultWidth;
+    interactionWidth: function interactionWidth() {
+      return this.centerOfTo - this.centerOfFrom;
     },
-    messageLeft: function messageLeft() {
-      return this.root ? this.centerOfFrom - 14 : 0;
+    interactionLeft: function interactionLeft() {
+      return this.root && this.centerOfFrom || 0;
     },
     occurrenceLeft: function occurrenceLeft() {
-      return this.rightToLeft ? -1 * (this.messageWidth + 16) : this.messageWidth - 16;
+      return this.interactionWidth - 14;
     },
     rightToLeft: function rightToLeft() {
       return this.centerOfTo < this.centerOfFrom;
     },
-    methodSignature: function methodSignature() {
-      var params = this.context.parameters();
-      var paramsText = params.length > 0 ? '(' + params[0].getText() + ')' : '';
-      return this.context.methodName().getText() + paramsText;
-    },
-    assignee: function assignee() {
-      var assignee = this.context.assignee();
-      var assigneePart = assignee && assignee.getText();
-      var type = this.context.type();
-      var typeText = type && type.getText();
-      var typePart = typeText && ':' + typeText;
-      return typePart ? assigneePart + typePart : assigneePart;
-    },
-    to: function to() {
-      return this.context.to().getText();
-    },
     root: function root() {
       return this.from === this.$store.getters.starter;
-    }
-  },
-  filters: {
-    arrowHead: function arrowHead(arrow) {
-      if (!arrow) return '';
-      var ltr = arrow.length - 10 + ',' + (arrow.top - 6) + ' ' + arrow.length + ',' + arrow.top + ' ' + (arrow.length - 10) + ',' + (arrow.top + 6);
-      var rtl = '10,' + (arrow.top - 6) + ' 0,' + arrow.top + ' 10,' + (arrow.top + 6);
-      return arrow.rightToLeft ? rtl : ltr;
     },
-    arrowClose: function arrowClose(arrow) {
-      if (!arrow) return '';
-      var ltr = arrow.length - 10 + ',' + (arrow.top - 7) + ' ' + (arrow.length - 10) + ',' + (arrow.top + 7);
-      var rtl = '10,' + (arrow.top - 7) + ' 10,' + (arrow.top + 7);
-      return arrow.rightToLeft ? rtl : ltr;
+    methodSignature: function methodSignature() {
+      var params = this.context.parameters();
+      var paramsText = params.length > 0 ? '(' + params[0].getCode() + ')' : '';
+      return this.context.methodName().getCode() + paramsText;
+    },
+    assignee: function assignee() {
+      function safeCodeGetter(context) {
+        return context && context.getCode() || '';
+      }
+      var assignment = this.context.assignment();
+      if (!assignment) return '';
+      var assignee = safeCodeGetter(assignment.assignee());
+      var type = safeCodeGetter(assignment.type());
+      return assignee + (type ? ':' + type : '');
+    },
+    to: function to() {
+      return this.context.to().getCode();
     }
   },
   components: {
-    Occurrence: __WEBPACK_IMPORTED_MODULE_0__Occurrence_vue___default.a
+    Assignment: __WEBPACK_IMPORTED_MODULE_3__Assignment___default.a,
+    Invocation: __WEBPACK_IMPORTED_MODULE_1__Invocation___default.a,
+    Occurrence: __WEBPACK_IMPORTED_MODULE_2__Occurrence_vue___default.a
   }
 });
 
 /***/ }),
 /* 43 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'invocation',
+  props: ['signature', 'rtl'],
+  computed: {
+    messageArrow: function messageArrow() {
+      var ltr = '0,7 10,13 0,19';
+      var rtl = '10,7 0,13 10,19';
+      return this.rtl ? rtl : ltr;
+    }
+  }
+});
+
+/***/ }),
+/* 44 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27142,12 +27137,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__LifeLine_vue__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__LifeLine_vue__ = __webpack_require__(98);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__LifeLine_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__LifeLine_vue__);
 //
 //
@@ -27184,12 +27179,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Block_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Block_vue__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Block_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Block_vue__);
 //
 //
@@ -27206,38 +27201,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     starter: function starter() {
       return this.$store.getters.starter;
     },
-    block: function block() {
-      return this.$store.getters.block;
+    code: function code() {
+      return this.$store.getters.code;
     }
   },
   components: {
     Block: __WEBPACK_IMPORTED_MODULE_0__Block_vue___default.a
-  }
-});
-
-/***/ }),
-/* 46 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'occurrence',
-  props: ['from', 'context'],
-  computed: {
-    to: function to() {
-      return this.context.to() && this.context.to().getText() || this.from;
-    }
-  },
-  beforeCreate: function beforeCreate() {
-    this.$options.components.Block = __webpack_require__(9);
   }
 });
 
@@ -27247,15 +27216,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Occurrence_vue__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Occurrence_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Occurrence_vue__);
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_sequence_parser__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_sequence_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_sequence_parser__);
 //
 //
 //
@@ -27268,17 +27230,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'self-interaction',
-  props: ['from', 'context'],
+  name: 'occurrence',
+  props: ['from', 'code'],
   computed: {
-    methodSignature: function methodSignature() {
-      var params = this.context.parameters();
-      var paramsText = params.length > 0 ? '(' + params[0].getText() + ')' : '';
-      return this.context.methodName().getText() + paramsText;
+    context: function context() {
+      return __WEBPACK_IMPORTED_MODULE_0_sequence_parser___default.a.RootContext(this.code).block().stat()[0].message();
+    },
+    to: function to() {
+      return this.context.to() && this.context.to().getCode() || this.from;
     }
   },
-  components: {
-    Occurrence: __WEBPACK_IMPORTED_MODULE_0__Occurrence_vue___default.a
+  beforeCreate: function beforeCreate() {
+    this.$options.components.Block = __webpack_require__(10);
   }
 });
 
@@ -27288,9 +27251,56 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__LifeLineLayer_vue__ = __webpack_require__(94);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_sequence_parser__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_sequence_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_sequence_parser__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Occurrence_vue__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Occurrence_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Occurrence_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'self-interaction',
+  props: ['from', 'code'],
+  computed: {
+    context: function context() {
+      return __WEBPACK_IMPORTED_MODULE_0_sequence_parser___default.a.RootContext(this.code).block().stat()[0].message();
+    },
+    methodSignature: function methodSignature() {
+      var params = this.context.parameters();
+      var paramsText = params.length > 0 ? '(' + params[0].getCode() + ')' : '';
+      return this.context.methodName().getCode() + paramsText;
+    }
+  },
+  components: {
+    Occurrence: __WEBPACK_IMPORTED_MODULE_1__Occurrence_vue___default.a
+  }
+});
+
+/***/ }),
+/* 49 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__LifeLineLayer_vue__ = __webpack_require__(99);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__LifeLineLayer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__LifeLineLayer_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__MessageLayer_vue__ = __webpack_require__(95);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__MessageLayer_vue__ = __webpack_require__(100);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__MessageLayer_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__MessageLayer_vue__);
 //
 //
@@ -27312,13 +27322,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(51), __esModule: true };
+module.exports = { "default": __webpack_require__(52), __esModule: true };
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -27326,7 +27336,7 @@ module.exports = { "default": __webpack_require__(51), __esModule: true };
 
 exports.__esModule = true;
 
-var _from = __webpack_require__(49);
+var _from = __webpack_require__(50);
 
 var _from2 = _interopRequireDefault(_from);
 
@@ -27345,24 +27355,24 @@ exports.default = function (arr) {
 };
 
 /***/ }),
-/* 51 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(79);
-__webpack_require__(77);
-module.exports = __webpack_require__(4).Array.from;
-
-
-/***/ }),
 /* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
+__webpack_require__(80);
 __webpack_require__(78);
-module.exports = __webpack_require__(4).Object.assign;
+module.exports = __webpack_require__(5).Array.from;
 
 
 /***/ }),
 /* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(79);
+module.exports = __webpack_require__(5).Object.assign;
+
+
+/***/ }),
+/* 54 */
 /***/ (function(module, exports) {
 
 module.exports = function (it) {
@@ -27372,14 +27382,14 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // false -> Array#indexOf
 // true  -> Array#includes
 var toIObject = __webpack_require__(30);
 var toLength = __webpack_require__(31);
-var toAbsoluteIndex = __webpack_require__(74);
+var toAbsoluteIndex = __webpack_require__(75);
 module.exports = function (IS_INCLUDES) {
   return function ($this, el, fromIndex) {
     var O = toIObject($this);
@@ -27401,12 +27411,12 @@ module.exports = function (IS_INCLUDES) {
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // getting tag from 19.1.3.6 Object.prototype.toString()
 var cof = __webpack_require__(22);
-var TAG = __webpack_require__(1)('toStringTag');
+var TAG = __webpack_require__(2)('toStringTag');
 // ES3 wrong here
 var ARG = cof(function () { return arguments; }()) == 'Arguments';
 
@@ -27430,13 +27440,13 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var $defineProperty = __webpack_require__(8);
-var createDesc = __webpack_require__(15);
+var $defineProperty = __webpack_require__(9);
+var createDesc = __webpack_require__(16);
 
 module.exports = function (object, index, value) {
   if (index in object) $defineProperty.f(object, index, createDesc(0, value));
@@ -27445,29 +27455,29 @@ module.exports = function (object, index, value) {
 
 
 /***/ }),
-/* 57 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var document = __webpack_require__(2).document;
-module.exports = document && document.documentElement;
-
-
-/***/ }),
 /* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = !__webpack_require__(5) && !__webpack_require__(12)(function () {
-  return Object.defineProperty(__webpack_require__(24)('div'), 'a', { get: function () { return 7; } }).a != 7;
-});
+var document = __webpack_require__(3).document;
+module.exports = document && document.documentElement;
 
 
 /***/ }),
 /* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = !__webpack_require__(6) && !__webpack_require__(13)(function () {
+  return Object.defineProperty(__webpack_require__(24)('div'), 'a', { get: function () { return 7; } }).a != 7;
+});
+
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
 // check on default Array iterator
-var Iterators = __webpack_require__(14);
-var ITERATOR = __webpack_require__(1)('iterator');
+var Iterators = __webpack_require__(15);
+var ITERATOR = __webpack_require__(2)('iterator');
 var ArrayProto = Array.prototype;
 
 module.exports = function (it) {
@@ -27476,11 +27486,11 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // call something on iterator step with safe closing on error
-var anObject = __webpack_require__(3);
+var anObject = __webpack_require__(4);
 module.exports = function (iterator, fn, value, entries) {
   try {
     return entries ? fn(anObject(value)[0], value[1]) : fn(value);
@@ -27494,18 +27504,18 @@ module.exports = function (iterator, fn, value, entries) {
 
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var create = __webpack_require__(66);
-var descriptor = __webpack_require__(15);
+var create = __webpack_require__(67);
+var descriptor = __webpack_require__(16);
 var setToStringTag = __webpack_require__(28);
 var IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-__webpack_require__(7)(IteratorPrototype, __webpack_require__(1)('iterator'), function () { return this; });
+__webpack_require__(8)(IteratorPrototype, __webpack_require__(2)('iterator'), function () { return this; });
 
 module.exports = function (Constructor, NAME, next) {
   Constructor.prototype = create(IteratorPrototype, { next: descriptor(1, next) });
@@ -27514,21 +27524,21 @@ module.exports = function (Constructor, NAME, next) {
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var LIBRARY = __webpack_require__(64);
-var $export = __webpack_require__(11);
-var redefine = __webpack_require__(72);
-var hide = __webpack_require__(7);
-var has = __webpack_require__(6);
-var Iterators = __webpack_require__(14);
-var $iterCreate = __webpack_require__(61);
+var LIBRARY = __webpack_require__(65);
+var $export = __webpack_require__(12);
+var redefine = __webpack_require__(73);
+var hide = __webpack_require__(8);
+var has = __webpack_require__(7);
+var Iterators = __webpack_require__(15);
+var $iterCreate = __webpack_require__(62);
 var setToStringTag = __webpack_require__(28);
-var getPrototypeOf = __webpack_require__(69);
-var ITERATOR = __webpack_require__(1)('iterator');
+var getPrototypeOf = __webpack_require__(70);
+var ITERATOR = __webpack_require__(2)('iterator');
 var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
 var FF_ITERATOR = '@@iterator';
 var KEYS = 'keys';
@@ -27591,10 +27601,10 @@ module.exports = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ITERATOR = __webpack_require__(1)('iterator');
+var ITERATOR = __webpack_require__(2)('iterator');
 var SAFE_CLOSING = false;
 
 try {
@@ -27619,28 +27629,28 @@ module.exports = function (exec, skipClosing) {
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports) {
 
 module.exports = true;
 
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // 19.1.2.1 Object.assign(target, source, ...)
 var getKeys = __webpack_require__(27);
-var gOPS = __webpack_require__(68);
-var pIE = __webpack_require__(71);
-var toObject = __webpack_require__(18);
+var gOPS = __webpack_require__(69);
+var pIE = __webpack_require__(72);
+var toObject = __webpack_require__(19);
 var IObject = __webpack_require__(26);
 var $assign = Object.assign;
 
 // should work with symbols and should have deterministic property order (V8 bug)
-module.exports = !$assign || __webpack_require__(12)(function () {
+module.exports = !$assign || __webpack_require__(13)(function () {
   var A = {};
   var B = {};
   // eslint-disable-next-line no-undef
@@ -27667,14 +27677,14 @@ module.exports = !$assign || __webpack_require__(12)(function () {
 
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
-var anObject = __webpack_require__(3);
-var dPs = __webpack_require__(67);
+var anObject = __webpack_require__(4);
+var dPs = __webpack_require__(68);
 var enumBugKeys = __webpack_require__(25);
-var IE_PROTO = __webpack_require__(16)('IE_PROTO');
+var IE_PROTO = __webpack_require__(17)('IE_PROTO');
 var Empty = function () { /* empty */ };
 var PROTOTYPE = 'prototype';
 
@@ -27687,7 +27697,7 @@ var createDict = function () {
   var gt = '>';
   var iframeDocument;
   iframe.style.display = 'none';
-  __webpack_require__(57).appendChild(iframe);
+  __webpack_require__(58).appendChild(iframe);
   iframe.src = 'javascript:'; // eslint-disable-line no-script-url
   // createDict = iframe.contentWindow.Object;
   // html.removeChild(iframe);
@@ -27714,14 +27724,14 @@ module.exports = Object.create || function create(O, Properties) {
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var dP = __webpack_require__(8);
-var anObject = __webpack_require__(3);
+var dP = __webpack_require__(9);
+var anObject = __webpack_require__(4);
 var getKeys = __webpack_require__(27);
 
-module.exports = __webpack_require__(5) ? Object.defineProperties : function defineProperties(O, Properties) {
+module.exports = __webpack_require__(6) ? Object.defineProperties : function defineProperties(O, Properties) {
   anObject(O);
   var keys = getKeys(Properties);
   var length = keys.length;
@@ -27733,20 +27743,20 @@ module.exports = __webpack_require__(5) ? Object.defineProperties : function def
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports) {
 
 exports.f = Object.getOwnPropertySymbols;
 
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
-var has = __webpack_require__(6);
-var toObject = __webpack_require__(18);
-var IE_PROTO = __webpack_require__(16)('IE_PROTO');
+var has = __webpack_require__(7);
+var toObject = __webpack_require__(19);
+var IE_PROTO = __webpack_require__(17)('IE_PROTO');
 var ObjectProto = Object.prototype;
 
 module.exports = Object.getPrototypeOf || function (O) {
@@ -27759,13 +27769,13 @@ module.exports = Object.getPrototypeOf || function (O) {
 
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var has = __webpack_require__(6);
+var has = __webpack_require__(7);
 var toIObject = __webpack_require__(30);
-var arrayIndexOf = __webpack_require__(54)(false);
-var IE_PROTO = __webpack_require__(16)('IE_PROTO');
+var arrayIndexOf = __webpack_require__(55)(false);
+var IE_PROTO = __webpack_require__(17)('IE_PROTO');
 
 module.exports = function (object, names) {
   var O = toIObject(object);
@@ -27782,25 +27792,25 @@ module.exports = function (object, names) {
 
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports) {
 
 exports.f = {}.propertyIsEnumerable;
 
 
 /***/ }),
-/* 72 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(7);
-
-
-/***/ }),
 /* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var toInteger = __webpack_require__(17);
-var defined = __webpack_require__(10);
+module.exports = __webpack_require__(8);
+
+
+/***/ }),
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var toInteger = __webpack_require__(18);
+var defined = __webpack_require__(11);
 // true  -> String#at
 // false -> String#codePointAt
 module.exports = function (TO_STRING) {
@@ -27819,10 +27829,10 @@ module.exports = function (TO_STRING) {
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var toInteger = __webpack_require__(17);
+var toInteger = __webpack_require__(18);
 var max = Math.max;
 var min = Math.min;
 module.exports = function (index, length) {
@@ -27832,11 +27842,11 @@ module.exports = function (index, length) {
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.1 ToPrimitive(input [, PreferredType])
-var isObject = __webpack_require__(13);
+var isObject = __webpack_require__(14);
 // instead of the ES6 spec version, we didn't implement @@toPrimitive case
 // and the second argument - flag - preferred type is a string
 module.exports = function (it, S) {
@@ -27850,13 +27860,13 @@ module.exports = function (it, S) {
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var classof = __webpack_require__(55);
-var ITERATOR = __webpack_require__(1)('iterator');
-var Iterators = __webpack_require__(14);
-module.exports = __webpack_require__(4).getIteratorMethod = function (it) {
+var classof = __webpack_require__(56);
+var ITERATOR = __webpack_require__(2)('iterator');
+var Iterators = __webpack_require__(15);
+module.exports = __webpack_require__(5).getIteratorMethod = function (it) {
   if (it != undefined) return it[ITERATOR]
     || it['@@iterator']
     || Iterators[classof(it)];
@@ -27864,21 +27874,21 @@ module.exports = __webpack_require__(4).getIteratorMethod = function (it) {
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var ctx = __webpack_require__(23);
-var $export = __webpack_require__(11);
-var toObject = __webpack_require__(18);
-var call = __webpack_require__(60);
-var isArrayIter = __webpack_require__(59);
+var $export = __webpack_require__(12);
+var toObject = __webpack_require__(19);
+var call = __webpack_require__(61);
+var isArrayIter = __webpack_require__(60);
 var toLength = __webpack_require__(31);
-var createProperty = __webpack_require__(56);
-var getIterFn = __webpack_require__(76);
+var createProperty = __webpack_require__(57);
+var getIterFn = __webpack_require__(77);
 
-$export($export.S + $export.F * !__webpack_require__(63)(function (iter) { Array.from(iter); }), 'Array', {
+$export($export.S + $export.F * !__webpack_require__(64)(function (iter) { Array.from(iter); }), 'Array', {
   // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
   from: function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
     var O = toObject(arrayLike);
@@ -27908,25 +27918,25 @@ $export($export.S + $export.F * !__webpack_require__(63)(function (iter) { Array
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.3.1 Object.assign(target, source)
-var $export = __webpack_require__(11);
+var $export = __webpack_require__(12);
 
-$export($export.S + $export.F, 'Object', { assign: __webpack_require__(65) });
+$export($export.S + $export.F, 'Object', { assign: __webpack_require__(66) });
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var $at = __webpack_require__(73)(true);
+var $at = __webpack_require__(74)(true);
 
 // 21.1.3.27 String.prototype[@@iterator]()
-__webpack_require__(62)(String, 'String', function (iterated) {
+__webpack_require__(63)(String, 'String', function (iterated) {
   this._t = String(iterated); // target
   this._i = 0;                // next index
 // 21.1.5.2.1 %StringIteratorPrototype%.next()
@@ -27940,12 +27950,6 @@ __webpack_require__(62)(String, 'String', function (iterated) {
   return { value: point, done: false };
 });
 
-
-/***/ }),
-/* 80 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ }),
 /* 81 */
@@ -28003,89 +28007,38 @@ __webpack_require__(62)(String, 'String', function (iterated) {
 
 /***/ }),
 /* 90 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-function injectStyle (ssrContext) {
-  __webpack_require__(83)
-}
-var Component = __webpack_require__(0)(
-  /* script */
-  __webpack_require__(40),
-  /* template */
-  __webpack_require__(100),
-  /* styles */
-  injectStyle,
-  /* scopeId */
-  "data-v-3052f184",
-  /* moduleIdentifier (server only) */
-  null
-)
-
-module.exports = Component.exports
-
+// removed by extract-text-webpack-plugin
 
 /***/ }),
 /* 91 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-function injectStyle (ssrContext) {
-  __webpack_require__(82)
-}
-var Component = __webpack_require__(0)(
-  /* script */
-  __webpack_require__(41),
-  /* template */
-  __webpack_require__(99),
-  /* styles */
-  injectStyle,
-  /* scopeId */
-  "data-v-2b38044e",
-  /* moduleIdentifier (server only) */
-  null
-)
-
-module.exports = Component.exports
-
+// removed by extract-text-webpack-plugin
 
 /***/ }),
 /* 92 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-function injectStyle (ssrContext) {
-  __webpack_require__(87)
-}
-var Component = __webpack_require__(0)(
-  /* script */
-  __webpack_require__(42),
-  /* template */
-  __webpack_require__(103),
-  /* styles */
-  injectStyle,
-  /* scopeId */
-  "data-v-5be86ddd",
-  /* moduleIdentifier (server only) */
-  null
-)
-
-module.exports = Component.exports
-
+// removed by extract-text-webpack-plugin
 
 /***/ }),
 /* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 function injectStyle (ssrContext) {
-  __webpack_require__(80)
+  __webpack_require__(89)
 }
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(43),
+  __webpack_require__(38),
   /* template */
-  __webpack_require__(97),
+  __webpack_require__(109),
   /* styles */
   injectStyle,
   /* scopeId */
-  "data-v-21263e55",
+  "data-v-72ecb252",
   /* moduleIdentifier (server only) */
   null
 )
@@ -28098,17 +28051,17 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 function injectStyle (ssrContext) {
-  __webpack_require__(89)
+  __webpack_require__(84)
 }
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(44),
+  __webpack_require__(40),
   /* template */
   __webpack_require__(105),
   /* styles */
   injectStyle,
   /* scopeId */
-  "data-v-8ec24ca8",
+  "data-v-3052f184",
   /* moduleIdentifier (server only) */
   null
 )
@@ -28121,17 +28074,17 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 function injectStyle (ssrContext) {
-  __webpack_require__(81)
+  __webpack_require__(83)
 }
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(45),
+  __webpack_require__(41),
   /* template */
-  __webpack_require__(98),
+  __webpack_require__(104),
   /* styles */
   injectStyle,
   /* scopeId */
-  "data-v-26ab2f4f",
+  "data-v-2b38044e",
   /* moduleIdentifier (server only) */
   null
 )
@@ -28144,13 +28097,128 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 function injectStyle (ssrContext) {
-  __webpack_require__(86)
+  __webpack_require__(88)
 }
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(47),
+  __webpack_require__(42),
+  /* template */
+  __webpack_require__(108),
+  /* styles */
+  injectStyle,
+  /* scopeId */
+  "data-v-5be86ddd",
+  /* moduleIdentifier (server only) */
+  null
+)
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 97 */
+/***/ (function(module, exports, __webpack_require__) {
+
+function injectStyle (ssrContext) {
+  __webpack_require__(90)
+}
+var Component = __webpack_require__(0)(
+  /* script */
+  __webpack_require__(43),
+  /* template */
+  __webpack_require__(110),
+  /* styles */
+  injectStyle,
+  /* scopeId */
+  "data-v-7d81ead6",
+  /* moduleIdentifier (server only) */
+  null
+)
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 98 */
+/***/ (function(module, exports, __webpack_require__) {
+
+function injectStyle (ssrContext) {
+  __webpack_require__(81)
+}
+var Component = __webpack_require__(0)(
+  /* script */
+  __webpack_require__(44),
   /* template */
   __webpack_require__(102),
+  /* styles */
+  injectStyle,
+  /* scopeId */
+  "data-v-21263e55",
+  /* moduleIdentifier (server only) */
+  null
+)
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 99 */
+/***/ (function(module, exports, __webpack_require__) {
+
+function injectStyle (ssrContext) {
+  __webpack_require__(92)
+}
+var Component = __webpack_require__(0)(
+  /* script */
+  __webpack_require__(45),
+  /* template */
+  __webpack_require__(112),
+  /* styles */
+  injectStyle,
+  /* scopeId */
+  "data-v-8ec24ca8",
+  /* moduleIdentifier (server only) */
+  null
+)
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 100 */
+/***/ (function(module, exports, __webpack_require__) {
+
+function injectStyle (ssrContext) {
+  __webpack_require__(82)
+}
+var Component = __webpack_require__(0)(
+  /* script */
+  __webpack_require__(46),
+  /* template */
+  __webpack_require__(103),
+  /* styles */
+  injectStyle,
+  /* scopeId */
+  "data-v-26ab2f4f",
+  /* moduleIdentifier (server only) */
+  null
+)
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 101 */
+/***/ (function(module, exports, __webpack_require__) {
+
+function injectStyle (ssrContext) {
+  __webpack_require__(87)
+}
+var Component = __webpack_require__(0)(
+  /* script */
+  __webpack_require__(48),
+  /* template */
+  __webpack_require__(107),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -28163,7 +28231,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 97 */
+/* 102 */
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -28185,7 +28253,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 },staticRenderFns: []}
 
 /***/ }),
-/* 98 */
+/* 103 */
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -28196,14 +28264,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('block', {
     attrs: {
-      "context": _vm.block,
+      "code": _vm.code,
       "from": _vm.starter
     }
   })], 1)
 },staticRenderFns: []}
 
 /***/ }),
-/* 99 */
+/* 104 */
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -28217,7 +28285,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("[" + _vm._s(_vm.condition) + "]")])]), _vm._v(" "), _c('block', {
     style: (_vm.blockStyle),
     attrs: {
-      "context": this.context.braceBlock().block(),
+      "code": this.context.braceBlock().block().getCode(),
       "from": _vm.from
     }
   })], 1)
@@ -28228,7 +28296,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 }]}
 
 /***/ }),
-/* 100 */
+/* 105 */
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -28242,7 +28310,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("[" + _vm._s(_vm.condition) + "]")])]), _vm._v(" "), _c('block', {
     style: (_vm.blockStyle),
     attrs: {
-      "context": _vm.context.ifBlock().braceBlock().block(),
+      "code": _vm.context.ifBlock().braceBlock().block().getCode(),
       "from": _vm.from
     }
   }), _vm._v(" "), _vm._l((_vm.context.elseIfBlock()), function(elseIfBlock) {
@@ -28252,11 +28320,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }), _vm._v(" "), _c('div', {
       key: elseIfBlock,
       staticClass: "name"
-    }, [_vm._v("else if [" + _vm._s(elseIfBlock.parExpr().expr().getText()) + "]")]), _vm._v(" "), _c('block', {
+    }, [_vm._v("else if [" + _vm._s(elseIfBlock.parExpr().expr().getCode()) + "]")]), _vm._v(" "), _c('block', {
       key: elseIfBlock,
       style: (_vm.blockStyle),
       attrs: {
-        "context": elseIfBlock.braceBlock().block(),
+        "code": elseIfBlock.braceBlock().block().getCode(),
         "from": _vm.from
       }
     })]
@@ -28267,7 +28335,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("else")]), _vm._v(" "), _c('block', {
     style: (_vm.blockStyle),
     attrs: {
-      "context": _vm.context.elseBlock().braceBlock().block(),
+      "code": _vm.context.elseBlock().braceBlock().block().getCode(),
       "from": _vm.from
     }
   })] : _vm._e()], 2)
@@ -28278,7 +28346,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 }]}
 
 /***/ }),
-/* 101 */
+/* 106 */
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -28288,7 +28356,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 },staticRenderFns: []}
 
 /***/ }),
-/* 102 */
+/* 107 */
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -28315,93 +28383,104 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "name"
   }, [_vm._v(_vm._s(_vm.methodSignature))])]), _vm._v(" "), _c('occurrence', {
     attrs: {
-      "context": _vm.context,
+      "code": _vm.code,
       "from": _vm.from
     }
   })], 1)
 },staticRenderFns: []}
 
 /***/ }),
-/* 103 */
+/* 108 */
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "interaction",
     class: {
-      'right-to-left': _vm.rightToLeft
+      'root': _vm.root
     },
     style: ({
-      width: _vm.messageWidth + 'px',
-      left: _vm.messageLeft + 'px'
+      width: Math.abs(_vm.interactionWidth) + 'px',
+      left: _vm.interactionLeft + 'px'
     })
-  }, [_c('div', {
-    staticClass: "message"
-  }, [_c('svg', {
-    staticClass: "arrow",
+  }, [_c('invocation', {
     attrs: {
-      "width": _vm.messageWidth,
-      "height": "20"
+      "rtl": _vm.rightToLeft,
+      "signature": _vm.methodSignature
     }
-  }, [_c('line', {
-    attrs: {
-      "x1": 0,
-      "y1": _vm.messageArrow.top,
-      "x2": _vm.messageArrow.length,
-      "y2": _vm.messageArrow.top
-    }
-  }), _vm._v(" "), _c('polyline', {
-    staticClass: "head",
-    attrs: {
-      "points": _vm._f("arrowHead")(_vm.messageArrow)
-    }
-  }), _vm._v(" "), _c('polyline', {
-    staticClass: "closed",
-    attrs: {
-      "points": _vm._f("arrowClose")(_vm.messageArrow)
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "name"
-  }, [_vm._v(_vm._s(_vm.methodSignature))])]), _vm._v(" "), _c('occurrence', {
+  }), _vm._v(" "), _c('occurrence', {
     style: ({
       left: _vm.occurrenceLeft + 'px'
     }),
     attrs: {
-      "context": _vm.context,
+      "code": _vm.code,
       "from": _vm.to
     }
-  }), _vm._v(" "), (_vm.assignee) ? _c('div', {
-    staticClass: "message return reverse"
-  }, [_c('svg', {
-    staticClass: "arrow",
+  }), _vm._v(" "), _c('assignment', {
     attrs: {
-      "width": _vm.messageWidth,
-      "height": "20"
+      "width": Math.abs(_vm.interactionWidth),
+      "rtl": _vm.rightToLeft,
+      "assignee": _vm.assignee
     }
-  }, [_c('line', {
-    attrs: {
-      "x1": _vm.returnArrow.length,
-      "y1": _vm.returnArrow.top,
-      "x2": "0",
-      "y2": _vm.returnArrow.top
-    }
-  }), _vm._v(" "), _c('polyline', {
-    staticClass: "head",
-    attrs: {
-      "points": _vm._f("arrowHead")(_vm.returnArrow)
-    }
-  }), _vm._v(" "), _c('polyline', {
-    staticClass: "closed",
-    attrs: {
-      "points": _vm._f("arrowClose")(_vm.returnArrow)
-    }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "name"
-  }, [_vm._v(_vm._s(_vm.assignee))])]) : _vm._e()], 1)
+  })], 1)
 },staticRenderFns: []}
 
 /***/ }),
-/* 104 */
+/* 109 */
+/***/ (function(module, exports) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return (_vm.assignee) ? _c('div', {
+    staticClass: "message return reverse",
+    class: {
+      'right-to-left': _vm.rtl
+    }
+  }, [_c('div', {
+    staticClass: "name"
+  }, [_vm._v(_vm._s(_vm.assignee))]), _vm._v(" "), _c('div', {
+    staticClass: "point"
+  }, [_c('svg', {
+    staticClass: "arrow",
+    attrs: {
+      "height": "20"
+    }
+  }, [_c('polyline', {
+    staticClass: "head",
+    attrs: {
+      "points": _vm.returnArrow
+    }
+  })])])]) : _vm._e()
+},staticRenderFns: []}
+
+/***/ }),
+/* 110 */
+/***/ (function(module, exports) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "message",
+    class: {
+      'right-to-left': _vm.rtl
+    }
+  }, [_c('div', {
+    staticClass: "name"
+  }, [_vm._v(_vm._s(_vm.signature))]), _vm._v(" "), _c('div', {
+    staticClass: "point"
+  }, [_c('svg', {
+    staticClass: "arrow",
+    attrs: {
+      "height": "20"
+    }
+  }, [_c('polyline', {
+    staticClass: "head",
+    attrs: {
+      "points": _vm.messageArrow
+    }
+  })])])])
+},staticRenderFns: []}
+
+/***/ }),
+/* 111 */
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -28409,14 +28488,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "occurrence"
   }, [(this.context.block()) ? _c('block', {
     attrs: {
-      "context": this.context.block(),
+      "code": this.context.block().getCode(),
       "from": _vm.to
     }
   }) : _vm._e()], 1)
 },staticRenderFns: []}
 
 /***/ }),
-/* 105 */
+/* 112 */
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -28435,29 +28514,29 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 },staticRenderFns: []}
 
 /***/ }),
-/* 106 */
+/* 113 */
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', _vm._l((_vm.statements), function(stat) {
-    return _c('div', [(!!stat.message() && !!stat.message().to() && !(stat.message().to().getText() === _vm.from)) ? _c('interaction', {
+    return _c('div', [(!!stat.message() && !!stat.message().to() && !(stat.message().to().getCode() === _vm.from)) ? _c('interaction', {
       attrs: {
-        "context": stat.message(),
+        "code": stat.getCode(),
         "from": _vm.from
       }
-    }) : _vm._e(), _vm._v(" "), (!!stat.message() && (!stat.message().to() || stat.message().to().getText() === _vm.from)) ? _c('self-interaction', {
+    }) : _vm._e(), _vm._v(" "), (!!stat.message() && (!stat.message().to() || stat.message().to().getCode() === _vm.from)) ? _c('self-interaction', {
       attrs: {
-        "context": stat.message(),
+        "code": stat.getCode(),
         "from": _vm.from
       }
     }) : _vm._e(), _vm._v(" "), (!!stat.alt()) ? _c('fragment-alt', {
       attrs: {
-        "context": stat.alt(),
+        "code": stat.alt().getCode(),
         "from": _vm.from
       }
     }) : _vm._e(), _vm._v(" "), (!!stat.loop()) ? _c('fragment-loop', {
       attrs: {
-        "context": stat.loop(),
+        "code": stat.loop().getCode(),
         "from": _vm.from
       }
     }) : _vm._e()], 1)
@@ -28465,7 +28544,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 },staticRenderFns: []}
 
 /***/ }),
-/* 107 */
+/* 114 */
 /***/ (function(module, exports) {
 
 var g;
@@ -28492,7 +28571,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 108 */
+/* 115 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29385,13 +29464,13 @@ var index_esm = {
 
 
 /***/ }),
-/* 109 */
+/* 116 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(108);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(115);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__main__ = __webpack_require__(34);
 
 
@@ -29415,9 +29494,13 @@ window.app = new __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */]({
   store: store
 });
 
-store.commit('code', 'RET ret = a:A.methodA() { \n  if (x) { \n    B.method() \n    C.methodC() { \n      while (y) { \n        if(z) { \n          b = B.methodB() \n        } else { \n          D.methodD()\n        }\n      }\n    }\n  }\n}');
+store.commit('code', '@Starter(User)\nRET ret = a:A.methodA(a, b) { \n  methodA1\n  if (x) { \n    B.method\n    C.methodA2 { \n      while (y) { \n        if(z) { \n          B b = B.methodB\n        } else { \n          D.methodD\n        }\n      }\n    }\n  }\n}');
 store.commit('code2', 'RET ret = a:A.methodA() { if (x) { B.method() }}');
 store.commit('code3', 'RET ret = a:A.methodA() { if (x) { method() if (y) { method2() }}}');
+store.commit('code4', 'RET ret = a:A.methodA() { while (x) { B.method() }}');
+store.commit('code5', 'RET ret = a:A.methodA() { if (x) { method() }}');
+store.commit('code6', 'RET ret = A.methodA()');
+store.commit('code', '\na=a.method() {\n  b=b.method() {\n    a=a.method() {\n      c=c.method()\n    }\n  }\n}\n');
 
 /***/ })
 /******/ ]);

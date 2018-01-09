@@ -15,50 +15,54 @@
  */
 
 /* eslint-env browser */
-'use strict';
 
 if ('serviceWorker' in navigator) {
-  // Delay registration until after the page has loaded, to ensure that our
-  // precaching requests don't degrade the first visit experience.
-  // See https://developers.google.com/web/fundamentals/instant-and-offline/service-worker/registration
-  window.addEventListener('load', function() {
-    // Your service-worker.js *must* be located at the top-level directory relative to your site.
-    // It won't be able to control pages unless it's located at the same level or higher than them.
-    // *Don't* register service worker file in, e.g., a scripts/ sub-directory!
-    // See https://github.com/slightlyoff/ServiceWorker/issues/468
-    navigator.serviceWorker.register('service-worker.js').then(function(reg) {
-      // updatefound is fired if service-worker.js changes.
-      reg.onupdatefound = function() {
-        // The updatefound event implies that reg.installing is set; see
-        // https://w3c.github.io/ServiceWorker/#service-worker-registration-updatefound-event
-        var installingWorker = reg.installing;
+	// Delay registration until after the page has loaded, to ensure that our
+	// precaching requests don't degrade the first visit experience.
+	// See https://developers.google.com/web/fundamentals/instant-and-offline/service-worker/registration
+	window.addEventListener('load', function() {
+		// Your service-worker.js *must* be located at the top-level directory relative to your site.
+		// It won't be able to control pages unless it's located at the same level or higher than them.
+		// *Don't* register service worker file in, e.g., a scripts/ sub-directory!
+		// See https://github.com/slightlyoff/ServiceWorker/issues/468
+		navigator.serviceWorker
+			.register('service-worker.js')
+			.then(function(reg) {
+				// updatefound is fired if service-worker.js changes.
+				reg.onupdatefound = function() {
+					// The updatefound event implies that reg.installing is set; see
+					// https://w3c.github.io/ServiceWorker/#service-worker-registration-updatefound-event
+					var installingWorker = reg.installing;
 
-        installingWorker.onstatechange = function() {
-          switch (installingWorker.state) {
-            case 'installed':
-              if (navigator.serviceWorker.controller) {
-                // At this point, the old content will have been purged and the fresh content will
-                // have been added to the cache.
-                // It's the perfect time to display a "New content is available; please refresh."
-                // message in the page's interface.
-                console.log('New or updated content is available.');
-              } else {
-                // At this point, everything has been precached.
-                // It's the perfect time to display a "Content is cached for offline use." message.
-                console.log('Content is now available offline!');
-              }
-              break;
+					installingWorker.onstatechange = function() {
+						switch (installingWorker.state) {
+							case 'installed':
+								if (navigator.serviceWorker.controller) {
+									// At this point, the old content will have been purged and the fresh content will
+									// have been added to the cache.
+									// It's the perfect time to display a "New content is available; please refresh."
+									// message in the page's interface.
+									console.log('New or updated content is available.');
+								} else {
+									// At this point, everything has been precached.
+									// It's the perfect time to display a "Content is cached for offline use." message.
+									console.log('Content is now available offline!');
+								}
+								break;
 
-            case 'redundant':
-              console.error('The installing service worker became redundant.');
-              break;
-          }
-        };
-      };
-    }).catch(function(e) {
-      console.error('Error during service worker registration:', e);
-    });
-  });
+							case 'redundant':
+								console.error(
+									'The installing service worker became redundant.'
+								);
+								break;
+						}
+					};
+				};
+			})
+			.catch(function(e) {
+				console.error('Error during service worker registration:', e);
+			});
+	});
 }
 
 (function() {
@@ -246,20 +250,25 @@ if ('serviceWorker' in navigator) {
 
 	window.chrome = window.chrome || {};
 	window.chrome.i18n = { getMessage: () => {} };
+
+	window.IS_EXTENSION = !!window.chrome.extension;
 })();
 
 (() => {
 	const FAUX_DELAY = 1;
+
+	var db;
+	var dbPromise;
+
 	var local = {
 		get: (obj, cb) => {
+			const retVal = {};
 			if (typeof obj === 'string') {
-				const retVal = {};
 				retVal[obj] = JSON.parse(window.localStorage.getItem(obj));
 				setTimeout(() => cb(retVal), FAUX_DELAY);
 			} else {
-				const retVal = {};
 				Object.keys(obj).forEach(key => {
-					let val = window.localStorage.getItem(key);
+					const val = window.localStorage.getItem(key);
 					retVal[key] =
 						val === undefined || val === null ? obj[key] : JSON.parse(val);
 				});
@@ -270,16 +279,188 @@ if ('serviceWorker' in navigator) {
 			Object.keys(obj).forEach(key => {
 				window.localStorage.setItem(key, JSON.stringify(obj[key]));
 			});
+			/* eslint-disable consistent-return */
 			setTimeout(() => {
-				if (cb) cb();
+				if (cb) {
+					return cb();
+				}
 			}, FAUX_DELAY);
+			/* eslint-enable consistent-return */
 		}
 	};
+	const dbLocalAlias = chrome && chrome.storage ? chrome.storage.local : local;
+	const dbSyncAlias = chrome && chrome.storage ? chrome.storage.sync : local;
+
+	async function getDb() {
+		if (dbPromise) {
+			return dbPromise;
+		}
+		utils.log('Initializing firestore');
+		dbPromise = new Promise((resolve, reject) => {
+			if (db) {
+				return resolve(db);
+			}
+			return firebase
+				.firestore()
+				.enablePersistence()
+				.then(function() {
+					// Initialize Cloud Firestore through firebase
+					db = firebase.firestore();
+					utils.log('firebase db ready', db);
+					resolve(db);
+				})
+				.catch(function(err) {
+					reject(err.code);
+					if (err.code === 'failed-precondition') {
+						// Multiple tabs open, persistence can only be enabled
+						// in one tab at a a time.
+						// ...
+					} else if (err.code === 'unimplemented') {
+						// The current browser does not support all of the
+						// features required to enable persistence
+						// ...
+					}
+				});
+		});
+		return dbPromise;
+	}
+
+	async function getUserLastSeenVersion() {
+		const d = deferred();
+		// Will be chrome.storage.sync in extension environment,
+		// otherwise will fallback to localstorage
+		dbSyncAlias.get(
+			{
+				lastSeenVersion: ''
+			},
+			result => {
+				d.resolve(result.lastSeenVersion);
+			}
+		);
+		return d.promise;
+		// Might consider getting actual value from remote db.
+		// Not critical right now.
+	}
+
+	async function setUserLastSeenVersion(version) {
+		if (window.IS_EXTENSION) {
+			chrome.storage.sync.set(
+				{
+					lastSeenVersion: version
+				},
+				function() {}
+			);
+			return;
+		}
+		// Settings the lastSeenVersion in localStorage also because next time we need
+		// to fetch it irrespective of the user being logged in or out
+		local.set({ lastSeenVersion: version });
+		if (window.user) {
+			const remoteDb = await getDb();
+			remoteDb
+				.doc(`users/${window.user.uid}`)
+				.update({ lastSeenVersion: version });
+		}
+	}
+
+	async function getUser(userId) {
+		const remoteDb = await getDb();
+		return remoteDb.doc(`users/${userId}`).get().then(doc => {
+			if (!doc.exists)
+				return remoteDb.doc(`users/${userId}`).set({}, { merge: true });
+			const user = doc.data();
+			Object.assign(window.user, user);
+			return user;
+		});
+	}
+
+	function getSettings(defaultSettings) {
+		const d = deferred();
+		// Will be chrome.storage.sync in extension environment,
+		// otherwise will fallback to localstorage
+		dbSyncAlias.get(defaultSettings, result => {
+			d.resolve(result);
+		});
+		return d.promise;
+	}
+
 	window.db = {
-		local: chrome && chrome.storage ? chrome.storage.local : local,
-		sync: chrome && chrome.storage ? chrome.storage.sync : local
+		getDb,
+		getUser,
+		getUserLastSeenVersion,
+		setUserLastSeenVersion,
+		getSettings,
+		local: dbLocalAlias,
+		sync: dbSyncAlias
 	};
 })();
+
+window.logout = function logout() {
+	firebase.auth().signOut();
+};
+function login(providerName) {
+	var provider;
+	if (providerName === 'fb') {
+		provider = new firebase.auth.FacebookAuthProvider();
+	} else if (providerName === 'twitter') {
+		provider = new firebase.auth.TwitterAuthProvider();
+	} else if (providerName === 'google') {
+		provider = new firebase.auth.GoogleAuthProvider();
+		provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+	} else {
+		provider = new firebase.auth.GithubAuthProvider();
+	}
+
+	return firebase
+		.auth()
+		.signInWithPopup(provider)
+		.then(function(result) {
+			return;
+			// Save this user in the store
+			firebase
+				.database()
+				.ref('users/' + result.user.uid)
+				.update({
+					displayName: result.user.displayName,
+					email: result.user.email,
+					photoURL: result.user.providerData[0].photoURL,
+					signedUpOn: Date.now()
+				})
+				.then(function() {
+					// Port items in localstorage to user account
+					if (window.localStorage.prototyp) {
+						var items = JSON.parse(window.localStorage.prototyp);
+						var newItemKey;
+						items.forEach(function(localItem) {
+							itemService.fetchItem(localItem.id).then(function(item) {
+								newItemKey = firebase.database().ref('pens').push().key;
+								item.createdBy = result.user.uid;
+								delete item.uid;
+								firebase.database().ref('pens/' + newItemKey).set(item);
+								firebase
+									.database()
+									.ref('users/' + result.user.uid)
+									.child('items')
+									.child(newItemKey)
+									.set(true);
+							});
+						});
+						delete localStorage.prototyp;
+					}
+				});
+		})
+		.catch(function(error) {
+			// Handle Errors here.
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			// The email of the user's account used.
+			var email = error.email;
+			// The firebase.auth.AuthCredential type that was used.
+			var credential = error.credential;
+			utils.log(error);
+		});
+}
+window.login = login;
 
 /* global ga */
 // eslint-disable-next-line max-params
@@ -665,6 +846,201 @@ window.cssLibs = [
 	window.TextareaAutoComplete = TextareaAutoComplete;
 })();
 
+(() => {
+	window.itemService = {
+		async getItem(id) {
+			var remoteDb = await window.db.getDb();
+			return remoteDb.doc(`items/${id}`).get().then(doc => {
+				return doc.data();
+			});
+		},
+		async getUserItemIds() {
+			if (window.user) {
+				return new Promise(resolve => {
+					resolve(window.user.items || {});
+				});
+			}
+			var remoteDb = await window.db.getDb();
+			return remoteDb.doc(`users/${window.user.uid}`).get().then(doc => {
+				if (!doc.exists) {
+					return {};
+				}
+				return doc.data().items;
+			});
+		},
+
+		async getAllItems() {
+			var d = deferred();
+			let itemIds = await this.getUserItemIds();
+			itemIds = Object.getOwnPropertyNames(itemIds || {});
+			utils.log('itemids', itemIds);
+
+			if (!itemIds.length) {
+				d.resolve([]);
+			}
+
+			const items = [];
+			for (let i = 0; i < itemIds.length; i++) {
+				const id = itemIds[i];
+				utils.log('Starting to fetch item ', id);
+				this.getItem(id).then(item => {
+					items.push(item);
+					// Check if we have all items now.
+					if (itemIds.length === items.length) {
+						d.resolve(items);
+					}
+				});
+			}
+			return d.promise;
+		},
+
+		async setUser() {
+			const remoteDb = await window.db.getDb();
+			return remoteDb.doc(`users/${window.user.uid}`).set({
+				items: {}
+			});
+		},
+
+		async setItem(id, item) {
+			if (!window.user) {
+				return new Promise(resolve => resolve());
+			}
+			var remoteDb = await window.db.getDb();
+			utils.log(`Starting to save item ${id}`);
+			item.createdBy = window.user.uid;
+			return remoteDb
+				.collection('items')
+				.doc(id)
+				.set(item, {
+					merge: true
+				})
+				.then(arg => {
+					utils.log('Document written', arg);
+				})
+				.catch(error => utils.log(error));
+		},
+
+		/**
+		 * Saves the passed items in the database.
+		 * @param {Array} items to be saved in DB
+		 */
+		saveItems(items) {
+			var d = deferred();
+			if (window.IS_EXTENSION) {
+				// save new items
+				window.db.local.set(items, d.resolve);
+				// Push in new item IDs
+				window.db.local.get(
+					{
+						items: {}
+					},
+					function(result) {
+						/* eslint-disable guard-for-in */
+						for (var id in items) {
+							result.items[id] = true;
+						}
+						window.db.local.set({
+							items: result.items
+						});
+						/* eslint-enable guard-for-in */
+					}
+				);
+			} else {
+				window.db.getDb().then(remoteDb => {
+					const batch = remoteDb.batch();
+					/* eslint-disable guard-for-in */
+					for (var id in items) {
+						items[id].createdBy = window.user.uid;
+						batch.set(remoteDb.doc(`items/${id}`), items[id]);
+						batch.update(remoteDb.doc(`users/${window.user.uid}`), {
+							[`items.${id}`]: true
+						});
+						// Set these items on out cached user object too
+						window.user.items[id] = true;
+					}
+					batch.commit().then(d.resolve);
+					/* eslint-enable guard-for-in */
+				});
+			}
+			return d.promise;
+		},
+
+		async removeItem(id) {
+			if (window.IS_EXTENSION) {
+				var d = deferred();
+				db.local.remove(id, d.resolve);
+				return d.promise;
+			}
+			const remoteDb = await window.db.getDb();
+			utils.log(`Starting to save item ${id}`);
+			return remoteDb
+				.collection('items')
+				.doc(id)
+				.delete()
+				.then(arg => {
+					utils.log('Document removed', arg);
+				})
+				.catch(error => utils.log(error));
+		},
+
+		async setItemForUser(itemId) {
+			if (window.IS_EXTENSION || !window.user) {
+				return window.db.local.get(
+					{
+						items: {}
+					},
+					function(result) {
+						result.items[itemId] = true;
+						window.db.local.set({
+							items: result.items
+						});
+					}
+				);
+			}
+			const remoteDb = await window.db.getDb();
+			return remoteDb
+				.collection('users')
+				.doc(window.user.uid)
+				.update({
+					[`items.${itemId}`]: true
+				})
+				.then(arg => {
+					utils.log(`Item ${itemId} set for user`, arg);
+					window.user.items = window.user.items || {};
+					window.user.items[itemId] = true;
+				})
+				.catch(error => utils.log(error));
+		},
+
+		async unsetItemForUser(itemId) {
+			if (window.IS_EXTENSION) {
+				return window.db.local.get(
+					{
+						items: {}
+					},
+					function(result) {
+						delete result.items[itemId];
+						db.local.set({
+							items: result.items
+						});
+					}
+				);
+			}
+			const remoteDb = await window.db.getDb();
+			return remoteDb
+				.collection('users')
+				.doc(window.user.uid)
+				.update({
+					[`items.${itemId}`]: firebase.firestore.FieldValue.delete()
+				})
+				.then(arg => {
+					utils.log(`Item ${itemId} unset for user`, arg);
+				})
+				.catch(error => utils.log(error));
+		}
+	};
+})();
+
 /* global trackEvent */
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
 onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, onboardModal, onboardModal,
@@ -674,18 +1050,41 @@ onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editor
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
 customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
-globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
+globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal, headerAvatarImg,
+loginModal
 */
 /* eslint-disable no-extra-semi */
-(function(alertsService) {
+(function(alertsService, itemService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.9.4';
+	var version = '2.9.6';
 
 	if (window.DEBUG) {
 		window.scope = scope;
 	}
 
+	const defaultSettings = {
+		preserveLastCode: true,
+		replaceNewTab: false,
+		htmlMode: 'html',
+		jsMode: 'js',
+		cssMode: 'css',
+		isCodeBlastOn: false,
+		indentWith: 'spaces',
+		indentSize: 2,
+		editorTheme: 'monokai',
+		keymap: 'sublime',
+		fontSize: 16,
+		refreshOnResize: false,
+		autoPreview: true,
+		editorFont: 'FiraCode',
+		editorCustomFont: '',
+		autoSave: true,
+		autoComplete: true,
+		preserveConsoleLogs: true,
+		lightVersion: false,
+		lineWrap: true
+	};
 	var HtmlModes = {
 		HTML: 'html',
 		MARKDOWN: 'markdown',
@@ -968,8 +1367,9 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 
 	function saveSetting(setting, value) {
 		const d = deferred();
-		var obj = {};
-		obj[setting] = value;
+		const obj = {
+			[setting]: value
+		};
 		db.local.set(obj, d.resolve);
 		return d.promise;
 	}
@@ -990,17 +1390,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		});
 		// Push into the items hash if its a new item being saved
 		if (isNewItem) {
-			db.local.get(
-				{
-					items: {}
-				},
-				function(result) {
-					result.items[currentItem.id] = true;
-					db.local.set({
-						items: result.items
-					});
-				}
-			);
+			itemService.setItemForUser(currentItem.id);
 		}
 	}
 
@@ -1075,7 +1465,8 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		currentItem.mainSizes = getMainPaneSizes();
 
 		utils.log('saving key', key || currentItem.id, currentItem);
-		return saveSetting(key || currentItem.id, currentItem).then(() => {
+		saveSetting(key || currentItem.id, currentItem);
+		return itemService.setItem(key || currentItem.id, currentItem).then(() => {
 			alertsService.add('Item saved.');
 			unsavedEditCount = 0;
 			saveBtn.classList.remove('is-marked');
@@ -1139,16 +1530,27 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 	 * @param  {boolean} shouldSaveGlobally Whether to store the fetched items in global arr for later use.
 	 * @return {promise}                    Promise.
 	 */
-	function fetchItems(shouldSaveGlobally) {
+	async function fetchItems(shouldSaveGlobally) {
 		var d = deferred();
+		savedItems = savedItems || {};
+		var items = [];
+		if (!window.IS_EXTENSION && window.user) {
+			items = await itemService.getAllItems();
+
+			if (shouldSaveGlobally) {
+				items.forEach(item => {
+					savedItems[item.id] = item;
+				});
+			}
+			d.resolve(items);
+			return d.promise;
+		}
 		db.local.get('items', function(result) {
-			var itemIds = Object.getOwnPropertyNames(result.items || {}),
-				items = [];
+			var itemIds = Object.getOwnPropertyNames(result.items || {});
 			if (!itemIds.length) {
 				d.resolve([]);
 			}
 
-			savedItems = savedItems || {};
 			trackEvent('fn', 'fetchItems', itemIds.length);
 			for (let i = 0; i < itemIds.length; i++) {
 				/* eslint-disable no-loop-func */
@@ -1176,6 +1578,8 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 	}
 	function setCurrentItem(item) {
 		currentItem = item;
+		utils.log('Current Item set', item);
+
 		// Reset auto-saving flag
 		isAutoSavingEnabled = false;
 		// Reset unsaved count, in UI also.
@@ -1240,26 +1644,17 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 
 		itemTile.remove();
 		// Remove from items list
-		db.local.get(
-			{
-				items: {}
-			},
-			function(result) {
-				delete result.items[itemId];
-				db.local.set({
-					items: result.items
-				});
-			}
-		);
+		itemService.unsetItemForUser(itemId);
 
 		// Remove individual item too.
-		db.local.remove(itemId, function() {
+		itemService.removeItem(itemId).then(() => {
 			alertsService.add('Item removed.');
 			// This item is open in the editor. Lets open a new one.
 			if (currentItem.id === itemId) {
 				createNewItem();
 			}
 		});
+
 		// Remove from cached list
 		delete savedItems[itemId];
 
@@ -1316,6 +1711,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		settingsModal.classList.remove('is-modal-visible');
 		cssSettingsModal.classList.remove('is-modal-visible');
 		keyboardShortcutsModal.classList.remove('is-modal-visible');
+		loginModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -1743,7 +2139,8 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 	}
 
 	function createPreviewFile(html, css, js) {
-		const shouldInlineJs = !window.webkitRequestFileSystem;
+		const shouldInlineJs =
+			!window.webkitRequestFileSystem || !window.IS_EXTENSION;
 		var contents = getCompleteHtml(html, css, shouldInlineJs ? js : null);
 		var blob = new Blob([contents], { type: 'text/plain;charset=UTF-8' });
 		var blobjs = new Blob([js], { type: 'text/plain;charset=UTF-8' });
@@ -2084,6 +2481,9 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		var existingItemIds = [];
 		var toMergeItems = {};
 		items.forEach(item => {
+			// We can access `savedItems` here because this gets set when user
+			// opens the saved creations panel. And import option is available
+			// inside the saved items panel.
 			if (savedItems[item.id]) {
 				// Item already exists
 				existingItemIds.push(item.id);
@@ -2107,31 +2507,12 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			}
 		}
 		if (mergedItemCount) {
-			// save new items
-			db.local.set(toMergeItems, function() {
+			itemService.saveItems(toMergeItems).then(() => {
 				alertsService.add(
 					mergedItemCount + ' creations imported successfully.'
 				);
+				trackEvent('fn', 'itemsImported', mergedItemCount);
 			});
-			// Push in new item IDs
-			db.local.get(
-				{
-					items: {}
-				},
-				function(result) {
-					/* eslint-disable guard-for-in */
-					for (var id in toMergeItems) {
-						result.items[id] = true;
-					}
-					db.local.set({
-						items: result.items
-					});
-					trackEvent('fn', 'itemsImported', mergedItemCount);
-
-					/* eslint-enable guard-for-in */
-				}
-			);
-			alertsService.add(mergedItemCount + ' creations imported successfully.');
 		}
 		// FIXME: Move from here
 		toggleSavedItemsPane(false);
@@ -2150,7 +2531,8 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				items = JSON.parse(progressEvent.target.result);
 				utils.log(items);
 				mergeImportedItems(items);
-			} catch (ex) {
+			} catch (exception) {
+				utils.log(exception);
 				alert(
 					'Oops! Selected file is corrupted. Please select a file that was generated by clicking the "Export" button.'
 				);
@@ -2371,9 +2753,26 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			utils.log(settingName, el.type === 'checkbox' ? el.checked : el.value);
 			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
 			obj[settingName] = prefs[settingName];
+
+			// In case of !extension, we save in localstorage so that it gets fetched
+			// faster on future loads.
 			db.sync.set(obj, function() {
 				alertsService.add('Setting saved');
 			});
+			if (!window.IS_EXTENSION) {
+				window.db.getDb().then(remoteDb => {
+					remoteDb
+						.collection('users')
+						.doc(window.user.uid)
+						.update({
+							[`settings.${settingName}`]: prefs[settingName]
+						})
+						.then(arg => {
+							utils.log(`Setting "${settingName}" for user`, arg);
+						})
+						.catch(error => utils.log(error));
+				});
+			}
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
 
@@ -2559,9 +2958,21 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		/* eslint-enable no-param-reassign */
 	};
 
-	function compileNodes() {
+	/**
+	 * Compiles directives on the given node
+	 * @param {Node} root The element on which compilation is required
+	 */
+	function compileNodes(root) {
+		if (!(root instanceof Node)) {
+			/* eslint-disable no-param-reassign */
+			root = document;
+			/* eslint-enable no-param-reassign */
+		}
+		// Create a querySelectorAll function bound to the passed `root` Node
+		const query = selector => [...root.querySelectorAll(selector)];
+
 		function attachListenerForEvent(eventName) {
-			const nodes = $all(`[d-${eventName}]`);
+			const nodes = query(`[d-${eventName}]`);
 			nodes.forEach(function(el) {
 				el.addEventListener(eventName, function(e) {
 					scope[el.getAttribute(`d-${eventName}`)].call(window, e);
@@ -2574,7 +2985,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		attachListenerForEvent('keyup');
 
 		// Compile d-open-modal directive
-		const modalTriggers = $all(`[d-open-modal]`);
+		const modalTriggers = query(`[d-open-modal]`);
 		modalTriggers.forEach(function(el) {
 			utils.onButtonClick(el, function() {
 				scope.toggleModal(window[el.getAttribute('d-open-modal')]);
@@ -2586,7 +2997,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		});
 
 		// Compile d-html directive
-		const dHtmlNodes = $all(`[d-html]`);
+		const dHtmlNodes = query(`[d-html]`);
 		dHtmlNodes.forEach(function(el) {
 			fetch(el.getAttribute('d-html')).then(response => {
 				// Stop further compilation because of future recursion by removing attribute.
@@ -2594,6 +3005,8 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				response.text().then(html => {
 					requestIdleCallback(() => {
 						el.innerHTML = html;
+						// Now compile this newly inserted HTML also.
+						compileNodes(el);
 					});
 				});
 			});
@@ -2649,7 +3062,60 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		e.preventDefault();
 	};
 
+	scope.updateProfileUi = () => {
+		if (window.user) {
+			document.body.classList.add('is-logged-in');
+			headerAvatarImg.src = window.user.photoURL;
+		} else {
+			document.body.classList.remove('is-logged-in');
+			headerAvatarImg.src = '';
+		}
+	};
+
+	scope.login = e => {
+		firebase.auth().signInAnonymously().then().catch(function(error) {
+			// Handle Errors here.
+			utils.log(error);
+		});
+
+		if (e) {
+			e.preventDefault();
+		}
+	};
+	scope.login = window.login;
+	scope.logout = window.logout;
+
 	function init() {
+		var config = {
+			apiKey: 'AIzaSyBl8Dz7ZOE7aP75mipYl2zKdLSRzBU2fFc',
+			authDomain: 'web-maker-app.firebaseapp.com',
+			databaseURL: 'https://web-maker-app.firebaseio.com',
+			projectId: 'web-maker-app',
+			storageBucket: 'web-maker-app.appspot.com',
+			messagingSenderId: '560473480645'
+		};
+		firebase.initializeApp(config);
+
+		firebase.auth().onAuthStateChanged(function(user) {
+			scope.closeAllOverlays();
+			if (user) {
+				utils.log('You are -> ', user);
+				alertsService.add('You are now logged in!');
+				scope.user = window.user = user;
+				window.db.getUser(user.uid).then(customUser => {
+					if (customUser) {
+						Object.assign(prefs, user.settings);
+						updateSettingsInUi();
+						scope.updateSetting();
+					}
+				});
+			} else {
+				delete window.user;
+				// User is signed out.
+			}
+			scope.updateProfileUi();
+		});
+
 		var lastCode;
 
 		CodeMirror.modeURL = `lib/codemirror/mode/%N/%N.js`;
@@ -2676,12 +3142,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			) {
 				hasSeenNotifications = true;
 				notificationsBtn.classList.remove('has-new');
-				db.sync.set(
-					{
-						lastSeenVersion: version
-					},
-					function() {}
-				);
+				window.db.setUserLastSeenVersion(version);
 			}
 			trackEvent('ui', 'notificationButtonClick', version);
 			return false;
@@ -2816,7 +3277,11 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				event.preventDefault();
 				openSavedItemsPane();
 				trackEvent('ui', 'openCreationKeyboardShortcut');
-			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 191) {
+			} else if (
+				(event.ctrlKey || event.metaKey) &&
+				event.shiftKey &&
+				event.keyCode === 191
+			) {
 				// Ctrl/⌘ + Shift + ?
 				event.preventDefault();
 				scope.toggleModal(keyboardShortcutsModal);
@@ -2980,118 +3445,54 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		);
 
 		// Get synced `preserveLastCode` setting to get back last code (or not).
-		db.sync.get(
-			{
-				preserveLastCode: true,
-				replaceNewTab: false,
-				htmlMode: 'html',
-				jsMode: 'js',
-				cssMode: 'css',
-				isCodeBlastOn: false,
-				indentWith: 'spaces',
-				indentSize: 2,
-				editorTheme: 'monokai',
-				keymap: 'sublime',
-				fontSize: 16,
-				refreshOnResize: false,
-				autoPreview: true,
-				editorFont: 'FiraCode',
-				editorCustomFont: '',
-				autoSave: true,
-				autoComplete: true,
-				preserveConsoleLogs: true,
-				lightVersion: false,
-				lineWrap: true
-			},
-			function syncGetCallback(result) {
-				if (result.preserveLastCode && lastCode) {
-					unsavedEditCount = 0;
-					if (lastCode.id) {
-						db.local.get(lastCode.id, function(itemResult) {
+		db.getSettings(defaultSettings).then(result => {
+			if (result.preserveLastCode && lastCode) {
+				unsavedEditCount = 0;
+				if (lastCode.id) {
+					// Ignore for remote db
+					db.local.get(lastCode.id, function(itemResult) {
+						if (itemResult[lastCode.id]) {
 							utils.log('Load item ', lastCode.id);
 							currentItem = itemResult[lastCode.id];
 							refreshEditor();
-						});
-					} else {
-						utils.log('Load last unsaved item', lastCode);
-						currentItem = lastCode;
-						refreshEditor();
-					}
+						}
+					});
 				} else {
-					createNewItem();
+					utils.log('Load last unsaved item', lastCode);
+					currentItem = lastCode;
+					refreshEditor();
 				}
-				prefs.preserveLastCode = result.preserveLastCode;
-				prefs.replaceNewTab = result.replaceNewTab;
-				prefs.htmlMode = result.htmlMode;
-				prefs.cssMode = result.cssMode;
-				prefs.jsMode = result.jsMode;
-				prefs.isCodeBlastOn = result.isCodeBlastOn;
-				prefs.indentSize = result.indentSize;
-				prefs.indentWith = result.indentWith;
-				prefs.editorTheme = result.editorTheme;
-				prefs.keymap = result.keymap;
-				prefs.fontSize = result.fontSize;
-				prefs.refreshOnResize = result.refreshOnResize;
-				prefs.autoPreview = result.autoPreview;
-				prefs.editorFont = result.editorFont;
-				prefs.editorCustomFont = result.editorCustomFont;
-				prefs.autoSave = result.autoSave;
-				prefs.autoComplete = result.autoComplete;
-				prefs.preserveConsoleLogs = result.preserveConsoleLogs;
-				prefs.lightVersion = result.lightVersion;
-				prefs.lineWrap = result.lineWrap;
-
-				updateSettingsInUi();
-				scope.updateSetting();
+			} else {
+				createNewItem();
 			}
-		);
+			Object.assign(prefs, result);
+
+			updateSettingsInUi();
+			scope.updateSetting();
+		});
 
 		// Check for new version notifications
-		db.sync.get(
-			{
-				lastSeenVersion: ''
-			},
-			function syncGetCallback(result) {
-				// Check if new user
-				if (!result.lastSeenVersion) {
-					onboardModal.classList.add('is-modal-visible');
-					if (document.cookie.indexOf('onboarded') === -1) {
-						trackEvent('ui', 'onboardModalSeen', version);
-						document.cookie = 'onboarded=1';
-					}
-					db.sync.set(
-						{
-							lastSeenVersion: version
-						},
-						function() {}
-					);
-					// set some initial preferences on closing the onboard modal
-					utils.once(document, 'overlaysClosed', function() {
-						db.sync.set(
-							{
-								replaceNewTab: onboardShowInTabOptionBtn.classList.contains(
-									'selected'
-								)
-							},
-							function() {
-								trackEvent(
-									'fn',
-									'setReplaceNewTabFromOnboard',
-									onboardShowInTabOptionBtn.classList.contains('selected')
-								);
-							}
-						);
-					});
+		db.getUserLastSeenVersion().then(lastSeenVersion => {
+			// Check if new user
+			if (!lastSeenVersion) {
+				onboardModal.classList.add('is-modal-visible');
+				if (document.cookie.indexOf('onboarded') === -1) {
+					trackEvent('ui', 'onboardModalSeen', version);
+					document.cookie = 'onboarded=1';
 				}
-				if (
-					!result.lastSeenVersion ||
-					utils.semverCompare(result.lastSeenVersion, version) === -1
-				) {
-					notificationsBtn.classList.add('has-new');
-					hasSeenNotifications = false;
-				}
+				window.db.setUserLastSeenVersion(version);
+				// set some initial preferences on closing the onboard modal
+				// Old onboarding.
+				// utils.once(document, 'overlaysClosed', function() {});
 			}
-		);
+			if (
+				!lastSeenVersion ||
+				utils.semverCompare(lastSeenVersion, version) === -1
+			) {
+				notificationsBtn.classList.add('has-new');
+				hasSeenNotifications = false;
+			}
+		});
 
 		scope.acssSettingsCm = CodeMirror.fromTextArea(acssSettingsTextarea, {
 			mode: 'application/ld+json'
@@ -3163,7 +3564,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 	scope.closeAllOverlays = closeAllOverlays;
 
 	init();
-})(window.alertsService);
+})(window.alertsService, window.itemService);
 
 // Dropdown.js
 

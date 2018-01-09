@@ -348,6 +348,9 @@ body > #demo-frame {
 .main-header__btn-wrap > a:hover {
 	border-color: rgba(146, 151, 179, 0.5);
 }
+.main-header__avatar-img {
+	border-radius: 50%;
+}
 .logo {
 	display: inline-block;
 	height: 25px;
@@ -954,6 +957,11 @@ transition: 0.25s ease;
 }
 .kbd-shortcut__details {
 	display: inline-block;
+}
+
+body.is-logged-in .hide-on-login,
+body:not(.is-logged-in) .hide-on-logout {
+	display: none;
 }
 
 /* Codemirror themes basic bg styles. This is here so that there is no big FOUC

@@ -73,6 +73,13 @@
 						    <path d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
 						</svg>Open
 					</a>
+					<a class="hide-on-login flex  flex-v-center  hint--rounded  hint--bottom-left" aria-label="Login/Signup" d-open-modal="loginModal">
+						Login/Signup
+					</a>
+					<a class="hide-on-logout flex  flex-v-center  hint--rounded  hint--bottom-left" aria-label="Logout" d-click="logout">
+						Logout
+					</a>
+					<img id="headerAvatarImg" width="20" src="https://www.gravatar.com/avatar/6be4e636e8aacd405bed5cd15124a875" class="main-header__avatar-img  hide-on-logout ml-1"/>
 				</div>
 			</div>
 			<div class="content-wrap  flex  flex-grow">
@@ -313,6 +320,10 @@
 
 		<div class="modal" id="onboardModal">
 			<div class="modal__content" d-html="partials/onboard-modal.html"></div>
+		</div>
+
+		<div class="modal" id="loginModal">
+			<div class="modal__content" d-html="partials/login-modal.html"></div>
 		</div>
 
 		<div class="modal modal--settings" id="settingsModal">
@@ -580,18 +591,22 @@
 		<script src="lib/split.js"></script>
 		<script src="lib/inlet.min.js"></script>
 		<script src="lib/esprima.js"></script>
+		<script src="lib/firebase.js"></script>
+		<script src="lib/firebase-firestore.js"></script>
 		<!-- endbuild -->
 
 		<!-- build:js script.js -->
-		<script src="service-worker-registration.js"></script>
+		<!-- <script src="service-worker-registration.js"></script> -->
 		<script src="utils.js"></script>
 		<script src="db.js"></script>
+		<script src="auth.js"></script>
 		<script src="analytics.js"></script>
 		<script src="deferred.js"></script>
 		<script src="loader.js"></script>
 		<script src="notifications.js"></script>
 		<script src="library-list.js"></script>
 		<script src="textarea-autocomplete.js"></script>
+		<script src="itemService.js"></script>
 		<script src="script.js"></script>
 		<script src="dropdown.js"></script>
 		<!-- endbuild -->

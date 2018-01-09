@@ -1725,9 +1725,9 @@ loginModal
 							[`settings.${settingName}`]: prefs[settingName]
 						})
 						.then(arg => {
-							console.log(`Setting "${settingName}" for user`, arg);
+							utils.log(`Setting "${settingName}" for user`, arg);
 						})
-						.catch(error => console.log(error));
+						.catch(error => utils.log(error));
 				});
 			}
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);

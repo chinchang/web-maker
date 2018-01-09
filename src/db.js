@@ -50,7 +50,7 @@
 				.then(function() {
 					// Initialize Cloud Firestore through firebase
 					db = firebase.firestore();
-					console.log('firebase db ready', db);
+					utils.log('firebase db ready', db);
 					resolve(db);
 				})
 				.catch(function(err) {

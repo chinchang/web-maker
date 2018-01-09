@@ -25,7 +25,7 @@
 			var d = deferred();
 			let itemIds = await this.getUserItemIds();
 			itemIds = Object.getOwnPropertyNames(itemIds || {});
-			console.log('itemids', itemIds);
+			utils.log('itemids', itemIds);
 
 			if (!itemIds.length) {
 				d.resolve([]);
@@ -58,7 +58,7 @@
 				return new Promise(resolve => resolve());
 			}
 			var remoteDb = await window.db.getDb();
-			console.log(`Starting to save item ${id}`);
+			utils.log(`Starting to save item ${id}`);
 			item.createdBy = window.user.uid;
 			return remoteDb
 				.collection('items')
@@ -67,9 +67,9 @@
 					merge: true
 				})
 				.then(arg => {
-					console.log('Document written', arg);
+					utils.log('Document written', arg);
 				})
-				.catch(error => console.log(error));
+				.catch(error => utils.log(error));
 		},
 
 		/**
@@ -124,15 +124,15 @@
 				return d.promise;
 			}
 			const remoteDb = await window.db.getDb();
-			console.log(`Starting to save item ${id}`);
+			utils.log(`Starting to save item ${id}`);
 			return remoteDb
 				.collection('items')
 				.doc(id)
 				.delete()
 				.then(arg => {
-					console.log('Document removed', arg);
+					utils.log('Document removed', arg);
 				})
-				.catch(error => console.log(error));
+				.catch(error => utils.log(error));
 		},
 
 		async setItemForUser(itemId) {
@@ -157,11 +157,11 @@
 					[`items.${itemId}`]: true
 				})
 				.then(arg => {
-					console.log(`Item ${itemId} set for user`, arg);
+					utils.log(`Item ${itemId} set for user`, arg);
 					window.user.items = window.user.items || {};
 					window.user.items[itemId] = true;
 				})
-				.catch(error => console.log(error));
+				.catch(error => utils.log(error));
 		},
 
 		async unsetItemForUser(itemId) {
@@ -186,9 +186,9 @@
 					[`items.${itemId}`]: firebase.firestore.FieldValue.delete()
 				})
 				.then(arg => {
-					console.log(`Item ${itemId} unset for user`, arg);
+					utils.log(`Item ${itemId} unset for user`, arg);
 				})
-				.catch(error => console.log(error));
+				.catch(error => utils.log(error));
 		}
 	};
 })();

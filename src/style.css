@@ -959,6 +959,11 @@ transition: 0.25s ease;
 	display: inline-block;
 }
 
+body.is-logged-in .hide-on-login,
+body:not(.is-logged-in) .hide-on-logout {
+	display: none;
+}
+
 /* Codemirror themes basic bg styles. This is here so that there is no big FOUC
 while the theme CSS file is loading */
 .cm-s-paraiso-dark.CodeMirror { background: #2f1e2e; color: #b9b6b0; }

@@ -19,7 +19,7 @@
 		"computed-property-spacing": ["error", "never"],
 		"consistent-return": "error",
 		"consistent-this": "off",
-		"curly": "error",
+		"curly": "off",
 		"default-case": "error",
 		"dot-location": ["error", "property"],
 		"dot-notation": "error",

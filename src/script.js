@@ -7,7 +7,8 @@ onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editor
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
 customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
-globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
+globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal, headerAvatarImg,
+loginModal
 */
 /* eslint-disable no-extra-semi */
 (function(alertsService, itemService) {
@@ -490,7 +491,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		var d = deferred();
 		savedItems = savedItems || {};
 		var items = [];
-		if (!window.IS_EXTENSION) {
+		if (!window.IS_EXTENSION && window.user) {
 			items = await itemService.getAllItems();
 
 			if (shouldSaveGlobally) {
@@ -667,6 +668,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		settingsModal.classList.remove('is-modal-visible');
 		cssSettingsModal.classList.remove('is-modal-visible');
 		keyboardShortcutsModal.classList.remove('is-modal-visible');
+		loginModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -1094,7 +1096,8 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 	}
 
 	function createPreviewFile(html, css, js) {
-		const shouldInlineJs = !window.webkitRequestFileSystem;
+		const shouldInlineJs =
+			!window.webkitRequestFileSystem || !window.IS_EXTENSION;
 		var contents = getCompleteHtml(html, css, shouldInlineJs ? js : null);
 		var blob = new Blob([contents], { type: 'text/plain;charset=UTF-8' });
 		var blobjs = new Blob([js], { type: 'text/plain;charset=UTF-8' });
@@ -1707,21 +1710,26 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			utils.log(settingName, el.type === 'checkbox' ? el.checked : el.value);
 			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
 			obj[settingName] = prefs[settingName];
+
+			// In case of !extension, we save in localstorage so that it gets fetched
+			// faster on future loads.
 			db.sync.set(obj, function() {
 				alertsService.add('Setting saved');
 			});
-			window.db.getDb().then(remoteDb => {
-				remoteDb
-					.collection('users')
-					.doc(window.user.uid)
-					.update({
-						[`settings.${settingName}`]: prefs[settingName]
-					})
-					.then(arg => {
-						console.log(`Setting "${settingName}" for user`, arg);
-					})
-					.catch(error => console.log(error));
-			});
+			if (!window.IS_EXTENSION) {
+				window.db.getDb().then(remoteDb => {
+					remoteDb
+						.collection('users')
+						.doc(window.user.uid)
+						.update({
+							[`settings.${settingName}`]: prefs[settingName]
+						})
+						.then(arg => {
+							console.log(`Setting "${settingName}" for user`, arg);
+						})
+						.catch(error => console.log(error));
+				});
+			}
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
 
@@ -2011,7 +2019,17 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		e.preventDefault();
 	};
 
-	scope.login = function(e) {
+	scope.updateProfileUi = () => {
+		if (window.user) {
+			document.body.classList.add('is-logged-in');
+			headerAvatarImg.src = window.user.photoURL;
+		} else {
+			document.body.classList.remove('is-logged-in');
+			headerAvatarImg.src = '';
+		}
+	};
+
+	scope.login = e => {
 		firebase.auth().signInAnonymously().then().catch(function(error) {
 			// Handle Errors here.
 			utils.log(error);
@@ -2021,6 +2039,8 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			e.preventDefault();
 		}
 	};
+	scope.login = window.login;
+	scope.logout = window.logout;
 
 	function init() {
 		var config = {
@@ -2034,17 +2054,23 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		firebase.initializeApp(config);
 
 		firebase.auth().onAuthStateChanged(function(user) {
+			scope.closeAllOverlays();
 			if (user) {
 				utils.log('You are -> ', user);
+				alertsService.add('You are now logged in!');
 				scope.user = window.user = user;
-				window.db.getUser(user.uid).then(() => {
-					Object.assign(prefs, user.settings);
-					updateSettingsInUi();
-					scope.updateSetting();
+				window.db.getUser(user.uid).then(customUser => {
+					if (customUser) {
+						Object.assign(prefs, user.settings);
+						updateSettingsInUi();
+						scope.updateSetting();
+					}
 				});
 			} else {
+				delete window.user;
 				// User is signed out.
 			}
+			scope.updateProfileUi();
 		});
 
 		var lastCode;
@@ -2073,7 +2099,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			) {
 				hasSeenNotifications = true;
 				notificationsBtn.classList.remove('has-new');
-				window.db.setUserLastSeenVersion(window.user.uid, version);
+				window.db.setUserLastSeenVersion(version);
 			}
 			trackEvent('ui', 'notificationButtonClick', version);
 			return false;
@@ -2382,9 +2408,11 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				if (lastCode.id) {
 					// Ignore for remote db
 					db.local.get(lastCode.id, function(itemResult) {
-						utils.log('Load item ', lastCode.id);
-						currentItem = itemResult[lastCode.id];
-						refreshEditor();
+						if (itemResult[lastCode.id]) {
+							utils.log('Load item ', lastCode.id);
+							currentItem = itemResult[lastCode.id];
+							refreshEditor();
+						}
 					});
 				} else {
 					utils.log('Load last unsaved item', lastCode);
@@ -2409,7 +2437,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 					trackEvent('ui', 'onboardModalSeen', version);
 					document.cookie = 'onboarded=1';
 				}
-				window.db.setUserLastSeenVersion(window.user, version);
+				window.db.setUserLastSeenVersion(version);
 				// set some initial preferences on closing the onboard modal
 				// Old onboarding.
 				// utils.once(document, 'overlaysClosed', function() {});

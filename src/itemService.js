@@ -7,13 +7,16 @@
 			});
 		},
 		async getUserItemIds() {
-			if (window.user && window.user.items) {
+			if (window.user) {
 				return new Promise(resolve => {
-					resolve(window.user.items);
+					resolve(window.user.items || {});
 				});
 			}
 			var remoteDb = await window.db.getDb();
 			return remoteDb.doc(`users/${window.user.uid}`).get().then(doc => {
+				if (!doc.exists) {
+					return {};
+				}
 				return doc.data().items;
 			});
 		},
@@ -51,6 +54,9 @@
 		},
 
 		async setItem(id, item) {
+			if (!window.user) {
+				return new Promise(resolve => resolve());
+			}
 			var remoteDb = await window.db.getDb();
 			console.log(`Starting to save item ${id}`);
 			item.createdBy = window.user.uid;
@@ -130,7 +136,7 @@
 		},
 
 		async setItemForUser(itemId) {
-			if (window.IS_EXTENSION) {
+			if (window.IS_EXTENSION || !window.user) {
 				return window.db.local.get(
 					{
 						items: {}
@@ -152,6 +158,8 @@
 				})
 				.then(arg => {
 					console.log(`Item ${itemId} set for user`, arg);
+					window.user.items = window.user.items || {};
+					window.user.items[itemId] = true;
 				})
 				.catch(error => console.log(error));
 		},

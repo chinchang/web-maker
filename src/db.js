@@ -86,7 +86,7 @@
 		// Not critical right now.
 	}
 
-	async function setUserLastSeenVersion(user, version) {
+	async function setUserLastSeenVersion(version) {
 		if (window.IS_EXTENSION) {
 			chrome.storage.sync.set(
 				{
@@ -99,17 +99,22 @@
 		// Settings the lastSeenVersion in localStorage also because next time we need
 		// to fetch it irrespective of the user being logged in or out
 		local.set({ lastSeenVersion: version });
-		if (user) {
+		if (window.user) {
 			const remoteDb = await getDb();
-			remoteDb.doc(`users/${user.uid}`).update({ lastSeenVersion: version });
+			remoteDb
+				.doc(`users/${window.user.uid}`)
+				.update({ lastSeenVersion: version });
 		}
 	}
 
 	async function getUser(userId) {
 		const remoteDb = await getDb();
 		return remoteDb.doc(`users/${userId}`).get().then(doc => {
+			if (!doc.exists)
+				return remoteDb.doc(`users/${userId}`).set({}, { merge: true });
 			const user = doc.data();
 			Object.assign(window.user, user);
+			return user;
 		});
 	}
 

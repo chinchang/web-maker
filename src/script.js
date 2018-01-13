@@ -1258,7 +1258,13 @@ loginModal
 					CodeMirror.commands.indentAuto(editor);
 				},
 				Tab: function(editor) {
-					var input = $('[data-setting=indentWith]:checked');
+					if (options.emmet) {
+						const didEmmetWork = editor.execCommand('emmetExpandAbbreviation');
+						if (didEmmetWork === true) {
+							return;
+						}
+					}
+					const input = $('[data-setting=indentWith]:checked');
 					if (
 						!editor.somethingSelected() &&
 						(!input || input.value === 'spaces')
@@ -1270,7 +1276,8 @@ loginModal
 					} else {
 						CodeMirror.commands.defaultTab(editor);
 					}
-				}
+				},
+				'Enter': 'emmetInsertLineBreak'
 			}
 		});
 		cm.on('focus', editor => {
@@ -1335,14 +1342,14 @@ loginModal
 		profile: 'xhtml',
 		gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
 		noAutocomplete: true,
-		matchTags: { bothTags: true }
+		matchTags: { bothTags: true },
+		emmet: true
 	});
-	emmetCodeMirror(scope.cm.html);
 	scope.cm.css = initEditor(cssCode, {
 		mode: 'css',
-		gutters: ['error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+		gutters: ['error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+		emmet: true
 	});
-	emmetCodeMirror(scope.cm.css);
 	Inlet(scope.cm.css);
 	scope.cm.js = initEditor(jsCode, {
 		mode: 'javascript',

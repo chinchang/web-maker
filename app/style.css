@@ -473,7 +473,8 @@ transition: 0.25s ease;
 	max-height: 90vh;
 	box-sizing: border-box;
 	overflow-y: auto;
-	transition: all 0.19s;
+	transition-property: transform, opacity;
+	transition-duration: 0.19s;
 	transform: translateY(-50px) scale(0.7);
 }
 .is-modal-visible {
@@ -495,13 +496,13 @@ transition: 0.25s ease;
 	opacity: 0;
 	will-change: opacity;
 	background: rgba(0,0,0,0.6);
-	transition: all 0.3s;
+	transition: opacity 0.3s;
 }
 /* Make settings modal smaller */
 @media screen and (min-width: 600px) {
 	.modal--settings {
 		/* width: 600px; */
-		/* margin-left: -300px; */
+		/* margin-lef.t: -300px; */
 	}
 }
 .saved-items-pane {
@@ -957,6 +958,22 @@ transition: 0.25s ease;
 }
 .kbd-shortcut__details {
 	display: inline-block;
+}
+.web-maker-with-tag {
+	position: relative;
+	display: inline-block;
+}
+.web-maker-with-tag:after {
+    content: 'BETA';
+    position: relative;
+    left: 3px;
+    top: -10px;
+    border-radius: 4px;
+    background: #b76b29;
+    color: white;
+    letter-spacing: 0.6px;
+    padding: 2px;
+    font-size: 10px;
 }
 
 body.is-logged-in .hide-on-login,

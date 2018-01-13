@@ -238,14 +238,44 @@ if ('serviceWorker' in navigator) {
 		});
 	}
 
+	function downloadFile(fileName, blob) {
+		function downloadWithAnchor() {
+			var a = document.createElement('a');
+			a.href = window.URL.createObjectURL(blob);
+			a.download = fileName;
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+		}
+		if (window.IS_EXTENSION) {
+			chrome.downloads.download(
+				{
+					url: window.URL.createObjectURL(blob),
+					filename: fileName,
+					saveAs: true
+				},
+				() => {
+					// If there was an error, just download the file using ANCHOR method.
+					if (chrome.runtime.lastError) {
+						downloadWithAnchor();
+					}
+				}
+			);
+		} else {
+			downloadWithAnchor();
+		}
+	}
+
 	window.utils = {
-		semverCompare: semverCompare,
-		generateRandomId: generateRandomId,
-		onButtonClick: onButtonClick,
-		addInfiniteLoopProtection: addInfiniteLoopProtection,
-		getHumanDate: getHumanDate,
-		log: log,
-		once: once
+		semverCompare,
+		generateRandomId,
+		onButtonClick,
+		addInfiniteLoopProtection,
+		getHumanDate,
+		log,
+		once,
+		downloadFile
 	};
 
 	window.chrome = window.chrome || {};
@@ -1466,6 +1496,12 @@ loginModal
 
 		utils.log('saving key', key || currentItem.id, currentItem);
 		saveSetting(key || currentItem.id, currentItem);
+		// If key is `code`, this is a call on unloadbefore to save the last open thing.
+		// Do not presist that on remote.
+		if (key === 'code') {
+			// No deferred required here as this gets called on unloadbefore
+			return false;
+		}
 		return itemService.setItem(key || currentItem.id, currentItem).then(() => {
 			alertsService.add('Item saved.');
 			unsavedEditCount = 0;
@@ -2247,14 +2283,9 @@ loginModal
 				fileName = currentItem.title;
 			}
 
-			var a = document.createElement('a');
 			var blob = new Blob([fileContent], { type: 'text/html;charset=UTF-8' });
-			a.href = window.URL.createObjectURL(blob);
-			a.download = fileName;
-			a.style.display = 'none';
-			document.body.appendChild(a);
-			a.click();
-			a.remove();
+			utils.downloadFile(fileName, blob);
+
 			trackEvent('fn', 'saveFileComplete');
 		});
 	}
@@ -2451,25 +2482,7 @@ loginModal
 					type: 'application/json;charset=UTF-8'
 				});
 
-				chrome.downloads.download(
-					{
-						url: window.URL.createObjectURL(blob),
-						filename: fileName,
-						saveAs: true
-					},
-					function() {
-						// If there was an error, just download the file using ANCHOR method.
-						if (chrome.runtime.lastError) {
-							var a = document.createElement('a');
-							a.href = window.URL.createObjectURL(blob);
-							a.download = fileName;
-							a.style.display = 'none';
-							document.body.appendChild(a);
-							a.click();
-							a.remove();
-						}
-					}
-				);
+				utils.downloadFile(fileName, blob);
 
 				trackEvent('ui', 'exportBtnClicked');
 			});
@@ -2633,6 +2646,10 @@ loginModal
 
 	function handleDownloadsPermission() {
 		var d = deferred();
+		if (!window.IS_EXTENSION) {
+			d.resolve();
+			return d.promise;
+		}
 		chrome.permissions.contains(
 			{
 				permissions: ['downloads']

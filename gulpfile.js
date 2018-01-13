@@ -65,7 +65,10 @@ gulp.task('generate-service-worker', ['minify'], function(callback) {
 			staticFileGlobs: [
 				rootDir + '/**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'
 			],
-			stripPrefix: `${rootDir}/`
+			stripPrefix: `${rootDir}/`,
+
+			// has to be increased to around 2.8mb for sass.worker.js
+			maximumFileSizeToCacheInBytes: 2900000
 		},
 		callback
 	);

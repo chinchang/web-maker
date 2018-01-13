@@ -10,6 +10,9 @@ gulp.task('copyFiles', [], function() {
 	gulp
 		.src('src/lib/codemirror/mode/**/*')
 		.pipe(gulp.dest('app/lib/codemirror/mode'));
+	gulp
+		.src('src/lib/transpilers/*')
+		.pipe(gulp.dest('app/lib/transpilers'));
 	gulp.src('src/partials/*').pipe(gulp.dest('app/partials'));
 	gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib'));
 	gulp.src('src/icon-48.png').pipe(gulp.dest('app'));

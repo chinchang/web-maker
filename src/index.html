@@ -88,13 +88,13 @@
 						    <path d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
 						</svg>Open
 					</a>
-					<a class="hide-on-login flex  flex-v-center  hint--rounded  hint--bottom-left" aria-label="Login/Signup" d-open-modal="loginModal">
+					<a class="show-when-app hide-on-login flex  flex-v-center  hint--rounded  hint--bottom-left" aria-label="Login/Signup" d-open-modal="loginModal">
 						Login/Signup
 					</a>
 					<a class="hide-on-logout flex  flex-v-center  hint--rounded  hint--bottom-left" aria-label="Logout" d-click="logout">
 						Logout
 					</a>
-					<img id="headerAvatarImg" width="20" src="" class="main-header__avatar-img  hide-on-logout ml-1"/>
+					<img id="headerAvatarImg" width="20" src="" class="hide-on-logout main-header__avatar-img ml-1"/>
 				</div>
 			</div>
 			<div class="content-wrap  flex  flex-grow">
@@ -201,7 +201,7 @@
 						</svg>
 					</a>
 
-					<a href="" id="screenshotBtn" class="mode-btn  hint--rounded  hint--top-left" d-click="takeScreenshot" aria-label="Take screenshot of preview">
+					<a href="" id="screenshotBtn" class="mode-btn  hint--rounded  hint--top-left show-when-extension" d-click="takeScreenshot" aria-label="Take screenshot of preview">
 						<svg style="width:24px;height:24px" viewBox="0 0 24 24">
 							<path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" />
 						</svg>

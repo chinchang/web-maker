@@ -215,4 +215,9 @@
 	window.chrome.i18n = { getMessage: () => {} };
 
 	window.IS_EXTENSION = !!window.chrome.extension;
+	if (window.IS_EXTENSION) {
+		document.body.classList.add('is-extension');
+	} else {
+		document.body.classList.add('is-app');
+	}
 })();

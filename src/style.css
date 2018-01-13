@@ -998,6 +998,9 @@ body > #demo-frame {
     padding: 2px;
     font-size: 10px;
 }
+.is-extension .web-maker-with-tag:after {
+	display: none;
+}
 .social-login-btn--github {
 	background: #656B6F;
 }
@@ -1011,7 +1014,9 @@ body > #demo-frame {
 }
 
 body.is-logged-in .hide-on-login,
-body:not(.is-logged-in) .hide-on-logout {
+body:not(.is-logged-in) .hide-on-logout,
+body:not(.is-extension) .show-when-extension,
+body:not(.is-app) .show-when-app {
 	display: none;
 }
 

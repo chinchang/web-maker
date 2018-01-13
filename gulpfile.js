@@ -1,8 +1,18 @@
 /*eslint-env node*/
 
-var gulp = require('gulp');
-var useref = require('gulp-useref');
+const fs = require('fs');
+const gulp = require('gulp');
+const useref = require('gulp-useref');
+const cleanCSS = require('gulp-clean-css');
+const babelMinify = require('babel-minify');
 
+function minifyJs(fileName) {
+	const content = fs.readFileSync(fileName, "utf8");
+	const minifiedContent = babelMinify(content).code;
+	fs.writeFileSync(fileName, minifiedContent);
+	console.log(`[${fileName}]: before -> ${content.length}kb`)
+	console.log(`[${fileName}]: after -> ${minifiedContent.length}kb`)
+}
 gulp.task('copyFiles', [], function() {
 	gulp
 		.src('src/lib/codemirror/theme/*')
@@ -33,7 +43,19 @@ gulp.task('useRef', ['copyFiles'], function() {
 		.pipe(gulp.dest('app'));
 });
 
-gulp.task('generate-service-worker', ['useRef'], function(callback) {
+gulp.task('minify', ['useRef'], function() {
+	minifyJs('app/script.js');
+	minifyJs('app/vendor.js');
+
+	gulp.src('app/*.css')
+		.pipe(cleanCSS({ debug: true }, (details) => {
+			console.log(`${details.name}: ${details.stats.originalSize}`);
+			console.log(`${details.name}: ${details.stats.minifiedSize}`);
+		}))
+		.pipe(gulp.dest('app'));
+});
+
+gulp.task('generate-service-worker', ['minify'], function(callback) {
 	var swPrecache = require('sw-precache');
 	var rootDir = 'app';
 

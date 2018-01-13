@@ -958,6 +958,22 @@ transition: 0.25s ease;
 .kbd-shortcut__details {
 	display: inline-block;
 }
+.web-maker-with-tag {
+	position: relative;
+	display: inline-block;
+}
+.web-maker-with-tag:after {
+	content: 'BETA';
+    position: relative;
+    left: 3px;
+    top: -10px;
+    border-radius: 4px;
+    background: #b76b29;
+    color: white;
+    letter-spacing: 0.6px;
+    padding: 2px;
+    font-size: 10px;
+}
 
 body.is-logged-in .hide-on-login,
 body:not(.is-logged-in) .hide-on-logout {

@@ -39939,8 +39939,8 @@ define(function(require, exports, module) {
 		 * @return {Object} Object with <code>width</code> and <code>height</code> properties
 		 */
 		getImageSize: function(stream) {
-			var pngMagicNum = "\211PNG\r\n\032\n",
-				jpgMagicNum = "\377\330",
+			var pngMagicNum = "",
+				jpgMagicNum = "",
 				gifMagicNum = "GIF8",
 				pos = 0,
 				nextByte = function() {

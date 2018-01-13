@@ -3,7 +3,7 @@ window.logout = function logout() {
 };
 function login(providerName) {
 	var provider;
-	if (providerName === 'fb') {
+	if (providerName === 'facebook') {
 		provider = new firebase.auth.FacebookAuthProvider();
 	} else if (providerName === 'twitter') {
 		provider = new firebase.auth.TwitterAuthProvider();
@@ -17,49 +17,11 @@ function login(providerName) {
 	return firebase
 		.auth()
 		.signInWithPopup(provider)
-		.then(function(result) {
-			return;
-			// Save this user in the store
-			firebase
-				.database()
-				.ref('users/' + result.user.uid)
-				.update({
-					displayName: result.user.displayName,
-					email: result.user.email,
-					photoURL: result.user.providerData[0].photoURL,
-					signedUpOn: Date.now()
-				})
-				.then(function() {
-					// Port items in localstorage to user account
-					if (window.localStorage.prototyp) {
-						var items = JSON.parse(window.localStorage.prototyp);
-						var newItemKey;
-						items.forEach(function(localItem) {
-							itemService.fetchItem(localItem.id).then(function(item) {
-								newItemKey = firebase.database().ref('pens').push().key;
-								item.createdBy = result.user.uid;
-								delete item.uid;
-								firebase.database().ref('pens/' + newItemKey).set(item);
-								firebase
-									.database()
-									.ref('users/' + result.user.uid)
-									.child('items')
-									.child(newItemKey)
-									.set(true);
-							});
-						});
-						delete localStorage.prototyp;
-					}
-				});
-		})
+		.then(function() {})
 		.catch(function(error) {
-			// Handle Errors here.
-			var errorCode = error.code;
-			var errorMessage = error.message;
-			// The email of the user's account used.
-			var email = error.email;
-			// The firebase.auth.AuthCredential type that was used.
-			var credential = error.credential;
+			alert(
+				'You have already signed up with the same email using different social login'
+			);
 			utils.log(error);
 		});
 }

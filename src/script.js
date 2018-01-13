@@ -2019,16 +2019,12 @@ loginModal
 	};
 
 	scope.login = e => {
-		firebase.auth().signInAnonymously().then().catch(function(error) {
-			// Handle Errors here.
-			utils.log(error);
-		});
-
+		const provider = e.target.dataset.authProvider;
+		window.login(provider);
 		if (e) {
 			e.preventDefault();
 		}
 	};
-	scope.login = window.login;
 	scope.logout = window.logout;
 
 	function init() {

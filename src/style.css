@@ -34,6 +34,8 @@ a { text-decoration: none; color: crimson; cursor: pointer; }
 .pointer-none { pointer-events: none; }
 .ml-1 { margin-left: 1rem; }
 .ml-2 { margin-left: 2rem; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
 hr {
 	background: 0;
 	border: 0;
@@ -87,6 +89,10 @@ select, input[type="text"], input[type="number"],  textarea {
 	cursor: pointer;
 	transition: box-shadow 0.2s ease;
 }
+.btn--big {
+	padding: 15px 30px;
+	border-radius: 3px;
+}
 .btn-icon {
 	display: inline-flex;
 	align-items: center;
@@ -95,12 +101,23 @@ select, input[type="text"], input[type="number"],  textarea {
 	text-decoration: none;
 	box-shadow: 0 3px 5px 0 rgba(0,0,0,0.15);
 }
+.btn:focus {
+	outline-width: 4px;
+	outline-color: #b76b29;
+	outline-style: solid;
+    outline-offset: 1px;
+}
 .btn-icon > svg {
 	width: 20px;
 	height: 20px;
-	fill: white;
+	fill: currentColor;
 	vertical-align: middle;
 	margin-right: 8px;
+}
+.btn--big > svg {
+	width: 25px;
+	height: 25px;
+	margin-right: 12px;
 }
 .star:after {
 	content: '★';
@@ -431,19 +448,23 @@ body > #demo-frame {
 }
 .modal {
 	position: fixed;
-	top: 5vh;
-	left: 50%;
-	width: 68vw;
-	margin-left: -34vw;
-	max-width: 90vw;
-	height: auto;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	z-index: 2000;
 	visibility: hidden;
+
+	/* So that modal overlay gets pointer events */
+	pointer-events: none;
 }
 @media screen and (max-width: 900px) {
 	.modal {
-		width: 90vw;
-		margin-left: -45vw;
+		/* width: 90vw; */
+		/* margin-left: -45vw; */
 	}
 }
 .modal__close-btn {
@@ -451,7 +472,7 @@ body > #demo-frame {
 	right: 10px;
 	top: 10px;
 	opacity: 0.3;
-transition: 0.25s ease;
+	transition: 0.25s ease;
 }
 .modal__close-btn > svg {
 	fill: black;
@@ -464,8 +485,8 @@ transition: 0.25s ease;
 	background: #fdfdfd;
 	color: #444;
 	position: relative;
-	border-radius: 3px;
-	margin: 0 auto;
+	border-radius: 8px;
+	/* margin: 0 auto; */
 	opacity: 0;
 	padding: 2em;
 	font-size: 1.1em;
@@ -473,6 +494,7 @@ transition: 0.25s ease;
 	max-height: 90vh;
 	box-sizing: border-box;
 	overflow-y: auto;
+	pointer-events: auto;
 	transition-property: transform, opacity;
 	transition-duration: 0.19s;
 	transform: translateY(-50px) scale(0.7);
@@ -975,6 +997,17 @@ transition: 0.25s ease;
     letter-spacing: 0.6px;
     padding: 2px;
     font-size: 10px;
+}
+.social-login-btn--github {
+	background: #656B6F;
+}
+.social-login-btn--facebook {
+	background: #4E62C0;
+}
+.social-login-btn--google {
+	background: white;
+	border: 2px solid currentColor;
+	color: inherit;
 }
 
 body.is-logged-in .hide-on-login,

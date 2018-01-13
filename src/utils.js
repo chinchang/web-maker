@@ -171,14 +171,44 @@
 		});
 	}
 
+	function downloadFile(fileName, blob) {
+		function downloadWithAnchor() {
+			var a = document.createElement('a');
+			a.href = window.URL.createObjectURL(blob);
+			a.download = fileName;
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+		}
+		if (window.IS_EXTENSION) {
+			chrome.downloads.download(
+				{
+					url: window.URL.createObjectURL(blob),
+					filename: fileName,
+					saveAs: true
+				},
+				() => {
+					// If there was an error, just download the file using ANCHOR method.
+					if (chrome.runtime.lastError) {
+						downloadWithAnchor();
+					}
+				}
+			);
+		} else {
+			downloadWithAnchor();
+		}
+	}
+
 	window.utils = {
-		semverCompare: semverCompare,
-		generateRandomId: generateRandomId,
-		onButtonClick: onButtonClick,
-		addInfiniteLoopProtection: addInfiniteLoopProtection,
-		getHumanDate: getHumanDate,
-		log: log,
-		once: once
+		semverCompare,
+		generateRandomId,
+		onButtonClick,
+		addInfiniteLoopProtection,
+		getHumanDate,
+		log,
+		once,
+		downloadFile
 	};
 
 	window.chrome = window.chrome || {};

@@ -685,6 +685,7 @@ loginModal
 	 * Loaded the code comiler based on the mode selected
 	 */
 	function handleModeRequirements(mode) {
+		const baseTranspilerPath = 'lib/transpilers';
 		// Exit if already loaded
 		var d = deferred();
 		if (modes[mode].hasLoaded) {
@@ -698,26 +699,26 @@ loginModal
 		}
 
 		if (mode === HtmlModes.JADE) {
-			loadJS('lib/jade.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/jade.js`).then(setLoadedFlag);
 		} else if (mode === HtmlModes.MARKDOWN) {
-			loadJS('lib/marked.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/marked.js`).then(setLoadedFlag);
 		} else if (mode === CssModes.LESS) {
-			loadJS('lib/less.min.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/less.min.js`).then(setLoadedFlag);
 		} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
-			loadJS('lib/sass.js').then(function() {
-				sass = new Sass('lib/sass.worker.js');
+			loadJS(`${baseTranspilerPath}/sass.js`).then(function() {
+				sass = new Sass(`${baseTranspilerPath}/sass.worker.js`);
 				setLoadedFlag();
 			});
 		} else if (mode === CssModes.STYLUS) {
-			loadJS('lib/stylus.min.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/stylus.min.js`).then(setLoadedFlag);
 		} else if (mode === CssModes.ACSS) {
-			loadJS('lib/atomizer.browser.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/atomizer.browser.js`).then(setLoadedFlag);
 		} else if (mode === JsModes.COFFEESCRIPT) {
-			loadJS('lib/coffee-script.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/coffee-script.js`).then(setLoadedFlag);
 		} else if (mode === JsModes.ES6) {
-			loadJS('lib/babel.min.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/babel.min.js`).then(setLoadedFlag);
 		} else if (mode === JsModes.TS) {
-			loadJS('lib/typescript.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/typescript.js`).then(setLoadedFlag);
 		} else {
 			d.resolve();
 		}
@@ -1032,7 +1033,7 @@ loginModal
 		if (jsMode === JsModes.ES6) {
 			contents +=
 				'<script src="' +
-				chrome.extension.getURL('lib/babel-polyfill.min.js') +
+				chrome.extension.getURL('lib/transpilers/babel-polyfill.min.js') +
 				'"></script>';
 		}
 

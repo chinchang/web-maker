@@ -282,6 +282,11 @@ if ('serviceWorker' in navigator) {
 	window.chrome.i18n = { getMessage: () => {} };
 
 	window.IS_EXTENSION = !!window.chrome.extension;
+	if (window.IS_EXTENSION) {
+		document.body.classList.add('is-extension');
+	} else {
+		document.body.classList.add('is-app');
+	}
 })();
 
 (() => {
@@ -430,7 +435,7 @@ window.logout = function logout() {
 };
 function login(providerName) {
 	var provider;
-	if (providerName === 'fb') {
+	if (providerName === 'facebook') {
 		provider = new firebase.auth.FacebookAuthProvider();
 	} else if (providerName === 'twitter') {
 		provider = new firebase.auth.TwitterAuthProvider();
@@ -444,49 +449,11 @@ function login(providerName) {
 	return firebase
 		.auth()
 		.signInWithPopup(provider)
-		.then(function(result) {
-			return;
-			// Save this user in the store
-			firebase
-				.database()
-				.ref('users/' + result.user.uid)
-				.update({
-					displayName: result.user.displayName,
-					email: result.user.email,
-					photoURL: result.user.providerData[0].photoURL,
-					signedUpOn: Date.now()
-				})
-				.then(function() {
-					// Port items in localstorage to user account
-					if (window.localStorage.prototyp) {
-						var items = JSON.parse(window.localStorage.prototyp);
-						var newItemKey;
-						items.forEach(function(localItem) {
-							itemService.fetchItem(localItem.id).then(function(item) {
-								newItemKey = firebase.database().ref('pens').push().key;
-								item.createdBy = result.user.uid;
-								delete item.uid;
-								firebase.database().ref('pens/' + newItemKey).set(item);
-								firebase
-									.database()
-									.ref('users/' + result.user.uid)
-									.child('items')
-									.child(newItemKey)
-									.set(true);
-							});
-						});
-						delete localStorage.prototyp;
-					}
-				});
-		})
+		.then(function() {})
 		.catch(function(error) {
-			// Handle Errors here.
-			var errorCode = error.code;
-			var errorMessage = error.message;
-			// The email of the user's account used.
-			var email = error.email;
-			// The firebase.auth.AuthCredential type that was used.
-			var credential = error.credential;
+			alert(
+				'You have already signed up with the same email using different social login'
+			);
 			utils.log(error);
 		});
 }
@@ -1198,6 +1165,8 @@ loginModal
 
 	const AUTO_SAVE_INTERVAL = 15000; // 15 seconds
 	const BASE_PATH = chrome.extension ? '/' : '/app';
+	const DEFAULT_PROFILE_IMG =
+		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAXtJREFUSMfVlT1KQ0EUhc+NiTaxSaUiBBG0133kV+x0CbEza/BnE4JYJxvQFcRaibESXYAKSVQ+i0zkMZn3E7DJgYHHzLnnzj0z74606LCkRWBZUl1SVdKepE239CKpJ6krqWNm47kzA01gQDqegPo8wkvAZQZhH2dALkuCkPgIOAU23Gi7uZkkWWwJoR3gtmO49TjxZednCOsB/loM9xlYmfKintUlbccUF7ptcX5vSaqESNUE944Cc8cJ/Fkt4DHhhoyc52mHPMXDTOnAu6Si/gcfZrbqW0SGwE830vCnFU3wFiAOJV1JakgqmVnRzIqSSpKabm0YiHsNncGN52MPKKduFcrAvRd7HSIeeqSdrIYDu17sQYhUAPoRUmuOBCeRuAGTLhwkNiLEb6AFWIKwOfGfSFzS/yQBF165t0AFyEc4eTd353GTm50LzgHngZ9n7MofuG8f2dp1JFHNO5M49JNsSXsyC5JqmvSWfc0+mR1JXTP7yrzzhcMvKuvFJdN+wSwAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTgtMDEtMTNUMDU6NDg6MDYrMDA6MDBnRzN5AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE4LTAxLTEzVDA1OjQ4OjA2KzAwOjAwFhqLxQAAACh0RVh0c3ZnOmJhc2UtdXJpAGZpbGU6Ly8vdG1wL21hZ2ljay1MLWhFV0FISOqcDjwAAAAASUVORK5CYII=';
 
 	var updateTimer,
 		updateDelay = 500,
@@ -1756,6 +1725,7 @@ loginModal
 	 * Loaded the code comiler based on the mode selected
 	 */
 	function handleModeRequirements(mode) {
+		const baseTranspilerPath = 'lib/transpilers';
 		// Exit if already loaded
 		var d = deferred();
 		if (modes[mode].hasLoaded) {
@@ -1769,26 +1739,26 @@ loginModal
 		}
 
 		if (mode === HtmlModes.JADE) {
-			loadJS('lib/jade.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/jade.js`).then(setLoadedFlag);
 		} else if (mode === HtmlModes.MARKDOWN) {
-			loadJS('lib/marked.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/marked.js`).then(setLoadedFlag);
 		} else if (mode === CssModes.LESS) {
-			loadJS('lib/less.min.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/less.min.js`).then(setLoadedFlag);
 		} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
-			loadJS('lib/sass.js').then(function() {
-				sass = new Sass('lib/sass.worker.js');
+			loadJS(`${baseTranspilerPath}/sass.js`).then(function() {
+				sass = new Sass(`${baseTranspilerPath}/sass.worker.js`);
 				setLoadedFlag();
 			});
 		} else if (mode === CssModes.STYLUS) {
-			loadJS('lib/stylus.min.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/stylus.min.js`).then(setLoadedFlag);
 		} else if (mode === CssModes.ACSS) {
-			loadJS('lib/atomizer.browser.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/atomizer.browser.js`).then(setLoadedFlag);
 		} else if (mode === JsModes.COFFEESCRIPT) {
-			loadJS('lib/coffee-script.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/coffee-script.js`).then(setLoadedFlag);
 		} else if (mode === JsModes.ES6) {
-			loadJS('lib/babel.min.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/babel.min.js`).then(setLoadedFlag);
 		} else if (mode === JsModes.TS) {
-			loadJS('lib/typescript.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/typescript.js`).then(setLoadedFlag);
 		} else {
 			d.resolve();
 		}
@@ -2103,7 +2073,7 @@ loginModal
 		if (jsMode === JsModes.ES6) {
 			contents +=
 				'<script src="' +
-				chrome.extension.getURL('lib/babel-polyfill.min.js') +
+				chrome.extension.getURL('lib/transpilers/babel-polyfill.min.js') +
 				'"></script>';
 		}
 
@@ -3082,7 +3052,7 @@ loginModal
 	scope.updateProfileUi = () => {
 		if (window.user) {
 			document.body.classList.add('is-logged-in');
-			headerAvatarImg.src = window.user.photoURL;
+			headerAvatarImg.src = window.user.photoURL || DEFAULT_PROFILE_IMG;
 		} else {
 			document.body.classList.remove('is-logged-in');
 			headerAvatarImg.src = '';
@@ -3090,16 +3060,12 @@ loginModal
 	};
 
 	scope.login = e => {
-		firebase.auth().signInAnonymously().then().catch(function(error) {
-			// Handle Errors here.
-			utils.log(error);
-		});
-
+		const provider = e.target.dataset.authProvider;
+		window.login(provider);
 		if (e) {
 			e.preventDefault();
 		}
 	};
-	scope.login = window.login;
 	scope.logout = window.logout;
 
 	function init() {

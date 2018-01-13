@@ -423,6 +423,12 @@ loginModal
 
 		utils.log('saving key', key || currentItem.id, currentItem);
 		saveSetting(key || currentItem.id, currentItem);
+		// If key is `code`, this is a call on unloadbefore to save the last open thing.
+		// Do not presist that on remote.
+		if (key === 'code') {
+			// No deferred required here as this gets called on unloadbefore
+			return;
+		}
 		return itemService.setItem(key || currentItem.id, currentItem).then(() => {
 			alertsService.add('Item saved.');
 			unsavedEditCount = 0;

@@ -85,7 +85,7 @@ select, input[type="text"], input[type="number"],  textarea {
 	border-radius: 3px;
 	padding: 7px 15px;
 	cursor: pointer;
-	transition: 0.2s ease;
+	transition: box-shadow 0.2s ease;
 }
 .btn-icon {
 	display: inline-flex;
@@ -515,6 +515,7 @@ transition: 0.25s ease;
 	z-index: 6;
 	background-color: var(--color-sidebar);
 	transition: 0.3s cubic-bezier(1, 0.13, 0.21, 0.87);
+	transition-property: transform;
 	will-change: transform;
 	transform: translateX(100%);
 }

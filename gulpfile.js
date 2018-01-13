@@ -1,28 +1,22 @@
+/*eslint-env node*/
+
 var gulp = require('gulp');
-// var uglify = require('gulp-uglify');
-// var minifyCSS = require('gulp-csso');
 var useref = require('gulp-useref');
 
-gulp.task('css', function() {
-	return gulp
-		.src([
-			'src/lib/codemirror/lib/codemirror.css',
-			'src/lib/codemirror/addon/hint/show-hint.css',
-			'src/lib/codemirror/addon/fold/foldgutter.css',
-			'src/lib/hint.min.css',
-			'src/lib/inlet.css',
-			'src/style.css'
-		])
-		.pipe(concat('build.css'))
-		.pipe(minifyCSS())
-		.pipe(gulp.dest('src'));
+gulp.task('copyFiles', [], function() {
+	gulp.src('src/lib/codemirror/theme/*').pipe(gulp.dest('app/lib/codemirror/theme'));
+	gulp.src('src/lib/codemirror/mode/**/*').pipe(gulp.dest('app/lib/codemirror/mode'));
+	gulp.src('src/partials/*').pipe(gulp.dest('app/partials'));
+	gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib'));
+	gulp.src('src/icon-48.png').pipe(gulp.dest('app'));
+	gulp.src([ 'src/FiraCode.ttf', 'src/Fixedsys.ttf', 'src/Inconsolata.ttf', 'src/Monoid.ttf' ]).pipe(gulp.dest('app'));
 });
 
-gulp.task('useRef', [], function() {
+gulp.task('useRef', [ 'copyFiles' ], function() {
 	return gulp.src('src/index.html').pipe(useref()).pipe(gulp.dest('app'));
 });
 
-gulp.task('generate-service-worker', ['useRef'], function(callback) {
+gulp.task('generate-service-worker', [ 'useRef' ], function(callback) {
 	var swPrecache = require('sw-precache');
 	var rootDir = 'app';
 

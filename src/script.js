@@ -125,6 +125,8 @@ loginModal
 
 	const AUTO_SAVE_INTERVAL = 15000; // 15 seconds
 	const BASE_PATH = chrome.extension ? '/' : '/app';
+	const DEFAULT_PROFILE_IMG =
+		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAXtJREFUSMfVlT1KQ0EUhc+NiTaxSaUiBBG0133kV+x0CbEza/BnE4JYJxvQFcRaibESXYAKSVQ+i0zkMZn3E7DJgYHHzLnnzj0z74606LCkRWBZUl1SVdKepE239CKpJ6krqWNm47kzA01gQDqegPo8wkvAZQZhH2dALkuCkPgIOAU23Gi7uZkkWWwJoR3gtmO49TjxZednCOsB/loM9xlYmfKintUlbccUF7ptcX5vSaqESNUE944Cc8cJ/Fkt4DHhhoyc52mHPMXDTOnAu6Si/gcfZrbqW0SGwE830vCnFU3wFiAOJV1JakgqmVnRzIqSSpKabm0YiHsNncGN52MPKKduFcrAvRd7HSIeeqSdrIYDu17sQYhUAPoRUmuOBCeRuAGTLhwkNiLEb6AFWIKwOfGfSFzS/yQBF165t0AFyEc4eTd353GTm50LzgHngZ9n7MofuG8f2dp1JFHNO5M49JNsSXsyC5JqmvSWfc0+mR1JXTP7yrzzhcMvKuvFJdN+wSwAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTgtMDEtMTNUMDU6NDg6MDYrMDA6MDBnRzN5AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE4LTAxLTEzVDA1OjQ4OjA2KzAwOjAwFhqLxQAAACh0RVh0c3ZnOmJhc2UtdXJpAGZpbGU6Ly8vdG1wL21hZ2ljay1MLWhFV0FISOqcDjwAAAAASUVORK5CYII=';
 
 	var updateTimer,
 		updateDelay = 500,
@@ -2009,7 +2011,7 @@ loginModal
 	scope.updateProfileUi = () => {
 		if (window.user) {
 			document.body.classList.add('is-logged-in');
-			headerAvatarImg.src = window.user.photoURL;
+			headerAvatarImg.src = window.user.photoURL || DEFAULT_PROFILE_IMG;
 		} else {
 			document.body.classList.remove('is-logged-in');
 			headerAvatarImg.src = '';

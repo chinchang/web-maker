@@ -384,7 +384,8 @@ body > #demo-frame {
 	/*line-height: 20px;*/
 }
 .footer {
-	z-index: 6; // Because .console is 6
+	/* Because .console is 6 */
+	z-index: 6;
 }
 .main-header {
 	display: flex;

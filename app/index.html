@@ -82,10 +82,9 @@
 					<a class="show-when-app hide-on-login flex  flex-v-center  hint--rounded  hint--bottom-left" aria-label="Login/Signup" d-open-modal="loginModal">
 						Login/Signup
 					</a>
-					<a class="hide-on-logout flex  flex-v-center  hint--rounded  hint--bottom-left" aria-label="Logout" d-click="logout">
-						Logout
+					<a d-open-modal="profileModal" aria-label="See profile or Logout" class="hide-on-logout">
+						<img id="headerAvatarImg" width="20" src="" class="main-header__avatar-img"/>
 					</a>
-					<img id="headerAvatarImg" width="20" src="" class="hide-on-logout main-header__avatar-img ml-1"/>
 				</div>
 			</div>
 			<div class="content-wrap  flex  flex-grow">
@@ -292,7 +291,7 @@
 				</div>
 
 				<h3>JavaScript</h3>
-				<p style="font-size: 0.8em;" class="opacity--70">Note: You can load external scripts from following domains: localhost, https://ajax.googleapis.com, https://code.jquery.com, https://cdnjs.cloudflare.com, https://unpkg.com, https://maxcdn.com, https://cdn77.com, https://maxcdn.bootstrapcdn.com, https://cdn.jsdelivr.net/, https://rawgit.com, https://wzrd.in</p>
+				<p style="font-size: 0.8em;" class="show-when-extension opacity--70">Note: You can load external scripts from following domains: localhost, https://ajax.googleapis.com, https://code.jquery.com, https://cdnjs.cloudflare.com, https://unpkg.com, https://maxcdn.com, https://cdn77.com, https://maxcdn.bootstrapcdn.com, https://cdn.jsdelivr.net/, https://rawgit.com, https://wzrd.in</p>
 				<textarea id="js-external-js" class="full-width" id="" cols="30" rows="5" placeholder="Start typing name of a library. Put each library in new line"></textarea>
 
 				<h3>CSS</h3>
@@ -330,6 +329,23 @@
 
 		<div class="modal" id="loginModal">
 			<div class="modal__content" d-html="partials/login-modal.html"></div>
+		</div>
+
+		<div class="modal" id="profileModal">
+			<div class="modal__content">
+				<a d-click="onModalCloseBtnClick" href="" aria-label="Close logout modal" title="Close" class="js-modal__close-btn  modal__close-btn">
+					<svg>
+						<use xlink:href="#cross-icon"></use>
+					</svg>
+				</a>
+				<div class="tac">
+					<img height="80" class="profile-modal__avatar-img" src="" id="profileAvatarImg" alt="Profile image">
+					<h3 id="profileUserName" class="mb-2"></h3>
+					<p>
+						<button class="btn" aria-label="Logout from your account" d-click="logout">Logout</button>
+					</p>
+				</div>
+			</div>
 		</div>
 
 		<div class="modal modal--settings" id="settingsModal">

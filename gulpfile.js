@@ -45,6 +45,7 @@ gulp.task('useRef', ['copyFiles'], function() {
 gulp.task('minify', ['useRef'], function() {
 	minifyJs('app/script.js');
 	minifyJs('app/vendor.js');
+	minifyJs('app/lib/screenlog.js');
 
 	gulp.src('app/*.css')
 		.pipe(cleanCSS({ debug: true }, (details) => {

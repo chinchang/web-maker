@@ -8,7 +8,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
 customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
 globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal, headerAvatarImg,
-loginModal
+loginModal, profileModal, profileAvatarImg, profileUserName
 */
 /* eslint-disable no-extra-semi */
 (function(alertsService, itemService) {
@@ -125,8 +125,7 @@ loginModal
 
 	const AUTO_SAVE_INTERVAL = 15000; // 15 seconds
 	const BASE_PATH = chrome.extension ? '/' : '/app';
-	const DEFAULT_PROFILE_IMG =
-		'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAAAXtJREFUSMfVlT1KQ0EUhc+NiTaxSaUiBBG0133kV+x0CbEza/BnE4JYJxvQFcRaibESXYAKSVQ+i0zkMZn3E7DJgYHHzLnnzj0z74606LCkRWBZUl1SVdKepE239CKpJ6krqWNm47kzA01gQDqegPo8wkvAZQZhH2dALkuCkPgIOAU23Gi7uZkkWWwJoR3gtmO49TjxZednCOsB/loM9xlYmfKintUlbccUF7ptcX5vSaqESNUE944Cc8cJ/Fkt4DHhhoyc52mHPMXDTOnAu6Si/gcfZrbqW0SGwE830vCnFU3wFiAOJV1JakgqmVnRzIqSSpKabm0YiHsNncGN52MPKKduFcrAvRd7HSIeeqSdrIYDu17sQYhUAPoRUmuOBCeRuAGTLhwkNiLEb6AFWIKwOfGfSFzS/yQBF165t0AFyEc4eTd353GTm50LzgHngZ9n7MofuG8f2dp1JFHNO5M49JNsSXsyC5JqmvSWfc0+mR1JXTP7yrzzhcMvKuvFJdN+wSwAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTgtMDEtMTNUMDU6NDg6MDYrMDA6MDBnRzN5AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE4LTAxLTEzVDA1OjQ4OjA2KzAwOjAwFhqLxQAAACh0RVh0c3ZnOmJhc2UtdXJpAGZpbGU6Ly8vdG1wL21hZ2ljay1MLWhFV0FISOqcDjwAAAAASUVORK5CYII=';
+	const DEFAULT_PROFILE_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='#ccc' d='M12,19.2C9.5,19.2 7.29,17.92 6,16C6.03,14 10,12.9 12,12.9C14,12.9 17.97,14 18,16C16.71,17.92 14.5,19.2 12,19.2M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z' /%3E%3C/svg%3E";
 
 	var updateTimer,
 		updateDelay = 500,
@@ -677,6 +676,7 @@ loginModal
 		cssSettingsModal.classList.remove('is-modal-visible');
 		keyboardShortcutsModal.classList.remove('is-modal-visible');
 		loginModal.classList.remove('is-modal-visible');
+		profileModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -1955,7 +1955,7 @@ loginModal
 		const dHtmlNodes = query(`[d-html]`);
 		dHtmlNodes.forEach(function(el) {
 			fetch(el.getAttribute('d-html')).then(response => {
-				// Stop further compilation because of future recursion by removing attribute.
+				// Stop further compilation because of future recursion, by removing attribute.
 				el.removeAttribute('d-html');
 				response.text().then(html => {
 					requestIdleCallback(() => {
@@ -2020,10 +2020,12 @@ loginModal
 	scope.updateProfileUi = () => {
 		if (window.user) {
 			document.body.classList.add('is-logged-in');
-			headerAvatarImg.src = window.user.photoURL || DEFAULT_PROFILE_IMG;
+			headerAvatarImg.src = profileAvatarImg.src = window.user.photoURL || DEFAULT_PROFILE_IMG;
+			profileUserName.textContent = window.user.displayName || 'Anonymous Creator';
 		} else {
 			document.body.classList.remove('is-logged-in');
-			headerAvatarImg.src = '';
+			headerAvatarImg.src = profileAvatarImg.src = '';
+			profileUserName.textContent = 'Anonymous Creator';
 		}
 	};
 
@@ -2034,7 +2036,16 @@ loginModal
 			e.preventDefault();
 		}
 	};
-	scope.logout = window.logout;
+	scope.logout = e => {
+		e.preventDefault();
+		if (unsavedEditCount) {
+			var shouldDiscard = confirm(
+				'You have unsaved changes. Do you still want to logout?'
+			);
+			if (!shouldDiscard) { return; }
+		}
+		window.logout();
+	}
 
 	function init() {
 		var config = {

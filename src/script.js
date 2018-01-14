@@ -1327,6 +1327,7 @@ loginModal
 					!prefs.autoComplete ||
 					input.origin !== '+input' ||
 					input.text[0] === ';' ||
+					input.text[0] === ',' ||
 					input.text[0] === ' '
 				) {
 					return;

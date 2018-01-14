@@ -10,8 +10,7 @@ function minifyJs(fileName) {
 	const content = fs.readFileSync(fileName, "utf8");
 	const minifiedContent = babelMinify(content).code;
 	fs.writeFileSync(fileName, minifiedContent);
-	console.log(`[${fileName}]: before -> ${content.length}kb`)
-	console.log(`[${fileName}]: after -> ${minifiedContent.length}kb`)
+	console.log(`[${fileName}]: ${content.length}kb -> ${minifiedContent.length}kb`)
 }
 gulp.task('copyFiles', [], function() {
 	gulp

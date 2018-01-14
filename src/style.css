@@ -519,12 +519,6 @@ body > #demo-frame {
 	/* So that modal overlay gets pointer events */
 	pointer-events: none;
 }
-@media screen and (max-width: 900px) {
-	.modal {
-		/* width: 90vw; */
-		/* margin-left: -45vw; */
-	}
-}
 .modal__close-btn {
 	position: absolute;
 	right: 10px;
@@ -545,11 +539,11 @@ body > #demo-frame {
 	color: #444;
 	position: relative;
 	border-radius: 8px;
-	/* margin: 0 auto; */
 	opacity: 0;
 	padding: 2em;
 	font-size: 1.1em;
 	line-height: 1.4;
+	max-width: 85vw;
 	max-height: 90vh;
 	box-sizing: border-box;
 	overflow-y: auto;
@@ -557,6 +551,11 @@ body > #demo-frame {
 	transition-property: transform, opacity;
 	transition-duration: 0.19s;
 	transform: translateY(-50px) scale(0.7);
+}
+@media screen and (max-width: 900px) {
+	.modal__content {
+		max-width: 95vw;
+	}
 }
 .is-modal-visible {
 	visibility: visible;
@@ -1080,7 +1079,7 @@ body > #demo-frame {
 	content: 'BETA';
 	position: relative;
 	left: 3px;
-	top: -10px;
+	top: -7px;
 	border-radius: 4px;
 	background: #b76b29;
 	color: white;

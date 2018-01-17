@@ -2,22 +2,43 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Web Maker</title>
+
+		<style>
+			/* Critically acclaimed CSS */
+			.saved-items-pane {
+				position: fixed;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				width: 450px;
+				transform: translateX(100%);
+			}
+			.modal {
+				visibility: hidden;
+			}
+		</style>
+
+		<!-- build:css vendor.css -->
 		<link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
-
-		<link rel="stylesheet" id="editorThemeLinkTag" href="/lib/codemirror/theme/monokai.css"></link>
-
 		<link rel="stylesheet" href="lib/codemirror/addon/hint/show-hint.css">
 		<link rel="stylesheet" href="lib/codemirror/addon/fold/foldgutter.css">
 		<link rel="stylesheet" href="lib/codemirror/addon/dialog/dialog.css">
 		<link rel="stylesheet" href="lib/hint.min.css">
 		<link rel="stylesheet" href="lib/inlet.css">
+		<!-- endbuild -->
+
+		<link rel="stylesheet" id="editorThemeLinkTag" href="lib/codemirror/theme/monokai.css"></link>
+
+		<!-- build:css style.css -->
 		<link rel="stylesheet" href="style.css">
+		<!-- endbuild -->
+
 		<style id="fontStyleTemplate" type="template">
 			@font-face {
 				font-family: 'fontname';
 				font-style: normal;
 				font-weight: 400;
-				src: url(../fontname.ttf) format('truetype');
+				src: url(fontname.ttf) format('truetype');
 				unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
 			}
 			.Codemirror pre {
@@ -29,7 +50,7 @@
 				font-family: 'FiraCode';
 				font-style: normal;
 				font-weight: 400;
-				src: url(../FiraCode.ttf) format('truetype');
+				src: url(FiraCode.ttf) format('truetype');
 				unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
 			}
 			.Codemirror pre {
@@ -66,6 +87,12 @@
 						<svg style="width:14px;height:14px;vertical-align:middle;" viewBox="0 0 24 24">
 						    <path d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
 						</svg>Open
+					</a>
+					<a class="show-when-app hide-on-login flex  flex-v-center  hint--rounded  hint--bottom-left" aria-label="Login/Signup" d-open-modal="loginModal">
+						Login/Signup
+					</a>
+					<a d-open-modal="profileModal" aria-label="See profile or Logout" class="hide-on-logout">
+						<img id="headerAvatarImg" width="20" src="" class="main-header__avatar-img"/>
 					</a>
 				</div>
 			</div>
@@ -173,7 +200,7 @@
 						</svg>
 					</a>
 
-					<a href="" id="screenshotBtn" class="mode-btn  hint--rounded  hint--top-left" d-click="takeScreenshot" aria-label="Take screenshot of preview">
+					<a href="" id="screenshotBtn" class="mode-btn  hint--rounded  hint--top-left show-when-extension" d-click="takeScreenshot" aria-label="Take screenshot of preview">
 						<svg style="width:24px;height:24px" viewBox="0 0 24 24">
 							<path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" />
 						</svg>
@@ -225,7 +252,7 @@
 				</div>
 
 				<a href="https://webmakerapp.com/" target="_blank"><div class="logo"></div></a>
-				&copy; Web Maker &nbsp;&nbsp;
+				&copy;<span class="web-maker-with-tag">Web Maker</span> &nbsp;&nbsp;
 				<a d-open-modal="helpModal" data-event-category="ui" data-event-action="helpButtonClick" class="footer__link  hint--rounded  hint--top-right" aria-label="Help">
 					<svg style="width:20px; height:20px; vertical-align:text-bottom" viewBox="0 0 24 24">
 						<path d="M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z" />
@@ -273,7 +300,7 @@
 				</div>
 
 				<h3>JavaScript</h3>
-				<p style="font-size: 0.8em;" class="opacity--70">Note: You can load external scripts from following domains: localhost, https://ajax.googleapis.com, https://code.jquery.com, https://cdnjs.cloudflare.com, https://unpkg.com, https://maxcdn.com, https://cdn77.com, https://maxcdn.bootstrapcdn.com, https://cdn.jsdelivr.net/, https://rawgit.com, https://wzrd.in</p>
+				<p style="font-size: 0.8em;" class="show-when-extension opacity--70">Note: You can load external scripts from following domains: localhost, https://ajax.googleapis.com, https://code.jquery.com, https://cdnjs.cloudflare.com, https://unpkg.com, https://maxcdn.com, https://cdn77.com, https://maxcdn.bootstrapcdn.com, https://cdn.jsdelivr.net/, https://rawgit.com, https://wzrd.in</p>
 				<textarea id="js-external-js" class="full-width" id="" cols="30" rows="5" placeholder="Start typing name of a library. Put each library in new line"></textarea>
 
 				<h3>CSS</h3>
@@ -307,6 +334,27 @@
 
 		<div class="modal" id="onboardModal">
 			<div class="modal__content" d-html="partials/onboard-modal.html"></div>
+		</div>
+
+		<div class="modal" id="loginModal">
+			<div class="modal__content" d-html="partials/login-modal.html"></div>
+		</div>
+
+		<div class="modal" id="profileModal">
+			<div class="modal__content">
+				<a d-click="onModalCloseBtnClick" href="" aria-label="Close logout modal" title="Close" class="js-modal__close-btn  modal__close-btn">
+					<svg>
+						<use xlink:href="#cross-icon"></use>
+					</svg>
+				</a>
+				<div class="tac">
+					<img height="80" class="profile-modal__avatar-img" src="" id="profileAvatarImg" alt="Profile image">
+					<h3 id="profileUserName" class="mb-2"></h3>
+					<p>
+						<button class="btn" aria-label="Logout from your account" d-click="logout">Logout</button>
+					</p>
+				</div>
+			</div>
 		</div>
 
 		<div class="modal modal--settings" id="settingsModal">
@@ -350,12 +398,12 @@
 							Default Preprocessors
 						</label>
 						<div class="flex line">
-							<select style="flex:1;margin:0 20px" data-setting="htmlMode" d-change="updateSetting">
+							<select style="flex:1;margin-left:20px" data-setting="htmlMode" d-change="updateSetting">
 								<option value="html">HTML</option>
 								<option value="markdown">Markdown</option>
 								<option value="jade">Pug</option>
 							</select>
-							<select style="flex:1;margin:0 20px" data-setting="cssMode" d-change="updateSetting">
+							<select style="flex:1;margin-left:20px" data-setting="cssMode" d-change="updateSetting">
 								<option value="css">CSS</option>
 								<option value="scss">SCSS</option>
 								<option value="sass">SASS</option>
@@ -363,7 +411,7 @@
 								<option value="stylus">Stylus</option>
 								<option value="acss">Atomic CSS</option>
 							</select>
-							<select style="flex:1;margin:0 20px" data-setting="jsMode" d-change="updateSetting">
+							<select style="flex:1;margin-left:20px" data-setting="jsMode" d-change="updateSetting">
 								<option value="js">JS</option>
 								<option value="coffee">CoffeeScript</option>
 								<option value="es6">ES6 (Babel)</option>
@@ -494,6 +542,12 @@
 			<symbol id="bug-icon" viewBox="0 0 24 24">
     			<path d="M14,12H10V10H14M14,16H10V14H14M20,8H17.19C16.74,7.22 16.12,6.55 15.37,6.04L17,4.41L15.59,3L13.42,5.17C12.96,5.06 12.5,5 12,5C11.5,5 11.04,5.06 10.59,5.17L8.41,3L7,4.41L8.62,6.04C7.88,6.55 7.26,7.22 6.81,8H4V10H6.09C6.04,10.33 6,10.66 6,11V12H4V14H6V15C6,15.34 6.04,15.67 6.09,16H4V18H6.81C7.85,19.79 9.78,21 12,21C14.22,21 16.15,19.79 17.19,18H20V16H17.91C17.96,15.67 18,15.34 18,15V14H20V12H18V11C18,10.66 17.96,10.33 17.91,10H20V8Z" />
 			</symbol>
+			<symbol id="google-icon" viewBox="0 0 24 24">
+				<path d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.25,22C17.6,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z" />
+			</symbol>
+			<symbol id="fb-icon" viewBox="0 0 24 24">
+				<path d="M17,2V2H17V6H15C14.31,6 14,6.81 14,7.5V10H14L17,10V14H14V22H10V14H7V10H10V6A4,4 0 0,1 14,2H17Z" />
+			</symbol>
 			<symbol id="github-icon" viewBox="0 0 24 24">
 			    <path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" />
 			</symbol>
@@ -537,6 +591,7 @@
 			</symbol>
 		</svg>
 
+		<!-- build:js vendor.js -->
 		<script src="lib/codemirror/lib/codemirror.js"></script>
 		<script src="lib/codemirror/addon/edit/matchbrackets.js"></script>
 		<script src="lib/codemirror/addon/edit/matchtags.js"></script>
@@ -573,15 +628,24 @@
 		<script src="lib/split.js"></script>
 		<script src="lib/inlet.min.js"></script>
 		<script src="lib/esprima.js"></script>
+		<script src="lib/firebase.js"></script>
+		<script src="lib/firebase-firestore.js"></script>
+		<!-- endbuild -->
 
+		<!-- build:js script.js -->
+		<script src="service-worker-registration.js"></script>
 		<script src="utils.js"></script>
+		<script src="db.js"></script>
+		<script src="auth.js"></script>
 		<script src="analytics.js"></script>
 		<script src="deferred.js"></script>
 		<script src="loader.js"></script>
 		<script src="notifications.js"></script>
 		<script src="library-list.js"></script>
 		<script src="textarea-autocomplete.js"></script>
+		<script src="itemService.js"></script>
 		<script src="script.js"></script>
 		<script src="dropdown.js"></script>
+		<!-- endbuild -->
 	</body>
 </html>

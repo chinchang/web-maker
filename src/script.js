@@ -423,18 +423,19 @@ loginModal, profileModal, profileAvatarImg, profileUserName
 		currentItem.mainSizes = getMainPaneSizes();
 
 		utils.log('saving key', key || currentItem.id, currentItem);
-		saveSetting(key || currentItem.id, currentItem);
-		// If key is `code`, this is a call on unloadbefore to save the last open thing.
-		// Do not presist that on remote.
-		if (key === 'code') {
-			// No deferred required here as this gets called on unloadbefore
-			return false;
-		}
-		return itemService.setItem(key || currentItem.id, currentItem).then(() => {
-			alertsService.add('Item saved.');
+
+		function onSaveComplete() {
+			if (window.user && !navigator.onLine) {
+				alertsService.add('Item saved locally. Will save to account when you are online.');
+			} else {
+				alertsService.add('Item saved.');
+
+			}
 			unsavedEditCount = 0;
 			saveBtn.classList.remove('is-marked');
-		});
+		}
+
+		return itemService.setItem(key || currentItem.id, currentItem).then(onSaveComplete);
 	}
 
 	function populateItemsInSavedPane(items) {

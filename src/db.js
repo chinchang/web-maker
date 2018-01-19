@@ -118,6 +118,9 @@
 		});
 	}
 
+	// Fetch user settings.
+	// This isn't hitting the remote db because remote settings
+	// get fetch asynchronously (in user/ call) and update the envioronment.
 	function getSettings(defaultSettings) {
 		const d = deferred();
 		// Will be chrome.storage.sync in extension environment,

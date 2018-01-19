@@ -1710,7 +1710,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName
 			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
 			obj[settingName] = prefs[settingName];
 
-			// In case of !extension, we save in localstorage so that it gets fetched
+			// We always save locally so that it gets fetched
 			// faster on future loads.
 			db.sync.set(obj, function() {
 				alertsService.add('Setting saved');

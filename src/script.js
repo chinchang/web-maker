@@ -2032,6 +2032,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName
 
 	scope.login = e => {
 		const provider = e.target.dataset.authProvider;
+		trackEvent('ui', 'loginProviderClick', provider);
 		window.login(provider);
 		if (e) {
 			e.preventDefault();
@@ -2045,6 +2046,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName
 			);
 			if (!shouldDiscard) { return; }
 		}
+		trackEvent('fn', 'loggedOut');
 		window.logout();
 	}
 

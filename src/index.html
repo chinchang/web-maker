@@ -88,10 +88,10 @@
 						    <path d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
 						</svg>Open
 					</a>
-					<a class="show-when-app hide-on-login flex  flex-v-center  hint--rounded  hint--bottom-left" aria-label="Login/Signup" d-open-modal="loginModal">
+					<a d-open-modal="loginModal" data-event-category="ui" data-event-action="loginButtonClick" class="show-when-app hide-on-login flex  flex-v-center  hint--rounded  hint--bottom-left" aria-label="Login/Signup">
 						Login/Signup
 					</a>
-					<a d-open-modal="profileModal" aria-label="See profile or Logout" class="hide-on-logout">
+					<a d-open-modal="profileModal" data-event-category="ui" data-event-action="headerAvatarClick" aria-label="See profile or Logout" class="hide-on-logout hint--rounded  hint--bottom-left">
 						<img id="headerAvatarImg" width="20" src="" class="main-header__avatar-img"/>
 					</a>
 				</div>

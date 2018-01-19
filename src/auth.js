@@ -1,3 +1,5 @@
+/* global trackEvent */
+
 window.logout = function logout() {
 	firebase.auth().signOut();
 };
@@ -17,7 +19,9 @@ function login(providerName) {
 	return firebase
 		.auth()
 		.signInWithPopup(provider)
-		.then(function() {})
+		.then(function() {
+			trackEvent('fn', 'loggedIn', providerName);
+		})
 		.catch(function(error) {
 			alert(
 				'You have already signed up with the same email using different social login'

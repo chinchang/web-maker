@@ -8,7 +8,7 @@ onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentati
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
 customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
 globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal, headerAvatarImg,
-loginModal, profileModal, profileAvatarImg, profileUserName
+loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 */
 /* eslint-disable no-extra-semi */
 (function(alertsService, itemService) {
@@ -336,7 +336,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName
 	function saveItem() {
 		var isNewItem = !currentItem.id;
 		currentItem.id = currentItem.id || 'item-' + utils.generateRandomId();
+		saveBtn.classList.add('is-loading');
 		saveCode().then(() => {
+			saveBtn.classList.remove('is-loading');
 			// If this is the first save, and auto-saving settings is enabled,
 			// then start auto-saving from now on.
 			// This is done in `saveCode()` completion so that the
@@ -537,7 +539,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName
 	}
 
 	function openSavedItemsPane() {
+		openItemsBtn.classList.add('is-loading');
 		fetchItems(true).then(function(items) {
+			openItemsBtn.classList.remove('is-loading');
 			populateItemsInSavedPane(items);
 		});
 	}

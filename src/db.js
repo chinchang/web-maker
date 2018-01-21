@@ -106,13 +106,16 @@
 
 	async function getUser(userId) {
 		const remoteDb = await getDb();
-		return remoteDb.doc(`users/${userId}`).get().then(doc => {
-			if (!doc.exists)
-				return remoteDb.doc(`users/${userId}`).set({}, { merge: true });
-			const user = doc.data();
-			Object.assign(window.user, user);
-			return user;
-		});
+		return remoteDb
+			.doc(`users/${userId}`)
+			.get()
+			.then(doc => {
+				if (!doc.exists)
+					return remoteDb.doc(`users/${userId}`).set({}, { merge: true });
+				const user = doc.data();
+				Object.assign(window.user, user);
+				return user;
+			});
 	}
 
 	// Fetch user settings.

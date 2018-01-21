@@ -2,6 +2,7 @@
 	--color-bg: #252637;
 	--color-sidebar: #3a2b63;
 	--code-font-size: 16px;
+	--color-button: #0074d9;
 }
 body {
 	margin: 0;
@@ -121,14 +122,18 @@ textarea {
 }
 .btn {
 	display: inline-block;
-	border: 0;
-	background: #0074d9;
-	color: white;
+	color: var(--color-button);
 	font-size: inherit;
-	border-radius: 3px;
-	padding: 7px 15px;
+	border: 3px solid var(--color-button);
+	border-radius: 5px;
+	padding: 9px 15px;
 	cursor: pointer;
 	transition: box-shadow 0.2s ease;
+}
+.btn--primary {
+	background: var(--color-button)
+		linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0px, transparent);
+	color: white;
 }
 .btn--big {
 	padding: 15px 30px;
@@ -140,7 +145,7 @@ textarea {
 }
 .btn:hover {
 	text-decoration: none;
-	box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.15);
+	box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.25);
 }
 .btn:focus {
 	outline-width: 4px;
@@ -164,7 +169,7 @@ textarea {
 	display: none;
 }
 .is-loading > svg {
-	display:none;
+	display: none;
 }
 .is-loading .btn-loader {
 	display: block;
@@ -190,13 +195,12 @@ textarea {
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
-	will-change: -webkit-filter;
 	transition: 0.1s ease 0.2s;
+	will-change: filter;
 }
 body:not(.light-version).overlay-visible .main-container {
 	transition-duration: 0.5s;
 	transition-delay: 0.4s;
-	-webkit-filter: blur(3px);
 	filter: blur(3px);
 }
 .code-side,
@@ -631,6 +635,8 @@ body > #demo-frame {
 	border-radius: 50%;
 	padding: 10px 14px;
 	background: crimson;
+	color: white;
+	border: 0;
 	transform: scale(0);
 	will-change: transform, opacity;
 	transition: 0.3s ease;
@@ -1105,10 +1111,14 @@ body > #demo-frame {
 	display: none;
 }
 .social-login-btn--github {
+	color: white;
 	background: #656b6f;
+	border-color: #656b6f;
 }
 .social-login-btn--facebook {
+	color: white;
 	background: #4e62c0;
+	border-color: #4e62c0;
 }
 .social-login-btn--google {
 	background: white;

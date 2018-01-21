@@ -2,9 +2,12 @@
 	window.itemService = {
 		async getItem(id) {
 			var remoteDb = await window.db.getDb();
-			return remoteDb.doc(`items/${id}`).get().then(doc => {
-				return doc.data();
-			});
+			return remoteDb
+				.doc(`items/${id}`)
+				.get()
+				.then(doc => {
+					return doc.data();
+				});
 		},
 		async getUserItemIds() {
 			if (window.user) {
@@ -13,12 +16,15 @@
 				});
 			}
 			var remoteDb = await window.db.getDb();
-			return remoteDb.doc(`users/${window.user.uid}`).get().then(doc => {
-				if (!doc.exists) {
-					return {};
-				}
-				return doc.data().items;
-			});
+			return remoteDb
+				.doc(`users/${window.user.uid}`)
+				.get()
+				.then(doc => {
+					if (!doc.exists) {
+						return {};
+					}
+					return doc.data().items;
+				});
 		},
 
 		async getAllItems() {
@@ -91,9 +97,9 @@
 						d.resolve();
 					})
 					.catch(d.reject);
-				}
+			}
 
-			return (window.user && navigator.onLine) ? remotePromise : d.promise;
+			return window.user && navigator.onLine ? remotePromise : d.promise;
 		},
 
 		/**
@@ -102,7 +108,8 @@
 		 */
 		saveItems(items) {
 			var d = deferred();
-			if (window.IS_EXTENSION) {
+			// When not logged in
+			if (!window.user) {
 				// save new items
 				window.db.local.set(items, d.resolve);
 				// Push in new item IDs
@@ -142,7 +149,8 @@
 		},
 
 		async removeItem(id) {
-			if (window.IS_EXTENSION) {
+			// When not logged in
+			if (!window.user) {
 				var d = deferred();
 				db.local.remove(id, d.resolve);
 				return d.promise;
@@ -160,7 +168,8 @@
 		},
 
 		async setItemForUser(itemId) {
-			if (window.IS_EXTENSION || !window.user) {
+			// When not logged in
+			if (!window.user) {
 				return window.db.local.get(
 					{
 						items: {}
@@ -189,7 +198,8 @@
 		},
 
 		async unsetItemForUser(itemId) {
-			if (window.IS_EXTENSION) {
+			// When not logged in
+			if (!window.user) {
 				return window.db.local.get(
 					{
 						items: {}
@@ -210,6 +220,7 @@
 					[`items.${itemId}`]: firebase.firestore.FieldValue.delete()
 				})
 				.then(arg => {
+					delete window.user.items[itemId];
 					utils.log(`Item ${itemId} unset for user`, arg);
 				})
 				.catch(error => utils.log(error));

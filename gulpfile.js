@@ -7,10 +7,12 @@ const cleanCSS = require('gulp-clean-css');
 const babelMinify = require('babel-minify');
 
 function minifyJs(fileName) {
-	const content = fs.readFileSync(fileName, "utf8");
+	const content = fs.readFileSync(fileName, 'utf8');
 	const minifiedContent = babelMinify(content).code;
 	fs.writeFileSync(fileName, minifiedContent);
-	console.log(`[${fileName}]: ${content.length}kb -> ${minifiedContent.length}kb`)
+	console.log(
+		`[${fileName}]: ${content.length}kb -> ${minifiedContent.length}kb`
+	);
 }
 gulp.task('copyFiles', [], function() {
 	gulp
@@ -19,12 +21,11 @@ gulp.task('copyFiles', [], function() {
 	gulp
 		.src('src/lib/codemirror/mode/**/*')
 		.pipe(gulp.dest('app/lib/codemirror/mode'));
-	gulp
-		.src('src/lib/transpilers/*')
-		.pipe(gulp.dest('app/lib/transpilers'));
+	gulp.src('src/lib/transpilers/*').pipe(gulp.dest('app/lib/transpilers'));
 	gulp.src('src/partials/*').pipe(gulp.dest('app/partials'));
 	gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib'));
 	gulp.src('src/icon-48.png').pipe(gulp.dest('app'));
+	gulp.src('src/icon-128.png').pipe(gulp.dest('app'));
 	gulp
 		.src([
 			'src/FiraCode.ttf',
@@ -47,11 +48,14 @@ gulp.task('minify', ['useRef'], function() {
 	minifyJs('app/vendor.js');
 	minifyJs('app/lib/screenlog.js');
 
-	gulp.src('app/*.css')
-		.pipe(cleanCSS({ debug: true }, (details) => {
-			console.log(`${details.name}: ${details.stats.originalSize}`);
-			console.log(`${details.name}: ${details.stats.minifiedSize}`);
-		}))
+	gulp
+		.src('app/*.css')
+		.pipe(
+			cleanCSS({ debug: true }, details => {
+				console.log(`${details.name}: ${details.stats.originalSize}`);
+				console.log(`${details.name}: ${details.stats.minifiedSize}`);
+			})
+		)
 		.pipe(gulp.dest('app'));
 });
 

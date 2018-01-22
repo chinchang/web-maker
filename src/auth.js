@@ -21,6 +21,8 @@ function login(providerName) {
 		.signInWithPopup(provider)
 		.then(function() {
 			trackEvent('fn', 'loggedIn', providerName);
+			// Save to recommend next time
+			window.db.local.set({ lastAuthProvider: providerName });
 		})
 		.catch(function(error) {
 			alert(

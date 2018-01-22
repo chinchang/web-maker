@@ -48,6 +48,9 @@ if ('serviceWorker' in navigator && document.cookie.indexOf('wmdebug') === -1) {
 									// At this point, everything has been precached.
 									// It's the perfect time to display a "Content is cached for offline use." message.
 									console.log('Content is now available offline!');
+									if (window.alertsService) {
+										window.alertsService.add('Web Maker is now ready to be used offline.');
+									}
 								}
 								break;
 

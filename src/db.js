@@ -93,7 +93,7 @@
 		// Setting the `lastSeenVersion` in localStorage(sync for extension) always
 		// because next time we need to fetch it irrespective of the user being
 		// logged in or out quickly from local storage.
-		chrome.storage.sync.set(
+		dbSyncAlias.set(
 			{
 				lastSeenVersion: version
 			},

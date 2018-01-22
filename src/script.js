@@ -14,7 +14,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 (function(alertsService, itemService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.9.6';
+	var version = '3.0.0';
 
 	if (window.DEBUG) {
 		window.scope = scope;

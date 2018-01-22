@@ -1,5 +1,3 @@
-/* global trackEvent */
-
 window.logout = function logout() {
 	firebase.auth().signOut();
 };
@@ -20,7 +18,7 @@ function login(providerName) {
 		.auth()
 		.signInWithPopup(provider)
 		.then(function() {
-			trackEvent('fn', 'loggedIn', providerName);
+			window.trackEvent('fn', 'loggedIn', providerName);
 			// Save to recommend next time
 			window.db.local.set({ lastAuthProvider: providerName });
 		})

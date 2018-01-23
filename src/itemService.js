@@ -138,7 +138,8 @@
 						batch.update(remoteDb.doc(`users/${window.user.uid}`), {
 							[`items.${id}`]: true
 						});
-						// Set these items on out cached user object too
+						// Set these items on our cached user object too
+						window.user.items = window.user.items || {};
 						window.user.items[id] = true;
 					}
 					batch.commit().then(d.resolve);

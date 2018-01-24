@@ -1734,7 +1734,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 			db.sync.set(obj, function() {
 				alertsService.add('Setting saved');
 			});
-			if (!window.IS_EXTENSION) {
+			if (window.user) {
 				window.db.getDb().then(remoteDb => {
 					remoteDb
 						.collection('users')

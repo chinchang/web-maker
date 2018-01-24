@@ -124,8 +124,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 	};
 
 	const AUTO_SAVE_INTERVAL = 15000; // 15 seconds
-	const BASE_PATH = (chrome.extension || window.DEBUG) ? '/' : '/app';
-	const DEFAULT_PROFILE_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='#ccc' d='M12,19.2C9.5,19.2 7.29,17.92 6,16C6.03,14 10,12.9 12,12.9C14,12.9 17.97,14 18,16C16.71,17.92 14.5,19.2 12,19.2M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z' /%3E%3C/svg%3E";
+	const BASE_PATH = chrome.extension || window.DEBUG ? '/' : '/app';
+	const DEFAULT_PROFILE_IMG =
+		"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='#ccc' d='M12,19.2C9.5,19.2 7.29,17.92 6,16C6.03,14 10,12.9 12,12.9C14,12.9 17.97,14 18,16C16.71,17.92 14.5,19.2 12,19.2M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z' /%3E%3C/svg%3E";
 
 	var updateTimer,
 		updateDelay = 500,
@@ -428,16 +429,19 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 
 		function onSaveComplete() {
 			if (window.user && !navigator.onLine) {
-				alertsService.add('Item saved locally. Will save to account when you are online.');
+				alertsService.add(
+					'Item saved locally. Will save to account when you are online.'
+				);
 			} else {
 				alertsService.add('Item saved.');
-
 			}
 			unsavedEditCount = 0;
 			saveBtn.classList.remove('is-marked');
 		}
 
-		return itemService.setItem(key || currentItem.id, currentItem).then(onSaveComplete);
+		return itemService
+			.setItem(key || currentItem.id, currentItem)
+			.then(onSaveComplete);
 	}
 
 	function populateItemsInSavedPane(items) {
@@ -1040,7 +1044,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 				'<script src="' +
 				(chrome.extension
 					? chrome.extension.getURL('lib/transpilers/babel-polyfill.min.js')
-					: `${location.origin}${BASE_PATH}/lib/transpilers/babel-polyfill.min.js`) +
+					: `${
+							location.origin
+						}${BASE_PATH}/lib/transpilers/babel-polyfill.min.js`) +
 				'"></script>';
 		}
 
@@ -1284,7 +1290,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 						CodeMirror.commands.defaultTab(editor);
 					}
 				},
-				'Enter': 'emmetInsertLineBreak'
+				Enter: 'emmetInsertLineBreak'
 			}
 		});
 		cm.on('focus', editor => {
@@ -1355,7 +1361,11 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 	});
 	scope.cm.css = initEditor(cssCode, {
 		mode: 'css',
-		gutters: ['error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+		gutters: [
+			'error-gutter',
+			'CodeMirror-linenumbers',
+			'CodeMirror-foldgutter'
+		],
 		emmet: true
 	});
 	Inlet(scope.cm.css);
@@ -1518,7 +1528,10 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		var byteString = atob(dataURI.split(',')[1]);
 
 		// separate out the mime component
-		var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+		var mimeString = dataURI
+			.split(',')[0]
+			.split(':')[1]
+			.split(';')[0];
 
 		// write the bytes of the string to an ArrayBuffer
 		var ab = new ArrayBuffer(byteString.length);
@@ -2027,8 +2040,10 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 	scope.updateProfileUi = () => {
 		if (window.user) {
 			document.body.classList.add('is-logged-in');
-			headerAvatarImg.src = profileAvatarImg.src = window.user.photoURL || DEFAULT_PROFILE_IMG;
-			profileUserName.textContent = window.user.displayName || 'Anonymous Creator';
+			headerAvatarImg.src = profileAvatarImg.src =
+				window.user.photoURL || DEFAULT_PROFILE_IMG;
+			profileUserName.textContent =
+				window.user.displayName || 'Anonymous Creator';
 		} else {
 			document.body.classList.remove('is-logged-in');
 			headerAvatarImg.src = profileAvatarImg.src = '';
@@ -2050,11 +2065,13 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 			var shouldDiscard = confirm(
 				'You have unsaved changes. Do you still want to logout?'
 			);
-			if (!shouldDiscard) { return; }
+			if (!shouldDiscard) {
+				return;
+			}
 		}
 		trackEvent('fn', 'loggedOut');
 		window.logout();
-	}
+	};
 
 	function init() {
 		var config = {
@@ -2341,14 +2358,18 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		var libOptions = window.jsLibs.reduce(
 			(html, lib) =>
 				html +
-				`<option data-type="${lib.type}" value="${lib.url}">${lib.label}</option>`,
+				`<option data-type="${lib.type}" value="${lib.url}">${
+					lib.label
+				}</option>`,
 			''
 		);
 		addLibrarySelect.children[1].innerHTML = libOptions;
 		libOptions = window.cssLibs.reduce(
 			(html, lib) =>
 				html +
-				`<option data-type="${lib.type}" value="${lib.url}">${lib.label}</option>`,
+				`<option data-type="${lib.type}" value="${lib.url}">${
+					lib.label
+				}</option>`,
 			''
 		);
 		addLibrarySelect.children[2].innerHTML = libOptions;

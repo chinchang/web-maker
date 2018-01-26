@@ -29,7 +29,7 @@ gulp.task('copyFiles', [], function() {
 	gulp
 		.src([
 			'src/FiraCode.ttf',
-			'src/Fixedsys.ttf',
+			'src/FixedSys.ttf',
 			'src/Inconsolata.ttf',
 			'src/Monoid.ttf'
 		])

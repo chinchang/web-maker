@@ -2440,8 +2440,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		db.getSettings(defaultSettings).then(result => {
 			if (result.preserveLastCode && lastCode) {
 				unsavedEditCount = 0;
-				if (lastCode.id) {
-					// Ignore for remote db
+				// For web app environment we don't fetch item from localStorage,
+				// because the item isn't stored in the localStorage.
+				if (lastCode.id && window.IS_EXTENSION) {
 					db.local.get(lastCode.id, function(itemResult) {
 						if (itemResult[lastCode.id]) {
 							utils.log('Load item ', lastCode.id);

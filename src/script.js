@@ -892,20 +892,19 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 				d.resolve(code);
 			}
 		} else if (jsMode === JsModes.COFFEESCRIPT) {
-			var coffeeCode;
 			if (!window.CoffeeScript) {
 				d.resolve('');
 				return d.promise;
 			}
 			try {
-				coffeeCode = CoffeeScript.compile(code, { bare: true });
+				code = CoffeeScript.compile(code, { bare: true });
 			} catch (e) {
 				showErrors('js', [
 					{ lineNumber: e.location.first_line, message: e.message }
 				]);
 			} finally {
 				if (shouldPreventInfiniteLoops !== false) {
-					code = utils.addInfiniteLoopProtection(coffeeCode);
+					code = utils.addInfiniteLoopProtection(code);
 				}
 				d.resolve(code);
 			}

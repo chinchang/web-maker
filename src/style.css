@@ -226,6 +226,15 @@ body:not(.light-version).overlay-visible .main-container {
 .layout-2 .demo-side {
 	width: auto;
 }
+/* All vertical layout */
+.layout-5 .code-side {
+	flex-direction: row;
+	width: auto;
+}
+.layout-5 .code-wrap {
+	height: auto;
+}
+/* Fullscreen layout */
 .layout-4 .code-side {
 	display: none;
 }
@@ -256,7 +265,8 @@ body:not(.light-version).overlay-visible .main-container {
 	transition: height 0.3s ease, width 0.3s ease;
 	will-change: height;
 }
-.layout-2 .code-wrap.is-minimized {
+.layout-2 .code-wrap.is-minimized,
+.layout-5 .code-wrap.is-minimized {
 	flex-direction: row;
 }
 .is-dragging .code-wrap {
@@ -266,13 +276,6 @@ body:not(.light-version).overlay-visible .main-container {
 	height: auto;
 	width: 33%;
 }
-.code-wrap:nth-of-type(3) {
-	animation-delay: 0.3s;
-}
-.code-wrap:nth-of-type(5) {
-	animation-delay: 0.4s;
-}
-
 .code-wrap__header {
 	display: flex;
 	flex-shrink: 0;
@@ -292,7 +295,8 @@ body:not(.light-version).overlay-visible .main-container {
 	opacity: 0.5;
 	/*transform-origin: left center;*/
 }
-.layout-2 .code-side .is-minimized .code-wrap__header {
+.layout-2 .code-side .is-minimized .code-wrap__header,
+.layout-5 .code-side .is-minimized .code-wrap__header {
 	writing-mode: vertical-lr;
 	padding: 10px 5px;
 }
@@ -337,7 +341,9 @@ body:not(.light-version).overlay-visible .main-container {
 	height: calc(100% - 25px); /* 25px for header */
 	font-size: var(--code-font-size);
 }
-.layout-2 .is-minimized .Codemirror {
+/* TODO: Check why? */
+.layout-2 .is-minimized .Codemirror,
+.layout-5 .is-minimized .Codemirror {
 	height: calc(100%);
 }
 .Codemirror pre {

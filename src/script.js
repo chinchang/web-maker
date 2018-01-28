@@ -1,7 +1,7 @@
 /* global trackEvent */
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
-onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, onboardModal, onboardModal,
-addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
+onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, layoutBtn5, onboardModal,
+onboardModal, addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn,
 onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
@@ -176,7 +176,8 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		// This is debounced!
 		clearTimeout(updateCodeWrapCollapseStates.timeout);
 		updateCodeWrapCollapseStates.timeout = setTimeout(function() {
-			const prop = currentLayoutMode === 2 ? 'width' : 'height';
+			const prop =
+				currentLayoutMode === 2 || currentLayoutMode === 5 ? 'width' : 'height';
 			[htmlCode, cssCode, jsCode].forEach(function(el) {
 				const bounds = el.getBoundingClientRect();
 				const size = bounds[prop];
@@ -226,7 +227,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 					? [currentItem.mainSizes[1], currentItem.mainSizes[0]]
 					: currentItem.mainSizes;
 		} else {
-			mainSplitSizes = [50, 50];
+			mainSplitSizes = currentLayoutMode === 5 ? [75, 25] : [50, 50];
 		}
 		return mainSplitSizes;
 	}
@@ -240,7 +241,10 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		}
 
 		var options = {
-			direction: currentLayoutMode === 2 ? 'horizontal' : 'vertical',
+			direction:
+				currentLayoutMode === 2 || currentLayoutMode === 5
+					? 'horizontal'
+					: 'vertical',
 			minSize: minCodeWrapSize,
 			gutterSize: 6,
 			onDragStart: function() {
@@ -285,15 +289,12 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 			return;
 		}
 		currentLayoutMode = mode;
-		layoutBtn1.classList.remove('selected');
-		layoutBtn2.classList.remove('selected');
-		layoutBtn3.classList.remove('selected');
-		layoutBtn4.classList.remove('selected');
+		// Remove all layout classes
+		[1, 2, 3, 4, 5].forEach(layoutNumber => {
+			window[`layoutBtn${layoutNumber}`].classList.remove('selected');
+			document.body.classList.remove(`layout-${layoutNumber}`);
+		});
 		$('#layoutBtn' + mode).classList.add('selected');
-		document.body.classList.remove('layout-1');
-		document.body.classList.remove('layout-2');
-		document.body.classList.remove('layout-3');
-		document.body.classList.remove('layout-4');
 		document.body.classList.add('layout-' + mode);
 
 		resetSplitting();
@@ -366,7 +367,8 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 	// Calculates the sizes of html, css & js code panes.
 	function getCodePaneSizes() {
 		var sizes;
-		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
+		var dimensionProperty =
+			currentLayoutMode === 2 || currentLayoutMode === 5 ? 'width' : 'height';
 		try {
 			sizes = [
 				htmlCode.style[dimensionProperty],
@@ -2119,6 +2121,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		layoutBtn2.addEventListener('click', getToggleLayoutButtonListener(2));
 		layoutBtn3.addEventListener('click', getToggleLayoutButtonListener(3));
 		layoutBtn4.addEventListener('click', getToggleLayoutButtonListener(4));
+		layoutBtn5.addEventListener('click', getToggleLayoutButtonListener(5));
 
 		notificationsBtn.addEventListener('click', function() {
 			scope.toggleModal(notificationsModal);

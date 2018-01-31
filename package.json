@@ -10,7 +10,8 @@
 		"prettier": "^1.5.2"
 	},
 	"scripts": {
-		"install": "ln -sf ../../git-hooks/pre-commit .git/hooks/pre-commit"
+		"install": "ln -sf ../../git-hooks/pre-commit .git/hooks/pre-commit",
+		"lint": "eslint src/*.js"
 	},
 	"repository": {
 		"type": "git",

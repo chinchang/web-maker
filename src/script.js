@@ -13,7 +13,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 (function(alertsService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.9.6';
+	var version = '2.9.7';
 
 	if (window.DEBUG) {
 		window.scope = scope;

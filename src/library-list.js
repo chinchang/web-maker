@@ -11,8 +11,8 @@ window.jsLibs = [
 	},
 	{
 		url:
-			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js',
-		label: 'Bootstrap 4β',
+			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js',
+		label: 'Bootstrap 4',
 		type: 'js'
 	},
 	{
@@ -27,33 +27,33 @@ window.jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js',
+		url: 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js',
 		label: 'Angular',
 		type: 'js'
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/react/16.2.0/cjs/react.production.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/react/16.2.0/umd/react.production.min.js',
 		label: 'React',
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.2.0/umd/react-dom.production.min.js',
 		label: 'React DOM',
 		type: 'js'
 	},
 	{
-		url: 'https://unpkg.com/vue@2.5.0/dist/vue.min.js',
+		url: 'https://unpkg.com/vue',
 		label: 'Vue.js',
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/three.js/85/three.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js',
 		label: 'Three.js',
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js',
 		label: 'D3',
 		type: 'js'
 	},
@@ -75,7 +75,7 @@ window.jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.31/js/uikit.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.39/js/uikit.min.js',
 		label: 'UIkit 3',
 		type: 'js'
 	}
@@ -89,8 +89,8 @@ window.cssLibs = [
 	},
 	{
 		url:
-			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css',
-		label: 'Bootstrap 4β',
+			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+		label: 'Bootstrap 4',
 		type: 'css'
 	},
 	{
@@ -105,7 +105,7 @@ window.cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css',
 		label: 'Bulma',
 		type: 'css'
 	},
@@ -116,6 +116,11 @@ window.cssLibs = [
 		type: 'css'
 	},
 	{
+		url: 'https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css',
+		label: 'Tailwind.css',
+		type: 'css'
+	},
+	{
 		url:
 			'https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.4/css/uikit.min.css',
 		label: 'UIkit 2',
@@ -123,7 +128,7 @@ window.cssLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.31/css/uikit.min.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.39/css/uikit.min.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},
@@ -136,7 +141,13 @@ window.cssLibs = [
 	{
 		url:
 			'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
-		label: 'FontAwesome',
+		label: 'FontAwesome 4',
+		type: 'css'
+	},
+		{
+		url:
+			'https://use.fontawesome.com/releases/v5.0.6/css/all.css',
+		label: 'FontAwesome 5',
 		type: 'css'
 	}
 ];

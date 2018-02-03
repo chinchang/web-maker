@@ -2245,7 +2245,6 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 
 		// Editor keyboard shortucuts
 		window.addEventListener('keydown', function(event) {
-			var selectedItemElement;
 			// TODO: refactor common listener code
 			// Ctrl/⌘ + S
 			if ((event.ctrlKey || event.metaKey) && event.keyCode === 83) {
@@ -2279,40 +2278,37 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 			} else if (event.keyCode === 27) {
 				closeAllOverlays();
 			}
-			if (event.keyCode === 40 && isSavedItemsPaneOpen) {
-				// Return if no items present.
-				if (!$all('.js-saved-item-tile').length) {
-					return;
-				}
-				selectedItemElement = $('.js-saved-item-tile.selected');
+		});
+
+		savedItemsPane.addEventListener('keydown', function(event) {
+			if (!isSavedItemsPaneOpen) {
+				return;
+			}
+
+			const isCtrlOrMetaPressed = event.ctrlKey || event.metaKey;
+			const isForkKeyPressed = isCtrlOrMetaPressed && event.keyCode === 70;
+			const isDownKeyPressed = event.keyCode === 40;
+			const isUpKeyPressed = event.keyCode === 38;
+			const isEnterKeyPressed = event.keyCode === 13;
+
+			const selectedItemElement = $('.js-saved-item-tile.selected');
+			const havePaneItems = $all('.js-saved-item-tile').length !== 0;
+
+			if ((isDownKeyPressed || isUpKeyPressed) && havePaneItems) {
+				const method = isDownKeyPressed ? 'nextUntil' : 'previousUntil';
+
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
-					selectedItemElement
-						.nextUntil('.js-saved-item-tile:not(.hide)')
-						.classList.add('selected');
+					selectedItemElement[method](
+						'.js-saved-item-tile:not(.hide)'
+					).classList.add('selected');
 				} else {
 					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				}
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
-			} else if (event.keyCode === 38 && isSavedItemsPaneOpen) {
-				if (!$all('.js-saved-item-tile').length) {
-					return;
-				}
-				selectedItemElement = $('.js-saved-item-tile.selected');
-				if (selectedItemElement) {
-					selectedItemElement.classList.remove('selected');
-					selectedItemElement
-						.previousUntil('.js-saved-item-tile:not(.hide)')
-						.classList.add('selected');
-				} else {
-					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
-				}
-				$('.js-saved-item-tile.selected').scrollIntoView(false);
-			} else if (event.keyCode === 13 && isSavedItemsPaneOpen) {
-				selectedItemElement = $('.js-saved-item-tile.selected');
-				if (!selectedItemElement) {
-					return;
-				}
+			}
+
+			if (isEnterKeyPressed && selectedItemElement) {
 				setTimeout(function() {
 					openItem(selectedItemElement.dataset.itemId);
 				}, 350);
@@ -2320,13 +2316,8 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 			}
 
 			// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
-			if (
-				isSavedItemsPaneOpen &&
-				(event.ctrlKey || event.metaKey) &&
-				event.keyCode === 70
-			) {
+			if (isForkKeyPressed) {
 				event.preventDefault();
-				selectedItemElement = $('.js-saved-item-tile.selected');
 				setTimeout(function() {
 					forkItem(savedItems[selectedItemElement.dataset.itemId]);
 				}, 350);

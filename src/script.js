@@ -2135,41 +2135,37 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 
 		// Editor keyboard shortucuts
 		window.addEventListener('keydown', function(event) {
-			const CTRL_META = event.ctrlKey || event.metaKey;
-			const CTRL_META_SHIFT = CTRL_META && event.shiftKey;
-			const CTRL_META_S = CTRL_META && event.code === 'KeyS';
-			const CTRL_META_O = CTRL_META && event.code === 'KeyO';
-			const CTRL_META_SHIFT_5 = CTRL_META_SHIFT && event.code === 'Digit5';
-			const CTRL_META_SHIFT_SLASH = CTRL_META_SHIFT && event.code === 'Slash';
-			const ESCAPE = event.code === 'Escape';
-
 			// TODO: refactor common listener code
-
-			if (CTRL_META_S) {
+			// Ctrl/⌘ + S
+			if ((event.ctrlKey || event.metaKey) && event.keyCode === 83) {
 				event.preventDefault();
 				saveItem();
 				trackEvent('ui', 'saveItemKeyboardShortcut');
 			}
-
-			if (CTRL_META_SHIFT_5) {
+			// Ctrl/⌘ + Shift + 5
+			if (
+				(event.ctrlKey || event.metaKey) &&
+				event.shiftKey &&
+				event.keyCode === 53
+			) {
 				event.preventDefault();
 				scope.setPreviewContent(true);
 				trackEvent('ui', 'previewKeyboardShortcut');
-			}
-
-			if (CTRL_META_O) {
+			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 79) {
+				// Ctrl/⌘ + O
 				event.preventDefault();
 				openSavedItemsPane();
 				trackEvent('ui', 'openCreationKeyboardShortcut');
-			}
-
-			if (CTRL_META_SHIFT_SLASH) {
+			} else if (
+				(event.ctrlKey || event.metaKey) &&
+				event.shiftKey &&
+				event.keyCode === 191
+			) {
+				// Ctrl/⌘ + Shift + ?
 				event.preventDefault();
 				scope.toggleModal(keyboardShortcutsModal);
 				trackEvent('ui', 'showKeyboardShortcutsShortcut');
-			}
-
-			if (ESCAPE) {
+			} else if (event.keyCode === 27) {
 				closeAllOverlays();
 			}
 		});
@@ -2179,17 +2175,17 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				return;
 			}
 
-			const CTRL_META = event.ctrlKey || event.metaKey;
-			const CTRL_META_F = CTRL_META && event.code === 'KeyF';
-			const ARROW_DOWN = event.code === 'ArrowDown';
-			const ARROW_UP = event.code === 'ArrowUp';
-			const ENTER = event.code === 'Enter';
+			const isCtrlOrMetaPressed = event.ctrlKey || event.metaKey;
+			const isForkKeyPressed = isCtrlOrMetaPressed && event.keyCode === 70;
+			const isDownKeyPressed = event.keyCode === 40;
+			const isUpKeyPressed = event.keyCode === 38;
+			const isEnterKeyPressed = event.keyCode === 13;
 
 			const selectedItemElement = $('.js-saved-item-tile.selected');
-			const HAVE_PANE_ITEMS = $all('.js-saved-item-tile').length !== 0;
+			const havePaneItems = $all('.js-saved-item-tile').length !== 0;
 
-			if ((ARROW_DOWN || ARROW_UP) && HAVE_PANE_ITEMS) {
-				const method = ARROW_DOWN ? 'nextUntil' : 'previousUntil';
+			if ((isDownKeyPressed || isUpKeyPressed) && havePaneItems) {
+				const method = isDownKeyPressed ? 'nextUntil' : 'previousUntil';
 
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
@@ -2202,7 +2198,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
 			}
 
-			if (ENTER && selectedItemElement) {
+			if (isEnterKeyPressed && selectedItemElement) {
 				setTimeout(function() {
 					openItem(selectedItemElement.dataset.itemId);
 				}, 350);
@@ -2210,7 +2206,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 			}
 
 			// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
-			if (CTRL_META_F) {
+			if (isForkKeyPressed) {
 				event.preventDefault();
 				setTimeout(function() {
 					forkItem(savedItems[selectedItemElement.dataset.itemId]);

@@ -224,6 +224,11 @@
 							<use xlink:href="#mode-icon" />
 						</svg>
 					</a>
+					<a id="layoutBtn5" class="mode-btn">
+						<svg viewBox="0 0 100 100">
+							<use xlink:href="#vertical-mode-icon" />
+						</svg>
+					</a>
 					<a id="layoutBtn4" class="mode-btn hint--top-left hint--rounded" aria-label="Full Screen">
 						<svg viewBox="0 0 100 100">
 							<rect x="0" y="0" width="100" height="100" />
@@ -515,17 +520,6 @@
 
 		<div class="modal-overlay"></div>
 
-		<svg  width="30" height="30" viewBox="0 0 100 100" fill="rgba(255, 255, 255, 0.09)">
-			<defs>
-				<g id="mode-icon">
-				  <rect x="0" y="0" width="28" height="47" />
-				  <rect x="36" y="0" width="28" height="47"/>
-				  <rect x="72" y="0" width="28" height="47"/>
-				  <rect x="0" y="53" width="100" height="47"/>
-				</g>
-			</defs>
-		</svg>
-
 		<div class="alerts-container" id="js-alerts-container"></div>
 		<form style="display:none;" action="https://codepen.io/pen/define" method="POST" target="_blank" id="js-codepen-form">
 		  <input type="hidden" name="data" value='{"title": "New Pen!", "html": "<div>Hello, World!</div>"}'>
@@ -589,6 +583,22 @@
 			</symbol>
 			<symbol id="keyboard-icon" viewBox="0 0 24 24">
 				<path d="M19,10H17V8H19M19,13H17V11H19M16,10H14V8H16M16,13H14V11H16M16,17H8V15H16M7,10H5V8H7M7,13H5V11H7M8,11H10V13H8M8,8H10V10H8M11,11H13V13H11M11,8H13V10H11M20,5H4C2.89,5 2,5.89 2,7V17A2,2 0 0,0 4,19H20A2,2 0 0,0 22,17V7C22,5.89 21.1,5 20,5Z" />
+			</symbol>
+			<symbol id="mode-icon" width="30" height="30" viewBox="0 0 100 100">
+				<g>
+					<rect x="0" y="0" width="28" height="47" />
+					<rect x="36" y="0" width="28" height="47"/>
+					<rect x="72" y="0" width="28" height="47"/>
+					<rect x="0" y="53" width="100" height="47"/>
+				</g>
+			</symbol>
+			<symbol id="vertical-mode-icon" width="30" height="30" viewBox="0 0 100 100">
+				<g>
+					<rect x="0" y="0" width="20" height="100" />
+					<rect x="23" y="0" width="20" height="100"/>
+					<rect x="46" y="0" width="20" height="100"/>
+					<rect x="69" y="0" width="32" height="100"/>
+				</g>
 			</symbol>
 			<symbol id="loader-icon" viewBox="0 0 44 44">
 				<!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->

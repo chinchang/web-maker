@@ -19,6 +19,10 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		window.scope = scope;
 	}
 
+	if( typeof __filename === "undefined" && typeof process !== "undefined") {
+		window.__filename = process.execPath; /*eslint no-underscore-dangle: "off"*/ /*global process*/
+	}
+
 	var HtmlModes = {
 		HTML: 'html',
 		MARKDOWN: 'markdown',
@@ -688,7 +692,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		} else if (mode === JsModes.ES6) {
 			loadJS('lib/babel.min.js').then(setLoadedFlag);
 		} else if (mode === JsModes.TS) {
-			loadJS('lib/typescript.js').then(setLoadedFlag);
+			loadJS('lib/typescript/typescript.js').then(setLoadedFlag);
 		} else {
 			d.resolve();
 		}
@@ -894,38 +898,95 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				d.resolve(code);
 			}
 		} else if (jsMode === JsModes.TS) {
-			try {
-				if (!window.ts) {
-					d.resolve('');
-					return d.promise;
-				}
-				code = ts.transpileModule(code, {
-					reportDiagnostics: true,
-					compilerOptions: {
-						noEmitOnError: true,
-						diagnostics: true,
-						module: ts.ModuleKind.ES2015
-					}
-				});
-				if (code.diagnostics.length) {
-					/* eslint-disable no-throw-literal */
-					throw {
-						description: code.diagnostics[0].messageText,
-						lineNumber: ts.getLineOfLocalPosition(
-							code.diagnostics[0].file,
-							code.diagnostics[0].start
-						)
-					};
-				}
-				if (shouldPreventInfiniteLoops !== false) {
-					code = utils.addInfiniteLoopProtection(code.outputText);
-				}
-				d.resolve(code);
-			} catch (e) {
-				showErrors('js', [
-					{ lineNumber: e.lineNumber - 1, message: e.description }
-				]);
+
+			if (!window.ts) {
+				d.resolve('');
+				return d.promise;
 			}
+
+			const compileCode = () => {
+				// Credits to https://gist.github.com/teppeis/6e0f2d823a94de4ae442
+				if( !window.TSLibSource ) {
+					const errorHandler = e => utils.log(e);
+
+					chrome.runtime.getPackageDirectoryEntry(function(root) {
+						root.getFile("lib/typescript/lib.d.ts", {}, function(fileEntry) {
+							fileEntry.file(function(file) {
+							var reader = new FileReader();
+							reader.onloadend = function() {
+								window.TSLibSource = this.result;
+								compileCode();
+							};
+							reader.readAsText(file);
+							}, errorHandler);
+						}, errorHandler);
+					});
+
+					return;
+				}
+
+				const compilerOptions = {
+					noEmitOnError: true,
+					diagnostics: true,
+					module: ts.ModuleKind.ES2015
+				};
+
+				var output = '';
+				var compilerHost = {
+					getSourceFile: function (filename) {
+						if (filename === "file.ts") {
+							return ts.createSourceFile(filename, source, compilerOptions.target, "0");
+						}
+						if (filename === "lib.d.ts") {
+							return ts.createSourceFile(filename, window.TSLibSource, compilerOptions.target, "0");
+						}
+						return null;
+					},
+					writeFile: function (name, text) {
+						output = text;
+					},
+					getDefaultLibFileName: function () { return "lib.d.ts"; },
+					useCaseSensitiveFileNames: function () { return false; },
+					getCanonicalFileName: function (filename) { return filename; },
+					getCurrentDirectory: function () { return ""; },
+					getNewLine: function () { return "\n"; }
+				};
+
+				const source = code;
+
+				try {
+					// code = ts.transpileModule(code, {
+					// 	reportDiagnostics: true,
+					// 	compilerOptions
+					// });
+
+					var program = ts.createProgram(["file.ts"], compilerOptions, compilerHost);
+					code = program.emit();
+					code.outputText = output;
+
+					if (code.diagnostics && code.diagnostics.length) {
+						/* eslint-disable no-throw-literal */
+						throw code.diagnostics.map(e => ({
+							message: e.messageText,
+							lineNumber: ts.getLineOfLocalPosition(
+								e.file,
+								e.start
+							)
+						}));
+					}
+
+					if (shouldPreventInfiniteLoops !== false) {
+						code = utils.addInfiniteLoopProtection(code.outputText);
+					}
+
+					d.resolve(code);
+				}
+				catch (e) {
+					showErrors('js', e);
+				}
+			}
+
+			compileCode();
 		}
 
 		return d.promise;

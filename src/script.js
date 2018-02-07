@@ -1132,12 +1132,17 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		}
 
 		if (shouldInlineJs) {
-			frame.src = frame.src;
-			setTimeout(() => {
-				frame.contentDocument.open();
-				frame.contentDocument.write(contents);
-				frame.contentDocument.close();
-			}, 10);
+			if (scope.detachedWindow) {
+				utils.log('✉️ Sending message to detached window');
+				scope.detachedWindow.postMessage({ contents }, '*');
+			} else {
+				frame.src = frame.src;
+				setTimeout(() => {
+					frame.contentDocument.open();
+					frame.contentDocument.write(contents);
+					frame.contentDocument.close();
+				}, 10);
+			}
 		} else {
 			// we need to store user script in external JS file to prevent inline-script
 			// CSP from affecting it.
@@ -2007,16 +2012,18 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 			'Web Maker',
 			`width=${iframeWidth},height=${iframeHeight},resizable,scrollbars=yes,status=1`
 		);
+		// Trigger initial render in detached window
 		setTimeout(() => {
-			scope.detachedWindow.postMessage(frame.src, '*');
-		}, 1000);
+			scope.setPreviewContent(true);
+		}, 1500);
 		function checkWindow() {
 			if (scope.detachedWindow && scope.detachedWindow.closed) {
 				clearInterval(intervalID);
 				document.body.classList.remove('is-detached-mode');
 				$('#js-demo-side').insertBefore(consoleEl, null);
 				scope.detachedWindow = null;
-				// Update main frame preview
+				// Update main frame preview to get latest changes (which were not
+				// getting reflected while detached window was open)
 				scope.setPreviewContent(true);
 			}
 		}

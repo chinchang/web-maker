@@ -97,7 +97,33 @@ On the bottom-left side are few help options, one of which shows you all th keyb
 Coming soon...
 
 ## Pre-processors
-Coming soon...
+
+For `HTML` >
+
+`PUG`
+
+`MARKDOWN`
+
+
+For `CSS` > 
+
+`SCSS`
+
+`SASS`
+
+`Stylus`
+
+`Atomic CSS`
+
+
+For `JavaScript` > 
+
+
+`CoffeeScript`
+
+`ES6 (Babel)`
+
+`TypeScript`
 
 ## Adding external libraries
 Coming soon...
@@ -106,7 +132,35 @@ Coming soon...
 Coming soon...
 
 ## Keyboard shortcuts
-Coming soon...
+`Ctrl/⌘ + Shift + ?` See keyboard shortcuts
+
+`Ctrl/⌘ + Shift + 5` Refresh preview
+
+`Ctrl/⌘ + S` Save current creations
+
+`Ctrl/⌘ + O` Open list of saved creations
+
+`Ctrl + L` Clear console (works when console input is focused)
+
+`Esc` Close saved creations panel & modals
+
+`Ctrl/⌘ + F` Find
+
+`Ctrl/⌘ + G` Select next match
+
+`Ctrl/⌘ + Shift + G` Select previous match
+
+`Ctrl/⌘ + Opt/Alt + F` Find & replace
+
+`Shift + Tab` Realign code
+
+`Ctrl/⌘ + ]` Indent code right
+
+`Ctrl/⌘ + [` Indent code left
+
+`Tab` Emmet code completion Read more
+
+`Ctrl/⌘ + /` Single line comment
 
 ## Settings
 Coming soon...

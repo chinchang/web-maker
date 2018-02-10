@@ -462,11 +462,14 @@ body > #demo-frame {
 	background-repeat: no-repeat;
 	vertical-align: middle;
 	-webkit-filter: grayscale(0.9);
+	filter: grayscale(0.9);
 	transition: 0.4s ease;
 	opacity: 0.3;
+	will-change: opacity, filter;
 }
 .footer:hover .logo {
 	-webkit-filter: grayscale(0);
+	filter: grayscale(0);
 	opacity: 1;
 }
 .footer__right {

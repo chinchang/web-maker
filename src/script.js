@@ -3,8 +3,8 @@
 onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, layoutBtn5, onboardModal,
 onboardModal, addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn,
-onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
-onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
+onboardModal, settingsModal, notificationsBtn, editorThemeLinkTag, TextareaAutoComplete,
+savedItemCountEl, indentationSizeValueEl, pledgeModal
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
 customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
 globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal, headerAvatarImg,
@@ -688,6 +688,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		keyboardShortcutsModal.classList.remove('is-modal-visible');
 		loginModal.classList.remove('is-modal-visible');
 		profileModal.classList.remove('is-modal-visible');
+		pledgeModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -1415,13 +1416,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 	};
 
 	scope.onShowInTabClicked = function onShowInTabClicked() {
-		onboardDontShowInTabOptionBtn.classList.remove('selected');
-		onboardShowInTabOptionBtn.classList.add('selected');
 		trackEvent('ui', 'onboardShowInTabClick');
 	};
 	scope.onDontShowInTabClicked = function onDontShowInTabClicked() {
-		onboardDontShowInTabOptionBtn.classList.add('selected');
-		onboardShowInTabOptionBtn.classList.remove('selected');
 		trackEvent('ui', 'onboardDontShowInTabClick');
 	};
 

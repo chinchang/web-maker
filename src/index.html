@@ -285,6 +285,10 @@
 					</svg>
 				</a>
 
+				<a d-open-modal="pledgeModal" data-event-category="ui" data-event-action="supportDeveloperBtnClick" class="footer__link  ml-1  hint--rounded  hint--top-right" aria-label="Support the developer by pledging some amount" target="_blank">
+					Support the developer
+				</a>
+
 			</div>
 		</div>
 
@@ -370,6 +374,10 @@
 					</p>
 				</div>
 			</div>
+		</div>
+
+		<div class="modal pledge-modal" id="pledgeModal">
+			<div class="modal__content" d-html="partials/pledge-modal.html"></div>
 		</div>
 
 		<div class="modal modal--settings" id="settingsModal">

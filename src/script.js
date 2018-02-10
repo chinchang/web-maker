@@ -2042,6 +2042,12 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		e.preventDefault();
 	};
 
+	scope.openSupportDeveloperModal = function(e) {
+		closeAllOverlays();
+		trackEvent('ui', e.target.dataset.eventAction);
+		scope.toggleModal(pledgeModal);
+	}
+
 	scope.updateProfileUi = () => {
 		if (window.user) {
 			document.body.classList.add('is-logged-in');

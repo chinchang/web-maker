@@ -39,6 +39,9 @@ p {
 .flex-v-center {
 	align-items: center;
 }
+.flex-h-center {
+	justify-content: center;
+}
 .fr {
 	float: right;
 }
@@ -1148,10 +1151,6 @@ body:not(.is-app) .show-when-app {
 	display: none;
 }
 
-.onboard-selection-wrap {
-	justify-content: center;
-	align-items: center;
-}
 .onboard-selection {
 	padding: 10px;
 	margin: 0 40px;

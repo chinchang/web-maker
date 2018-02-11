@@ -28,6 +28,7 @@ gulp.task('copyFiles', [], function() {
 	gulp.src('src/detached-window.js').pipe(gulp.dest('app'));
 	gulp.src('src/icon-48.png').pipe(gulp.dest('app'));
 	gulp.src('src/icon-128.png').pipe(gulp.dest('app'));
+	gulp.src('src/patreon.png').pipe(gulp.dest('app'));
 	gulp
 		.src([
 			'src/FiraCode.ttf',

@@ -509,7 +509,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		var items = [];
 		if (!window.IS_EXTENSION && window.user) {
 			items = await itemService.getAllItems();
-
+			utils.log('got items')
 			if (shouldSaveGlobally) {
 				items.forEach(item => {
 					savedItems[item.id] = item;

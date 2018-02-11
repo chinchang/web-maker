@@ -28,6 +28,7 @@
 		},
 
 		async getAllItems() {
+			var t=Date.now()
 			var d = deferred();
 			let itemIds = await this.getUserItemIds();
 			itemIds = Object.getOwnPropertyNames(itemIds || {});
@@ -36,19 +37,21 @@
 			if (!itemIds.length) {
 				d.resolve([]);
 			}
-
+			var remoteDb = await window.db.getDb();
 			const items = [];
-			for (let i = 0; i < itemIds.length; i++) {
-				const id = itemIds[i];
-				utils.log('Starting to fetch item ', id);
-				this.getItem(id).then(item => {
-					items.push(item);
-					// Check if we have all items now.
-					if (itemIds.length === items.length) {
-						d.resolve(items);
-					}
+			remoteDb
+				.collection('items')
+				.where('createdBy', '==', window.user.uid)
+				.onSnapshot(function(querySnapshot) {
+					querySnapshot.forEach(function(doc) {
+						items.push(doc.data());
+					});
+					utils.log('Items fetched in ', Date.now()-t, 'ms')
+
+					d.resolve(items);
+				}, function() {
+					d.resolve([])
 				});
-			}
 			return d.promise;
 		},
 

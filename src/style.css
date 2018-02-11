@@ -986,7 +986,7 @@ body > #demo-frame {
 }
 .onboard-step__icon {
 	fill: transparent !important;
-	stroke-width: 0.3px;
+	stroke-width: 0.5px;
 	stroke: #eeb096;
 	width: 150px;
 	height: 150px;

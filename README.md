@@ -1,9 +1,9 @@
 Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master) [![Gitter](https://badges.gitter.im/web-maker-app/Lobby.svg)](https://gitter.im/web-maker-app/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 ======
 
-**Web-Maker** is a chrome extension that converts your Chrome tab into an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and works offline being local on your system.
+**Web-Maker** is an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and offline supported because it runs completely on your system.
 
-### [INSTALL EXTENSION](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
+### [INSTALL EXTENSION](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh) or [GO TO WEB APP](https://webmakerapp.com/app/)
 
 ![Screenshot](/screenshots/ss1.png)
 
@@ -19,9 +19,9 @@ Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master) 
 * Import & Export all creations anytime, anywhere
 * Multiple editor themes & other configurable settings
 * Font options + use any system font!
-* Very easily accessible. Simply open a new tab in Chrome!
+* Very easily accessible. Simply open a new tab in Chrome! (in chrome extension only)
 * Multiple layouts to choose from
-* Capture preview screenshot
+* Capture preview screenshot (in Chrome extension only)
 * Save as HTML file
 * Edit in CodePen
 
@@ -29,10 +29,14 @@ Follow [@webmakerApp](https://twitter.com/intent/follow?screen_name=webmakerApp)
 
 ### Support Web Maker
 
-Web Maker is completely free and open-source. If you find it useful, you can show your support by sharing it in your social network or by [donating](https://www.paypal.me/kushagragour) or by simply letting me know how much you 💖 it by tweeting to [@webmakerapp](https://twitter.com/webmakerApp).
+Web Maker is a free and open-source project. To keep myself motivated for working on such open-source and free [side projects](https://kushagragour.in/lab/), I have launched a [Patreon campaign](https://patreon.com/kushagra). Your pledge, no matter how small, will act as an appreciation towards my work and keep me going forward making Web Maker more awesome🔥.
+
+[![Become a patron](/src/patreon.png)](https://patreon.com/kushagra)
+
+If not that, you can support by simply sharing about how much you love 💖 [@webmakerapp](https://twitter.com/webmakerApp).
 
 ### License
 
 MIT Licensed
 
-Copyright (c) 2017 Kushagra Gour, [webmakerapp.com](https://webmakerapp.com)
+Copyright (c) 2018 Kushagra Gour, [webmakerapp.com](https://webmakerapp.com)

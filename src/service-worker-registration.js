@@ -36,6 +36,7 @@ if ('serviceWorker' in navigator && document.cookie.indexOf('wmdebug') === -1) {
 					var installingWorker = reg.installing;
 
 					installingWorker.onstatechange = function() {
+						/* eslint-disable default-case */
 						switch (installingWorker.state) {
 							case 'installed':
 								if (navigator.serviceWorker.controller) {

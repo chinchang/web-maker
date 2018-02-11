@@ -3,9 +3,13 @@ Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master) 
 
 **Web-Maker** is an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and offline supported because it runs completely on your system.
 
-### [INSTALL EXTENSION](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh) or [GO TO WEB APP](https://webmakerapp.com/app/)
+### [Install Chrome extension](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
 
-![Screenshot](/screenshots/ss1.png)
+or
+
+### [Go to Web App](https://webmakerapp.com/app/)
+
+![Screenshot](/ss1.png)
 
 ### Features
 
@@ -29,7 +33,7 @@ Follow [@webmakerApp](https://twitter.com/intent/follow?screen_name=webmakerApp)
 
 ### Support Web Maker
 
-Web Maker is a free and open-source project. To keep myself motivated for working on such open-source and free [side projects](https://kushagragour.in/lab/), I have launched a [Patreon campaign](https://patreon.com/kushagra). Your pledge, no matter how small, will act as an appreciation towards my work and keep me going forward making Web Maker more awesome🔥.
+Hi! I am Kushagra Gour. Web Maker is a free and open-source project. To keep myself motivated for working on such open-source and free [side projects](https://kushagragour.in/lab/), I have launched a [Patreon campaign](https://patreon.com/kushagra). Your pledge, no matter how small, will act as an appreciation towards my work and keep me going forward making Web Maker more awesome🔥.
 
 [![Become a patron](/src/patreon.png)](https://patreon.com/kushagra)
 

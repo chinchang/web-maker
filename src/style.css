@@ -22,6 +22,7 @@ a { text-decoration: none; color: crimson; cursor: pointer; }
 .hide { display: none!important; }
 .flex { display: flex; }
 .flex-grow { flex-grow: 1; }
+.flex-h-center { justify-content: center; }
 .flex-v-center { align-items: center; }
 .fr { float: right; }
 .relative { position: relative; }
@@ -501,6 +502,10 @@ transition: 0.25s ease;
 		/* margin-left: -300px; */
 	}
 }
+.pledge-modal .modal__content {
+	max-width: 800px;
+}
+
 .saved-items-pane {
 	position: fixed;
 	right: 0;

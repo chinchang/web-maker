@@ -243,6 +243,10 @@
 					</svg>
 				</a>
 
+				<a d-click="openSupportDeveloperModal" data-event-action="supportDeveloperFooterBtnClick" class="footer__link  ml-1  hint--rounded  hint--top-right" aria-label="Support the developer by pledging some amount" target="_blank">
+					Support the developer
+				</a>
+
 			</div>
 		</div>
 
@@ -307,6 +311,10 @@
 
 		<div class="modal" id="onboardModal">
 			<div class="modal__content" d-html="partials/onboard-modal.html"></div>
+		</div>
+
+		<div class="modal pledge-modal" id="pledgeModal">
+			<div class="modal__content" d-html="partials/pledge-modal.html"></div>
 		</div>
 
 		<div class="modal modal--settings" id="settingsModal">

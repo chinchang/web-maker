@@ -7,7 +7,8 @@ onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editor
 onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
 customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
-globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
+globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal,
+pledgeModal
 */
 /* eslint-disable no-extra-semi */
 (function(alertsService) {
@@ -648,6 +649,7 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		settingsModal.classList.remove('is-modal-visible');
 		cssSettingsModal.classList.remove('is-modal-visible');
 		keyboardShortcutsModal.classList.remove('is-modal-visible');
+		pledgeModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -1990,6 +1992,12 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 		e.preventDefault();
 	};
 
+	scope.openSupportDeveloperModal = function() {
+		closeAllOverlays();
+		trackEvent('ui', 'patreonModalSeenOnUpgrade');
+		scope.toggleModal(pledgeModal);
+	};
+
 	function init() {
 		var lastCode;
 
@@ -2429,6 +2437,15 @@ globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal
 				) {
 					notificationsBtn.classList.add('has-new');
 					hasSeenNotifications = false;
+				}
+				// If its an upgrade
+				if (
+					result.lastSeenVersion &&
+					utils.semverCompare(result.lastSeenVersion, version) === -1 &&
+					!window.localStorage.pledgeModalSeen
+				) {
+					scope.openSupportDeveloperModal();
+					window.localStorage.pledgeModalSeen = true;
 				}
 			}
 		);

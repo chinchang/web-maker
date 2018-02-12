@@ -14,7 +14,7 @@ pledgeModal
 (function(alertsService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.9.7';
+	var version = '2.9.8';
 
 	if (window.DEBUG) {
 		window.scope = scope;

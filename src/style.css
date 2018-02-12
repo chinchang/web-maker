@@ -209,6 +209,11 @@ body:not(.light-version).overlay-visible .main-container {
 	transition-delay: 0.4s;
 	filter: blur(3px);
 }
+.content-wrap {
+	/* HACK: 70px is approx header+footer. This is required to because
+	on FF the content-wrap goes beyond the flex parent otherwise. */
+	max-height: calc(100% - 70px);
+}
 .code-side,
 .demo-side {
 	flex-basis: inherit;

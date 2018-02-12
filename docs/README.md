@@ -2,9 +2,9 @@
 # Getting started
 
 ## What is Web Maker
-**Web-Maker** is a chrome extension that converts your Chrome tab into a blazing fast & offline frontend playground for your web experiments.
+**Web-Maker** is a blazing fast & offline frontend playground for your web experiments. Its available as a Chrome extension and a web app as well. Both are offline usable!
 
-![Screenshot](../screenshots/ss1.png)
+![Screenshot](../ss1.png)
 
 ## Features
 
@@ -26,13 +26,25 @@
 
 ## Installation
 
-If you haven't already installed Web Maker, you can do so from the [Chrome Web Store](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
+If you haven't already installed Web Maker, you can do so from the Web Maker home page.
+
+**Web app**
+
+The web app requires no installation.
+
+**Chrome extension**
+
+Here is the link to the Chrome extension 👉 [Chrome Web Store](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
 
 ## Starting Web Maker
 
-Once installed, you'll see a Web Maker icon in the right-top of your Chrome browser. Click it and Web Maker will open in a new tab.
+**Web app**
 
-By default, Web Maker shows up whatever was last open in it. But this behavior can be changed from [settings].
+The web app can be simply opened by visiting [https://webmakerapp.com/app/](https://webmakerapp.com/app/).
+
+**Chrome extension**
+
+Once the Chrome extension is installed, you'll see a Web Maker icon in the right-top of your Chrome browser. Click it and Web Maker will open in a new tab.
 
 ## Your first code
 
@@ -84,20 +96,33 @@ Besides the Settings button, is the Changelog button where you can read all the 
 
 Next you have some layout options to choose from. Select whats suits you best. This setting is saved per creation basis, so each of your creation can show in a different layout that you see best for it.
 
-### Export Item
+### Download/Share creation
 
 Web Maker gives you quite some options to export your current creation to share with the world. You can save it as a single HTML file to upload it on a server, or open it in CodePen or take a screenshot of your preview.
+
+### Export/Import creations
+
+[Read blog post about exporting & importing your creations](https://medium.com/web-maker/importing-exporting-your-creations-d92e7de5c3dc).
 
 ### Help and Share
 
 On the bottom-left side are few help options, one of which shows you all th keyboard shortcuts available inside the app. Also there is a tweet button you can use to share Web Maker with everyone :)
+
+## User account
+
+> Currently only available in Web app.
+
+You can login with your favourite social account to create a user account inside Web Maker and save all your creations in the cloud. That way no matter on which computer you are, you can simply open Web Maker, login with your account and get back all your creations to continue work!
 
 ## Code panes
 
 Coming soon...
 
 ## Pre-processors
-Coming soon...
+
+Web Maker supports bunch of pre-processors in for HTML, CSS & JavaScript each. You can switch to any for your current creation by click on each pane's title.
+
+<video src="./images/switching-preprocessor.mp4" loop autoplay></video>
 
 ## Adding external libraries
 Coming soon...
@@ -106,13 +131,43 @@ Coming soon...
 Coming soon...
 
 ## Keyboard shortcuts
-Coming soon...
+
+`Ctrl/⌘ + Shift + ?` See keyboard shortcuts
+
+`Ctrl/⌘ + Shift + 5` Refresh preview
+
+`Ctrl/⌘ + S` Save current creations
+
+`Ctrl/⌘ + O` Open list of saved creations
+
+`Ctrl + L` Clear console (works when console input is focused)
+
+`Esc` Close saved creations panel & modals
+
+`Ctrl/⌘ + F` Find
+
+`Ctrl/⌘ + G` Select next match
+
+`Ctrl/⌘ + Shift + G` Select previous match
+
+`Ctrl/⌘ + Opt/Alt + F` Find & replace
+
+`Shift + Tab` Realign code
+
+`Ctrl/⌘ + ]` Indent code right
+
+`Ctrl/⌘ + [` Indent code left
+
+`Tab` Emmet code completion Read more
+
+`Ctrl/⌘ + /` Single line comment
 
 ## Settings
 Coming soon...
 
 ## Frequently Asked Questions
-Coming soon...
+
+[See on Github](https://github.com/chinchang/web-maker/issues?q=label%3Afaq)
 
 ## From the Developer
 
@@ -122,6 +177,8 @@ Hi! I am [Kushagra Gour](https://twitter.com/chinchang457), a frontend developer
 - Sitepoint: https://www.sitepoint.com/web-maker-an-offline-browser-based-codepen-alternative/
 
 Make sure to read them if you like to get more behind the scenes of my journey with Web Maker.
+
+Oh yes, I am [running a Patreon campaign](https://www.patreon.com/kushagra) to support my free and open-source projects such as Web Maker. Consider pledging if you use and love Web Maker. 🤗
 
 ## Let's Talk
 

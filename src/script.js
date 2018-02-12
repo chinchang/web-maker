@@ -507,7 +507,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		var d = deferred();
 		savedItems = savedItems || {};
 		var items = [];
-		if (!window.IS_EXTENSION && window.user) {
+		if (window.user) {
 			items = await itemService.getAllItems();
 			utils.log('got items')
 			if (shouldSaveGlobally) {

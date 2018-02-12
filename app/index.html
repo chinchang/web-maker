@@ -270,10 +270,14 @@
 					</svg>
 				</a>
 				<!-- #00ACED -->
-				<a class="footer__link  hint--rounded  hint--top-right" aria-label="Tweet about 'Web Maker'" href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,playground,chrome,extension" target="_blank">
+				<a class="footer__link  hint--rounded  hint--top-right" aria-label="Tweet about 'Web Maker'" href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline" target="_blank">
 					<svg style="width:20px; height:20px; vertical-align:text-bottom">
 						<use xlink:href="#twitter-icon"></use>
 					</svg>
+				</a>
+
+				<a d-click="openSupportDeveloperModal" data-event-action="supportDeveloperFooterBtnClick" class="footer__link  ml-1  hint--rounded  hint--top-right" aria-label="Support the developer by pledging some amount" target="_blank">
+					Support the developer
 				</a>
 
 			</div>
@@ -361,6 +365,10 @@
 					</p>
 				</div>
 			</div>
+		</div>
+
+		<div class="modal pledge-modal" id="pledgeModal">
+			<div class="modal__content" d-html="partials/pledge-modal.html"></div>
 		</div>
 
 		<div class="modal modal--settings" id="settingsModal">
@@ -473,7 +481,7 @@
 						<label class="line" title="Loads the last open creation when app starts">
 							<input type="checkbox" d-change="updateSetting" data-setting="preserveLastCode"> Preserve last written code
 						</label>
-						<label class="line" title="Turning this on will start showing Web Maker in every new tab you open">
+						<label class="line show-when-extension" title="Turning this on will start showing Web Maker in every new tab you open">
 							<input type="checkbox" d-change="updateSetting" data-setting="replaceNewTab"> Replace new tab page
 						</label>
 						<label class="line" title="Preserves the console logs across your preview refreshes">
@@ -584,7 +592,7 @@
 			<symbol id="keyboard-icon" viewBox="0 0 24 24">
 				<path d="M19,10H17V8H19M19,13H17V11H19M16,10H14V8H16M16,13H14V11H16M16,17H8V15H16M7,10H5V8H7M7,13H5V11H7M8,11H10V13H8M8,8H10V10H8M11,11H13V13H11M11,8H13V10H11M20,5H4C2.89,5 2,5.89 2,7V17A2,2 0 0,0 4,19H20A2,2 0 0,0 22,17V7C22,5.89 21.1,5 20,5Z" />
 			</symbol>
-			<symbol id="mode-icon" width="30" height="30" viewBox="0 0 100 100">
+			<symbol id="mode-icon" viewBox="0 0 100 100">
 				<g>
 					<rect x="0" y="0" width="28" height="47" />
 					<rect x="36" y="0" width="28" height="47"/>
@@ -592,7 +600,7 @@
 					<rect x="0" y="53" width="100" height="47"/>
 				</g>
 			</symbol>
-			<symbol id="vertical-mode-icon" width="30" height="30" viewBox="0 0 100 100">
+			<symbol id="vertical-mode-icon" viewBox="0 0 100 100">
 				<g>
 					<rect x="0" y="0" width="20" height="100" />
 					<rect x="23" y="0" width="20" height="100"/>

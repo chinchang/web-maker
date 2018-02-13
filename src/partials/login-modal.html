@@ -1,0 +1,28 @@
+<a d-click="onModalCloseBtnClick" href="" aria-label="Close Login modal" title="Close" class="js-modal__close-btn  modal__close-btn">
+    <svg>
+        <use xlink:href="#cross-icon"></use>
+    </svg>
+</a>
+
+<h2>Login / Signup</h2>
+
+<div>
+    <p>
+        <button d-click="login" class="btn btn-icon btn--big full-width social-login-btn--github" data-auth-provider="github">
+            <svg><use xlink:href="#github-icon"></use></svg>Login with Github
+        </button>
+    </p>
+    <p>
+        <button d-click="login" class="btn btn-icon btn--big full-width social-login-btn--google" data-auth-provider="google">
+            <svg><use xlink:href="#google-icon"></use></svg>Login with Google
+        </button>
+    </p>
+    <p class="mb-2">
+        <button d-click="login" class="btn btn-icon btn--big full-width social-login-btn--facebook" data-auth-provider="facebook">
+            <svg><use xlink:href="#fb-icon"></use></svg>Login with Facebook
+        </button>
+    </p>
+    <p>
+        Join a community of 50,000+ Developers
+    </p>
+</div>

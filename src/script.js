@@ -1,25 +1,47 @@
 /* global trackEvent */
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
-onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, onboardModal, onboardModal,
-addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
+onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, layoutBtn5, onboardModal,
+onboardModal, addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal,
 notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn,
-onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
-onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
+onboardModal, settingsModal, notificationsBtn, editorThemeLinkTag, TextareaAutoComplete,
+savedItemCountEl, indentationSizeValueEl, pledgeModal
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
 customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
-globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal,
-pledgeModal
+globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal, headerAvatarImg,
+loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 */
 /* eslint-disable no-extra-semi */
-(function(alertsService) {
+(function(alertsService, itemService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
-	var version = '2.9.8';
+	var version = '3.0.0';
 
 	if (window.DEBUG) {
 		window.scope = scope;
 	}
 
+	const defaultSettings = {
+		preserveLastCode: true,
+		replaceNewTab: false,
+		htmlMode: 'html',
+		jsMode: 'js',
+		cssMode: 'css',
+		isCodeBlastOn: false,
+		indentWith: 'spaces',
+		indentSize: 2,
+		editorTheme: 'monokai',
+		keymap: 'sublime',
+		fontSize: 16,
+		refreshOnResize: false,
+		autoPreview: true,
+		editorFont: 'FiraCode',
+		editorCustomFont: '',
+		autoSave: true,
+		autoComplete: true,
+		preserveConsoleLogs: true,
+		lightVersion: false,
+		lineWrap: true
+	};
 	var HtmlModes = {
 		HTML: 'html',
 		MARKDOWN: 'markdown',
@@ -102,6 +124,9 @@ pledgeModal
 	};
 
 	const AUTO_SAVE_INTERVAL = 15000; // 15 seconds
+	const BASE_PATH = chrome.extension || window.DEBUG ? '/' : '/app';
+	const DEFAULT_PROFILE_IMG =
+		"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='#ccc' d='M12,19.2C9.5,19.2 7.29,17.92 6,16C6.03,14 10,12.9 12,12.9C14,12.9 17.97,14 18,16C16.71,17.92 14.5,19.2 12,19.2M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z' /%3E%3C/svg%3E";
 
 	var updateTimer,
 		updateDelay = 500,
@@ -151,7 +176,8 @@ pledgeModal
 		// This is debounced!
 		clearTimeout(updateCodeWrapCollapseStates.timeout);
 		updateCodeWrapCollapseStates.timeout = setTimeout(function() {
-			const prop = currentLayoutMode === 2 ? 'width' : 'height';
+			const prop =
+				currentLayoutMode === 2 || currentLayoutMode === 5 ? 'width' : 'height';
 			[htmlCode, cssCode, jsCode].forEach(function(el) {
 				const bounds = el.getBoundingClientRect();
 				const size = bounds[prop];
@@ -201,7 +227,7 @@ pledgeModal
 					? [currentItem.mainSizes[1], currentItem.mainSizes[0]]
 					: currentItem.mainSizes;
 		} else {
-			mainSplitSizes = [50, 50];
+			mainSplitSizes = currentLayoutMode === 5 ? [75, 25] : [50, 50];
 		}
 		return mainSplitSizes;
 	}
@@ -215,7 +241,10 @@ pledgeModal
 		}
 
 		var options = {
-			direction: currentLayoutMode === 2 ? 'horizontal' : 'vertical',
+			direction:
+				currentLayoutMode === 2 || currentLayoutMode === 5
+					? 'horizontal'
+					: 'vertical',
 			minSize: minCodeWrapSize,
 			gutterSize: 6,
 			onDragStart: function() {
@@ -260,15 +289,12 @@ pledgeModal
 			return;
 		}
 		currentLayoutMode = mode;
-		layoutBtn1.classList.remove('selected');
-		layoutBtn2.classList.remove('selected');
-		layoutBtn3.classList.remove('selected');
-		layoutBtn4.classList.remove('selected');
+		// Remove all layout classes
+		[1, 2, 3, 4, 5].forEach(layoutNumber => {
+			window[`layoutBtn${layoutNumber}`].classList.remove('selected');
+			document.body.classList.remove(`layout-${layoutNumber}`);
+		});
 		$('#layoutBtn' + mode).classList.add('selected');
-		document.body.classList.remove('layout-1');
-		document.body.classList.remove('layout-2');
-		document.body.classList.remove('layout-3');
-		document.body.classList.remove('layout-4');
 		document.body.classList.add('layout-' + mode);
 
 		resetSplitting();
@@ -301,9 +327,10 @@ pledgeModal
 
 	function saveSetting(setting, value) {
 		const d = deferred();
-		var obj = {};
-		obj[setting] = value;
-		chrome.storage.local.set(obj, d.resolve);
+		const obj = {
+			[setting]: value
+		};
+		db.local.set(obj, d.resolve);
 		return d.promise;
 	}
 
@@ -311,7 +338,9 @@ pledgeModal
 	function saveItem() {
 		var isNewItem = !currentItem.id;
 		currentItem.id = currentItem.id || 'item-' + utils.generateRandomId();
+		saveBtn.classList.add('is-loading');
 		saveCode().then(() => {
+			saveBtn.classList.remove('is-loading');
 			// If this is the first save, and auto-saving settings is enabled,
 			// then start auto-saving from now on.
 			// This is done in `saveCode()` completion so that the
@@ -323,17 +352,7 @@ pledgeModal
 		});
 		// Push into the items hash if its a new item being saved
 		if (isNewItem) {
-			chrome.storage.local.get(
-				{
-					items: {}
-				},
-				function(result) {
-					result.items[currentItem.id] = true;
-					chrome.storage.local.set({
-						items: result.items
-					});
-				}
-			);
+			itemService.setItemForUser(currentItem.id);
 		}
 	}
 
@@ -348,7 +367,8 @@ pledgeModal
 	// Calculates the sizes of html, css & js code panes.
 	function getCodePaneSizes() {
 		var sizes;
-		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
+		var dimensionProperty =
+			currentLayoutMode === 2 || currentLayoutMode === 5 ? 'width' : 'height';
 		try {
 			sizes = [
 				htmlCode.style[dimensionProperty],
@@ -408,11 +428,22 @@ pledgeModal
 		currentItem.mainSizes = getMainPaneSizes();
 
 		utils.log('saving key', key || currentItem.id, currentItem);
-		return saveSetting(key || currentItem.id, currentItem).then(() => {
-			alertsService.add('Item saved.');
+
+		function onSaveComplete() {
+			if (window.user && !navigator.onLine) {
+				alertsService.add(
+					'Item saved locally. Will save to account when you are online.'
+				);
+			} else {
+				alertsService.add('Item saved.');
+			}
 			unsavedEditCount = 0;
 			saveBtn.classList.remove('is-marked');
-		});
+		}
+
+		return itemService
+			.setItem(key || currentItem.id, currentItem)
+			.then(onSaveComplete);
 	}
 
 	function populateItemsInSavedPane(items) {
@@ -472,20 +503,31 @@ pledgeModal
 	 * @param  {boolean} shouldSaveGlobally Whether to store the fetched items in global arr for later use.
 	 * @return {promise}                    Promise.
 	 */
-	function fetchItems(shouldSaveGlobally) {
+	async function fetchItems(shouldSaveGlobally) {
 		var d = deferred();
-		chrome.storage.local.get('items', function(result) {
-			var itemIds = Object.getOwnPropertyNames(result.items || {}),
-				items = [];
+		savedItems = savedItems || {};
+		var items = [];
+		if (window.user) {
+			items = await itemService.getAllItems();
+			utils.log('got items')
+			if (shouldSaveGlobally) {
+				items.forEach(item => {
+					savedItems[item.id] = item;
+				});
+			}
+			d.resolve(items);
+			return d.promise;
+		}
+		db.local.get('items', function(result) {
+			var itemIds = Object.getOwnPropertyNames(result.items || {});
 			if (!itemIds.length) {
 				d.resolve([]);
 			}
 
-			savedItems = savedItems || {};
 			trackEvent('fn', 'fetchItems', itemIds.length);
 			for (let i = 0; i < itemIds.length; i++) {
 				/* eslint-disable no-loop-func */
-				chrome.storage.local.get(itemIds[i], function(itemResult) {
+				db.local.get(itemIds[i], function(itemResult) {
 					if (shouldSaveGlobally) {
 						savedItems[itemIds[i]] = itemResult[itemIds[i]];
 					}
@@ -503,12 +545,16 @@ pledgeModal
 	}
 
 	function openSavedItemsPane() {
+		openItemsBtn.classList.add('is-loading');
 		fetchItems(true).then(function(items) {
+			openItemsBtn.classList.remove('is-loading');
 			populateItemsInSavedPane(items);
 		});
 	}
 	function setCurrentItem(item) {
 		currentItem = item;
+		utils.log('Current Item set', item);
+
 		// Reset auto-saving flag
 		isAutoSavingEnabled = false;
 		// Reset unsaved count, in UI also.
@@ -573,26 +619,17 @@ pledgeModal
 
 		itemTile.remove();
 		// Remove from items list
-		chrome.storage.local.get(
-			{
-				items: {}
-			},
-			function(result) {
-				delete result.items[itemId];
-				chrome.storage.local.set({
-					items: result.items
-				});
-			}
-		);
+		itemService.unsetItemForUser(itemId);
 
 		// Remove individual item too.
-		chrome.storage.local.remove(itemId, function() {
+		itemService.removeItem(itemId).then(() => {
 			alertsService.add('Item removed.');
 			// This item is open in the editor. Lets open a new one.
 			if (currentItem.id === itemId) {
 				createNewItem();
 			}
 		});
+
 		// Remove from cached list
 		delete savedItems[itemId];
 
@@ -649,6 +686,8 @@ pledgeModal
 		settingsModal.classList.remove('is-modal-visible');
 		cssSettingsModal.classList.remove('is-modal-visible');
 		keyboardShortcutsModal.classList.remove('is-modal-visible');
+		loginModal.classList.remove('is-modal-visible');
+		profileModal.classList.remove('is-modal-visible');
 		pledgeModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
@@ -658,6 +697,7 @@ pledgeModal
 	 * Loaded the code comiler based on the mode selected
 	 */
 	function handleModeRequirements(mode) {
+		const baseTranspilerPath = 'lib/transpilers';
 		// Exit if already loaded
 		var d = deferred();
 		if (modes[mode].hasLoaded) {
@@ -671,26 +711,26 @@ pledgeModal
 		}
 
 		if (mode === HtmlModes.JADE) {
-			loadJS('lib/jade.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/jade.js`).then(setLoadedFlag);
 		} else if (mode === HtmlModes.MARKDOWN) {
-			loadJS('lib/marked.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/marked.js`).then(setLoadedFlag);
 		} else if (mode === CssModes.LESS) {
-			loadJS('lib/less.min.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/less.min.js`).then(setLoadedFlag);
 		} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
-			loadJS('lib/sass.js').then(function() {
-				sass = new Sass('lib/sass.worker.js');
+			loadJS(`${baseTranspilerPath}/sass.js`).then(function() {
+				sass = new Sass(`${baseTranspilerPath}/sass.worker.js`);
 				setLoadedFlag();
 			});
 		} else if (mode === CssModes.STYLUS) {
-			loadJS('lib/stylus.min.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/stylus.min.js`).then(setLoadedFlag);
 		} else if (mode === CssModes.ACSS) {
-			loadJS('lib/atomizer.browser.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/atomizer.browser.js`).then(setLoadedFlag);
 		} else if (mode === JsModes.COFFEESCRIPT) {
-			loadJS('lib/coffee-script.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/coffee-script.js`).then(setLoadedFlag);
 		} else if (mode === JsModes.ES6) {
-			loadJS('lib/babel.min.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/babel.min.js`).then(setLoadedFlag);
 		} else if (mode === JsModes.TS) {
-			loadJS('lib/typescript.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/typescript.js`).then(setLoadedFlag);
 		} else {
 			d.resolve();
 		}
@@ -855,20 +895,19 @@ pledgeModal
 				d.resolve(code);
 			}
 		} else if (jsMode === JsModes.COFFEESCRIPT) {
-			var coffeeCode;
 			if (!window.CoffeeScript) {
 				d.resolve('');
 				return d.promise;
 			}
 			try {
-				coffeeCode = CoffeeScript.compile(code, { bare: true });
+				code = CoffeeScript.compile(code, { bare: true });
 			} catch (e) {
 				showErrors('js', [
 					{ lineNumber: e.location.first_line, message: e.message }
 				]);
 			} finally {
 				if (shouldPreventInfiniteLoops !== false) {
-					code = utils.addInfiniteLoopProtection(coffeeCode);
+					code = utils.addInfiniteLoopProtection(code);
 				}
 				d.resolve(code);
 			}
@@ -996,27 +1035,31 @@ pledgeModal
 		if (!isForExport) {
 			contents +=
 				'<script src="' +
-				chrome.extension.getURL('lib/screenlog.js') +
+				(chrome.extension
+					? chrome.extension.getURL('lib/screenlog.js')
+					: `${location.origin}${BASE_PATH}/lib/screenlog.js`) +
 				'"></script>';
 		}
 
 		if (jsMode === JsModes.ES6) {
 			contents +=
 				'<script src="' +
-				chrome.extension.getURL('lib/babel-polyfill.min.js') +
+				(chrome.extension
+					? chrome.extension.getURL('lib/transpilers/babel-polyfill.min.js')
+					: `${
+							location.origin
+						}${BASE_PATH}/lib/transpilers/babel-polyfill.min.js`) +
 				'"></script>';
 		}
 
-		if (js) {
+		if (typeof js === 'string') {
 			contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';
 		} else {
+			var origin = chrome.i18n.getMessage()
+				? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
+				: `${location.origin}`;
 			contents +=
-				'<script src="' +
-				'filesystem:chrome-extension://' +
-				chrome.i18n.getMessage('@@extension_id') +
-				'/temporary/' +
-				'script.js' +
-				'">';
+				'<script src="' + `filesystem:${origin}/temporary/script.js` + '">';
 		}
 		contents += '\n</script>\n</body>\n</html>';
 
@@ -1077,7 +1120,9 @@ pledgeModal
 	}
 
 	function createPreviewFile(html, css, js) {
-		var contents = getCompleteHtml(html, css);
+		const shouldInlineJs =
+			!window.webkitRequestFileSystem || !window.IS_EXTENSION;
+		var contents = getCompleteHtml(html, css, shouldInlineJs ? js : null);
 		var blob = new Blob([contents], { type: 'text/plain;charset=UTF-8' });
 		var blobjs = new Blob([js], { type: 'text/plain;charset=UTF-8' });
 
@@ -1087,22 +1132,35 @@ pledgeModal
 			trackEvent.hasTrackedCode = true;
 		}
 
-		// we need to store user script in external JS file to prevent inline-script
-		// CSP from affecting it.
-		writeFile('script.js', blobjs, function() {
-			writeFile('preview.html', blob, function() {
-				const frameSrc =
-					'filesystem:chrome-extension://' +
-					chrome.i18n.getMessage('@@extension_id') +
-					'/temporary/' +
-					'preview.html';
-				if (scope.detachedWindow) {
-					scope.detachedWindow.postMessage(frame.src, '*');
-				} else {
-					frame.src = frameSrc;
-				}
+		if (shouldInlineJs) {
+			if (scope.detachedWindow) {
+				utils.log('✉️ Sending message to detached window');
+				scope.detachedWindow.postMessage({ contents }, '*');
+			} else {
+				frame.src = frame.src;
+				setTimeout(() => {
+					frame.contentDocument.open();
+					frame.contentDocument.write(contents);
+					frame.contentDocument.close();
+				}, 10);
+			}
+		} else {
+			// we need to store user script in external JS file to prevent inline-script
+			// CSP from affecting it.
+			writeFile('script.js', blobjs, function() {
+				writeFile('preview.html', blob, function() {
+					var origin = chrome.i18n.getMessage()
+						? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
+						: `${location.origin}`;
+					var src = `filesystem:${origin}/temporary/preview.html`;
+					if (scope.detachedWindow) {
+						scope.detachedWindow.postMessage(src, '*');
+					} else {
+						frame.src = src;
+					}
+				});
 			});
-		});
+		}
 	}
 
 	scope.setPreviewContent = function(isForced) {
@@ -1175,14 +1233,9 @@ pledgeModal
 				fileName = currentItem.title;
 			}
 
-			var a = document.createElement('a');
 			var blob = new Blob([fileContent], { type: 'text/html;charset=UTF-8' });
-			a.href = window.URL.createObjectURL(blob);
-			a.download = fileName;
-			a.style.display = 'none';
-			document.body.appendChild(a);
-			a.click();
-			a.remove();
+			utils.downloadFile(fileName, blob);
+
 			trackEvent('fn', 'saveFileComplete');
 		});
 	}
@@ -1225,7 +1278,13 @@ pledgeModal
 					CodeMirror.commands.indentAuto(editor);
 				},
 				Tab: function(editor) {
-					var input = $('[data-setting=indentWith]:checked');
+					if (options.emmet) {
+						const didEmmetWork = editor.execCommand('emmetExpandAbbreviation');
+						if (didEmmetWork === true) {
+							return;
+						}
+					}
+					const input = $('[data-setting=indentWith]:checked');
 					if (
 						!editor.somethingSelected() &&
 						(!input || input.value === 'spaces')
@@ -1237,7 +1296,8 @@ pledgeModal
 					} else {
 						CodeMirror.commands.defaultTab(editor);
 					}
-				}
+				},
+				Enter: 'emmetInsertLineBreak'
 			}
 		});
 		cm.on('focus', editor => {
@@ -1287,6 +1347,7 @@ pledgeModal
 					!prefs.autoComplete ||
 					input.origin !== '+input' ||
 					input.text[0] === ';' ||
+					input.text[0] === ',' ||
 					input.text[0] === ' '
 				) {
 					return;
@@ -1302,14 +1363,18 @@ pledgeModal
 		profile: 'xhtml',
 		gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
 		noAutocomplete: true,
-		matchTags: { bothTags: true }
+		matchTags: { bothTags: true },
+		emmet: true
 	});
-	emmetCodeMirror(scope.cm.html);
 	scope.cm.css = initEditor(cssCode, {
 		mode: 'css',
-		gutters: ['error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+		gutters: [
+			'error-gutter',
+			'CodeMirror-linenumbers',
+			'CodeMirror-foldgutter'
+		],
+		emmet: true
 	});
-	emmetCodeMirror(scope.cm.css);
 	Inlet(scope.cm.css);
 	scope.cm.js = initEditor(jsCode, {
 		mode: 'javascript',
@@ -1351,13 +1416,9 @@ pledgeModal
 	};
 
 	scope.onShowInTabClicked = function onShowInTabClicked() {
-		onboardDontShowInTabOptionBtn.classList.remove('selected');
-		onboardShowInTabOptionBtn.classList.add('selected');
 		trackEvent('ui', 'onboardShowInTabClick');
 	};
 	scope.onDontShowInTabClicked = function onDontShowInTabClicked() {
-		onboardDontShowInTabOptionBtn.classList.add('selected');
-		onboardShowInTabOptionBtn.classList.remove('selected');
 		trackEvent('ui', 'onboardDontShowInTabClick');
 	};
 
@@ -1379,25 +1440,7 @@ pledgeModal
 					type: 'application/json;charset=UTF-8'
 				});
 
-				chrome.downloads.download(
-					{
-						url: window.URL.createObjectURL(blob),
-						filename: fileName,
-						saveAs: true
-					},
-					function() {
-						// If there was an error, just download the file using ANCHOR method.
-						if (chrome.runtime.lastError) {
-							var a = document.createElement('a');
-							a.href = window.URL.createObjectURL(blob);
-							a.download = fileName;
-							a.style.display = 'none';
-							document.body.appendChild(a);
-							a.click();
-							a.remove();
-						}
-					}
-				);
+				utils.downloadFile(fileName, blob);
 
 				trackEvent('ui', 'exportBtnClicked');
 			});
@@ -1409,6 +1452,9 @@ pledgeModal
 		var existingItemIds = [];
 		var toMergeItems = {};
 		items.forEach(item => {
+			// We can access `savedItems` here because this gets set when user
+			// opens the saved creations panel. And import option is available
+			// inside the saved items panel.
 			if (savedItems[item.id]) {
 				// Item already exists
 				existingItemIds.push(item.id);
@@ -1432,31 +1478,12 @@ pledgeModal
 			}
 		}
 		if (mergedItemCount) {
-			// save new items
-			chrome.storage.local.set(toMergeItems, function() {
+			itemService.saveItems(toMergeItems).then(() => {
 				alertsService.add(
 					mergedItemCount + ' creations imported successfully.'
 				);
+				trackEvent('fn', 'itemsImported', mergedItemCount);
 			});
-			// Push in new item IDs
-			chrome.storage.local.get(
-				{
-					items: {}
-				},
-				function(result) {
-					/* eslint-disable guard-for-in */
-					for (var id in toMergeItems) {
-						result.items[id] = true;
-					}
-					chrome.storage.local.set({
-						items: result.items
-					});
-					trackEvent('fn', 'itemsImported', mergedItemCount);
-
-					/* eslint-enable guard-for-in */
-				}
-			);
-			alertsService.add(mergedItemCount + ' creations imported successfully.');
 		}
 		// FIXME: Move from here
 		toggleSavedItemsPane(false);
@@ -1475,7 +1502,8 @@ pledgeModal
 				items = JSON.parse(progressEvent.target.result);
 				utils.log(items);
 				mergeImportedItems(items);
-			} catch (ex) {
+			} catch (exception) {
+				utils.log(exception);
 				alert(
 					'Oops! Selected file is corrupted. Please select a file that was generated by clicking the "Export" button.'
 				);
@@ -1579,6 +1607,10 @@ pledgeModal
 
 	function handleDownloadsPermission() {
 		var d = deferred();
+		if (!window.IS_EXTENSION) {
+			d.resolve();
+			return d.promise;
+		}
 		chrome.permissions.contains(
 			{
 				permissions: ['downloads']
@@ -1699,9 +1731,26 @@ pledgeModal
 			utils.log(settingName, el.type === 'checkbox' ? el.checked : el.value);
 			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
 			obj[settingName] = prefs[settingName];
-			chrome.storage.sync.set(obj, function() {
+
+			// We always save locally so that it gets fetched
+			// faster on future loads.
+			db.sync.set(obj, function() {
 				alertsService.add('Setting saved');
 			});
+			if (window.user) {
+				window.db.getDb().then(remoteDb => {
+					remoteDb
+						.collection('users')
+						.doc(window.user.uid)
+						.update({
+							[`settings.${settingName}`]: prefs[settingName]
+						})
+						.then(arg => {
+							utils.log(`Setting "${settingName}" for user`, arg);
+						})
+						.catch(error => utils.log(error));
+				});
+			}
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
 
@@ -1717,8 +1766,7 @@ pledgeModal
 		indentationSizeValueEl.textContent = $('[data-setting=indentSize]').value;
 
 		// Replace correct css file in LINK tags's href
-		editorThemeLinkTag.href =
-			'/lib/codemirror/theme/' + prefs.editorTheme + '.css';
+		editorThemeLinkTag.href = `lib/codemirror/theme/${prefs.editorTheme}.css`;
 		fontStyleTag.textContent = fontStyleTemplate.textContent.replace(
 			/fontname/g,
 			(prefs.editorFont === 'other'
@@ -1930,7 +1978,7 @@ pledgeModal
 		const dHtmlNodes = query(`[d-html]`);
 		dHtmlNodes.forEach(function(el) {
 			fetch(el.getAttribute('d-html')).then(response => {
-				// Stop further compilation because of future recursion by removing attribute.
+				// Stop further compilation because of future recursion, by removing attribute.
 				el.removeAttribute('d-html');
 				response.text().then(html => {
 					requestIdleCallback(() => {
@@ -1961,16 +2009,18 @@ pledgeModal
 			'Web Maker',
 			`width=${iframeWidth},height=${iframeHeight},resizable,scrollbars=yes,status=1`
 		);
+		// Trigger initial render in detached window
 		setTimeout(() => {
-			scope.detachedWindow.postMessage(frame.src, '*');
-		}, 1000);
+			scope.setPreviewContent(true);
+		}, 1500);
 		function checkWindow() {
 			if (scope.detachedWindow && scope.detachedWindow.closed) {
 				clearInterval(intervalID);
 				document.body.classList.remove('is-detached-mode');
 				$('#js-demo-side').insertBefore(consoleEl, null);
 				scope.detachedWindow = null;
-				// Update main frame preview
+				// Update main frame preview to get latest changes (which were not
+				// getting reflected while detached window was open)
 				scope.setPreviewContent(true);
 			}
 		}
@@ -1992,16 +2042,82 @@ pledgeModal
 		e.preventDefault();
 	};
 
-	scope.openSupportDeveloperModal = function() {
+	scope.openSupportDeveloperModal = function(e) {
 		closeAllOverlays();
-		trackEvent('ui', 'patreonModalSeenOnUpgrade');
+		trackEvent('ui', e.target.dataset.eventAction);
 		scope.toggleModal(pledgeModal);
+	}
+
+	scope.updateProfileUi = () => {
+		if (window.user) {
+			document.body.classList.add('is-logged-in');
+			headerAvatarImg.src = profileAvatarImg.src =
+				window.user.photoURL || DEFAULT_PROFILE_IMG;
+			profileUserName.textContent =
+				window.user.displayName || 'Anonymous Creator';
+		} else {
+			document.body.classList.remove('is-logged-in');
+			headerAvatarImg.src = profileAvatarImg.src = '';
+			profileUserName.textContent = 'Anonymous Creator';
+		}
+	};
+
+	scope.login = e => {
+		const provider = e.target.dataset.authProvider;
+		trackEvent('ui', 'loginProviderClick', provider);
+		window.login(provider);
+		if (e) {
+			e.preventDefault();
+		}
+	};
+	scope.logout = e => {
+		e.preventDefault();
+		if (unsavedEditCount) {
+			var shouldDiscard = confirm(
+				'You have unsaved changes. Do you still want to logout?'
+			);
+			if (!shouldDiscard) {
+				return;
+			}
+		}
+		trackEvent('fn', 'loggedOut');
+		window.logout();
 	};
 
 	function init() {
+		var config = {
+			apiKey: 'AIzaSyBl8Dz7ZOE7aP75mipYl2zKdLSRzBU2fFc',
+			authDomain: 'web-maker-app.firebaseapp.com',
+			databaseURL: 'https://web-maker-app.firebaseio.com',
+			projectId: 'web-maker-app',
+			storageBucket: 'web-maker-app.appspot.com',
+			messagingSenderId: '560473480645'
+		};
+		firebase.initializeApp(config);
+
+		firebase.auth().onAuthStateChanged(function(user) {
+			scope.closeAllOverlays();
+			if (user) {
+				utils.log('You are -> ', user);
+				alertsService.add('You are now logged in!');
+				scope.user = window.user = user;
+				window.db.getUser(user.uid).then(customUser => {
+					if (customUser) {
+						Object.assign(prefs, user.settings);
+						updateSettingsInUi();
+						scope.updateSetting();
+					}
+				});
+			} else {
+				delete window.user;
+				// User is signed out.
+			}
+			scope.updateProfileUi();
+		});
+
 		var lastCode;
 
-		CodeMirror.modeURL = 'lib/codemirror/mode/%N/%N.js';
+		CodeMirror.modeURL = `lib/codemirror/mode/%N/%N.js`;
 
 		function getToggleLayoutButtonListener(mode) {
 			return function() {
@@ -2015,6 +2131,7 @@ pledgeModal
 		layoutBtn2.addEventListener('click', getToggleLayoutButtonListener(2));
 		layoutBtn3.addEventListener('click', getToggleLayoutButtonListener(3));
 		layoutBtn4.addEventListener('click', getToggleLayoutButtonListener(4));
+		layoutBtn5.addEventListener('click', getToggleLayoutButtonListener(5));
 
 		notificationsBtn.addEventListener('click', function() {
 			scope.toggleModal(notificationsModal);
@@ -2025,12 +2142,7 @@ pledgeModal
 			) {
 				hasSeenNotifications = true;
 				notificationsBtn.classList.remove('has-new');
-				chrome.storage.sync.set(
-					{
-						lastSeenVersion: version
-					},
-					function() {}
-				);
+				window.db.setUserLastSeenVersion(version);
 			}
 			trackEvent('ui', 'notificationButtonClick', version);
 			return false;
@@ -2313,7 +2425,7 @@ pledgeModal
 			$('#demo-frame').classList.remove('pointer-none');
 		});
 
-		chrome.storage.local.get(
+		db.local.get(
 			{
 				layoutMode: 1,
 				code: ''
@@ -2328,127 +2440,55 @@ pledgeModal
 		);
 
 		// Get synced `preserveLastCode` setting to get back last code (or not).
-		chrome.storage.sync.get(
-			{
-				preserveLastCode: true,
-				replaceNewTab: false,
-				htmlMode: 'html',
-				jsMode: 'js',
-				cssMode: 'css',
-				isCodeBlastOn: false,
-				indentWith: 'spaces',
-				indentSize: 2,
-				editorTheme: 'monokai',
-				keymap: 'sublime',
-				fontSize: 16,
-				refreshOnResize: false,
-				autoPreview: true,
-				editorFont: 'FiraCode',
-				editorCustomFont: '',
-				autoSave: true,
-				autoComplete: true,
-				preserveConsoleLogs: true,
-				lightVersion: false,
-				lineWrap: true
-			},
-			function syncGetCallback(result) {
-				if (result.preserveLastCode && lastCode) {
-					unsavedEditCount = 0;
-					if (lastCode.id) {
-						chrome.storage.local.get(lastCode.id, function(itemResult) {
+		db.getSettings(defaultSettings).then(result => {
+			if (result.preserveLastCode && lastCode) {
+				unsavedEditCount = 0;
+				// For web app environment we don't fetch item from localStorage,
+				// because the item isn't stored in the localStorage.
+				if (lastCode.id && window.IS_EXTENSION) {
+					db.local.get(lastCode.id, function(itemResult) {
+						if (itemResult[lastCode.id]) {
 							utils.log('Load item ', lastCode.id);
 							currentItem = itemResult[lastCode.id];
 							refreshEditor();
-						});
-					} else {
-						utils.log('Load last unsaved item', lastCode);
-						currentItem = lastCode;
-						refreshEditor();
-					}
+						}
+					});
 				} else {
-					createNewItem();
+					utils.log('Load last unsaved item', lastCode);
+					currentItem = lastCode;
+					refreshEditor();
 				}
-				prefs.preserveLastCode = result.preserveLastCode;
-				prefs.replaceNewTab = result.replaceNewTab;
-				prefs.htmlMode = result.htmlMode;
-				prefs.cssMode = result.cssMode;
-				prefs.jsMode = result.jsMode;
-				prefs.isCodeBlastOn = result.isCodeBlastOn;
-				prefs.indentSize = result.indentSize;
-				prefs.indentWith = result.indentWith;
-				prefs.editorTheme = result.editorTheme;
-				prefs.keymap = result.keymap;
-				prefs.fontSize = result.fontSize;
-				prefs.refreshOnResize = result.refreshOnResize;
-				prefs.autoPreview = result.autoPreview;
-				prefs.editorFont = result.editorFont;
-				prefs.editorCustomFont = result.editorCustomFont;
-				prefs.autoSave = result.autoSave;
-				prefs.autoComplete = result.autoComplete;
-				prefs.preserveConsoleLogs = result.preserveConsoleLogs;
-				prefs.lightVersion = result.lightVersion;
-				prefs.lineWrap = result.lineWrap;
-
-				updateSettingsInUi();
-				scope.updateSetting();
+			} else {
+				createNewItem();
 			}
-		);
+			Object.assign(prefs, result);
+
+			updateSettingsInUi();
+			scope.updateSetting();
+		});
 
 		// Check for new version notifications
-		chrome.storage.sync.get(
-			{
-				lastSeenVersion: ''
-			},
-			function syncGetCallback(result) {
-				// Check if new user
-				if (!result.lastSeenVersion) {
-					onboardModal.classList.add('is-modal-visible');
-					if (document.cookie.indexOf('onboarded') === -1) {
-						trackEvent('ui', 'onboardModalSeen', version);
-						document.cookie = 'onboarded=1';
-					}
-					chrome.storage.sync.set(
-						{
-							lastSeenVersion: version
-						},
-						function() {}
-					);
-					// set some initial preferences on closing the onboard modal
-					utils.once(document, 'overlaysClosed', function() {
-						chrome.storage.sync.set(
-							{
-								replaceNewTab: onboardShowInTabOptionBtn.classList.contains(
-									'selected'
-								)
-							},
-							function() {
-								trackEvent(
-									'fn',
-									'setReplaceNewTabFromOnboard',
-									onboardShowInTabOptionBtn.classList.contains('selected')
-								);
-							}
-						);
-					});
+		db.getUserLastSeenVersion().then(lastSeenVersion => {
+			// Check if new user
+			if (!lastSeenVersion) {
+				onboardModal.classList.add('is-modal-visible');
+				if (document.cookie.indexOf('onboarded') === -1) {
+					trackEvent('ui', 'onboardModalSeen', version);
+					document.cookie = 'onboarded=1';
 				}
-				if (
-					!result.lastSeenVersion ||
-					utils.semverCompare(result.lastSeenVersion, version) === -1
-				) {
-					notificationsBtn.classList.add('has-new');
-					hasSeenNotifications = false;
-				}
-				// If its an upgrade
-				if (
-					result.lastSeenVersion &&
-					utils.semverCompare(result.lastSeenVersion, version) === -1 &&
-					!window.localStorage.pledgeModalSeen
-				) {
-					scope.openSupportDeveloperModal();
-					window.localStorage.pledgeModalSeen = true;
-				}
+				window.db.setUserLastSeenVersion(version);
+				// set some initial preferences on closing the onboard modal
+				// Old onboarding.
+				// utils.once(document, 'overlaysClosed', function() {});
 			}
-		);
+			if (
+				!lastSeenVersion ||
+				utils.semverCompare(lastSeenVersion, version) === -1
+			) {
+				notificationsBtn.classList.add('has-new');
+				hasSeenNotifications = false;
+			}
+		});
 
 		scope.acssSettingsCm = CodeMirror.fromTextArea(acssSettingsTextarea, {
 			mode: 'application/ld+json'
@@ -2520,4 +2560,4 @@ pledgeModal
 	scope.closeAllOverlays = closeAllOverlays;
 
 	init();
-})(window.alertsService);
+})(window.alertsService, window.itemService);

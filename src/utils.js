@@ -20,6 +20,13 @@
 		return siblings[index + 1];
 	};
 
+	// Safari doesn't have this!
+	window.requestIdleCallback =
+		window.requestIdleCallback ||
+		function(fn) {
+			setTimeout(fn, 10);
+		};
+
 	/*
 	 * @param  Selector that should match for next siblings
 	 * @return element Next element that mathes `selector`

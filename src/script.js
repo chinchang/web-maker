@@ -336,6 +336,19 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 
 	// Save current item to storage
 	function saveItem() {
+		if (!window.user && !window.localStorage.loginAndsaveMessageSeen) {
+			const answer = confirm(
+				'Saving without signing in will save your work only on this machine and this browser. If you want it to be secure & available anywhere, please login in your account and then save.\n\nDo you still want to continue saving locally?'
+			);
+			window.localStorage.loginAndsaveMessageSeen = true;
+			if (!answer) {
+				trackEvent('ui', 'loginAndsaveMessageSeen', 'login');
+				closeAllOverlays();
+				loginModal.classList.add('is-modal-visible');
+				return;
+			}
+			trackEvent('ui', 'loginAndsaveMessageSeen', 'local');
+		}
 		var isNewItem = !currentItem.id;
 		currentItem.id = currentItem.id || 'item-' + utils.generateRandomId();
 		saveBtn.classList.add('is-loading');
@@ -509,7 +522,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		var items = [];
 		if (window.user) {
 			items = await itemService.getAllItems();
-			utils.log('got items')
+			utils.log('got items');
 			if (shouldSaveGlobally) {
 				items.forEach(item => {
 					savedItems[item.id] = item;
@@ -2046,7 +2059,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		closeAllOverlays();
 		trackEvent('ui', e.target.dataset.eventAction);
 		scope.toggleModal(pledgeModal);
-	}
+	};
 
 	scope.updateProfileUi = () => {
 		if (window.user) {

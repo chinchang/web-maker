@@ -58,7 +58,7 @@ You should be seeing 3 code panes with the headings: **HTML**, **CSS** and *JS*.
 
 As soon as you paste the code, you should see the preview of your HTML in the white preview area.
 
-![First code](/images/first-code.png)
+![First code](images/first-code.png)
 
 This is a very simple web page we just made. Going forward, you might need to put CSS and JavaScript too. You can write them in their respective code panes and see instant preview.
 

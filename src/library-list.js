@@ -146,7 +146,7 @@ window.cssLibs = [
 	},
 		{
 		url:
-			'https://use.fontawesome.com/releases/v5.0.7/css/all.css',
+			'https://use.fontawesome.com/releases/v5.0.8/css/all.css',
 		label: 'FontAwesome 5',
 		type: 'css'
 	}

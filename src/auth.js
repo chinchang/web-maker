@@ -23,10 +23,12 @@ function login(providerName) {
 			window.db.local.set({ lastAuthProvider: providerName });
 		})
 		.catch(function(error) {
-			alert(
-				'You have already signed up with the same email using different social login'
-			);
 			utils.log(error);
+			if (error.code === 'auth/account-exists-with-different-credential') {
+				alert(
+					'You have already signed up with the same email using different social login'
+				);
+			}
 		});
 }
 window.login = login;

@@ -518,7 +518,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 	 */
 	async function fetchItems(shouldSaveGlobally) {
 		var d = deferred();
-		savedItems = savedItems || {};
+		savedItems = {};
 		var items = [];
 		if (window.user) {
 			items = await itemService.getAllItems();

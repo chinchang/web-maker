@@ -990,11 +990,11 @@ body > #demo-frame {
 	animation-delay: 0.4s;
 }
 .onboard-step__icon {
-	fill: transparent !important;
+	fill: #fff2ed;
 	stroke-width: 0.5px;
-	stroke: #eeb096;
-	width: 150px;
-	height: 150px;
+	stroke: #e79f80;
+	width: 80px;
+	height: 80px;
 }
 
 @keyframes onboard-step-show {
@@ -1178,6 +1178,14 @@ body:not(.is-app) .show-when-app {
 	border-radius: 50%;
 	background: white
 		url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width:32px;height:32px" viewBox="0 0 24 24"><path fill="limegreen" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z" /></svg>');
+}
+.bookmarklet {
+	display: inline-flex;
+	align-items: center;
+	border: 1px #aaa solid;
+	padding: 0 5px;
+	border-style: dashed;
+	color: #333;
 }
 
 /* Codemirror themes basic bg styles. This is here so that there is no big FOUC

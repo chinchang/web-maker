@@ -2151,6 +2151,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 					window.oldSavedCreationsCountEl
 				) {
 					fetchItems(false, true).then(items => {
+						if (!items.length) {
+							return;
+						}
 						scope.oldSavedItems = items;
 						window.oldSavedCreationsCountEl.textContent = items.length;
 						scope.toggleModal(askToImportModal);

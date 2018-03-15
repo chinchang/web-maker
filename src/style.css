@@ -42,6 +42,9 @@ p {
 .flex-h-center {
 	justify-content: center;
 }
+.flex-h-end {
+	justify-content: flex-end;
+}
 .fr {
 	float: right;
 }
@@ -134,6 +137,7 @@ textarea {
 	border-radius: 5px;
 	padding: 9px 15px;
 	cursor: pointer;
+	letter-spacing: 0.2px;
 	transition: box-shadow 0.2s ease;
 }
 .btn--primary {
@@ -623,7 +627,8 @@ body > #demo-frame {
 		/* margin-lef.t: -300px; */
 	}
 }
-.pledge-modal .modal__content {
+.pledge-modal .modal__content,
+.ask-to-import-modal .modal__content {
 	max-width: 800px;
 }
 .saved-items-pane {

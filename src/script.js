@@ -8,7 +8,7 @@ savedItemCountEl, indentationSizeValueEl, pledgeModal
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
 customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
 globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal, headerAvatarImg,
-loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
+loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askToImportModal
 */
 /* eslint-disable no-extra-semi */
 (function(alertsService, itemService) {
@@ -128,6 +128,10 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 	const DEFAULT_PROFILE_IMG =
 		"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='#ccc' d='M12,19.2C9.5,19.2 7.29,17.92 6,16C6.03,14 10,12.9 12,12.9C14,12.9 17.97,14 18,16C16.71,17.92 14.5,19.2 12,19.2M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z' /%3E%3C/svg%3E";
 
+	const LocalStorageKeys = {
+		LOGIN_AND_SAVE_MESSAGE_SEEN: 'loginAndsaveMessageSeen',
+		ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
+	};
 	var updateTimer,
 		updateDelay = 500,
 		autoSaveInterval,
@@ -336,18 +340,21 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 
 	// Save current item to storage
 	function saveItem() {
-		if (!window.user && !window.localStorage.loginAndsaveMessageSeen) {
+		if (
+			!window.user &&
+			!window.localStorage[LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN]
+		) {
 			const answer = confirm(
 				'Saving without signing in will save your work only on this machine and this browser. If you want it to be secure & available anywhere, please login in your account and then save.\n\nDo you still want to continue saving locally?'
 			);
-			window.localStorage.loginAndsaveMessageSeen = true;
+			window.localStorage[LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN] = true;
 			if (!answer) {
-				trackEvent('ui', 'loginAndsaveMessageSeen', 'login');
+				trackEvent('ui', LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN, 'login');
 				closeAllOverlays();
 				loginModal.classList.add('is-modal-visible');
 				return;
 			}
-			trackEvent('ui', 'loginAndsaveMessageSeen', 'local');
+			trackEvent('ui', LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN, 'local');
 		}
 		var isNewItem = !currentItem.id;
 		currentItem.id = currentItem.id || 'item-' + utils.generateRandomId();
@@ -516,11 +523,11 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 	 * @param  {boolean} shouldSaveGlobally Whether to store the fetched items in global arr for later use.
 	 * @return {promise}                    Promise.
 	 */
-	async function fetchItems(shouldSaveGlobally) {
+	async function fetchItems(shouldSaveGlobally, shouldFetchLocally) {
 		var d = deferred();
 		savedItems = {};
 		var items = [];
-		if (window.user) {
+		if (window.user && !shouldFetchLocally) {
 			items = await itemService.getAllItems();
 			utils.log('got items');
 			if (shouldSaveGlobally) {
@@ -702,6 +709,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		loginModal.classList.remove('is-modal-visible');
 		profileModal.classList.remove('is-modal-visible');
 		pledgeModal.classList.remove('is-modal-visible');
+		askToImportModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -1464,6 +1472,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 	function mergeImportedItems(items) {
 		var existingItemIds = [];
 		var toMergeItems = {};
+		const d = deferred();
 		items.forEach(item => {
 			// We can access `savedItems` here because this gets set when user
 			// opens the saved creations panel. And import option is available
@@ -1492,21 +1501,23 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		}
 		if (mergedItemCount) {
 			itemService.saveItems(toMergeItems).then(() => {
+				d.resolve();
 				alertsService.add(
 					mergedItemCount + ' creations imported successfully.'
 				);
 				trackEvent('fn', 'itemsImported', mergedItemCount);
 			});
+		} else {
+			d.resolve();
 		}
 		// FIXME: Move from here
 		toggleSavedItemsPane(false);
+
+		return d.promise;
 	}
 
 	function onImportFileChange(e) {
 		var file = e.target.files[0];
-		// if (!f.type.match('image.*')) {
-		// 		continue;
-		// }
 
 		var reader = new FileReader();
 		reader.onload = function(progressEvent) {
@@ -2097,6 +2108,27 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 		window.logout();
 	};
 
+	/**
+	 * Called from inside ask-to-import-modal
+	 */
+	scope.dontAskToImportAnymore = e => {
+		scope.toggleModal(askToImportModal);
+		window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS] = true;
+		if (e) {
+			trackEvent('ui', 'dontAskToImportBtnClick');
+		}
+	};
+
+	/**
+	 * Called from inside ask-to-import-modal
+	 */
+	scope.importCreationsAndSettingsIntoApp = () => {
+		mergeImportedItems(scope.oldSavedItems).then(() => {
+			trackEvent('fn', 'oldItemsImported');
+			scope.dontAskToImportAnymore();
+		});
+	};
+
 	function init() {
 		var config = {
 			apiKey: 'AIzaSyBl8Dz7ZOE7aP75mipYl2zKdLSRzBU2fFc',
@@ -2114,6 +2146,17 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn
 				utils.log('You are -> ', user);
 				alertsService.add('You are now logged in!');
 				scope.user = window.user = user;
+				if (
+					!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS] &&
+					window.oldSavedCreationsCountEl
+				) {
+					fetchItems(false, true).then(items => {
+						scope.oldSavedItems = items;
+						window.oldSavedCreationsCountEl.textContent = items.length;
+						scope.toggleModal(askToImportModal);
+						trackEvent('ui', 'askToImportModalSeen');
+					});
+				}
 				window.db.getUser(user.uid).then(customUser => {
 					if (customUser) {
 						Object.assign(prefs, user.settings);

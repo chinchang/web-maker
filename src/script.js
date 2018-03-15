@@ -2175,6 +2175,12 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 
 		CodeMirror.modeURL = `lib/codemirror/mode/%N/%N.js`;
 
+		window.db.local.get({ lastAuthProvider: '' }, result => {
+			if (result.lastAuthProvider) {
+				document.body.classList.add(`last-login-${result.lastAuthProvider}`);
+			}
+		});
+
 		function getToggleLayoutButtonListener(mode) {
 			return function() {
 				saveSetting('layoutMode', mode);

@@ -96,6 +96,7 @@ label {
 	text-transform: none;
 	font-weight: normal;
 	letter-spacing: 0.5px;
+	font-size: 14px;
 }
 .line {
 	display: block;
@@ -582,7 +583,7 @@ body > #demo-frame {
 	position: relative;
 	border-radius: 8px;
 	opacity: 0;
-	padding: 2em;
+	padding: 3em;
 	font-size: 1.1em;
 	line-height: 1.4;
 	max-width: 85vw;
@@ -630,6 +631,9 @@ body > #demo-frame {
 .pledge-modal .modal__content,
 .ask-to-import-modal .modal__content {
 	max-width: 800px;
+}
+.login-modal .modal__content {
+	overflow-y: initial;
 }
 .saved-items-pane {
 	position: fixed;
@@ -1191,6 +1195,25 @@ body:not(.is-app) .show-when-app {
 	padding: 0 5px;
 	border-style: dashed;
 	color: #333;
+}
+
+.social-login-btn:after,
+.social-login-btn:before,
+.social-login-btn:hover:before,
+.social-login-btn:hover:after {
+	visibility: hidden;
+}
+.last-login-github .social-login-btn--github:before,
+.last-login-github .social-login-btn--github:after {
+	visibility: visible;
+}
+.last-login-facebook .social-login-btn--facebook:before,
+.last-login-facebook .social-login-btn--facebook:after {
+	visibility: visible;
+}
+.last-login-google .social-login-btn--google:before,
+.last-login-google .social-login-btn--google:after {
+	visibility: visible;
 }
 
 /* Codemirror themes basic bg styles. This is here so that there is no big FOUC

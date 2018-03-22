@@ -43,7 +43,7 @@ window.jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://unpkg.com/vue',
+		url: 'https://unpkg.com/vue/dist/vue.min.js',
 		label: 'Vue.js',
 		type: 'js'
 	},
@@ -69,13 +69,13 @@ window.jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.4/js/uikit.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/js/uikit.min.js',
 		label: 'UIkit 2',
 		type: 'js'
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.39/js/uikit.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.40/js/uikit.min.js',
 		label: 'UIkit 3',
 		type: 'js'
 	}
@@ -122,13 +122,13 @@ window.cssLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.4/css/uikit.min.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/css/uikit.min.css',
 		label: 'UIkit 2',
 		type: 'css'
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.39/css/uikit.min.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.40/css/uikit.min.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},
@@ -146,7 +146,7 @@ window.cssLibs = [
 	},
 		{
 		url:
-			'https://use.fontawesome.com/releases/v5.0.6/css/all.css',
+			'https://use.fontawesome.com/releases/v5.0.8/css/all.css',
 		label: 'FontAwesome 5',
 		type: 'css'
 	}

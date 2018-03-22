@@ -1098,7 +1098,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 				if (writeFile.errorCount === 4) {
 					setTimeout(function() {
 						alert(
-							"Oops! Seems like your preview isn't updating. Please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart browser\n - Update browser\n - Reinstall Web Maker (don't forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp."
+							"Oops! Seems like your preview isn't updating. It's recommended to switch to the web app: https://webmakerapp.com/app/.\n\n If you still want to get the extension working, please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart browser\n - Update browser\n - Reinstall Web Maker (don't forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp."
 						);
 						trackEvent('ui', 'writeFileMessageSeen');
 					}, 1000);

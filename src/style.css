@@ -1127,6 +1127,7 @@ body > #demo-frame {
 	position: relative;
 	display: inline-block;
 }
+/*
 .web-maker-with-tag:after {
 	content: 'BETA';
 	position: relative;
@@ -1138,7 +1139,7 @@ body > #demo-frame {
 	letter-spacing: 0.6px;
 	padding: 2px;
 	font-size: 10px;
-}
+} */
 .is-extension .web-maker-with-tag:after {
 	display: none;
 }

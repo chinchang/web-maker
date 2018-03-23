@@ -23,7 +23,13 @@ if (navigator.onLine && !window.DEBUG) {
 		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-		ga('create', 'UA-87786708-1');
+		if (location.href.indexOf('chrome-extension://') === -1) {
+			ga('create', 'UA-87786708-1');
+		} else {
+			ga('create', 'UA-87786708-1', {'cookieDomain': 'none'});
+			// required for chrome extension protocol
+			ga('set', 'checkProtocolTask', function(){ /* nothing */ });
+		}
 		ga('send', 'pageview');
 	}, 100);
 

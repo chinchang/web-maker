@@ -16,8 +16,11 @@
 
 /* eslint-env browser */
 
-if ('serviceWorker' in navigator && document.cookie.indexOf('wmdebug') === -1) {
-
+if (
+	'serviceWorker' in navigator &&
+	document.cookie.indexOf('wmdebug') === -1 &&
+	location.href.indexOf('chrome-extension://') === -1
+) {
 	// Delay registration until after the page has loaded, to ensure that our
 	// precaching requests don't degrade the first visit experience.
 	// See https://developers.google.com/web/fundamentals/instant-and-offline/service-worker/registration
@@ -50,7 +53,9 @@ if ('serviceWorker' in navigator && document.cookie.indexOf('wmdebug') === -1) {
 									// It's the perfect time to display a "Content is cached for offline use." message.
 									console.log('Content is now available offline!');
 									if (window.alertsService) {
-										window.alertsService.add('Web Maker is now ready to be used offline.');
+										window.alertsService.add(
+											'Web Maker is now ready to be used offline.'
+										);
 									}
 								}
 								break;

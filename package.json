@@ -1,6 +1,6 @@
 {
 	"name": "web-maker",
-	"version": "3.0.1",
+	"version": "3.0.3",
 	"description": "A blazing fast & offline web playground",
 	"main": "index.html",
 	"devDependencies": {

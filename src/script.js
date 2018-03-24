@@ -1248,11 +1248,11 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 				d.getMinutes(),
 				d.getSeconds()
 			].join('-');
-			fileName += '.html';
 
 			if (currentItem.title) {
 				fileName = currentItem.title;
 			}
+			fileName += '.html';
 
 			var blob = new Blob([fileContent], { type: 'text/html;charset=UTF-8' });
 			utils.downloadFile(fileName, blob);

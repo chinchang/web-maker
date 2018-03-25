@@ -2546,6 +2546,16 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 				// Old onboarding.
 				// utils.once(document, 'overlaysClosed', function() {});
 			}
+			// If its an upgrade
+			if (
+				lastSeenVersion &&
+				utils.semverCompare(lastSeenVersion, version) === -1 &&
+				!window.localStorage.pledgeModalSeen
+			) {
+				scope.openSupportDeveloperModal();
+				window.localStorage.pledgeModalSeen = true;
+			}
+
 			if (
 				!lastSeenVersion ||
 				utils.semverCompare(lastSeenVersion, version) === -1

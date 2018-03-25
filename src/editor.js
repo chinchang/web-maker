@@ -91,6 +91,8 @@ class Editor {
 	setOption(optionName, optionValue) {
 		if (this.mode === 'cm') {
 			this.instance.setOption(optionName, optionValue);
+		} else {
+			this.instance.updateOptions(optionName, optionValue);
 		}
 	}
 	clearGutter(gutter) {
@@ -111,6 +113,13 @@ class Editor {
 			this.el.querySelector('.CodeMirror').style.fontSize = size;
 		} else {
 			this.instance.updateOptions({ fontSize: size });
+		}
+	}
+	setLanguage(language) {
+		if (this.mode === 'cm') {
+			this.instance.setOption('mode', language);
+		} else {
+			this.instance.updateOptions({ language: language });
 		}
 	}
 }

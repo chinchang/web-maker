@@ -767,7 +767,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		htmlModelLabel.textContent = modes[value].label;
 		// FIXME - use a better selector for the mode selectbox
 		htmlModelLabel.parentElement.querySelector('select').value = value;
-		scope.cm.html.setOption('mode', modes[value].cmMode);
+		scope.cm.html.setLanguage(modes[value].cmMode);
 		CodeMirror.autoLoadMode(
 			scope.cm.html,
 			modes[value].cmPath || modes[value].cmMode
@@ -779,7 +779,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		cssModelLabel.textContent = modes[value].label;
 		// FIXME - use a better selector for the mode selectbox
 		cssModelLabel.parentElement.querySelector('select').value = value;
-		scope.cm.css.setOption('mode', modes[value].cmMode);
+		scope.cm.css.setLanguage(modes[value].cmMode);
 		scope.cm.css.setOption('readOnly', modes[value].cmDisable);
 		cssSettingsBtn.classList[modes[value].hasSettings ? 'remove' : 'add'](
 			'hide'
@@ -795,7 +795,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		jsModelLabel.textContent = modes[value].label;
 		// FIXME - use a better selector for the mode selectbox
 		jsModelLabel.parentElement.querySelector('select').value = value;
-		scope.cm.js.setOption('mode', modes[value].cmMode);
+		scope.cm.js.setLanguage(modes[value].cmMode);
 		CodeMirror.autoLoadMode(
 			scope.cm.js,
 			modes[value].cmPath || modes[value].cmMode
@@ -1362,7 +1362,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		'',
 		jsCode,
 		{
-			language: 'coffeescript'
+			language: 'javascript'
 		},
 		scope.onChange
 	);

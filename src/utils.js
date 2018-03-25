@@ -88,6 +88,7 @@
 	 * @param code {string}	Code to be protected from infinite loops.
 	 */
 	function addInfiniteLoopProtection(code) {
+		return code;
 		var loopId = 1;
 		var patches = [];
 		var varPrefix = '_wmloopvar';

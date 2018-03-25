@@ -196,6 +196,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 					el.classList.remove('is-maximized');
 				}
 			});
+			scope.cm.html.refresh();
+			scope.cm.css.refresh();
+			scope.cm.js.refresh();
 		}, 50);
 	}
 
@@ -1011,6 +1014,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		scope.cm[lang].clearGutter('error-gutter');
 	}
 	function showErrors(lang, errors) {
+		return;
 		var editor = scope.cm[lang];
 		errors.forEach(function(e) {
 			editor.operation(function() {
@@ -1261,104 +1265,12 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		});
 	}
 
-	function initEditor(element, options) {
-		var cm = CodeMirror(element, {
-			mode: options.mode,
-			lineNumbers: true,
-			lineWrapping: true,
-			autofocus: options.autofocus || false,
-			autoCloseBrackets: true,
-			autoCloseTags: true,
-			matchBrackets: true,
-			matchTags: options.matchTags || false,
-			tabMode: 'indent',
-			keyMap: 'sublime',
-			theme: 'monokai',
-			lint: !!options.lint,
-			tabSize: 2,
-			foldGutter: true,
-			styleActiveLine: true,
-			gutters: options.gutters || [],
-			// cursorScrollMargin: '20', has issue with scrolling
-			profile: options.profile || '',
-			extraKeys: {
-				Up: function(editor) {
-					// Stop up/down keys default behavior when saveditempane is open
-					if (isSavedItemsPaneOpen) {
-						return;
-					}
-					CodeMirror.commands.goLineUp(editor);
-				},
-				Down: function(editor) {
-					if (isSavedItemsPaneOpen) {
-						return;
-					}
-					CodeMirror.commands.goLineDown(editor);
-				},
-				'Shift-Tab': function(editor) {
-					CodeMirror.commands.indentAuto(editor);
-				},
-				Tab: function(editor) {
-					if (options.emmet) {
-						const didEmmetWork = editor.execCommand('emmetExpandAbbreviation');
-						if (didEmmetWork === true) {
-							return;
-						}
-					}
-					const input = $('[data-setting=indentWith]:checked');
-					if (
-						!editor.somethingSelected() &&
-						(!input || input.value === 'spaces')
-					) {
-						// softtabs adds spaces. This is required because by default tab key will put tab, but we want
-						// to indent with spaces if `spaces` is preferred mode of indentation.
-						// `somethingSelected` needs to be checked otherwise, all selected code is replaced with softtab.
-						CodeMirror.commands.insertSoftTab(editor);
-					} else {
-						CodeMirror.commands.defaultTab(editor);
-					}
-				},
-				Enter: 'emmetInsertLineBreak'
-			}
-		});
+	/* function initEditor(element, options) {
+
 		cm.on('focus', editor => {
 			editorWithFocus = editor;
 		});
-		cm.on('change', function onChange(editor, change) {
-			clearTimeout(updateTimer);
 
-			updateTimer = setTimeout(function() {
-				// This is done so that multiple simultaneous setValue don't trigger too many preview refreshes
-				// and in turn too many file writes on a single file (eg. preview.html).
-				if (change.origin !== 'setValue') {
-					// Specifically checking for false so that the condition doesn't get true even
-					// on absent key - possible when the setting key hasn't been fetched yet.
-					if (prefs.autoPreview !== false) {
-						scope.setPreviewContent();
-					}
-
-					saveBtn.classList.add('is-marked');
-					unsavedEditCount += 1;
-					if (
-						unsavedEditCount % unsavedEditWarningCount === 0 &&
-						unsavedEditCount >= unsavedEditWarningCount
-					) {
-						saveBtn.classList.add('animated');
-						saveBtn.classList.add('wobble');
-						saveBtn.addEventListener('animationend', () => {
-							saveBtn.classList.remove('animated');
-							saveBtn.classList.remove('wobble');
-						});
-					}
-
-					// Track when people actually are working.
-					trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
-					if (trackEvent.previewCount === 4) {
-						trackEvent('fn', 'usingPreview');
-					}
-				}
-			}, updateDelay);
-		});
 		cm.addKeyMap({
 			'Ctrl-Space': 'autocomplete'
 		});
@@ -1377,31 +1289,88 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 			});
 		}
 		return cm;
-	}
+	} */
 
-	scope.cm.html = initEditor(htmlCode, {
-		mode: 'htmlmixed',
-		profile: 'xhtml',
-		gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-		noAutocomplete: true,
-		matchTags: { bothTags: true },
-		emmet: true
-	});
-	scope.cm.css = initEditor(cssCode, {
-		mode: 'css',
-		gutters: [
-			'error-gutter',
-			'CodeMirror-linenumbers',
-			'CodeMirror-foldgutter'
-		],
-		emmet: true
-	});
-	Inlet(scope.cm.css);
-	scope.cm.js = initEditor(jsCode, {
-		mode: 'javascript',
-		gutters: ['error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter']
-	});
-	Inlet(scope.cm.js);
+	scope.onChange = function(change) {
+		clearTimeout(updateTimer);
+
+		updateTimer = setTimeout(function() {
+			// This is done so that multiple simultaneous setValue don't trigger too many preview refreshes
+			// and in turn too many file writes on a single file (eg. preview.html).
+			if (change.origin !== 'setValue') {
+				// Specifically checking for false so that the condition doesn't get true even
+				// on absent key - possible when the setting key hasn't been fetched yet.
+				if (prefs.autoPreview !== false) {
+					scope.setPreviewContent();
+				}
+
+				saveBtn.classList.add('is-marked');
+				unsavedEditCount += 1;
+				if (
+					unsavedEditCount % unsavedEditWarningCount === 0 &&
+					unsavedEditCount >= unsavedEditWarningCount
+				) {
+					saveBtn.classList.add('animated');
+					saveBtn.classList.add('wobble');
+					saveBtn.addEventListener('animationend', () => {
+						saveBtn.classList.remove('animated');
+						saveBtn.classList.remove('wobble');
+					});
+				}
+
+				// Track when people actually are working.
+				trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
+				if (trackEvent.previewCount === 4) {
+					trackEvent('fn', 'usingPreview');
+				}
+			}
+		}, updateDelay);
+	};
+
+	scope.cm.html = editor.init(
+		'',
+		htmlCode,
+		{
+			language: 'html'
+			// mode: 'htmlmixed',
+			// profile: 'xhtml',
+			// gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+			// noAutocomplete: true,
+			// matchTags: { bothTags: true },
+			// emmet: true
+		},
+		scope.onChange
+	);
+	scope.cm.css = editor.init(
+		'',
+		cssCode,
+		{
+			language: 'css'
+			// mode: 'css',
+			// gutters: [
+			// 	'error-gutter',
+			// 	'CodeMirror-linenumbers',
+			// 	'CodeMirror-foldgutter'
+			// ],
+			// emmet: true
+		},
+		scope.onChange
+	);
+	// Inlet(scope.cm.css);
+
+	scope.cm.js = editor.init(
+		'',
+		jsCode,
+		{
+			language: 'coffeescript'
+		},
+		scope.onChange
+	);
+	// scope.cm.js = initEditor(jsCode, {
+	// 	mode: 'javascript',
+	// 	gutters: ['error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+	// });
+	// Inlet(scope.cm.js);
 
 	// Initialize codemirror in console
 	scope.consoleCm = CodeMirror(consoleLogEl, {
@@ -1781,9 +1750,11 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		// Show/hide RUN button based on autoPreview setting.
 		runBtn.classList[prefs.autoPreview ? 'add' : 'remove']('hide');
 
-		htmlCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
-		cssCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
-		jsCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		// htmlCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		scope.cm.html.setFontSize(prefs.fontSize);
+		scope.cm.css.setFontSize(prefs.fontSize);
+		scope.cm.js.setFontSize(prefs.fontSize);
+
 		consoleEl.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
 
 		// Update indentation count when slider is updated
@@ -2313,7 +2284,10 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		// Update code wrap collapse states whenever any of them transitions due to any
 		// reason.
 		[htmlCode, cssCode, jsCode].forEach(function(el) {
-			el.addEventListener('transitionend', function() {
+			el.addEventListener('transitionend', function(e) {
+				if (e.target !== e.currentTarget) {
+					return;
+				}
 				updateCodeWrapCollapseStates();
 			});
 		});

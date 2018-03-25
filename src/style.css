@@ -357,6 +357,10 @@ body:not(.light-version).overlay-visible .main-container {
 	height: calc(100% - 25px); /* 25px for header */
 	font-size: var(--code-font-size);
 }
+.monaco-editor {
+	width: 100%;
+	height: calc(100% - 25px); /* 25px for header */
+}
 /* TODO: Check why? */
 .layout-2 .is-minimized .Codemirror,
 .layout-5 .is-minimized .Codemirror {

@@ -2626,3 +2626,27 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 
 	init();
 })(window.alertsService, window.itemService);
+
+function changeWidth(e) {
+	localStorage.setItem('arWidth', e.value);
+}
+function changeHeight(e) {
+	localStorage.setItem('arHeight', e.value);
+}
+
+function ORAR(e) {
+	localStorage.setItem('overrideAR', e.value);
+}
+
+renderRatio()
+function renderRatio() {
+
+}
+
+
+
+
+
+
+
+

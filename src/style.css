@@ -403,6 +403,8 @@ li.CodeMirror-hint-active {
 	width: 100%;
 	height: calc(100% - 29px); /*  minus minimized console height */
 	position: absolute;
+	left: 50%; top: 50%;
+	transform: translate(-50%, -50%);
 	z-index: 1;
 	background: white;
 }

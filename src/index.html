@@ -18,7 +18,7 @@
 				visibility: hidden;
 			}
 		</style>
-
+ 
 		<!-- build:css vendor.css -->
 		<link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
 		<link rel="stylesheet" href="lib/codemirror/addon/hint/show-hint.css">
@@ -109,7 +109,7 @@
 			<div class="content-wrap  flex  flex-grow">
 				<div class="code-side" id="js-code-side">
 					<div data-code-wrap-id="0" id="js-html-code" data-type="html" class="code-wrap">
-						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle code pane">
+						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle §pane">
 							<label class="btn-group" dropdow title="Click to change">
 								<span id="js-html-mode-label" class="code-wrap__header-label">HTML</span><span class="caret"></span>
 								<select data-type="html" class="js-mode-select  hidden-select" name="">
@@ -505,6 +505,18 @@
 						</label>
 					</div>
 				</div>
+
+				<hr>
+
+				<h3>Aspect Ratio</h3>
+				<p>
+					<label class="line" title="Set your aspect ratio to any ratio desired">
+						<input type="checkbox" d-change="updateSetting" data-setting="isAspRatOn" onchange="ORAR(this)"> Override aspect ratio
+					</label>
+					<input type="text" class="ARfield" id="ARwidth" onchange="changeWidth(this)" />
+					:
+					<input type="text" class="ARfield" id="ARheight" onchange="changeHeight(this)" />
+				</p>
 
 				<hr>
 

@@ -2638,9 +2638,31 @@ function ORAR(e) {
 	localStorage.setItem('overrideAR', e.value);
 }
 
+if(localStorage.getItem('arWidth') !== null) { document.querySelector('#ARWidth').value = localStorage.getItem('arWidth'); }
+if(localStorage.getItem('arHeight') !== null) { document.querySelector('#ARHeight').value = localStorage.getItem('arHeight'); }
+
 renderRatio()
 function renderRatio() {
 
+	requestAnimationFrame(renderRatio)
+
+	var w = parseInt(localStorage.getItem('arWidth'));
+	var h = parseInt(localStorage.getItem('arHeight'));
+
+	var el = document.querySelector("#demo-frame");
+
+	var f = document.querySelector('.demo-side');
+
+	if(w > h) {
+		el.style.width = f.scrollWidth;
+		el.style.height = f.scrollWidth * (h/w);
+	} else if(w < h) {
+		el.style.width = (f.scrollHeight * (w/h)) / 1.5;
+		el.style.height = f.scrollHeight / 1.5;
+	} else if(w == h) {
+		el.style.width = f.scrollWidth;
+		el.style.height = f.scrollWidth;
+	}
 }
 
 

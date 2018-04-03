@@ -404,7 +404,7 @@ li.CodeMirror-hint-active {
 	height: calc(100% - 29px); /*  minus minimized console height */
 	position: absolute;
 	left: 50%; top: 50%;
-	transform: translate(-50%, -50%);
+	transform: translate(-50%, calc(-50% - 14.5px));
 	z-index: 1;
 	background: white;
 }

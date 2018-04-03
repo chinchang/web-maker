@@ -2646,8 +2646,8 @@ function renderRatio() {
 
 	requestAnimationFrame(renderRatio)
 
-	var w = parseInt(localStorage.getItem('arWidth'));
-	var h = parseInt(localStorage.getItem('arHeight'));
+	var w = Number(localStorage.getItem('arWidth'));
+	var h = Number(localStorage.getItem('arHeight'));
 
 	var el = document.querySelector("#demo-frame");
 
@@ -2659,16 +2659,8 @@ function renderRatio() {
 	} else if(w < h) {
 		el.style.width = (f.scrollHeight * (w/h)) / 1.5;
 		el.style.height = f.scrollHeight / 1.5;
-	} else if(w == h) {
+	} else if(w === h) {
 		el.style.width = f.scrollWidth;
 		el.style.height = f.scrollWidth;
 	}
 }
-
-
-
-
-
-
-
-

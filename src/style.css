@@ -226,6 +226,10 @@ body:not(.light-version).overlay-visible .main-container {
 	width: 50%;
 	overflow-x: scroll;
 	overflow-y: hidden;
+	z-index: 1;
+}
+.demo-side {
+	z-index: 0 !important;
 }
 .layout-3 .content-wrap {
 	flex-direction: row-reverse;

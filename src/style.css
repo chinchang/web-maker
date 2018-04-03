@@ -224,6 +224,8 @@ body:not(.light-version).overlay-visible .main-container {
 	flex-basis: inherit;
 	position: relative;
 	width: 50%;
+	overflow-x: scroll;
+	overflow-y: hidden;
 }
 .layout-3 .content-wrap {
 	flex-direction: row-reverse;
@@ -399,7 +401,7 @@ li.CodeMirror-hint-active {
 	/*color: white;*/
 }
 #demo-frame {
-	border: 0;
+	border: 0; padding: 0; margin: 0;
 	width: 100%;
 	height: calc(100% - 29px); /*  minus minimized console height */
 	position: absolute;

@@ -2627,17 +2627,6 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 	init();
 })(window.alertsService, window.itemService);
 
-function changeWidth(e) {
-	localStorage.setItem('arWidth', e.value);
-}
-function changeHeight(e) {
-	localStorage.setItem('arHeight', e.value);
-}
-
-function ORAR(e) {
-	localStorage.setItem('overrideAR', e.value);
-}
-
 if(localStorage.getItem('arWidth') !== null) { document.querySelector('#ARWidth').value = localStorage.getItem('arWidth'); }
 if(localStorage.getItem('arHeight') !== null) { document.querySelector('#ARHeight').value = localStorage.getItem('arHeight'); }
 

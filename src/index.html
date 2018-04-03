@@ -511,11 +511,11 @@
 				<h3>Aspect Ratio</h3>
 				<p>
 					<label class="line" title="Set your aspect ratio to any ratio desired">
-						<input type="checkbox" d-change="updateSetting" data-setting="isAspRatOn" onchange="ORAR(this)"> Override aspect ratio
+						<input type="checkbox" d-change="updateSetting" data-setting="isAspRatOn" onchange="localStorage.setItem('overrideAR', this.value);"> Override aspect ratio
 					</label>
-					<input type="text" class="ARfield" id="ARwidth" onchange="changeWidth(this)" />
+					<input type="text" class="ARfield" id="ARwidth" onchange="localStorage.setItem('arWidth', this.value);" />
 					:
-					<input type="text" class="ARfield" id="ARheight" onchange="changeHeight(this)" />
+					<input type="text" class="ARfield" id="ARheight" onchange="localStorage.setItem('arHeight', this.value);" />
 				</p>
 
 				<hr>

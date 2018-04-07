@@ -1185,6 +1185,10 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 	}
 
 	scope.setPreviewContent = function(isForced) {
+		if (!prefs.autoPreview) {
+			return;
+		}
+
 		if (!prefs.preserveConsoleLogs) {
 			scope.clearConsole();
 		}

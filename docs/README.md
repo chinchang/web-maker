@@ -1,7 +1,7 @@
-
 # Getting started
 
 ## What is Web Maker
+
 **Web-Maker** is a blazing fast & offline frontend playground for your web experiments. Its available as a Chrome extension and a web app as well. Both are offline usable!
 
 ![Screenshot](../ss1.png)
@@ -50,7 +50,7 @@ Once the Chrome extension is installed, you'll see a Web Maker icon in the right
 
 Okay, so now you might be wondering what do I do with Web Maker open in front of me? Wait no more! Simply put, Web Maker lets you write HTML, CSS & JavaScript code and see instant preview. So lets write some code.
 
-You should be seeing 3 code panes with the headings: **HTML**, **CSS** and *JS*. Each code pane is dedicated place to write code in the respective languages. Go ahead and click inside the **HTML** code pane to focus it and then paste the following HTML code:
+You should be seeing 3 code panes with the headings: **HTML**, **CSS** and _JS_. Each code pane is dedicated place to write code in the respective languages. Go ahead and click inside the **HTML** code pane to focus it and then paste the following HTML code:
 
 ```html
 <h1>My first HTML</h1>
@@ -80,9 +80,9 @@ On the top-left side you can see the title of your creation. Click on it to edit
 
 ### Create New, Save or Open a creation
 
-On the top-right side, you have the 3 buttons to create a new creation or save an open one. Also you can access all your saved creations from the *Saved Creations Pane* by clicking the *Open* button.
+On the top-right side, you have the 3 buttons to create a new creation or save an open one. Also you can access all your saved creations from the _Saved Creations Pane_ by clicking the _Open_ button.
 
-From the *Saved Creations Pane* you can also export or import all your creations at once. Exporting generates a JSON file which you can backup in your Google Drive, Dropbox etc.
+From the _Saved Creations Pane_ you can also export or import all your creations at once. Exporting generates a JSON file which you can backup in your Google Drive, Dropbox etc.
 
 ### Settings
 
@@ -125,9 +125,11 @@ Web Maker supports bunch of pre-processors in for HTML, CSS & JavaScript each. Y
 <video src="./images/switching-preprocessor.mp4" loop autoplay></video>
 
 ## Adding external libraries
+
 Coming soon...
 
 ## Layouts
+
 Coming soon...
 
 ## Keyboard shortcuts
@@ -163,6 +165,7 @@ Coming soon...
 `Ctrl/⌘ + /` Single line comment
 
 ## Settings
+
 Coming soon...
 
 ## Frequently Asked Questions
@@ -173,8 +176,8 @@ Coming soon...
 
 Hi! I am [Kushagra Gour](https://twitter.com/chinchang457), a frontend developer from India. I created Web Maker as a side project from myself because I wanted a frontend playground that was fast and didn't have to rely on network latency to generate realtime preview. Also something which I could use whenever and wherever I wanted, even wihtout Internet! I have written articles about why and how I created Web Maker and how you can benefit from it as a developer.
 
-- FreeCodeCamp: https://medium.freecodecamp.org/web-maker-how-i-built-a-fast-offline-front-end-playground-9fe3629bc86f
-- Sitepoint: https://www.sitepoint.com/web-maker-an-offline-browser-based-codepen-alternative/
+* FreeCodeCamp: https://medium.freecodecamp.org/web-maker-how-i-built-a-fast-offline-front-end-playground-9fe3629bc86f
+* Sitepoint: https://www.sitepoint.com/web-maker-an-offline-browser-based-codepen-alternative/
 
 Make sure to read them if you like to get more behind the scenes of my journey with Web Maker.
 
@@ -184,6 +187,7 @@ Oh yes, I am [running a Patreon campaign](https://www.patreon.com/kushagra) to s
 
 Want to send in some suggestions, comments, feature requests or just have a question? Here are your options:
 
-- Twitter  — [ @webmakerApp](https://twitter.com/webmakerapp)
-- [Gitter  chat]( http://gitter.im/web-maker-app/Lobby)
-- [Github repository]( https://github.com/chinchang/web-maker/issues)
+* Twitter  — [ @webmakerApp](https://twitter.com/webmakerapp)
+* [Chat](https://web-maker.slack.com)
+* [Community forum](https://spectrum.chat/web-maker)
+* [Github repository](https://github.com/chinchang/web-maker/issues)

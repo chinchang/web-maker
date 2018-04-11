@@ -1,6 +1,6 @@
 {
 	"name": "web-maker",
-	"version": "3.0.3",
+	"version": "3.0.4",
 	"description": "A blazing fast & offline web playground",
 	"main": "index.html",
 	"devDependencies": {
@@ -23,12 +23,7 @@
 		"type": "git",
 		"url": "git+https://github.com/chinchang/web-maker.git"
 	},
-	"keywords": [
-		"frontend",
-		"playground",
-		"web",
-		"editor"
-	],
+	"keywords": ["frontend", "playground", "web", "editor"],
 	"author": "Kushagra Gour",
 	"license": "MIT",
 	"bugs": {

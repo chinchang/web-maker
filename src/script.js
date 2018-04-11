@@ -2072,8 +2072,10 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 
 	scope.openSupportDeveloperModal = function(e) {
 		closeAllOverlays();
-		trackEvent('ui', e.target.dataset.eventAction);
 		scope.toggleModal(pledgeModal);
+		if (e) {
+			trackEvent('ui', e.target.dataset.eventAction);
+		}
 	};
 
 	scope.updateProfileUi = () => {

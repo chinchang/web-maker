@@ -2,7 +2,7 @@
 
 # RUN PRETTIER
 filesToPrettify=$(git diff --staged --name-only | grep ".*\.\(js\|json\|css\|md\)")
-echo "$fileToPrettify" | xargs ./node_modules/.bin/prettier --single-quote --use-tabs --write
+echo "$fileToPrettify" | xargs ./node_modules/.bin/prettier --config ./prettierrc --write
 echo "$fileToPrettify" | xargs git add
 
 # Fetch .js or .json filed from staged files

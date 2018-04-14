@@ -286,6 +286,8 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		});
 	}
 	function toggleLayout(mode) {
+		mode = window.innerWidth < 500 ? 2 : mode;
+
 		if (currentLayoutMode === mode) {
 			mainSplitInstance.setSizes(getMainSplitSizesToApply());
 			codeSplitInstance.setSizes(currentItem.sizes || [33.33, 33.33, 33.33]);
@@ -2189,6 +2191,8 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 				document.body.classList.add(`last-login-${result.lastAuthProvider}`);
 			}
 		});
+
+		document.body.style.height = `${window.innerHeight}px`;
 
 		function getToggleLayoutButtonListener(mode) {
 			return function() {

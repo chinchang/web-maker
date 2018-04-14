@@ -19,7 +19,9 @@
 if (
 	'serviceWorker' in navigator &&
 	document.cookie.indexOf('wmdebug') === -1 &&
-	location.href.indexOf('chrome-extension://') === -1
+	location.href.indexOf('chrome-extension://') === -1 &&
+	location.href.indexOf('localhost') === -1 &&
+	location.href.indexOf('192.168') === -1
 ) {
 	// Delay registration until after the page has loaded, to ensure that our
 	// precaching requests don't degrade the first visit experience.

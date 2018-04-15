@@ -286,6 +286,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		});
 	}
 	function toggleLayout(mode) {
+		/* eslint-disable no-param-reassign */
 		mode = window.innerWidth < 500 ? 2 : mode;
 
 		if (currentLayoutMode === mode) {
@@ -2415,7 +2416,10 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 			if (typeof e.target.className !== 'string') {
 				return;
 			}
-			if (e.target.classList.contains('modal-overlay') || e.target.classList.contains('modal')) {
+			if (
+				e.target.classList.contains('modal-overlay') ||
+				e.target.classList.contains('modal')
+			) {
 				closeAllOverlays();
 			}
 		});

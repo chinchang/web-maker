@@ -286,6 +286,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		});
 	}
 	function toggleLayout(mode) {
+		/* eslint-disable no-param-reassign */
+		mode = window.innerWidth < 500 ? 2 : mode;
+
 		if (currentLayoutMode === mode) {
 			mainSplitInstance.setSizes(getMainSplitSizesToApply());
 			codeSplitInstance.setSizes(currentItem.sizes || [33.33, 33.33, 33.33]);
@@ -2190,6 +2193,8 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 			}
 		});
 
+		document.body.style.height = `${window.innerHeight}px`;
+
 		function getToggleLayoutButtonListener(mode) {
 			return function() {
 				saveSetting('layoutMode', mode);
@@ -2411,7 +2416,10 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 			if (typeof e.target.className !== 'string') {
 				return;
 			}
-			if (e.target.className.indexOf('modal-overlay') !== -1) {
+			if (
+				e.target.classList.contains('modal-overlay') ||
+				e.target.classList.contains('modal')
+			) {
 				closeAllOverlays();
 			}
 		});

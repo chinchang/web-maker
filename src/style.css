@@ -12,6 +12,10 @@ body {
 	color: rgba(255, 255, 255, 0.9);
 	min-height: 100vh;
 	font-size: 87.5%;
+
+	/* speocifically for mobile when keyboard is open */
+	position: relative;
+
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
 		sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
@@ -83,6 +87,18 @@ p {
 }
 .mb-2 {
 	margin-bottom: 2rem;
+}
+
+@media screen and (max-width: 500px) {
+	.block--mobile {
+		display: block;
+	}
+	.ml-0--mobile {
+		margin-left: 0rem;
+	}
+	.hide-on-mobile {
+		display: none !important;
+	}
 }
 hr {
 	background: 0;
@@ -332,6 +348,12 @@ body:not(.light-version).overlay-visible .main-container {
 	width: 18px;
 	height: 18px;
 }
+.code-wrap__header-right-options {
+	position: relative;
+
+	/* bring over mode select boxes */
+	z-index: 1;
+}
 .code-wrap__collapse-btn:before {
 	/* maximize icon */
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.2)" d="M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z" /></svg>');
@@ -553,14 +575,11 @@ body > #demo-frame {
 	left: 0;
 	width: 100vw;
 	height: 100vh;
-	display: flex;
+	overflow-y: auto;
 	align-items: center;
 	justify-content: center;
 	z-index: 2000;
 	visibility: hidden;
-
-	/* So that modal overlay gets pointer events */
-	pointer-events: none;
 }
 .modal__close-btn {
 	position: absolute;
@@ -587,13 +606,13 @@ body > #demo-frame {
 	font-size: 1.1em;
 	line-height: 1.4;
 	max-width: 85vw;
-	max-height: 90vh;
+	margin: 2rem auto;
 	box-sizing: border-box;
 	overflow-y: auto;
 	pointer-events: auto;
 	transition-property: transform, opacity;
 	transition-duration: 0.19s;
-	transform: translateY(-50px) scale(0.7);
+	transform: translateY(50px) scale(0.95);
 }
 @media screen and (max-width: 900px) {
 	.modal__content {
@@ -1215,6 +1234,25 @@ body:not(.is-app) .show-when-app {
 .last-login-google .social-login-btn--google:before,
 .last-login-google .social-login-btn--google:after {
 	visibility: visible;
+}
+
+@media screen and (max-width: 500px) {
+	body {
+		font-size: 70%;
+	}
+	.main-header {
+		overflow-x: auto;
+	}
+	.main-header__btn-wrap {
+		flex-shrink: 0;
+	}
+	.modal__content {
+		padding: 1em;
+	}
+	.saved-items-pane {
+		width: 77vw;
+		padding: 10px 20px;
+	}
 }
 
 /* Codemirror themes basic bg styles. This is here so that there is no big FOUC

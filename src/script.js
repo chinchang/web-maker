@@ -2415,7 +2415,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 			if (typeof e.target.className !== 'string') {
 				return;
 			}
-			if (e.target.className.indexOf('modal-overlay') !== -1) {
+			if (e.target.classList.contains('modal-overlay') || e.target.classList.contains('modal')) {
 				closeAllOverlays();
 			}
 		});

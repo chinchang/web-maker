@@ -90,6 +90,12 @@ p {
 }
 
 @media screen and (max-width: 500px) {
+	.block--mobile {
+		display: block;
+	}
+	.ml-0--mobile {
+		margin-left: 0rem;
+	}
 	.hide-on-mobile {
 		display: none !important;
 	}
@@ -569,14 +575,11 @@ body > #demo-frame {
 	left: 0;
 	width: 100vw;
 	height: 100vh;
-	display: flex;
+	overflow-y: auto;
 	align-items: center;
 	justify-content: center;
 	z-index: 2000;
 	visibility: hidden;
-
-	/* So that modal overlay gets pointer events */
-	pointer-events: none;
 }
 .modal__close-btn {
 	position: absolute;
@@ -603,13 +606,13 @@ body > #demo-frame {
 	font-size: 1.1em;
 	line-height: 1.4;
 	max-width: 85vw;
-	max-height: 90vh;
+	margin: 2rem auto;
 	box-sizing: border-box;
 	overflow-y: auto;
 	pointer-events: auto;
 	transition-property: transform, opacity;
 	transition-duration: 0.19s;
-	transform: translateY(-50px) scale(0.7);
+	transform: translateY(50px) scale(0.95);
 }
 @media screen and (max-width: 900px) {
 	.modal__content {

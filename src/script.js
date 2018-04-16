@@ -873,10 +873,6 @@ globalConsoleContainerEl
 		// 			(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
 		// 		);
 		// 	}, '');
-		var vueSequenceCss =
-			'<link rel="stylesheet" href="' +
-			chrome.extension.getURL('lib/vue-sequence.css') +
-			'"></link>';
 		var vueSequenceExtCss =
 			'<link rel="stylesheet" href="' +
 			chrome.extension.getURL('lib/vue-sequence-ext.css') +
@@ -889,7 +885,7 @@ globalConsoleContainerEl
 			'<!DOCTYPE html>\n' +
 			'<html>\n<head>\n' +
 			'<meta charset="UTF-8" />\n' +
-			vueSequenceCss + vueSequenceExtCss + fontIndieFlower +
+			vueSequenceExtCss + fontIndieFlower +
 			'\n' +
 			'<style id="webmakerstyle">\n' +
 			css +
@@ -907,7 +903,7 @@ globalConsoleContainerEl
 			'"></script>';
 		contents +=
 			'<script src="' +
-			chrome.extension.getURL('lib/vue-sequence.demo.js') +
+			chrome.extension.getURL('lib/bundle.js') +
 			'"></script>';
 
 		if (jsMode === JsModes.ES6) {

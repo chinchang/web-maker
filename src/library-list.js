@@ -11,7 +11,7 @@ window.jsLibs = [
 	},
 	{
 		url:
-			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js',
+			'https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js',
 		label: 'Bootstrap 4',
 		type: 'js'
 	},
@@ -89,7 +89,7 @@ window.cssLibs = [
 	},
 	{
 		url:
-			'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+			'https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css',
 		label: 'Bootstrap 4',
 		type: 'css'
 	},

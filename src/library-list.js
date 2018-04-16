@@ -75,7 +75,7 @@ window.jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.40/js/uikit.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/js/uikit.min.js',
 		label: 'UIkit 3',
 		type: 'js'
 	}
@@ -105,7 +105,7 @@ window.cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.0/css/bulma.min.css',
 		label: 'Bulma',
 		type: 'css'
 	},
@@ -128,7 +128,7 @@ window.cssLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.40/css/uikit.min.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/css/uikit.min.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},
@@ -146,7 +146,7 @@ window.cssLibs = [
 	},
 		{
 		url:
-			'https://use.fontawesome.com/releases/v5.0.8/css/all.css',
+			'https://use.fontawesome.com/releases/v5.0.10/css/all.css',
 		label: 'FontAwesome 5',
 		type: 'css'
 	}

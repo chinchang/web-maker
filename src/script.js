@@ -1187,8 +1187,13 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		}
 	}
 
-	scope.setPreviewContent = function(isForced) {
-		if (!prefs.autoPreview) {
+	/**
+	 * Generates the preview from the current code.
+	 * @param {boolean} isForced Should refresh everything without any check or not
+	 * @param {boolean} isManual Is this a manual preview request from user?
+	 */
+	scope.setPreviewContent = function(isForced, isManual) {
+		if (!prefs.autoPreview && !isManual) {
 			return;
 		}
 
@@ -2022,6 +2027,11 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		});
 	}
 
+	scope.onRunBtnClick = function() {
+		scope.setPreviewContent(true, true);
+		trackEvent('ui', 'runBtnClick');
+	};
+
 	scope.openDetachedPreview = function() {
 		trackEvent('ui', 'detachPreviewBtnClick');
 
@@ -2345,7 +2355,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 				event.keyCode === 53
 			) {
 				event.preventDefault();
-				scope.setPreviewContent(true);
+				scope.setPreviewContent(true, true);
 				trackEvent('ui', 'previewKeyboardShortcut');
 			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 79) {
 				// Ctrl/⌘ + O

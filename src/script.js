@@ -1891,9 +1891,23 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 	 */
 	scope.toggleModal = function(modal) {
 		modal.classList.toggle('is-modal-visible');
-		document.body.classList[
-			modal.classList.contains('is-modal-visible') ? 'add' : 'remove'
-		]('overlay-visible');
+		const hasOpened = modal.classList.contains('is-modal-visible');
+		document.body.classList[hasOpened ? 'add' : 'remove']('overlay-visible');
+
+		if (hasOpened) {
+			/* eslint-disable no-inner-declarations */
+			function onTransitionEnd() {
+				modal.querySelector('.js-modal__close-btn').focus();
+				modal
+					.querySelector('.modal__content')
+					.removeEventListener('transitionend', onTransitionEnd);
+			}
+			/* eslint-enable no-inner-declarations */
+
+			modal
+				.querySelector('.modal__content')
+				.addEventListener('transitionend', onTransitionEnd);
+		}
 	};
 	scope.onSearchInputChange = function(e) {
 		const text = e.target.value;
@@ -2653,6 +2667,19 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		document.querySelector('[data-setting="editorTheme"]').innerHTML = options;
 
 		requestAnimationFrame(compileNodes);
+
+		window.addEventListener('focusin', e => {
+			if (document.body.classList.contains('overlay-visible')) {
+				const modal = $('.is-modal-visible');
+				if (!modal) {
+					return;
+				}
+				if (!modal.contains(e.target)) {
+					e.preventDefault();
+					modal.querySelector('.js-modal__close-btn').focus();
+				}
+			}
+		});
 	}
 
 	// Set few stuff on a 'scope' object so that they can be referenced dynamically.

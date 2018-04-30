@@ -38,7 +38,8 @@ window.jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.2.0/umd/react-dom.production.min.js',
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.2.0/umd/react-dom.production.min.js',
 		label: 'React DOM',
 		type: 'js'
 	},
@@ -105,7 +106,7 @@ window.cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.0/css/bulma.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css',
 		label: 'Bulma',
 		type: 'css'
 	},
@@ -144,9 +145,8 @@ window.cssLibs = [
 		label: 'FontAwesome 4',
 		type: 'css'
 	},
-		{
-		url:
-			'https://use.fontawesome.com/releases/v5.0.10/css/all.css',
+	{
+		url: 'https://use.fontawesome.com/releases/v5.0.10/css/all.css',
 		label: 'FontAwesome 5',
 		type: 'css'
 	}

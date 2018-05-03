@@ -2254,6 +2254,10 @@ node-pre-gyp@^0.6.39:
     tar "^2.2.1"
     tar-pack "^3.4.0"
 
+node-uuid@^1.4.8:
+  version "1.4.8"
+  resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.8.tgz#b040eb0923968afabf8d32fb1f17f1167fdab907"
+
 nopt@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/nopt/-/nopt-4.0.1.tgz#d0d4685afd5415193c8c7505602d0d17cd64474d"
@@ -3103,9 +3107,9 @@ schema-utils@^0.4.5:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.5.0.tgz#dc4bbc7a6ca9d916dee5d43516f0092b58f7b8ab"
 
-sequence-parser@^0.5.6:
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/sequence-parser/-/sequence-parser-0.5.6.tgz#a9b171cde87ad544e5eea6693c3b5c57a80ecf3e"
+sequence-parser@^0.5.9:
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/sequence-parser/-/sequence-parser-0.5.9.tgz#0b33c03cdcebab14244a85120785eb48bf7e02c8"
   dependencies:
     antlr4 "^4.7.0"
     webpack "^3.11.0"
@@ -3622,7 +3626,7 @@ util@0.10.3, util@^0.10.3:
   dependencies:
     inherits "2.0.1"
 
-uuid@^3.0.0:
+uuid@^3.0.0, uuid@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.2.1.tgz#12c528bb9d58d0b9265d9a2f6f0fe8be17ff1f14"
 
@@ -3651,13 +3655,15 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vue-sequence@^0.5.13:
-  version "0.5.13"
-  resolved "https://registry.yarnpkg.com/vue-sequence/-/vue-sequence-0.5.13.tgz#2d68bb2db6cd0e958332d1b791553f2a98319708"
+vue-sequence@^0.5.17:
+  version "0.5.17"
+  resolved "https://registry.yarnpkg.com/vue-sequence/-/vue-sequence-0.5.17.tgz#7e98b1c51a06b0e979cddc2d797fdf6cb1dca09f"
   dependencies:
     babel-polyfill "^6.26.0"
     karma-chrome-launcher "^2.2.0"
-    sequence-parser "^0.5.6"
+    node-uuid "^1.4.8"
+    sequence-parser "^0.5.9"
+    uuid "^3.2.1"
     vue "^2.3.3"
     vuex "^2.4.0"
 

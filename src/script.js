@@ -823,7 +823,7 @@ globalConsoleContainerEl
 
 	function computeJs() {
 		var d = deferred();
-		var code = 'app.$store.commit(\'code\', ' + '\'' + escape(scope.cm.js.getValue()) + '\');';
+		var code = 'app.$store.dispatch(\'updateCode\', ' + ' { code: \'' + escape(scope.cm.js.getValue()) + '\' });';
 
 		cleanupErrors('js');
 		d.resolve(code);

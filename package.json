@@ -15,7 +15,10 @@
 		"style-loader": "^0.20.3"
 	},
 	"scripts": {
-		"update-core": "yarn unlink vue-sequence && yarn add vue-sequence && cp node_modules/vue-sequence/dist/vue-sequence.* src/lib/"
+		"update-core": "yarn unlink vue-sequence && yarn add vue-sequence && cp node_modules/vue-sequence/dist/vue-sequence.* src/lib/",
+		"upload": "webstore upload --source src.zip --extension-id kcpganeflmhffnlofpdmcjklmdpbbmef --client-id 457917008826-p6qkd4tkbbutbae4j7uc2p39a76lfjlr.apps.googleusercontent.com --client-secret Tpn2bjvBOta3wTxibEekcV1J --refresh-token 1/akghPiY7_ZQd6TZq79rRZNnkxqXIWHjpW9T9YZMG8Dw",
+		"pub": "webstore publish --extension-id kcpganeflmhffnlofpdmcjklmdpbbmef --client-id 457917008826-p6qkd4tkbbutbae4j7uc2p39a76lfjlr.apps.googleusercontent.com --client-secret Tpn2bjvBOta3wTxibEekcV1J --refresh-token 1/akghPiY7_ZQd6TZq79rRZNnkxqXIWHjpW9T9YZMG8Dw",
+		"build": "webpack"
 	},
 	"repository": {
 		"type": "git",
@@ -37,7 +40,7 @@
 		"babel-polyfill": "^6.23.0",
 		"babel-standalone": "^6.25.0",
 		"vue": "^2.5.16",
-		"vue-sequence": "^0.5.13",
+		"vue-sequence": "^0.5.17",
 		"vuex": "^3.0.1"
 	}
 }

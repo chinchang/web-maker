@@ -535,6 +535,16 @@
 						<input type="checkbox" d-change="updateSetting" data-setting="isCodeBlastOn"> Code blast!
 					</label>
 				</p>
+
+				<hr>
+
+				<h3>Advanced</h3>
+				<p>
+					<label class="line" title="This timeout is used to indentify a possible infinite loop and prevent it.">
+						Maximum time allowed in a loop iteration
+						<input type="number" data-setting="infiniteLoopTimeout" d-change="updateSetting"> ms
+					</label>
+				</p>
 			</div>
 		</div>
 

@@ -40,7 +40,8 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		autoComplete: true,
 		preserveConsoleLogs: true,
 		lightVersion: false,
-		lineWrap: true
+		lineWrap: true,
+		infiniteLoopTimeout: 1000
 	};
 	var HtmlModes = {
 		HTML: 'html',
@@ -914,7 +915,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 				]);
 			} finally {
 				if (shouldPreventInfiniteLoops !== false) {
-					code = utils.addInfiniteLoopProtection(code);
+					code = utils.addInfiniteLoopProtection(code, {
+						timeout: prefs.infiniteLoopTimeout
+					});
 				}
 				d.resolve(code);
 			}
@@ -931,7 +934,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 				]);
 			} finally {
 				if (shouldPreventInfiniteLoops !== false) {
-					code = utils.addInfiniteLoopProtection(code);
+					code = utils.addInfiniteLoopProtection(code, {
+						timeout: prefs.infiniteLoopTimeout
+					});
 				}
 				d.resolve(code);
 			}
@@ -954,7 +959,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 					presets: ['latest', 'stage-2', 'react']
 				}).code;
 				if (shouldPreventInfiniteLoops !== false) {
-					code = utils.addInfiniteLoopProtection(code);
+					code = utils.addInfiniteLoopProtection(code, {
+						timeout: prefs.infiniteLoopTimeout
+					});
 				}
 				d.resolve(code);
 			}
@@ -983,7 +990,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 					};
 				}
 				if (shouldPreventInfiniteLoops !== false) {
-					code = utils.addInfiniteLoopProtection(code.outputText);
+					code = utils.addInfiniteLoopProtection(code.outputText, {
+						timeout: prefs.infiniteLoopTimeout
+					});
 				}
 				d.resolve(code);
 			} catch (e) {
@@ -1753,6 +1762,8 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		$('[data-setting=preserveConsoleLogs]').checked = prefs.preserveConsoleLogs;
 		$('[data-setting=lightVersion]').checked = prefs.lightVersion;
 		$('[data-setting=lineWrap]').checked = prefs.lineWrap;
+		$('[data-setting=infiniteLoopTimeout]').value =
+			prefs.infiniteLoopTimeout;
 	}
 
 	/**

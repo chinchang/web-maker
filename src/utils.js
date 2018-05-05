@@ -87,13 +87,12 @@
 	 * Contributed by Ariya Hidayat!
 	 * @param code {string}	Code to be protected from infinite loops.
 	 */
-	function addInfiniteLoopProtection(code) {
+	function addInfiniteLoopProtection(code, { timeout }) {
 		var loopId = 1;
 		var patches = [];
 		var varPrefix = '_wmloopvar';
 		var varStr = 'var %d = Date.now();\n';
-		var checkStr =
-			'\nif (Date.now() - %d > 1000) { window.top.previewException(new Error("Infinite loop")); break;}\n';
+		var checkStr = `\nif (Date.now() - %d > ${timeout}) { window.top.previewException(new Error("Infinite loop")); break;}\n`;
 
 		esprima.parse(code, { tolerant: true, range: true, jsx: true }, function(
 			node

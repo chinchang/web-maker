@@ -941,7 +941,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 			d.resolve('');
 			return d.promise;
 		}
-
+		var shouldPreventInfiniteLoops = true;
 		if (jsMode === JsModes.JS) {
 			try {
 				esprima.parse(code, {

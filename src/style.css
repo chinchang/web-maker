@@ -618,7 +618,7 @@ body > #demo-frame {
 	color: #444;
 	position: relative;
 	border-radius: 8px;
-	opacity: 0;
+	/*opacity: 0;*/ /* TODO: Add this back. This has impact when we click the signin/up button */
 	padding: 3em;
 	font-size: 1.1em;
 	line-height: 1.4;
@@ -629,7 +629,7 @@ body > #demo-frame {
 	pointer-events: auto;
 	transition-property: transform, opacity;
 	transition-duration: 0.19s;
-	transform: translateY(50px) scale(0.95);
+	/*transform: translateY(50px) scale(0.95);*/ /* TODO: Add this back. This has impact when we click the signin/up button */
 }
 @media screen and (max-width: 900px) {
 	.modal__content {

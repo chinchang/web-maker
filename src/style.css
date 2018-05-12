@@ -684,6 +684,7 @@ body > #demo-frame {
 	transition-property: transform;
 	will-change: transform;
 	transform: translateX(100%);
+	color: navajowhite;
 }
 .saved-items-pane.is-open {
 	transition-duration: 0.4s;

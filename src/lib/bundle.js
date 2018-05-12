@@ -21892,417 +21892,417 @@ exports.DefaultErrorStrategy = DefaultErrorStrategy;
 /* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /Users/pengxiao/Dropbox/2Dev/all-coloruml/vue-sequence/sequence-parser/src/sequence.g4 by ANTLR 4.7
+// Generated from ./sequenceParser.g4 by ANTLR 4.5.3
 // jshint ignore: start
 var antlr4 = __webpack_require__(12);
 
 // This class defines a complete listener for a parse tree produced by sequenceParser.
-function sequenceListener() {
+function sequenceParserListener() {
 	antlr4.tree.ParseTreeListener.call(this);
 	return this;
 }
 
-sequenceListener.prototype = Object.create(antlr4.tree.ParseTreeListener.prototype);
-sequenceListener.prototype.constructor = sequenceListener;
+sequenceParserListener.prototype = Object.create(antlr4.tree.ParseTreeListener.prototype);
+sequenceParserListener.prototype.constructor = sequenceParserListener;
 
 // Enter a parse tree produced by sequenceParser#prog.
-sequenceListener.prototype.enterProg = function(ctx) {
+sequenceParserListener.prototype.enterProg = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#prog.
-sequenceListener.prototype.exitProg = function(ctx) {
+sequenceParserListener.prototype.exitProg = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#starterExp.
-sequenceListener.prototype.enterStarterExp = function(ctx) {
+sequenceParserListener.prototype.enterStarterExp = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#starterExp.
-sequenceListener.prototype.exitStarterExp = function(ctx) {
+sequenceParserListener.prototype.exitStarterExp = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#description.
-sequenceListener.prototype.enterDescription = function(ctx) {
+sequenceParserListener.prototype.enterDescription = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#description.
-sequenceListener.prototype.exitDescription = function(ctx) {
+sequenceParserListener.prototype.exitDescription = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#starter.
-sequenceListener.prototype.enterStarter = function(ctx) {
+sequenceParserListener.prototype.enterStarter = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#starter.
-sequenceListener.prototype.exitStarter = function(ctx) {
+sequenceParserListener.prototype.exitStarter = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#block.
-sequenceListener.prototype.enterBlock = function(ctx) {
+sequenceParserListener.prototype.enterBlock = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#block.
-sequenceListener.prototype.exitBlock = function(ctx) {
+sequenceParserListener.prototype.exitBlock = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#ret.
-sequenceListener.prototype.enterRet = function(ctx) {
+sequenceParserListener.prototype.enterRet = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#ret.
-sequenceListener.prototype.exitRet = function(ctx) {
+sequenceParserListener.prototype.exitRet = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#stat.
-sequenceListener.prototype.enterStat = function(ctx) {
+sequenceParserListener.prototype.enterStat = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#stat.
-sequenceListener.prototype.exitStat = function(ctx) {
+sequenceParserListener.prototype.exitStat = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#comment.
-sequenceListener.prototype.enterComment = function(ctx) {
+sequenceParserListener.prototype.enterComment = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#comment.
-sequenceListener.prototype.exitComment = function(ctx) {
+sequenceParserListener.prototype.exitComment = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#creation.
-sequenceListener.prototype.enterCreation = function(ctx) {
+sequenceParserListener.prototype.enterCreation = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#creation.
-sequenceListener.prototype.exitCreation = function(ctx) {
+sequenceParserListener.prototype.exitCreation = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#message.
-sequenceListener.prototype.enterMessage = function(ctx) {
+sequenceParserListener.prototype.enterMessage = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#message.
-sequenceListener.prototype.exitMessage = function(ctx) {
+sequenceParserListener.prototype.exitMessage = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#signature.
-sequenceListener.prototype.enterSignature = function(ctx) {
+sequenceParserListener.prototype.enterSignature = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#signature.
-sequenceListener.prototype.exitSignature = function(ctx) {
+sequenceParserListener.prototype.exitSignature = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#assignment.
-sequenceListener.prototype.enterAssignment = function(ctx) {
+sequenceParserListener.prototype.enterAssignment = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#assignment.
-sequenceListener.prototype.exitAssignment = function(ctx) {
+sequenceParserListener.prototype.exitAssignment = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#asyncMessage.
-sequenceListener.prototype.enterAsyncMessage = function(ctx) {
+sequenceParserListener.prototype.enterAsyncMessage = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#asyncMessage.
-sequenceListener.prototype.exitAsyncMessage = function(ctx) {
+sequenceParserListener.prototype.exitAsyncMessage = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#content.
-sequenceListener.prototype.enterContent = function(ctx) {
+sequenceParserListener.prototype.enterContent = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#content.
-sequenceListener.prototype.exitContent = function(ctx) {
+sequenceParserListener.prototype.exitContent = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#source.
-sequenceListener.prototype.enterSource = function(ctx) {
+sequenceParserListener.prototype.enterSource = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#source.
-sequenceListener.prototype.exitSource = function(ctx) {
+sequenceParserListener.prototype.exitSource = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#target.
-sequenceListener.prototype.enterTarget = function(ctx) {
+sequenceParserListener.prototype.enterTarget = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#target.
-sequenceListener.prototype.exitTarget = function(ctx) {
+sequenceParserListener.prototype.exitTarget = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#constructor.
-sequenceListener.prototype.enterConstructor = function(ctx) {
+sequenceParserListener.prototype.enterConstructor = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#constructor.
-sequenceListener.prototype.exitConstructor = function(ctx) {
+sequenceParserListener.prototype.exitConstructor = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#type.
-sequenceListener.prototype.enterType = function(ctx) {
+sequenceParserListener.prototype.enterType = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#type.
-sequenceListener.prototype.exitType = function(ctx) {
+sequenceParserListener.prototype.exitType = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#assignee.
-sequenceListener.prototype.enterAssignee = function(ctx) {
+sequenceParserListener.prototype.enterAssignee = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#assignee.
-sequenceListener.prototype.exitAssignee = function(ctx) {
+sequenceParserListener.prototype.exitAssignee = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#to.
-sequenceListener.prototype.enterTo = function(ctx) {
+sequenceParserListener.prototype.enterTo = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#to.
-sequenceListener.prototype.exitTo = function(ctx) {
+sequenceParserListener.prototype.exitTo = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#methodName.
-sequenceListener.prototype.enterMethodName = function(ctx) {
+sequenceParserListener.prototype.enterMethodName = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#methodName.
-sequenceListener.prototype.exitMethodName = function(ctx) {
+sequenceParserListener.prototype.exitMethodName = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#parameters.
-sequenceListener.prototype.enterParameters = function(ctx) {
+sequenceParserListener.prototype.enterParameters = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#parameters.
-sequenceListener.prototype.exitParameters = function(ctx) {
+sequenceParserListener.prototype.exitParameters = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#parameter.
-sequenceListener.prototype.enterParameter = function(ctx) {
+sequenceParserListener.prototype.enterParameter = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#parameter.
-sequenceListener.prototype.exitParameter = function(ctx) {
+sequenceParserListener.prototype.exitParameter = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#alt.
-sequenceListener.prototype.enterAlt = function(ctx) {
+sequenceParserListener.prototype.enterAlt = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#alt.
-sequenceListener.prototype.exitAlt = function(ctx) {
+sequenceParserListener.prototype.exitAlt = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#ifBlock.
-sequenceListener.prototype.enterIfBlock = function(ctx) {
+sequenceParserListener.prototype.enterIfBlock = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#ifBlock.
-sequenceListener.prototype.exitIfBlock = function(ctx) {
+sequenceParserListener.prototype.exitIfBlock = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#elseIfBlock.
-sequenceListener.prototype.enterElseIfBlock = function(ctx) {
+sequenceParserListener.prototype.enterElseIfBlock = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#elseIfBlock.
-sequenceListener.prototype.exitElseIfBlock = function(ctx) {
+sequenceParserListener.prototype.exitElseIfBlock = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#elseBlock.
-sequenceListener.prototype.enterElseBlock = function(ctx) {
+sequenceParserListener.prototype.enterElseBlock = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#elseBlock.
-sequenceListener.prototype.exitElseBlock = function(ctx) {
+sequenceParserListener.prototype.exitElseBlock = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#braceBlock.
-sequenceListener.prototype.enterBraceBlock = function(ctx) {
+sequenceParserListener.prototype.enterBraceBlock = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#braceBlock.
-sequenceListener.prototype.exitBraceBlock = function(ctx) {
+sequenceParserListener.prototype.exitBraceBlock = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#loop.
-sequenceListener.prototype.enterLoop = function(ctx) {
+sequenceParserListener.prototype.enterLoop = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#loop.
-sequenceListener.prototype.exitLoop = function(ctx) {
+sequenceParserListener.prototype.exitLoop = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#notExpr.
-sequenceListener.prototype.enterNotExpr = function(ctx) {
+sequenceParserListener.prototype.enterNotExpr = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#notExpr.
-sequenceListener.prototype.exitNotExpr = function(ctx) {
+sequenceParserListener.prototype.exitNotExpr = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#unaryMinusExpr.
-sequenceListener.prototype.enterUnaryMinusExpr = function(ctx) {
+sequenceParserListener.prototype.enterUnaryMinusExpr = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#unaryMinusExpr.
-sequenceListener.prototype.exitUnaryMinusExpr = function(ctx) {
+sequenceParserListener.prototype.exitUnaryMinusExpr = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#multiplicationExpr.
-sequenceListener.prototype.enterMultiplicationExpr = function(ctx) {
+sequenceParserListener.prototype.enterMultiplicationExpr = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#multiplicationExpr.
-sequenceListener.prototype.exitMultiplicationExpr = function(ctx) {
+sequenceParserListener.prototype.exitMultiplicationExpr = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#atomExpr.
-sequenceListener.prototype.enterAtomExpr = function(ctx) {
+sequenceParserListener.prototype.enterAtomExpr = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#atomExpr.
-sequenceListener.prototype.exitAtomExpr = function(ctx) {
+sequenceParserListener.prototype.exitAtomExpr = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#orExpr.
-sequenceListener.prototype.enterOrExpr = function(ctx) {
+sequenceParserListener.prototype.enterOrExpr = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#orExpr.
-sequenceListener.prototype.exitOrExpr = function(ctx) {
+sequenceParserListener.prototype.exitOrExpr = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#additiveExpr.
-sequenceListener.prototype.enterAdditiveExpr = function(ctx) {
+sequenceParserListener.prototype.enterAdditiveExpr = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#additiveExpr.
-sequenceListener.prototype.exitAdditiveExpr = function(ctx) {
+sequenceParserListener.prototype.exitAdditiveExpr = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#relationalExpr.
-sequenceListener.prototype.enterRelationalExpr = function(ctx) {
+sequenceParserListener.prototype.enterRelationalExpr = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#relationalExpr.
-sequenceListener.prototype.exitRelationalExpr = function(ctx) {
+sequenceParserListener.prototype.exitRelationalExpr = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#equalityExpr.
-sequenceListener.prototype.enterEqualityExpr = function(ctx) {
+sequenceParserListener.prototype.enterEqualityExpr = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#equalityExpr.
-sequenceListener.prototype.exitEqualityExpr = function(ctx) {
+sequenceParserListener.prototype.exitEqualityExpr = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#andExpr.
-sequenceListener.prototype.enterAndExpr = function(ctx) {
+sequenceParserListener.prototype.enterAndExpr = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#andExpr.
-sequenceListener.prototype.exitAndExpr = function(ctx) {
+sequenceParserListener.prototype.exitAndExpr = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#numberAtom.
-sequenceListener.prototype.enterNumberAtom = function(ctx) {
+sequenceParserListener.prototype.enterNumberAtom = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#numberAtom.
-sequenceListener.prototype.exitNumberAtom = function(ctx) {
+sequenceParserListener.prototype.exitNumberAtom = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#booleanAtom.
-sequenceListener.prototype.enterBooleanAtom = function(ctx) {
+sequenceParserListener.prototype.enterBooleanAtom = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#booleanAtom.
-sequenceListener.prototype.exitBooleanAtom = function(ctx) {
+sequenceParserListener.prototype.exitBooleanAtom = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#idAtom.
-sequenceListener.prototype.enterIdAtom = function(ctx) {
+sequenceParserListener.prototype.enterIdAtom = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#idAtom.
-sequenceListener.prototype.exitIdAtom = function(ctx) {
+sequenceParserListener.prototype.exitIdAtom = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#stringAtom.
-sequenceListener.prototype.enterStringAtom = function(ctx) {
+sequenceParserListener.prototype.enterStringAtom = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#stringAtom.
-sequenceListener.prototype.exitStringAtom = function(ctx) {
+sequenceParserListener.prototype.exitStringAtom = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#nilAtom.
-sequenceListener.prototype.enterNilAtom = function(ctx) {
+sequenceParserListener.prototype.enterNilAtom = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#nilAtom.
-sequenceListener.prototype.exitNilAtom = function(ctx) {
+sequenceParserListener.prototype.exitNilAtom = function(ctx) {
 };
 
 
 // Enter a parse tree produced by sequenceParser#parExpr.
-sequenceListener.prototype.enterParExpr = function(ctx) {
+sequenceParserListener.prototype.enterParExpr = function(ctx) {
 };
 
 // Exit a parse tree produced by sequenceParser#parExpr.
-sequenceListener.prototype.exitParExpr = function(ctx) {
+sequenceParserListener.prototype.exitParExpr = function(ctx) {
 };
 
 
 
-exports.sequenceListener = sequenceListener;
+exports.sequenceParserListener = sequenceParserListener;
 
 /***/ }),
 /* 32 */
@@ -22311,7 +22311,7 @@ exports.sequenceListener = sequenceListener;
 var antlr4  = __webpack_require__(12)
 var sequenceLexer = __webpack_require__(50)
 var sequenceParser = __webpack_require__(51)
-var sequenceListener = __webpack_require__(31)
+var sequenceParserListener = __webpack_require__(31)
 
 
 function ParserFactory() {
@@ -22334,11 +22334,11 @@ function rootContext(code) {
 }
 
 var ToCollector = function () {
-  sequenceListener.sequenceListener.call(this)
+  sequenceParserListener.sequenceParserListener.call(this)
   return this
 }
 
-ToCollector.prototype = Object.create(sequenceListener.sequenceListener.prototype)
+ToCollector.prototype = Object.create(sequenceParserListener.sequenceParserListener.prototype)
 ToCollector.prototype.constructor = ToCollector
 
 var descendantTos = new Set()
@@ -22375,11 +22375,11 @@ ToCollector.prototype.getAllTos = function (me) {
 var toCollector = new ToCollector();
 
 var ChildFragmentDetector = function () {
-  sequenceListener.sequenceListener.call(this)
+  sequenceParserListener.sequenceParserListener.call(this)
   return this
 }
 
-ChildFragmentDetector.prototype = Object.create(sequenceListener.sequenceListener.prototype)
+ChildFragmentDetector.prototype = Object.create(sequenceParserListener.sequenceParserListener.prototype)
 ChildFragmentDetector.prototype.constructor = ChildFragmentDetector
 
 var cursor = 0
@@ -22413,11 +22413,11 @@ ChildFragmentDetector.prototype.depth = function (me) {
 var childFragmentDetector = new ChildFragmentDetector()
 
 var SyncMessageDetector = function () {
-    sequenceListener.sequenceListener.call(this)
+    sequenceParserListener.sequenceParserListener.call(this)
     return this
 }
 
-SyncMessageDetector.prototype = Object.create(sequenceListener.sequenceListener.prototype)
+SyncMessageDetector.prototype = Object.create(sequenceParserListener.sequenceParserListener.prototype)
 SyncMessageDetector.prototype.constructor = SyncMessageDetector
 
 var hasSyncMessage = false
@@ -26922,15 +26922,15 @@ exports.Parser = Parser;
 /* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /Users/pengxiao/Dropbox/2Dev/all-coloruml/vue-sequence/sequence-parser/src/sequence.g4 by ANTLR 4.7
+// Generated from ./sequenceLexer.g4 by ANTLR 4.5.3
 // jshint ignore: start
 var antlr4 = __webpack_require__(12);
 
 
-var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
-    "\u0002-\u0113\b\u0001\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004",
-    "\u0004\t\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t",
-    "\u0007\u0004\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004",
+var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
+    "\u00021\u0133\b\u0001\b\u0001\u0004\u0002\t\u0002\u0004\u0003\t\u0003",
+    "\u0004\u0004\t\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007",
+    "\t\u0007\u0004\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004",
     "\f\t\f\u0004\r\t\r\u0004\u000e\t\u000e\u0004\u000f\t\u000f\u0004\u0010",
     "\t\u0010\u0004\u0011\t\u0011\u0004\u0012\t\u0012\u0004\u0013\t\u0013",
     "\u0004\u0014\t\u0014\u0004\u0015\t\u0015\u0004\u0016\t\u0016\u0004\u0017",
@@ -26938,168 +26938,189 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u0004\u001b\t\u001b\u0004\u001c\t\u001c\u0004\u001d\t\u001d\u0004\u001e",
     "\t\u001e\u0004\u001f\t\u001f\u0004 \t \u0004!\t!\u0004\"\t\"\u0004#",
     "\t#\u0004$\t$\u0004%\t%\u0004&\t&\u0004\'\t\'\u0004(\t(\u0004)\t)\u0004",
-    "*\t*\u0004+\t+\u0004,\t,\u0003\u0002\u0003\u0002\u0003\u0002\u0003\u0002",
-    "\u0003\u0002\u0003\u0002\u0003\u0002\u0003\u0002\u0003\u0003\u0003\u0003",
-    "\u0003\u0003\u0003\u0004\u0003\u0004\u0003\u0004\u0003\u0005\u0003\u0005",
-    "\u0003\u0006\u0003\u0006\u0003\u0007\u0003\u0007\u0003\u0007\u0003\b",
-    "\u0003\b\u0003\b\u0003\t\u0003\t\u0003\t\u0003\n\u0003\n\u0003\n\u0003",
-    "\u000b\u0003\u000b\u0003\f\u0003\f\u0003\r\u0003\r\u0003\r\u0003\u000e",
-    "\u0003\u000e\u0003\u000e\u0003\u000f\u0003\u000f\u0003\u0010\u0003\u0010",
-    "\u0003\u0011\u0003\u0011\u0003\u0012\u0003\u0012\u0003\u0013\u0003\u0013",
-    "\u0003\u0014\u0003\u0014\u0003\u0015\u0003\u0015\u0003\u0016\u0003\u0016",
-    "\u0003\u0017\u0003\u0017\u0003\u0018\u0003\u0018\u0003\u0019\u0003\u0019",
-    "\u0003\u001a\u0003\u001a\u0003\u001b\u0003\u001b\u0003\u001c\u0003\u001c",
-    "\u0003\u001d\u0003\u001d\u0003\u001d\u0003\u001d\u0003\u001d\u0003\u001e",
-    "\u0003\u001e\u0003\u001e\u0003\u001e\u0003\u001e\u0003\u001e\u0003\u001f",
-    "\u0003\u001f\u0003\u001f\u0003\u001f\u0003 \u0003 \u0003 \u0003!\u0003",
-    "!\u0003!\u0003!\u0003!\u0003\"\u0003\"\u0003\"\u0003\"\u0003\"\u0003",
-    "\"\u0003\"\u0003\"\u0003\"\u0003\"\u0003\"\u0003\"\u0003\"\u0003\"\u0003",
-    "\"\u0003\"\u0003\"\u0003\"\u0003\"\u0003\"\u0003\"\u0003\"\u0005\"\u00cb",
-    "\n\"\u0003#\u0003#\u0003#\u0003#\u0003#\u0003#\u0003#\u0003$\u0003$",
-    "\u0003$\u0003$\u0003%\u0003%\u0003&\u0003&\u0007&\u00dc\n&\f&\u000e",
-    "&\u00df\u000b&\u0003\'\u0006\'\u00e2\n\'\r\'\u000e\'\u00e3\u0003(\u0006",
-    "(\u00e7\n(\r(\u000e(\u00e8\u0003(\u0003(\u0007(\u00ed\n(\f(\u000e(\u00f0",
-    "\u000b(\u0003(\u0003(\u0006(\u00f4\n(\r(\u000e(\u00f5\u0005(\u00f8\n",
-    "(\u0003)\u0003)\u0003)\u0003)\u0007)\u00fe\n)\f)\u000e)\u0101\u000b",
-    ")\u0003)\u0003)\u0003*\u0003*\u0003*\u0003*\u0007*\u0109\n*\f*\u000e",
-    "*\u010c\u000b*\u0003+\u0003+\u0003+\u0003+\u0003,\u0003,\u0002\u0002",
-    "-\u0003\u0003\u0005\u0004\u0007\u0005\t\u0006\u000b\u0007\r\b\u000f",
-    "\t\u0011\n\u0013\u000b\u0015\f\u0017\r\u0019\u000e\u001b\u000f\u001d",
-    "\u0010\u001f\u0011!\u0012#\u0013%\u0014\'\u0015)\u0016+\u0017-\u0018",
-    "/\u00191\u001a3\u001b5\u001c7\u001d9\u001e;\u001f= ?!A\"C#E$G%I&K\'",
-    "M(O)Q*S+U,W-\u0003\u0002\b\u0005\u0002C\\aac|\u0006\u00022;C\\aac|\u0003",
-    "\u00022;\u0005\u0002\f\f\u000f\u000f$$\u0004\u0002\f\f\u000f\u000f\u0005",
-    "\u0002\u000b\f\u000f\u000f\"\"\u0002\u011e\u0002\u0003\u0003\u0002\u0002",
-    "\u0002\u0002\u0005\u0003\u0002\u0002\u0002\u0002\u0007\u0003\u0002\u0002",
-    "\u0002\u0002\t\u0003\u0002\u0002\u0002\u0002\u000b\u0003\u0002\u0002",
-    "\u0002\u0002\r\u0003\u0002\u0002\u0002\u0002\u000f\u0003\u0002\u0002",
-    "\u0002\u0002\u0011\u0003\u0002\u0002\u0002\u0002\u0013\u0003\u0002\u0002",
-    "\u0002\u0002\u0015\u0003\u0002\u0002\u0002\u0002\u0017\u0003\u0002\u0002",
-    "\u0002\u0002\u0019\u0003\u0002\u0002\u0002\u0002\u001b\u0003\u0002\u0002",
-    "\u0002\u0002\u001d\u0003\u0002\u0002\u0002\u0002\u001f\u0003\u0002\u0002",
-    "\u0002\u0002!\u0003\u0002\u0002\u0002\u0002#\u0003\u0002\u0002\u0002",
-    "\u0002%\u0003\u0002\u0002\u0002\u0002\'\u0003\u0002\u0002\u0002\u0002",
-    ")\u0003\u0002\u0002\u0002\u0002+\u0003\u0002\u0002\u0002\u0002-\u0003",
-    "\u0002\u0002\u0002\u0002/\u0003\u0002\u0002\u0002\u00021\u0003\u0002",
-    "\u0002\u0002\u00023\u0003\u0002\u0002\u0002\u00025\u0003\u0002\u0002",
-    "\u0002\u00027\u0003\u0002\u0002\u0002\u00029\u0003\u0002\u0002\u0002",
-    "\u0002;\u0003\u0002\u0002\u0002\u0002=\u0003\u0002\u0002\u0002\u0002",
-    "?\u0003\u0002\u0002\u0002\u0002A\u0003\u0002\u0002\u0002\u0002C\u0003",
-    "\u0002\u0002\u0002\u0002E\u0003\u0002\u0002\u0002\u0002G\u0003\u0002",
-    "\u0002\u0002\u0002I\u0003\u0002\u0002\u0002\u0002K\u0003\u0002\u0002",
-    "\u0002\u0002M\u0003\u0002\u0002\u0002\u0002O\u0003\u0002\u0002\u0002",
-    "\u0002Q\u0003\u0002\u0002\u0002\u0002S\u0003\u0002\u0002\u0002\u0002",
-    "U\u0003\u0002\u0002\u0002\u0002W\u0003\u0002\u0002\u0002\u0003Y\u0003",
-    "\u0002\u0002\u0002\u0005a\u0003\u0002\u0002\u0002\u0007d\u0003\u0002",
-    "\u0002\u0002\tg\u0003\u0002\u0002\u0002\u000bi\u0003\u0002\u0002\u0002",
-    "\rk\u0003\u0002\u0002\u0002\u000fn\u0003\u0002\u0002\u0002\u0011q\u0003",
-    "\u0002\u0002\u0002\u0013t\u0003\u0002\u0002\u0002\u0015w\u0003\u0002",
-    "\u0002\u0002\u0017y\u0003\u0002\u0002\u0002\u0019{\u0003\u0002\u0002",
-    "\u0002\u001b~\u0003\u0002\u0002\u0002\u001d\u0081\u0003\u0002\u0002",
-    "\u0002\u001f\u0083\u0003\u0002\u0002\u0002!\u0085\u0003\u0002\u0002",
-    "\u0002#\u0087\u0003\u0002\u0002\u0002%\u0089\u0003\u0002\u0002\u0002",
-    "\'\u008b\u0003\u0002\u0002\u0002)\u008d\u0003\u0002\u0002\u0002+\u008f",
-    "\u0003\u0002\u0002\u0002-\u0091\u0003\u0002\u0002\u0002/\u0093\u0003",
-    "\u0002\u0002\u00021\u0095\u0003\u0002\u0002\u00023\u0097\u0003\u0002",
-    "\u0002\u00025\u0099\u0003\u0002\u0002\u00027\u009b\u0003\u0002\u0002",
-    "\u00029\u009d\u0003\u0002\u0002\u0002;\u00a2\u0003\u0002\u0002\u0002",
-    "=\u00a8\u0003\u0002\u0002\u0002?\u00ac\u0003\u0002\u0002\u0002A\u00af",
-    "\u0003\u0002\u0002\u0002C\u00ca\u0003\u0002\u0002\u0002E\u00cc\u0003",
-    "\u0002\u0002\u0002G\u00d3\u0003\u0002\u0002\u0002I\u00d7\u0003\u0002",
-    "\u0002\u0002K\u00d9\u0003\u0002\u0002\u0002M\u00e1\u0003\u0002\u0002",
-    "\u0002O\u00f7\u0003\u0002\u0002\u0002Q\u00f9\u0003\u0002\u0002\u0002",
-    "S\u0104\u0003\u0002\u0002\u0002U\u010d\u0003\u0002\u0002\u0002W\u0111",
-    "\u0003\u0002\u0002\u0002YZ\u0007U\u0002\u0002Z[\u0007v\u0002\u0002[",
-    "\\\u0007c\u0002\u0002\\]\u0007t\u0002\u0002]^\u0007v\u0002\u0002^_\u0007",
-    "g\u0002\u0002_`\u0007t\u0002\u0002`\u0004\u0003\u0002\u0002\u0002ab",
-    "\u0007/\u0002\u0002bc\u0007@\u0002\u0002c\u0006\u0003\u0002\u0002\u0002",
-    "de\u0007<\u0002\u0002ef\u0007<\u0002\u0002f\b\u0003\u0002\u0002\u0002",
-    "gh\u0007.\u0002\u0002h\n\u0003\u0002\u0002\u0002ij\u0007B\u0002\u0002",
-    "j\f\u0003\u0002\u0002\u0002kl\u0007~\u0002\u0002lm\u0007~\u0002\u0002",
-    "m\u000e\u0003\u0002\u0002\u0002no\u0007(\u0002\u0002op\u0007(\u0002",
-    "\u0002p\u0010\u0003\u0002\u0002\u0002qr\u0007?\u0002\u0002rs\u0007?",
-    "\u0002\u0002s\u0012\u0003\u0002\u0002\u0002tu\u0007#\u0002\u0002uv\u0007",
-    "?\u0002\u0002v\u0014\u0003\u0002\u0002\u0002wx\u0007@\u0002\u0002x\u0016",
-    "\u0003\u0002\u0002\u0002yz\u0007>\u0002\u0002z\u0018\u0003\u0002\u0002",
-    "\u0002{|\u0007@\u0002\u0002|}\u0007?\u0002\u0002}\u001a\u0003\u0002",
-    "\u0002\u0002~\u007f\u0007>\u0002\u0002\u007f\u0080\u0007?\u0002\u0002",
-    "\u0080\u001c\u0003\u0002\u0002\u0002\u0081\u0082\u0007-\u0002\u0002",
-    "\u0082\u001e\u0003\u0002\u0002\u0002\u0083\u0084\u0007/\u0002\u0002",
-    "\u0084 \u0003\u0002\u0002\u0002\u0085\u0086\u0007,\u0002\u0002\u0086",
-    "\"\u0003\u0002\u0002\u0002\u0087\u0088\u00071\u0002\u0002\u0088$\u0003",
-    "\u0002\u0002\u0002\u0089\u008a\u0007\'\u0002\u0002\u008a&\u0003\u0002",
-    "\u0002\u0002\u008b\u008c\u0007`\u0002\u0002\u008c(\u0003\u0002\u0002",
-    "\u0002\u008d\u008e\u0007#\u0002\u0002\u008e*\u0003\u0002\u0002\u0002",
-    "\u008f\u0090\u0007<\u0002\u0002\u0090,\u0003\u0002\u0002\u0002\u0091",
-    "\u0092\u0007=\u0002\u0002\u0092.\u0003\u0002\u0002\u0002\u0093\u0094",
-    "\u0007?\u0002\u0002\u00940\u0003\u0002\u0002\u0002\u0095\u0096\u0007",
-    "*\u0002\u0002\u00962\u0003\u0002\u0002\u0002\u0097\u0098\u0007+\u0002",
-    "\u0002\u00984\u0003\u0002\u0002\u0002\u0099\u009a\u0007}\u0002\u0002",
-    "\u009a6\u0003\u0002\u0002\u0002\u009b\u009c\u0007\u007f\u0002\u0002",
-    "\u009c8\u0003\u0002\u0002\u0002\u009d\u009e\u0007v\u0002\u0002\u009e",
-    "\u009f\u0007t\u0002\u0002\u009f\u00a0\u0007w\u0002\u0002\u00a0\u00a1",
-    "\u0007g\u0002\u0002\u00a1:\u0003\u0002\u0002\u0002\u00a2\u00a3\u0007",
-    "h\u0002\u0002\u00a3\u00a4\u0007c\u0002\u0002\u00a4\u00a5\u0007n\u0002",
-    "\u0002\u00a5\u00a6\u0007u\u0002\u0002\u00a6\u00a7\u0007g\u0002\u0002",
-    "\u00a7<\u0003\u0002\u0002\u0002\u00a8\u00a9\u0007p\u0002\u0002\u00a9",
-    "\u00aa\u0007k\u0002\u0002\u00aa\u00ab\u0007n\u0002\u0002\u00ab>\u0003",
-    "\u0002\u0002\u0002\u00ac\u00ad\u0007k\u0002\u0002\u00ad\u00ae\u0007",
-    "h\u0002\u0002\u00ae@\u0003\u0002\u0002\u0002\u00af\u00b0\u0007g\u0002",
-    "\u0002\u00b0\u00b1\u0007n\u0002\u0002\u00b1\u00b2\u0007u\u0002\u0002",
-    "\u00b2\u00b3\u0007g\u0002\u0002\u00b3B\u0003\u0002\u0002\u0002\u00b4",
-    "\u00b5\u0007y\u0002\u0002\u00b5\u00b6\u0007j\u0002\u0002\u00b6\u00b7",
-    "\u0007k\u0002\u0002\u00b7\u00b8\u0007n\u0002\u0002\u00b8\u00cb\u0007",
-    "g\u0002\u0002\u00b9\u00ba\u0007h\u0002\u0002\u00ba\u00bb\u0007q\u0002",
-    "\u0002\u00bb\u00cb\u0007t\u0002\u0002\u00bc\u00bd\u0007h\u0002\u0002",
-    "\u00bd\u00be\u0007q\u0002\u0002\u00be\u00bf\u0007t\u0002\u0002\u00bf",
-    "\u00c0\u0007g\u0002\u0002\u00c0\u00c1\u0007c\u0002\u0002\u00c1\u00c2",
-    "\u0007e\u0002\u0002\u00c2\u00cb\u0007j\u0002\u0002\u00c3\u00c4\u0007",
-    "h\u0002\u0002\u00c4\u00c5\u0007q\u0002\u0002\u00c5\u00c6\u0007t\u0002",
-    "\u0002\u00c6\u00c7\u0007G\u0002\u0002\u00c7\u00c8\u0007c\u0002\u0002",
-    "\u00c8\u00c9\u0007e\u0002\u0002\u00c9\u00cb\u0007j\u0002\u0002\u00ca",
-    "\u00b4\u0003\u0002\u0002\u0002\u00ca\u00b9\u0003\u0002\u0002\u0002\u00ca",
-    "\u00bc\u0003\u0002\u0002\u0002\u00ca\u00c3\u0003\u0002\u0002\u0002\u00cb",
-    "D\u0003\u0002\u0002\u0002\u00cc\u00cd\u0007t\u0002\u0002\u00cd\u00ce",
-    "\u0007g\u0002\u0002\u00ce\u00cf\u0007v\u0002\u0002\u00cf\u00d0\u0007",
-    "w\u0002\u0002\u00d0\u00d1\u0007t\u0002\u0002\u00d1\u00d2\u0007p\u0002",
-    "\u0002\u00d2F\u0003\u0002\u0002\u0002\u00d3\u00d4\u0007p\u0002\u0002",
-    "\u00d4\u00d5\u0007g\u0002\u0002\u00d5\u00d6\u0007y\u0002\u0002\u00d6",
-    "H\u0003\u0002\u0002\u0002\u00d7\u00d8\u00070\u0002\u0002\u00d8J\u0003",
-    "\u0002\u0002\u0002\u00d9\u00dd\t\u0002\u0002\u0002\u00da\u00dc\t\u0003",
-    "\u0002\u0002\u00db\u00da\u0003\u0002\u0002\u0002\u00dc\u00df\u0003\u0002",
-    "\u0002\u0002\u00dd\u00db\u0003\u0002\u0002\u0002\u00dd\u00de\u0003\u0002",
-    "\u0002\u0002\u00deL\u0003\u0002\u0002\u0002\u00df\u00dd\u0003\u0002",
-    "\u0002\u0002\u00e0\u00e2\t\u0004\u0002\u0002\u00e1\u00e0\u0003\u0002",
-    "\u0002\u0002\u00e2\u00e3\u0003\u0002\u0002\u0002\u00e3\u00e1\u0003\u0002",
-    "\u0002\u0002\u00e3\u00e4\u0003\u0002\u0002\u0002\u00e4N\u0003\u0002",
-    "\u0002\u0002\u00e5\u00e7\t\u0004\u0002\u0002\u00e6\u00e5\u0003\u0002",
-    "\u0002\u0002\u00e7\u00e8\u0003\u0002\u0002\u0002\u00e8\u00e6\u0003\u0002",
-    "\u0002\u0002\u00e8\u00e9\u0003\u0002\u0002\u0002\u00e9\u00ea\u0003\u0002",
-    "\u0002\u0002\u00ea\u00ee\u00070\u0002\u0002\u00eb\u00ed\t\u0004\u0002",
-    "\u0002\u00ec\u00eb\u0003\u0002\u0002\u0002\u00ed\u00f0\u0003\u0002\u0002",
-    "\u0002\u00ee\u00ec\u0003\u0002\u0002\u0002\u00ee\u00ef\u0003\u0002\u0002",
-    "\u0002\u00ef\u00f8\u0003\u0002\u0002\u0002\u00f0\u00ee\u0003\u0002\u0002",
-    "\u0002\u00f1\u00f3\u00070\u0002\u0002\u00f2\u00f4\t\u0004\u0002\u0002",
-    "\u00f3\u00f2\u0003\u0002\u0002\u0002\u00f4\u00f5\u0003\u0002\u0002\u0002",
-    "\u00f5\u00f3\u0003\u0002\u0002\u0002\u00f5\u00f6\u0003\u0002\u0002\u0002",
-    "\u00f6\u00f8\u0003\u0002\u0002\u0002\u00f7\u00e6\u0003\u0002\u0002\u0002",
-    "\u00f7\u00f1\u0003\u0002\u0002\u0002\u00f8P\u0003\u0002\u0002\u0002",
-    "\u00f9\u00ff\u0007$\u0002\u0002\u00fa\u00fe\n\u0005\u0002\u0002\u00fb",
-    "\u00fc\u0007$\u0002\u0002\u00fc\u00fe\u0007$\u0002\u0002\u00fd\u00fa",
-    "\u0003\u0002\u0002\u0002\u00fd\u00fb\u0003\u0002\u0002\u0002\u00fe\u0101",
-    "\u0003\u0002\u0002\u0002\u00ff\u00fd\u0003\u0002\u0002\u0002\u00ff\u0100",
-    "\u0003\u0002\u0002\u0002\u0100\u0102\u0003\u0002\u0002\u0002\u0101\u00ff",
-    "\u0003\u0002\u0002\u0002\u0102\u0103\u0007$\u0002\u0002\u0103R\u0003",
-    "\u0002\u0002\u0002\u0104\u0105\u00071\u0002\u0002\u0105\u0106\u0007",
-    "1\u0002\u0002\u0106\u010a\u0003\u0002\u0002\u0002\u0107\u0109\n\u0006",
-    "\u0002\u0002\u0108\u0107\u0003\u0002\u0002\u0002\u0109\u010c\u0003\u0002",
-    "\u0002\u0002\u010a\u0108\u0003\u0002\u0002\u0002\u010a\u010b\u0003\u0002",
-    "\u0002\u0002\u010bT\u0003\u0002\u0002\u0002\u010c\u010a\u0003\u0002",
-    "\u0002\u0002\u010d\u010e\t\u0007\u0002\u0002\u010e\u010f\u0003\u0002",
-    "\u0002\u0002\u010f\u0110\b+\u0002\u0002\u0110V\u0003\u0002\u0002\u0002",
-    "\u0111\u0112\u000b\u0002\u0002\u0002\u0112X\u0003\u0002\u0002\u0002",
-    "\r\u0002\u00ca\u00dd\u00e3\u00e8\u00ee\u00f5\u00f7\u00fd\u00ff\u010a",
-    "\u0003\u0002\u0003\u0002"].join("");
+    "*\t*\u0004+\t+\u0004,\t,\u0004-\t-\u0004.\t.\u0004/\t/\u00040\t0\u0003",
+    "\u0002\u0003\u0002\u0003\u0002\u0003\u0002\u0003\u0002\u0003\u0003\u0003",
+    "\u0003\u0003\u0004\u0003\u0004\u0003\u0004\u0003\u0005\u0003\u0005\u0003",
+    "\u0005\u0003\u0006\u0003\u0006\u0003\u0006\u0003\u0007\u0003\u0007\u0003",
+    "\u0007\u0003\b\u0003\b\u0003\t\u0003\t\u0003\n\u0003\n\u0003\n\u0003",
+    "\u000b\u0003\u000b\u0003\u000b\u0003\f\u0003\f\u0003\r\u0003\r\u0003",
+    "\u000e\u0003\u000e\u0003\u000f\u0003\u000f\u0003\u0010\u0003\u0010\u0003",
+    "\u0011\u0003\u0011\u0003\u0012\u0003\u0012\u0003\u0013\u0003\u0013\u0003",
+    "\u0014\u0003\u0014\u0003\u0014\u0003\u0015\u0003\u0015\u0003\u0016\u0003",
+    "\u0016\u0003\u0017\u0003\u0017\u0003\u0018\u0003\u0018\u0003\u0019\u0003",
+    "\u0019\u0003\u001a\u0003\u001a\u0003\u001b\u0003\u001b\u0003\u001c\u0003",
+    "\u001c\u0003\u001c\u0003\u001c\u0003\u001c\u0003\u001d\u0003\u001d\u0003",
+    "\u001d\u0003\u001d\u0003\u001d\u0003\u001d\u0003\u001e\u0003\u001e\u0003",
+    "\u001e\u0003\u001e\u0003\u001f\u0003\u001f\u0003\u001f\u0003 \u0003",
+    " \u0003 \u0003 \u0003 \u0003!\u0003!\u0003!\u0003!\u0003!\u0003!\u0003",
+    "!\u0003!\u0003!\u0003!\u0003!\u0003!\u0003!\u0003!\u0003!\u0003!\u0003",
+    "!\u0003!\u0003!\u0003!\u0003!\u0003!\u0005!\u00ce\n!\u0003\"\u0003\"",
+    "\u0003\"\u0003\"\u0003\"\u0003\"\u0003\"\u0003#\u0003#\u0003#\u0003",
+    "#\u0003$\u0003$\u0003$\u0003$\u0003$\u0003$\u0003$\u0003$\u0003%\u0003",
+    "%\u0003&\u0003&\u0007&\u00e7\n&\f&\u000e&\u00ea\u000b&\u0003\'\u0006",
+    "\'\u00ed\n\'\r\'\u000e\'\u00ee\u0003(\u0006(\u00f2\n(\r(\u000e(\u00f3",
+    "\u0003(\u0003(\u0007(\u00f8\n(\f(\u000e(\u00fb\u000b(\u0003(\u0003(",
+    "\u0006(\u00ff\n(\r(\u000e(\u0100\u0005(\u0103\n(\u0003)\u0003)\u0003",
+    ")\u0003)\u0007)\u0109\n)\f)\u000e)\u010c\u000b)\u0003)\u0003)\u0003",
+    "*\u0003*\u0003*\u0003*\u0007*\u0114\n*\f*\u000e*\u0117\u000b*\u0003",
+    "+\u0003+\u0003+\u0003+\u0003,\u0003,\u0003-\u0003-\u0007-\u0121\n-\f",
+    "-\u000e-\u0124\u000b-\u0003.\u0003.\u0006.\u0128\n.\r.\u000e.\u0129",
+    "\u0003/\u0003/\u0003/\u0003/\u00030\u00030\u00030\u00030\u0002\u0002",
+    "1\u0004\u0003\u0006\u0004\b\u0005\n\u0006\f\u0007\u000e\b\u0010\t\u0012",
+    "\n\u0014\u000b\u0016\f\u0018\r\u001a\u000e\u001c\u000f\u001e\u0010 ",
+    "\u0011\"\u0012$\u0013&\u0014(\u0015*\u0016,\u0017.\u00180\u00192\u001a",
+    "4\u001b6\u001c8\u001d:\u001e<\u001f> @!B\"D#F$H%J&L\'N(P)R*T+V,X-Z.",
+    "\\/^0`1\u0004\u0002\u0003\t\u0005\u0002C\\aac|\u0006\u00022;C\\aac|",
+    "\u0003\u00022;\u0005\u0002\f\f\u000f\u000f$$\u0004\u0002\f\f\u000f\u000f",
+    "\u0005\u0002\u000b\f\u000f\u000f\"\"\u0003\u0002\"\"\u013f\u0002\u0004",
+    "\u0003\u0002\u0002\u0002\u0002\u0006\u0003\u0002\u0002\u0002\u0002\b",
+    "\u0003\u0002\u0002\u0002\u0002\n\u0003\u0002\u0002\u0002\u0002\f\u0003",
+    "\u0002\u0002\u0002\u0002\u000e\u0003\u0002\u0002\u0002\u0002\u0010\u0003",
+    "\u0002\u0002\u0002\u0002\u0012\u0003\u0002\u0002\u0002\u0002\u0014\u0003",
+    "\u0002\u0002\u0002\u0002\u0016\u0003\u0002\u0002\u0002\u0002\u0018\u0003",
+    "\u0002\u0002\u0002\u0002\u001a\u0003\u0002\u0002\u0002\u0002\u001c\u0003",
+    "\u0002\u0002\u0002\u0002\u001e\u0003\u0002\u0002\u0002\u0002 \u0003",
+    "\u0002\u0002\u0002\u0002\"\u0003\u0002\u0002\u0002\u0002$\u0003\u0002",
+    "\u0002\u0002\u0002&\u0003\u0002\u0002\u0002\u0002(\u0003\u0002\u0002",
+    "\u0002\u0002*\u0003\u0002\u0002\u0002\u0002,\u0003\u0002\u0002\u0002",
+    "\u0002.\u0003\u0002\u0002\u0002\u00020\u0003\u0002\u0002\u0002\u0002",
+    "2\u0003\u0002\u0002\u0002\u00024\u0003\u0002\u0002\u0002\u00026\u0003",
+    "\u0002\u0002\u0002\u00028\u0003\u0002\u0002\u0002\u0002:\u0003\u0002",
+    "\u0002\u0002\u0002<\u0003\u0002\u0002\u0002\u0002>\u0003\u0002\u0002",
+    "\u0002\u0002@\u0003\u0002\u0002\u0002\u0002B\u0003\u0002\u0002\u0002",
+    "\u0002D\u0003\u0002\u0002\u0002\u0002F\u0003\u0002\u0002\u0002\u0002",
+    "H\u0003\u0002\u0002\u0002\u0002J\u0003\u0002\u0002\u0002\u0002L\u0003",
+    "\u0002\u0002\u0002\u0002N\u0003\u0002\u0002\u0002\u0002P\u0003\u0002",
+    "\u0002\u0002\u0002R\u0003\u0002\u0002\u0002\u0002T\u0003\u0002\u0002",
+    "\u0002\u0002V\u0003\u0002\u0002\u0002\u0002X\u0003\u0002\u0002\u0002",
+    "\u0003Z\u0003\u0002\u0002\u0002\u0003\\\u0003\u0002\u0002\u0002\u0003",
+    "^\u0003\u0002\u0002\u0002\u0003`\u0003\u0002\u0002\u0002\u0004b\u0003",
+    "\u0002\u0002\u0002\u0006g\u0003\u0002\u0002\u0002\bi\u0003\u0002\u0002",
+    "\u0002\nl\u0003\u0002\u0002\u0002\fo\u0003\u0002\u0002\u0002\u000er",
+    "\u0003\u0002\u0002\u0002\u0010u\u0003\u0002\u0002\u0002\u0012w\u0003",
+    "\u0002\u0002\u0002\u0014y\u0003\u0002\u0002\u0002\u0016|\u0003\u0002",
+    "\u0002\u0002\u0018\u007f\u0003\u0002\u0002\u0002\u001a\u0081\u0003\u0002",
+    "\u0002\u0002\u001c\u0083\u0003\u0002\u0002\u0002\u001e\u0085\u0003\u0002",
+    "\u0002\u0002 \u0087\u0003\u0002\u0002\u0002\"\u0089\u0003\u0002\u0002",
+    "\u0002$\u008b\u0003\u0002\u0002\u0002&\u008d\u0003\u0002\u0002\u0002",
+    "(\u008f\u0003\u0002\u0002\u0002*\u0092\u0003\u0002\u0002\u0002,\u0094",
+    "\u0003\u0002\u0002\u0002.\u0096\u0003\u0002\u0002\u00020\u0098\u0003",
+    "\u0002\u0002\u00022\u009a\u0003\u0002\u0002\u00024\u009c\u0003\u0002",
+    "\u0002\u00026\u009e\u0003\u0002\u0002\u00028\u00a0\u0003\u0002\u0002",
+    "\u0002:\u00a5\u0003\u0002\u0002\u0002<\u00ab\u0003\u0002\u0002\u0002",
+    ">\u00af\u0003\u0002\u0002\u0002@\u00b2\u0003\u0002\u0002\u0002B\u00cd",
+    "\u0003\u0002\u0002\u0002D\u00cf\u0003\u0002\u0002\u0002F\u00d6\u0003",
+    "\u0002\u0002\u0002H\u00da\u0003\u0002\u0002\u0002J\u00e2\u0003\u0002",
+    "\u0002\u0002L\u00e4\u0003\u0002\u0002\u0002N\u00ec\u0003\u0002\u0002",
+    "\u0002P\u0102\u0003\u0002\u0002\u0002R\u0104\u0003\u0002\u0002\u0002",
+    "T\u010f\u0003\u0002\u0002\u0002V\u0118\u0003\u0002\u0002\u0002X\u011c",
+    "\u0003\u0002\u0002\u0002Z\u011e\u0003\u0002\u0002\u0002\\\u0125\u0003",
+    "\u0002\u0002\u0002^\u012b\u0003\u0002\u0002\u0002`\u012f\u0003\u0002",
+    "\u0002\u0002bc\u0007/\u0002\u0002cd\u0007@\u0002\u0002de\u0003\u0002",
+    "\u0002\u0002ef\b\u0002\u0002\u0002f\u0005\u0003\u0002\u0002\u0002gh",
+    "\u0007B\u0002\u0002h\u0007\u0003\u0002\u0002\u0002ij\u0007~\u0002\u0002",
+    "jk\u0007~\u0002\u0002k\t\u0003\u0002\u0002\u0002lm\u0007(\u0002\u0002",
+    "mn\u0007(\u0002\u0002n\u000b\u0003\u0002\u0002\u0002op\u0007?\u0002",
+    "\u0002pq\u0007?\u0002\u0002q\r\u0003\u0002\u0002\u0002rs\u0007#\u0002",
+    "\u0002st\u0007?\u0002\u0002t\u000f\u0003\u0002\u0002\u0002uv\u0007@",
+    "\u0002\u0002v\u0011\u0003\u0002\u0002\u0002wx\u0007>\u0002\u0002x\u0013",
+    "\u0003\u0002\u0002\u0002yz\u0007@\u0002\u0002z{\u0007?\u0002\u0002{",
+    "\u0015\u0003\u0002\u0002\u0002|}\u0007>\u0002\u0002}~\u0007?\u0002\u0002",
+    "~\u0017\u0003\u0002\u0002\u0002\u007f\u0080\u0007-\u0002\u0002\u0080",
+    "\u0019\u0003\u0002\u0002\u0002\u0081\u0082\u0007/\u0002\u0002\u0082",
+    "\u001b\u0003\u0002\u0002\u0002\u0083\u0084\u0007,\u0002\u0002\u0084",
+    "\u001d\u0003\u0002\u0002\u0002\u0085\u0086\u00071\u0002\u0002\u0086",
+    "\u001f\u0003\u0002\u0002\u0002\u0087\u0088\u0007\'\u0002\u0002\u0088",
+    "!\u0003\u0002\u0002\u0002\u0089\u008a\u0007`\u0002\u0002\u008a#\u0003",
+    "\u0002\u0002\u0002\u008b\u008c\u0007#\u0002\u0002\u008c%\u0003\u0002",
+    "\u0002\u0002\u008d\u008e\u0007<\u0002\u0002\u008e\'\u0003\u0002\u0002",
+    "\u0002\u008f\u0090\u0007<\u0002\u0002\u0090\u0091\u0007<\u0002\u0002",
+    "\u0091)\u0003\u0002\u0002\u0002\u0092\u0093\u0007=\u0002\u0002\u0093",
+    "+\u0003\u0002\u0002\u0002\u0094\u0095\u0007.\u0002\u0002\u0095-\u0003",
+    "\u0002\u0002\u0002\u0096\u0097\u0007?\u0002\u0002\u0097/\u0003\u0002",
+    "\u0002\u0002\u0098\u0099\u0007*\u0002\u0002\u00991\u0003\u0002\u0002",
+    "\u0002\u009a\u009b\u0007+\u0002\u0002\u009b3\u0003\u0002\u0002\u0002",
+    "\u009c\u009d\u0007}\u0002\u0002\u009d5\u0003\u0002\u0002\u0002\u009e",
+    "\u009f\u0007\u007f\u0002\u0002\u009f7\u0003\u0002\u0002\u0002\u00a0",
+    "\u00a1\u0007v\u0002\u0002\u00a1\u00a2\u0007t\u0002\u0002\u00a2\u00a3",
+    "\u0007w\u0002\u0002\u00a3\u00a4\u0007g\u0002\u0002\u00a49\u0003\u0002",
+    "\u0002\u0002\u00a5\u00a6\u0007h\u0002\u0002\u00a6\u00a7\u0007c\u0002",
+    "\u0002\u00a7\u00a8\u0007n\u0002\u0002\u00a8\u00a9\u0007u\u0002\u0002",
+    "\u00a9\u00aa\u0007g\u0002\u0002\u00aa;\u0003\u0002\u0002\u0002\u00ab",
+    "\u00ac\u0007p\u0002\u0002\u00ac\u00ad\u0007k\u0002\u0002\u00ad\u00ae",
+    "\u0007n\u0002\u0002\u00ae=\u0003\u0002\u0002\u0002\u00af\u00b0\u0007",
+    "k\u0002\u0002\u00b0\u00b1\u0007h\u0002\u0002\u00b1?\u0003\u0002\u0002",
+    "\u0002\u00b2\u00b3\u0007g\u0002\u0002\u00b3\u00b4\u0007n\u0002\u0002",
+    "\u00b4\u00b5\u0007u\u0002\u0002\u00b5\u00b6\u0007g\u0002\u0002\u00b6",
+    "A\u0003\u0002\u0002\u0002\u00b7\u00b8\u0007y\u0002\u0002\u00b8\u00b9",
+    "\u0007j\u0002\u0002\u00b9\u00ba\u0007k\u0002\u0002\u00ba\u00bb\u0007",
+    "n\u0002\u0002\u00bb\u00ce\u0007g\u0002\u0002\u00bc\u00bd\u0007h\u0002",
+    "\u0002\u00bd\u00be\u0007q\u0002\u0002\u00be\u00ce\u0007t\u0002\u0002",
+    "\u00bf\u00c0\u0007h\u0002\u0002\u00c0\u00c1\u0007q\u0002\u0002\u00c1",
+    "\u00c2\u0007t\u0002\u0002\u00c2\u00c3\u0007g\u0002\u0002\u00c3\u00c4",
+    "\u0007c\u0002\u0002\u00c4\u00c5\u0007e\u0002\u0002\u00c5\u00ce\u0007",
+    "j\u0002\u0002\u00c6\u00c7\u0007h\u0002\u0002\u00c7\u00c8\u0007q\u0002",
+    "\u0002\u00c8\u00c9\u0007t\u0002\u0002\u00c9\u00ca\u0007G\u0002\u0002",
+    "\u00ca\u00cb\u0007c\u0002\u0002\u00cb\u00cc\u0007e\u0002\u0002\u00cc",
+    "\u00ce\u0007j\u0002\u0002\u00cd\u00b7\u0003\u0002\u0002\u0002\u00cd",
+    "\u00bc\u0003\u0002\u0002\u0002\u00cd\u00bf\u0003\u0002\u0002\u0002\u00cd",
+    "\u00c6\u0003\u0002\u0002\u0002\u00ceC\u0003\u0002\u0002\u0002\u00cf",
+    "\u00d0\u0007t\u0002\u0002\u00d0\u00d1\u0007g\u0002\u0002\u00d1\u00d2",
+    "\u0007v\u0002\u0002\u00d2\u00d3\u0007w\u0002\u0002\u00d3\u00d4\u0007",
+    "t\u0002\u0002\u00d4\u00d5\u0007p\u0002\u0002\u00d5E\u0003\u0002\u0002",
+    "\u0002\u00d6\u00d7\u0007p\u0002\u0002\u00d7\u00d8\u0007g\u0002\u0002",
+    "\u00d8\u00d9\u0007y\u0002\u0002\u00d9G\u0003\u0002\u0002\u0002\u00da",
+    "\u00db\u0007U\u0002\u0002\u00db\u00dc\u0007v\u0002\u0002\u00dc\u00dd",
+    "\u0007c\u0002\u0002\u00dd\u00de\u0007t\u0002\u0002\u00de\u00df\u0007",
+    "v\u0002\u0002\u00df\u00e0\u0007g\u0002\u0002\u00e0\u00e1\u0007t\u0002",
+    "\u0002\u00e1I\u0003\u0002\u0002\u0002\u00e2\u00e3\u00070\u0002\u0002",
+    "\u00e3K\u0003\u0002\u0002\u0002\u00e4\u00e8\t\u0002\u0002\u0002\u00e5",
+    "\u00e7\t\u0003\u0002\u0002\u00e6\u00e5\u0003\u0002\u0002\u0002\u00e7",
+    "\u00ea\u0003\u0002\u0002\u0002\u00e8\u00e6\u0003\u0002\u0002\u0002\u00e8",
+    "\u00e9\u0003\u0002\u0002\u0002\u00e9M\u0003\u0002\u0002\u0002\u00ea",
+    "\u00e8\u0003\u0002\u0002\u0002\u00eb\u00ed\t\u0004\u0002\u0002\u00ec",
+    "\u00eb\u0003\u0002\u0002\u0002\u00ed\u00ee\u0003\u0002\u0002\u0002\u00ee",
+    "\u00ec\u0003\u0002\u0002\u0002\u00ee\u00ef\u0003\u0002\u0002\u0002\u00ef",
+    "O\u0003\u0002\u0002\u0002\u00f0\u00f2\t\u0004\u0002\u0002\u00f1\u00f0",
+    "\u0003\u0002\u0002\u0002\u00f2\u00f3\u0003\u0002\u0002\u0002\u00f3\u00f1",
+    "\u0003\u0002\u0002\u0002\u00f3\u00f4\u0003\u0002\u0002\u0002\u00f4\u00f5",
+    "\u0003\u0002\u0002\u0002\u00f5\u00f9\u00070\u0002\u0002\u00f6\u00f8",
+    "\t\u0004\u0002\u0002\u00f7\u00f6\u0003\u0002\u0002\u0002\u00f8\u00fb",
+    "\u0003\u0002\u0002\u0002\u00f9\u00f7\u0003\u0002\u0002\u0002\u00f9\u00fa",
+    "\u0003\u0002\u0002\u0002\u00fa\u0103\u0003\u0002\u0002\u0002\u00fb\u00f9",
+    "\u0003\u0002\u0002\u0002\u00fc\u00fe\u00070\u0002\u0002\u00fd\u00ff",
+    "\t\u0004\u0002\u0002\u00fe\u00fd\u0003\u0002\u0002\u0002\u00ff\u0100",
+    "\u0003\u0002\u0002\u0002\u0100\u00fe\u0003\u0002\u0002\u0002\u0100\u0101",
+    "\u0003\u0002\u0002\u0002\u0101\u0103\u0003\u0002\u0002\u0002\u0102\u00f1",
+    "\u0003\u0002\u0002\u0002\u0102\u00fc\u0003\u0002\u0002\u0002\u0103Q",
+    "\u0003\u0002\u0002\u0002\u0104\u010a\u0007$\u0002\u0002\u0105\u0109",
+    "\n\u0005\u0002\u0002\u0106\u0107\u0007$\u0002\u0002\u0107\u0109\u0007",
+    "$\u0002\u0002\u0108\u0105\u0003\u0002\u0002\u0002\u0108\u0106\u0003",
+    "\u0002\u0002\u0002\u0109\u010c\u0003\u0002\u0002\u0002\u010a\u0108\u0003",
+    "\u0002\u0002\u0002\u010a\u010b\u0003\u0002\u0002\u0002\u010b\u010d\u0003",
+    "\u0002\u0002\u0002\u010c\u010a\u0003\u0002\u0002\u0002\u010d\u010e\u0007",
+    "$\u0002\u0002\u010eS\u0003\u0002\u0002\u0002\u010f\u0110\u00071\u0002",
+    "\u0002\u0110\u0111\u00071\u0002\u0002\u0111\u0115\u0003\u0002\u0002",
+    "\u0002\u0112\u0114\n\u0006\u0002\u0002\u0113\u0112\u0003\u0002\u0002",
+    "\u0002\u0114\u0117\u0003\u0002\u0002\u0002\u0115\u0113\u0003\u0002\u0002",
+    "\u0002\u0115\u0116\u0003\u0002\u0002\u0002\u0116U\u0003\u0002\u0002",
+    "\u0002\u0117\u0115\u0003\u0002\u0002\u0002\u0118\u0119\t\u0007\u0002",
+    "\u0002\u0119\u011a\u0003\u0002\u0002\u0002\u011a\u011b\b+\u0003\u0002",
+    "\u011bW\u0003\u0002\u0002\u0002\u011c\u011d\u000b\u0002\u0002\u0002",
+    "\u011dY\u0003\u0002\u0002\u0002\u011e\u0122\t\u0002\u0002\u0002\u011f",
+    "\u0121\t\u0003\u0002\u0002\u0120\u011f\u0003\u0002\u0002\u0002\u0121",
+    "\u0124\u0003\u0002\u0002\u0002\u0122\u0120\u0003\u0002\u0002\u0002\u0122",
+    "\u0123\u0003\u0002\u0002\u0002\u0123[\u0003\u0002\u0002\u0002\u0124",
+    "\u0122\u0003\u0002\u0002\u0002\u0125\u0127\u0007<\u0002\u0002\u0126",
+    "\u0128\n\u0006\u0002\u0002\u0127\u0126\u0003\u0002\u0002\u0002\u0128",
+    "\u0129\u0003\u0002\u0002\u0002\u0129\u0127\u0003\u0002\u0002\u0002\u0129",
+    "\u012a\u0003\u0002\u0002\u0002\u012a]\u0003\u0002\u0002\u0002\u012b",
+    "\u012c\t\u0006\u0002\u0002\u012c\u012d\u0003\u0002\u0002\u0002\u012d",
+    "\u012e\b/\u0004\u0002\u012e_\u0003\u0002\u0002\u0002\u012f\u0130\t\b",
+    "\u0002\u0002\u0130\u0131\u0003\u0002\u0002\u0002\u0131\u0132\b0\u0003",
+    "\u0002\u0132a\u0003\u0002\u0002\u0002\u0010\u0002\u0003\u00cd\u00e8",
+    "\u00ee\u00f3\u00f9\u0100\u0102\u0108\u010a\u0115\u0122\u0129\u0005\u0007",
+    "\u0003\u0002\u0002\u0003\u0002\u0006\u0002\u0002"].join("");
 
 
 var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
@@ -27116,41 +27137,41 @@ sequenceLexer.prototype = Object.create(antlr4.Lexer.prototype);
 sequenceLexer.prototype.constructor = sequenceLexer;
 
 sequenceLexer.EOF = antlr4.Token.EOF;
-sequenceLexer.T__0 = 1;
-sequenceLexer.T__1 = 2;
-sequenceLexer.T__2 = 3;
-sequenceLexer.T__3 = 4;
-sequenceLexer.AT = 5;
-sequenceLexer.OR = 6;
-sequenceLexer.AND = 7;
-sequenceLexer.EQ = 8;
-sequenceLexer.NEQ = 9;
-sequenceLexer.GT = 10;
-sequenceLexer.LT = 11;
-sequenceLexer.GTEQ = 12;
-sequenceLexer.LTEQ = 13;
-sequenceLexer.PLUS = 14;
-sequenceLexer.MINUS = 15;
-sequenceLexer.MULT = 16;
-sequenceLexer.DIV = 17;
-sequenceLexer.MOD = 18;
-sequenceLexer.POW = 19;
-sequenceLexer.NOT = 20;
-sequenceLexer.COL = 21;
-sequenceLexer.SCOL = 22;
-sequenceLexer.ASSIGN = 23;
-sequenceLexer.OPAR = 24;
-sequenceLexer.CPAR = 25;
-sequenceLexer.OBRACE = 26;
-sequenceLexer.CBRACE = 27;
-sequenceLexer.TRUE = 28;
-sequenceLexer.FALSE = 29;
-sequenceLexer.NIL = 30;
-sequenceLexer.IF = 31;
-sequenceLexer.ELSE = 32;
-sequenceLexer.WHILE = 33;
-sequenceLexer.RETURN = 34;
-sequenceLexer.NEW = 35;
+sequenceLexer.ARROW = 1;
+sequenceLexer.AT = 2;
+sequenceLexer.OR = 3;
+sequenceLexer.AND = 4;
+sequenceLexer.EQ = 5;
+sequenceLexer.NEQ = 6;
+sequenceLexer.GT = 7;
+sequenceLexer.LT = 8;
+sequenceLexer.GTEQ = 9;
+sequenceLexer.LTEQ = 10;
+sequenceLexer.PLUS = 11;
+sequenceLexer.MINUS = 12;
+sequenceLexer.MULT = 13;
+sequenceLexer.DIV = 14;
+sequenceLexer.MOD = 15;
+sequenceLexer.POW = 16;
+sequenceLexer.NOT = 17;
+sequenceLexer.COL = 18;
+sequenceLexer.DOUBLECOL = 19;
+sequenceLexer.SCOL = 20;
+sequenceLexer.COMMA = 21;
+sequenceLexer.ASSIGN = 22;
+sequenceLexer.OPAR = 23;
+sequenceLexer.CPAR = 24;
+sequenceLexer.OBRACE = 25;
+sequenceLexer.CBRACE = 26;
+sequenceLexer.TRUE = 27;
+sequenceLexer.FALSE = 28;
+sequenceLexer.NIL = 29;
+sequenceLexer.IF = 30;
+sequenceLexer.ELSE = 31;
+sequenceLexer.WHILE = 32;
+sequenceLexer.RETURN = 33;
+sequenceLexer.NEW = 34;
+sequenceLexer.STARTER = 35;
 sequenceLexer.DOT = 36;
 sequenceLexer.ID = 37;
 sequenceLexer.INT = 38;
@@ -27159,42 +27180,43 @@ sequenceLexer.STRING = 40;
 sequenceLexer.COMMENT = 41;
 sequenceLexer.SPACE = 42;
 sequenceLexer.OTHER = 43;
+sequenceLexer.NAME = 44;
+sequenceLexer.CONTENT = 45;
+sequenceLexer.NEWLINE = 46;
+sequenceLexer.WS = 47;
 
-sequenceLexer.prototype.channelNames = [ "DEFAULT_TOKEN_CHANNEL", "HIDDEN" ];
+sequenceLexer.ASYNC = 1;
 
-sequenceLexer.prototype.modeNames = [ "DEFAULT_MODE" ];
+sequenceLexer.modeNames = [ "DEFAULT_MODE", "ASYNC" ];
 
-sequenceLexer.prototype.literalNames = [ null, "'Starter'", "'->'", "'::'", 
-                                         "','", "'@'", "'||'", "'&&'", "'=='", 
-                                         "'!='", "'>'", "'<'", "'>='", "'<='", 
-                                         "'+'", "'-'", "'*'", "'/'", "'%'", 
-                                         "'^'", "'!'", "':'", "';'", "'='", 
-                                         "'('", "')'", "'{'", "'}'", "'true'", 
-                                         "'false'", "'nil'", "'if'", "'else'", 
-                                         null, "'return'", "'new'", "'.'" ];
+sequenceLexer.literalNames = [ null, "'->'", "'@'", "'||'", "'&&'", "'=='", 
+                               "'!='", "'>'", "'<'", "'>='", "'<='", "'+'", 
+                               "'-'", "'*'", "'/'", "'%'", "'^'", "'!'", 
+                               "':'", "'::'", "';'", "','", "'='", "'('", 
+                               "')'", "'{'", "'}'", "'true'", "'false'", 
+                               "'nil'", "'if'", "'else'", null, "'return'", 
+                               "'new'", "'Starter'", "'.'" ];
 
-sequenceLexer.prototype.symbolicNames = [ null, null, null, null, null, 
-                                          "AT", "OR", "AND", "EQ", "NEQ", 
-                                          "GT", "LT", "GTEQ", "LTEQ", "PLUS", 
-                                          "MINUS", "MULT", "DIV", "MOD", 
-                                          "POW", "NOT", "COL", "SCOL", "ASSIGN", 
-                                          "OPAR", "CPAR", "OBRACE", "CBRACE", 
-                                          "TRUE", "FALSE", "NIL", "IF", 
-                                          "ELSE", "WHILE", "RETURN", "NEW", 
-                                          "DOT", "ID", "INT", "FLOAT", "STRING", 
-                                          "COMMENT", "SPACE", "OTHER" ];
+sequenceLexer.symbolicNames = [ null, "ARROW", "AT", "OR", "AND", "EQ", 
+                                "NEQ", "GT", "LT", "GTEQ", "LTEQ", "PLUS", 
+                                "MINUS", "MULT", "DIV", "MOD", "POW", "NOT", 
+                                "COL", "DOUBLECOL", "SCOL", "COMMA", "ASSIGN", 
+                                "OPAR", "CPAR", "OBRACE", "CBRACE", "TRUE", 
+                                "FALSE", "NIL", "IF", "ELSE", "WHILE", "RETURN", 
+                                "NEW", "STARTER", "DOT", "ID", "INT", "FLOAT", 
+                                "STRING", "COMMENT", "SPACE", "OTHER", "NAME", 
+                                "CONTENT", "NEWLINE", "WS" ];
 
-sequenceLexer.prototype.ruleNames = [ "T__0", "T__1", "T__2", "T__3", "AT", 
-                                      "OR", "AND", "EQ", "NEQ", "GT", "LT", 
-                                      "GTEQ", "LTEQ", "PLUS", "MINUS", "MULT", 
-                                      "DIV", "MOD", "POW", "NOT", "COL", 
-                                      "SCOL", "ASSIGN", "OPAR", "CPAR", 
-                                      "OBRACE", "CBRACE", "TRUE", "FALSE", 
-                                      "NIL", "IF", "ELSE", "WHILE", "RETURN", 
-                                      "NEW", "DOT", "ID", "INT", "FLOAT", 
-                                      "STRING", "COMMENT", "SPACE", "OTHER" ];
+sequenceLexer.ruleNames = [ "ARROW", "AT", "OR", "AND", "EQ", "NEQ", "GT", 
+                            "LT", "GTEQ", "LTEQ", "PLUS", "MINUS", "MULT", 
+                            "DIV", "MOD", "POW", "NOT", "COL", "DOUBLECOL", 
+                            "SCOL", "COMMA", "ASSIGN", "OPAR", "CPAR", "OBRACE", 
+                            "CBRACE", "TRUE", "FALSE", "NIL", "IF", "ELSE", 
+                            "WHILE", "RETURN", "NEW", "STARTER", "DOT", 
+                            "ID", "INT", "FLOAT", "STRING", "COMMENT", "SPACE", 
+                            "OTHER", "NAME", "CONTENT", "NEWLINE", "WS" ];
 
-sequenceLexer.prototype.grammarFileName = "sequence.g4";
+sequenceLexer.grammarFileName = "sequenceLexer.g4";
 
 
 
@@ -27206,14 +27228,14 @@ exports.sequenceLexer = sequenceLexer;
 /* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Generated from /Users/pengxiao/Dropbox/2Dev/all-coloruml/vue-sequence/sequence-parser/src/sequence.g4 by ANTLR 4.7
+// Generated from ./sequenceParser.g4 by ANTLR 4.5.3
 // jshint ignore: start
 var antlr4 = __webpack_require__(12);
-var sequenceListener = __webpack_require__(31).sequenceListener;
-var grammarFileName = "sequence.g4";
+var sequenceParserListener = __webpack_require__(31).sequenceParserListener;
+var grammarFileName = "sequenceParser.g4";
 
-var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
-    "\u0003-\u0134\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
+var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
+    "\u00031\u0127\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
     "\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t\u0007\u0004",
     "\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004\f\t\f\u0004",
     "\r\t\r\u0004\u000e\t\u000e\u0004\u000f\t\u000f\u0004\u0010\t\u0010\u0004",
@@ -27238,54 +27260,50 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u0003\u000b\u0003\u000b\u0003\u000b\u0003\u000b\u0003\u000b\u0005\u000b",
     "\u00a7\n\u000b\u0003\f\u0003\f\u0003\f\u0005\f\u00ac\n\f\u0003\f\u0005",
     "\f\u00af\n\f\u0003\r\u0005\r\u00b2\n\r\u0003\r\u0003\r\u0003\r\u0003",
-    "\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003",
-    "\u000e\u0003\u000e\u0003\u000e\u0005\u000e\u00c0\n\u000e\u0003\u000f",
-    "\u0006\u000f\u00c3\n\u000f\r\u000f\u000e\u000f\u00c4\u0003\u0010\u0006",
-    "\u0010\u00c8\n\u0010\r\u0010\u000e\u0010\u00c9\u0003\u0011\u0006\u0011",
-    "\u00cd\n\u0011\r\u0011\u000e\u0011\u00ce\u0003\u0012\u0003\u0012\u0003",
-    "\u0013\u0003\u0013\u0003\u0014\u0003\u0014\u0003\u0015\u0003\u0015\u0003",
-    "\u0015\u0005\u0015\u00da\n\u0015\u0003\u0015\u0003\u0015\u0003\u0016",
-    "\u0003\u0016\u0003\u0017\u0003\u0017\u0003\u0017\u0007\u0017\u00e3\n",
-    "\u0017\f\u0017\u000e\u0017\u00e6\u000b\u0017\u0003\u0018\u0003\u0018",
-    "\u0005\u0018\u00ea\n\u0018\u0003\u0019\u0003\u0019\u0007\u0019\u00ee",
-    "\n\u0019\f\u0019\u000e\u0019\u00f1\u000b\u0019\u0003\u0019\u0005\u0019",
-    "\u00f4\n\u0019\u0003\u001a\u0003\u001a\u0003\u001a\u0003\u001a\u0003",
-    "\u001b\u0003\u001b\u0003\u001b\u0003\u001b\u0003\u001b\u0003\u001c\u0003",
-    "\u001c\u0003\u001c\u0003\u001d\u0003\u001d\u0003\u001d\u0003\u001d\u0003",
-    "\u001e\u0003\u001e\u0003\u001e\u0003\u001e\u0003\u001f\u0003\u001f\u0003",
-    "\u001f\u0003\u001f\u0003\u001f\u0003\u001f\u0005\u001f\u0110\n\u001f",
+    "\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0003\u000e\u0005\u000e\u00bc",
+    "\n\u000e\u0003\u000f\u0003\u000f\u0003\u0010\u0003\u0010\u0003\u0011",
+    "\u0003\u0011\u0003\u0012\u0003\u0012\u0003\u0013\u0003\u0013\u0003\u0014",
+    "\u0003\u0014\u0003\u0015\u0003\u0015\u0003\u0015\u0005\u0015\u00cd\n",
+    "\u0015\u0003\u0015\u0003\u0015\u0003\u0016\u0003\u0016\u0003\u0017\u0003",
+    "\u0017\u0003\u0017\u0007\u0017\u00d6\n\u0017\f\u0017\u000e\u0017\u00d9",
+    "\u000b\u0017\u0003\u0018\u0003\u0018\u0005\u0018\u00dd\n\u0018\u0003",
+    "\u0019\u0003\u0019\u0007\u0019\u00e1\n\u0019\f\u0019\u000e\u0019\u00e4",
+    "\u000b\u0019\u0003\u0019\u0005\u0019\u00e7\n\u0019\u0003\u001a\u0003",
+    "\u001a\u0003\u001a\u0003\u001a\u0003\u001b\u0003\u001b\u0003\u001b\u0003",
+    "\u001b\u0003\u001b\u0003\u001c\u0003\u001c\u0003\u001c\u0003\u001d\u0003",
+    "\u001d\u0003\u001d\u0003\u001d\u0003\u001e\u0003\u001e\u0003\u001e\u0003",
+    "\u001e\u0003\u001f\u0003\u001f\u0003\u001f\u0003\u001f\u0003\u001f\u0003",
+    "\u001f\u0005\u001f\u0103\n\u001f\u0003\u001f\u0003\u001f\u0003\u001f",
     "\u0003\u001f\u0003\u001f\u0003\u001f\u0003\u001f\u0003\u001f\u0003\u001f",
     "\u0003\u001f\u0003\u001f\u0003\u001f\u0003\u001f\u0003\u001f\u0003\u001f",
-    "\u0003\u001f\u0003\u001f\u0003\u001f\u0003\u001f\u0003\u001f\u0003\u001f",
-    "\u0007\u001f\u0124\n\u001f\f\u001f\u000e\u001f\u0127\u000b\u001f\u0003",
-    " \u0003 \u0003 \u0003 \u0003 \u0005 \u012e\n \u0003!\u0003!\u0003!\u0003",
-    "!\u0003!\u0002\u0003<\"\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014",
-    "\u0016\u0018\u001a\u001c\u001e \"$&(*,.02468:<>@\u0002\u000b\u0004\u0002",
-    "\u0005\u0005\u0017\u0017\u0006\u0002\u0007\t\f\r\u0019\u0019&)\u0004",
-    "\u0002\u0017\u0017\'\'\u0003\u0002\u0012\u0014\u0003\u0002\u0010\u0011",
-    "\u0003\u0002\f\u000f\u0003\u0002\n\u000b\u0003\u0002()\u0003\u0002\u001e",
-    "\u001f\u0002\u0147\u0002C\u0003\u0002\u0002\u0002\u0004K\u0003\u0002",
-    "\u0002\u0002\u0006T\u0003\u0002\u0002\u0002\bX\u0003\u0002\u0002\u0002",
-    "\n]\u0003\u0002\u0002\u0002\fc\u0003\u0002\u0002\u0002\u000e\u0081\u0003",
+    "\u0003\u001f\u0003\u001f\u0003\u001f\u0007\u001f\u0117\n\u001f\f\u001f",
+    "\u000e\u001f\u011a\u000b\u001f\u0003 \u0003 \u0003 \u0003 \u0003 \u0005",
+    " \u0121\n \u0003!\u0003!\u0003!\u0003!\u0003!\u0002\u0003<\"\u0002\u0004",
+    "\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018\u001a\u001c\u001e ",
+    "\"$&(*,.02468:<>@\u0002\b\u0003\u0002\u000f\u0011\u0003\u0002\r\u000e",
+    "\u0003\u0002\t\f\u0003\u0002\u0007\b\u0003\u0002()\u0003\u0002\u001d",
+    "\u001e\u0137\u0002C\u0003\u0002\u0002\u0002\u0004K\u0003\u0002\u0002",
+    "\u0002\u0006T\u0003\u0002\u0002\u0002\bX\u0003\u0002\u0002\u0002\n]",
+    "\u0003\u0002\u0002\u0002\fc\u0003\u0002\u0002\u0002\u000e\u0081\u0003",
     "\u0002\u0002\u0002\u0010\u0083\u0003\u0002\u0002\u0002\u0012\u0086\u0003",
     "\u0002\u0002\u0002\u0014\u0099\u0003\u0002\u0002\u0002\u0016\u00a8\u0003",
     "\u0002\u0002\u0002\u0018\u00b1\u0003\u0002\u0002\u0002\u001a\u00b6\u0003",
-    "\u0002\u0002\u0002\u001c\u00c2\u0003\u0002\u0002\u0002\u001e\u00c7\u0003",
-    "\u0002\u0002\u0002 \u00cc\u0003\u0002\u0002\u0002\"\u00d0\u0003\u0002",
-    "\u0002\u0002$\u00d2\u0003\u0002\u0002\u0002&\u00d4\u0003\u0002\u0002",
-    "\u0002(\u00d9\u0003\u0002\u0002\u0002*\u00dd\u0003\u0002\u0002\u0002",
-    ",\u00df\u0003\u0002\u0002\u0002.\u00e9\u0003\u0002\u0002\u00020\u00eb",
-    "\u0003\u0002\u0002\u00022\u00f5\u0003\u0002\u0002\u00024\u00f9\u0003",
-    "\u0002\u0002\u00026\u00fe\u0003\u0002\u0002\u00028\u0101\u0003\u0002",
-    "\u0002\u0002:\u0105\u0003\u0002\u0002\u0002<\u010f\u0003\u0002\u0002",
-    "\u0002>\u012d\u0003\u0002\u0002\u0002@\u012f\u0003\u0002\u0002\u0002",
+    "\u0002\u0002\u0002\u001c\u00bd\u0003\u0002\u0002\u0002\u001e\u00bf\u0003",
+    "\u0002\u0002\u0002 \u00c1\u0003\u0002\u0002\u0002\"\u00c3\u0003\u0002",
+    "\u0002\u0002$\u00c5\u0003\u0002\u0002\u0002&\u00c7\u0003\u0002\u0002",
+    "\u0002(\u00cc\u0003\u0002\u0002\u0002*\u00d0\u0003\u0002\u0002\u0002",
+    ",\u00d2\u0003\u0002\u0002\u0002.\u00dc\u0003\u0002\u0002\u00020\u00de",
+    "\u0003\u0002\u0002\u00022\u00e8\u0003\u0002\u0002\u00024\u00ec\u0003",
+    "\u0002\u0002\u00026\u00f1\u0003\u0002\u0002\u00028\u00f4\u0003\u0002",
+    "\u0002\u0002:\u00f8\u0003\u0002\u0002\u0002<\u0102\u0003\u0002\u0002",
+    "\u0002>\u0120\u0003\u0002\u0002\u0002@\u0122\u0003\u0002\u0002\u0002",
     "BD\u0005\u0006\u0004\u0002CB\u0003\u0002\u0002\u0002CD\u0003\u0002\u0002",
     "\u0002DF\u0003\u0002\u0002\u0002EG\u0005\u0004\u0003\u0002FE\u0003\u0002",
     "\u0002\u0002FG\u0003\u0002\u0002\u0002GH\u0003\u0002\u0002\u0002HI\u0005",
     "\n\u0006\u0002IJ\u0007\u0002\u0002\u0003J\u0003\u0003\u0002\u0002\u0002",
-    "KL\u0007\u0007\u0002\u0002LM\u0007\u0003\u0002\u0002MO\u0007\u001a\u0002",
+    "KL\u0007\u0004\u0002\u0002LM\u0007%\u0002\u0002MO\u0007\u0019\u0002",
     "\u0002NP\u0005\b\u0005\u0002ON\u0003\u0002\u0002\u0002OP\u0003\u0002",
-    "\u0002\u0002PQ\u0003\u0002\u0002\u0002QR\u0007\u001b\u0002\u0002R\u0005",
+    "\u0002\u0002PQ\u0003\u0002\u0002\u0002QR\u0007\u001a\u0002\u0002R\u0005",
     "\u0003\u0002\u0002\u0002SU\u0007+\u0002\u0002TS\u0003\u0002\u0002\u0002",
     "UV\u0003\u0002\u0002\u0002VT\u0003\u0002\u0002\u0002VW\u0003\u0002\u0002",
     "\u0002W\u0007\u0003\u0002\u0002\u0002XY\u0007\'\u0002\u0002Y\t\u0003",
@@ -27293,9 +27311,9 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\\_\u0003\u0002\u0002\u0002][\u0003\u0002\u0002\u0002]^\u0003\u0002",
     "\u0002\u0002^a\u0003\u0002\u0002\u0002_]\u0003\u0002\u0002\u0002`b\u0005",
     "\f\u0007\u0002a`\u0003\u0002\u0002\u0002ab\u0003\u0002\u0002\u0002b",
-    "\u000b\u0003\u0002\u0002\u0002cf\u0007$\u0002\u0002dg\u0005> \u0002",
+    "\u000b\u0003\u0002\u0002\u0002cf\u0007#\u0002\u0002dg\u0005> \u0002",
     "eg\u0007\'\u0002\u0002fd\u0003\u0002\u0002\u0002fe\u0003\u0002\u0002",
-    "\u0002gi\u0003\u0002\u0002\u0002hj\u0007\u0018\u0002\u0002ih\u0003\u0002",
+    "\u0002gi\u0003\u0002\u0002\u0002hj\u0007\u0016\u0002\u0002ih\u0003\u0002",
     "\u0002\u0002ij\u0003\u0002\u0002\u0002j\r\u0003\u0002\u0002\u0002km",
     "\u0005\u0010\t\u0002lk\u0003\u0002\u0002\u0002lm\u0003\u0002\u0002\u0002",
     "mn\u0003\u0002\u0002\u0002n\u0082\u00050\u0019\u0002oq\u0005\u0010\t",
@@ -27313,14 +27331,14 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u0002\u0002\u0002\u0083\u0084\u0007+\u0002\u0002\u0084\u0011\u0003",
     "\u0002\u0002\u0002\u0085\u0087\u0005\u0018\r\u0002\u0086\u0085\u0003",
     "\u0002\u0002\u0002\u0086\u0087\u0003\u0002\u0002\u0002\u0087\u0088\u0003",
-    "\u0002\u0002\u0002\u0088\u0089\u0007%\u0002\u0002\u0089\u008f\u0005",
-    "\"\u0012\u0002\u008a\u008c\u0007\u001a\u0002\u0002\u008b\u008d\u0005",
+    "\u0002\u0002\u0002\u0088\u0089\u0007$\u0002\u0002\u0089\u008f\u0005",
+    "\"\u0012\u0002\u008a\u008c\u0007\u0019\u0002\u0002\u008b\u008d\u0005",
     ",\u0017\u0002\u008c\u008b\u0003\u0002\u0002\u0002\u008c\u008d\u0003",
     "\u0002\u0002\u0002\u008d\u008e\u0003\u0002\u0002\u0002\u008e\u0090\u0007",
-    "\u001b\u0002\u0002\u008f\u008a\u0003\u0002\u0002\u0002\u008f\u0090\u0003",
+    "\u001a\u0002\u0002\u008f\u008a\u0003\u0002\u0002\u0002\u008f\u0090\u0003",
     "\u0002\u0002\u0002\u0090\u0096\u0003\u0002\u0002\u0002\u0091\u0097\u0007",
-    "\u0018\u0002\u0002\u0092\u0093\u0007\u001c\u0002\u0002\u0093\u0094\u0005",
-    "\n\u0006\u0002\u0094\u0095\u0007\u001d\u0002\u0002\u0095\u0097\u0003",
+    "\u0016\u0002\u0002\u0092\u0093\u0007\u001b\u0002\u0002\u0093\u0094\u0005",
+    "\n\u0006\u0002\u0094\u0095\u0007\u001c\u0002\u0002\u0095\u0097\u0003",
     "\u0002\u0002\u0002\u0096\u0091\u0003\u0002\u0002\u0002\u0096\u0092\u0003",
     "\u0002\u0002\u0002\u0096\u0097\u0003\u0002\u0002\u0002\u0097\u0013\u0003",
     "\u0002\u0002\u0002\u0098\u009a\u0005\u0018\r\u0002\u0099\u0098\u0003",
@@ -27329,91 +27347,84 @@ var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "&\u0002\u0002\u009d\u009f\u0003\u0002\u0002\u0002\u009e\u009b\u0003",
     "\u0002\u0002\u0002\u009e\u009f\u0003\u0002\u0002\u0002\u009f\u00a0\u0003",
     "\u0002\u0002\u0002\u00a0\u00a6\u0005\u0016\f\u0002\u00a1\u00a7\u0007",
-    "\u0018\u0002\u0002\u00a2\u00a3\u0007\u001c\u0002\u0002\u00a3\u00a4\u0005",
-    "\n\u0006\u0002\u00a4\u00a5\u0007\u001d\u0002\u0002\u00a5\u00a7\u0003",
+    "\u0016\u0002\u0002\u00a2\u00a3\u0007\u001b\u0002\u0002\u00a3\u00a4\u0005",
+    "\n\u0006\u0002\u00a4\u00a5\u0007\u001c\u0002\u0002\u00a5\u00a7\u0003",
     "\u0002\u0002\u0002\u00a6\u00a1\u0003\u0002\u0002\u0002\u00a6\u00a2\u0003",
     "\u0002\u0002\u0002\u00a6\u00a7\u0003\u0002\u0002\u0002\u00a7\u0015\u0003",
     "\u0002\u0002\u0002\u00a8\u00ae\u0005*\u0016\u0002\u00a9\u00ab\u0007",
-    "\u001a\u0002\u0002\u00aa\u00ac\u0005,\u0017\u0002\u00ab\u00aa\u0003",
+    "\u0019\u0002\u0002\u00aa\u00ac\u0005,\u0017\u0002\u00ab\u00aa\u0003",
     "\u0002\u0002\u0002\u00ab\u00ac\u0003\u0002\u0002\u0002\u00ac\u00ad\u0003",
-    "\u0002\u0002\u0002\u00ad\u00af\u0007\u001b\u0002\u0002\u00ae\u00a9\u0003",
+    "\u0002\u0002\u0002\u00ad\u00af\u0007\u001a\u0002\u0002\u00ae\u00a9\u0003",
     "\u0002\u0002\u0002\u00ae\u00af\u0003\u0002\u0002\u0002\u00af\u0017\u0003",
     "\u0002\u0002\u0002\u00b0\u00b2\u0005$\u0013\u0002\u00b1\u00b0\u0003",
     "\u0002\u0002\u0002\u00b1\u00b2\u0003\u0002\u0002\u0002\u00b2\u00b3\u0003",
     "\u0002\u0002\u0002\u00b3\u00b4\u0005&\u0014\u0002\u00b4\u00b5\u0007",
-    "\u0019\u0002\u0002\u00b5\u0019\u0003\u0002\u0002\u0002\u00b6\u00b7\u0005",
-    "\u001e\u0010\u0002\u00b7\u00b8\u0007\u0004\u0002\u0002\u00b8\u00b9\u0005",
-    " \u0011\u0002\u00b9\u00ba\t\u0002\u0002\u0002\u00ba\u00bf\u0005\u001c",
-    "\u000f\u0002\u00bb\u00bc\u0007\u001c\u0002\u0002\u00bc\u00bd\u0005\n",
-    "\u0006\u0002\u00bd\u00be\u0007\u001d\u0002\u0002\u00be\u00c0\u0003\u0002",
-    "\u0002\u0002\u00bf\u00bb\u0003\u0002\u0002\u0002\u00bf\u00c0\u0003\u0002",
-    "\u0002\u0002\u00c0\u001b\u0003\u0002\u0002\u0002\u00c1\u00c3\t\u0003",
-    "\u0002\u0002\u00c2\u00c1\u0003\u0002\u0002\u0002\u00c3\u00c4\u0003\u0002",
-    "\u0002\u0002\u00c4\u00c2\u0003\u0002\u0002\u0002\u00c4\u00c5\u0003\u0002",
-    "\u0002\u0002\u00c5\u001d\u0003\u0002\u0002\u0002\u00c6\u00c8\t\u0004",
-    "\u0002\u0002\u00c7\u00c6\u0003\u0002\u0002\u0002\u00c8\u00c9\u0003\u0002",
-    "\u0002\u0002\u00c9\u00c7\u0003\u0002\u0002\u0002\u00c9\u00ca\u0003\u0002",
-    "\u0002\u0002\u00ca\u001f\u0003\u0002\u0002\u0002\u00cb\u00cd\t\u0004",
-    "\u0002\u0002\u00cc\u00cb\u0003\u0002\u0002\u0002\u00cd\u00ce\u0003\u0002",
-    "\u0002\u0002\u00ce\u00cc\u0003\u0002\u0002\u0002\u00ce\u00cf\u0003\u0002",
-    "\u0002\u0002\u00cf!\u0003\u0002\u0002\u0002\u00d0\u00d1\u0007\'\u0002",
-    "\u0002\u00d1#\u0003\u0002\u0002\u0002\u00d2\u00d3\u0007\'\u0002\u0002",
-    "\u00d3%\u0003\u0002\u0002\u0002\u00d4\u00d5\u0007\'\u0002\u0002\u00d5",
-    "\'\u0003\u0002\u0002\u0002\u00d6\u00d7\u0007\'\u0002\u0002\u00d7\u00da",
-    "\u0007\u0017\u0002\u0002\u00d8\u00da\u0007\u0017\u0002\u0002\u00d9\u00d6",
-    "\u0003\u0002\u0002\u0002\u00d9\u00d8\u0003\u0002\u0002\u0002\u00d9\u00da",
-    "\u0003\u0002\u0002\u0002\u00da\u00db\u0003\u0002\u0002\u0002\u00db\u00dc",
-    "\u0007\'\u0002\u0002\u00dc)\u0003\u0002\u0002\u0002\u00dd\u00de\u0007",
-    "\'\u0002\u0002\u00de+\u0003\u0002\u0002\u0002\u00df\u00e4\u0005.\u0018",
-    "\u0002\u00e0\u00e1\u0007\u0006\u0002\u0002\u00e1\u00e3\u0005.\u0018",
-    "\u0002\u00e2\u00e0\u0003\u0002\u0002\u0002\u00e3\u00e6\u0003\u0002\u0002",
-    "\u0002\u00e4\u00e2\u0003\u0002\u0002\u0002\u00e4\u00e5\u0003\u0002\u0002",
-    "\u0002\u00e5-\u0003\u0002\u0002\u0002\u00e6\u00e4\u0003\u0002\u0002",
-    "\u0002\u00e7\u00ea\u0007\'\u0002\u0002\u00e8\u00ea\u0005> \u0002\u00e9",
-    "\u00e7\u0003\u0002\u0002\u0002\u00e9\u00e8\u0003\u0002\u0002\u0002\u00ea",
-    "/\u0003\u0002\u0002\u0002\u00eb\u00ef\u00052\u001a\u0002\u00ec\u00ee",
-    "\u00054\u001b\u0002\u00ed\u00ec\u0003\u0002\u0002\u0002\u00ee\u00f1",
-    "\u0003\u0002\u0002\u0002\u00ef\u00ed\u0003\u0002\u0002\u0002\u00ef\u00f0",
-    "\u0003\u0002\u0002\u0002\u00f0\u00f3\u0003\u0002\u0002\u0002\u00f1\u00ef",
-    "\u0003\u0002\u0002\u0002\u00f2\u00f4\u00056\u001c\u0002\u00f3\u00f2",
-    "\u0003\u0002\u0002\u0002\u00f3\u00f4\u0003\u0002\u0002\u0002\u00f41",
-    "\u0003\u0002\u0002\u0002\u00f5\u00f6\u0007!\u0002\u0002\u00f6\u00f7",
-    "\u0005@!\u0002\u00f7\u00f8\u00058\u001d\u0002\u00f83\u0003\u0002\u0002",
-    "\u0002\u00f9\u00fa\u0007\"\u0002\u0002\u00fa\u00fb\u0007!\u0002\u0002",
-    "\u00fb\u00fc\u0005@!\u0002\u00fc\u00fd\u00058\u001d\u0002\u00fd5\u0003",
-    "\u0002\u0002\u0002\u00fe\u00ff\u0007\"\u0002\u0002\u00ff\u0100\u0005",
-    "8\u001d\u0002\u01007\u0003\u0002\u0002\u0002\u0101\u0102\u0007\u001c",
-    "\u0002\u0002\u0102\u0103\u0005\n\u0006\u0002\u0103\u0104\u0007\u001d",
-    "\u0002\u0002\u01049\u0003\u0002\u0002\u0002\u0105\u0106\u0007#\u0002",
-    "\u0002\u0106\u0107\u0005@!\u0002\u0107\u0108\u00058\u001d\u0002\u0108",
-    ";\u0003\u0002\u0002\u0002\u0109\u010a\b\u001f\u0001\u0002\u010a\u010b",
-    "\u0007\u0011\u0002\u0002\u010b\u0110\u0005<\u001f\u000b\u010c\u010d",
-    "\u0007\u0016\u0002\u0002\u010d\u0110\u0005<\u001f\n\u010e\u0110\u0005",
-    "> \u0002\u010f\u0109\u0003\u0002\u0002\u0002\u010f\u010c\u0003\u0002",
-    "\u0002\u0002\u010f\u010e\u0003\u0002\u0002\u0002\u0110\u0125\u0003\u0002",
-    "\u0002\u0002\u0111\u0112\f\t\u0002\u0002\u0112\u0113\t\u0005\u0002\u0002",
-    "\u0113\u0124\u0005<\u001f\n\u0114\u0115\f\b\u0002\u0002\u0115\u0116",
-    "\t\u0006\u0002\u0002\u0116\u0124\u0005<\u001f\t\u0117\u0118\f\u0007",
-    "\u0002\u0002\u0118\u0119\t\u0007\u0002\u0002\u0119\u0124\u0005<\u001f",
-    "\b\u011a\u011b\f\u0006\u0002\u0002\u011b\u011c\t\b\u0002\u0002\u011c",
-    "\u0124\u0005<\u001f\u0007\u011d\u011e\f\u0005\u0002\u0002\u011e\u011f",
-    "\u0007\t\u0002\u0002\u011f\u0124\u0005<\u001f\u0006\u0120\u0121\f\u0004",
-    "\u0002\u0002\u0121\u0122\u0007\b\u0002\u0002\u0122\u0124\u0005<\u001f",
-    "\u0005\u0123\u0111\u0003\u0002\u0002\u0002\u0123\u0114\u0003\u0002\u0002",
-    "\u0002\u0123\u0117\u0003\u0002\u0002\u0002\u0123\u011a\u0003\u0002\u0002",
-    "\u0002\u0123\u011d\u0003\u0002\u0002\u0002\u0123\u0120\u0003\u0002\u0002",
-    "\u0002\u0124\u0127\u0003\u0002\u0002\u0002\u0125\u0123\u0003\u0002\u0002",
-    "\u0002\u0125\u0126\u0003\u0002\u0002\u0002\u0126=\u0003\u0002\u0002",
-    "\u0002\u0127\u0125\u0003\u0002\u0002\u0002\u0128\u012e\t\t\u0002\u0002",
-    "\u0129\u012e\t\n\u0002\u0002\u012a\u012e\u0007\'\u0002\u0002\u012b\u012e",
-    "\u0007*\u0002\u0002\u012c\u012e\u0007 \u0002\u0002\u012d\u0128\u0003",
-    "\u0002\u0002\u0002\u012d\u0129\u0003\u0002\u0002\u0002\u012d\u012a\u0003",
-    "\u0002\u0002\u0002\u012d\u012b\u0003\u0002\u0002\u0002\u012d\u012c\u0003",
-    "\u0002\u0002\u0002\u012e?\u0003\u0002\u0002\u0002\u012f\u0130\u0007",
-    "\u001a\u0002\u0002\u0130\u0131\u0005<\u001f\u0002\u0131\u0132\u0007",
-    "\u001b\u0002\u0002\u0132A\u0003\u0002\u0002\u0002\'CFOV]afilptx|\u0081",
-    "\u0086\u008c\u008f\u0096\u0099\u009e\u00a6\u00ab\u00ae\u00b1\u00bf\u00c4",
-    "\u00c9\u00ce\u00d9\u00e4\u00e9\u00ef\u00f3\u010f\u0123\u0125\u012d"].join("");
+    "\u0018\u0002\u0002\u00b5\u0019\u0003\u0002\u0002\u0002\u00b6\u00b7\u0005",
+    "\u001e\u0010\u0002\u00b7\u00b8\u0007\u0003\u0002\u0002\u00b8\u00b9\u0005",
+    " \u0011\u0002\u00b9\u00bb\u0005\u001c\u000f\u0002\u00ba\u00bc\u0007",
+    "0\u0002\u0002\u00bb\u00ba\u0003\u0002\u0002\u0002\u00bb\u00bc\u0003",
+    "\u0002\u0002\u0002\u00bc\u001b\u0003\u0002\u0002\u0002\u00bd\u00be\u0007",
+    "/\u0002\u0002\u00be\u001d\u0003\u0002\u0002\u0002\u00bf\u00c0\u0007",
+    "\'\u0002\u0002\u00c0\u001f\u0003\u0002\u0002\u0002\u00c1\u00c2\u0007",
+    ".\u0002\u0002\u00c2!\u0003\u0002\u0002\u0002\u00c3\u00c4\u0007\'\u0002",
+    "\u0002\u00c4#\u0003\u0002\u0002\u0002\u00c5\u00c6\u0007\'\u0002\u0002",
+    "\u00c6%\u0003\u0002\u0002\u0002\u00c7\u00c8\u0007\'\u0002\u0002\u00c8",
+    "\'\u0003\u0002\u0002\u0002\u00c9\u00ca\u0007\'\u0002\u0002\u00ca\u00cd",
+    "\u0007\u0014\u0002\u0002\u00cb\u00cd\u0007\u0014\u0002\u0002\u00cc\u00c9",
+    "\u0003\u0002\u0002\u0002\u00cc\u00cb\u0003\u0002\u0002\u0002\u00cc\u00cd",
+    "\u0003\u0002\u0002\u0002\u00cd\u00ce\u0003\u0002\u0002\u0002\u00ce\u00cf",
+    "\u0007\'\u0002\u0002\u00cf)\u0003\u0002\u0002\u0002\u00d0\u00d1\u0007",
+    "\'\u0002\u0002\u00d1+\u0003\u0002\u0002\u0002\u00d2\u00d7\u0005.\u0018",
+    "\u0002\u00d3\u00d4\u0007\u0017\u0002\u0002\u00d4\u00d6\u0005.\u0018",
+    "\u0002\u00d5\u00d3\u0003\u0002\u0002\u0002\u00d6\u00d9\u0003\u0002\u0002",
+    "\u0002\u00d7\u00d5\u0003\u0002\u0002\u0002\u00d7\u00d8\u0003\u0002\u0002",
+    "\u0002\u00d8-\u0003\u0002\u0002\u0002\u00d9\u00d7\u0003\u0002\u0002",
+    "\u0002\u00da\u00dd\u0007\'\u0002\u0002\u00db\u00dd\u0005> \u0002\u00dc",
+    "\u00da\u0003\u0002\u0002\u0002\u00dc\u00db\u0003\u0002\u0002\u0002\u00dd",
+    "/\u0003\u0002\u0002\u0002\u00de\u00e2\u00052\u001a\u0002\u00df\u00e1",
+    "\u00054\u001b\u0002\u00e0\u00df\u0003\u0002\u0002\u0002\u00e1\u00e4",
+    "\u0003\u0002\u0002\u0002\u00e2\u00e0\u0003\u0002\u0002\u0002\u00e2\u00e3",
+    "\u0003\u0002\u0002\u0002\u00e3\u00e6\u0003\u0002\u0002\u0002\u00e4\u00e2",
+    "\u0003\u0002\u0002\u0002\u00e5\u00e7\u00056\u001c\u0002\u00e6\u00e5",
+    "\u0003\u0002\u0002\u0002\u00e6\u00e7\u0003\u0002\u0002\u0002\u00e71",
+    "\u0003\u0002\u0002\u0002\u00e8\u00e9\u0007 \u0002\u0002\u00e9\u00ea",
+    "\u0005@!\u0002\u00ea\u00eb\u00058\u001d\u0002\u00eb3\u0003\u0002\u0002",
+    "\u0002\u00ec\u00ed\u0007!\u0002\u0002\u00ed\u00ee\u0007 \u0002\u0002",
+    "\u00ee\u00ef\u0005@!\u0002\u00ef\u00f0\u00058\u001d\u0002\u00f05\u0003",
+    "\u0002\u0002\u0002\u00f1\u00f2\u0007!\u0002\u0002\u00f2\u00f3\u0005",
+    "8\u001d\u0002\u00f37\u0003\u0002\u0002\u0002\u00f4\u00f5\u0007\u001b",
+    "\u0002\u0002\u00f5\u00f6\u0005\n\u0006\u0002\u00f6\u00f7\u0007\u001c",
+    "\u0002\u0002\u00f79\u0003\u0002\u0002\u0002\u00f8\u00f9\u0007\"\u0002",
+    "\u0002\u00f9\u00fa\u0005@!\u0002\u00fa\u00fb\u00058\u001d\u0002\u00fb",
+    ";\u0003\u0002\u0002\u0002\u00fc\u00fd\b\u001f\u0001\u0002\u00fd\u00fe",
+    "\u0007\u000e\u0002\u0002\u00fe\u0103\u0005<\u001f\u000b\u00ff\u0100",
+    "\u0007\u0013\u0002\u0002\u0100\u0103\u0005<\u001f\n\u0101\u0103\u0005",
+    "> \u0002\u0102\u00fc\u0003\u0002\u0002\u0002\u0102\u00ff\u0003\u0002",
+    "\u0002\u0002\u0102\u0101\u0003\u0002\u0002\u0002\u0103\u0118\u0003\u0002",
+    "\u0002\u0002\u0104\u0105\f\t\u0002\u0002\u0105\u0106\t\u0002\u0002\u0002",
+    "\u0106\u0117\u0005<\u001f\n\u0107\u0108\f\b\u0002\u0002\u0108\u0109",
+    "\t\u0003\u0002\u0002\u0109\u0117\u0005<\u001f\t\u010a\u010b\f\u0007",
+    "\u0002\u0002\u010b\u010c\t\u0004\u0002\u0002\u010c\u0117\u0005<\u001f",
+    "\b\u010d\u010e\f\u0006\u0002\u0002\u010e\u010f\t\u0005\u0002\u0002\u010f",
+    "\u0117\u0005<\u001f\u0007\u0110\u0111\f\u0005\u0002\u0002\u0111\u0112",
+    "\u0007\u0006\u0002\u0002\u0112\u0117\u0005<\u001f\u0006\u0113\u0114",
+    "\f\u0004\u0002\u0002\u0114\u0115\u0007\u0005\u0002\u0002\u0115\u0117",
+    "\u0005<\u001f\u0005\u0116\u0104\u0003\u0002\u0002\u0002\u0116\u0107",
+    "\u0003\u0002\u0002\u0002\u0116\u010a\u0003\u0002\u0002\u0002\u0116\u010d",
+    "\u0003\u0002\u0002\u0002\u0116\u0110\u0003\u0002\u0002\u0002\u0116\u0113",
+    "\u0003\u0002\u0002\u0002\u0117\u011a\u0003\u0002\u0002\u0002\u0118\u0116",
+    "\u0003\u0002\u0002\u0002\u0118\u0119\u0003\u0002\u0002\u0002\u0119=",
+    "\u0003\u0002\u0002\u0002\u011a\u0118\u0003\u0002\u0002\u0002\u011b\u0121",
+    "\t\u0006\u0002\u0002\u011c\u0121\t\u0007\u0002\u0002\u011d\u0121\u0007",
+    "\'\u0002\u0002\u011e\u0121\u0007*\u0002\u0002\u011f\u0121\u0007\u001f",
+    "\u0002\u0002\u0120\u011b\u0003\u0002\u0002\u0002\u0120\u011c\u0003\u0002",
+    "\u0002\u0002\u0120\u011d\u0003\u0002\u0002\u0002\u0120\u011e\u0003\u0002",
+    "\u0002\u0002\u0120\u011f\u0003\u0002\u0002\u0002\u0121?\u0003\u0002",
+    "\u0002\u0002\u0122\u0123\u0007\u0019\u0002\u0002\u0123\u0124\u0005<",
+    "\u001f\u0002\u0124\u0125\u0007\u001a\u0002\u0002\u0125A\u0003\u0002",
+    "\u0002\u0002$CFOV]afilptx|\u0081\u0086\u008c\u008f\u0096\u0099\u009e",
+    "\u00a6\u00ab\u00ae\u00b1\u00bb\u00cc\u00d7\u00dc\u00e2\u00e6\u0102\u0116",
+    "\u0118\u0120"].join("");
 
 
 var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
@@ -27422,20 +27433,21 @@ var decisionsToDFA = atn.decisionToState.map( function(ds, index) { return new a
 
 var sharedContextCache = new antlr4.PredictionContextCache();
 
-var literalNames = [ null, "'Starter'", "'->'", "'::'", "','", "'@'", "'||'", 
-                     "'&&'", "'=='", "'!='", "'>'", "'<'", "'>='", "'<='", 
-                     "'+'", "'-'", "'*'", "'/'", "'%'", "'^'", "'!'", "':'", 
-                     "';'", "'='", "'('", "')'", "'{'", "'}'", "'true'", 
-                     "'false'", "'nil'", "'if'", "'else'", null, "'return'", 
-                     "'new'", "'.'" ];
+var literalNames = [ null, "'->'", "'@'", "'||'", "'&&'", "'=='", "'!='", 
+                     "'>'", "'<'", "'>='", "'<='", "'+'", "'-'", "'*'", 
+                     "'/'", "'%'", "'^'", "'!'", "':'", "'::'", "';'", "','", 
+                     "'='", "'('", "')'", "'{'", "'}'", "'true'", "'false'", 
+                     "'nil'", "'if'", "'else'", null, "'return'", "'new'", 
+                     "'Starter'", "'.'" ];
 
-var symbolicNames = [ null, null, null, null, null, "AT", "OR", "AND", "EQ", 
-                      "NEQ", "GT", "LT", "GTEQ", "LTEQ", "PLUS", "MINUS", 
-                      "MULT", "DIV", "MOD", "POW", "NOT", "COL", "SCOL", 
+var symbolicNames = [ null, "ARROW", "AT", "OR", "AND", "EQ", "NEQ", "GT", 
+                      "LT", "GTEQ", "LTEQ", "PLUS", "MINUS", "MULT", "DIV", 
+                      "MOD", "POW", "NOT", "COL", "DOUBLECOL", "SCOL", "COMMA", 
                       "ASSIGN", "OPAR", "CPAR", "OBRACE", "CBRACE", "TRUE", 
                       "FALSE", "NIL", "IF", "ELSE", "WHILE", "RETURN", "NEW", 
-                      "DOT", "ID", "INT", "FLOAT", "STRING", "COMMENT", 
-                      "SPACE", "OTHER" ];
+                      "STARTER", "DOT", "ID", "INT", "FLOAT", "STRING", 
+                      "COMMENT", "SPACE", "OTHER", "NAME", "CONTENT", "NEWLINE", 
+                      "WS" ];
 
 var ruleNames =  [ "prog", "starterExp", "description", "starter", "block", 
                    "ret", "stat", "comment", "creation", "message", "signature", 
@@ -27463,41 +27475,41 @@ Object.defineProperty(sequenceParser.prototype, "atn", {
 });
 
 sequenceParser.EOF = antlr4.Token.EOF;
-sequenceParser.T__0 = 1;
-sequenceParser.T__1 = 2;
-sequenceParser.T__2 = 3;
-sequenceParser.T__3 = 4;
-sequenceParser.AT = 5;
-sequenceParser.OR = 6;
-sequenceParser.AND = 7;
-sequenceParser.EQ = 8;
-sequenceParser.NEQ = 9;
-sequenceParser.GT = 10;
-sequenceParser.LT = 11;
-sequenceParser.GTEQ = 12;
-sequenceParser.LTEQ = 13;
-sequenceParser.PLUS = 14;
-sequenceParser.MINUS = 15;
-sequenceParser.MULT = 16;
-sequenceParser.DIV = 17;
-sequenceParser.MOD = 18;
-sequenceParser.POW = 19;
-sequenceParser.NOT = 20;
-sequenceParser.COL = 21;
-sequenceParser.SCOL = 22;
-sequenceParser.ASSIGN = 23;
-sequenceParser.OPAR = 24;
-sequenceParser.CPAR = 25;
-sequenceParser.OBRACE = 26;
-sequenceParser.CBRACE = 27;
-sequenceParser.TRUE = 28;
-sequenceParser.FALSE = 29;
-sequenceParser.NIL = 30;
-sequenceParser.IF = 31;
-sequenceParser.ELSE = 32;
-sequenceParser.WHILE = 33;
-sequenceParser.RETURN = 34;
-sequenceParser.NEW = 35;
+sequenceParser.ARROW = 1;
+sequenceParser.AT = 2;
+sequenceParser.OR = 3;
+sequenceParser.AND = 4;
+sequenceParser.EQ = 5;
+sequenceParser.NEQ = 6;
+sequenceParser.GT = 7;
+sequenceParser.LT = 8;
+sequenceParser.GTEQ = 9;
+sequenceParser.LTEQ = 10;
+sequenceParser.PLUS = 11;
+sequenceParser.MINUS = 12;
+sequenceParser.MULT = 13;
+sequenceParser.DIV = 14;
+sequenceParser.MOD = 15;
+sequenceParser.POW = 16;
+sequenceParser.NOT = 17;
+sequenceParser.COL = 18;
+sequenceParser.DOUBLECOL = 19;
+sequenceParser.SCOL = 20;
+sequenceParser.COMMA = 21;
+sequenceParser.ASSIGN = 22;
+sequenceParser.OPAR = 23;
+sequenceParser.CPAR = 24;
+sequenceParser.OBRACE = 25;
+sequenceParser.CBRACE = 26;
+sequenceParser.TRUE = 27;
+sequenceParser.FALSE = 28;
+sequenceParser.NIL = 29;
+sequenceParser.IF = 30;
+sequenceParser.ELSE = 31;
+sequenceParser.WHILE = 32;
+sequenceParser.RETURN = 33;
+sequenceParser.NEW = 34;
+sequenceParser.STARTER = 35;
 sequenceParser.DOT = 36;
 sequenceParser.ID = 37;
 sequenceParser.INT = 38;
@@ -27506,6 +27518,10 @@ sequenceParser.STRING = 40;
 sequenceParser.COMMENT = 41;
 sequenceParser.SPACE = 42;
 sequenceParser.OTHER = 43;
+sequenceParser.NAME = 44;
+sequenceParser.CONTENT = 45;
+sequenceParser.NEWLINE = 46;
+sequenceParser.WS = 47;
 
 sequenceParser.RULE_prog = 0;
 sequenceParser.RULE_starterExp = 1;
@@ -27573,13 +27589,13 @@ ProgContext.prototype.starterExp = function() {
 };
 
 ProgContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterProg(this);
 	}
 };
 
 ProgContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitProg(this);
 	}
 };
@@ -27605,7 +27621,6 @@ sequenceParser.prototype.prog = function() {
 
         }
         this.state = 68;
-        this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===sequenceParser.AT) {
             this.state = 67;
@@ -27650,18 +27665,22 @@ StarterExpContext.prototype.AT = function() {
     return this.getToken(sequenceParser.AT, 0);
 };
 
+StarterExpContext.prototype.STARTER = function() {
+    return this.getToken(sequenceParser.STARTER, 0);
+};
+
 StarterExpContext.prototype.starter = function() {
     return this.getTypedRuleContext(StarterContext,0);
 };
 
 StarterExpContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterStarterExp(this);
 	}
 };
 
 StarterExpContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitStarterExp(this);
 	}
 };
@@ -27681,11 +27700,10 @@ sequenceParser.prototype.starterExp = function() {
         this.state = 73;
         this.match(sequenceParser.AT);
         this.state = 74;
-        this.match(sequenceParser.T__0);
+        this.match(sequenceParser.STARTER);
         this.state = 75;
         this.match(sequenceParser.OPAR);
         this.state = 77;
-        this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===sequenceParser.ID) {
             this.state = 76;
@@ -27737,13 +27755,13 @@ DescriptionContext.prototype.COMMENT = function(i) {
 
 
 DescriptionContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterDescription(this);
 	}
 };
 
 DescriptionContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitDescription(this);
 	}
 };
@@ -27810,13 +27828,13 @@ StarterContext.prototype.ID = function() {
 };
 
 StarterContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterStarter(this);
 	}
 };
 
 StarterContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitStarter(this);
 	}
 };
@@ -27880,13 +27898,13 @@ BlockContext.prototype.ret = function() {
 };
 
 BlockContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterBlock(this);
 	}
 };
 
 BlockContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitBlock(this);
 	}
 };
@@ -27906,7 +27924,7 @@ sequenceParser.prototype.block = function() {
         this.state = 91;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while(((((_la - 21)) & ~0x1f) == 0 && ((1 << (_la - 21)) & ((1 << (sequenceParser.COL - 21)) | (1 << (sequenceParser.IF - 21)) | (1 << (sequenceParser.WHILE - 21)) | (1 << (sequenceParser.NEW - 21)) | (1 << (sequenceParser.ID - 21)) | (1 << (sequenceParser.COMMENT - 21)) | (1 << (sequenceParser.OTHER - 21)))) !== 0)) {
+        while(((((_la - 18)) & ~0x1f) == 0 && ((1 << (_la - 18)) & ((1 << (sequenceParser.COL - 18)) | (1 << (sequenceParser.IF - 18)) | (1 << (sequenceParser.WHILE - 18)) | (1 << (sequenceParser.NEW - 18)) | (1 << (sequenceParser.ID - 18)) | (1 << (sequenceParser.COMMENT - 18)) | (1 << (sequenceParser.OTHER - 18)))) !== 0)) {
             this.state = 88;
             this.stat();
             this.state = 93;
@@ -27914,7 +27932,6 @@ sequenceParser.prototype.block = function() {
             _la = this._input.LA(1);
         }
         this.state = 95;
-        this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===sequenceParser.RETURN) {
             this.state = 94;
@@ -27968,13 +27985,13 @@ RetContext.prototype.SCOL = function() {
 };
 
 RetContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterRet(this);
 	}
 };
 
 RetContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitRet(this);
 	}
 };
@@ -28009,7 +28026,6 @@ sequenceParser.prototype.ret = function() {
 
         }
         this.state = 103;
-        this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===sequenceParser.SCOL) {
             this.state = 102;
@@ -28076,13 +28092,13 @@ StatContext.prototype.OTHER = function() {
 };
 
 StatContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterStat(this);
 	}
 };
 
 StatContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitStat(this);
 	}
 };
@@ -28105,7 +28121,6 @@ sequenceParser.prototype.stat = function() {
         case 1:
             this.enterOuterAlt(localctx, 1);
             this.state = 106;
-            this._errHandler.sync(this);
             _la = this._input.LA(1);
             if(_la===sequenceParser.COMMENT) {
                 this.state = 105;
@@ -28119,7 +28134,6 @@ sequenceParser.prototype.stat = function() {
         case 2:
             this.enterOuterAlt(localctx, 2);
             this.state = 110;
-            this._errHandler.sync(this);
             _la = this._input.LA(1);
             if(_la===sequenceParser.COMMENT) {
                 this.state = 109;
@@ -28133,7 +28147,6 @@ sequenceParser.prototype.stat = function() {
         case 3:
             this.enterOuterAlt(localctx, 3);
             this.state = 114;
-            this._errHandler.sync(this);
             _la = this._input.LA(1);
             if(_la===sequenceParser.COMMENT) {
                 this.state = 113;
@@ -28147,7 +28160,6 @@ sequenceParser.prototype.stat = function() {
         case 4:
             this.enterOuterAlt(localctx, 4);
             this.state = 118;
-            this._errHandler.sync(this);
             _la = this._input.LA(1);
             if(_la===sequenceParser.COMMENT) {
                 this.state = 117;
@@ -28161,7 +28173,6 @@ sequenceParser.prototype.stat = function() {
         case 5:
             this.enterOuterAlt(localctx, 5);
             this.state = 122;
-            this._errHandler.sync(this);
             _la = this._input.LA(1);
             if(_la===sequenceParser.COMMENT) {
                 this.state = 121;
@@ -28215,13 +28226,13 @@ CommentContext.prototype.COMMENT = function() {
 };
 
 CommentContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterComment(this);
 	}
 };
 
 CommentContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitComment(this);
 	}
 };
@@ -28302,13 +28313,13 @@ CreationContext.prototype.parameters = function() {
 };
 
 CreationContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterCreation(this);
 	}
 };
 
 CreationContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitCreation(this);
 	}
 };
@@ -28326,7 +28337,6 @@ sequenceParser.prototype.creation = function() {
     try {
         this.enterOuterAlt(localctx, 1);
         this.state = 132;
-        this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===sequenceParser.ID) {
             this.state = 131;
@@ -28338,15 +28348,13 @@ sequenceParser.prototype.creation = function() {
         this.state = 135;
         this.constructor();
         this.state = 141;
-        this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===sequenceParser.OPAR) {
             this.state = 136;
             this.match(sequenceParser.OPAR);
             this.state = 138;
-            this._errHandler.sync(this);
             _la = this._input.LA(1);
-            if(((((_la - 28)) & ~0x1f) == 0 && ((1 << (_la - 28)) & ((1 << (sequenceParser.TRUE - 28)) | (1 << (sequenceParser.FALSE - 28)) | (1 << (sequenceParser.NIL - 28)) | (1 << (sequenceParser.ID - 28)) | (1 << (sequenceParser.INT - 28)) | (1 << (sequenceParser.FLOAT - 28)) | (1 << (sequenceParser.STRING - 28)))) !== 0)) {
+            if(((((_la - 27)) & ~0x1f) == 0 && ((1 << (_la - 27)) & ((1 << (sequenceParser.TRUE - 27)) | (1 << (sequenceParser.FALSE - 27)) | (1 << (sequenceParser.NIL - 27)) | (1 << (sequenceParser.ID - 27)) | (1 << (sequenceParser.INT - 27)) | (1 << (sequenceParser.FLOAT - 27)) | (1 << (sequenceParser.STRING - 27)))) !== 0)) {
                 this.state = 137;
                 this.parameters();
             }
@@ -28356,7 +28364,6 @@ sequenceParser.prototype.creation = function() {
         }
 
         this.state = 148;
-        this._errHandler.sync(this);
         switch (this._input.LA(1)) {
         case sequenceParser.SCOL:
         	this.state = 143;
@@ -28382,7 +28389,7 @@ sequenceParser.prototype.creation = function() {
         case sequenceParser.OTHER:
         	break;
         default:
-        	break;
+        	throw new antlr4.error.NoViableAltException(this);
         }
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -28443,13 +28450,13 @@ MessageContext.prototype.CBRACE = function() {
 };
 
 MessageContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterMessage(this);
 	}
 };
 
 MessageContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitMessage(this);
 	}
 };
@@ -28486,7 +28493,6 @@ sequenceParser.prototype.message = function() {
         this.state = 158;
         this.signature();
         this.state = 164;
-        this._errHandler.sync(this);
         switch (this._input.LA(1)) {
         case sequenceParser.SCOL:
         	this.state = 159;
@@ -28512,7 +28518,7 @@ sequenceParser.prototype.message = function() {
         case sequenceParser.OTHER:
         	break;
         default:
-        	break;
+        	throw new antlr4.error.NoViableAltException(this);
         }
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -28553,13 +28559,13 @@ SignatureContext.prototype.parameters = function() {
 };
 
 SignatureContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterSignature(this);
 	}
 };
 
 SignatureContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitSignature(this);
 	}
 };
@@ -28579,15 +28585,13 @@ sequenceParser.prototype.signature = function() {
         this.state = 166;
         this.methodName();
         this.state = 172;
-        this._errHandler.sync(this);
         _la = this._input.LA(1);
         if(_la===sequenceParser.OPAR) {
             this.state = 167;
             this.match(sequenceParser.OPAR);
             this.state = 169;
-            this._errHandler.sync(this);
             _la = this._input.LA(1);
-            if(((((_la - 28)) & ~0x1f) == 0 && ((1 << (_la - 28)) & ((1 << (sequenceParser.TRUE - 28)) | (1 << (sequenceParser.FALSE - 28)) | (1 << (sequenceParser.NIL - 28)) | (1 << (sequenceParser.ID - 28)) | (1 << (sequenceParser.INT - 28)) | (1 << (sequenceParser.FLOAT - 28)) | (1 << (sequenceParser.STRING - 28)))) !== 0)) {
+            if(((((_la - 27)) & ~0x1f) == 0 && ((1 << (_la - 27)) & ((1 << (sequenceParser.TRUE - 27)) | (1 << (sequenceParser.FALSE - 27)) | (1 << (sequenceParser.NIL - 27)) | (1 << (sequenceParser.ID - 27)) | (1 << (sequenceParser.INT - 27)) | (1 << (sequenceParser.FLOAT - 27)) | (1 << (sequenceParser.STRING - 27)))) !== 0)) {
                 this.state = 168;
                 this.parameters();
             }
@@ -28639,13 +28643,13 @@ AssignmentContext.prototype.type = function() {
 };
 
 AssignmentContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterAssignment(this);
 	}
 };
 
 AssignmentContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitAssignment(this);
 	}
 };
@@ -28707,6 +28711,10 @@ AsyncMessageContext.prototype.source = function() {
     return this.getTypedRuleContext(SourceContext,0);
 };
 
+AsyncMessageContext.prototype.ARROW = function() {
+    return this.getToken(sequenceParser.ARROW, 0);
+};
+
 AsyncMessageContext.prototype.target = function() {
     return this.getTypedRuleContext(TargetContext,0);
 };
@@ -28715,26 +28723,18 @@ AsyncMessageContext.prototype.content = function() {
     return this.getTypedRuleContext(ContentContext,0);
 };
 
-AsyncMessageContext.prototype.OBRACE = function() {
-    return this.getToken(sequenceParser.OBRACE, 0);
-};
-
-AsyncMessageContext.prototype.block = function() {
-    return this.getTypedRuleContext(BlockContext,0);
-};
-
-AsyncMessageContext.prototype.CBRACE = function() {
-    return this.getToken(sequenceParser.CBRACE, 0);
+AsyncMessageContext.prototype.NEWLINE = function() {
+    return this.getToken(sequenceParser.NEWLINE, 0);
 };
 
 AsyncMessageContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterAsyncMessage(this);
 	}
 };
 
 AsyncMessageContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitAsyncMessage(this);
 	}
 };
@@ -28754,30 +28754,16 @@ sequenceParser.prototype.asyncMessage = function() {
         this.state = 180;
         this.source();
         this.state = 181;
-        this.match(sequenceParser.T__1);
+        this.match(sequenceParser.ARROW);
         this.state = 182;
         this.target();
         this.state = 183;
-        _la = this._input.LA(1);
-        if(!(_la===sequenceParser.T__2 || _la===sequenceParser.COL)) {
-        this._errHandler.recoverInline(this);
-        }
-        else {
-        	this._errHandler.reportMatch(this);
-            this.consume();
-        }
-        this.state = 184;
         this.content();
-        this.state = 189;
-        this._errHandler.sync(this);
+        this.state = 185;
         _la = this._input.LA(1);
-        if(_la===sequenceParser.OBRACE) {
-            this.state = 185;
-            this.match(sequenceParser.OBRACE);
-            this.state = 186;
-            this.block();
-            this.state = 187;
-            this.match(sequenceParser.CBRACE);
+        if(_la===sequenceParser.NEWLINE) {
+            this.state = 184;
+            this.match(sequenceParser.NEWLINE);
         }
 
     } catch (re) {
@@ -28810,134 +28796,18 @@ function ContentContext(parser, parent, invokingState) {
 ContentContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 ContentContext.prototype.constructor = ContentContext;
 
-ContentContext.prototype.ID = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.ID);
-    } else {
-        return this.getToken(sequenceParser.ID, i);
-    }
+ContentContext.prototype.CONTENT = function() {
+    return this.getToken(sequenceParser.CONTENT, 0);
 };
-
-
-ContentContext.prototype.AT = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.AT);
-    } else {
-        return this.getToken(sequenceParser.AT, i);
-    }
-};
-
-
-ContentContext.prototype.OR = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.OR);
-    } else {
-        return this.getToken(sequenceParser.OR, i);
-    }
-};
-
-
-ContentContext.prototype.AND = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.AND);
-    } else {
-        return this.getToken(sequenceParser.AND, i);
-    }
-};
-
-
-ContentContext.prototype.ASSIGN = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.ASSIGN);
-    } else {
-        return this.getToken(sequenceParser.ASSIGN, i);
-    }
-};
-
-
-ContentContext.prototype.GT = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.GT);
-    } else {
-        return this.getToken(sequenceParser.GT, i);
-    }
-};
-
-
-ContentContext.prototype.LT = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.LT);
-    } else {
-        return this.getToken(sequenceParser.LT, i);
-    }
-};
-
-
-ContentContext.prototype.INT = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.INT);
-    } else {
-        return this.getToken(sequenceParser.INT, i);
-    }
-};
-
-
-ContentContext.prototype.FLOAT = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.FLOAT);
-    } else {
-        return this.getToken(sequenceParser.FLOAT, i);
-    }
-};
-
-
-ContentContext.prototype.DOT = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.DOT);
-    } else {
-        return this.getToken(sequenceParser.DOT, i);
-    }
-};
-
 
 ContentContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterContent(this);
 	}
 };
 
 ContentContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitContent(this);
 	}
 };
@@ -28951,32 +28821,10 @@ sequenceParser.prototype.content = function() {
 
     var localctx = new ContentContext(this, this._ctx, this.state);
     this.enterRule(localctx, 26, sequenceParser.RULE_content);
-    var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 192; 
-        this._errHandler.sync(this);
-        var _alt = 1;
-        do {
-        	switch (_alt) {
-        	case 1:
-        		this.state = 191;
-        		_la = this._input.LA(1);
-        		if(!((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << sequenceParser.AT) | (1 << sequenceParser.OR) | (1 << sequenceParser.AND) | (1 << sequenceParser.GT) | (1 << sequenceParser.LT) | (1 << sequenceParser.ASSIGN))) !== 0) || ((((_la - 36)) & ~0x1f) == 0 && ((1 << (_la - 36)) & ((1 << (sequenceParser.DOT - 36)) | (1 << (sequenceParser.ID - 36)) | (1 << (sequenceParser.INT - 36)) | (1 << (sequenceParser.FLOAT - 36)))) !== 0))) {
-        		this._errHandler.recoverInline(this);
-        		}
-        		else {
-        			this._errHandler.reportMatch(this);
-        		    this.consume();
-        		}
-        		break;
-        	default:
-        		throw new antlr4.error.NoViableAltException(this);
-        	}
-        	this.state = 194; 
-        	this._errHandler.sync(this);
-        	_alt = this._interp.adaptivePredict(this._input,25, this._ctx);
-        } while ( _alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER );
+        this.state = 187;
+        this.match(sequenceParser.CONTENT);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;
@@ -29007,38 +28855,18 @@ function SourceContext(parser, parent, invokingState) {
 SourceContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 SourceContext.prototype.constructor = SourceContext;
 
-SourceContext.prototype.ID = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.ID);
-    } else {
-        return this.getToken(sequenceParser.ID, i);
-    }
+SourceContext.prototype.ID = function() {
+    return this.getToken(sequenceParser.ID, 0);
 };
-
-
-SourceContext.prototype.COL = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.COL);
-    } else {
-        return this.getToken(sequenceParser.COL, i);
-    }
-};
-
 
 SourceContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterSource(this);
 	}
 };
 
 SourceContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitSource(this);
 	}
 };
@@ -29052,26 +28880,10 @@ sequenceParser.prototype.source = function() {
 
     var localctx = new SourceContext(this, this._ctx, this.state);
     this.enterRule(localctx, 28, sequenceParser.RULE_source);
-    var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 197; 
-        this._errHandler.sync(this);
-        _la = this._input.LA(1);
-        do {
-            this.state = 196;
-            _la = this._input.LA(1);
-            if(!(_la===sequenceParser.COL || _la===sequenceParser.ID)) {
-            this._errHandler.recoverInline(this);
-            }
-            else {
-            	this._errHandler.reportMatch(this);
-                this.consume();
-            }
-            this.state = 199; 
-            this._errHandler.sync(this);
-            _la = this._input.LA(1);
-        } while(_la===sequenceParser.COL || _la===sequenceParser.ID);
+        this.state = 189;
+        this.match(sequenceParser.ID);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;
@@ -29102,38 +28914,18 @@ function TargetContext(parser, parent, invokingState) {
 TargetContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 TargetContext.prototype.constructor = TargetContext;
 
-TargetContext.prototype.ID = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.ID);
-    } else {
-        return this.getToken(sequenceParser.ID, i);
-    }
+TargetContext.prototype.NAME = function() {
+    return this.getToken(sequenceParser.NAME, 0);
 };
-
-
-TargetContext.prototype.COL = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
-        return this.getTokens(sequenceParser.COL);
-    } else {
-        return this.getToken(sequenceParser.COL, i);
-    }
-};
-
 
 TargetContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterTarget(this);
 	}
 };
 
 TargetContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitTarget(this);
 	}
 };
@@ -29147,32 +28939,10 @@ sequenceParser.prototype.target = function() {
 
     var localctx = new TargetContext(this, this._ctx, this.state);
     this.enterRule(localctx, 30, sequenceParser.RULE_target);
-    var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 202; 
-        this._errHandler.sync(this);
-        var _alt = 1;
-        do {
-        	switch (_alt) {
-        	case 1:
-        		this.state = 201;
-        		_la = this._input.LA(1);
-        		if(!(_la===sequenceParser.COL || _la===sequenceParser.ID)) {
-        		this._errHandler.recoverInline(this);
-        		}
-        		else {
-        			this._errHandler.reportMatch(this);
-        		    this.consume();
-        		}
-        		break;
-        	default:
-        		throw new antlr4.error.NoViableAltException(this);
-        	}
-        	this.state = 204; 
-        	this._errHandler.sync(this);
-        	_alt = this._interp.adaptivePredict(this._input,27, this._ctx);
-        } while ( _alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER );
+        this.state = 191;
+        this.match(sequenceParser.NAME);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;
@@ -29208,13 +28978,13 @@ ConstructorContext.prototype.ID = function() {
 };
 
 ConstructorContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterConstructor(this);
 	}
 };
 
 ConstructorContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitConstructor(this);
 	}
 };
@@ -29230,7 +29000,7 @@ sequenceParser.prototype.constructor = function() {
     this.enterRule(localctx, 32, sequenceParser.RULE_constructor);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 206;
+        this.state = 193;
         this.match(sequenceParser.ID);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -29267,13 +29037,13 @@ TypeContext.prototype.ID = function() {
 };
 
 TypeContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterType(this);
 	}
 };
 
 TypeContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitType(this);
 	}
 };
@@ -29289,7 +29059,7 @@ sequenceParser.prototype.type = function() {
     this.enterRule(localctx, 34, sequenceParser.RULE_type);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 208;
+        this.state = 195;
         this.match(sequenceParser.ID);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -29326,13 +29096,13 @@ AssigneeContext.prototype.ID = function() {
 };
 
 AssigneeContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterAssignee(this);
 	}
 };
 
 AssigneeContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitAssignee(this);
 	}
 };
@@ -29348,7 +29118,7 @@ sequenceParser.prototype.assignee = function() {
     this.enterRule(localctx, 36, sequenceParser.RULE_assignee);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 210;
+        this.state = 197;
         this.match(sequenceParser.ID);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -29397,13 +29167,13 @@ ToContext.prototype.COL = function() {
 };
 
 ToContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterTo(this);
 	}
 };
 
 ToContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitTo(this);
 	}
 };
@@ -29419,21 +29189,21 @@ sequenceParser.prototype.to = function() {
     this.enterRule(localctx, 38, sequenceParser.RULE_to);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 215;
+        this.state = 202;
         this._errHandler.sync(this);
-        var la_ = this._interp.adaptivePredict(this._input,28,this._ctx);
+        var la_ = this._interp.adaptivePredict(this._input,25,this._ctx);
         if(la_===1) {
-            this.state = 212;
+            this.state = 199;
             this.match(sequenceParser.ID);
-            this.state = 213;
+            this.state = 200;
             this.match(sequenceParser.COL);
 
         } else if(la_===2) {
-            this.state = 214;
+            this.state = 201;
             this.match(sequenceParser.COL);
 
         }
-        this.state = 217;
+        this.state = 204;
         this.match(sequenceParser.ID);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -29470,13 +29240,13 @@ MethodNameContext.prototype.ID = function() {
 };
 
 MethodNameContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterMethodName(this);
 	}
 };
 
 MethodNameContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitMethodName(this);
 	}
 };
@@ -29492,7 +29262,7 @@ sequenceParser.prototype.methodName = function() {
     this.enterRule(localctx, 40, sequenceParser.RULE_methodName);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 219;
+        this.state = 206;
         this.match(sequenceParser.ID);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -29535,14 +29305,26 @@ ParametersContext.prototype.parameter = function(i) {
     }
 };
 
+ParametersContext.prototype.COMMA = function(i) {
+	if(i===undefined) {
+		i = null;
+	}
+    if(i===null) {
+        return this.getTokens(sequenceParser.COMMA);
+    } else {
+        return this.getToken(sequenceParser.COMMA, i);
+    }
+};
+
+
 ParametersContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterParameters(this);
 	}
 };
 
 ParametersContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitParameters(this);
 	}
 };
@@ -29559,17 +29341,17 @@ sequenceParser.prototype.parameters = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 221;
+        this.state = 208;
         this.parameter();
-        this.state = 226;
+        this.state = 213;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while(_la===sequenceParser.T__3) {
-            this.state = 222;
-            this.match(sequenceParser.T__3);
-            this.state = 223;
+        while(_la===sequenceParser.COMMA) {
+            this.state = 209;
+            this.match(sequenceParser.COMMA);
+            this.state = 210;
             this.parameter();
-            this.state = 228;
+            this.state = 215;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
         }
@@ -29612,13 +29394,13 @@ ParameterContext.prototype.atom = function() {
 };
 
 ParameterContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterParameter(this);
 	}
 };
 
 ParameterContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitParameter(this);
 	}
 };
@@ -29633,19 +29415,19 @@ sequenceParser.prototype.parameter = function() {
     var localctx = new ParameterContext(this, this._ctx, this.state);
     this.enterRule(localctx, 44, sequenceParser.RULE_parameter);
     try {
-        this.state = 231;
+        this.state = 218;
         this._errHandler.sync(this);
-        var la_ = this._interp.adaptivePredict(this._input,30,this._ctx);
+        var la_ = this._interp.adaptivePredict(this._input,27,this._ctx);
         switch(la_) {
         case 1:
             this.enterOuterAlt(localctx, 1);
-            this.state = 229;
+            this.state = 216;
             this.match(sequenceParser.ID);
             break;
 
         case 2:
             this.enterOuterAlt(localctx, 2);
-            this.state = 230;
+            this.state = 217;
             this.atom();
             break;
 
@@ -29700,13 +29482,13 @@ AltContext.prototype.elseBlock = function() {
 };
 
 AltContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterAlt(this);
 	}
 };
 
 AltContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitAlt(this);
 	}
 };
@@ -29723,26 +29505,25 @@ sequenceParser.prototype.alt = function() {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 233;
+        this.state = 220;
         this.ifBlock();
-        this.state = 237;
+        this.state = 224;
         this._errHandler.sync(this);
-        var _alt = this._interp.adaptivePredict(this._input,31,this._ctx)
+        var _alt = this._interp.adaptivePredict(this._input,28,this._ctx)
         while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
             if(_alt===1) {
-                this.state = 234;
+                this.state = 221;
                 this.elseIfBlock(); 
             }
-            this.state = 239;
+            this.state = 226;
             this._errHandler.sync(this);
-            _alt = this._interp.adaptivePredict(this._input,31,this._ctx);
+            _alt = this._interp.adaptivePredict(this._input,28,this._ctx);
         }
 
-        this.state = 241;
-        this._errHandler.sync(this);
+        this.state = 228;
         _la = this._input.LA(1);
         if(_la===sequenceParser.ELSE) {
-            this.state = 240;
+            this.state = 227;
             this.elseBlock();
         }
 
@@ -29789,13 +29570,13 @@ IfBlockContext.prototype.braceBlock = function() {
 };
 
 IfBlockContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterIfBlock(this);
 	}
 };
 
 IfBlockContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitIfBlock(this);
 	}
 };
@@ -29811,11 +29592,11 @@ sequenceParser.prototype.ifBlock = function() {
     this.enterRule(localctx, 48, sequenceParser.RULE_ifBlock);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 243;
+        this.state = 230;
         this.match(sequenceParser.IF);
-        this.state = 244;
+        this.state = 231;
         this.parExpr();
-        this.state = 245;
+        this.state = 232;
         this.braceBlock();
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -29864,13 +29645,13 @@ ElseIfBlockContext.prototype.braceBlock = function() {
 };
 
 ElseIfBlockContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterElseIfBlock(this);
 	}
 };
 
 ElseIfBlockContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitElseIfBlock(this);
 	}
 };
@@ -29886,13 +29667,13 @@ sequenceParser.prototype.elseIfBlock = function() {
     this.enterRule(localctx, 50, sequenceParser.RULE_elseIfBlock);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 247;
+        this.state = 234;
         this.match(sequenceParser.ELSE);
-        this.state = 248;
+        this.state = 235;
         this.match(sequenceParser.IF);
-        this.state = 249;
+        this.state = 236;
         this.parExpr();
-        this.state = 250;
+        this.state = 237;
         this.braceBlock();
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -29933,13 +29714,13 @@ ElseBlockContext.prototype.braceBlock = function() {
 };
 
 ElseBlockContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterElseBlock(this);
 	}
 };
 
 ElseBlockContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitElseBlock(this);
 	}
 };
@@ -29955,9 +29736,9 @@ sequenceParser.prototype.elseBlock = function() {
     this.enterRule(localctx, 52, sequenceParser.RULE_elseBlock);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 252;
+        this.state = 239;
         this.match(sequenceParser.ELSE);
-        this.state = 253;
+        this.state = 240;
         this.braceBlock();
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -30002,13 +29783,13 @@ BraceBlockContext.prototype.CBRACE = function() {
 };
 
 BraceBlockContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterBraceBlock(this);
 	}
 };
 
 BraceBlockContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitBraceBlock(this);
 	}
 };
@@ -30024,11 +29805,11 @@ sequenceParser.prototype.braceBlock = function() {
     this.enterRule(localctx, 54, sequenceParser.RULE_braceBlock);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 255;
+        this.state = 242;
         this.match(sequenceParser.OBRACE);
-        this.state = 256;
+        this.state = 243;
         this.block();
-        this.state = 257;
+        this.state = 244;
         this.match(sequenceParser.CBRACE);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -30073,13 +29854,13 @@ LoopContext.prototype.braceBlock = function() {
 };
 
 LoopContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterLoop(this);
 	}
 };
 
 LoopContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitLoop(this);
 	}
 };
@@ -30095,11 +29876,11 @@ sequenceParser.prototype.loop = function() {
     this.enterRule(localctx, 56, sequenceParser.RULE_loop);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 259;
+        this.state = 246;
         this.match(sequenceParser.WHILE);
-        this.state = 260;
+        this.state = 247;
         this.parExpr();
-        this.state = 261;
+        this.state = 248;
         this.braceBlock();
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -30156,13 +29937,13 @@ NotExprContext.prototype.expr = function() {
     return this.getTypedRuleContext(ExprContext,0);
 };
 NotExprContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterNotExpr(this);
 	}
 };
 
 NotExprContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitNotExpr(this);
 	}
 };
@@ -30187,13 +29968,13 @@ UnaryMinusExprContext.prototype.expr = function() {
     return this.getTypedRuleContext(ExprContext,0);
 };
 UnaryMinusExprContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterUnaryMinusExpr(this);
 	}
 };
 
 UnaryMinusExprContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitUnaryMinusExpr(this);
 	}
 };
@@ -30234,13 +30015,13 @@ MultiplicationExprContext.prototype.MOD = function() {
     return this.getToken(sequenceParser.MOD, 0);
 };
 MultiplicationExprContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterMultiplicationExpr(this);
 	}
 };
 
 MultiplicationExprContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitMultiplicationExpr(this);
 	}
 };
@@ -30261,13 +30042,13 @@ AtomExprContext.prototype.atom = function() {
     return this.getTypedRuleContext(AtomContext,0);
 };
 AtomExprContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterAtomExpr(this);
 	}
 };
 
 AtomExprContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitAtomExpr(this);
 	}
 };
@@ -30299,13 +30080,13 @@ OrExprContext.prototype.OR = function() {
     return this.getToken(sequenceParser.OR, 0);
 };
 OrExprContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterOrExpr(this);
 	}
 };
 
 OrExprContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitOrExpr(this);
 	}
 };
@@ -30342,13 +30123,13 @@ AdditiveExprContext.prototype.MINUS = function() {
     return this.getToken(sequenceParser.MINUS, 0);
 };
 AdditiveExprContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterAdditiveExpr(this);
 	}
 };
 
 AdditiveExprContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitAdditiveExpr(this);
 	}
 };
@@ -30393,13 +30174,13 @@ RelationalExprContext.prototype.GT = function() {
     return this.getToken(sequenceParser.GT, 0);
 };
 RelationalExprContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterRelationalExpr(this);
 	}
 };
 
 RelationalExprContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitRelationalExpr(this);
 	}
 };
@@ -30436,13 +30217,13 @@ EqualityExprContext.prototype.NEQ = function() {
     return this.getToken(sequenceParser.NEQ, 0);
 };
 EqualityExprContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterEqualityExpr(this);
 	}
 };
 
 EqualityExprContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitEqualityExpr(this);
 	}
 };
@@ -30474,13 +30255,13 @@ AndExprContext.prototype.AND = function() {
     return this.getToken(sequenceParser.AND, 0);
 };
 AndExprContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterAndExpr(this);
 	}
 };
 
 AndExprContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitAndExpr(this);
 	}
 };
@@ -30500,26 +30281,25 @@ sequenceParser.prototype.expr = function(_p) {
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 269;
-        this._errHandler.sync(this);
+        this.state = 256;
         switch(this._input.LA(1)) {
         case sequenceParser.MINUS:
             localctx = new UnaryMinusExprContext(this, localctx);
             this._ctx = localctx;
             _prevctx = localctx;
 
-            this.state = 264;
+            this.state = 251;
             this.match(sequenceParser.MINUS);
-            this.state = 265;
+            this.state = 252;
             this.expr(9);
             break;
         case sequenceParser.NOT:
             localctx = new NotExprContext(this, localctx);
             this._ctx = localctx;
             _prevctx = localctx;
-            this.state = 266;
+            this.state = 253;
             this.match(sequenceParser.NOT);
-            this.state = 267;
+            this.state = 254;
             this.expr(8);
             break;
         case sequenceParser.TRUE:
@@ -30532,141 +30312,137 @@ sequenceParser.prototype.expr = function(_p) {
             localctx = new AtomExprContext(this, localctx);
             this._ctx = localctx;
             _prevctx = localctx;
-            this.state = 268;
+            this.state = 255;
             this.atom();
             break;
         default:
             throw new antlr4.error.NoViableAltException(this);
         }
         this._ctx.stop = this._input.LT(-1);
-        this.state = 291;
+        this.state = 278;
         this._errHandler.sync(this);
-        var _alt = this._interp.adaptivePredict(this._input,35,this._ctx)
+        var _alt = this._interp.adaptivePredict(this._input,32,this._ctx)
         while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
             if(_alt===1) {
                 if(this._parseListeners!==null) {
                     this.triggerExitRuleEvent();
                 }
                 _prevctx = localctx;
-                this.state = 289;
+                this.state = 276;
                 this._errHandler.sync(this);
-                var la_ = this._interp.adaptivePredict(this._input,34,this._ctx);
+                var la_ = this._interp.adaptivePredict(this._input,31,this._ctx);
                 switch(la_) {
                 case 1:
                     localctx = new MultiplicationExprContext(this, new ExprContext(this, _parentctx, _parentState));
                     this.pushNewRecursionContext(localctx, _startState, sequenceParser.RULE_expr);
-                    this.state = 271;
+                    this.state = 258;
                     if (!( this.precpred(this._ctx, 7))) {
                         throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 7)");
                     }
-                    this.state = 272;
+                    this.state = 259;
                     localctx.op = this._input.LT(1);
                     _la = this._input.LA(1);
                     if(!((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << sequenceParser.MULT) | (1 << sequenceParser.DIV) | (1 << sequenceParser.MOD))) !== 0))) {
                         localctx.op = this._errHandler.recoverInline(this);
                     }
                     else {
-                    	this._errHandler.reportMatch(this);
                         this.consume();
                     }
-                    this.state = 273;
+                    this.state = 260;
                     this.expr(8);
                     break;
 
                 case 2:
                     localctx = new AdditiveExprContext(this, new ExprContext(this, _parentctx, _parentState));
                     this.pushNewRecursionContext(localctx, _startState, sequenceParser.RULE_expr);
-                    this.state = 274;
+                    this.state = 261;
                     if (!( this.precpred(this._ctx, 6))) {
                         throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 6)");
                     }
-                    this.state = 275;
+                    this.state = 262;
                     localctx.op = this._input.LT(1);
                     _la = this._input.LA(1);
                     if(!(_la===sequenceParser.PLUS || _la===sequenceParser.MINUS)) {
                         localctx.op = this._errHandler.recoverInline(this);
                     }
                     else {
-                    	this._errHandler.reportMatch(this);
                         this.consume();
                     }
-                    this.state = 276;
+                    this.state = 263;
                     this.expr(7);
                     break;
 
                 case 3:
                     localctx = new RelationalExprContext(this, new ExprContext(this, _parentctx, _parentState));
                     this.pushNewRecursionContext(localctx, _startState, sequenceParser.RULE_expr);
-                    this.state = 277;
+                    this.state = 264;
                     if (!( this.precpred(this._ctx, 5))) {
                         throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 5)");
                     }
-                    this.state = 278;
+                    this.state = 265;
                     localctx.op = this._input.LT(1);
                     _la = this._input.LA(1);
                     if(!((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << sequenceParser.GT) | (1 << sequenceParser.LT) | (1 << sequenceParser.GTEQ) | (1 << sequenceParser.LTEQ))) !== 0))) {
                         localctx.op = this._errHandler.recoverInline(this);
                     }
                     else {
-                    	this._errHandler.reportMatch(this);
                         this.consume();
                     }
-                    this.state = 279;
+                    this.state = 266;
                     this.expr(6);
                     break;
 
                 case 4:
                     localctx = new EqualityExprContext(this, new ExprContext(this, _parentctx, _parentState));
                     this.pushNewRecursionContext(localctx, _startState, sequenceParser.RULE_expr);
-                    this.state = 280;
+                    this.state = 267;
                     if (!( this.precpred(this._ctx, 4))) {
                         throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 4)");
                     }
-                    this.state = 281;
+                    this.state = 268;
                     localctx.op = this._input.LT(1);
                     _la = this._input.LA(1);
                     if(!(_la===sequenceParser.EQ || _la===sequenceParser.NEQ)) {
                         localctx.op = this._errHandler.recoverInline(this);
                     }
                     else {
-                    	this._errHandler.reportMatch(this);
                         this.consume();
                     }
-                    this.state = 282;
+                    this.state = 269;
                     this.expr(5);
                     break;
 
                 case 5:
                     localctx = new AndExprContext(this, new ExprContext(this, _parentctx, _parentState));
                     this.pushNewRecursionContext(localctx, _startState, sequenceParser.RULE_expr);
-                    this.state = 283;
+                    this.state = 270;
                     if (!( this.precpred(this._ctx, 3))) {
                         throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 3)");
                     }
-                    this.state = 284;
+                    this.state = 271;
                     this.match(sequenceParser.AND);
-                    this.state = 285;
+                    this.state = 272;
                     this.expr(4);
                     break;
 
                 case 6:
                     localctx = new OrExprContext(this, new ExprContext(this, _parentctx, _parentState));
                     this.pushNewRecursionContext(localctx, _startState, sequenceParser.RULE_expr);
-                    this.state = 286;
+                    this.state = 273;
                     if (!( this.precpred(this._ctx, 2))) {
                         throw new antlr4.error.FailedPredicateException(this, "this.precpred(this._ctx, 2)");
                     }
-                    this.state = 287;
+                    this.state = 274;
                     this.match(sequenceParser.OR);
-                    this.state = 288;
+                    this.state = 275;
                     this.expr(3);
                     break;
 
                 } 
             }
-            this.state = 293;
+            this.state = 280;
             this._errHandler.sync(this);
-            _alt = this._interp.adaptivePredict(this._input,35,this._ctx);
+            _alt = this._interp.adaptivePredict(this._input,32,this._ctx);
         }
 
     } catch( error) {
@@ -30725,13 +30501,13 @@ BooleanAtomContext.prototype.FALSE = function() {
     return this.getToken(sequenceParser.FALSE, 0);
 };
 BooleanAtomContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterBooleanAtom(this);
 	}
 };
 
 BooleanAtomContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitBooleanAtom(this);
 	}
 };
@@ -30752,13 +30528,13 @@ IdAtomContext.prototype.ID = function() {
     return this.getToken(sequenceParser.ID, 0);
 };
 IdAtomContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterIdAtom(this);
 	}
 };
 
 IdAtomContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitIdAtom(this);
 	}
 };
@@ -30779,13 +30555,13 @@ StringAtomContext.prototype.STRING = function() {
     return this.getToken(sequenceParser.STRING, 0);
 };
 StringAtomContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterStringAtom(this);
 	}
 };
 
 StringAtomContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitStringAtom(this);
 	}
 };
@@ -30806,13 +30582,13 @@ NilAtomContext.prototype.NIL = function() {
     return this.getToken(sequenceParser.NIL, 0);
 };
 NilAtomContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterNilAtom(this);
 	}
 };
 
 NilAtomContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitNilAtom(this);
 	}
 };
@@ -30837,13 +30613,13 @@ NumberAtomContext.prototype.FLOAT = function() {
     return this.getToken(sequenceParser.FLOAT, 0);
 };
 NumberAtomContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterNumberAtom(this);
 	}
 };
 
 NumberAtomContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitNumberAtom(this);
 	}
 };
@@ -30858,20 +30634,18 @@ sequenceParser.prototype.atom = function() {
     this.enterRule(localctx, 60, sequenceParser.RULE_atom);
     var _la = 0; // Token type
     try {
-        this.state = 299;
-        this._errHandler.sync(this);
+        this.state = 286;
         switch(this._input.LA(1)) {
         case sequenceParser.INT:
         case sequenceParser.FLOAT:
             localctx = new NumberAtomContext(this, localctx);
             this.enterOuterAlt(localctx, 1);
-            this.state = 294;
+            this.state = 281;
             _la = this._input.LA(1);
             if(!(_la===sequenceParser.INT || _la===sequenceParser.FLOAT)) {
             this._errHandler.recoverInline(this);
             }
             else {
-            	this._errHandler.reportMatch(this);
                 this.consume();
             }
             break;
@@ -30879,32 +30653,31 @@ sequenceParser.prototype.atom = function() {
         case sequenceParser.FALSE:
             localctx = new BooleanAtomContext(this, localctx);
             this.enterOuterAlt(localctx, 2);
-            this.state = 295;
+            this.state = 282;
             _la = this._input.LA(1);
             if(!(_la===sequenceParser.TRUE || _la===sequenceParser.FALSE)) {
             this._errHandler.recoverInline(this);
             }
             else {
-            	this._errHandler.reportMatch(this);
                 this.consume();
             }
             break;
         case sequenceParser.ID:
             localctx = new IdAtomContext(this, localctx);
             this.enterOuterAlt(localctx, 3);
-            this.state = 296;
+            this.state = 283;
             this.match(sequenceParser.ID);
             break;
         case sequenceParser.STRING:
             localctx = new StringAtomContext(this, localctx);
             this.enterOuterAlt(localctx, 4);
-            this.state = 297;
+            this.state = 284;
             this.match(sequenceParser.STRING);
             break;
         case sequenceParser.NIL:
             localctx = new NilAtomContext(this, localctx);
             this.enterOuterAlt(localctx, 5);
-            this.state = 298;
+            this.state = 285;
             this.match(sequenceParser.NIL);
             break;
         default:
@@ -30953,13 +30726,13 @@ ParExprContext.prototype.CPAR = function() {
 };
 
 ParExprContext.prototype.enterRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.enterParExpr(this);
 	}
 };
 
 ParExprContext.prototype.exitRule = function(listener) {
-    if(listener instanceof sequenceListener ) {
+    if(listener instanceof sequenceParserListener ) {
         listener.exitParExpr(this);
 	}
 };
@@ -30975,11 +30748,11 @@ sequenceParser.prototype.parExpr = function() {
     this.enterRule(localctx, 62, sequenceParser.RULE_parExpr);
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 301;
+        this.state = 288;
         this.match(sequenceParser.OPAR);
-        this.state = 302;
+        this.state = 289;
         this.expr(0);
-        this.state = 303;
+        this.state = 290;
         this.match(sequenceParser.CPAR);
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
@@ -32273,7 +32046,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           }
         }
         if (tagName === 'interaction-async' || tagName === 'self-interaction-async') {
-          if (comp.target === entity) {
+          if (comp.source === entity || comp.target === entity) {
             return comp;
           }
         }
@@ -32377,7 +32150,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__SelfInvocation___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__SelfInvocation__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Occurrence_vue__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Occurrence_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Occurrence_vue__);
-//
 //
 //
 //
@@ -33942,7 +33714,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "interaction self",
+    staticClass: "interaction self async",
     style: ({
       left: (_vm.left) + 'px'
     })
@@ -33953,11 +33725,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }) : _vm._e(), _vm._v(" "), _c('self-invocation', {
     attrs: {
       "signature": _vm.methodSignature
-    }
-  }), _vm._v(" "), _c('occurrence', {
-    attrs: {
-      "context": _vm.context,
-      "from": _vm.from
     }
   })], 1)
 },staticRenderFns: []}
@@ -33984,7 +33751,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "interaction",
+    staticClass: "interaction async",
     class: {
       'right-to-left': _vm.rightToLeft
     },
@@ -34190,8 +33957,8 @@ var update = __webpack_require__(11)(content, options);
 if(content.locals) module.exports = content.locals;
 
 if(false) {
-	module.hot.accept("!!../../css-loader/index.js!./vue-sequence.css", function() {
-		var newContent = require("!!../../css-loader/index.js!./vue-sequence.css");
+	module.hot.accept("!!../../web-maker/node_modules/css-loader/index.js!./vue-sequence.css", function() {
+		var newContent = require("!!../../web-maker/node_modules/css-loader/index.js!./vue-sequence.css");
 
 		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 
@@ -34225,7 +33992,7 @@ exports = module.exports = __webpack_require__(10)(false);
 
 
 // module
-exports.push([module.i, "*,:after,:before{box-sizing:inherit}.sequence-diagram{position:relative;box-sizing:border-box;line-height:normal}.participant{border-width:2px}.participant .name{display:inline-block;margin:8px 0;padding:0 4px;min-width:88px;max-width:250px;text-align:center;word-break:normal}.sequence-diagram .fragment{border-width:1px;margin:4px 0}.life-line-layer[data-v-8ec24ca8]{display:-webkit-box;display:-ms-flexbox;display:flex;text-align:left;white-space:nowrap;position:absolute;height:100%;min-height:100px}.lifeline.starter[data-v-8ec24ca8]{-webkit-transform:translateX(6px);transform:translateX(6px)}.lifeline.starter.hidden[data-v-8ec24ca8]{visibility:hidden}.starter[data-v-8ec24ca8] .participant{border-radius:50%}.lifeline .participant.hidden[data-v-21263e55]{visibility:hidden}.lifeline[data-v-21263e55]{display:inline-block;height:calc(100% - 35px);margin-top:35px;min-width:50px;padding:0 20px}.lifeline .line[data-v-21263e55]{margin-left:50%;height:calc(100% - 44px);border-left-width:1px}.message-layer[data-v-26ab2f4f]{padding-top:100px;padding-bottom:40px}.interaction{position:relative;margin-top:20px;padding-left:6px;margin-bottom:5px}.interaction.self{padding-left:0}.message{position:relative}.message.return{position:absolute;bottom:0}.message>.name{font-size:13px;bottom:0;text-align:center}.message svg{position:absolute}.message svg.arrow polyline{stroke:gray;fill:none;stroke-width:1.5;stroke-linejoin:round}.occurrence{position:relative;width:16px;left:calc(100% - 8px);padding:16px 0;padding-left:6px;border-width:2px}.interaction.right-to-left>.occurrence{left:-14px}.interaction.self>.occurrence{left:-8px}.fragment .header .name label{padding:0 10px}.comments{position:relative;border:1px solid gray;background:#fff;padding:5px;width:300px;font-size:.8em;font-style:italic;line-height:1em}.fragment>.comments{width:100%;border-bottom:1px solid gray;border-top:none;border-left:none;border-right:none}.interaction>.comments{-webkit-transform:translateY(-14px);transform:translateY(-14px)}.right-to-left[data-v-0ff938a4]{-webkit-transform:translateX(-100%);transform:translateX(-100%)}.participant[data-v-0ff938a4]{position:relative;display:inline-block}.comments[data-v-0ff938a4]{top:10px}.message[data-v-0ff938a4]{top:20px}.right-to-left>.message[data-v-0ff938a4]{float:right;right:6px}.message.return[data-v-0ff938a4]{top:auto}.right-to-left>.occurrence[data-v-0ff938a4]{left:-14px}.message[data-v-7d81ead6]{width:calc(100% - 8px);border-bottom-width:2px;border-bottom-style:solid;white-space:nowrap}.message>.name[data-v-7d81ead6]{position:absolute;width:100%}.point[data-v-92bd2eca]{position:absolute;margin-top:-12px;right:10px}.fill svg.arrow polyline[data-v-92bd2eca]{stroke:gray;fill:gray;stroke-width:1.5;stroke-linejoin:round}.right-to-left.point[data-v-92bd2eca]{left:0;right:auto}.right-to-left.point>svg>polyline.right[data-v-92bd2eca]{display:none}.right-to-left.point>svg>polyline.left[data-v-92bd2eca]{display:inline}.point>svg>polyline.left[data-v-92bd2eca]{display:none}.message[data-v-72ecb252]{width:calc(100% - 14px);border-bottom-width:2px;border-bottom-style:dashed}.occurrence[data-v-83aa1954]{margin-top:-2px}.interaction.right-to-left[data-v-5be86ddd]{-webkit-transform:translateX(-100%);transform:translateX(-100%)}.interaction[data-v-75766d0c]{padding-left:0}.interaction .invisible-occurrence[data-v-75766d0c]{height:20px}.message[data-v-53e29fc4]{position:absolute;width:100%;border-bottom-width:2px;border-bottom-style:solid;white-space:nowrap}.message .name[data-v-53e29fc4]{position:absolute;width:100%;margin-top:-1.2em;white-space:nowrap}.point[data-v-53e29fc4]{position:absolute;margin-top:-12px;right:10px}.right-to-left.interaction>.message>.point[data-v-53e29fc4]{left:0}.right-to-left.interaction>.message>.point>svg>polyline.right[data-v-53e29fc4]{display:none}.right-to-left.interaction>.message>.point>svg>polyline.left[data-v-53e29fc4]{display:inline}.interaction>.message>.point>svg>polyline.left[data-v-53e29fc4]{display:none}.message.self[data-v-56970371]{left:8px}.message.self[data-v-2b451afe]{-webkit-transform:translateY(-10px);transform:translateY(-10px)}.message .name[data-v-2b451afe]{position:relative;left:30px;white-space:nowrap}.self>.message .name[data-v-2b451afe]{text-align:left}.message.self svg.arrow polyline[data-v-2b451afe]{fill:none}.message.self svg.arrow polyline.head[data-v-2b451afe]{fill:gray}.self>.occurrence[data-v-6988f8c0]{visibility:hidden;padding:5px 0}.divider[data-v-3052f184]{border-bottom-width:1px;margin:10px 4px}.sequence-diagram{font-family:Helvetica,Verdana,serif;font-size:16px;background-color:#fafafa}.sequence-diagram .participant{font-weight:700;background:#fff}.sequence-diagram .occurrence,.sequence-diagram .participant{border-style:solid;border-color:gray}.sequence-diagram .message{border-bottom-color:gray}.occurrence{border-style:solid;border-color:gray;background-color:#d3d3d3}.sequence-diagram .fragment{border-style:solid;border-color:#aaa;border-radius:2px}.sequence-diagram .fragment .header .name label{color:#000;font-weight:700;background-color:hsla(0,0%,67%,.5)}.sequence-diagram .fragment.alt div.divider{border-bottom-style:dashed;border-bottom-color:#555}.sequence-diagram .lifeline .line{border-left-style:dashed;border-left-color:gray}.comments{color:grey}.comments:hover{color:#000}", ""]);
+exports.push([module.i, "*,:after,:before{box-sizing:inherit}.sequence-diagram{position:relative;box-sizing:border-box;line-height:normal}.participant{border-width:2px}.participant .name{display:inline-block;margin:8px 0;padding:0 4px;min-width:88px;max-width:250px;text-align:center;word-break:normal}.sequence-diagram .fragment{border-width:1px;margin:4px 0}.life-line-layer[data-v-8ec24ca8]{display:-webkit-box;display:-ms-flexbox;display:flex;text-align:left;white-space:nowrap;position:absolute;height:100%;min-height:100px}.lifeline.starter[data-v-8ec24ca8]{-webkit-transform:translateX(6px);transform:translateX(6px)}.lifeline.starter.hidden[data-v-8ec24ca8]{visibility:hidden}.starter[data-v-8ec24ca8] .participant{border-radius:50%}.lifeline .participant.hidden[data-v-21263e55]{visibility:hidden}.lifeline[data-v-21263e55]{display:inline-block;height:calc(100% - 35px);margin-top:35px;min-width:50px;padding:0 20px}.lifeline .line[data-v-21263e55]{margin-left:50%;height:calc(100% - 44px);border-left-width:1px}.message-layer[data-v-26ab2f4f]{padding-top:100px;padding-bottom:40px}.interaction{position:relative;margin-top:10px;padding-left:6px;margin-bottom:5px}.interaction.self{padding-left:0}.message{position:relative}.message.return{position:absolute;bottom:0}.message>.name{font-size:13px;bottom:0;text-align:center}.message svg{position:absolute}.message svg.arrow polyline{stroke:gray;fill:none;stroke-width:1.5;stroke-linejoin:round}.occurrence{position:relative;width:16px;left:calc(100% - 8px);padding:16px 0;padding-left:6px;border-width:2px}.interaction.right-to-left>.occurrence{left:-14px}.interaction.self>.occurrence{left:-8px;margin-top:-10px}.fragment .header .name label{padding:0 10px}.comments{position:relative;border:1px solid gray;background:#fff;padding:5px;width:300px;font-size:.8em;font-style:italic;line-height:1em}.fragment>.comments{width:100%;border-bottom:1px solid gray;border-top:none;border-left:none;border-right:none}.right-to-left[data-v-0ff938a4]{-webkit-transform:translateX(-100%);transform:translateX(-100%)}.participant[data-v-0ff938a4]{position:relative;display:inline-block;margin-top:-10px}.message[data-v-0ff938a4]{top:10px}.right-to-left>.message[data-v-0ff938a4]{float:right;right:6px}.message.return[data-v-0ff938a4]{top:auto}.right-to-left>.occurrence[data-v-0ff938a4]{left:-14px}.message[data-v-7d81ead6]{width:calc(100% - 8px);border-bottom-width:2px;border-bottom-style:solid;white-space:nowrap}.message>.name[data-v-7d81ead6]{width:100%}.point[data-v-92bd2eca]{position:absolute;margin-top:-12px;right:10px}.fill svg.arrow polyline[data-v-92bd2eca]{stroke:gray;fill:gray;stroke-width:1.5;stroke-linejoin:round}.right-to-left.point[data-v-92bd2eca]{left:0;right:auto}.right-to-left.point>svg>polyline.right[data-v-92bd2eca]{display:none}.right-to-left.point>svg>polyline.left[data-v-92bd2eca]{display:inline}.point>svg>polyline.left[data-v-92bd2eca]{display:none}.message[data-v-72ecb252]{width:calc(100% - 14px);border-bottom-width:2px;border-bottom-style:dashed}.occurrence[data-v-83aa1954]{margin-top:-2px}.interaction.right-to-left[data-v-5be86ddd]{-webkit-transform:translateX(-100%);transform:translateX(-100%)}.interaction.async[data-v-75766d0c]{margin-top:15px;padding-left:0}.interaction .invisible-occurrence[data-v-75766d0c]{height:20px}.message[data-v-53e29fc4]{position:absolute;border-bottom-width:2px;border-bottom-style:solid}.message .name[data-v-53e29fc4],.message[data-v-53e29fc4]{width:100%;white-space:nowrap}.point[data-v-53e29fc4]{position:absolute;margin-top:-12px;right:10px}.right-to-left.interaction>.message>.point[data-v-53e29fc4]{left:0}.right-to-left.interaction>.message>.point>svg>polyline.right[data-v-53e29fc4]{display:none}.right-to-left.interaction>.message>.point>svg>polyline.left[data-v-53e29fc4]{display:inline}.interaction>.message>.point>svg>polyline.left[data-v-53e29fc4]{display:none}.message.self[data-v-56970371]{left:8px}.message.self[data-v-2b451afe]{height:34px}.message .name[data-v-2b451afe]{position:relative;left:30px;white-space:nowrap}.self>.message .name[data-v-2b451afe]{text-align:left}.message.self svg.arrow polyline[data-v-2b451afe]{fill:none}.message.self svg.arrow polyline.head[data-v-2b451afe]{fill:gray}.self>.comments[data-v-6988f8c0]{-webkit-transform:translateY(-4px);transform:translateY(-4px)}.divider[data-v-3052f184]{border-bottom-width:1px;margin:10px 4px}.sequence-diagram{font-family:Helvetica,Verdana,serif;font-size:16px;background-color:#fafafa}.sequence-diagram .participant{font-weight:700;background:#fff}.sequence-diagram .occurrence,.sequence-diagram .participant{border-style:solid;border-color:gray}.sequence-diagram .message{border-bottom-color:gray}.occurrence{border-style:solid;border-color:gray;background-color:#d3d3d3}.sequence-diagram .fragment{border-style:solid;border-color:#aaa;border-radius:2px}.sequence-diagram .fragment .header .name label{color:#000;font-weight:700;background-color:hsla(0,0%,67%,.5)}.sequence-diagram .fragment.alt div.divider{border-bottom-style:dashed;border-bottom-color:#555}.sequence-diagram .lifeline .line{border-left-style:dashed;border-left-color:gray}.comments{color:grey}.comments:hover{color:#000}", ""]);
 
 // exports
 

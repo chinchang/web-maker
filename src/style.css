@@ -615,7 +615,7 @@ body > #demo-frame {
 }
 .modal__content {
 	background: #fdfdfd;
-	color: #fff; /* TODO: Change it back to #444 ? */
+	color: #3338ff; /* TODO: Change it back to #444 ? */
 	position: relative;
 	border-radius: 8px;
 	/*opacity: 0;*/ /* TODO: Add this back. This has impact when we click the signin/up button */

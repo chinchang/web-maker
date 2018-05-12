@@ -24,11 +24,20 @@
 
 		</style>
 
-		<link rel="stylesheet" href="vendor.css">
+		<!-- build:css vendor.css -->
+		<link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
+		<link rel="stylesheet" href="lib/codemirror/addon/hint/show-hint.css">
+		<link rel="stylesheet" href="lib/codemirror/addon/fold/foldgutter.css">
+		<link rel="stylesheet" href="lib/codemirror/addon/dialog/dialog.css">
+		<link rel="stylesheet" href="lib/hint.min.css">
+		<link rel="stylesheet" href="lib/inlet.css">
+		<!-- endbuild -->
 
 		<link rel="stylesheet" id="editorThemeLinkTag" href="lib/codemirror/theme/monokai.css"></link>
 
+		<!-- build:css style.css -->
 		<link rel="stylesheet" href="style.css">
+		<!-- endbuild -->
 
 		<style id="fontStyleTemplate" type="template">
 			@font-face {
@@ -67,10 +76,6 @@
 						</svg>Run
 					</a>
 
-					<a d-open-modal="addLibraryModal" data-event-category="ui" data-event-action="addLibraryButtonClick" class="flex-v-center hint--rounded hint--bottom-left" aria-label="Add a JS/CSS library">
-						Add library <span id="js-external-lib-count" style="display:none;" class="count-label"></span>
-					</a>
-
 					<a class="flex  flex-v-center hint--rounded hint--bottom-left" aria-label="Start a new creation" d-click="onNewBtnClick">
 						<svg style="vertical-align:middle;width:14px;height:14px" viewBox="0 0 24 24">
     						<path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
@@ -104,7 +109,7 @@
 			</div>
 			<div class="content-wrap  flex  flex-grow">
 				<div class="code-side" id="js-code-side">
-					<div data-code-wrap-id="0" id="js-html-code" data-type="html" class="code-wrap">
+					<div data-code-wrap-id="0" id="js-html-code" data-type="html" class="code-wrap is-minimized" style="display: none;">
 						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle code pane">
 							<label class="btn-group" dropdow title="Click to change">
 								<span id="js-html-mode-label" class="code-wrap__header-label">HTML</span><span class="caret"></span>
@@ -120,7 +125,7 @@
 							</div>
 						</div>
 					</div>
-					<div data-code-wrap-id="1" id="js-css-code" data-type="css" class="code-wrap">
+					<div data-code-wrap-id="1" id="js-css-code" data-type="css" class="code-wrap is-minimized">
 						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle code pane">
 							<label class="btn-group" title="Click to change">
 								<span id="js-css-mode-label" class="code-wrap__header-label">CSS</span><span class="caret"></span>
@@ -144,11 +149,11 @@
 							</div>
 						</div>
 					</div>
-					<div data-code-wrap-id="2" id="js-js-code" data-type="js" class="code-wrap">
+					<div data-code-wrap-id="2" id="js-js-code" data-type="js" class="code-wrap" style="height: 100%;">
 						<div class="js-code-wrap__header  code-wrap__header" title="Double click to toggle code pane">
 							<label class="btn-group" title="Click to change">
-								<span id="js-js-mode-label" class="code-wrap__header-label">JS</span><span class="caret"></span>
-								<select data-type="js" class="js-mode-select  hidden-select">
+								<span id="js-js-mode-label" class="code-wrap__header-label">Pseudo Code</span>
+								<select data-type="js" class="js-mode-select  hidden-select" style="display: none;">
 									<option value="js">JS</option>
 									<option value="coffee">CoffeeScript</option>
 									<option value="es6">ES6 (Babel)</option>
@@ -191,7 +196,7 @@
 			<div class="global-console-container" id="globalConsoleContainerEl"></div>
 			<div id="footer" class="footer">
 				<div class="footer__right  fr">
-					<a id="saveHtmlBtn" class="mode-btn  hint--rounded  hint--top-left hide-on-mobile" data-hint="Save as HTML file">
+					<a id="saveHtmlBtn" class="mode-btn  hint--rounded  hint--top-left hide-on-mobile" data-hint="Save as HTML file" style="display: none;">
 						<svg viewBox="0 0 24 24">
 							<path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
 						</svg>
@@ -205,7 +210,7 @@
 						</symbol>
 					</svg>
 
-					<a href="" id="codepenBtn" class="mode-btn  hint--rounded  hint--top-left  hide-on-mobile" aria-label="Edit on CodePen">
+					<a href="" id="codepenBtn" class="mode-btn  hint--rounded  hint--top-left  hide" aria-label="Edit on CodePen">
 						<svg>
 							<use xlink:href="#codepen-logo"></use>
 						</svg>
@@ -226,17 +231,17 @@
 							<use xlink:href="#mode-icon" />
 						</svg>
 					</a>
-					<a id="layoutBtn2" class="mode-btn hide-on-mobile">
+					<a id="layoutBtn2" class="mode-btn hide" style="display: none;">
 						<svg viewBox="0 0 100 100">
 							<use xlink:href="#mode-icon" />
 						</svg>
 					</a>
-					<a id="layoutBtn3" class="mode-btn hide-on-mobile">
+					<a id="layoutBtn3" class="mode-btn hide" style="display: none;">
 						<svg viewBox="0 0 100 100" style="transform:rotate(90deg)">
 							<use xlink:href="#mode-icon" />
 						</svg>
 					</a>
-					<a id="layoutBtn5" class="mode-btn hide-on-mobile">
+					<a id="layoutBtn5" class="mode-btn hide">
 						<svg viewBox="0 0 100 100">
 							<use xlink:href="#vertical-mode-icon" />
 						</svg>
@@ -256,7 +261,7 @@
 
 					<div class="footer__separator"></div>
 
-					<a id="notificationsBtn" class="notifications-btn  mode-btn  hint--top-left  hint--rounded" aria-label="Notifications">
+					<a id="notificationsBtn" class="notifications-btn  mode-btn  hint--top-left  hint--rounded" aria-label="Notifications"style="display: none;" >
 						<svg viewBox="0 0 24 24">
 							<path d="M14,20A2,2 0 0,1 12,22A2,2 0 0,1 10,20H14M12,2A1,1 0 0,1 13,3V4.08C15.84,4.56 18,7.03 18,10V16L21,19H3L6,16V10C6,7.03 8.16,4.56 11,4.08V3A1,1 0 0,1 12,2Z" />
 						</svg>
@@ -270,11 +275,10 @@
 
 				</div>
 
-				<a href="https://webmakerapp.com/" target="_blank">
-					<div class="logo"></div>
-				</a>
-				&copy;
-				<span class="web-maker-with-tag">Web Maker</span> &nbsp;&nbsp;
+				<a href="http://zenuml.com/" target="_blank"><div class="logo small gray"></div></a>
+				&copy; Web Sequence &nbsp;&nbsp;
+				<a id="helpBtn" class="footer__link  hint--rounded  hint--top-right" data-hint="Help">
+
 				<a d-open-modal="helpModal" data-event-category="ui" data-event-action="helpButtonClick" class="footer__link  hint--rounded  hint--top-right"
 				aria-label="Help">
 					<svg style="width:20px; height:20px; vertical-align:text-bottom" viewBox="0 0 24 24">
@@ -289,14 +293,13 @@
 					</svg>
 				</a>
 				<!-- #00ACED -->
-				<a class="footer__link  hint--rounded  hint--top-right" aria-label="Tweet about 'Web Maker'" href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
-				target="_blank">
+				<a class="footer__link  hint--rounded  hint--top-right" data-hint="Tweet about 'Web Sequence'" href="http://twitter.com/share?url=http://zenuml.com/&text=Web Sequence - A blazing fast %26 offline sequence diagram generator! via @ZenUml&related=ZenUml&hashtags=uml,sequence,diagram,chrome,extension" target="_blank">
 					<svg style="width:20px; height:20px; vertical-align:text-bottom">
 						<use xlink:href="#twitter-icon"></use>
 					</svg>
 				</a>
 
-				<a d-click="openSupportDeveloperModal" data-event-action="supportDeveloperFooterBtnClick" class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile"
+				<a d-click="openSupportDeveloperModal" data-event-action="supportDeveloperFooterBtnClick" class="footer__link  ml-1  hint--rounded  hint--top-right hide"
 				aria-label="Support the developer by pledging some amount" target="_blank">
 					Support the developer
 				</a>
@@ -382,6 +385,8 @@
 					<img height="80" class="profile-modal__avatar-img" src="" id="profileAvatarImg" alt="Profile image">
 					<h3 id="profileUserName" class="mb-2"></h3>
 					<p>
+						Follow <a href="https://twitter.com/intent/follow?screen_name=ZenUml" target="_blank">@ZenUml</a> to know about the new upcoming
+						features!
 						<button class="btn" aria-label="Logout from your account" d-click="logout">Logout</button>
 					</p>
 				</div>
@@ -433,10 +438,10 @@
 				<div class="flex block--mobile">
 
 					<div>
-						<label class="line">
+						<label class="line" style="display: none;">
 							Default Preprocessors
 						</label>
-						<div class="flex line">
+						<div class="flex line" style="display: none;">
 							<select style="flex:1;margin-left:20px" data-setting="htmlMode" d-change="updateSetting">
 								<option value="html">HTML</option>
 								<option value="markdown">Markdown</option>
@@ -506,7 +511,7 @@
 						<label class="line" title="Loads the last open creation when app starts">
 							<input type="checkbox" d-change="updateSetting" data-setting="preserveLastCode"> Preserve last written code
 						</label>
-						<label class="line show-when-extension" title="Turning this on will start showing Web Maker in every new tab you open">
+						<label class="line show-when-extension" title="Turning this on will start showing Web Sequence in every new tab you open">
 							<input type="checkbox" d-change="updateSetting" data-setting="replaceNewTab"> Replace new tab page
 						</label>
 						<label class="line" title="Preserves the console logs across your preview refreshes">
@@ -526,6 +531,16 @@
 						<input type="checkbox" d-change="updateSetting" data-setting="isCodeBlastOn"> Code blast!
 					</label>
 				</p>
+
+				<hr>
+
+				<h3>Advanced</h3>
+				<p>
+					<label class="line" title="This timeout is used to indentify a possible infinite loop and prevent it.">
+						Maximum time allowed in a loop iteration
+						<input type="number" data-setting="infiniteLoopTimeout" d-change="updateSetting"> ms
+					</label>
+				</p>
 			</div>
 		</div>
 
@@ -533,7 +548,7 @@
 			<div class="modal__content" d-html="partials/changelog.html"></div>
 		</div>
 
-		<div id="js-saved-items-pane" class="saved-items-pane">
+		<div id="js-saved-items-pane" class="saved-items-pane" style="visibility: visible;">
 			<button class="btn  saved-items-pane__close-btn" id="js-saved-items-pane-close-btn">X</button>
 			<div class="flex flex-v-center" style="justify-content: space-between;">
 				<h3>My Library <span id="savedItemCountEl"></span></h3>
@@ -672,8 +687,62 @@
 			</symbol>
 		</svg>
 
-		<script src="vendor.js"></script>
+		<!-- build:js vendor.js -->
+		<script src="lib/jquery-3.3.1.min.js"></script>
+		<script src="lib/codemirror/lib/codemirror.js"></script>
+		<script src="lib/codemirror/addon/edit/matchbrackets.js"></script>
+		<script src="lib/codemirror/addon/edit/matchtags.js"></script>
+		<script src="lib/codemirror/addon/edit/closebrackets.js"></script>
+		<script src="lib/codemirror/addon/edit/closetag.js"></script>
+		<script src="lib/codemirror/addon/comment/comment.js"></script>
+		<script src="lib/codemirror/addon/fold/foldcode.js"></script>
+		<script src="lib/codemirror/addon/fold/foldgutter.js"></script>
+		<script src="lib/codemirror/addon/fold/xml-fold.js"></script>
+		<script src="lib/codemirror/addon/fold/indent-fold.js"></script>
+		<script src="lib/codemirror/addon/fold/comment-fold.js"></script>
+		<script src="lib/codemirror/addon/fold/brace-fold.js"></script>
+		<script src="lib/codemirror/addon/mode/loadmode.js"></script>
+		<script src="lib/codemirror/addon/hint/show-hint.js"></script>
+		<script src="lib/codemirror/addon/hint/javascript-hint.js"></script>
+		<script src="lib/codemirror/addon/hint/xml-hint.js"></script>
+		<script src="lib/codemirror/addon/hint/html-hint.js"></script>
+		<script src="lib/codemirror/addon/hint/css-hint.js"></script>
+		<script src="lib/codemirror/addon/selection/active-line.js"></script>
+		<script src="lib/codemirror/addon/search/searchcursor.js"></script>
+		<script src="lib/codemirror/addon/search/search.js"></script>
+		<script src="lib/codemirror/addon/dialog/dialog.js"></script>
+		<script src="lib/codemirror/addon/search/jump-to-line.js"></script>
 
+		<script src="lib/codemirror/mode/xml/xml.js"></script>
+		<script src="lib/codemirror/mode/javascript/javascript.js"></script>
+		<script src="lib/codemirror/mode/css/css.js"></script>
+		<script src="lib/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+		<script src="lib/codemirror/keymap/sublime.js"></script>
+		<script src="lib/codemirror/keymap/vim.js"></script>
+		<script src="lib/emmet.js"></script>
+		<script src="lib/code-blast.js"></script>
+
+		<script src="lib/split.js"></script>
+		<script src="lib/inlet.min.js"></script>
+		<script src="lib/esprima.js"></script>
+		<script src="lib/firebase.js"></script>
+		<script src="lib/firebase-firestore.js"></script>
+		<!-- endbuild -->
+
+		<!-- build:js script.js -->
+		<script src="service-worker-registration.js"></script>
+		<script src="utils.js"></script>
+		<script src="db.js"></script>
+		<script src="auth.js"></script>
+		<script src="analytics.js"></script>
+		<script src="deferred.js"></script>
+		<script src="loader.js"></script>
+		<script src="notifications.js"></script>
+		<script src="library-list.js"></script>
+		<script src="textarea-autocomplete.js"></script>
+		<script src="itemService.js"></script>
 		<script src="script.js"></script>
+		<script src="dropdown.js"></script>
+		<!-- endbuild -->
 	</body>
 </html>

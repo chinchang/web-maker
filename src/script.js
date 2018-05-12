@@ -1,16 +1,17 @@
 /* global trackEvent */
 /* global layoutBtn1, layoutBtn2, layoutBtn3, helpModal, notificationsModal, addLibraryModal,
-onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, helpBtn, onboardModal, onboardModal,
-addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal, notificationsModal,
-notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn, settingsBtn,
-onboardModal, settingsModal, notificationsBtn, onboardShowInTabOptionBtn, editorThemeLinkTag,
-onboardDontShowInTabOptionBtn, TextareaAutoComplete, savedItemCountEl, indentationSizeValueEl,
+onboardModal, layoutBtn1, layoutBtn2, layoutBtn3, layoutBtn4, layoutBtn5, onboardModal,
+onboardModal, addLibraryModal, addLibraryModal, notificationsBtn, notificationsModal,
+notificationsModal, notificationsBtn, codepenBtn, saveHtmlBtn, saveBtn,
+onboardModal, settingsModal, notificationsBtn, editorThemeLinkTag, TextareaAutoComplete,
+savedItemCountEl, indentationSizeValueEl, pledgeModal
 runBtn, searchInput, consoleEl, consoleLogEl, logCountEl, fontStyleTag, fontStyleTemplate,
 customEditorFontInput, cssSettingsModal, cssSettingsBtn, acssSettingsTextarea,
-globalConsoleContainerEl
+globalConsoleContainerEl, externalLibrarySearchInput, keyboardShortcutsModal, headerAvatarImg,
+loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askToImportModal
 */
 /* eslint-disable no-extra-semi */
-(function(alertsService) {
+(function(alertsService, itemService) {
 	/* eslint-enable no-extra-semi */
 	var scope = scope || {};
 	var version = '0.9.0';
@@ -19,6 +20,29 @@ globalConsoleContainerEl
 		window.scope = scope;
 	}
 
+	const defaultSettings = {
+		preserveLastCode: true,
+		replaceNewTab: false,
+		htmlMode: 'html',
+		jsMode: 'js',
+		cssMode: 'css',
+		isCodeBlastOn: false,
+		indentWith: 'spaces',
+		indentSize: 2,
+		editorTheme: 'monokai',
+		keymap: 'sublime',
+		fontSize: 16,
+		refreshOnResize: false,
+		autoPreview: true,
+		editorFont: 'FiraCode',
+		editorCustomFont: '',
+		autoSave: true,
+		autoComplete: true,
+		preserveConsoleLogs: true,
+		lightVersion: false,
+		lineWrap: true,
+		infiniteLoopTimeout: 1000
+	};
 	var HtmlModes = {
 		HTML: 'html',
 		MARKDOWN: 'markdown',
@@ -101,7 +125,14 @@ globalConsoleContainerEl
 	};
 
 	const AUTO_SAVE_INTERVAL = 15000; // 15 seconds
+	const BASE_PATH = chrome.extension || window.DEBUG ? '/' : '/app';
+	const DEFAULT_PROFILE_IMG =
+		"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='#ccc' d='M12,19.2C9.5,19.2 7.29,17.92 6,16C6.03,14 10,12.9 12,12.9C14,12.9 17.97,14 18,16C16.71,17.92 14.5,19.2 12,19.2M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z' /%3E%3C/svg%3E";
 
+	const LocalStorageKeys = {
+		LOGIN_AND_SAVE_MESSAGE_SEEN: 'loginAndsaveMessageSeen',
+		ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
+	};
 	var updateTimer,
 		updateDelay = 500,
 		autoSaveInterval,
@@ -137,7 +168,6 @@ globalConsoleContainerEl
 		jsModelLabel = $('#js-js-mode-label'),
 		titleInput = $('#js-title-input'),
 		addLibrarySelect = $('#js-add-library-select'),
-		addLibraryBtn = $('#js-add-library-btn'),
 		externalJsTextarea = $('#js-external-js'),
 		externalCssTextarea = $('#js-external-css');
 
@@ -160,6 +190,29 @@ globalConsoleContainerEl
 	// 		});
 	// 	}, 50);
 	// }
+	// Check all the code wrap if they are minimized or maximized
+	function updateCodeWrapCollapseStates() {
+		// This is debounced!
+		clearTimeout(updateCodeWrapCollapseStates.timeout);
+		updateCodeWrapCollapseStates.timeout = setTimeout(function() {
+			const prop =
+				currentLayoutMode === 2 || currentLayoutMode === 5 ? 'width' : 'height';
+			[htmlCode, cssCode, jsCode].forEach(function(el) {
+				const bounds = el.getBoundingClientRect();
+				const size = bounds[prop];
+				if (size < 100) {
+					el.classList.add('is-minimized');
+				} else {
+					el.classList.remove('is-minimized');
+				}
+				if (el.style[prop].indexOf(`100% - ${minCodeWrapSize * 2}px`) !== -1) {
+					el.classList.add('is-maximized');
+				} else {
+					el.classList.remove('is-maximized');
+				}
+			});
+		}, 50);
+	}
 
 	// function toggleCodeWrapCollapse(codeWrapEl) {
 	// 	if (codeWrapEl.classList.contains('is-minimized')) {
@@ -170,6 +223,27 @@ globalConsoleContainerEl
 	// 		codeWrapEl.classList.add('is-minimized');
 	// 	}
 	// }
+	function toggleCodeWrapCollapse(codeWrapEl) {
+		if (
+			codeWrapEl.classList.contains('is-minimized') ||
+			codeWrapEl.classList.contains('is-maximized')
+		) {
+			codeWrapEl.classList.remove('is-minimized');
+			codeWrapEl.classList.remove('is-maximized');
+			codeSplitInstance.setSizes([33.3, 33.3, 33.3]);
+		} else {
+			const id = parseInt(codeWrapEl.dataset.codeWrapId, 10);
+			var arr = [
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`
+			];
+			arr[id] = `calc(100% - ${minCodeWrapSize * 2}px)`;
+
+			codeSplitInstance.setSizes(arr);
+			codeWrapEl.classList.add('is-maximized');
+		}
+	}
 	// Returns the sizes of main code & preview panes.
 	function getMainSplitSizesToApply() {
 		var mainSplitSizes;
@@ -181,7 +255,7 @@ globalConsoleContainerEl
 					? [currentItem.mainSizes[1], currentItem.mainSizes[0]]
 					: currentItem.mainSizes;
 		} else {
-			mainSplitSizes = [30, 70];
+			mainSplitSizes = currentLayoutMode === 5 ? [75, 25] : [30, 70];
 		}
 		return mainSplitSizes;
 	}
@@ -195,7 +269,10 @@ globalConsoleContainerEl
 		}
 
 		var options = {
-			direction: currentLayoutMode === 2 ? 'horizontal' : 'vertical',
+			direction:
+				currentLayoutMode === 2 || currentLayoutMode === 5
+					? 'horizontal'
+					: 'vertical',
 			minSize: minCodeWrapSize,
 			gutterSize: 6,
 			onDragStart: function() {
@@ -233,6 +310,9 @@ globalConsoleContainerEl
 		});
 	}
 	function toggleLayout(mode) {
+		/* eslint-disable no-param-reassign */
+		mode = window.innerWidth < 500 ? 2 : mode;
+
 		if (currentLayoutMode === mode) {
 			mainSplitInstance.setSizes(getMainSplitSizesToApply());
 			codeSplitInstance.setSizes(currentItem.sizes || [0, 30, 70]);
@@ -240,15 +320,12 @@ globalConsoleContainerEl
 			return;
 		}
 		currentLayoutMode = mode;
-		layoutBtn1.classList.remove('selected');
-		layoutBtn2.classList.remove('selected');
-		layoutBtn3.classList.remove('selected');
-		layoutBtn4.classList.remove('selected');
+		// Remove all layout classes
+		[1, 2, 3, 4, 5].forEach(layoutNumber => {
+			window[`layoutBtn${layoutNumber}`].classList.remove('selected');
+			document.body.classList.remove(`layout-${layoutNumber}`);
+		});
 		$('#layoutBtn' + mode).classList.add('selected');
-		document.body.classList.remove('layout-1');
-		document.body.classList.remove('layout-2');
-		document.body.classList.remove('layout-3');
-		document.body.classList.remove('layout-4');
 		document.body.classList.add('layout-' + mode);
 
 		resetSplitting();
@@ -259,6 +336,7 @@ globalConsoleContainerEl
 		utils.log('onExternalLibChange');
 		// updateExternalLibUi();
 		scope.setPreviewContent(true);
+		alertsService.add('Libraries updated.');
 	}
 
 	function updateExternalLibUi() {
@@ -280,17 +358,36 @@ globalConsoleContainerEl
 
 	function saveSetting(setting, value) {
 		const d = deferred();
-		var obj = {};
-		obj[setting] = value;
-		chrome.storage.local.set(obj, d.resolve);
+		const obj = {
+			[setting]: value
+		};
+		db.local.set(obj, d.resolve);
 		return d.promise;
 	}
 
 	// Save current item to storage
 	function saveItem() {
+		if (
+			!window.user &&
+			!window.localStorage[LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN]
+		) {
+			const answer = confirm(
+				'Saving without signing in will save your work only on this machine and this browser. If you want it to be secure & available anywhere, please login in your account and then save.\n\nDo you still want to continue saving locally?'
+			);
+			window.localStorage[LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN] = true;
+			if (!answer) {
+				trackEvent('ui', LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN, 'login');
+				closeAllOverlays();
+				loginModal.classList.add('is-modal-visible');
+				return;
+			}
+			trackEvent('ui', LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN, 'local');
+		}
 		var isNewItem = !currentItem.id;
 		currentItem.id = currentItem.id || 'item-' + utils.generateRandomId();
+		saveBtn.classList.add('is-loading');
 		saveCode().then(() => {
+			saveBtn.classList.remove('is-loading');
 			// If this is the first save, and auto-saving settings is enabled,
 			// then start auto-saving from now on.
 			// This is done in `saveCode()` completion so that the
@@ -302,17 +399,7 @@ globalConsoleContainerEl
 		});
 		// Push into the items hash if its a new item being saved
 		if (isNewItem) {
-			chrome.storage.local.get(
-				{
-					items: {}
-				},
-				function(result) {
-					result.items[currentItem.id] = true;
-					chrome.storage.local.set({
-						items: result.items
-					});
-				}
-			);
+			itemService.setItemForUser(currentItem.id);
 		}
 	}
 
@@ -327,12 +414,13 @@ globalConsoleContainerEl
 	// Calculates the sizes of html, css & js code panes.
 	function getCodePaneSizes() {
 		var sizes;
-		var dimensionProperty = currentLayoutMode === 2 ? 'width' : 'height';
+		var dimensionProperty =
+			currentLayoutMode === 2 || currentLayoutMode === 5 ? 'width' : 'height';
 		try {
 			sizes = [
-				+htmlCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+cssCode.style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+jsCode.style[dimensionProperty].match(/([\d.]+)%/)[1]
+				htmlCode.style[dimensionProperty],
+				cssCode.style[dimensionProperty],
+				jsCode.style[dimensionProperty]
 			];
 		} catch (e) {
 			sizes = [0, 30, 70];
@@ -387,11 +475,22 @@ globalConsoleContainerEl
 		currentItem.mainSizes = getMainPaneSizes();
 
 		utils.log('saving key', key || currentItem.id, currentItem);
-		return saveSetting(key || currentItem.id, currentItem).then(() => {
-			alertsService.add('Item saved.');
+
+		function onSaveComplete() {
+			if (window.user && !navigator.onLine) {
+				alertsService.add(
+					'Item saved locally. Will save to account when you are online.'
+				);
+			} else {
+				alertsService.add('Item saved.');
+			}
 			unsavedEditCount = 0;
 			saveBtn.classList.remove('is-marked');
-		});
+		}
+
+		return itemService
+			.setItem(key || currentItem.id, currentItem)
+			.then(onSaveComplete);
 	}
 
 	function populateItemsInSavedPane(items) {
@@ -451,20 +550,31 @@ globalConsoleContainerEl
 	 * @param  {boolean} shouldSaveGlobally Whether to store the fetched items in global arr for later use.
 	 * @return {promise}                    Promise.
 	 */
-	function fetchItems(shouldSaveGlobally) {
+	async function fetchItems(shouldSaveGlobally, shouldFetchLocally) {
 		var d = deferred();
-		chrome.storage.local.get('items', function(result) {
-			var itemIds = Object.getOwnPropertyNames(result.items || {}),
-				items = [];
+		savedItems = {};
+		var items = [];
+		if (window.user && !shouldFetchLocally) {
+			items = await itemService.getAllItems();
+			utils.log('got items');
+			if (shouldSaveGlobally) {
+				items.forEach(item => {
+					savedItems[item.id] = item;
+				});
+			}
+			d.resolve(items);
+			return d.promise;
+		}
+		db.local.get('items', function(result) {
+			var itemIds = Object.getOwnPropertyNames(result.items || {});
 			if (!itemIds.length) {
 				d.resolve([]);
 			}
 
-			savedItems = savedItems || {};
 			trackEvent('fn', 'fetchItems', itemIds.length);
 			for (let i = 0; i < itemIds.length; i++) {
 				/* eslint-disable no-loop-func */
-				chrome.storage.local.get(itemIds[i], function(itemResult) {
+				db.local.get(itemIds[i], function(itemResult) {
 					if (shouldSaveGlobally) {
 						savedItems[itemIds[i]] = itemResult[itemIds[i]];
 					}
@@ -482,12 +592,16 @@ globalConsoleContainerEl
 	}
 
 	function openSavedItemsPane() {
+		openItemsBtn.classList.add('is-loading');
 		fetchItems(true).then(function(items) {
+			openItemsBtn.classList.remove('is-loading');
 			populateItemsInSavedPane(items);
 		});
 	}
 	function setCurrentItem(item) {
 		currentItem = item;
+		utils.log('Current Item set', item);
+
 		// Reset auto-saving flag
 		isAutoSavingEnabled = false;
 		// Reset unsaved count, in UI also.
@@ -552,26 +666,17 @@ globalConsoleContainerEl
 
 		itemTile.remove();
 		// Remove from items list
-		chrome.storage.local.get(
-			{
-				items: {}
-			},
-			function(result) {
-				delete result.items[itemId];
-				chrome.storage.local.set({
-					items: result.items
-				});
-			}
-		);
+		itemService.unsetItemForUser(itemId);
 
 		// Remove individual item too.
-		chrome.storage.local.remove(itemId, function() {
+		itemService.removeItem(itemId).then(() => {
 			alertsService.add('Item removed.');
 			// This item is open in the editor. Lets open a new one.
 			if (currentItem.id === itemId) {
 				createNewItem();
 			}
 		});
+
 		// Remove from cached list
 		delete savedItems[itemId];
 
@@ -627,6 +732,11 @@ globalConsoleContainerEl
 		onboardModal.classList.remove('is-modal-visible');
 		settingsModal.classList.remove('is-modal-visible');
 		cssSettingsModal.classList.remove('is-modal-visible');
+		keyboardShortcutsModal.classList.remove('is-modal-visible');
+		loginModal.classList.remove('is-modal-visible');
+		profileModal.classList.remove('is-modal-visible');
+		pledgeModal.classList.remove('is-modal-visible');
+		askToImportModal.classList.remove('is-modal-visible');
 		toggleSavedItemsPane(false);
 		document.dispatchEvent(new Event('overlaysClosed'));
 	}
@@ -635,6 +745,7 @@ globalConsoleContainerEl
 	 * Loaded the code comiler based on the mode selected
 	 */
 	function handleModeRequirements(mode) {
+		const baseTranspilerPath = 'lib/transpilers';
 		// Exit if already loaded
 		var d = deferred();
 		if (modes[mode].hasLoaded) {
@@ -648,26 +759,26 @@ globalConsoleContainerEl
 		}
 
 		if (mode === HtmlModes.JADE) {
-			loadJS('lib/jade.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/jade.js`).then(setLoadedFlag);
 		} else if (mode === HtmlModes.MARKDOWN) {
-			loadJS('lib/marked.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/marked.js`).then(setLoadedFlag);
 		} else if (mode === CssModes.LESS) {
-			loadJS('lib/less.min.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/less.min.js`).then(setLoadedFlag);
 		} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
-			loadJS('lib/sass.js').then(function() {
-				sass = new Sass('lib/sass.worker.js');
+			loadJS(`${baseTranspilerPath}/sass.js`).then(function() {
+				sass = new Sass(`${baseTranspilerPath}/sass.worker.js`);
 				setLoadedFlag();
 			});
 		} else if (mode === CssModes.STYLUS) {
-			loadJS('lib/stylus.min.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/stylus.min.js`).then(setLoadedFlag);
 		} else if (mode === CssModes.ACSS) {
-			loadJS('lib/atomizer.browser.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/atomizer.browser.js`).then(setLoadedFlag);
 		} else if (mode === JsModes.COFFEESCRIPT) {
-			loadJS('lib/coffee-script.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/coffee-script.js`).then(setLoadedFlag);
 		} else if (mode === JsModes.ES6) {
-			loadJS('lib/babel.min.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/babel.min.js`).then(setLoadedFlag);
 		} else if (mode === JsModes.TS) {
-			loadJS('lib/typescript.js').then(setLoadedFlag);
+			loadJS(`${baseTranspilerPath}/typescript.js`).then(setLoadedFlag);
 		} else {
 			d.resolve();
 		}
@@ -826,7 +937,109 @@ globalConsoleContainerEl
 		var code = 'app.$store.dispatch(\'updateCode\', ' + ' { code: \'' + escape(scope.cm.js.getValue()) + '\' });';
 
 		cleanupErrors('js');
-		d.resolve(code);
+		if (!code) {
+			d.resolve('');
+			return d.promise;
+		}
+
+		if (jsMode === JsModes.JS) {
+			try {
+				esprima.parse(code, {
+					tolerant: true
+				});
+			} catch (e) {
+				showErrors('js', [
+					{ lineNumber: e.lineNumber - 1, message: e.description }
+				]);
+			} finally {
+				if (shouldPreventInfiniteLoops !== false) {
+					code = utils.addInfiniteLoopProtection(code, {
+						timeout: prefs.infiniteLoopTimeout
+					});
+				}
+				d.resolve(code);
+			}
+		} else if (jsMode === JsModes.COFFEESCRIPT) {
+			if (!window.CoffeeScript) {
+				d.resolve('');
+				return d.promise;
+			}
+			try {
+				code = CoffeeScript.compile(code, { bare: true });
+			} catch (e) {
+				showErrors('js', [
+					{ lineNumber: e.location.first_line, message: e.message }
+				]);
+			} finally {
+				if (shouldPreventInfiniteLoops !== false) {
+					code = utils.addInfiniteLoopProtection(code, {
+						timeout: prefs.infiniteLoopTimeout
+					});
+				}
+				d.resolve(code);
+			}
+		} else if (jsMode === JsModes.ES6) {
+			if (!window.Babel) {
+				d.resolve('');
+				return d.promise;
+			}
+			try {
+				esprima.parse(code, {
+					tolerant: true,
+					jsx: true
+				});
+			} catch (e) {
+				showErrors('js', [
+					{ lineNumber: e.lineNumber - 1, message: e.description }
+				]);
+			} finally {
+				code = Babel.transform(code, {
+					presets: ['latest', 'stage-2', 'react']
+				}).code;
+				if (shouldPreventInfiniteLoops !== false) {
+					code = utils.addInfiniteLoopProtection(code, {
+						timeout: prefs.infiniteLoopTimeout
+					});
+				}
+				d.resolve(code);
+			}
+		} else if (jsMode === JsModes.TS) {
+			try {
+				if (!window.ts) {
+					d.resolve('');
+					return d.promise;
+				}
+				code = ts.transpileModule(code, {
+					reportDiagnostics: true,
+					compilerOptions: {
+						noEmitOnError: true,
+						diagnostics: true,
+						module: ts.ModuleKind.ES2015
+					}
+				});
+				if (code.diagnostics.length) {
+					/* eslint-disable no-throw-literal */
+					throw {
+						description: code.diagnostics[0].messageText,
+						lineNumber: ts.getLineOfLocalPosition(
+							code.diagnostics[0].file,
+							code.diagnostics[0].start
+						)
+					};
+				}
+				if (shouldPreventInfiniteLoops !== false) {
+					code = utils.addInfiniteLoopProtection(code.outputText, {
+						timeout: prefs.infiniteLoopTimeout
+					});
+				}
+				d.resolve(code);
+			} catch (e) {
+				showErrors('js', [
+					{ lineNumber: e.lineNumber - 1, message: e.description }
+				]);
+			}
+		}
+
 		return d.promise;
 	}
 
@@ -859,7 +1072,8 @@ globalConsoleContainerEl
 		});
 	}
 
-	function getCompleteHtml(html, css, js) {
+	/* eslint max-params: ["error", 4] */
+	function getCompleteHtml(html, css, js, isForExport) {
 		var externalJs = externalJsTextarea.value
 			.split('\n')
 			.reduce(function(scripts, url) {
@@ -905,24 +1119,34 @@ globalConsoleContainerEl
 			'<script src="' +
 			chrome.extension.getURL('lib/bundle.js') +
 			'"></script>';
+		if (!isForExport) {
+			contents +=
+				'<script src="' +
+				(chrome.extension
+					? chrome.extension.getURL('lib/screenlog.js')
+					: `${location.origin}${BASE_PATH}/lib/screenlog.js`) +
+				'"></script>';
+		}
 
 		if (jsMode === JsModes.ES6) {
 			contents +=
 				'<script src="' +
-				chrome.extension.getURL('lib/babel-polyfill.min.js') +
+				(chrome.extension
+					? chrome.extension.getURL('lib/transpilers/babel-polyfill.min.js')
+					: `${
+							location.origin
+						}${BASE_PATH}/lib/transpilers/babel-polyfill.min.js`) +
 				'"></script>';
 		}
 
-		if (js) {
+		if (typeof js === 'string') {
 			contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';
 		} else {
+			var origin = chrome.i18n.getMessage()
+				? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
+				: `${location.origin}`;
 			contents +=
-				'<script src="' +
-				'filesystem:chrome-extension://' +
-				chrome.i18n.getMessage('@@extension_id') +
-				'/temporary/' +
-				'script.js' +
-				'">';
+				'<script src="' + `filesystem:${origin}/temporary/script.js` + '">';
 		}
 		contents += '\n</script>\n</body>\n</html>';
 
@@ -940,7 +1164,7 @@ globalConsoleContainerEl
 				if (writeFile.errorCount === 4) {
 					setTimeout(function() {
 						alert(
-							"Oops! Seems like your preview isn't updating. Please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart browser\n - Update browser\n - Reinstall Web Maker (don't forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp."
+							"Oops! Seems like your preview isn't updating. It's recommended to switch to the web app: https://webmakerapp.com/app/.\n\n If you still want to get the extension working, please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart browser\n - Update browser\n - Reinstall Web Maker (don't forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp."
 						);
 						trackEvent('ui', 'writeFileMessageSeen');
 					}, 1000);
@@ -983,7 +1207,9 @@ globalConsoleContainerEl
 	}
 
 	function createPreviewFile(html, css, js) {
-		var contents = getCompleteHtml(html, css);
+		const shouldInlineJs =
+			!window.webkitRequestFileSystem || !window.IS_EXTENSION;
+		var contents = getCompleteHtml(html, css, shouldInlineJs ? js : null);
 		var blob = new Blob([contents], { type: 'text/plain;charset=UTF-8' });
 		var blobjs = new Blob([js], { type: 'text/plain;charset=UTF-8' });
 
@@ -993,23 +1219,47 @@ globalConsoleContainerEl
 			trackEvent.hasTrackedCode = true;
 		}
 
-		// we need to store user script in external JS file to prevent inline-script
-		// CSP from affecting it.
-		writeFile('script.js', blobjs, function() {
-			writeFile('preview.html', blob, function() {
-				frame.src =
-					'filesystem:chrome-extension://' +
-					chrome.i18n.getMessage('@@extension_id') +
-					'/temporary/' +
-					'preview.html';
-				if (scope.detachedWindow) {
-					scope.detachedWindow.postMessage(frame.src, '*');
-				}
+		if (shouldInlineJs) {
+			if (scope.detachedWindow) {
+				utils.log('✉️ Sending message to detached window');
+				scope.detachedWindow.postMessage({ contents }, '*');
+			} else {
+				frame.src = frame.src;
+				setTimeout(() => {
+					frame.contentDocument.open();
+					frame.contentDocument.write(contents);
+					frame.contentDocument.close();
+				}, 10);
+			}
+		} else {
+			// we need to store user script in external JS file to prevent inline-script
+			// CSP from affecting it.
+			writeFile('script.js', blobjs, function() {
+				writeFile('preview.html', blob, function() {
+					var origin = chrome.i18n.getMessage()
+						? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
+						: `${location.origin}`;
+					var src = `filesystem:${origin}/temporary/preview.html`;
+					if (scope.detachedWindow) {
+						scope.detachedWindow.postMessage(src, '*');
+					} else {
+						frame.src = src;
+					}
+				});
 			});
-		});
+		}
 	}
 
-	scope.setPreviewContent = function(isForced) {
+	/**
+	 * Generates the preview from the current code.
+	 * @param {boolean} isForced Should refresh everything without any check or not
+	 * @param {boolean} isManual Is this a manual preview request from user?
+	 */
+	scope.setPreviewContent = function(isForced, isManual) {
+		if (!prefs.autoPreview && !isManual) {
+			return;
+		}
+
 		if (!prefs.preserveConsoleLogs) {
 			scope.clearConsole();
 		}
@@ -1020,6 +1270,10 @@ globalConsoleContainerEl
 			js: scope.cm.js.getValue()
 		};
 		utils.log('🔎 setPreviewContent', isForced);
+		const targetFrame = scope.detachedWindow
+			? scope.detachedWindow.document.querySelector('iframe')
+			: frame;
+
 		// If just CSS was changed (and everything shudn't be empty),
 		// change the styles inside the iframe.
 		if (
@@ -1028,8 +1282,8 @@ globalConsoleContainerEl
 			currentCode.js === codeInPreview.js
 		) {
 			computeCss().then(function(css) {
-				if (frame.contentDocument.querySelector('#webmakerstyle')) {
-					frame.contentDocument.querySelector(
+				if (targetFrame.contentDocument.querySelector('#webmakerstyle')) {
+					targetFrame.contentDocument.querySelector(
 						'#webmakerstyle'
 					).textContent = css;
 				}
@@ -1057,7 +1311,7 @@ globalConsoleContainerEl
 				css = result[1],
 				js = result[2];
 
-			var fileContent = getCompleteHtml(html, css, js);
+			var fileContent = getCompleteHtml(html, css, js, true);
 
 			var d = new Date();
 			var fileName = [
@@ -1069,20 +1323,15 @@ globalConsoleContainerEl
 				d.getMinutes(),
 				d.getSeconds()
 			].join('-');
-			fileName += '.html';
 
 			if (currentItem.title) {
 				fileName = currentItem.title;
 			}
+			fileName += '.html';
 
-			var a = document.createElement('a');
 			var blob = new Blob([fileContent], { type: 'text/html;charset=UTF-8' });
-			a.href = window.URL.createObjectURL(blob);
-			a.download = fileName;
-			a.style.display = 'none';
-			document.body.appendChild(a);
-			a.click();
-			a.remove();
+			utils.downloadFile(fileName, blob);
+
 			trackEvent('fn', 'saveFileComplete');
 		});
 	}
@@ -1125,7 +1374,13 @@ globalConsoleContainerEl
 					CodeMirror.commands.indentAuto(editor);
 				},
 				Tab: function(editor) {
-					var input = $('[data-setting=indentWith]:checked');
+					if (options.emmet) {
+						const didEmmetWork = editor.execCommand('emmetExpandAbbreviation');
+						if (didEmmetWork === true) {
+							return;
+						}
+					}
+					const input = $('[data-setting=indentWith]:checked');
 					if (
 						!editor.somethingSelected() &&
 						(!input || input.value === 'spaces')
@@ -1137,7 +1392,8 @@ globalConsoleContainerEl
 					} else {
 						CodeMirror.commands.defaultTab(editor);
 					}
-				}
+				},
+				Enter: 'emmetInsertLineBreak'
 			}
 		});
 		cm.on('focus', editor => {
@@ -1187,6 +1443,7 @@ globalConsoleContainerEl
 					!prefs.autoComplete ||
 					input.origin !== '+input' ||
 					input.text[0] === ';' ||
+					input.text[0] === ',' ||
 					input.text[0] === ' '
 				) {
 					return;
@@ -1202,14 +1459,18 @@ globalConsoleContainerEl
 		profile: 'xhtml',
 		gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
 		noAutocomplete: true,
-		matchTags: { bothTags: true }
+		matchTags: { bothTags: true },
+		emmet: true
 	});
-	emmetCodeMirror(scope.cm.html);
 	scope.cm.css = initEditor(cssCode, {
 		mode: 'css',
-		gutters: ['error-gutter', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+		gutters: [
+			'error-gutter',
+			'CodeMirror-linenumbers',
+			'CodeMirror-foldgutter'
+		],
+		emmet: true
 	});
-	emmetCodeMirror(scope.cm.css);
 	Inlet(scope.cm.css);
 	scope.cm.js = initEditor(jsCode, {
 		mode: 'javascript',
@@ -1227,6 +1488,7 @@ globalConsoleContainerEl
 		gutters: ['CodeMirror-foldgutter']
 	});
 
+	// DEPRECATED
 	function openSettings() {
 		scope.toggleModal(settingsModal);
 
@@ -1250,40 +1512,34 @@ globalConsoleContainerEl
 	};
 
 	scope.onShowInTabClicked = function onShowInTabClicked() {
-		onboardDontShowInTabOptionBtn.classList.remove('selected');
-		onboardShowInTabOptionBtn.classList.add('selected');
 		trackEvent('ui', 'onboardShowInTabClick');
 	};
 	scope.onDontShowInTabClicked = function onDontShowInTabClicked() {
-		onboardDontShowInTabOptionBtn.classList.add('selected');
-		onboardShowInTabOptionBtn.classList.remove('selected');
 		trackEvent('ui', 'onboardDontShowInTabClick');
 	};
 
 	scope.exportItems = function exportItems(e) {
-		fetchItems().then(function(items) {
-			var d = new Date();
-			var fileName = [
-				'web-maker-export',
-				d.getFullYear(),
-				d.getMonth() + 1,
-				d.getDate(),
-				d.getHours(),
-				d.getMinutes(),
-				d.getSeconds()
-			].join('-');
-			fileName += '.json';
-			var blob = new Blob([JSON.stringify(items, false, 2)], {
-				type: 'application/json;charset=UTF-8'
+		handleDownloadsPermission().then(() => {
+			fetchItems().then(function(items) {
+				var d = new Date();
+				var fileName = [
+					'web-maker-export',
+					d.getFullYear(),
+					d.getMonth() + 1,
+					d.getDate(),
+					d.getHours(),
+					d.getMinutes(),
+					d.getSeconds()
+				].join('-');
+				fileName += '.json';
+				var blob = new Blob([JSON.stringify(items, false, 2)], {
+					type: 'application/json;charset=UTF-8'
+				});
+
+				utils.downloadFile(fileName, blob);
+
+				trackEvent('ui', 'exportBtnClicked');
 			});
-			var a = document.createElement('a');
-			a.href = window.URL.createObjectURL(blob);
-			a.download = fileName;
-			a.style.display = 'none';
-			document.body.appendChild(a);
-			a.click();
-			a.remove();
-			trackEvent('ui', 'exportBtnClicked');
 		});
 		e.preventDefault();
 	};
@@ -1291,7 +1547,11 @@ globalConsoleContainerEl
 	function mergeImportedItems(items) {
 		var existingItemIds = [];
 		var toMergeItems = {};
+		const d = deferred();
 		items.forEach(item => {
+			// We can access `savedItems` here because this gets set when user
+			// opens the saved creations panel. And import option is available
+			// inside the saved items panel.
 			if (savedItems[item.id]) {
 				// Item already exists
 				existingItemIds.push(item.id);
@@ -1315,41 +1575,24 @@ globalConsoleContainerEl
 			}
 		}
 		if (mergedItemCount) {
-			// save new items
-			chrome.storage.local.set(toMergeItems, function() {
+			itemService.saveItems(toMergeItems).then(() => {
+				d.resolve();
 				alertsService.add(
 					mergedItemCount + ' creations imported successfully.'
 				);
+				trackEvent('fn', 'itemsImported', mergedItemCount);
 			});
-			// Push in new item IDs
-			chrome.storage.local.get(
-				{
-					items: {}
-				},
-				function(result) {
-					/* eslint-disable guard-for-in */
-					for (var id in toMergeItems) {
-						result.items[id] = true;
-					}
-					chrome.storage.local.set({
-						items: result.items
-					});
-					trackEvent('fn', 'itemsImported', mergedItemCount);
-
-					/* eslint-enable guard-for-in */
-				}
-			);
-			alertsService.add(mergedItemCount + ' creations imported successfully.');
+		} else {
+			d.resolve();
 		}
 		// FIXME: Move from here
 		toggleSavedItemsPane(false);
+
+		return d.promise;
 	}
 
 	function onImportFileChange(e) {
 		var file = e.target.files[0];
-		// if (!f.type.match('image.*')) {
-		// 		continue;
-		// }
 
 		var reader = new FileReader();
 		reader.onload = function(progressEvent) {
@@ -1358,7 +1601,8 @@ globalConsoleContainerEl
 				items = JSON.parse(progressEvent.target.result);
 				utils.log(items);
 				mergeImportedItems(items);
-			} catch (ex) {
+			} catch (exception) {
+				utils.log(exception);
 				alert(
 					'Oops! Selected file is corrupted. Please select a file that was generated by clicking the "Export" button.'
 				);
@@ -1462,6 +1706,10 @@ globalConsoleContainerEl
 
 	function handleDownloadsPermission() {
 		var d = deferred();
+		if (!window.IS_EXTENSION) {
+			d.resolve();
+			return d.promise;
+		}
 		chrome.permissions.contains(
 			{
 				permissions: ['downloads']
@@ -1513,12 +1761,14 @@ globalConsoleContainerEl
 				// c.style.width = iframeBounds.width + 'px';
 				// c.style.height = iframeBounds.height + 'px';
 				var ctx = c.getContext('2d');
+				var devicePixelRatio = window.devicePixelRatio || 1;
+
 				ctx.drawImage(
 					image,
-					scaled.left,
-					scaled.top,
-					scaled.width,
-					scaled.height,
+					scaled.left * devicePixelRatio,
+					scaled.top * devicePixelRatio,
+					scaled.width * devicePixelRatio,
+					scaled.height * devicePixelRatio,
 					0,
 					0,
 					scaled.width,
@@ -1576,6 +1826,8 @@ globalConsoleContainerEl
 		$('[data-setting=preserveConsoleLogs]').checked = prefs.preserveConsoleLogs;
 		$('[data-setting=lightVersion]').checked = prefs.lightVersion;
 		$('[data-setting=lineWrap]').checked = prefs.lineWrap;
+		$('[data-setting=infiniteLoopTimeout]').value =
+			prefs.infiniteLoopTimeout;
 	}
 
 	/**
@@ -1590,9 +1842,26 @@ globalConsoleContainerEl
 			utils.log(settingName, el.type === 'checkbox' ? el.checked : el.value);
 			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
 			obj[settingName] = prefs[settingName];
-			chrome.storage.sync.set(obj, function() {
+
+			// We always save locally so that it gets fetched
+			// faster on future loads.
+			db.sync.set(obj, function() {
 				alertsService.add('Setting saved');
 			});
+			if (window.user) {
+				window.db.getDb().then(remoteDb => {
+					remoteDb
+						.collection('users')
+						.doc(window.user.uid)
+						.update({
+							[`settings.${settingName}`]: prefs[settingName]
+						})
+						.then(arg => {
+							utils.log(`Setting "${settingName}" for user`, arg);
+						})
+						.catch(error => utils.log(error));
+				});
+			}
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
 
@@ -1608,8 +1877,7 @@ globalConsoleContainerEl
 		indentationSizeValueEl.textContent = $('[data-setting=indentSize]').value;
 
 		// Replace correct css file in LINK tags's href
-		editorThemeLinkTag.href =
-			'/lib/codemirror/theme/' + prefs.editorTheme + '.css';
+		editorThemeLinkTag.href = `lib/codemirror/theme/${prefs.editorTheme}.css`;
 		fontStyleTag.textContent = fontStyleTemplate.textContent.replace(
 			/fontname/g,
 			(prefs.editorFont === 'other'
@@ -1698,9 +1966,23 @@ globalConsoleContainerEl
 	 */
 	scope.toggleModal = function(modal) {
 		modal.classList.toggle('is-modal-visible');
-		document.body.classList[
-			modal.classList.contains('is-modal-visible') ? 'add' : 'remove'
-		]('overlay-visible');
+		const hasOpened = modal.classList.contains('is-modal-visible');
+		document.body.classList[hasOpened ? 'add' : 'remove']('overlay-visible');
+
+		if (hasOpened) {
+			/* eslint-disable no-inner-declarations */
+			function onTransitionEnd() {
+				modal.querySelector('.js-modal__close-btn').focus();
+				modal
+					.querySelector('.modal__content')
+					.removeEventListener('transitionend', onTransitionEnd);
+			}
+			/* eslint-enable no-inner-declarations */
+
+			modal
+				.querySelector('.modal__content')
+				.addEventListener('transitionend', onTransitionEnd);
+		}
 	};
 	scope.onSearchInputChange = function(e) {
 		const text = e.target.value;
@@ -1760,13 +2042,17 @@ globalConsoleContainerEl
 					'script $1:$2'
 				);
 			}
-			scope.consoleCm.replaceRange(
-				arg +
-					' ' +
-					((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
-					'\n',
-				{ line: Infinity }
-			);
+			try {
+				scope.consoleCm.replaceRange(
+					arg +
+						' ' +
+						((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
+						'\n',
+					{ line: Infinity }
+				);
+			} catch (e) {
+				scope.consoleCm.replaceRange('🌀\n', { line: Infinity });
+			}
 			scope.consoleCm.scrollTo(0, Infinity);
 			logCount++;
 		});
@@ -1775,9 +2061,21 @@ globalConsoleContainerEl
 		/* eslint-enable no-param-reassign */
 	};
 
-	function compileNodes() {
+	/**
+	 * Compiles directives on the given node
+	 * @param {Node} root The element on which compilation is required
+	 */
+	function compileNodes(root) {
+		if (!(root instanceof Node)) {
+			/* eslint-disable no-param-reassign */
+			root = document;
+			/* eslint-enable no-param-reassign */
+		}
+		// Create a querySelectorAll function bound to the passed `root` Node
+		const query = selector => [...root.querySelectorAll(selector)];
+
 		function attachListenerForEvent(eventName) {
-			const nodes = $all(`[d-${eventName}]`);
+			const nodes = query(`[d-${eventName}]`);
 			nodes.forEach(function(el) {
 				el.addEventListener(eventName, function(e) {
 					scope[el.getAttribute(`d-${eventName}`)].call(window, e);
@@ -1789,20 +2087,39 @@ globalConsoleContainerEl
 		attachListenerForEvent('input');
 		attachListenerForEvent('keyup');
 
+		// Compile d-open-modal directive
+		const modalTriggers = query(`[d-open-modal]`);
+		modalTriggers.forEach(function(el) {
+			utils.onButtonClick(el, function() {
+				scope.toggleModal(window[el.getAttribute('d-open-modal')]);
+				trackEvent(
+					el.getAttribute('data-event-category'),
+					el.getAttribute('data-event-action')
+				);
+			});
+		});
+
 		// Compile d-html directive
-		const dHtmlNodes = $all(`[d-html]`);
+		const dHtmlNodes = query(`[d-html]`);
 		dHtmlNodes.forEach(function(el) {
 			fetch(el.getAttribute('d-html')).then(response => {
-				// Stop further compilation because of future recursion by removing attribute.
+				// Stop further compilation because of future recursion, by removing attribute.
 				el.removeAttribute('d-html');
 				response.text().then(html => {
 					requestIdleCallback(() => {
 						el.innerHTML = html;
+						// Now compile this newly inserted HTML also.
+						compileNodes(el);
 					});
 				});
 			});
 		});
 	}
+
+	scope.onRunBtnClick = function() {
+		scope.setPreviewContent(true, true);
+		trackEvent('ui', 'runBtnClick');
+	};
 
 	scope.openDetachedPreview = function() {
 		trackEvent('ui', 'detachPreviewBtnClick');
@@ -1822,15 +2139,19 @@ globalConsoleContainerEl
 			'Web Maker',
 			`width=${iframeWidth},height=${iframeHeight},resizable,scrollbars=yes,status=1`
 		);
+		// Trigger initial render in detached window
 		setTimeout(() => {
-			scope.detachedWindow.postMessage(frame.src, '*');
-		}, 1000);
+			scope.setPreviewContent(true);
+		}, 1500);
 		function checkWindow() {
 			if (scope.detachedWindow && scope.detachedWindow.closed) {
 				clearInterval(intervalID);
 				document.body.classList.remove('is-detached-mode');
 				$('#js-demo-side').insertBefore(consoleEl, null);
 				scope.detachedWindow = null;
+				// Update main frame preview to get latest changes (which were not
+				// getting reflected while detached window was open)
+				scope.setPreviewContent(true);
 			}
 		}
 		var intervalID = window.setInterval(checkWindow, 500);
@@ -1846,10 +2167,132 @@ globalConsoleContainerEl
 		trackEvent('ui', 'cssSettingsBtnClick');
 	};
 
+	scope.onModalCloseBtnClick = function(e) {
+		closeAllOverlays();
+		e.preventDefault();
+	};
+
+	scope.openSupportDeveloperModal = function(e) {
+		closeAllOverlays();
+		scope.toggleModal(pledgeModal);
+		if (e) {
+			trackEvent('ui', e.target.dataset.eventAction);
+		}
+	};
+
+	scope.updateProfileUi = () => {
+		if (window.user) {
+			document.body.classList.add('is-logged-in');
+			headerAvatarImg.src = profileAvatarImg.src =
+				window.user.photoURL || DEFAULT_PROFILE_IMG;
+			profileUserName.textContent =
+				window.user.displayName || 'Anonymous Creator';
+		} else {
+			document.body.classList.remove('is-logged-in');
+			headerAvatarImg.src = profileAvatarImg.src = '';
+			profileUserName.textContent = 'Anonymous Creator';
+		}
+	};
+
+	scope.login = e => {
+		const provider = e.target.dataset.authProvider;
+		trackEvent('ui', 'loginProviderClick', provider);
+		window.login(provider);
+		if (e) {
+			e.preventDefault();
+		}
+	};
+	scope.logout = e => {
+		e.preventDefault();
+		if (unsavedEditCount) {
+			var shouldDiscard = confirm(
+				'You have unsaved changes. Do you still want to logout?'
+			);
+			if (!shouldDiscard) {
+				return;
+			}
+		}
+		trackEvent('fn', 'loggedOut');
+		window.logout();
+	};
+
+	/**
+	 * Called from inside ask-to-import-modal
+	 */
+	scope.dontAskToImportAnymore = e => {
+		scope.toggleModal(askToImportModal);
+		window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS] = true;
+		if (e) {
+			trackEvent('ui', 'dontAskToImportBtnClick');
+		}
+	};
+
+	/**
+	 * Called from inside ask-to-import-modal
+	 */
+	scope.importCreationsAndSettingsIntoApp = () => {
+		mergeImportedItems(scope.oldSavedItems).then(() => {
+			trackEvent('fn', 'oldItemsImported');
+			scope.dontAskToImportAnymore();
+		});
+	};
+
 	function init() {
+		var config = {
+			apiKey: 'AIzaSyBl8Dz7ZOE7aP75mipYl2zKdLSRzBU2fFc',
+			authDomain: 'web-maker-app.firebaseapp.com',
+			databaseURL: 'https://web-maker-app.firebaseio.com',
+			projectId: 'web-maker-app',
+			storageBucket: 'web-maker-app.appspot.com',
+			messagingSenderId: '560473480645'
+		};
+		firebase.initializeApp(config);
+
+		firebase.auth().onAuthStateChanged(function(user) {
+			scope.closeAllOverlays();
+			if (user) {
+				utils.log('You are -> ', user);
+				alertsService.add('You are now logged in!');
+				scope.user = window.user = user;
+				if (
+					!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS] &&
+					window.oldSavedCreationsCountEl
+				) {
+					fetchItems(false, true).then(items => {
+						if (!items.length) {
+							return;
+						}
+						scope.oldSavedItems = items;
+						window.oldSavedCreationsCountEl.textContent = items.length;
+						scope.toggleModal(askToImportModal);
+						trackEvent('ui', 'askToImportModalSeen');
+					});
+				}
+				window.db.getUser(user.uid).then(customUser => {
+					if (customUser) {
+						Object.assign(prefs, user.settings);
+						updateSettingsInUi();
+						scope.updateSetting();
+					}
+				});
+			} else {
+				delete window.user;
+				// User is signed out.
+			}
+			scope.updateProfileUi();
+		});
+
 		var lastCode;
 
-		CodeMirror.modeURL = 'lib/codemirror/mode/%N/%N.js';
+		CodeMirror.modeURL = `lib/codemirror/mode/%N/%N.js`;
+
+		window.db.local.get({ lastAuthProvider: '' }, result => {
+			if (result.lastAuthProvider) {
+				document.body.classList.add(`last-login-${result.lastAuthProvider}`);
+			}
+		});
+
+		document.body.style.height = `${window.innerHeight}px`;
 
 		function getToggleLayoutButtonListener(mode) {
 			return function() {
@@ -1863,6 +2306,7 @@ globalConsoleContainerEl
 		layoutBtn2.addEventListener('click', getToggleLayoutButtonListener(2));
 		layoutBtn3.addEventListener('click', getToggleLayoutButtonListener(3));
 		layoutBtn4.addEventListener('click', getToggleLayoutButtonListener(4));
+		layoutBtn5.addEventListener('click', getToggleLayoutButtonListener(5));
 
 		utils.onButtonClick(helpBtn, function() {
 			scope.toggleModal(helpModal);
@@ -1878,12 +2322,7 @@ globalConsoleContainerEl
 			) {
 				hasSeenNotifications = true;
 				notificationsBtn.classList.remove('has-new');
-				chrome.storage.sync.set(
-					{
-						lastSeenVersion: version
-					},
-					function() {}
-				);
+				window.db.setUserLastSeenVersion(version);
 			}
 			trackEvent('ui', 'notificationButtonClick', version);
 			return false;
@@ -1964,7 +2403,6 @@ globalConsoleContainerEl
 
 		// Editor keyboard shortucuts
 		window.addEventListener('keydown', function(event) {
-			var selectedItemElement;
 			// TODO: refactor common listener code
 			// Ctrl/⌘ + S
 			if ((event.ctrlKey || event.metaKey) && event.keyCode === 83) {
@@ -1979,50 +2417,56 @@ globalConsoleContainerEl
 				event.keyCode === 53
 			) {
 				event.preventDefault();
-				scope.setPreviewContent(true);
+				scope.setPreviewContent(true, true);
 				trackEvent('ui', 'previewKeyboardShortcut');
 			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 79) {
 				// Ctrl/⌘ + O
 				event.preventDefault();
 				openSavedItemsPane();
 				trackEvent('ui', 'openCreationKeyboardShortcut');
+			} else if (
+				(event.ctrlKey || event.metaKey) &&
+				event.shiftKey &&
+				event.keyCode === 191
+			) {
+				// Ctrl/⌘ + Shift + ?
+				event.preventDefault();
+				scope.toggleModal(keyboardShortcutsModal);
+				trackEvent('ui', 'showKeyboardShortcutsShortcut');
 			} else if (event.keyCode === 27) {
 				closeAllOverlays();
 			}
-			if (event.keyCode === 40 && isSavedItemsPaneOpen) {
-				// Return if no items present.
-				if (!$all('.js-saved-item-tile').length) {
-					return;
-				}
-				selectedItemElement = $('.js-saved-item-tile.selected');
+		});
+
+		savedItemsPane.addEventListener('keydown', function(event) {
+			if (!isSavedItemsPaneOpen) {
+				return;
+			}
+
+			const isCtrlOrMetaPressed = event.ctrlKey || event.metaKey;
+			const isForkKeyPressed = isCtrlOrMetaPressed && event.keyCode === 70;
+			const isDownKeyPressed = event.keyCode === 40;
+			const isUpKeyPressed = event.keyCode === 38;
+			const isEnterKeyPressed = event.keyCode === 13;
+
+			const selectedItemElement = $('.js-saved-item-tile.selected');
+			const havePaneItems = $all('.js-saved-item-tile').length !== 0;
+
+			if ((isDownKeyPressed || isUpKeyPressed) && havePaneItems) {
+				const method = isDownKeyPressed ? 'nextUntil' : 'previousUntil';
+
 				if (selectedItemElement) {
 					selectedItemElement.classList.remove('selected');
-					selectedItemElement
-						.nextUntil('.js-saved-item-tile:not(.hide)')
-						.classList.add('selected');
+					selectedItemElement[method](
+						'.js-saved-item-tile:not(.hide)'
+					).classList.add('selected');
 				} else {
 					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
 				}
 				$('.js-saved-item-tile.selected').scrollIntoView(false);
-			} else if (event.keyCode === 38 && isSavedItemsPaneOpen) {
-				if (!$all('.js-saved-item-tile').length) {
-					return;
-				}
-				selectedItemElement = $('.js-saved-item-tile.selected');
-				if (selectedItemElement) {
-					selectedItemElement.classList.remove('selected');
-					selectedItemElement
-						.previousUntil('.js-saved-item-tile:not(.hide)')
-						.classList.add('selected');
-				} else {
-					$('.js-saved-item-tile:not(.hide)').classList.add('selected');
-				}
-				$('.js-saved-item-tile.selected').scrollIntoView(false);
-			} else if (event.keyCode === 13 && isSavedItemsPaneOpen) {
-				selectedItemElement = $('.js-saved-item-tile.selected');
-				if (!selectedItemElement) {
-					return;
-				}
+			}
+
+			if (isEnterKeyPressed && selectedItemElement) {
 				setTimeout(function() {
 					openItem(selectedItemElement.dataset.itemId);
 				}, 350);
@@ -2030,13 +2474,8 @@ globalConsoleContainerEl
 			}
 
 			// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
-			if (
-				isSavedItemsPaneOpen &&
-				(event.ctrlKey || event.metaKey) &&
-				event.keyCode === 70
-			) {
+			if (isForkKeyPressed) {
 				event.preventDefault();
-				selectedItemElement = $('.js-saved-item-tile.selected');
 				setTimeout(function() {
 					forkItem(savedItems[selectedItemElement.dataset.itemId]);
 				}, 350);
@@ -2046,9 +2485,12 @@ globalConsoleContainerEl
 		});
 
 		window.addEventListener('click', function(e) {
+			if (typeof e.target.className !== 'string') {
+				return;
+			}
 			if (
-				typeof e.target.className === 'string' &&
-				e.target.className.indexOf('modal-overlay') !== -1
+				e.target.classList.contains('modal-overlay') ||
+				e.target.classList.contains('modal')
 			) {
 				closeAllOverlays();
 			}
@@ -2066,23 +2508,22 @@ globalConsoleContainerEl
 			}
 		});
 
-		utils.onButtonClick(settingsBtn, function() {
-			openSettings();
-			trackEvent('ui', 'settingsBtnClick');
-		});
-
 		// Initialize add library select box
 		var libOptions = window.jsLibs.reduce(
 			(html, lib) =>
 				html +
-				`<option data-type="${lib.type}" value="${lib.url}">${lib.label}</option>`,
+				`<option data-type="${lib.type}" value="${lib.url}">${
+					lib.label
+				}</option>`,
 			''
 		);
 		addLibrarySelect.children[1].innerHTML = libOptions;
 		libOptions = window.cssLibs.reduce(
 			(html, lib) =>
 				html +
-				`<option data-type="${lib.type}" value="${lib.url}">${lib.label}</option>`,
+				`<option data-type="${lib.type}" value="${lib.url}">${
+					lib.label
+				}</option>`,
 			''
 		);
 		addLibrarySelect.children[2].innerHTML = libOptions;
@@ -2101,12 +2542,21 @@ globalConsoleContainerEl
 		externalJsTextarea.addEventListener('blur', onExternalLibChange);
 		externalCssTextarea.addEventListener('blur', onExternalLibChange);
 
-		new TextareaAutoComplete(externalJsTextarea, obj =>
-			obj.latest.match(/\.js$/)
-		);
-		new TextareaAutoComplete(externalCssTextarea, obj =>
-			obj.latest.match(/\.css$/)
-		);
+		new TextareaAutoComplete(externalJsTextarea, {
+			filter: obj => obj.latest.match(/\.js$/)
+		});
+		new TextareaAutoComplete(externalCssTextarea, {
+			filter: obj => obj.latest.match(/\.css$/)
+		});
+		new TextareaAutoComplete(externalLibrarySearchInput, {
+			selectedCallback: value => {
+				const textarea = value.match(/\.js$/)
+					? externalJsTextarea
+					: externalCssTextarea;
+				textarea.value = `${textarea.value}\n${value}`;
+				externalLibrarySearchInput.value = '';
+			}
+		});
 
 		// Console header drag resize logic
 		var consoleHeaderDragStartY;
@@ -2126,7 +2576,7 @@ globalConsoleContainerEl
 			$('#demo-frame').classList.remove('pointer-none');
 		});
 
-		chrome.storage.local.get(
+		db.local.get(
 			{
 				layoutMode: 1,
 				code: ''
@@ -2141,118 +2591,65 @@ globalConsoleContainerEl
 		);
 
 		// Get synced `preserveLastCode` setting to get back last code (or not).
-		chrome.storage.sync.get(
-			{
-				preserveLastCode: true,
-				replaceNewTab: false,
-				htmlMode: 'html',
-				jsMode: 'js',
-				cssMode: 'css',
-				isCodeBlastOn: false,
-				indentWith: 'spaces',
-				indentSize: 2,
-				editorTheme: 'monokai',
-				keymap: 'sublime',
-				fontSize: 16,
-				refreshOnResize: false,
-				autoPreview: true,
-				editorFont: 'FiraCode',
-				editorCustomFont: '',
-				autoSave: true,
-				autoComplete: true,
-				preserveConsoleLogs: true,
-				lightVersion: false,
-				lineWrap: true
-			},
-			function syncGetCallback(result) {
-				if (result.preserveLastCode && lastCode) {
-					unsavedEditCount = 0;
-					if (lastCode.id) {
-						chrome.storage.local.get(lastCode.id, function(itemResult) {
+		db.getSettings(defaultSettings).then(result => {
+			if (result.preserveLastCode && lastCode) {
+				unsavedEditCount = 0;
+				// For web app environment we don't fetch item from localStorage,
+				// because the item isn't stored in the localStorage.
+				if (lastCode.id && window.IS_EXTENSION) {
+					db.local.get(lastCode.id, function(itemResult) {
+						if (itemResult[lastCode.id]) {
 							utils.log('Load item ', lastCode.id);
 							currentItem = itemResult[lastCode.id];
 							refreshEditor();
-						});
-					} else {
-						utils.log('Load last unsaved item');
-						currentItem = lastCode;
-						refreshEditor();
-					}
+						}
+					});
 				} else {
-					createNewItem();
+					utils.log('Load last unsaved item', lastCode);
+					currentItem = lastCode;
+					refreshEditor();
 				}
-				prefs.preserveLastCode = result.preserveLastCode;
-				prefs.replaceNewTab = result.replaceNewTab;
-				prefs.htmlMode = result.htmlMode;
-				prefs.cssMode = result.cssMode;
-				prefs.jsMode = result.jsMode;
-				prefs.isCodeBlastOn = result.isCodeBlastOn;
-				prefs.indentSize = result.indentSize;
-				prefs.indentWith = result.indentWith;
-				prefs.editorTheme = result.editorTheme;
-				prefs.keymap = result.keymap;
-				prefs.fontSize = result.fontSize;
-				prefs.refreshOnResize = result.refreshOnResize;
-				prefs.autoPreview = result.autoPreview;
-				prefs.editorFont = result.editorFont;
-				prefs.editorCustomFont = result.editorCustomFont;
-				prefs.autoSave = result.autoSave;
-				prefs.autoComplete = result.autoComplete;
-				prefs.preserveConsoleLogs = result.preserveConsoleLogs;
-				prefs.lightVersion = result.lightVersion;
-				prefs.lineWrap = result.lineWrap;
-
-				updateSettingsInUi();
-				scope.updateSetting();
+			} else {
+				createNewItem();
 			}
-		);
+			Object.assign(prefs, result);
+
+			updateSettingsInUi();
+			scope.updateSetting();
+		});
 
 		// Check for new version notifications
-		chrome.storage.sync.get(
-			{
-				lastSeenVersion: ''
-			},
-			function syncGetCallback(result) {
-				// Check if new user
-				if (!result.lastSeenVersion) {
-					onboardModal.classList.add('is-modal-visible');
-					if (document.cookie.indexOf('onboarded') === -1) {
-						trackEvent('ui', 'onboardModalSeen', version);
-						document.cookie = 'onboarded=1';
-					}
-					chrome.storage.sync.set(
-						{
-							lastSeenVersion: version
-						},
-						function() {}
-					);
-					// set some initial preferences on closing the onboard modal
-					utils.once(document, 'overlaysClosed', function() {
-						chrome.storage.sync.set(
-							{
-								replaceNewTab: onboardShowInTabOptionBtn.classList.contains(
-									'selected'
-								)
-							},
-							function() {
-								trackEvent(
-									'fn',
-									'setReplaceNewTabFromOnboard',
-									onboardShowInTabOptionBtn.classList.contains('selected')
-								);
-							}
-						);
-					});
+		db.getUserLastSeenVersion().then(lastSeenVersion => {
+			// Check if new user
+			if (!lastSeenVersion) {
+				onboardModal.classList.add('is-modal-visible');
+				if (document.cookie.indexOf('onboarded') === -1) {
+					trackEvent('ui', 'onboardModalSeen', version);
+					document.cookie = 'onboarded=1';
 				}
-				if (
-					!result.lastSeenVersion ||
-					utils.semverCompare(result.lastSeenVersion, version) === -1
-				) {
-					notificationsBtn.classList.add('has-new');
-					hasSeenNotifications = false;
-				}
+				window.db.setUserLastSeenVersion(version);
+				// set some initial preferences on closing the onboard modal
+				// Old onboarding.
+				// utils.once(document, 'overlaysClosed', function() {});
 			}
-		);
+			// If its an upgrade
+			if (
+				lastSeenVersion &&
+				utils.semverCompare(lastSeenVersion, version) === -1 &&
+				!window.localStorage.pledgeModalSeen
+			) {
+				scope.openSupportDeveloperModal();
+				window.localStorage.pledgeModalSeen = true;
+			}
+
+			if (
+				!lastSeenVersion ||
+				utils.semverCompare(lastSeenVersion, version) === -1
+			) {
+				notificationsBtn.classList.add('has-new');
+				hasSeenNotifications = false;
+			}
+		});
 
 		scope.acssSettingsCm = CodeMirror.fromTextArea(acssSettingsTextarea, {
 			mode: 'application/ld+json'
@@ -2318,10 +2715,23 @@ globalConsoleContainerEl
 		document.querySelector('[data-setting="editorTheme"]').innerHTML = options;
 
 		requestAnimationFrame(compileNodes);
+
+		window.addEventListener('focusin', e => {
+			if (document.body.classList.contains('overlay-visible')) {
+				const modal = $('.is-modal-visible');
+				if (!modal) {
+					return;
+				}
+				if (!modal.contains(e.target)) {
+					e.preventDefault();
+					modal.querySelector('.js-modal__close-btn').focus();
+				}
+			}
+		});
 	}
 
 	// Set few stuff on a 'scope' object so that they can be referenced dynamically.
 	scope.closeAllOverlays = closeAllOverlays;
 
 	init();
-})(window.alertsService);
+})(window.alertsService, window.itemService);

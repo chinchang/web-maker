@@ -20,6 +20,13 @@
 		return siblings[index + 1];
 	};
 
+	// Safari doesn't have this!
+	window.requestIdleCallback =
+		window.requestIdleCallback ||
+		function(fn) {
+			setTimeout(fn, 10);
+		};
+
 	/*
 	 * @param  Selector that should match for next siblings
 	 * @return element Next element that mathes `selector`
@@ -80,13 +87,12 @@
 	 * Contributed by Ariya Hidayat!
 	 * @param code {string}	Code to be protected from infinite loops.
 	 */
-	function addInfiniteLoopProtection(code) {
+	function addInfiniteLoopProtection(code, { timeout }) {
 		var loopId = 1;
 		var patches = [];
 		var varPrefix = '_wmloopvar';
 		var varStr = 'var %d = Date.now();\n';
-		var checkStr =
-			'\nif (Date.now() - %d > 1000) { window.top.previewException(new Error("Infinite loop")); break;}\n';
+		var checkStr = `\nif (Date.now() - %d > ${timeout}) { window.top.previewException(new Error("Infinite loop")); break;}\n`;
 
 		esprima.parse(code, { tolerant: true, range: true, jsx: true }, function(
 			node
@@ -171,13 +177,53 @@
 		});
 	}
 
+	function downloadFile(fileName, blob) {
+		function downloadWithAnchor() {
+			var a = document.createElement('a');
+			a.href = window.URL.createObjectURL(blob);
+			a.download = fileName;
+			a.style.display = 'none';
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+		}
+		if (window.IS_EXTENSION) {
+			chrome.downloads.download(
+				{
+					url: window.URL.createObjectURL(blob),
+					filename: fileName,
+					saveAs: true
+				},
+				() => {
+					// If there was an error, just download the file using ANCHOR method.
+					if (chrome.runtime.lastError) {
+						downloadWithAnchor();
+					}
+				}
+			);
+		} else {
+			downloadWithAnchor();
+		}
+	}
+
 	window.utils = {
-		semverCompare: semverCompare,
-		generateRandomId: generateRandomId,
-		onButtonClick: onButtonClick,
-		addInfiniteLoopProtection: addInfiniteLoopProtection,
-		getHumanDate: getHumanDate,
-		log: log,
-		once: once
+		semverCompare,
+		generateRandomId,
+		onButtonClick,
+		addInfiniteLoopProtection,
+		getHumanDate,
+		log,
+		once,
+		downloadFile
 	};
+
+	window.chrome = window.chrome || {};
+	window.chrome.i18n = { getMessage: () => {} };
+
+	window.IS_EXTENSION = !!window.chrome.extension;
+	if (window.IS_EXTENSION) {
+		document.body.classList.add('is-extension');
+	} else {
+		document.body.classList.add('is-app');
+	}
 })();

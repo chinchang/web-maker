@@ -1,5 +1,12 @@
-.sass-cache
+### OSX ###
+.DS_Store
+
+### PhPStorm / IntellJ IDEA ###
+.idea/
+*.iml
+
+### Misc ###
 node_modules/
 *.map
-.idea/
-.DS_Store
+
+.sass-cache

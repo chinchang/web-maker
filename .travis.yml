@@ -5,4 +5,4 @@ install:
   - npm install -g eslint
   - npm install -g babel-eslint
 script:
-  - eslint src/*.js
+  - npm run lint

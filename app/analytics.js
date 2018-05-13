@@ -25,12 +25,13 @@ if (navigator.onLine && !window.DEBUG) {
 
 		if (location.href.indexOf('chrome-extension://') === -1) {
 			ga('create', 'UA-1211588-20');
+			ga('send', 'pageview', 'app-beta');
 		} else {
 			ga('create', 'UA-1211588-20', {'cookieDomain': 'none'});
 			// required for chrome extension protocol
 			ga('set', 'checkProtocolTask', function(){ /* nothing */ });
+			ga('send', 'pageview', 'extension');
 		}
-		ga('send', 'pageview', 'extension');
 	}, 100);
 
 	/* eslint-enable */

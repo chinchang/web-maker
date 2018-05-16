@@ -1219,6 +1219,11 @@ body:not(.is-app) .show-when-app {
 	border-style: dashed;
 	color: #333;
 }
+.help-text {
+	font-size: 0.9em;
+	color: #616465;
+	padding-left: 1em;
+}
 
 .social-login-btn:after,
 .social-login-btn:before,

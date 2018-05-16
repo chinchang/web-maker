@@ -474,7 +474,7 @@
 							<input id="customEditorFontInput" type="text" value="" placeholder="Custom font name here" data-setting="editorCustomFont" d-change="updateSetting">
 						</label>
 						<label class="line">
-							Font Size <input type="number" value="16" data-setting="fontSize" d-change="updateSetting"> px
+							Font Size <input style="width:70px" type="number" value="16" data-setting="fontSize" d-change="updateSetting"> px
 
 						</label>
 						<div class="line">
@@ -525,6 +525,17 @@
 					<label class="line" title="Enjoy wonderful particle blasts while you type">
 						<input type="checkbox" d-change="updateSetting" data-setting="isCodeBlastOn"> Code blast!
 					</label>
+				</p>
+
+				<hr>
+
+				<h3>Advanced</h3>
+				<p>
+					<label class="line" title="This timeout is used to indentify a possible infinite loop and prevent it.">
+						Maximum time allowed in a loop iteration
+						<input type="number" data-setting="infiniteLoopTimeout" d-change="updateSetting"> ms
+					</label>
+					<div class="help-text">If any loop iteration takes more than the defined time, it is detected as a potential infinite loop and further iterations are stopped.</div>
 				</p>
 			</div>
 		</div>

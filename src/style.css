@@ -24,7 +24,7 @@ h1 {
 }
 a {
 	text-decoration: none;
-	color: crimson;
+	color: #d61237;
 	cursor: pointer;
 }
 p {
@@ -325,7 +325,6 @@ body:not(.light-version).overlay-visible .main-container {
 	/*transform: translate(0px) scale(1.2);*/
 	display: inline-block;
 	font-size: 1.1em;
-	opacity: 0.5;
 	/*transform-origin: left center;*/
 }
 .layout-2 .code-side .is-minimized .code-wrap__header,

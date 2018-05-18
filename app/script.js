@@ -74,7 +74,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		codepenVal: 'markdown'
 	};
 	modes[HtmlModes.JADE] = { label: 'Pug', cmMode: 'pug', codepenVal: 'pug' };
-	modes[JsModes.JS] = { label: 'Pseudo Code', cmMode: 'javascript', codepenVal: 'none' };
+	modes[JsModes.JS] = { label: 'ZenUML-Sequence', cmMode: 'javascript', codepenVal: 'none' };
 	modes[JsModes.COFFEESCRIPT] = {
 		label: 'CoffeeScript',
 		cmMode: 'coffeescript',

@@ -2382,24 +2382,24 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		});
 
 		// Collapse btn event listeners
-		// var collapseBtns = $all('.js-code-collapse-btn');
-		// collapseBtns.forEach(function(btn) {
-		// 	btn.addEventListener('click', function(e) {
-		// 		var codeWrapParent =
-		// 			e.currentTarget.parentElement.parentElement.parentElement;
-		// 		toggleCodeWrapCollapse(codeWrapParent);
-		// 		trackEvent('ui', 'paneCollapseBtnClick', codeWrapParent.dataset.type);
-		// 		return false;
-		// 	});
-		// });
+		var collapseBtns = $all('.js-code-collapse-btn');
+		collapseBtns.forEach(function(btn) {
+			btn.addEventListener('click', function(e) {
+				var codeWrapParent =
+					e.currentTarget.parentElement.parentElement.parentElement;
+				toggleCodeWrapCollapse(codeWrapParent);
+				trackEvent('ui', 'paneCollapseBtnClick', codeWrapParent.dataset.type);
+				return false;
+			});
+		});
 
 		// Update code wrap collapse states whenever any of them transitions due to any
 		// reason.
-		// [htmlCode, cssCode, jsCode].forEach(function(el) {
-		// 	el.addEventListener('transitionend', function() {
-		// 		updateCodeWrapCollapseStates();
-		// 	});
-		// });
+		[htmlCode, cssCode, jsCode].forEach(function(el) {
+			el.addEventListener('transitionend', function() {
+				updateCodeWrapCollapseStates();
+			});
+		});
 
 		// Editor keyboard shortucuts
 		window.addEventListener('keydown', function(event) {

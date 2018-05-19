@@ -39,6 +39,7 @@ gulp.task('copyFiles', [], function() {
 		.pipe(gulp.dest('app'));
 });
 
+// Generate script.js, vendor.js, style.css and vendor.css and index.html under ./app/
 gulp.task('useRef', ['copyFiles'], function() {
 	return gulp
 		.src('src/index.html')

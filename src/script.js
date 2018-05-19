@@ -1089,7 +1089,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		// 	}, '');
 		var vueSequenceExtCss =
 			'<link rel="stylesheet" href="' +
-			chrome.extension.getURL('lib/vue-sequence-ext.css') +
+			(chrome.extension
+			  ? chrome.extension.getURL('lib/vue-sequence-ext.css')
+			  : `${location.origin}${BASE_PATH}/lib/vue-sequence-ext.css`) +
 			'"></link>';
 		var fontIndieFlower =
 			'<link rel="stylesheet" href="' +
@@ -1113,11 +1115,15 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 
 		contents +=
 			'<script src="' +
-			chrome.extension.getURL('lib/screenlog.js') +
+			(chrome.extension
+			  ? chrome.extension.getURL('lib/screenlog.js')
+			  : `${location.origin}${BASE_PATH}/lib/screenlog.js`) +
 			'"></script>';
 		contents +=
 			'<script src="' +
-			chrome.extension.getURL('lib/bundle.js') +
+			(chrome.extension
+			  ? chrome.extension.getURL('lib/bundle.js')
+			  : `${location.origin}${BASE_PATH}/lib/bundle.js`)+
 			'"></script>';
 		if (!isForExport) {
 			contents +=

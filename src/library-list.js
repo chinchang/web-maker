@@ -79,6 +79,21 @@ window.jsLibs = [
 			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/js/uikit.min.js',
 		label: 'UIkit 3',
 		type: 'js'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.min.js',
+		label: 'P5.js',
+		type: 'js'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.min.js',
+		label: 'P5.js DOM',
+		type: 'js'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.min.js',
+		label: 'P5.js Sound',
+		type: 'js'
 	}
 ];
 window.cssLibs = [

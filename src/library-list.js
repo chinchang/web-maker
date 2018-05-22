@@ -82,17 +82,17 @@ window.jsLibs = [
 	},
 	{
 		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.min.js',
-		label: 'P5.js',
+		label: 'p5.js',
 		type: 'js'
 	},
 	{
 		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.min.js',
-		label: 'P5.js DOM',
+		label: 'p5.js DOM',
 		type: 'js'
 	},
 	{
 		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.min.js',
-		label: 'P5.js Sound',
+		label: 'p5.js Sound',
 		type: 'js'
 	}
 ];

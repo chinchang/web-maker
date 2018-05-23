@@ -1654,7 +1654,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 
 		var d = new Date();
 		var fileName = [
-			'web-maker-screenshot',
+			'web-sequence-screenshot',
 			d.getFullYear(),
 			d.getMonth() + 1,
 			d.getDate(),
@@ -1752,33 +1752,23 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 			document.body.appendChild(s);
 
 			function onImgLoad(image) {
-				var ratio = window.devicePixelRatio || 1;
 				var c = document.createElement('canvas');
 				var iframeBounds = frame.getBoundingClientRect();
-				var scaled = {
-					left: iframeBounds.left * ratio,
-					top: iframeBounds.top * ratio,
-					width: iframeBounds.width * ratio,
-					height: iframeBounds.height * ratio
-				};
-				c.width = scaled.width;
-				c.height = scaled.height;
-				// The size of the element won't matter here.
-				// c.style.width = iframeBounds.width + 'px';
-				// c.style.height = iframeBounds.height + 'px';
+				c.width = iframeBounds.width;
+				c.height = iframeBounds.height;
 				var ctx = c.getContext('2d');
 				var devicePixelRatio = window.devicePixelRatio || 1;
 
 				ctx.drawImage(
 					image,
-					scaled.left * devicePixelRatio,
-					scaled.top * devicePixelRatio,
-					scaled.width * devicePixelRatio,
-					scaled.height * devicePixelRatio,
+					iframeBounds.left * devicePixelRatio,
+					iframeBounds.top * devicePixelRatio,
+					iframeBounds.width * devicePixelRatio,
+					iframeBounds.height * devicePixelRatio,
 					0,
 					0,
-					scaled.width,
-					scaled.height
+					iframeBounds.width,
+					iframeBounds.height
 				);
 				image.removeEventListener('load', onImgLoad);
 				saveScreenshot(c.toDataURL());

@@ -457,7 +457,9 @@ export default class ContentWrap extends Component {
 										title="Clear console (CTRL + L)"
 										d-click="onClearConsoleBtnClick"
 									>
-										Clear
+										<svg>
+											<use xlinkHref="#cancel-icon" />
+										</svg>
 									</a>
 									<a
 										class="code-wrap__header-btn  code-wrap__collapse-btn"

@@ -144,7 +144,15 @@ export default class Footer extends Component {
 					class="footer__link  hint--rounded  hint--top-right hide-on-mobile"
 					aria-label="Keyboard shortcuts"
 				>
-					Keyboard
+					<svg
+						style={{
+							width: '20px',
+							height: '20px',
+							verticalAlign: 'text-bottom'
+						}}
+					>
+						<use xlinkHref="#keyboard-icon" />
+					</svg>
 				</a>
 				<a
 					class="footer__link  hint--rounded  hint--top-right"
@@ -152,7 +160,15 @@ export default class Footer extends Component {
 					href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
 					target="_blank"
 				>
-					Tweet
+					<svg
+						style={{
+							width: '20px',
+							height: '20px',
+							verticalAlign: 'text-bottom'
+						}}
+					>
+						<use xlinkHref="#twitter-icon" />
+					</svg>
 				</a>
 				<a
 					d-click="openSupportDeveloperModal"

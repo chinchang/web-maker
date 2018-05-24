@@ -58,16 +58,24 @@ export default class Footer extends Component {
 					<div class="footer__separator hide-on-mobile" />
 
 					<a id="layoutBtn1" class="mode-btn hide-on-mobile">
-						Layout1
+						<svg viewBox="0 0 100 100" style="transform:rotate(-90deg)">
+							<use xlinkHref="#mode-icon" />
+						</svg>
 					</a>
 					<a id="layoutBtn2" class="mode-btn hide-on-mobile">
-						Layout2
+						<svg viewBox="0 0 100 100">
+							<use xlinkHref="#mode-icon" />
+						</svg>
 					</a>
 					<a id="layoutBtn3" class="mode-btn hide-on-mobile">
-						Layout3
+						<svg viewBox="0 0 100 100" style="transform:rotate(90deg)">
+							<use xlinkHref="#mode-icon" />
+						</svg>
 					</a>
 					<a id="layoutBtn5" class="mode-btn hide-on-mobile">
-						Layout4
+						<svg viewBox="0 0 100 100">
+							<use xlinkHref="#vertical-mode-icon" />
+						</svg>
 					</a>
 					<a
 						id="layoutBtn4"

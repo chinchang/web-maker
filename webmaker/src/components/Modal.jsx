@@ -1,6 +1,17 @@
 import { h, Component } from 'preact';
 
 export default class Modal extends Component {
+	componentDidMount() {
+		window.addEventListener('keydown', this.onKeyDownHandler);
+	}
+	componentWillUnmount() {
+		window.removeEventListener('keydown', this.onKeyDownHandler);
+	}
+	onKeyDownHandler(event) {
+		if (event.keyCode === 27) {
+			this.props.closeHandler();
+		}
+	}
 	render() {
 		if (!this.props.show) return null;
 

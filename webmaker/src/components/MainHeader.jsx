@@ -33,7 +33,9 @@ export default class Header extends Component {
 						Add library
 						<span
 							id="js-external-lib-count"
-							style="display:none;"
+							style={`display:${
+								this.props.externalLibCount ? 'inline' : 'none'
+							}`}
 							class="count-label"
 						>
 							{this.props.externalLibCount}

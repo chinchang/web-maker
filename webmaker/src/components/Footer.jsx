@@ -2,10 +2,14 @@ import { h, Component } from 'preact';
 import Modal from './Modal.jsx';
 
 export default class Footer extends Component {
-	getInitialState() {
-		return {
+	constructor(props) {
+		super(props);
+		this.state = {
 			isKeyboardShortcutsModalOpen: false
 		};
+	}
+	layoutBtnClickhandler(layoutId) {
+		this.props.layoutBtnClickHandler(layoutId);
 	}
 
 	render() {
@@ -57,27 +61,44 @@ export default class Footer extends Component {
 
 					<div class="footer__separator hide-on-mobile" />
 
-					<a id="layoutBtn1" class="mode-btn hide-on-mobile">
+					<a
+						onClick={this.layoutBtnClickhandler.bind(this, 1)}
+						id="layoutBtn1"
+						class="mode-btn hide-on-mobile"
+					>
 						<svg viewBox="0 0 100 100" style="transform:rotate(-90deg)">
 							<use xlinkHref="#mode-icon" />
 						</svg>
 					</a>
-					<a id="layoutBtn2" class="mode-btn hide-on-mobile">
+					<a
+						onClick={this.layoutBtnClickhandler.bind(this, 2)}
+						id="layoutBtn2"
+						class="mode-btn hide-on-mobile"
+					>
 						<svg viewBox="0 0 100 100">
 							<use xlinkHref="#mode-icon" />
 						</svg>
 					</a>
-					<a id="layoutBtn3" class="mode-btn hide-on-mobile">
+					<a
+						onClick={this.layoutBtnClickhandler.bind(this, 3)}
+						id="layoutBtn3"
+						class="mode-btn hide-on-mobile"
+					>
 						<svg viewBox="0 0 100 100" style="transform:rotate(90deg)">
 							<use xlinkHref="#mode-icon" />
 						</svg>
 					</a>
-					<a id="layoutBtn5" class="mode-btn hide-on-mobile">
+					<a
+						onClick={this.layoutBtnClickhandler.bind(this, 5)}
+						id="layoutBtn5"
+						class="mode-btn hide-on-mobile"
+					>
 						<svg viewBox="0 0 100 100">
 							<use xlinkHref="#vertical-mode-icon" />
 						</svg>
 					</a>
 					<a
+						onClick={this.layoutBtnClickhandler.bind(this, 4)}
 						id="layoutBtn4"
 						class="mode-btn hint--top-left hint--rounded  hide-on-mobile"
 						aria-label="Full Screen"
@@ -124,7 +145,7 @@ export default class Footer extends Component {
 				&copy;
 				<span class="web-maker-with-tag">Web Maker</span> &nbsp;&nbsp;
 				<a
-					d-open-modal="helpModal"
+					onClick={this.props.helpBtnClickHandler}
 					data-event-category="ui"
 					data-event-action="helpButtonClick"
 					class="footer__link  hint--rounded  hint--top-right"

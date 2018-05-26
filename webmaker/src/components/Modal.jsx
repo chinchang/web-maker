@@ -7,8 +7,13 @@ export default class Modal extends Component {
 	componentWillUnmount() {
 		window.removeEventListener('keydown', this.onKeyDownHandler);
 	}
-	onKeyDownHandler(event) {
-		if (event.keyCode === 27) {
+	onKeyDownHandler(e) {
+		if (e.keyCode === 27) {
+			this.props.closeHandler();
+		}
+	}
+	onOverlayClick(e) {
+		if (e.target === this.overlayEl) {
 			this.props.closeHandler();
 		}
 	}
@@ -16,7 +21,11 @@ export default class Modal extends Component {
 		if (!this.props.show) return null;
 
 		return (
-			<div class="modal is-modal-visible">
+			<div
+				class="modal is-modal-visible"
+				ref={el => (this.overlayEl = el)}
+				onClick={this.onOverlayClick.bind(this)}
+			>
 				<div class="modal__content">
 					<button
 						onClick={this.props.closeHandler}

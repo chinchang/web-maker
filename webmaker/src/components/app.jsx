@@ -7,7 +7,8 @@ import Footer from './Footer.jsx';
 import SavedItemPane from './SavedItemPane.jsx';
 import AddLibrary from './AddLibrary.jsx';
 import Modal from './Modal.jsx';
-import '../utils';
+import HelpModal from './HelpModal.jsx';
+import { log } from '../utils';
 
 if (module.hot) {
 	require('preact/debug');
@@ -20,14 +21,17 @@ export default class App extends Component {
 			isSavedItemPaneOpen: false,
 			isModalOpen: false,
 			isAddLibraryModalOpen: false,
-			currentItem: {}
+			isHelpModalOpen: false,
+			currentItem: {
+				title: '',
+				externalLibs: { js: '', css: '' }
+			}
 		};
 	}
 	openSavedItemsPane() {
 		this.setState({ isSavedItemPaneOpen: true });
 	}
 	openAddLibrary() {
-		console.log(99999);
 		this.setState({ isAddLibraryModalOpen: true });
 	}
 	closeSavedItemsPane() {
@@ -80,14 +84,16 @@ export default class App extends Component {
 		}
 	}
 	onExternalLibChange(newValues) {
+		log('onExternalLibChange');
 		this.state.currentItem.externalLibs = {
 			js: newValues.js,
 			css: newValues.css
 		};
 		this.updateExternalLibCount();
 		this.setState({
-			currentItem: this.state.currentItem
+			currentItem: { ...this.state.currentItem }
 		});
+		// alertsService.add('Libraries updated.');
 	}
 	updateExternalLibCount() {
 		// Calculate no. of external libs
@@ -101,12 +107,34 @@ export default class App extends Component {
 		this.setState({
 			externalLibCount: noOfExternalLibs
 		});
-		if (noOfExternalLibs) {
-			// $('#js-external-lib-count').textContent = noOfExternalLibs;
-			$('#js-external-lib-count').style.display = 'inline';
-		} else {
-			$('#js-external-lib-count').style.display = 'none';
+	}
+	toggleLayout(mode) {
+		/* eslint-disable no-param-reassign */
+		mode = window.innerWidth < 500 ? 2 : mode;
+
+		if (this.state.currentLayoutMode === mode) {
+			// mainSplitInstance.setSizes(getMainSplitSizesToApply());
+			// codeSplitInstance.setSizes(currentItem.sizes || [33.33, 33.33, 33.33]);
+			this.setState({ currentLayoutMode: mode });
+			return;
 		}
+		this.setState({ currentLayoutMode: mode });
+		// Remove all layout classes
+		[1, 2, 3, 4, 5].forEach(layoutNumber => {
+			window[`layoutBtn${layoutNumber}`].classList.remove('selected');
+			document.body.classList.remove(`layout-${layoutNumber}`);
+		});
+		$('#layoutBtn' + mode).classList.add('selected');
+		document.body.classList.add('layout-' + mode);
+
+		// resetSplitting();
+		// scope.setPreviewContent(true);
+	}
+
+	layoutBtnClickHandler(layoutId) {
+		// saveSetting('layoutMode', mode);
+		// trackEvent('ui', 'toggleLayoutClick', mode);
+		this.toggleLayout(layoutId);
 	}
 
 	render() {
@@ -120,7 +148,10 @@ export default class App extends Component {
 					/>
 					<ContentWrap currentItem={this.state.currentItem} />
 					<div class="global-console-container" id="globalConsoleContainerEl" />
-					<Footer />
+					<Footer
+						layoutBtnClickHandler={this.layoutBtnClickHandler.bind(this)}
+						helpBtnClickHandler={() => this.setState({ isHelpModalOpen: true })}
+					/>
 				</div>
 
 				<SavedItemPane
@@ -160,6 +191,10 @@ export default class App extends Component {
 						onChange={this.onExternalLibChange.bind(this)}
 					/>
 				</Modal>
+				<HelpModal
+					show={this.state.isHelpModalOpen}
+					closeHandler={() => this.setState({ isHelpModalOpen: false })}
+				/>
 
 				<svg
 					version="1.1"

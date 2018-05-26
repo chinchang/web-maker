@@ -73,24 +73,27 @@ export default class ContentWrap extends Component {
 
 	/* eslint max-params: ["error", 4] */
 	getCompleteHtml(html, css, js, isForExport) {
-		/* var externalJs = externalJsTextarea.value
+		if (!this.props.currentItem) {
+			return '';
+		}
+		var externalJs = this.props.currentItem.externalLibs.js
 			.split('\n')
 			.reduce(function(scripts, url) {
 				return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
 			}, '');
-		var externalCss = externalCssTextarea.value
+		var externalCss = this.props.currentItem.externalLibs.css
 			.split('\n')
 			.reduce(function(links, url) {
 				return (
 					links +
 					(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
 				);
-			}, ''); */
+			}, '');
 		var contents =
 			'<!DOCTYPE html>\n' +
 			'<html>\n<head>\n' +
 			'<meta charset="UTF-8" />\n' +
-			// externalCss +
+			externalCss +
 			'\n' +
 			'<style id="webmakerstyle">\n' +
 			css +
@@ -99,7 +102,7 @@ export default class ContentWrap extends Component {
 			'<body>\n' +
 			html +
 			'\n' +
-			// externalJs +
+			externalJs +
 			'\n';
 
 		if (!isForExport) {
@@ -285,13 +288,14 @@ export default class ContentWrap extends Component {
 		this.codeInPreview.js = currentCode.js;
 	}
 	componentWillReceiveProps() {
-		console.log('compoenntwillrecvprops', this.props.currentItem);
+		// console.log('compoenntwillrecvprops', this.props.currentItem);
 	}
 	componentDidUpdate() {
+		this.setPreviewContent(true);
 		console.log('componentdidupdate', this.props.currentItem);
 	}
 	componentWillUpdate() {
-		console.log('compoenntwillupdate', this.props.currentItem);
+		// console.log('compoenntwillupdate', this.props.currentItem);
 	}
 
 	render() {

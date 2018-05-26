@@ -17,7 +17,7 @@ export default class Modal extends Component {
 
 		return (
 			<div class="modal is-modal-visible">
-				<div class="modal__content t">
+				<div class="modal__content">
 					<button
 						onClick={this.props.closeHandler}
 						aria-label="Close modal"

@@ -582,6 +582,7 @@ body > #demo-frame {
 	justify-content: center;
 	z-index: 2000;
 	visibility: hidden;
+	background-color: rgba(102, 51, 153, 0.7);
 }
 .modal__close-btn {
 	position: absolute;

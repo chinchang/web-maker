@@ -284,6 +284,15 @@ export default class ContentWrap extends Component {
 		this.codeInPreview.css = currentCode.css;
 		this.codeInPreview.js = currentCode.js;
 	}
+	componentWillReceiveProps() {
+		console.log('compoenntwillrecvprops', this.props.currentItem);
+	}
+	componentDidUpdate() {
+		console.log('componentdidupdate', this.props.currentItem);
+	}
+	componentWillUpdate() {
+		console.log('compoenntwillupdate', this.props.currentItem);
+	}
 
 	render() {
 		return (

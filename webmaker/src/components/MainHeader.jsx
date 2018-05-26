@@ -24,18 +24,20 @@ export default class Header extends Component {
 					</a>
 
 					<a
-						d-open-modal="addLibraryModal"
+						onClick={this.props.addLibraryBtnHandler}
 						data-event-category="ui"
 						data-event-action="addLibraryButtonClick"
 						class="flex-v-center hint--rounded hint--bottom-left"
 						aria-label="Add a JS/CSS library"
 					>
-						Add library{' '}
+						Add library
 						<span
 							id="js-external-lib-count"
 							style="display:none;"
 							class="count-label"
-						/>
+						>
+							{this.props.externalLibCount}
+						</span>
 					</a>
 
 					<a

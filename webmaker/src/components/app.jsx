@@ -5,18 +5,30 @@ import MainHeader from './MainHeader.jsx';
 import ContentWrap from './ContentWrap.jsx';
 import Footer from './Footer.jsx';
 import SavedItemPane from './SavedItemPane.jsx';
+import AddLibrary from './AddLibrary.jsx';
 import Modal from './Modal.jsx';
+import '../utils';
 
 if (module.hot) {
 	require('preact/debug');
 }
 
 export default class App extends Component {
-	getInitialState() {
-		return { isSavedItemPaneOpen: false, isModalOpen: false };
+	constructor() {
+		super();
+		this.state = {
+			isSavedItemPaneOpen: false,
+			isModalOpen: false,
+			isAddLibraryModalOpen: false,
+			currentItem: {}
+		};
 	}
 	openSavedItemsPane() {
 		this.setState({ isSavedItemPaneOpen: true });
+	}
+	openAddLibrary() {
+		console.log(99999);
+		this.setState({ isAddLibraryModalOpen: true });
 	}
 	closeSavedItemsPane() {
 		this.setState({
@@ -67,13 +79,46 @@ export default class App extends Component {
 			this.setState({ isSavedItemPaneOpen: false });
 		}
 	}
+	onExternalLibChange(newValues) {
+		this.state.currentItem.externalLibs = {
+			js: newValues.js,
+			css: newValues.css
+		};
+		this.updateExternalLibCount();
+		this.setState({
+			currentItem: this.state.currentItem
+		});
+	}
+	updateExternalLibCount() {
+		// Calculate no. of external libs
+		var noOfExternalLibs = 0;
+		noOfExternalLibs += this.state.currentItem.externalLibs.js
+			.split('\n')
+			.filter(lib => !!lib).length;
+		noOfExternalLibs += this.state.currentItem.externalLibs.css
+			.split('\n')
+			.filter(lib => !!lib).length;
+		this.setState({
+			externalLibCount: noOfExternalLibs
+		});
+		if (noOfExternalLibs) {
+			// $('#js-external-lib-count').textContent = noOfExternalLibs;
+			$('#js-external-lib-count').style.display = 'inline';
+		} else {
+			$('#js-external-lib-count').style.display = 'none';
+		}
+	}
 
 	render() {
 		return (
 			<div>
 				<div class="main-container">
-					<MainHeader openBtnHandler={this.openSavedItemsPane.bind(this)} />
-					<ContentWrap />
+					<MainHeader
+						externalLibCount={this.state.externalLibCount}
+						openBtnHandler={this.openSavedItemsPane.bind(this)}
+						addLibraryBtnHandler={this.openAddLibrary.bind(this)}
+					/>
+					<ContentWrap currentItem={this.state.currentItem} />
 					<div class="global-console-container" id="globalConsoleContainerEl" />
 					<Footer />
 				</div>
@@ -96,6 +141,25 @@ export default class App extends Component {
 						value="{&quot;title&quot;: &quot;New Pen!&quot;, &quot;html&quot;: &quot;<div>Hello, World!</div>&quot;}"
 					/>
 				</form>
+
+				<Modal
+					show={this.state.isAddLibraryModalOpen}
+					closeHandler={() => this.setState({ isAddLibraryModalOpen: false })}
+				>
+					<AddLibrary
+						js={
+							this.state.currentItem.externalLibs
+								? this.state.currentItem.externalLibs.js
+								: ''
+						}
+						css={
+							this.state.currentItem.externalLibs
+								? this.state.currentItem.externalLibs.css
+								: ''
+						}
+						onChange={this.onExternalLibChange.bind(this)}
+					/>
+				</Modal>
 
 				<svg
 					version="1.1"
@@ -150,8 +214,7 @@ export default class App extends Component {
 						<path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
 					</symbol>
 					<symbol id="twitter-icon" viewBox="0 0 16 16">
-						<path d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
-			c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z" />
+						<path d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809 c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z" />
 					</symbol>
 					<symbol id="heart-icon" viewBox="0 0 24 24">
 						<path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" />

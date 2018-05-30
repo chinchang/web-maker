@@ -9,24 +9,146 @@ import AddLibrary from './AddLibrary.jsx';
 import Modal from './Modal.jsx';
 import HelpModal from './HelpModal.jsx';
 import { log } from '../utils';
+import { itemService } from '../itemService';
+import '../db';
+import Notifications from './Notifications';
+import Settings from './Settings.jsx';
+import { modes, cssModes } from '../codeModes';
 
 if (module.hot) {
 	require('preact/debug');
 }
 
+const LocalStorageKeys = {
+	LOGIN_AND_SAVE_MESSAGE_SEEN: 'loginAndsaveMessageSeen',
+	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
+};
+
 export default class App extends Component {
 	constructor() {
 		super();
+		this.AUTO_SAVE_INTERVAL = 15000; // 15 seconds
+
 		this.state = {
 			isSavedItemPaneOpen: false,
 			isModalOpen: false,
 			isAddLibraryModalOpen: false,
 			isHelpModalOpen: false,
+			isNotificationsModalOpen: false,
+			prefs: {},
 			currentItem: {
 				title: '',
 				externalLibs: { js: '', css: '' }
 			}
 		};
+		this.defaultSettings = {
+			preserveLastCode: true,
+			replaceNewTab: false,
+			htmlMode: 'html',
+			jsMode: 'js',
+			cssMode: 'css',
+			isCodeBlastOn: false,
+			indentWith: 'spaces',
+			indentSize: 2,
+			editorTheme: 'monokai',
+			keymap: 'sublime',
+			fontSize: 16,
+			refreshOnResize: false,
+			autoPreview: true,
+			editorFont: 'FiraCode',
+			editorCustomFont: '',
+			autoSave: true,
+			autoComplete: true,
+			preserveConsoleLogs: true,
+			lightVersion: false,
+			lineWrap: true,
+			infiniteLoopTimeout: 1000
+		};
+		this.prefs = {};
+	}
+
+	componentWillMount() {
+		var lastCode;
+		window.onunload = () => {
+			this.saveCode('code');
+			if (this.detachedWindow) {
+				this.detachedWindow.close();
+			}
+		};
+
+		db.local.get(
+			{
+				layoutMode: 1,
+				code: ''
+			},
+			result => {
+				// this.toggleLayout(result.layoutMode);
+				this.prefs.layoutMode = result.layoutMode;
+				if (result.code) {
+					lastCode = result.code;
+				}
+			}
+		);
+		// Get synced `preserveLastCode` setting to get back last code (or not).
+		db.getSettings(this.defaultSettings).then(result => {
+			if (result.preserveLastCode && lastCode) {
+				this.setState({ unsavedEditCount: 0 });
+				// For web app environment we don't fetch item from localStorage,
+				// because the item isn't stored in the localStorage.
+				if (lastCode.id && window.IS_EXTENSION) {
+					db.local.get(lastCode.id, itemResult => {
+						if (itemResult[lastCode.id]) {
+							log('Load item ', lastCode.id);
+							this.state.currentItem = itemResult[lastCode.id];
+							this.refreshEditor();
+							this.setState({ currentItem: this.state.currentItem });
+						}
+					});
+				} else {
+					log('Load last unsaved item', lastCode);
+					this.state.currentItem = lastCode;
+					this.refreshEditor();
+					this.setState({ currentItem: this.state.currentItem });
+				}
+			} else {
+				this.createNewItem();
+			}
+			Object.assign(this.state.prefs, result);
+			this.setState({ prefs: this.state.prefs });
+			this.updateSetting();
+		});
+	}
+	refreshEditor() {}
+	createNewItem() {
+		var d = new Date();
+		this.setCurrentItem({
+			title:
+				'Untitled ' +
+				d.getDate() +
+				'-' +
+				(d.getMonth() + 1) +
+				'-' +
+				d.getHours() +
+				':' +
+				d.getMinutes(),
+			html: '',
+			css: '',
+			js: '',
+			externalLibs: { js: '', css: '' },
+			layoutMode: this.state.currentLayoutMode
+		});
+		this.refreshEditor();
+		// alertsService.add('New item created');
+	}
+	setCurrentItem(item) {
+		this.state.currentItem = item;
+		log('Current Item set', item);
+
+		// Reset auto-saving flag
+		this.isAutoSavingEnabled = false;
+		// Reset unsaved count, in UI also.
+		this.setState({ unsavedEditCount: 0 });
+		// saveBtn.classList.remove('is-marked');
 	}
 	openSavedItemsPane() {
 		this.setState({ isSavedItemPaneOpen: true });
@@ -75,6 +197,40 @@ export default class App extends Component {
 			} else if (event.keyCode === 27) {
 				this.closeAllOverlays();
 			}
+		});
+	}
+
+	saveFile() {
+		var htmlPromise = computeHtml();
+		var cssPromise = computeCss();
+		var jsPromise = computeJs(false);
+		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function(result) {
+			var html = result[0],
+				css = result[1],
+				js = result[2];
+
+			var fileContent = getCompleteHtml(html, css, js, true);
+
+			var d = new Date();
+			var fileName = [
+				'web-maker',
+				d.getFullYear(),
+				d.getMonth() + 1,
+				d.getDate(),
+				d.getHours(),
+				d.getMinutes(),
+				d.getSeconds()
+			].join('-');
+
+			if (currentItem.title) {
+				fileName = currentItem.title;
+			}
+			fileName += '.html';
+
+			var blob = new Blob([fileContent], { type: 'text/html;charset=UTF-8' });
+			utils.downloadFile(fileName, blob);
+
+			// trackEvent('fn', 'saveFileComplete');
 		});
 	}
 
@@ -136,6 +292,211 @@ export default class App extends Component {
 		// trackEvent('ui', 'toggleLayoutClick', mode);
 		this.toggleLayout(layoutId);
 	}
+	saveSetting(setting, value) {
+		const d = deferred();
+		const obj = {
+			[setting]: value
+		};
+		db.local.set(obj, d.resolve);
+		return d.promise;
+	}
+
+	saveCode(key) {
+		// this.currentItem.title = titleInput.value;
+		// currentItem.html = scope.cm.html.getValue();
+		// currentItem.css = scope.cm.css.getValue();
+		// currentItem.js = scope.cm.js.getValue();
+		// currentItem.htmlMode = htmlMode;
+		// currentItem.cssMode = cssMode;
+		// currentItem.jsMode = jsMode;
+		if (modes['css' || cssMode].hasSettings) {
+			this.state.currentItem.cssSettings = {
+				acssConfig: scope.acssSettingsCm.getValue()
+			};
+		}
+		this.state.currentItem.updatedOn = Date.now();
+		this.state.currentItem.layoutMode = this.state.currentLayoutMode;
+		// this.state.currentItem.externalLibs = {
+		// 	js: externalJsTextarea.value,
+		// 	css: externalCssTextarea.value
+		// };
+
+		// currentItem.sizes = getCodePaneSizes();
+		// currentItem.mainSizes = getMainPaneSizes();
+
+		log('saving key', key || this.state.currentItem.id, this.state.currentItem);
+
+		function onSaveComplete() {
+			if (window.user && !navigator.onLine) {
+				// alertsService.add(
+				// 'Item saved locally. Will save to account when you are online.'
+				// );
+			} else {
+				// alertsService.add('Item saved.');
+			}
+			this.state.unsavedEditCount = 0;
+			// saveBtn.classList.remove('is-marked');
+		}
+
+		return itemService
+			.setItem(key || this.state.currentItem.id, this.state.currentItem)
+			.then(onSaveComplete);
+	}
+
+	// Save current item to storage
+	saveItem() {
+		if (
+			!window.user &&
+			!window.localStorage[LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN]
+		) {
+			const answer = confirm(
+				'Saving without signing in will save your work only on this machine and this browser. If you want it to be secure & available anywhere, please login in your account and then save.\n\nDo you still want to continue saving locally?'
+			);
+			window.localStorage[LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN] = true;
+			if (!answer) {
+				trackEvent('ui', LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN, 'login');
+				closeAllOverlays();
+				loginModal.classList.add('is-modal-visible');
+				return;
+			}
+			trackEvent('ui', LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN, 'local');
+		}
+		var isNewItem = !currentItem.id;
+		currentItem.id = currentItem.id || 'item-' + utils.generateRandomId();
+		saveBtn.classList.add('is-loading');
+		this.saveCode().then(() => {
+			saveBtn.classList.remove('is-loading');
+			// If this is the first save, and auto-saving settings is enabled,
+			// then start auto-saving from now on.
+			// This is done in `saveCode()` completion so that the
+			// auto-save notification overrides the `saveCode` function's notification.
+			if (!isAutoSavingEnabled && prefs.autoSave) {
+				isAutoSavingEnabled = true;
+				alertsService.add('Auto-save enabled.');
+			}
+		});
+		// Push into the items hash if its a new item being saved
+		if (isNewItem) {
+			itemService.setItemForUser(currentItem.id);
+		}
+	}
+	onCodeChange(type, code) {
+		this.state.currentItem[type] = code;
+	}
+
+	/**
+	 * Handles all user triggered preference changes in the UI.
+	 */
+	updateSetting(e) {
+		// If this was triggered from user interaction, save the setting
+		if (e) {
+			var settingName = e.target.dataset.setting;
+			var obj = {};
+			var el = e.target;
+			log(settingName, el.type === 'checkbox' ? el.checked : el.value);
+			this.state.prefs[settingName] =
+				el.type === 'checkbox' ? el.checked : el.value;
+			obj[settingName] = this.state.prefs[settingName];
+
+			// We always save locally so that it gets fetched
+			// faster on future loads.
+			db.sync.set(obj, function() {
+				// alertsService.add('Setting saved');
+			});
+			if (window.user) {
+				window.db.getDb().then(remoteDb => {
+					remoteDb
+						.collection('users')
+						.doc(window.user.uid)
+						.update({
+							[`settings.${settingName}`]: this.state.prefs[settingName]
+						})
+						.then(arg => {
+							utils.log(`Setting "${settingName}" for user`, arg);
+						})
+						.catch(error => utils.log(error));
+				});
+			}
+			// trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
+		}
+
+		const prefs = this.state.prefs;
+		// Show/hide RUN button based on autoPreview setting.
+		runBtn.classList[prefs.autoPreview ? 'add' : 'remove']('hide');
+
+		// htmlCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		// cssCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		// jsCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		// consoleEl.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+
+		// Update indentation count when slider is updated
+		// indentationSizeValueEl.textContent = $('[data-setting=indentSize]').value;
+
+		// Replace correct css file in LINK tags's href
+		// editorThemeLinkTag.href = `lib/codemirror/theme/${prefs.editorTheme}.css`;
+		// fontStyleTag.textContent = fontStyleTemplate.textContent.replace(
+		// /fontname/g,
+		// (prefs.editorFont === 'other'
+		// ? prefs.editorCustomFont
+		// : prefs.editorFont) || 'FiraCode'
+		// );
+		// customEditorFontInput.classList[
+		// prefs.editorFont === 'other' ? 'remove' : 'add'
+		// ]('hide');
+
+		/* ['html', 'js', 'css'].forEach(type => {
+			scope.cm[type].setOption(
+				'indentWithTabs',
+				$('[data-setting=indentWith]:checked').value !== 'spaces'
+			);
+			scope.cm[type].setOption(
+				'blastCode',
+				$('[data-setting=isCodeBlastOn]').checked
+					? { effect: 2, shake: false }
+					: false
+			);
+			scope.cm[type].setOption(
+				'indentUnit',
+				+$('[data-setting=indentSize]').value
+			);
+			scope.cm[type].setOption(
+				'tabSize',
+				+$('[data-setting=indentSize]').value
+			);
+			scope.cm[type].setOption('theme', $('[data-setting=editorTheme]').value);
+
+			scope.cm[type].setOption(
+				'keyMap',
+				$('[data-setting=keymap]:checked').value
+			);
+			scope.cm[type].setOption(
+				'lineWrapping',
+				$('[data-setting=lineWrap]').checked
+			);
+			scope.cm[type].refresh();
+		});
+		scope.consoleCm.setOption('theme', $('[data-setting=editorTheme]').value);
+		scope.acssSettingsCm.setOption(
+			'theme',
+			$('[data-setting=editorTheme]').value
+		); */
+		if (prefs.autoSave) {
+			if (!this.autoSaveInterval) {
+				this.autoSaveInterval = setInterval(
+					this.autoSaveLoop.bind(this),
+					this.AUTO_SAVE_INTERVAL
+				);
+			}
+		} else {
+			clearInterval(this.autoSaveInterval);
+			this.autoSaveInterval = null;
+		}
+
+		document.body.classList[prefs.lightVersion ? 'add' : 'remove'](
+			'light-version'
+		);
+	}
+	autoSaveLoop() {}
 
 	render() {
 		return (
@@ -146,11 +507,20 @@ export default class App extends Component {
 						openBtnHandler={this.openSavedItemsPane.bind(this)}
 						addLibraryBtnHandler={this.openAddLibrary.bind(this)}
 					/>
-					<ContentWrap currentItem={this.state.currentItem} />
+					<ContentWrap
+						currentItem={this.state.currentItem}
+						onCodeChange={this.onCodeChange.bind(this)}
+					/>
 					<div class="global-console-container" id="globalConsoleContainerEl" />
 					<Footer
 						layoutBtnClickHandler={this.layoutBtnClickHandler.bind(this)}
 						helpBtnClickHandler={() => this.setState({ isHelpModalOpen: true })}
+						settingsBtnClickHandler={() =>
+							this.setState({ isSettingsModalOpen: true })
+						}
+						notificationsBtnClickHandler={() =>
+							this.setState({ isNotificationsModalOpen: true })
+						}
 					/>
 				</div>
 
@@ -189,6 +559,23 @@ export default class App extends Component {
 								: ''
 						}
 						onChange={this.onExternalLibChange.bind(this)}
+					/>
+				</Modal>
+				<Modal
+					show={this.state.isNotificationsModalOpen}
+					closeHandler={() =>
+						this.setState({ isNotificationsModalOpen: false })
+					}
+				>
+					<Notifications />
+				</Modal>
+				<Modal
+					show={this.state.isSettingsModalOpen}
+					closeHandler={() => this.setState({ isSettingsModalOpen: false })}
+				>
+					<Settings
+						prefs={this.state.prefs}
+						onChange={this.updateSetting.bind(this)}
 					/>
 				</Modal>
 				<HelpModal

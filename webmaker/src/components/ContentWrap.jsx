@@ -16,22 +16,23 @@ export default class ContentWrap extends Component {
 		this.jsMode = JsModes.JS;
 		this.prefs = {};
 		this.codeInPreview = { html: null, css: null, js: null };
-		this.cmCodes = { html: '', css: '', js: '' };
-	}
-	getInitialState() {
-		return {};
+		this.cmCodes = { html: props.currentItem.html, css: '', js: '' };
+		this.cm = {};
 	}
 
 	onHtmlCodeChange(editor, change) {
 		this.cmCodes.html = editor.getValue();
+		this.props.onCodeChange('html', this.cmCodes.html);
 		this.onCodeChange(editor, change);
 	}
 	onCssCodeChange(editor, change) {
 		this.cmCodes.css = editor.getValue();
+		this.props.onCodeChange('css', this.cmCodes.css);
 		this.onCodeChange(editor, change);
 	}
 	onJsCodeChange(editor, change) {
 		this.cmCodes.js = editor.getValue();
+		this.props.onCodeChange('js', this.cmCodes.js);
 		this.onCodeChange(editor, change);
 	}
 	onCodeChange(editor, change) {
@@ -287,15 +288,15 @@ export default class ContentWrap extends Component {
 		this.codeInPreview.css = currentCode.css;
 		this.codeInPreview.js = currentCode.js;
 	}
-	componentWillReceiveProps() {
-		// console.log('compoenntwillrecvprops', this.props.currentItem);
-	}
 	componentDidUpdate() {
+		this.cmCodes.html = this.props.currentItem.html;
+		this.cmCodes.css = this.props.currentItem.css;
+		this.cmCodes.js = this.props.currentItem.js;
+		this.cm.html.setValue(this.cmCodes.html);
+		this.cm.css.setValue(this.cmCodes.css);
+		this.cm.js.setValue(this.cmCodes.js);
 		this.setPreviewContent(true);
 		console.log('componentdidupdate', this.props.currentItem);
-	}
-	componentWillUpdate() {
-		// console.log('compoenntwillupdate', this.props.currentItem);
 	}
 
 	render() {
@@ -343,6 +344,7 @@ export default class ContentWrap extends Component {
 								matchTags: { bothTags: true }
 							}}
 							onChange={this.onHtmlCodeChange.bind(this)}
+							onCreation={el => (this.cm.html = el)}
 						/>
 					</div>
 					<div
@@ -402,6 +404,7 @@ export default class ContentWrap extends Component {
 								// emmet: true
 							}}
 							onChange={this.onCssCodeChange.bind(this)}
+							onCreation={el => (this.cm.css = el)}
 						/>
 					</div>
 					<div
@@ -444,6 +447,7 @@ export default class ContentWrap extends Component {
 								noAutocomplete: true
 							}}
 							onChange={this.onJsCodeChange.bind(this)}
+							onCreation={el => (this.cm.js = el)}
 						/>
 					</div>
 				</div>

@@ -88,6 +88,7 @@ export default class UserCodeMirror extends Component {
 				CodeMirror.commands.autocomplete(cm, null, { completeSingle: false });
 			});
 		}
+		this.props.onCreation(this.cm);
 	}
 
 	render() {

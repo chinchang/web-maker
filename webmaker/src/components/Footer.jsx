@@ -120,6 +120,7 @@ export default class Footer extends Component {
 					<div class="footer__separator" />
 
 					<a
+						onClick={this.props.notificationsBtnClickHandler}
 						id="notificationsBtn"
 						class="notifications-btn  mode-btn  hint--top-left  hint--rounded"
 						aria-label="Notifications"
@@ -130,13 +131,15 @@ export default class Footer extends Component {
 						<span class="notifications-btn__dot" />
 					</a>
 					<a
-						d-open-modal="settingsModal"
+						onClick={this.props.settingsBtnClickHandler}
 						data-event-category="ui"
 						data-event-action="settingsBtnClick"
 						class="mode-btn  hint--top-left  hint--rounded"
 						aria-label="Settings"
 					>
-						Settings
+						<svg>
+							<use xlinkHref="#settings-icon" />
+						</svg>
 					</a>
 				</div>
 				<a href="https://webmakerapp.com/" target="_blank">

@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import { editorThemes } from '../editorThemes';
 
 export default class Settings extends Component {
 	updateSetting(e) {
@@ -20,7 +21,7 @@ export default class Settings extends Component {
 							checked="true"
 							name="indentation"
 							value="spaces"
-							d-change="updateSetting"
+							onChange={this.updateSetting.bind(this)}
 							data-setting="indentWith"
 						/>{' '}
 						Spaces
@@ -30,7 +31,7 @@ export default class Settings extends Component {
 							type="radio"
 							name="indentation"
 							value="tabs"
-							d-change="updateSetting"
+							onChange={this.updateSetting.bind(this)}
 							data-setting="indentWith"
 						/>{' '}
 						Tabs
@@ -46,7 +47,7 @@ export default class Settings extends Component {
 						max="7"
 						list="indentationSizeList"
 						data-setting="indentSize"
-						d-change="updateSetting"
+						onChange={this.updateSetting.bind(this)}
 					/>
 					<span id="indentationSizeValueEl" />
 					<datalist id="indentationSizeList">
@@ -70,7 +71,7 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin-left:20px"
 								data-setting="htmlMode"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 							>
 								<option value="html">HTML</option>
 								<option value="markdown">Markdown</option>
@@ -79,7 +80,7 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin-left:20px"
 								data-setting="cssMode"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 							>
 								<option value="css">CSS</option>
 								<option value="scss">SCSS</option>
@@ -91,7 +92,7 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin-left:20px"
 								data-setting="jsMode"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 							>
 								<option value="js">JS</option>
 								<option value="coffee">CoffeeScript</option>
@@ -104,15 +105,19 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin:0 20px"
 								data-setting="editorTheme"
-								d-change="updateSetting"
-							/>
+								onChange={this.updateSetting.bind(this)}
+							>
+								{editorThemes.map(theme => (
+									<option value={theme}>{theme}</option>
+								))}
+							</select>
 						</label>
 						<label class="line">
 							Font
 							<select
 								style="flex:1;margin:0 20px"
 								data-setting="editorFont"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 							>
 								<option value="FiraCode">Fira Code</option>
 								<option value="Inconsolata">Inconsolata</option>
@@ -127,7 +132,7 @@ export default class Settings extends Component {
 								value=""
 								placeholder="Custom font name here"
 								data-setting="editorCustomFont"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 							/>
 						</label>
 						<label class="line">
@@ -149,8 +154,8 @@ export default class Settings extends Component {
 									checked="true"
 									name="keymap"
 									value="sublime"
-									d-change="updateSetting"
 									data-setting="keymap"
+									onChange={this.updateSetting.bind(this)}
 								/>{' '}
 								Sublime
 							</label>
@@ -159,7 +164,7 @@ export default class Settings extends Component {
 									type="radio"
 									name="keymap"
 									value="vim"
-									d-change="updateSetting"
+									onChange={this.updateSetting.bind(this)}
 									data-setting="keymap"
 								/>{' '}
 								Vim
@@ -173,7 +178,7 @@ export default class Settings extends Component {
 						>
 							<input
 								type="checkbox"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 								data-setting="lineWrap"
 							/>{' '}
 							Line wrap
@@ -184,7 +189,7 @@ export default class Settings extends Component {
 						>
 							<input
 								type="checkbox"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 								data-setting="refreshOnResize"
 							/>{' '}
 							Refresh preview on resize
@@ -195,7 +200,7 @@ export default class Settings extends Component {
 						>
 							<input
 								type="checkbox"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 								data-setting="autoComplete"
 							/>{' '}
 							Auto-complete suggestions
@@ -206,7 +211,7 @@ export default class Settings extends Component {
 						>
 							<input
 								type="checkbox"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 								data-setting="autoPreview"
 							/>{' '}
 							Auto-preview
@@ -217,7 +222,7 @@ export default class Settings extends Component {
 						>
 							<input
 								type="checkbox"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 								data-setting="autoSave"
 							/>{' '}
 							Auto-save
@@ -228,7 +233,7 @@ export default class Settings extends Component {
 						>
 							<input
 								type="checkbox"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 								data-setting="preserveLastCode"
 							/>{' '}
 							Preserve last written code
@@ -239,7 +244,7 @@ export default class Settings extends Component {
 						>
 							<input
 								type="checkbox"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 								data-setting="replaceNewTab"
 							/>{' '}
 							Replace new tab page
@@ -250,7 +255,7 @@ export default class Settings extends Component {
 						>
 							<input
 								type="checkbox"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 								data-setting="preserveConsoleLogs"
 							/>{' '}
 							Preserve console logs
@@ -261,7 +266,7 @@ export default class Settings extends Component {
 						>
 							<input
 								type="checkbox"
-								d-change="updateSetting"
+								onChange={this.updateSetting.bind(this)}
 								data-setting="lightVersion"
 							/>{' '}
 							Fast/light version
@@ -279,7 +284,7 @@ export default class Settings extends Component {
 					>
 						<input
 							type="checkbox"
-							d-change="updateSetting"
+							onChange={this.updateSetting.bind(this)}
 							data-setting="isCodeBlastOn"
 						/>{' '}
 						Code blast!
@@ -298,7 +303,7 @@ export default class Settings extends Component {
 						<input
 							type="number"
 							data-setting="infiniteLoopTimeout"
-							d-change="updateSetting"
+							onChange={this.updateSetting.bind(this)}
 						/>{' '}
 						ms
 					</label>

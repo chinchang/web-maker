@@ -2,10 +2,10 @@ import { h, Component } from 'preact';
 
 export default class Modal extends Component {
 	componentDidMount() {
-		window.addEventListener('keydown', this.onKeyDownHandler);
+		window.addEventListener('keydown', this.onKeyDownHandler.bind(this));
 	}
 	componentWillUnmount() {
-		window.removeEventListener('keydown', this.onKeyDownHandler);
+		window.removeEventListener('keydown', this.onKeyDownHandler.bind(this));
 	}
 	onKeyDownHandler(e) {
 		if (e.keyCode === 27) {
@@ -16,6 +16,11 @@ export default class Modal extends Component {
 		if (e.target === this.overlayEl) {
 			this.props.closeHandler();
 		}
+	}
+	componentDidUpdate() {
+		document.body.classList[this.props.show ? 'add' : 'remove'](
+			'overlay-visible'
+		);
 	}
 	render() {
 		if (!this.props.show) return null;

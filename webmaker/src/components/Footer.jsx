@@ -44,7 +44,9 @@ export default class Footer extends Component {
 						class="mode-btn  hint--rounded  hint--top-left  hide-on-mobile"
 						aria-label="Edit on CodePen"
 					>
-						Codepen
+						<svg>
+							<use xlinkHref="#codepen-logo" />
+						</svg>
 					</a>
 
 					<a

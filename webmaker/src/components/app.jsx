@@ -424,57 +424,12 @@ export default class App extends Component {
 		// Show/hide RUN button based on autoPreview setting.
 		runBtn.classList[prefs.autoPreview ? 'add' : 'remove']('hide');
 
-		// htmlCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
-		// cssCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
-		// jsCode.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
-		// consoleEl.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		this.contentWrap.applyCodemirrorSettings(this.state.prefs);
 
 		// Update indentation count when slider is updated
 		// indentationSizeValueEl.textContent = $('[data-setting=indentSize]').value;
 
-		// Replace correct css file in LINK tags's href
-		// editorThemeLinkTag.href = `lib/codemirror/theme/${prefs.editorTheme}.css`;
-		// fontStyleTag.textContent = fontStyleTemplate.textContent.replace(
-		// /fontname/g,
-		// (prefs.editorFont === 'other'
-		// ? prefs.editorCustomFont
-		// : prefs.editorFont) || 'FiraCode'
-		// );
-		// customEditorFontInput.classList[
-		// prefs.editorFont === 'other' ? 'remove' : 'add'
-		// ]('hide');
-
-		/* ['html', 'js', 'css'].forEach(type => {
-			scope.cm[type].setOption(
-				'indentWithTabs',
-				$('[data-setting=indentWith]:checked').value !== 'spaces'
-			);
-			scope.cm[type].setOption(
-				'blastCode',
-				$('[data-setting=isCodeBlastOn]').checked
-					? { effect: 2, shake: false }
-					: false
-			);
-			scope.cm[type].setOption(
-				'indentUnit',
-				+$('[data-setting=indentSize]').value
-			);
-			scope.cm[type].setOption(
-				'tabSize',
-				+$('[data-setting=indentSize]').value
-			);
-			scope.cm[type].setOption('theme', $('[data-setting=editorTheme]').value);
-
-			scope.cm[type].setOption(
-				'keyMap',
-				$('[data-setting=keymap]:checked').value
-			);
-			scope.cm[type].setOption(
-				'lineWrapping',
-				$('[data-setting=lineWrap]').checked
-			);
-			scope.cm[type].refresh();
-		});
+		/*
 		scope.consoleCm.setOption('theme', $('[data-setting=editorTheme]').value);
 		scope.acssSettingsCm.setOption(
 			'theme',
@@ -510,6 +465,7 @@ export default class App extends Component {
 					<ContentWrap
 						currentItem={this.state.currentItem}
 						onCodeChange={this.onCodeChange.bind(this)}
+						onRef={comp => (this.contentWrap = comp)}
 					/>
 					<div class="global-console-container" id="globalConsoleContainerEl" />
 					<Footer

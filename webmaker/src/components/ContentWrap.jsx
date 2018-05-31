@@ -292,11 +292,58 @@ export default class ContentWrap extends Component {
 		this.cmCodes.html = this.props.currentItem.html;
 		this.cmCodes.css = this.props.currentItem.css;
 		this.cmCodes.js = this.props.currentItem.js;
-		this.cm.html.setValue(this.cmCodes.html);
-		this.cm.css.setValue(this.cmCodes.css);
-		this.cm.js.setValue(this.cmCodes.js);
+		this.cm.html.setValue(this.cmCodes.html || '');
+		this.cm.css.setValue(this.cmCodes.css || '');
+		this.cm.js.setValue(this.cmCodes.js || '');
 		this.setPreviewContent(true);
-		console.log('componentdidupdate', this.props.currentItem);
+		// console.log('componentdidupdate', this.props.currentItem);
+	}
+	componentDidMount() {
+		this.props.onRef(this);
+	}
+	applyCodemirrorSettings(prefs) {
+		if (!this.cm) {
+			return;
+		}
+		$('#js-html-code').querySelector('.CodeMirror').style.fontSize = $(
+			'#js-css-code'
+		).querySelector('.CodeMirror').style.fontSize = $(
+			'#js-js-code'
+		).querySelector('.CodeMirror').style.fontSize = `${parseInt(
+			prefs.fontSize,
+			10
+		)}px`;
+
+		// consoleEl.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+
+		// Replace correct css file in LINK tags's href
+		window.editorThemeLinkTag.href = `lib/codemirror/theme/${
+			prefs.editorTheme
+		}.css`;
+		window.fontStyleTag.textContent = window.fontStyleTemplate.textContent.replace(
+			/fontname/g,
+			(prefs.editorFont === 'other'
+				? prefs.editorCustomFont
+				: prefs.editorFont) || 'FiraCode'
+		);
+		// window.customEditorFontInput.classList[
+		// 	prefs.editorFont === 'other' ? 'remove' : 'add'
+		// ]('hide');
+
+		['html', 'js', 'css'].forEach(type => {
+			this.cm[type].setOption('indentWithTabs', prefs.indentWith !== 'spaces');
+			this.cm[type].setOption(
+				'blastCode',
+				prefs.isCodeBlastOn ? { effect: 2, shake: false } : false
+			);
+			this.cm[type].setOption('indentUnit', +prefs.indentSize);
+			this.cm[type].setOption('tabSize', +prefs.indentSize);
+			this.cm[type].setOption('theme', prefs.editorTheme);
+
+			// this.cm[type].setOption('keyMap', prefs.keymap);
+			this.cm[type].setOption('lineWrapping', prefs.lineWrap);
+			this.cm[type].refresh();
+		});
 	}
 
 	render() {

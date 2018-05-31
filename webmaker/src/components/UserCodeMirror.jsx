@@ -1,6 +1,36 @@
 import { h, Component } from 'preact';
 import CodeMirror from 'codemirror';
 
+import 'codemirror/addon/edit/matchbrackets.js';
+import 'codemirror/addon/edit/matchtags.js';
+import 'codemirror/addon/edit/closebrackets.js';
+import 'codemirror/addon/edit/closetag.js';
+import 'codemirror/addon/comment/comment.js';
+import 'codemirror/addon/fold/foldcode.js';
+import 'codemirror/addon/fold/foldgutter.js';
+import 'codemirror/addon/fold/xml-fold.js';
+import 'codemirror/addon/fold/indent-fold.js';
+import 'codemirror/addon/fold/comment-fold.js';
+import 'codemirror/addon/fold/brace-fold.js';
+// import 'codemirror/addon/mode/loadmode.js';
+import 'codemirror/addon/hint/show-hint.js';
+import 'codemirror/addon/hint/javascript-hint.js';
+import 'codemirror/addon/hint/xml-hint.js';
+import 'codemirror/addon/hint/html-hint.js';
+import 'codemirror/addon/hint/css-hint.js';
+import 'codemirror/addon/selection/active-line.js';
+import 'codemirror/addon/search/searchcursor.js';
+import 'codemirror/addon/search/search.js';
+import 'codemirror/addon/dialog/dialog.js';
+import 'codemirror/addon/search/jump-to-line.js';
+
+import 'codemirror/mode/xml/xml.js';
+import 'codemirror/mode/css/css.js';
+import 'codemirror/mode/javascript/javascript.js';
+import 'codemirror/mode/htmlmixed/htmlmixed.js';
+import 'codemirror/keymap/sublime.js';
+import 'codemirror/keymap/vim.js';
+
 export default class UserCodeMirror extends Component {
 	componentDidMount() {
 		this.initEditor();
@@ -30,15 +60,15 @@ export default class UserCodeMirror extends Component {
 			extraKeys: {
 				Up: function(editor) {
 					// Stop up/down keys default behavior when saveditempane is open
-					if (isSavedItemsPaneOpen) {
-						return;
-					}
+					// if (isSavedItemsPaneOpen) {
+					// return;
+					// }
 					CodeMirror.commands.goLineUp(editor);
 				},
 				Down: function(editor) {
-					if (isSavedItemsPaneOpen) {
-						return;
-					}
+					// if (isSavedItemsPaneOpen) {
+					// return;
+					// }
 					CodeMirror.commands.goLineDown(editor);
 				},
 				'Shift-Tab': function(editor) {
@@ -89,6 +119,9 @@ export default class UserCodeMirror extends Component {
 			});
 		}
 		this.props.onCreation(this.cm);
+	}
+	shouldComponentUpdate() {
+		return false;
 	}
 
 	render() {

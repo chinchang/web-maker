@@ -6,10 +6,11 @@ export default class Header extends Component {
 			<div class="main-header">
 				<input
 					type="text"
-					id="js-title-input"
+					id="titleInput"
 					title="Click to edit"
 					class="item-title-input"
 					value="Untitled Work"
+					onBlur={this.props.titleInputBlurHandler}
 				/>
 				<div class="main-header__btn-wrap  flex  flex-v-center">
 					<a
@@ -56,9 +57,11 @@ export default class Header extends Component {
 					</a>
 					<a
 						id="saveBtn"
-						class="flex  flex-v-center hint--rounded hint--bottom-left"
+						class={`flex  flex-v-center hint--rounded hint--bottom-left ${
+							this.props.isSaving ? 'is-loading' : ''
+						}`}
 						aria-label="Save current creation (Ctrl/⌘ + S)"
-						d-click="onSaveBtnClick"
+						onClick={this.props.saveBtnHandler}
 					>
 						<svg
 							style="vertical-align:middle;width:14px;height:14px"
@@ -73,7 +76,9 @@ export default class Header extends Component {
 					</a>
 					<a
 						id="openItemsBtn"
-						class="flex  flex-v-center hint--rounded hint--bottom-left"
+						class={`flex  flex-v-center hint--rounded hint--bottom-left ${
+							this.props.isFetchingItems ? 'is-loading' : ''
+						}`}
 						aria-label="Open a saved creation (Ctrl/⌘ + O)"
 						onClick={this.props.openBtnHandler}
 					>

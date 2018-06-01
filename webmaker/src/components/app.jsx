@@ -8,12 +8,15 @@ import SavedItemPane from './SavedItemPane.jsx';
 import AddLibrary from './AddLibrary.jsx';
 import Modal from './Modal.jsx';
 import HelpModal from './HelpModal.jsx';
-import { log } from '../utils';
+import { log, generateRandomId } from '../utils';
 import { itemService } from '../itemService';
 import '../db';
 import Notifications from './Notifications';
 import Settings from './Settings.jsx';
 import { modes, cssModes } from '../codeModes';
+import { trackEvent } from '../analytics';
+import { deferred } from '../deferred';
+import { alertsService } from '../notifications';
 
 if (module.hot) {
 	require('preact/debug');
@@ -150,8 +153,103 @@ export default class App extends Component {
 		this.setState({ unsavedEditCount: 0 });
 		// saveBtn.classList.remove('is-marked');
 	}
+	saveBtnClickHandler() {
+		trackEvent(
+			'ui',
+			'saveBtnClick',
+			this.state.currentItem.id ? 'saved' : 'new'
+		);
+		this.saveItem();
+	}
+
+	populateItemsInSavedPane(items) {
+		const savedItemsPane = $('#js-saved-items-pane');
+		// TODO: sort desc. by updation date
+		this.setState({
+			savedItems: items.sort(function(a, b) {
+				return b.updatedOn - a.updatedOn;
+			})
+		});
+
+		this.toggleSavedItemsPane();
+		// HACK: Set overflow after sometime so that the items can animate without getting cropped.
+		// setTimeout(() => $('#js-saved-items-wrap').style.overflowY = 'auto', 1000);
+	}
+	toggleSavedItemsPane(shouldOpen) {
+		// const savedItemsPane = $('#js-saved-items-pane');
+		this.setState({ isSavedItemPaneOpen: !this.state.isSavedItemPaneOpen });
+
+		if (this.state.isSavedItemPaneOpen) {
+			window.searchInput.focus();
+		} else {
+			window.searchInput.value = '';
+			// Give last focused editor, focus again
+			// if (editorWithFocus) {
+			// editorWithFocus.focus();
+			// }
+		}
+		document.body.classList[this.state.isSavedItemPaneOpen ? 'add' : 'remove'](
+			'overlay-visible'
+		);
+	}
+
+	/**
+	 * Fetches all items from storage
+	 * @param  {boolean} shouldSaveGlobally Whether to store the fetched items in global arr for later use.
+	 * @return {promise}                    Promise.
+	 */
+	async fetchItems(shouldSaveGlobally, shouldFetchLocally) {
+		var d = deferred();
+		this.state.savedItems = {};
+		var items = [];
+		if (window.user && !shouldFetchLocally) {
+			items = await itemService.getAllItems();
+			utils.log('got items');
+			if (shouldSaveGlobally) {
+				items.forEach(item => {
+					this.state.savedItems[item.id] = item;
+				});
+			}
+			d.resolve(items);
+			return d.promise;
+		}
+		db.local.get('items', result => {
+			var itemIds = Object.getOwnPropertyNames(result.items || {});
+			if (!itemIds.length) {
+				d.resolve([]);
+			}
+
+			trackEvent('fn', 'fetchItems', itemIds.length);
+			for (let i = 0; i < itemIds.length; i++) {
+				/* eslint-disable no-loop-func */
+				db.local.get(itemIds[i], itemResult => {
+					if (shouldSaveGlobally) {
+						this.state.savedItems[itemIds[i]] = itemResult[itemIds[i]];
+					}
+					items.push(itemResult[itemIds[i]]);
+					// Check if we have all items now.
+					if (itemIds.length === items.length) {
+						d.resolve(items);
+					}
+				});
+
+				/* eslint-enable no-loop-func */
+			}
+		});
+		return d.promise;
+	}
+
 	openSavedItemsPane() {
-		this.setState({ isSavedItemPaneOpen: true });
+		this.setState({
+			isFetchingItems: true
+		});
+		this.fetchItems(true).then(items => {
+			this.setState({
+				isFetchingItems: false
+			});
+			this.populateItemsInSavedPane(items);
+		});
+		// this.setState({ isSavedItemPaneOpen: true });
 	}
 	openAddLibrary() {
 		this.setState({ isAddLibraryModalOpen: true });
@@ -168,8 +266,8 @@ export default class App extends Component {
 			// Ctrl/⌘ + S
 			if ((event.ctrlKey || event.metaKey) && event.keyCode === 83) {
 				event.preventDefault();
-				// saveItem();
-				// trackEvent('ui', 'saveItemKeyboardShortcut');
+				this.saveItem();
+				trackEvent('ui', 'saveItemKeyboardShortcut');
 			}
 			// Ctrl/⌘ + Shift + 5
 			if (
@@ -179,12 +277,12 @@ export default class App extends Component {
 			) {
 				event.preventDefault();
 				// scope.setPreviewContent(true, true);
-				// trackEvent('ui', 'previewKeyboardShortcut');
+				trackEvent('ui', 'previewKeyboardShortcut');
 			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 79) {
 				// Ctrl/⌘ + O
 				event.preventDefault();
 				this.openSavedItemsPane();
-				// trackEvent('ui', 'openCreationKeyboardShortcut');
+				trackEvent('ui', 'openCreationKeyboardShortcut');
 			} else if (
 				(event.ctrlKey || event.metaKey) &&
 				event.shiftKey &&
@@ -193,7 +291,7 @@ export default class App extends Component {
 				// Ctrl/⌘ + Shift + ?
 				event.preventDefault();
 				// scope.toggleModal(keyboardShortcutsModal);
-				// trackEvent('ui', 'showKeyboardShortcutsShortcut');
+				trackEvent('ui', 'showKeyboardShortcutsShortcut');
 			} else if (event.keyCode === 27) {
 				this.closeAllOverlays();
 			}
@@ -302,10 +400,8 @@ export default class App extends Component {
 	}
 
 	saveCode(key) {
-		// this.currentItem.title = titleInput.value;
-		// currentItem.html = scope.cm.html.getValue();
-		// currentItem.css = scope.cm.css.getValue();
-		// currentItem.js = scope.cm.js.getValue();
+		this.state.currentItem.title = window.titleInput.value;
+
 		// currentItem.htmlMode = htmlMode;
 		// currentItem.cssMode = cssMode;
 		// currentItem.jsMode = jsMode;
@@ -328,11 +424,11 @@ export default class App extends Component {
 
 		function onSaveComplete() {
 			if (window.user && !navigator.onLine) {
-				// alertsService.add(
-				// 'Item saved locally. Will save to account when you are online.'
-				// );
+				alertsService.add(
+					'Item saved locally. Will save to account when you are online.'
+				);
 			} else {
-				// alertsService.add('Item saved.');
+				alertsService.add('Item saved.');
 			}
 			this.state.unsavedEditCount = 0;
 			// saveBtn.classList.remove('is-marked');
@@ -340,7 +436,7 @@ export default class App extends Component {
 
 		return itemService
 			.setItem(key || this.state.currentItem.id, this.state.currentItem)
-			.then(onSaveComplete);
+			.then(onSaveComplete.bind(this));
 	}
 
 	// Save current item to storage
@@ -361,27 +457,41 @@ export default class App extends Component {
 			}
 			trackEvent('ui', LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN, 'local');
 		}
-		var isNewItem = !currentItem.id;
-		currentItem.id = currentItem.id || 'item-' + utils.generateRandomId();
-		saveBtn.classList.add('is-loading');
+		var isNewItem = !this.state.currentItem.id;
+		this.state.currentItem.id =
+			this.state.currentItem.id || 'item-' + generateRandomId();
+		this.setState({
+			isSaving: true
+		});
 		this.saveCode().then(() => {
-			saveBtn.classList.remove('is-loading');
+			this.setState({
+				isSaving: false
+			});
+			// TODO: May be setState with currentItem
+
 			// If this is the first save, and auto-saving settings is enabled,
 			// then start auto-saving from now on.
 			// This is done in `saveCode()` completion so that the
 			// auto-save notification overrides the `saveCode` function's notification.
-			if (!isAutoSavingEnabled && prefs.autoSave) {
-				isAutoSavingEnabled = true;
+			if (!this.isAutoSavingEnabled && this.state.prefs.autoSave) {
+				this.isAutoSavingEnabled = true;
 				alertsService.add('Auto-save enabled.');
 			}
 		});
 		// Push into the items hash if its a new item being saved
 		if (isNewItem) {
-			itemService.setItemForUser(currentItem.id);
+			itemService.setItemForUser(this.state.currentItem.id);
 		}
 	}
 	onCodeChange(type, code) {
 		this.state.currentItem[type] = code;
+	}
+
+	titleInputBlurHandler() {
+		if (this.state.currentItem.id) {
+			this.saveItem();
+			trackEvent('ui', 'titleChanged');
+		}
 	}
 
 	/**
@@ -458,7 +568,11 @@ export default class App extends Component {
 					<MainHeader
 						externalLibCount={this.state.externalLibCount}
 						openBtnHandler={this.openSavedItemsPane.bind(this)}
+						saveBtnHandler={this.saveBtnClickHandler.bind(this)}
 						addLibraryBtnHandler={this.openAddLibrary.bind(this)}
+						isFetchingItems={this.state.isFetchingItems}
+						isSaving={this.state.isSaving}
+						titleInputBlurHandler={this.titleInputBlurHandler.bind(this)}
 					/>
 					<ContentWrap
 						currentItem={this.state.currentItem}
@@ -479,6 +593,7 @@ export default class App extends Component {
 				</div>
 
 				<SavedItemPane
+					items={this.state.savedItems}
 					isOpen={this.state.isSavedItemPaneOpen}
 					closeHandler={this.closeSavedItemsPane.bind(this)}
 				/>
@@ -536,6 +651,8 @@ export default class App extends Component {
 					show={this.state.isHelpModalOpen}
 					closeHandler={() => this.setState({ isHelpModalOpen: false })}
 				/>
+
+				<div class="modal-overlay" />
 
 				<svg
 					version="1.1"

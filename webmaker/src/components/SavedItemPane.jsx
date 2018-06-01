@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import { getHumanDate } from '../utils';
 
 export default class SavedItemPane extends Component {
 	onCloseIntent() {
@@ -19,7 +20,10 @@ export default class SavedItemPane extends Component {
 				</button>
 				<div class="flex flex-v-center" style="justify-content: space-between;">
 					<h3>
-						My Library <span id="savedItemCountEl" />
+						My Library{' '}
+						<span id="savedItemCountEl">
+							{this.props.items ? this.props.items.length : 0}
+						</span>
 					</h3>
 
 					<div class="main-header__btn-wrap">
@@ -49,7 +53,38 @@ export default class SavedItemPane extends Component {
 					placeholder="Search your creations here..."
 				/>
 
-				<div id="js-saved-items-wrap" class="saved-items-pane__container" />
+				<div id="js-saved-items-wrap" class="saved-items-pane__container">
+					{this.props.items &&
+						this.props.items.length &&
+						this.props.items.map(item => (
+							<div
+								class="js-saved-item-tile saved-item-tile"
+								data-item-id={item.id}
+							>
+								<div class="saved-item-tile__btns">
+									<a
+										class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium"
+										aria-label="Creates a duplicate of this creation (Ctrl/⌘ + F)"
+									>
+										Fork<span class="show-when-selected">(Ctrl/⌘ + F)</span>
+									</a>
+									<a
+										class="js-saved-item-tile__remove-btn  saved-item-tile__btn hint--left"
+										aria-label="Remove"
+									>
+										X
+									</a>
+								</div>
+								<h3 class="saved-item-tile__title">{item.title}</h3>
+								<span class="saved-item-tile__meta">
+									Last updated: {getHumanDate(item.updatedOn)}
+								</span>
+							</div>
+						))}
+					{!(this.props.items && this.props.items.length) && (
+						<h2 class="opacity--30">Nothing saved here.</h2>
+					)}
+				</div>
 			</div>
 		);
 	}

@@ -394,9 +394,10 @@ export default class App extends Component {
 			var obj = {};
 			var el = e.target;
 			log(settingName, el.type === 'checkbox' ? el.checked : el.value);
-			this.state.prefs[settingName] =
-				el.type === 'checkbox' ? el.checked : el.value;
-			obj[settingName] = this.state.prefs[settingName];
+			const prefs = { ...this.state.prefs };
+			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
+			obj[settingName] = prefs[settingName];
+			this.setState({ prefs });
 
 			// We always save locally so that it gets fetched
 			// faster on future loads.
@@ -425,9 +426,6 @@ export default class App extends Component {
 		runBtn.classList[prefs.autoPreview ? 'add' : 'remove']('hide');
 
 		this.contentWrap.applyCodemirrorSettings(this.state.prefs);
-
-		// Update indentation count when slider is updated
-		// indentationSizeValueEl.textContent = $('[data-setting=indentSize]').value;
 
 		/*
 		scope.consoleCm.setOption('theme', $('[data-setting=editorTheme]').value);

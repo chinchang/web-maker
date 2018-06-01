@@ -1,9 +1,36 @@
 import { h, Component } from 'preact';
 import { editorThemes } from '../editorThemes';
 
+function CheckboxSetting({
+	title,
+	label,
+	onChange,
+	pref,
+	name,
+	showWhenExtension
+}) {
+	return (
+		<label
+			class={`line ${showWhenExtension ? 'show-when-extension' : ''} `}
+			title={title}
+		>
+			<input
+				type="checkbox"
+				checked={pref}
+				onChange={onChange}
+				data-setting={name}
+			/>
+			{label}
+		</label>
+	);
+}
 export default class Settings extends Component {
 	updateSetting(e) {
 		this.props.onChange(e);
+	}
+	shouldComponentUpdate() {
+		// TODO: add check on prefs
+		return true;
 	}
 	render() {
 		return (
@@ -18,9 +45,9 @@ export default class Settings extends Component {
 					<label>
 						<input
 							type="radio"
-							checked="true"
 							name="indentation"
 							value="spaces"
+							checked={this.props.prefs.indentation === 'spaces'}
 							onChange={this.updateSetting.bind(this)}
 							data-setting="indentWith"
 						/>{' '}
@@ -31,6 +58,7 @@ export default class Settings extends Component {
 							type="radio"
 							name="indentation"
 							value="tabs"
+							checked={this.props.prefs.indentation === 'tabs'}
 							onChange={this.updateSetting.bind(this)}
 							data-setting="indentWith"
 						/>{' '}
@@ -42,14 +70,14 @@ export default class Settings extends Component {
 					<input
 						type="range"
 						class="va-m ml-1"
-						value="2"
+						value={this.props.prefs.indentSize}
 						min="1"
 						max="7"
 						list="indentationSizeList"
 						data-setting="indentSize"
 						onChange={this.updateSetting.bind(this)}
 					/>
-					<span id="indentationSizeValueEl" />
+					<span id="indentationSizeValueEl">{this.props.prefs.indentSize}</span>
 					<datalist id="indentationSizeList">
 						<option>1</option>
 						<option>2</option>
@@ -71,6 +99,7 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin-left:20px"
 								data-setting="htmlMode"
+								value={this.props.prefs.htmlMode}
 								onChange={this.updateSetting.bind(this)}
 							>
 								<option value="html">HTML</option>
@@ -80,6 +109,7 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin-left:20px"
 								data-setting="cssMode"
+								value={this.props.prefs.cssMode}
 								onChange={this.updateSetting.bind(this)}
 							>
 								<option value="css">CSS</option>
@@ -92,6 +122,7 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin-left:20px"
 								data-setting="jsMode"
+								value={this.props.prefs.jsMode}
 								onChange={this.updateSetting.bind(this)}
 							>
 								<option value="js">JS</option>
@@ -105,6 +136,7 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin:0 20px"
 								data-setting="editorTheme"
+								value={this.props.prefs.editorTheme}
 								onChange={this.updateSetting.bind(this)}
 							>
 								{editorThemes.map(theme => (
@@ -117,6 +149,7 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin:0 20px"
 								data-setting="editorFont"
+								value={this.props.prefs.editorFont}
 								onChange={this.updateSetting.bind(this)}
 							>
 								<option value="FiraCode">Fira Code</option>
@@ -129,7 +162,7 @@ export default class Settings extends Component {
 							<input
 								id="customEditorFontInput"
 								type="text"
-								value=""
+								value={this.props.prefs.editorCustomFont}
 								placeholder="Custom font name here"
 								data-setting="editorCustomFont"
 								onChange={this.updateSetting.bind(this)}
@@ -151,9 +184,9 @@ export default class Settings extends Component {
 							<label class="ml-1">
 								<input
 									type="radio"
-									checked="true"
 									name="keymap"
 									value="sublime"
+									checked={this.props.prefs.keymap === 'sublime'}
 									data-setting="keymap"
 									onChange={this.updateSetting.bind(this)}
 								/>{' '}
@@ -164,113 +197,79 @@ export default class Settings extends Component {
 									type="radio"
 									name="keymap"
 									value="vim"
-									onChange={this.updateSetting.bind(this)}
+									checked={this.props.prefs.keymap === 'vim'}
 									data-setting="keymap"
+									onChange={this.updateSetting.bind(this)}
 								/>{' '}
 								Vim
 							</label>
 						</div>
 					</div>
 					<div class="ml-2 ml-0--mobile">
-						<label
-							class="line"
+						<CheckboxSetting
+							name="lineWrap"
 							title="Toggle wrapping of long sentences onto new line"
-						>
-							<input
-								type="checkbox"
-								onChange={this.updateSetting.bind(this)}
-								data-setting="lineWrap"
-							/>{' '}
-							Line wrap
-						</label>
-						<label
-							class="line"
+							label="Line wrap"
+							pref={this.props.prefs.lineWrap}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<CheckboxSetting
+							name="refreshOnResize"
 							title="Your Preview will refresh when you resize the preview split"
-						>
-							<input
-								type="checkbox"
-								onChange={this.updateSetting.bind(this)}
-								data-setting="refreshOnResize"
-							/>{' '}
-							Refresh preview on resize
-						</label>
-						<label
-							class="line"
+							label="Refresh preview on resize"
+							pref={this.props.prefs.refreshOnResize}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<CheckboxSetting
+							name="autoComplete"
 							title="Turns on the auto-completion suggestions as you type"
-						>
-							<input
-								type="checkbox"
-								onChange={this.updateSetting.bind(this)}
-								data-setting="autoComplete"
-							/>{' '}
-							Auto-complete suggestions
-						</label>
-						<label
-							class="line"
+							label="Auto-complete suggestions"
+							pref={this.props.prefs.autoComplete}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<CheckboxSetting
+							name="autoPreview"
 							title="Refreshes the preview as you code. Otherwise use the Run button"
-						>
-							<input
-								type="checkbox"
-								onChange={this.updateSetting.bind(this)}
-								data-setting="autoPreview"
-							/>{' '}
-							Auto-preview
-						</label>
-						<label
-							class="line"
+							label="Auto-preview"
+							pref={this.props.prefs.autoPreview}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<CheckboxSetting
+							name="autoSave"
 							title="Auto-save keeps saving your code at regular intervals after you hit the first save manually"
-						>
-							<input
-								type="checkbox"
-								onChange={this.updateSetting.bind(this)}
-								data-setting="autoSave"
-							/>{' '}
-							Auto-save
-						</label>
-						<label
-							class="line"
+							label="Auto-save"
+							pref={this.props.prefs.autoSave}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<CheckboxSetting
+							name="preserveLastCode"
 							title="Loads the last open creation when app starts"
-						>
-							<input
-								type="checkbox"
-								onChange={this.updateSetting.bind(this)}
-								data-setting="preserveLastCode"
-							/>{' '}
-							Preserve last written code
-						</label>
-						<label
-							class="line show-when-extension"
+							label="Preserve last written code"
+							pref={this.props.prefs.preserveLastCode}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<CheckboxSetting
+							name="replaceNewTab"
 							title="Turning this on will start showing Web Maker in every new tab you open"
-						>
-							<input
-								type="checkbox"
-								onChange={this.updateSetting.bind(this)}
-								data-setting="replaceNewTab"
-							/>{' '}
-							Replace new tab page
-						</label>
-						<label
-							class="line"
+							label="Replace new tab page"
+							pref={this.props.prefs.replaceNewTab}
+							onChange={this.updateSetting.bind(this)}
+							showWhenExtension
+						/>
+						<CheckboxSetting
+							name="preserveConsoleLogs"
 							title="Preserves the console logs across your preview refreshes"
-						>
-							<input
-								type="checkbox"
-								onChange={this.updateSetting.bind(this)}
-								data-setting="preserveConsoleLogs"
-							/>{' '}
-							Preserve console logs
-						</label>
-						<label
-							class="line"
+							label="Preserve console logs"
+							pref={this.props.prefs.preserveConsoleLogs}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<CheckboxSetting
+							name="lightVersion"
 							title="Switch to lighter version for better performance. Removes things like blur etc."
-						>
-							<input
-								type="checkbox"
-								onChange={this.updateSetting.bind(this)}
-								data-setting="lightVersion"
-							/>{' '}
-							Fast/light version
-						</label>
+							label="Fast/light version"
+							pref={this.props.prefs.lightVersion}
+							onChange={this.updateSetting.bind(this)}
+						/>
 					</div>
 				</div>
 
@@ -278,17 +277,13 @@ export default class Settings extends Component {
 
 				<h3>Fun</h3>
 				<p>
-					<label
-						class="line"
+					<CheckboxSetting
 						title="Enjoy wonderful particle blasts while you type"
-					>
-						<input
-							type="checkbox"
-							onChange={this.updateSetting.bind(this)}
-							data-setting="isCodeBlastOn"
-						/>{' '}
-						Code blast!
-					</label>
+						label="Code blast!"
+						name="isCodeBlastOn"
+						pref={this.props.prefs.isCodeBlastOn}
+						onChange={this.updateSetting.bind(this)}
+					/>
 				</p>
 
 				<hr />
@@ -302,6 +297,7 @@ export default class Settings extends Component {
 						Maximum time allowed in a loop iteration
 						<input
 							type="number"
+							value={this.props.prefs.infiniteLoopTimeout}
 							data-setting="infiniteLoopTimeout"
 							onChange={this.updateSetting.bind(this)}
 						/>{' '}

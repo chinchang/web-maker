@@ -5,6 +5,17 @@ export default class SavedItemPane extends Component {
 	onCloseIntent() {
 		this.props.closeHandler();
 	}
+	itemClickHandler(item) {
+		this.props.itemClickHandler(item);
+	}
+	itemRemoveBtnClickHandler(item, e) {
+		e.stopPropagation();
+		this.props.itemRemoveBtnClickHandler(item);
+	}
+	itemForkBtnClickHandler(item, e) {
+		e.stopPropagation();
+		this.props.itemForkBtnClickHandler(item);
+	}
 	render() {
 		return (
 			<div
@@ -60,17 +71,20 @@ export default class SavedItemPane extends Component {
 							<div
 								class="js-saved-item-tile saved-item-tile"
 								data-item-id={item.id}
+								onClick={this.itemClickHandler.bind(this, item)}
 							>
 								<div class="saved-item-tile__btns">
 									<a
 										class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium"
 										aria-label="Creates a duplicate of this creation (Ctrl/⌘ + F)"
+										onClick={this.itemForkBtnClickHandler.bind(this, item)}
 									>
 										Fork<span class="show-when-selected">(Ctrl/⌘ + F)</span>
 									</a>
 									<a
 										class="js-saved-item-tile__remove-btn  saved-item-tile__btn hint--left"
 										aria-label="Remove"
+										onClick={this.itemRemoveBtnClickHandler.bind(this, item)}
 									>
 										X
 									</a>

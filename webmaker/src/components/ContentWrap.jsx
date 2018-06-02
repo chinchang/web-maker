@@ -25,17 +25,29 @@ export default class ContentWrap extends Component {
 
 	onHtmlCodeChange(editor, change) {
 		this.cmCodes.html = editor.getValue();
-		this.props.onCodeChange('html', this.cmCodes.html);
+		this.props.onCodeChange(
+			'html',
+			this.cmCodes.html,
+			change.origin !== 'setValue'
+		);
 		this.onCodeChange(editor, change);
 	}
 	onCssCodeChange(editor, change) {
 		this.cmCodes.css = editor.getValue();
-		this.props.onCodeChange('css', this.cmCodes.css);
+		this.props.onCodeChange(
+			'css',
+			this.cmCodes.css,
+			change.origin !== 'setValue'
+		);
 		this.onCodeChange(editor, change);
 	}
 	onJsCodeChange(editor, change) {
 		this.cmCodes.js = editor.getValue();
-		this.props.onCodeChange('js', this.cmCodes.js);
+		this.props.onCodeChange(
+			'js',
+			this.cmCodes.js,
+			change.origin !== 'setValue'
+		);
 		this.onCodeChange(editor, change);
 	}
 	onCodeChange(editor, change) {
@@ -51,25 +63,11 @@ export default class ContentWrap extends Component {
 					this.setPreviewContent();
 				}
 
-				/* saveBtn.classList.add('is-marked');
-				this.unsavedEditCount += 1;
-				if (
-					this.unsavedEditCount % this.unsavedEditWarningCount === 0 &&
-					this.unsavedEditCount >= this.unsavedEditWarningCount
-				) {
-					saveBtn.classList.add('animated');
-					saveBtn.classList.add('wobble');
-					saveBtn.addEventListener('animationend', () => {
-						saveBtn.classList.remove('animated');
-						saveBtn.classList.remove('wobble');
-					});
-				} */
-
 				// Track when people actually are working.
-				// trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
-				// if (trackEvent.previewCount === 4) {
-				// trackEvent('fn', 'usingPreview');
-				// }
+				trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
+				if (trackEvent.previewCount === 4) {
+					trackEvent('fn', 'usingPreview');
+				}
 			}
 		}, this.updateDelay);
 	}
@@ -292,17 +290,26 @@ export default class ContentWrap extends Component {
 		this.codeInPreview.js = currentCode.js;
 	}
 	componentDidUpdate() {
+		this.refreshEditor();
+		// this.setPreviewContent(true);
+		// console.log('componentdidupdate', this.props.currentItem);
+	}
+	componentDidMount() {
+		this.props.onRef(this);
+	}
+	refreshEditor() {
+		console.log('ContentWrap refresh editor');
 		this.cmCodes.html = this.props.currentItem.html;
 		this.cmCodes.css = this.props.currentItem.css;
 		this.cmCodes.js = this.props.currentItem.js;
 		this.cm.html.setValue(this.cmCodes.html || '');
 		this.cm.css.setValue(this.cmCodes.css || '');
 		this.cm.js.setValue(this.cmCodes.js || '');
-		// this.setPreviewContent(true);
-		// console.log('componentdidupdate', this.props.currentItem);
-	}
-	componentDidMount() {
-		this.props.onRef(this);
+		this.cm.html.refresh();
+		this.cm.css.refresh();
+		this.cm.js.refresh();
+
+		this.setPreviewContent(true);
 	}
 	applyCodemirrorSettings(prefs) {
 		if (!this.cm) {

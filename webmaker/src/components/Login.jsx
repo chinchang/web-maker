@@ -9,18 +9,6 @@ export default class Login extends Component {
 		trackEvent('ui', 'loginProviderClick', provider);
 		auth.login(provider);
 	}
-	logout(e) {
-		if (this.unsavedEditCount) {
-			var shouldDiscard = confirm(
-				'You have unsaved changes. Do you still want to logout?'
-			);
-			if (!shouldDiscard) {
-				return;
-			}
-		}
-		trackEvent('fn', 'loggedOut');
-		auth.logout();
-	}
 	render() {
 		return (
 			<div>

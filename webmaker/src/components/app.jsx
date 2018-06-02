@@ -21,6 +21,7 @@ import { alertsService } from '../notifications';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import Profile from './Profile';
+import { auth } from '../auth';
 
 if (module.hot) {
 	require('preact/debug');
@@ -30,6 +31,7 @@ const LocalStorageKeys = {
 	LOGIN_AND_SAVE_MESSAGE_SEEN: 'loginAndsaveMessageSeen',
 	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
 };
+const UNSAVED_WARNING_COUNT = 15;
 
 export default class App extends Component {
 	constructor() {
@@ -71,7 +73,8 @@ export default class App extends Component {
 			preserveConsoleLogs: true,
 			lightVersion: false,
 			lineWrap: true,
-			infiniteLoopTimeout: 1000
+			infiniteLoopTimeout: 1000,
+			layoutMode: 2
 		};
 		this.prefs = {};
 
@@ -131,7 +134,7 @@ export default class App extends Component {
 			},
 			result => {
 				// this.toggleLayout(result.layoutMode);
-				this.prefs.layoutMode = result.layoutMode;
+				this.state.prefs.layoutMode = result.layoutMode;
 				if (result.code) {
 					lastCode = result.code;
 				}
@@ -174,7 +177,31 @@ export default class App extends Component {
 		}
 	}
 
-	refreshEditor() {}
+	refreshEditor() {
+		this.toggleLayout(
+			this.state.currentItem.layoutMode || this.state.prefs.layoutMode
+		);
+		// this.contentWrap.refreshEditor();
+	}
+	// Creates a new item with passed item's contents
+	forkItem(sourceItem) {
+		if (this.state.unsavedEditCount) {
+			var shouldDiscard = confirm(
+				'You have unsaved changes in your current work. Do you want to discard unsaved changes and continue?'
+			);
+			if (!shouldDiscard) {
+				return;
+			}
+		}
+		const fork = JSON.parse(JSON.stringify(sourceItem));
+		delete fork.id;
+		fork.title = '(Forked) ' + sourceItem.title;
+		fork.updatedOn = Date.now();
+		this.setCurrentItem(fork);
+		this.refreshEditor();
+		alertsService.add(`"${sourceItem.title}" was forked`);
+		trackEvent('fn', 'itemForked');
+	}
 	createNewItem() {
 		var d = new Date();
 		this.setCurrentItem({
@@ -196,8 +223,43 @@ export default class App extends Component {
 		this.refreshEditor();
 		alertsService.add('New item created');
 	}
+	openItem(item) {
+		// console.log(itemId, this.state.savedItems)
+
+		this.setCurrentItem(item);
+		this.refreshEditor();
+		alertsService.add('Saved item loaded');
+	}
+	removeItem(itemId) {
+		var answer = confirm(
+			`Are you sure you want to delete "${savedItems[itemId].title}"?`
+		);
+		if (!answer) {
+			return;
+		}
+
+		// Remove from items list
+		itemService.unsetItemForUser(itemId);
+
+		// Remove individual item too.
+		itemService.removeItem(itemId).then(() => {
+			alertsService.add('Item removed.');
+			// This item is open in the editor. Lets open a new one.
+			if (this.state.currentItem.id === itemId) {
+				this.createNewItem();
+			}
+		});
+
+		// Remove from cached list
+		delete this.state.savedItems[itemId];
+		this.setState({
+			savedItems: { ...this.state.savedItems }
+		});
+
+		trackEvent('fn', 'itemRemoved');
+	}
 	setCurrentItem(item) {
-		this.state.currentItem = item;
+		this.setState({ currentItem: item });
 		log('Current Item set', item);
 
 		// Reset auto-saving flag
@@ -373,8 +435,8 @@ export default class App extends Component {
 				d.getSeconds()
 			].join('-');
 
-			if (currentItem.title) {
-				fileName = currentItem.title;
+			if (this.state.currentItem.title) {
+				fileName = this.state.currentItem.title;
 			}
 			fileName += '.html';
 
@@ -440,8 +502,8 @@ export default class App extends Component {
 	}
 
 	layoutBtnClickHandler(layoutId) {
-		// saveSetting('layoutMode', mode);
-		trackEvent('ui', 'toggleLayoutClick', mode);
+		this.saveSetting('layoutMode', layoutId);
+		trackEvent('ui', 'toggleLayoutClick', layoutId);
 		this.toggleLayout(layoutId);
 	}
 	saveSetting(setting, value) {
@@ -454,8 +516,6 @@ export default class App extends Component {
 	}
 
 	saveCode(key) {
-		this.state.currentItem.title = window.titleInput.value;
-
 		// currentItem.htmlMode = htmlMode;
 		// currentItem.cssMode = cssMode;
 		// currentItem.jsMode = jsMode;
@@ -466,10 +526,6 @@ export default class App extends Component {
 		}
 		this.state.currentItem.updatedOn = Date.now();
 		this.state.currentItem.layoutMode = this.state.currentLayoutMode;
-		// this.state.currentItem.externalLibs = {
-		// 	js: externalJsTextarea.value,
-		// 	css: externalCssTextarea.value
-		// };
 
 		// currentItem.sizes = getCodePaneSizes();
 		// currentItem.mainSizes = getMainPaneSizes();
@@ -537,11 +593,28 @@ export default class App extends Component {
 			itemService.setItemForUser(this.state.currentItem.id);
 		}
 	}
-	onCodeChange(type, code) {
+	onCodeChange(type, code, isUserChange) {
 		this.state.currentItem[type] = code;
+		if (isUserChange) {
+			this.setState({ unsavedEditCount: this.state.unsavedEditCount + 1 });
+
+			if (
+				this.state.unsavedEditCount % UNSAVED_WARNING_COUNT === 0 &&
+				this.state.unsavedEditCount >= UNSAVED_WARNING_COUNT
+			) {
+				window.saveBtn.classList.add('animated');
+				window.saveBtn.classList.add('wobble');
+				window.saveBtn.addEventListener('animationend', () => {
+					window.saveBtn.classList.remove('animated');
+					window.saveBtn.classList.remove('wobble');
+				});
+			}
+		}
 	}
 
-	titleInputBlurHandler() {
+	titleInputBlurHandler(e) {
+		this.state.currentItem.title = e.target.value;
+
 		if (this.state.currentItem.id) {
 			this.saveItem();
 			trackEvent('ui', 'titleChanged');
@@ -622,9 +695,8 @@ export default class App extends Component {
 		this.setState({ isProfileModalOpen: true });
 	}
 
-	logout(e) {
-		e.preventDefault();
-		if (unsavedEditCount) {
+	logout() {
+		if (this.state.unsavedEditCount) {
 			var shouldDiscard = confirm(
 				'You have unsaved changes. Do you still want to logout?'
 			);
@@ -633,7 +705,36 @@ export default class App extends Component {
 			}
 		}
 		trackEvent('fn', 'loggedOut');
-		window.logout();
+		auth.logout();
+	}
+
+	itemClickHandler(item) {
+		setTimeout(() => {
+			this.openItem(item);
+		}, 350);
+		this.toggleSavedItemsPane();
+	}
+	itemRemoveBtnClickHandler(itemId) {
+		this.removeItem(itemId);
+	}
+	itemForkBtnClickHandler(item) {
+		this.toggleSavedItemsPane();
+		setTimeout(() => {
+			this.forkItem(item);
+		}, 350);
+	}
+	newBtnClickHandler() {
+		trackEvent('ui', 'newBtnClick');
+		if (this.state.unsavedEditCount) {
+			var shouldDiscard = confirm(
+				'You have unsaved changes. Do you still want to create something new?'
+			);
+			if (shouldDiscard) {
+				this.createNewItem();
+			}
+		} else {
+			this.createNewItem();
+		}
 	}
 
 	render() {
@@ -643,19 +744,24 @@ export default class App extends Component {
 					<MainHeader
 						externalLibCount={this.state.externalLibCount}
 						openBtnHandler={this.openSavedItemsPane.bind(this)}
+						newBtnHandler={this.newBtnClickHandler.bind(this)}
 						saveBtnHandler={this.saveBtnClickHandler.bind(this)}
 						loginBtnHandler={this.loginBtnClickHandler.bind(this)}
 						profileBtnHandler={this.profileBtnClickHandler.bind(this)}
 						addLibraryBtnHandler={this.openAddLibrary.bind(this)}
 						isFetchingItems={this.state.isFetchingItems}
 						isSaving={this.state.isSaving}
+						title={this.state.currentItem.title}
 						titleInputBlurHandler={this.titleInputBlurHandler.bind(this)}
 						user={this.state.user}
+						unsavedEditCount={this.state.unsavedEditCount}
 					/>
 					<ContentWrap
+						currentLayoutMode={this.state.currentLayoutMode}
 						currentItem={this.state.currentItem}
 						onCodeChange={this.onCodeChange.bind(this)}
 						onRef={comp => (this.contentWrap = comp)}
+						prefs={this.state.prefs}
 					/>
 					<div class="global-console-container" id="globalConsoleContainerEl" />
 					<Footer
@@ -674,6 +780,9 @@ export default class App extends Component {
 					items={this.state.savedItems}
 					isOpen={this.state.isSavedItemPaneOpen}
 					closeHandler={this.closeSavedItemsPane.bind(this)}
+					itemClickHandler={this.itemClickHandler.bind(this)}
+					itemRemoveBtnClickHandler={this.itemRemoveBtnClickHandler.bind(this)}
+					itemForkBtnClickHandler={this.itemForkBtnClickHandler.bind(this)}
 				/>
 				<div class="alerts-container" id="js-alerts-container" />
 				<form
@@ -735,7 +844,10 @@ export default class App extends Component {
 					show={this.state.isProfileModalOpen}
 					closeHandler={() => this.setState({ isProfileModalOpen: false })}
 				>
-					<Profile user={this.state.user} />
+					<Profile
+						user={this.state.user}
+						logoutBtnHandler={this.logout.bind(this)}
+					/>
 				</Modal>
 				<HelpModal
 					show={this.state.isHelpModalOpen}

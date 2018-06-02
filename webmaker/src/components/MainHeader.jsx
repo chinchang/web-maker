@@ -9,7 +9,7 @@ export default class Header extends Component {
 					id="titleInput"
 					title="Click to edit"
 					class="item-title-input"
-					value="Untitled Work"
+					value={this.props.title}
 					onBlur={this.props.titleInputBlurHandler}
 				/>
 				<div class="main-header__btn-wrap  flex  flex-v-center">
@@ -46,7 +46,7 @@ export default class Header extends Component {
 					<a
 						class="flex  flex-v-center hint--rounded hint--bottom-left"
 						aria-label="Start a new creation"
-						d-click="onNewBtnClick"
+						onClick={this.props.newBtnHandler}
 					>
 						<svg
 							style="vertical-align:middle;width:14px;height:14px"
@@ -59,7 +59,7 @@ export default class Header extends Component {
 						id="saveBtn"
 						class={`flex  flex-v-center hint--rounded hint--bottom-left ${
 							this.props.isSaving ? 'is-loading' : ''
-						}`}
+						} ${this.props.unsavedEditCount ? 'is-marked' : 0}`}
 						aria-label="Save current creation (Ctrl/⌘ + S)"
 						onClick={this.props.saveBtnHandler}
 					>

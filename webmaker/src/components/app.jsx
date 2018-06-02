@@ -8,6 +8,7 @@ import SavedItemPane from './SavedItemPane.jsx';
 import AddLibrary from './AddLibrary.jsx';
 import Modal from './Modal.jsx';
 import HelpModal from './HelpModal.jsx';
+import Login from './Login.jsx';
 import { log, generateRandomId } from '../utils';
 import { itemService } from '../itemService';
 import '../db';
@@ -17,6 +18,9 @@ import { modes, cssModes } from '../codeModes';
 import { trackEvent } from '../analytics';
 import { deferred } from '../deferred';
 import { alertsService } from '../notifications';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import Profile from './Profile';
 
 if (module.hot) {
 	require('preact/debug');
@@ -38,6 +42,8 @@ export default class App extends Component {
 			isAddLibraryModalOpen: false,
 			isHelpModalOpen: false,
 			isNotificationsModalOpen: false,
+			isLoginModalOpen: false,
+			isProfileModalOpen: false,
 			prefs: {},
 			currentItem: {
 				title: '',
@@ -68,6 +74,45 @@ export default class App extends Component {
 			infiniteLoopTimeout: 1000
 		};
 		this.prefs = {};
+
+		firebase.auth().onAuthStateChanged(user => {
+			this.setState({ isLoginModalOpen: false });
+			if (user) {
+				log('You are -> ', user);
+				alertsService.add('You are now logged in!');
+				this.setState({ user });
+				window.user = user;
+				if (
+					!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS] &&
+					window.oldSavedCreationsCountEl
+				) {
+					this.fetchItems(false, true).then(items => {
+						if (!items.length) {
+							return;
+						}
+						this.oldSavedItems = items;
+						// window.oldSavedCreationsCountEl.textContent = items.length;
+						this.setState({
+							isAskToImportModalOpen: true
+						});
+						trackEvent('ui', 'askToImportModalSeen');
+					});
+				}
+				window.db.getUser(user.uid).then(customUser => {
+					if (customUser) {
+						const prefs = { ...this.state.prefs };
+						Object.assign(prefs, user.settings);
+						this.setState({ prefs: prefs });
+						this.updateSetting();
+					}
+				});
+			} else {
+				this.setState({ user: undefined });
+				delete window.user;
+				// User is signed out.
+			}
+			this.updateProfileUi();
+		});
 	}
 
 	componentWillMount() {
@@ -121,6 +166,14 @@ export default class App extends Component {
 			this.updateSetting();
 		});
 	}
+	updateProfileUi() {
+		if (this.state.user) {
+			document.body.classList.add('is-logged-in');
+		} else {
+			document.body.classList.remove('is-logged-in');
+		}
+	}
+
 	refreshEditor() {}
 	createNewItem() {
 		var d = new Date();
@@ -561,6 +614,27 @@ export default class App extends Component {
 	}
 	autoSaveLoop() {}
 
+	loginBtnClickHandler() {
+		this.setState({ isLoginModalOpen: true });
+	}
+	profileBtnClickHandler() {
+		this.setState({ isProfileModalOpen: true });
+	}
+
+	logout(e) {
+		e.preventDefault();
+		if (unsavedEditCount) {
+			var shouldDiscard = confirm(
+				'You have unsaved changes. Do you still want to logout?'
+			);
+			if (!shouldDiscard) {
+				return;
+			}
+		}
+		trackEvent('fn', 'loggedOut');
+		window.logout();
+	}
+
 	render() {
 		return (
 			<div>
@@ -569,10 +643,13 @@ export default class App extends Component {
 						externalLibCount={this.state.externalLibCount}
 						openBtnHandler={this.openSavedItemsPane.bind(this)}
 						saveBtnHandler={this.saveBtnClickHandler.bind(this)}
+						loginBtnHandler={this.loginBtnClickHandler.bind(this)}
+						profileBtnHandler={this.profileBtnClickHandler.bind(this)}
 						addLibraryBtnHandler={this.openAddLibrary.bind(this)}
 						isFetchingItems={this.state.isFetchingItems}
 						isSaving={this.state.isSaving}
 						titleInputBlurHandler={this.titleInputBlurHandler.bind(this)}
+						user={this.state.user}
 					/>
 					<ContentWrap
 						currentItem={this.state.currentItem}
@@ -646,6 +723,18 @@ export default class App extends Component {
 						prefs={this.state.prefs}
 						onChange={this.updateSetting.bind(this)}
 					/>
+				</Modal>
+				<Modal
+					show={this.state.isLoginModalOpen}
+					closeHandler={() => this.setState({ isLoginModalOpen: false })}
+				>
+					<Login />
+				</Modal>
+				<Modal
+					show={this.state.isProfileModalOpen}
+					closeHandler={() => this.setState({ isProfileModalOpen: false })}
+				>
+					<Profile user={this.state.user} />
 				</Modal>
 				<HelpModal
 					show={this.state.isHelpModalOpen}

@@ -94,7 +94,7 @@ export default class Header extends Component {
 						Open
 					</a>
 					<a
-						d-open-modal="loginModal"
+						onClick={this.props.loginBtnHandler}
 						data-event-category="ui"
 						data-event-action="loginButtonClick"
 						class="hide-on-login flex  flex-v-center  hint--rounded  hint--bottom-left"
@@ -103,7 +103,7 @@ export default class Header extends Component {
 						Login/Signup
 					</a>
 					<a
-						d-open-modal="profileModal"
+						onClick={this.props.profileBtnHandler}
 						data-event-category="ui"
 						data-event-action="headerAvatarClick"
 						aria-label="See profile or Logout"
@@ -112,7 +112,11 @@ export default class Header extends Component {
 						<img
 							id="headerAvatarImg"
 							width="20"
-							src=""
+							src={
+								this.props.user
+									? this.props.user.photoURL || DEFAULT_PROFILE_IMG
+									: ''
+							}
 							class="main-header__avatar-img"
 						/>
 					</a>

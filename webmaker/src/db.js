@@ -1,6 +1,14 @@
+import './firebaseInit';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 import {
 	deferred
-} from './deferred'
+} from './deferred';
+import {
+	trackEvent
+} from './analytics';
+
+
 (() => {
 	const FAUX_DELAY = 1;
 
@@ -53,6 +61,10 @@ import {
 				.then(function () {
 					// Initialize Cloud Firestore through firebase
 					db = firebase.firestore();
+					// const settings = {
+					// 	timestampsInSnapshots: true
+					// };
+					// db.settings(settings);
 					utils.log('firebase db ready', db);
 					resolve(db);
 				})
@@ -64,7 +76,7 @@ import {
 						alert(
 							"Opening Web Maker web app in multiple tabs isn't supported at present and it seems like you already have it opened in another tab. Please use in one tab."
 						);
-						window.trackEvent('fn', 'multiTabError');
+						trackEvent('fn', 'multiTabError');
 					} else if (err.code === 'unimplemented') {
 						// The current browser does not support all of the
 						// features required to enable persistence

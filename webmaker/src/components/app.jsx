@@ -194,7 +194,7 @@ export default class App extends Component {
 			layoutMode: this.state.currentLayoutMode
 		});
 		this.refreshEditor();
-		// alertsService.add('New item created');
+		alertsService.add('New item created');
 	}
 	setCurrentItem(item) {
 		this.state.currentItem = item;
@@ -329,7 +329,7 @@ export default class App extends Component {
 				event.keyCode === 53
 			) {
 				event.preventDefault();
-				// scope.setPreviewContent(true, true);
+				this.contentWrap.setPreviewContent(true, true);
 				trackEvent('ui', 'previewKeyboardShortcut');
 			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 79) {
 				// Ctrl/⌘ + O
@@ -381,7 +381,7 @@ export default class App extends Component {
 			var blob = new Blob([fileContent], { type: 'text/html;charset=UTF-8' });
 			utils.downloadFile(fileName, blob);
 
-			// trackEvent('fn', 'saveFileComplete');
+			trackEvent('fn', 'saveFileComplete');
 		});
 	}
 
@@ -400,7 +400,8 @@ export default class App extends Component {
 		this.setState({
 			currentItem: { ...this.state.currentItem }
 		});
-		// alertsService.add('Libraries updated.');
+		this.contentWrap.setPreviewContent(true);
+		alertsService.add('Libraries updated.');
 	}
 	updateExternalLibCount() {
 		// Calculate no. of external libs
@@ -435,12 +436,12 @@ export default class App extends Component {
 		document.body.classList.add('layout-' + mode);
 
 		// resetSplitting();
-		// scope.setPreviewContent(true);
+		this.contentWrap.setPreviewContent(true);
 	}
 
 	layoutBtnClickHandler(layoutId) {
 		// saveSetting('layoutMode', mode);
-		// trackEvent('ui', 'toggleLayoutClick', mode);
+		trackEvent('ui', 'toggleLayoutClick', mode);
 		this.toggleLayout(layoutId);
 	}
 	saveSetting(setting, value) {
@@ -565,7 +566,7 @@ export default class App extends Component {
 			// We always save locally so that it gets fetched
 			// faster on future loads.
 			db.sync.set(obj, function() {
-				// alertsService.add('Setting saved');
+				alertsService.add('Setting saved');
 			});
 			if (window.user) {
 				window.db.getDb().then(remoteDb => {
@@ -581,7 +582,7 @@ export default class App extends Component {
 						.catch(error => utils.log(error));
 				});
 			}
-			// trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
+			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
 
 		const prefs = this.state.prefs;

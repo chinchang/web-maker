@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 import UserCodeMirror from './UserCodeMirror.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
 import { HtmlModes, CssModes, JsModes } from '../codeModes';
-
+import { log } from '../utils';
 const BASE_PATH = chrome.extension || window.DEBUG ? '/' : '/app';
 
 export default class ContentWrap extends Component {
@@ -256,7 +256,7 @@ export default class ContentWrap extends Component {
 			css: this.cmCodes.css,
 			js: this.cmCodes.js
 		};
-		// utils.log('🔎 setPreviewContent', isForced);
+		log('🔎 setPreviewContent', isForced);
 		const targetFrame = this.detachedWindow
 			? this.detachedWindow.document.querySelector('iframe')
 			: this.frame;
@@ -295,7 +295,7 @@ export default class ContentWrap extends Component {
 		this.cm.html.setValue(this.cmCodes.html || '');
 		this.cm.css.setValue(this.cmCodes.css || '');
 		this.cm.js.setValue(this.cmCodes.js || '');
-		this.setPreviewContent(true);
+		// this.setPreviewContent(true);
 		// console.log('componentdidupdate', this.props.currentItem);
 	}
 	componentDidMount() {

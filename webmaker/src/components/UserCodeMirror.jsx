@@ -35,6 +35,9 @@ export default class UserCodeMirror extends Component {
 	componentDidMount() {
 		this.initEditor();
 	}
+	shouldComponentUpdate() {
+		return false;
+	}
 
 	initEditor() {
 		const options = this.props.options;
@@ -119,9 +122,6 @@ export default class UserCodeMirror extends Component {
 			});
 		}
 		this.props.onCreation(this.cm);
-	}
-	shouldComponentUpdate() {
-		return false;
 	}
 
 	render() {

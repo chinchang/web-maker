@@ -447,7 +447,7 @@ body:not(.light-version).overlay-visible .main-container {
 
 /* Codemirror */
 
-.Codemirror {
+.CodeMirror {
 	width: 100%;
 	height: calc(100% - 25px);
 	/* 25px for header */
@@ -461,7 +461,7 @@ body:not(.light-version).overlay-visible .main-container {
 	height: calc(100%);
 }
 
-.Codemirror pre {
+.CodeMirror pre {
 	font-variant-ligatures: contextual;
 }
 

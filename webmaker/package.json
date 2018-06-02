@@ -31,7 +31,8 @@
     "firebase": "^5.0.4",
     "preact": "^8.2.6",
     "preact-compat": "^3.17.0",
-    "preact-router": "^2.5.7"
+    "preact-router": "^2.5.7",
+    "split.js": "^1.3.5"
   },
   "jest": {
     "verbose": true,

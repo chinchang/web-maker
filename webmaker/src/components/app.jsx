@@ -435,7 +435,7 @@ export default class App extends Component {
 		$('#layoutBtn' + mode).classList.add('selected');
 		document.body.classList.add('layout-' + mode);
 
-		// resetSplitting();
+		this.contentWrap.resetSplitting();
 		this.contentWrap.setPreviewContent(true);
 	}
 

@@ -3,7 +3,10 @@ import UserCodeMirror from './UserCodeMirror.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
 import { HtmlModes, CssModes, JsModes } from '../codeModes';
 import { log } from '../utils';
+import { SplitPane } from './SplitPane.jsx';
+
 const BASE_PATH = chrome.extension || window.DEBUG ? '/' : '/app';
+const minCodeWrapSize = 33;
 
 export default class ContentWrap extends Component {
 	constructor(props) {
@@ -346,10 +349,133 @@ export default class ContentWrap extends Component {
 		});
 	}
 
+	// Returns the sizes of main code & preview panes.
+	getMainSplitSizesToApply() {
+		var mainSplitSizes;
+		const { currentItem, currentLayoutMode } = this.props;
+		if (currentItem && currentItem.mainSizes) {
+			// For layout mode 3, main panes are reversed using flex-direction.
+			// So we need to apply the saved sizes in reverse order.
+			mainSplitSizes =
+				currentLayoutMode === 3
+					? [currentItem.mainSizes[1], currentItem.mainSizes[0]]
+					: currentItem.mainSizes;
+		} else {
+			mainSplitSizes = currentLayoutMode === 5 ? [75, 25] : [50, 50];
+		}
+		return mainSplitSizes;
+	}
+
+	// Check all the code wrap if they are minimized or maximized
+	updateCodeWrapCollapseStates() {
+		// This is debounced!
+		clearTimeout(this.updateCodeWrapCollapseStates.timeout);
+		updateCodeWrapCollapseStates.timeout = setTimeout(function() {
+			const prop =
+				currentLayoutMode === 2 || currentLayoutMode === 5 ? 'width' : 'height';
+			[htmlCode, cssCode, jsCode].forEach(function(el) {
+				const bounds = el.getBoundingClientRect();
+				const size = bounds[prop];
+				if (size < 100) {
+					el.classList.add('is-minimized');
+				} else {
+					el.classList.remove('is-minimized');
+				}
+				if (el.style[prop].indexOf(`100% - ${minCodeWrapSize * 2}px`) !== -1) {
+					el.classList.add('is-maximized');
+				} else {
+					el.classList.remove('is-maximized');
+				}
+			});
+		}, 50);
+	}
+
+	toggleCodeWrapCollapse(codeWrapEl) {
+		if (
+			codeWrapEl.classList.contains('is-minimized') ||
+			codeWrapEl.classList.contains('is-maximized')
+		) {
+			codeWrapEl.classList.remove('is-minimized');
+			codeWrapEl.classList.remove('is-maximized');
+			this.codeSplitInstance.setSizes([33.3, 33.3, 33.3]);
+		} else {
+			const id = parseInt(codeWrapEl.dataset.codeWrapId, 10);
+			var arr = [
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`
+			];
+			arr[id] = `calc(100% - ${minCodeWrapSize * 2}px)`;
+
+			this.codeSplitInstance.setSizes(arr);
+			codeWrapEl.classList.add('is-maximized');
+		}
+	}
+
+	collapseBtnHandler(e) {
+		var codeWrapParent =
+			e.currentTarget.parentElement.parentElement.parentElement;
+		this.toggleCodeWrapCollapse(codeWrapParent);
+		trackEvent('ui', 'paneCollapseBtnClick', codeWrapParent.dataset.type);
+	}
+
+	resetSplitting() {
+		const codeSplitSizes = this.getCodeSplitSizes();
+		this.setState({
+			codeSplitSizes: this.codeSplitSizes
+		});
+	}
+	getCodeSplitSizes() {
+		if (this.props.currentItem && this.props.currentItem.sizes) {
+			return this.props.currentItem.sizes;
+		} else {
+			return [33.33, 33.33, 33.33];
+		}
+	}
+
+	mainSplitDragEndHandler() {
+		if (this.props.prefs.refreshOnResize) {
+			// Running preview updation in next call stack, so that error there
+			// doesn't affect this dragend listener.
+			setTimeout(() => {
+				this.setPreviewContent(true);
+			}, 1);
+		}
+	}
+	codeSplitDragStart() {
+		document.body.classList.add('is-dragging');
+	}
+	codeSplitDragEnd() {
+		this.updateCodeWrapCollapseStates();
+		document.body.classList.remove('is-dragging');
+	}
+
 	render() {
 		return (
-			<div class="content-wrap  flex  flex-grow">
-				<div class="code-side" id="js-code-side">
+			<SplitPane
+				class="content-wrap  flex  flex-grow"
+				sizes={this.getMainSplitSizesToApply()}
+				minSize={150}
+				direction={
+					this.props.currentLayoutMode === 2 ? 'vertical' : 'horizontal'
+				}
+				onDragEnd={this.mainSplitDragEndHandler.bind(this)}
+			>
+				<SplitPane
+					class="code-side"
+					id="js-code-side"
+					sizes={this.state.codeSplitSizes}
+					minSize={minCodeWrapSize}
+					direction={
+						this.props.currentLayoutMode === 2 ||
+						this.props.currentLayoutMode === 5
+							? 'horizontal'
+							: 'vertical'
+					}
+					onDragStart={this.codeSplitDragStart.bind(this)}
+					onDragend={this.codeSplitDragEnd.bind(this)}
+					onSplit={splitInstance => (this.codeSplitInstance = splitInstance)}
+				>
 					<div
 						data-code-wrap-id="0"
 						id="js-html-code"
@@ -379,6 +505,7 @@ export default class ContentWrap extends Component {
 								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
 									title="Toggle code pane"
+									onClick={this.collapseBtnHandler.bind(this)}
 								/>
 							</div>
 						</div>
@@ -435,6 +562,7 @@ export default class ContentWrap extends Component {
 								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
 									title="Toggle code pane"
+									onClick={this.collapseBtnHandler.bind(this)}
 								/>
 							</div>
 						</div>
@@ -480,6 +608,7 @@ export default class ContentWrap extends Component {
 								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
 									title="Toggle code pane"
+									onClick={this.collapseBtnHandler.bind(this)}
 								/>
 							</div>
 						</div>
@@ -497,7 +626,7 @@ export default class ContentWrap extends Component {
 							onCreation={el => (this.cm.js = el)}
 						/>
 					</div>
-				</div>
+				</SplitPane>
 				<div class="demo-side" id="js-demo-side">
 					<iframe
 						ref={el => (this.frame = el)}
@@ -544,7 +673,7 @@ export default class ContentWrap extends Component {
 						</div>
 					</div>
 				</div>
-			</div>
+			</SplitPane>
 		);
 	}
 }

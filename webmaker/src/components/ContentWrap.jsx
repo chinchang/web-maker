@@ -4,6 +4,7 @@ import { computeHtml, computeCss, computeJs } from '../computes';
 import { HtmlModes, CssModes, JsModes } from '../codeModes';
 import { log } from '../utils';
 import { SplitPane } from './SplitPane.jsx';
+import { trackEvent } from '../analytics';
 
 const BASE_PATH = chrome.extension || window.DEBUG ? '/' : '/app';
 const minCodeWrapSize = 33;

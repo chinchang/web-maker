@@ -697,6 +697,8 @@ body>#demo-frame {
 	visibility: hidden;
 	background-color: rgba(102, 51, 153, 0.7);
 	background-color: rgba(0, 0, 0, 0.7);
+	/* To prevent scroll repaint inside modal */
+	will-change: transform;
 }
 
 .modal__close-btn {

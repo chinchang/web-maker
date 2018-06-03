@@ -1,6 +1,10 @@
 	import {
 		trackEvent
 	} from './analytics';
+
+	import {
+		deferred
+	} from './deferred';
 	window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
 
 	window.$ = document.querySelector.bind(document);
@@ -80,7 +84,7 @@
 
 	export function log() {
 		if (window.DEBUG) {
-			console.log(...arguments);
+			console.log(Date.now(), ...arguments);
 		}
 	}
 
@@ -272,6 +276,19 @@
 			getErrorHandler('webkitRequestFileSystemFail')
 		);
 	}
+
+	export function loadJS(src) {
+		var d = deferred();
+		var ref = window.document.getElementsByTagName('script')[0];
+		var script = window.document.createElement('script');
+		script.src = src;
+		script.async = true;
+		ref.parentNode.insertBefore(script, ref);
+		script.onload = function () {
+			d.resolve();
+		};
+		return d.promise;
+	};
 
 	window.chrome = window.chrome || {};
 	window.chrome.i18n = {

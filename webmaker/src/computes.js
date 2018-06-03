@@ -14,7 +14,7 @@ export function computeHtml(code, mode) {
 	if (mode === HtmlModes.HTML) {
 		d.resolve(code);
 	} else if (mode === HtmlModes.MARKDOWN) {
-		d.resolve(marked ? marked(code) : code);
+		d.resolve(window.marked ? marked(code) : code);
 	} else if (mode === HtmlModes.JADE) {
 		d.resolve(window.jade ? jade.render(code) : code);
 	}
@@ -28,10 +28,10 @@ export function computeCss(code, mode) {
 	if (mode === CssModes.CSS) {
 		d.resolve(code);
 	} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
-		if (sass && code) {
-			sass.compile(
+		if (window.sass && code) {
+			window.sass.compile(
 				code, {
-					indentedSyntax: cssMode === CssModes.SASS
+					indentedSyntax: mode === CssModes.SASS
 				},
 				function (result) {
 					// Something was wrong

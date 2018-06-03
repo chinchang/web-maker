@@ -1,10 +1,12 @@
 import { h, Component } from 'preact';
 import UserCodeMirror from './UserCodeMirror.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
-import { HtmlModes, CssModes, JsModes } from '../codeModes';
-import { log, writeFile } from '../utils';
+import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
+import { log, writeFile, loadJS } from '../utils';
 import { SplitPane } from './SplitPane.jsx';
 import { trackEvent } from '../analytics';
+import CodeMirror from '../CodeMirror';
+import { deferred } from '../deferred';
 
 const BASE_PATH = chrome.extension || window.DEBUG ? '/' : '/app';
 const minCodeWrapSize = 33;
@@ -217,7 +219,9 @@ export default class ContentWrap extends Component {
 			currentCode.html === this.codeInPreview.html &&
 			currentCode.js === this.codeInPreview.js
 		) {
-			computeCss(currentCode.css, this.cssMode).then(function(css) {
+			computeCss(currentCode.css, this.props.currentItem.cssMode).then(function(
+				css
+			) {
 				if (targetFrame.contentDocument.querySelector('#webmakerstyle')) {
 					targetFrame.contentDocument.querySelector(
 						'#webmakerstyle'
@@ -225,9 +229,15 @@ export default class ContentWrap extends Component {
 				}
 			});
 		} else {
-			var htmlPromise = computeHtml(currentCode.html, this.htmlMode);
-			var cssPromise = computeCss(currentCode.css, this.cssMode);
-			var jsPromise = computeJs(currentCode.js, this.jsMode);
+			var htmlPromise = computeHtml(
+				currentCode.html,
+				this.props.currentItem.htmlMode
+			);
+			var cssPromise = computeCss(
+				currentCode.css,
+				this.props.currentItem.cssMode
+			);
+			var jsPromise = computeJs(currentCode.js, this.props.currentItem.jsMode);
 			Promise.all([htmlPromise, cssPromise, jsPromise]).then(result => {
 				this.createPreviewFile(result[0], result[1], result[2]);
 			});
@@ -237,10 +247,15 @@ export default class ContentWrap extends Component {
 		this.codeInPreview.css = currentCode.css;
 		this.codeInPreview.js = currentCode.js;
 	}
+	isValidItem(item) {
+		return !!item.title;
+	}
 	componentDidUpdate() {
-		this.refreshEditor();
-		// this.setPreviewContent(true);
-		// console.log('componentdidupdate', this.props.currentItem);
+		log('🚀', 'didupdate', this.props.currentItem);
+
+		// if (this.isValidItem(this.props.currentItem)) {
+		// this.refreshEditor();
+		// }
 	}
 	componentDidMount() {
 		this.props.onRef(this);
@@ -257,7 +272,13 @@ export default class ContentWrap extends Component {
 		this.cm.css.refresh();
 		this.cm.js.refresh();
 
-		this.setPreviewContent(true);
+		// Set preview only when all modes are updated so that preview doesn't generate on partially
+		// correct modes and also doesn't happen 3 times.
+		Promise.all([
+			this.updateHtmlMode(this.props.currentItem.htmlMode),
+			this.updateCssMode(this.props.currentItem.cssMode),
+			this.updateJsMode(this.props.currentItem.jsMode)
+		]).then(() => this.setPreviewContent(true));
 	}
 	applyCodemirrorSettings(prefs) {
 		if (!this.cm) {
@@ -404,7 +425,116 @@ export default class ContentWrap extends Component {
 		this.updateCodeWrapCollapseStates();
 		document.body.classList.remove('is-dragging');
 	}
+	/**
+	 * Loaded the code comiler based on the mode selected
+	 */
+	handleModeRequirements(mode) {
+		const baseTranspilerPath = 'lib/transpilers';
+		// Exit if already loaded
+		var d = deferred();
+		if (modes[mode].hasLoaded) {
+			d.resolve();
+			return d.promise;
+		}
 
+		function setLoadedFlag() {
+			modes[mode].hasLoaded = true;
+			d.resolve();
+		}
+
+		if (mode === HtmlModes.JADE) {
+			loadJS(`${baseTranspilerPath}/jade.js`).then(setLoadedFlag);
+		} else if (mode === HtmlModes.MARKDOWN) {
+			loadJS(`${baseTranspilerPath}/marked.js`).then(setLoadedFlag);
+		} else if (mode === CssModes.LESS) {
+			loadJS(`${baseTranspilerPath}/less.min.js`).then(setLoadedFlag);
+		} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
+			loadJS(`${baseTranspilerPath}/sass.js`).then(function() {
+				window.sass = new Sass(`${baseTranspilerPath}/sass.worker.js`);
+				setLoadedFlag();
+			});
+		} else if (mode === CssModes.STYLUS) {
+			loadJS(`${baseTranspilerPath}/stylus.min.js`).then(setLoadedFlag);
+		} else if (mode === CssModes.ACSS) {
+			loadJS(`${baseTranspilerPath}/atomizer.browser.js`).then(setLoadedFlag);
+		} else if (mode === JsModes.COFFEESCRIPT) {
+			loadJS(`${baseTranspilerPath}/coffee-script.js`).then(setLoadedFlag);
+		} else if (mode === JsModes.ES6) {
+			loadJS(`${baseTranspilerPath}/babel.min.js`).then(setLoadedFlag);
+		} else if (mode === JsModes.TS) {
+			loadJS(`${baseTranspilerPath}/typescript.js`).then(setLoadedFlag);
+		} else {
+			d.resolve();
+		}
+
+		return d.promise;
+	}
+
+	updateHtmlMode(value) {
+		this.props.onCodeModeChange('html', value);
+		this.props.currentItem.htmlMode = value;
+		const htmlModeLabel = $('#js-html-mode-label');
+
+		htmlModeLabel.textContent = modes[value].label;
+		// FIXME - use a better selector for the mode selectbox
+		htmlModeLabel.parentElement.querySelector('select').value = value;
+		this.cm.html.setOption('mode', modes[value].cmMode);
+		CodeMirror.autoLoadMode(
+			this.cm.html,
+			modes[value].cmPath || modes[value].cmMode
+		);
+		return this.handleModeRequirements(value);
+	}
+	updateCssMode(value) {
+		this.props.onCodeModeChange('css', value);
+		this.props.currentItem.cssMode = value;
+		const cssModeLabel = $('#js-css-mode-label');
+		cssModeLabel.textContent = modes[value].label;
+		// FIXME - use a better selector for the mode selectbox
+		cssModeLabel.parentElement.querySelector('select').value = value;
+		this.cm.css.setOption('mode', modes[value].cmMode);
+		this.cm.css.setOption('readOnly', modes[value].cmDisable);
+		// cssSettingsBtn.classList[modes[value].hasSettings ? 'remove' : 'add'](
+		// 'hide'
+		// );
+		CodeMirror.autoLoadMode(
+			this.cm.css,
+			modes[value].cmPath || modes[value].cmMode
+		);
+		return this.handleModeRequirements(value);
+	}
+	updateJsMode(value) {
+		this.props.onCodeModeChange('js', value);
+		this.props.currentItem.jsMode = value;
+		const jsModeLabel = $('#js-js-mode-label');
+
+		jsModeLabel.textContent = modes[value].label;
+		// FIXME - use a better selector for the mode selectbox
+		jsModeLabel.parentElement.querySelector('select').value = value;
+		this.cm.js.setOption('mode', modes[value].cmMode);
+		CodeMirror.autoLoadMode(
+			this.cm.js,
+			modes[value].cmPath || modes[value].cmMode
+		);
+		return this.handleModeRequirements(value);
+	}
+	codeModeChangeHandler(e) {
+		var mode = e.target.value;
+		var type = e.target.dataset.type;
+		var currentMode = this.props.currentItem[
+			type === 'html' ? 'htmlMode' : type === 'css' ? 'cssMode' : 'jsMode'
+		];
+		if (currentMode !== mode) {
+			if (type === 'html') {
+				this.updateHtmlMode(mode).then(() => this.setPreviewContent(true));
+			} else if (type === 'js') {
+				this.updateJsMode(mode).then(() => this.setPreviewContent(true));
+			} else if (type === 'css') {
+				this.updateCssMode(mode).then(() => this.setPreviewContent(true));
+			}
+			trackEvent('ui', 'updateCodeMode', mode);
+		}
+	}
 	render() {
 		return (
 			<SplitPane
@@ -449,7 +579,7 @@ export default class ContentWrap extends Component {
 								<select
 									data-type="html"
 									class="js-mode-select  hidden-select"
-									name=""
+									onChange={this.codeModeChangeHandler.bind(this)}
 								>
 									<option value="html">HTML</option>
 									<option value="markdown">Markdown</option>
@@ -494,7 +624,7 @@ export default class ContentWrap extends Component {
 								<select
 									data-type="css"
 									class="js-mode-select  hidden-select"
-									name=""
+									onChange={this.codeModeChangeHandler.bind(this)}
 								>
 									<option value="css">CSS</option>
 									<option value="scss">SCSS</option>
@@ -552,7 +682,11 @@ export default class ContentWrap extends Component {
 									JS
 								</span>
 								<span class="caret" />
-								<select data-type="js" class="js-mode-select  hidden-select">
+								<select
+									data-type="js"
+									class="js-mode-select  hidden-select"
+									onChange={this.codeModeChangeHandler.bind(this)}
+								>
 									<option value="js">JS</option>
 									<option value="coffee">CoffeeScript</option>
 									<option value="es6">ES6 (Babel)</option>

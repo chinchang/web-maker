@@ -14,7 +14,7 @@ import { itemService } from '../itemService';
 import '../db';
 import Notifications from './Notifications';
 import Settings from './Settings.jsx';
-import { modes, cssModes } from '../codeModes';
+import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { trackEvent } from '../analytics';
 import { deferred } from '../deferred';
 import { alertsService } from '../notifications';
@@ -144,22 +144,21 @@ export default class App extends Component {
 		db.getSettings(this.defaultSettings).then(result => {
 			if (result.preserveLastCode && lastCode) {
 				this.setState({ unsavedEditCount: 0 });
+				log('🚀', 'unsaededitcount setstate');
 				// For web app environment we don't fetch item from localStorage,
 				// because the item isn't stored in the localStorage.
 				if (lastCode.id && window.IS_EXTENSION) {
 					db.local.get(lastCode.id, itemResult => {
 						if (itemResult[lastCode.id]) {
 							log('Load item ', lastCode.id);
-							this.state.currentItem = itemResult[lastCode.id];
-							this.refreshEditor();
-							this.setState({ currentItem: this.state.currentItem });
+							this.setCurrentItem(itemResult[lastCode.id]).then(() =>
+								this.refreshEditor()
+							);
 						}
 					});
 				} else {
 					log('Load last unsaved item', lastCode);
-					this.state.currentItem = lastCode;
-					this.refreshEditor();
-					this.setState({ currentItem: this.state.currentItem });
+					this.setCurrentItem(lastCode).then(() => this.refreshEditor());
 				}
 			} else {
 				this.createNewItem();
@@ -181,7 +180,7 @@ export default class App extends Component {
 		this.toggleLayout(
 			this.state.currentItem.layoutMode || this.state.prefs.layoutMode
 		);
-		// this.contentWrap.refreshEditor();
+		this.contentWrap.refreshEditor();
 	}
 	// Creates a new item with passed item's contents
 	forkItem(sourceItem) {
@@ -197,8 +196,7 @@ export default class App extends Component {
 		delete fork.id;
 		fork.title = '(Forked) ' + sourceItem.title;
 		fork.updatedOn = Date.now();
-		this.setCurrentItem(fork);
-		this.refreshEditor();
+		this.setCurrentItem(fork).then(() => this.refreshEditor());
 		alertsService.add(`"${sourceItem.title}" was forked`);
 		trackEvent('fn', 'itemForked');
 	}
@@ -219,15 +217,11 @@ export default class App extends Component {
 			js: '',
 			externalLibs: { js: '', css: '' },
 			layoutMode: this.state.currentLayoutMode
-		});
-		this.refreshEditor();
+		}).then(() => this.refreshEditor());
 		alertsService.add('New item created');
 	}
 	openItem(item) {
-		// console.log(itemId, this.state.savedItems)
-
-		this.setCurrentItem(item);
-		this.refreshEditor();
+		this.setCurrentItem(item).then(() => this.refreshEditor());
 		alertsService.add('Saved item loaded');
 	}
 	removeItem(itemId) {
@@ -259,14 +253,21 @@ export default class App extends Component {
 		trackEvent('fn', 'itemRemoved');
 	}
 	setCurrentItem(item) {
-		this.setState({ currentItem: item });
-		log('Current Item set', item);
+		const d = deferred();
+		// TODO: remove later
+		item.htmlMode =
+			item.htmlMode || this.state.prefs.htmlMode || HtmlModes.HTML;
+		item.cssMode = item.cssMode || this.state.prefs.cssMode || CssModes.CSS;
+		item.jsMode = item.jsMode || this.state.prefs.jsMode || JsModes.JS;
+
+		this.setState({ currentItem: item }, d.resolve);
+		log('🚀', 'currentItem setstate', item);
 
 		// Reset auto-saving flag
 		this.isAutoSavingEnabled = false;
 		// Reset unsaved count, in UI also.
 		this.setState({ unsavedEditCount: 0 });
-		// saveBtn.classList.remove('is-marked');
+		return d.promise;
 	}
 	saveBtnClickHandler() {
 		trackEvent(
@@ -462,7 +463,7 @@ export default class App extends Component {
 		this.setState({
 			currentItem: { ...this.state.currentItem }
 		});
-		this.contentWrap.setPreviewContent(true);
+		// this.contentWrap.setPreviewContent(true);
 		alertsService.add('Libraries updated.');
 	}
 	updateExternalLibCount() {
@@ -592,6 +593,11 @@ export default class App extends Component {
 		if (isNewItem) {
 			itemService.setItemForUser(this.state.currentItem.id);
 		}
+	}
+	onCodeModeChange(ofWhat, mode) {
+		const item = {...this.state.currentItem}
+		item[`${ofWhat}Mode`] = mode;
+		this.setState({currentItem: item});
 	}
 	onCodeChange(type, code, isUserChange) {
 		this.state.currentItem[type] = code;
@@ -760,6 +766,7 @@ export default class App extends Component {
 						currentLayoutMode={this.state.currentLayoutMode}
 						currentItem={this.state.currentItem}
 						onCodeChange={this.onCodeChange.bind(this)}
+						onCodeModeChange={this.onCodeModeChange.bind(this)}
 						onRef={comp => (this.contentWrap = comp)}
 						prefs={this.state.prefs}
 					/>

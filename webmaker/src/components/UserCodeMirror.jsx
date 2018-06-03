@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import CodeMirror from 'codemirror';
+import CodeMirror from '../CodeMirror';
 
 import 'codemirror/addon/edit/matchbrackets.js';
 import 'codemirror/addon/edit/matchtags.js';

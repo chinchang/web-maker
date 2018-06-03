@@ -16,7 +16,7 @@ export function trackEvent(category, action, label, value) {
 };
 
 // if online, load after sometime
-if (navigator.onLine && !window.DEBUG) {
+if (false && navigator.onLine && !window.DEBUG) {
 	/* eslint-disable */
 
 	// prettier-ignore

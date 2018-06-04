@@ -159,8 +159,8 @@ export default class ContentWrap extends Component {
 
 		if (shouldInlineJs) {
 			if (this.detachedWindow) {
-				utils.log('✉️ Sending message to detached window');
-				scope.detachedWindow.postMessage({ contents }, '*');
+				log('✉️ Sending message to detached window');
+				this.detachedWindow.postMessage({ contents }, '*');
 			} else {
 				this.frame.src = this.frame.src;
 				setTimeout(() => {
@@ -251,8 +251,7 @@ export default class ContentWrap extends Component {
 		return !!item.title;
 	}
 	componentDidUpdate() {
-		log('🚀', 'didupdate', this.props.currentItem);
-
+		// log('🚀', 'didupdate', this.props.currentItem);
 		// if (this.isValidItem(this.props.currentItem)) {
 		// this.refreshEditor();
 		// }
@@ -535,6 +534,40 @@ export default class ContentWrap extends Component {
 			trackEvent('ui', 'updateCodeMode', mode);
 		}
 	}
+	detachPreview() {
+		if (this.detachedWindow) {
+			this.detachedWindow.focus();
+			return;
+		}
+		const iframeBounds = this.frame.getBoundingClientRect();
+		const iframeWidth = iframeBounds.width;
+		const iframeHeight = iframeBounds.height;
+		document.body.classList.add('is-detached-mode');
+		window.globalConsoleContainerEl.insertBefore(window.consoleEl, null);
+
+		this.detachedWindow = window.open(
+			'./preview.html',
+			'Web Maker',
+			`width=${iframeWidth},height=${iframeHeight},resizable,scrollbars=yes,status=1`
+		);
+		// Trigger initial render in detached window
+		setTimeout(() => {
+			this.setPreviewContent(true);
+		}, 1500);
+		function checkWindow() {
+			if (this.detachedWindow && this.detachedWindow.closed) {
+				clearInterval(intervalID);
+				document.body.classList.remove('is-detached-mode');
+				$('#js-demo-side').insertBefore(window.consoleEl, null);
+				this.detachedWindow = null;
+				// Update main frame preview to get latest changes (which were not
+				// getting reflected while detached window was open)
+				this.setPreviewContent(true);
+			}
+		}
+		var intervalID = window.setInterval(checkWindow.bind(this), 500);
+	}
+
 	render() {
 		return (
 			<SplitPane

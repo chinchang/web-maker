@@ -144,7 +144,7 @@ export default class App extends Component {
 		db.getSettings(this.defaultSettings).then(result => {
 			if (result.preserveLastCode && lastCode) {
 				this.setState({ unsavedEditCount: 0 });
-				log('🚀', 'unsaededitcount setstate');
+
 				// For web app environment we don't fetch item from localStorage,
 				// because the item isn't stored in the localStorage.
 				if (lastCode.id && window.IS_EXTENSION) {
@@ -261,7 +261,6 @@ export default class App extends Component {
 		item.jsMode = item.jsMode || this.state.prefs.jsMode || JsModes.JS;
 
 		this.setState({ currentItem: item }, d.resolve);
-		log('🚀', 'currentItem setstate', item);
 
 		// Reset auto-saving flag
 		this.isAutoSavingEnabled = false;
@@ -595,9 +594,9 @@ export default class App extends Component {
 		}
 	}
 	onCodeModeChange(ofWhat, mode) {
-		const item = {...this.state.currentItem}
+		const item = { ...this.state.currentItem };
 		item[`${ofWhat}Mode`] = mode;
-		this.setState({currentItem: item});
+		this.setState({ currentItem: item });
 	}
 	onCodeChange(type, code, isUserChange) {
 		this.state.currentItem[type] = code;
@@ -742,6 +741,11 @@ export default class App extends Component {
 			this.createNewItem();
 		}
 	}
+	detachedPreviewBtnHandler() {
+		trackEvent('ui', 'detachPreviewBtnClick');
+
+		this.contentWrap.detachPreview()
+	}
 
 	render() {
 		return (
@@ -780,6 +784,9 @@ export default class App extends Component {
 						notificationsBtnClickHandler={() =>
 							this.setState({ isNotificationsModalOpen: true })
 						}
+						detachedPreviewBtnHandler={this.detachedPreviewBtnHandler.bind(
+							this
+						)}
 					/>
 				</div>
 

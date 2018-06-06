@@ -265,6 +265,7 @@ export default class App extends Component {
 
 		// Reset auto-saving flag
 		this.isAutoSavingEnabled = false;
+
 		// Reset unsaved count, in UI also.
 		this.setState({ unsavedEditCount: 0 });
 		return d.promise;
@@ -541,8 +542,7 @@ export default class App extends Component {
 			} else {
 				alertsService.add('Item saved.');
 			}
-			this.state.unsavedEditCount = 0;
-			// saveBtn.classList.remove('is-marked');
+			this.setState({ unsavedEditCount: 0 });
 		}
 
 		return itemService
@@ -678,10 +678,9 @@ export default class App extends Component {
 		); */
 		if (prefs.autoSave) {
 			if (!this.autoSaveInterval) {
-				this.autoSaveInterval = setInterval(
-					this.autoSaveLoop.bind(this),
-					this.AUTO_SAVE_INTERVAL
-				);
+				this.autoSaveInterval = setInterval(() => {
+					this.autoSaveLoop();
+				}, this.AUTO_SAVE_INTERVAL);
 			}
 		} else {
 			clearInterval(this.autoSaveInterval);
@@ -692,7 +691,14 @@ export default class App extends Component {
 			'light-version'
 		);
 	}
-	autoSaveLoop() {}
+
+	// Keeps getting called after certain interval to auto-save current creation
+	// if it needs to be.
+	autoSaveLoop() {
+		if (this.isAutoSavingEnabled && this.state.unsavedEditCount) {
+			this.saveItem();
+		}
+	}
 
 	loginBtnClickHandler() {
 		this.setState({ isLoginModalOpen: true });

@@ -22,6 +22,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import Profile from './Profile';
 import { auth } from '../auth';
+import SupportDeveloperModal from './SupportDeveloperModal';
 
 if (module.hot) {
 	require('preact/debug');
@@ -46,6 +47,7 @@ export default class App extends Component {
 			isNotificationsModalOpen: false,
 			isLoginModalOpen: false,
 			isProfileModalOpen: false,
+			isSupportDeveloperModalOpen: false,
 			prefs: {},
 			currentItem: {
 				title: '',
@@ -117,7 +119,6 @@ export default class App extends Component {
 			this.updateProfileUi();
 		});
 	}
-
 	componentWillMount() {
 		var lastCode;
 		window.onunload = () => {
@@ -744,7 +745,7 @@ export default class App extends Component {
 	detachedPreviewBtnHandler() {
 		trackEvent('ui', 'detachPreviewBtnClick');
 
-		this.contentWrap.detachPreview()
+		this.contentWrap.detachPreview();
 	}
 
 	render() {
@@ -783,6 +784,11 @@ export default class App extends Component {
 						}
 						notificationsBtnClickHandler={() =>
 							this.setState({ isNotificationsModalOpen: true })
+						}
+						supportDeveloperBtnClickHandler={() =>
+							this.setState({
+								isSupportDeveloperModalOpen: true
+							})
 						}
 						detachedPreviewBtnHandler={this.detachedPreviewBtnHandler.bind(
 							this
@@ -866,6 +872,12 @@ export default class App extends Component {
 				<HelpModal
 					show={this.state.isHelpModalOpen}
 					closeHandler={() => this.setState({ isHelpModalOpen: false })}
+				/>
+				<SupportDeveloperModal
+					isOpen={this.state.isSupportDeveloperModalOpen}
+					closeHandler={() =>
+						this.setState({ isSupportDeveloperModalOpen: false })
+					}
 				/>
 
 				<div class="modal-overlay" />

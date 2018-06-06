@@ -197,7 +197,7 @@ export default class Footer extends Component {
 					</svg>
 				</a>
 				<a
-					d-click="openSupportDeveloperModal"
+					onClick={this.props.supportDeveloperBtnClickHandler}
 					data-event-action="supportDeveloperFooterBtnClick"
 					class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile"
 					aria-label="Support the developer by pledging some amount"

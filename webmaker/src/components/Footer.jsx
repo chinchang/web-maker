@@ -40,6 +40,7 @@ export default class Footer extends Component {
 
 					<a
 						href=""
+						onClick={this.props.codepenBtnClickHandler}
 						id="codepenBtn"
 						class="mode-btn  hint--rounded  hint--top-left  hide-on-mobile"
 						aria-label="Edit on CodePen"

@@ -799,6 +799,40 @@ export default class App extends Component {
 		trackEvent('ui', 'notificationButtonClick', version);
 		return false;
 	}
+	codepenBtnClickHandler(e) {
+		debugger;
+		if (this.state.currentItem.cssMode === CssModes.ACSS) {
+			alert("Oops! CodePen doesn't supports Atomic CSS currently.");
+			e.preventDefault();
+			return;
+		}
+		var json = {
+			title: 'A Web Maker experiment',
+			html: this.state.currentItem.html,
+			css: this.state.currentItem.css,
+			js: this.state.currentItem.js,
+
+			/* eslint-disable camelcase */
+			html_pre_processor: modes[this.state.currentItem.htmlMode].codepenVal,
+			css_pre_processor: modes[this.state.currentItem.cssMode].codepenVal,
+			js_pre_processor: modes[this.state.currentItem.jsMode].codepenVal,
+
+			css_external: this.state.currentItem.externalLibs.css
+				.split('\n')
+				.join(';'),
+			js_external: this.state.currentItem.externalLibs.js.split('\n').join(';')
+
+			/* eslint-enable camelcase */
+		};
+		if (!this.state.currentItem.title.match(/Untitled\s\d\d*-\d/)) {
+			json.title = this.state.currentItem.title;
+		}
+		json = JSON.stringify(json);
+		window.codepenForm.querySelector('input').value = json;
+		window.codepenForm.submit();
+		trackEvent('ui', 'openInCodepen');
+		e.preventDefault();
+	}
 
 	render() {
 		return (
@@ -845,6 +879,7 @@ export default class App extends Component {
 						detachedPreviewBtnHandler={this.detachedPreviewBtnHandler.bind(
 							this
 						)}
+						codepenBtnClickHandler={this.codepenBtnClickHandler.bind(this)}
 						hasUnseenChangelog={this.state.hasUnseenChangelog}
 					/>
 				</div>
@@ -1088,6 +1123,19 @@ export default class App extends Component {
 						</symbol>
 					</symbol>
 				</svg>
+				<form
+					style="display:none;"
+					action="https://codepen.io/pen/define"
+					method="POST"
+					target="_blank"
+					id="codepenForm"
+				>
+					<input
+						type="hidden"
+						name="data"
+						value="{&quot;title&quot;: &quot;New Pen!&quot;, &quot;html&quot;: &quot;<div>Hello, World!</div>&quot;}"
+					/>
+				</form>
 			</div>
 		);
 	}

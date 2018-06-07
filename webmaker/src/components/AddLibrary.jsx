@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import { jsLibs, cssLibs } from '../libraryList';
+import { trackEvent } from '../analytics';
 
 export default class AddLibrary extends Component {
 	constructor(props) {
@@ -21,7 +22,7 @@ export default class AddLibrary extends Component {
 			});
 		}
 
-		// trackEvent('ui', 'addLibrarySelect', target.selectedOptions[0].label);
+		trackEvent('ui', 'addLibrarySelect', target.selectedOptions[0].label);
 		this.props.onChange({ js: this.state.js, css: this.state.css });
 		// Reset the select to the default value
 		target.value = '';

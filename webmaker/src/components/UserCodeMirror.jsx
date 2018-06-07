@@ -108,9 +108,9 @@ export default class UserCodeMirror extends Component {
 			'Ctrl-Space': 'autocomplete'
 		});
 		if (!options.noAutocomplete) {
-			this.cm.on('inputRead', function onChange(editor, input) {
+			this.cm.on('inputRead', (editor, input) => {
 				if (
-					!prefs.autoComplete ||
+					!this.props.autoComplete ||
 					input.origin !== '+input' ||
 					input.text[0] === ';' ||
 					input.text[0] === ',' ||

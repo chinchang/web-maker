@@ -6,6 +6,7 @@ import { log, writeFile, loadJS, getCompleteHtml } from '../utils';
 import { SplitPane } from './SplitPane.jsx';
 import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
+import CodeMirrorBox from './CodeMirrorBox';
 import { deferred } from '../deferred';
 
 const BASE_PATH = chrome.extension || window.DEBUG ? '/' : '/app';
@@ -14,6 +15,9 @@ const minCodeWrapSize = 33;
 export default class ContentWrap extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			isConsoleOpen: false
+		};
 		this.updateTimer = null;
 		this.updateDelay = 500;
 		this.htmlMode = HtmlModes.HTML;
@@ -24,6 +28,12 @@ export default class ContentWrap extends Component {
 		this.codeInPreview = { html: null, css: null, js: null };
 		this.cmCodes = { html: props.currentItem.html, css: '', js: '' };
 		this.cm = {};
+		this.logCount = 0;
+
+		window.onMessageFromConsole = this.onMessageFromConsole.bind(this);
+
+		// `clearConsole` is on window because it gets called from inside iframe also.
+		window.clearConsole = this.clearConsole.bind(this);
 	}
 
 	onHtmlCodeChange(editor, change) {
@@ -188,6 +198,9 @@ export default class ContentWrap extends Component {
 		return !!item.title;
 	}
 	componentDidUpdate() {
+		// HACK: becuase its a DOM manipulation
+		window.logCountEl.textContent = this.logCount;
+
 		// log('🚀', 'didupdate', this.props.currentItem);
 		// if (this.isValidItem(this.props.currentItem)) {
 		// this.refreshEditor();
@@ -329,6 +342,14 @@ export default class ContentWrap extends Component {
 			e.currentTarget.parentElement.parentElement.parentElement;
 		this.toggleCodeWrapCollapse(codeWrapParent);
 		trackEvent('ui', 'paneCollapseBtnClick', codeWrapParent.dataset.type);
+	}
+	codeWrapHeaderDblClickHandler(e) {
+		if (!e.target.classList.contains('js-code-wrap__header')) {
+			return;
+		}
+		const codeWrapParent = e.target.parentElement;
+		this.toggleCodeWrapCollapse(codeWrapParent);
+		trackEvent('ui', 'paneHeaderDblClick', codeWrapParent.dataset.type);
 	}
 
 	resetSplitting() {
@@ -505,6 +526,64 @@ export default class ContentWrap extends Component {
 		var intervalID = window.setInterval(checkWindow.bind(this), 500);
 	}
 
+	onMessageFromConsole() {
+		const self = this;
+		/* eslint-disable no-param-reassign */
+		[...arguments].forEach(arg => {
+			if (
+				arg &&
+				arg.indexOf &&
+				arg.indexOf('filesystem:chrome-extension') !== -1
+			) {
+				arg = arg.replace(
+					/filesystem:chrome-extension.*\.js:(\d+):*(\d*)/g,
+					'script $1:$2'
+				);
+			}
+			try {
+				this.consoleCm.replaceRange(
+					arg +
+						' ' +
+						((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
+						'\n',
+					{
+						line: Infinity
+					}
+				);
+			} catch (e) {
+				this.consoleCm.replaceRange('🌀\n', {
+					line: Infinity
+				});
+			}
+			this.consoleCm.scrollTo(0, Infinity);
+			this.logCount++;
+		});
+		logCountEl.textContent = this.logCount;
+
+		/* eslint-enable no-param-reassign */
+	}
+
+	toggleConsole() {
+		this.setState({ isConsoleOpen: !this.state.isConsoleOpen });
+		trackEvent('ui', 'consoleToggle');
+	}
+	consoleHeaderDblClickHandler(e) {
+		if (!e.target.classList.contains('js-console__header')) {
+			return;
+		}
+		trackEvent('ui', 'consoleToggleDblClick');
+		this.toggleConsole();
+	}
+	clearConsole() {
+		this.consoleCm.setValue('');
+		this.logCount = 0;
+		window.logCountEl.textContent = this.logCount;
+	}
+	clearConsoleBtnClickHandler() {
+		this.clearConsole();
+		trackEvent('ui', 'consoleClearBtnClick');
+	}
+
 	render() {
 		return (
 			<SplitPane
@@ -540,6 +619,7 @@ export default class ContentWrap extends Component {
 						<div
 							class="js-code-wrap__header  code-wrap__header"
 							title="Double click to toggle code pane"
+							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
 						>
 							<label class="btn-group" dropdow title="Click to change">
 								<span id="js-html-mode-label" class="code-wrap__header-label">
@@ -586,6 +666,7 @@ export default class ContentWrap extends Component {
 						<div
 							class="js-code-wrap__header  code-wrap__header"
 							title="Double click to toggle code pane"
+							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
 						>
 							<label class="btn-group" title="Click to change">
 								<span id="js-css-mode-label" class="code-wrap__header-label">
@@ -646,6 +727,7 @@ export default class ContentWrap extends Component {
 						<div
 							class="js-code-wrap__header  code-wrap__header"
 							title="Double click to toggle code pane"
+							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
 						>
 							<label class="btn-group" title="Click to change">
 								<span id="js-js-mode-label" class="code-wrap__header-label">
@@ -680,6 +762,7 @@ export default class ContentWrap extends Component {
 									'CodeMirror-foldgutter'
 								]
 							}}
+							autoComplete={this.props.prefs.autoComplete}
 							onChange={this.onJsCodeChange.bind(this)}
 							onCreation={el => (this.cm.js = el)}
 						/>
@@ -694,11 +777,15 @@ export default class ContentWrap extends Component {
 						id="demo-frame"
 						allowfullscreen
 					/>
-					<div id="consoleEl" class="console is-minimized">
-						<div id="consoleLogEl" class="console__log" class="code">
+					<div
+						id="consoleEl"
+						class={`console ${this.state.isConsoleOpen ? '' : 'is-minimized'}`}
+					>
+						<div id="consoleLogEl" class="console__log">
 							<div
 								class="js-console__header  code-wrap__header"
 								title="Double click to toggle console"
+								onDblClick={this.toggleConsole.bind(this)}
 							>
 								<span class="code-wrap__header-label">
 									Console (<span id="logCountEl">0</span>)
@@ -707,7 +794,7 @@ export default class ContentWrap extends Component {
 									<a
 										class="code-wrap__header-btn"
 										title="Clear console (CTRL + L)"
-										d-click="onClearConsoleBtnClick"
+										onClick={this.clearConsoleBtnClickHandler.bind(this)}
 									>
 										<svg>
 											<use xlinkHref="#cancel-icon" />
@@ -716,10 +803,21 @@ export default class ContentWrap extends Component {
 									<a
 										class="code-wrap__header-btn  code-wrap__collapse-btn"
 										title="Toggle console"
-										d-click="toggleConsole"
+										onClick={this.toggleConsole.bind(this)}
 									/>
 								</div>
 							</div>
+							<CodeMirrorBox
+								options={{
+									mode: 'javascript',
+									lineWrapping: true,
+									theme: 'monokai',
+									foldGutter: true,
+									readOnly: true,
+									gutters: ['CodeMirror-foldgutter']
+								}}
+								onCreation={el => (this.consoleCm = el)}
+							/>
 						</div>
 						<div
 							id="consolePromptEl"

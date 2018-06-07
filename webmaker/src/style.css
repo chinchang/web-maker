@@ -1289,7 +1289,7 @@ body>#demo-frame {
 	transform: translateY(calc(100% - 29px));
 }
 
-.console .Codemirror {
+.console .CodeMirror {
 	height: calc(100% - 55px);
 }
 

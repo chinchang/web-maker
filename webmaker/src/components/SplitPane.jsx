@@ -3,17 +3,19 @@ import Split from 'split.js';
 import { log } from '../utils';
 
 export class SplitPane extends Component {
-	shouldComponentUpdate(nextProps, nextState) {
-		return (
-			nextProps.direction !== this.props.direction ||
-			nextProps.sizes.join('') !== this.props.sizes.join('')
-		);
-	}
+	// shouldComponentUpdate(nextProps, nextState) {
+	// 	return (
+	// 		nextProps.direction !== this.props.direction ||
+	// 		nextProps.sizes.join('') !== this.props.sizes.join('')
+	// 	);
+	// }
 	componentDidMount() {
 		this.updateSplit();
 	}
 	componentWillUpdate() {
-		this.splitInstance.destroy();
+		if (this.splitInstance) {
+			this.splitInstance.destroy();
+		}
 	}
 	componentDidUpdate() {
 		this.updateSplit();

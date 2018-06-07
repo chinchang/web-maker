@@ -258,44 +258,6 @@
 	}
 
 
-
-	function saveFile() {
-		var htmlPromise = computeHtml();
-		var cssPromise = computeCss();
-		var jsPromise = computeJs(false);
-		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
-			var html = result[0],
-				css = result[1],
-				js = result[2];
-
-			var fileContent = getCompleteHtml(html, css, js, true);
-
-			var d = new Date();
-			var fileName = [
-				'web-maker',
-				d.getFullYear(),
-				d.getMonth() + 1,
-				d.getDate(),
-				d.getHours(),
-				d.getMinutes(),
-				d.getSeconds()
-			].join('-');
-
-			if (currentItem.title) {
-				fileName = currentItem.title;
-			}
-			fileName += '.html';
-
-			var blob = new Blob([fileContent], {
-				type: 'text/html;charset=UTF-8'
-			});
-			utils.downloadFile(fileName, blob);
-
-			trackEvent('fn', 'saveFileComplete');
-		});
-	}
-
-
 	// Initialize codemirror in console
 	scope.consoleCm = CodeMirror(consoleLogEl, {
 		mode: 'javascript',
@@ -823,53 +785,6 @@
 		document.body.style.height = `${window.innerHeight}px`;
 
 
-
-		notificationsBtn.addEventListener('click', function () {
-			scope.toggleModal(notificationsModal);
-
-			if (
-				notificationsModal.classList.contains('is-modal-visible') &&
-				!hasSeenNotifications
-			) {
-				hasSeenNotifications = true;
-				notificationsBtn.classList.remove('has-new');
-				window.db.setUserLastSeenVersion(version);
-			}
-			trackEvent('ui', 'notificationButtonClick', version);
-			return false;
-		});
-
-		codepenBtn.addEventListener('click', function (e) {
-			if (cssMode === CssModes.ACSS) {
-				alert("Oops! CodePen doesn't supports Atomic CSS currently.");
-				e.preventDefault();
-				return;
-			}
-			var json = {
-				title: 'A Web Maker experiment',
-				html: scope.cm.html.getValue(),
-				css: scope.cm.css.getValue(),
-				js: scope.cm.js.getValue(),
-
-				/* eslint-disable camelcase */
-				html_pre_processor: modes[htmlMode].codepenVal,
-				css_pre_processor: modes[cssMode].codepenVal,
-				js_pre_processor: modes[jsMode].codepenVal,
-
-				css_external: externalCssTextarea.value.split('\n').join(';'),
-				js_external: externalJsTextarea.value.split('\n').join(';')
-
-				/* eslint-enable camelcase */
-			};
-			if (!currentItem.title.match(/Untitled\s\d\d*-\d/)) {
-				json.title = currentItem.title;
-			}
-			json = JSON.stringify(json);
-			codepenForm.querySelector('input').value = json;
-			codepenForm.submit();
-			trackEvent('ui', 'openInCodepen');
-			e.preventDefault();
-		});
 
 		utils.onButtonClick(saveHtmlBtn, function () {
 			saveFile();

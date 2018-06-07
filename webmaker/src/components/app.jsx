@@ -112,9 +112,9 @@ export default class App extends Component {
 					}
 				});
 			} else {
+				// User is signed out.
 				this.setState({ user: undefined });
 				delete window.user;
-				// User is signed out.
 			}
 			this.updateProfileUi();
 		});
@@ -293,7 +293,6 @@ export default class App extends Component {
 		// setTimeout(() => $('#js-saved-items-wrap').style.overflowY = 'auto', 1000);
 	}
 	toggleSavedItemsPane(shouldOpen) {
-		// const savedItemsPane = $('#js-saved-items-pane');
 		this.setState({ isSavedItemPaneOpen: !this.state.isSavedItemPaneOpen });
 
 		if (this.state.isSavedItemPaneOpen) {
@@ -366,7 +365,6 @@ export default class App extends Component {
 			});
 			this.populateItemsInSavedPane(items);
 		});
-		// this.setState({ isSavedItemPaneOpen: true });
 	}
 	openAddLibrary() {
 		this.setState({ isAddLibraryModalOpen: true });
@@ -464,7 +462,7 @@ export default class App extends Component {
 		this.setState({
 			currentItem: { ...this.state.currentItem }
 		});
-		// this.contentWrap.setPreviewContent(true);
+		this.contentWrap.setPreviewContent(true);
 		alertsService.add('Libraries updated.');
 	}
 	updateExternalLibCount() {
@@ -748,6 +746,10 @@ export default class App extends Component {
 			this.createNewItem();
 		}
 	}
+	openBtnClickHandler() {
+		trackEvent('ui', 'openBtnClick');
+		this.openSavedItemsPane();
+	}
 	detachedPreviewBtnHandler() {
 		trackEvent('ui', 'detachPreviewBtnClick');
 
@@ -760,7 +762,7 @@ export default class App extends Component {
 				<div class="main-container">
 					<MainHeader
 						externalLibCount={this.state.externalLibCount}
-						openBtnHandler={this.openSavedItemsPane.bind(this)}
+						openBtnHandler={this.openBtnClickHandler.bind(this)}
 						newBtnHandler={this.newBtnClickHandler.bind(this)}
 						saveBtnHandler={this.saveBtnClickHandler.bind(this)}
 						loginBtnHandler={this.loginBtnClickHandler.bind(this)}

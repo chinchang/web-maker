@@ -152,10 +152,10 @@ export default class ContentWrap extends Component {
 		var blobjs = new Blob([js], { type: 'text/plain;charset=UTF-8' });
 
 		// Track if people have written code.
-		// if (!trackEvent.hasTrackedCode && (html || css || js)) {
-		// trackEvent('fn', 'hasCode');
-		// trackEvent.hasTrackedCode = true;
-		// }
+		if (!trackEvent.hasTrackedCode && (html || css || js)) {
+			trackEvent('fn', 'hasCode');
+			trackEvent.hasTrackedCode = true;
+		}
 
 		if (shouldInlineJs) {
 			if (this.detachedWindow) {
@@ -194,11 +194,11 @@ export default class ContentWrap extends Component {
 	 * @param {boolean} isManual Is this a manual preview request from user?
 	 */
 	setPreviewContent(isForced, isManual) {
-		if (!this.prefs.autoPreview && !isManual) {
-			// return;
+		if (!this.props.prefs.autoPreview && !isManual) {
+			return;
 		}
 
-		if (!this.prefs.preserveConsoleLogs) {
+		if (!this.props.prefs.preserveConsoleLogs) {
 			this.clearConsole();
 		}
 
@@ -318,7 +318,7 @@ export default class ContentWrap extends Component {
 			this.cm[type].setOption('tabSize', +prefs.indentSize);
 			this.cm[type].setOption('theme', prefs.editorTheme);
 
-			// this.cm[type].setOption('keyMap', prefs.keymap);
+			this.cm[type].setOption('keyMap', prefs.keymap);
 			this.cm[type].setOption('lineWrapping', prefs.lineWrap);
 			this.cm[type].refresh();
 		});
@@ -634,6 +634,7 @@ export default class ContentWrap extends Component {
 								gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
 								noAutocomplete: true,
 								matchTags: { bothTags: true }
+								// emmet: true
 							}}
 							onChange={this.onHtmlCodeChange.bind(this)}
 							onCreation={el => (this.cm.html = el)}
@@ -691,14 +692,13 @@ export default class ContentWrap extends Component {
 									'error-gutter',
 									'CodeMirror-linenumbers',
 									'CodeMirror-foldgutter'
-								],
-								noAutocomplete: true
-
+								]
 								// emmet: true
 							}}
 							onChange={this.onCssCodeChange.bind(this)}
 							onCreation={el => (this.cm.css = el)}
 						/>
+						{/* Inlet(scope.cm.css); */}
 					</div>
 					<div
 						data-code-wrap-id="2"
@@ -741,12 +741,12 @@ export default class ContentWrap extends Component {
 									'error-gutter',
 									'CodeMirror-linenumbers',
 									'CodeMirror-foldgutter'
-								],
-								noAutocomplete: true
+								]
 							}}
 							onChange={this.onJsCodeChange.bind(this)}
 							onCreation={el => (this.cm.js = el)}
 						/>
+						{/* Inlet(scope.cm.js); */}
 					</div>
 				</SplitPane>
 				<div class="demo-side" id="js-demo-side">

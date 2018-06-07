@@ -51,7 +51,7 @@ export default class UserCodeMirror extends Component {
 			matchBrackets: true,
 			matchTags: options.matchTags || false,
 			tabMode: 'indent',
-			// keyMap: 'sublime',
+			keyMap: 'sublime',
 			theme: 'monokai',
 			lint: !!options.lint,
 			tabSize: 2,

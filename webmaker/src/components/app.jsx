@@ -9,7 +9,7 @@ import AddLibrary from './AddLibrary.jsx';
 import Modal from './Modal.jsx';
 import HelpModal from './HelpModal.jsx';
 import Login from './Login.jsx';
-import { log, generateRandomId, semverCompare } from '../utils';
+import { log, generateRandomId, semverCompare, saveAsHtml } from '../utils';
 import { itemService } from '../itemService';
 import '../db';
 import Notifications from './Notifications';
@@ -446,40 +446,6 @@ export default class App extends Component {
 		});
 	}
 
-	saveFile() {
-		var htmlPromise = computeHtml();
-		var cssPromise = computeCss();
-		var jsPromise = computeJs(false);
-		Promise.all([htmlPromise, cssPromise, jsPromise]).then(function(result) {
-			var html = result[0],
-				css = result[1],
-				js = result[2];
-
-			var fileContent = getCompleteHtml(html, css, js, true);
-
-			var d = new Date();
-			var fileName = [
-				'web-maker',
-				d.getFullYear(),
-				d.getMonth() + 1,
-				d.getDate(),
-				d.getHours(),
-				d.getMinutes(),
-				d.getSeconds()
-			].join('-');
-
-			if (this.state.currentItem.title) {
-				fileName = this.state.currentItem.title;
-			}
-			fileName += '.html';
-
-			var blob = new Blob([fileContent], { type: 'text/html;charset=UTF-8' });
-			utils.downloadFile(fileName, blob);
-
-			trackEvent('fn', 'saveFileComplete');
-		});
-	}
-
 	closeAllOverlays() {
 		if (this.state.isSavedItemPaneOpen) {
 			this.setState({ isSavedItemPaneOpen: false });
@@ -833,6 +799,11 @@ export default class App extends Component {
 		trackEvent('ui', 'openInCodepen');
 		e.preventDefault();
 	}
+	saveHtmlBtnClickHandler(e) {
+		saveAsHtml(this.state.currentItem);
+		trackEvent('ui', 'saveHtmlClick');
+		e.preventDefault();
+	}
 
 	render() {
 		return (
@@ -880,6 +851,7 @@ export default class App extends Component {
 							this
 						)}
 						codepenBtnClickHandler={this.codepenBtnClickHandler.bind(this)}
+						saveHtmlBtnClickHandler={this.saveHtmlBtnClickHandler.bind(this)}
 						hasUnseenChangelog={this.state.hasUnseenChangelog}
 					/>
 				</div>

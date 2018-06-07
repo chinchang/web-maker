@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 import UserCodeMirror from './UserCodeMirror.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
-import { log, writeFile, loadJS } from '../utils';
+import { log, writeFile, loadJS, getCompleteHtml } from '../utils';
 import { SplitPane } from './SplitPane.jsx';
 import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
@@ -76,78 +76,15 @@ export default class ContentWrap extends Component {
 	}
 	clearConsole() {}
 
-	/* eslint max-params: ["error", 4] */
-	getCompleteHtml(html, css, js, isForExport) {
-		if (!this.props.currentItem) {
-			return '';
-		}
-		var externalJs = this.props.currentItem.externalLibs.js
-			.split('\n')
-			.reduce(function(scripts, url) {
-				return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
-			}, '');
-		var externalCss = this.props.currentItem.externalLibs.css
-			.split('\n')
-			.reduce(function(links, url) {
-				return (
-					links +
-					(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
-				);
-			}, '');
-		var contents =
-			'<!DOCTYPE html>\n' +
-			'<html>\n<head>\n' +
-			'<meta charset="UTF-8" />\n' +
-			externalCss +
-			'\n' +
-			'<style id="webmakerstyle">\n' +
-			css +
-			'\n</style>\n' +
-			'</head>\n' +
-			'<body>\n' +
-			html +
-			'\n' +
-			externalJs +
-			'\n';
-
-		if (!isForExport) {
-			contents +=
-				'<script src="' +
-				(chrome.extension
-					? chrome.extension.getURL('lib/screenlog.js')
-					: `${location.origin}${BASE_PATH}/lib/screenlog.js`) +
-				'"></script>';
-		}
-
-		if (this.jsMode === JsModes.ES6) {
-			contents +=
-				'<script src="' +
-				(chrome.extension
-					? chrome.extension.getURL('lib/transpilers/babel-polyfill.min.js')
-					: `${
-							location.origin
-						}${BASE_PATH}/lib/transpilers/babel-polyfill.min.js`) +
-				'"></script>';
-		}
-
-		if (typeof js === 'string') {
-			contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';
-		} else {
-			var origin = chrome.i18n.getMessage()
-				? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
-				: `${location.origin}`;
-			contents +=
-				'<script src="' + `filesystem:${origin}/temporary/script.js` + '">';
-		}
-		contents += '\n</script>\n</body>\n</html>';
-
-		return contents;
-	}
-
 	createPreviewFile(html, css, js) {
 		const shouldInlineJs =
 			!window.webkitRequestFileSystem || !window.IS_EXTENSION;
-		var contents = this.getCompleteHtml(html, css, shouldInlineJs ? js : null);
+		var contents = getCompleteHtml(
+			html,
+			css,
+			shouldInlineJs ? js : null,
+			this.props.currentItem
+		);
 		var blob = new Blob([contents], { type: 'text/plain;charset=UTF-8' });
 		var blobjs = new Blob([js], { type: 'text/plain;charset=UTF-8' });
 

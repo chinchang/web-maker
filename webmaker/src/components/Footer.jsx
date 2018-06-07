@@ -17,6 +17,7 @@ export default class Footer extends Component {
 			<div id="footer" class="footer">
 				<div class="footer__right  fr">
 					<a
+						onClick={this.props.saveHtmlBtnClickHandler}
 						id="saveHtmlBtn"
 						class="mode-btn  hint--rounded  hint--top-left hide-on-mobile"
 						data-hint="Save as HTML file"

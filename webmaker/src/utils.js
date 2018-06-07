@@ -1,114 +1,123 @@
-	import {
-		trackEvent
-	} from './analytics';
+import {
+	trackEvent
+} from './analytics';
 
-	import {
-		deferred
-	} from './deferred';
-	window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
+import {
+	computeHtml,
+	computeCss,
+	computeJs
+} from './computes';
+import {
+	JsModes
+} from './codeModes';
+import {
+	deferred
+} from './deferred';
 
-	window.$ = document.querySelector.bind(document);
-	window.$all = selector => [...document.querySelectorAll(selector)];
-	var alphaNum =
-		'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
+window.$ = document.querySelector.bind(document);
+window.$all = selector => [...document.querySelectorAll(selector)];
+const BASE_PATH = chrome.extension || window.DEBUG ? '/' : '/app';
 
-	/**
-	 * The following 2 functions are supposed to find the next/previous sibling until the
-	 * passed `selector` is matched. But for now it actually finds the next/previous
-	 * element of `this` element in the list of `selector` matched element inside `this`'s
-	 * parent.
-	 * @param  Selector that should match for next siblings
-	 * @return element Next element that mathes `selector`
-	 */
-	Node.prototype.nextUntil = function (selector) {
-		const siblings = [...this.parentNode.querySelectorAll(selector)];
-		const index = siblings.indexOf(this);
-		return siblings[index + 1];
+var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+/**
+ * The following 2 functions are supposed to find the next/previous sibling until the
+ * passed `selector` is matched. But for now it actually finds the next/previous
+ * element of `this` element in the list of `selector` matched element inside `this`'s
+ * parent.
+ * @param  Selector that should match for next siblings
+ * @return element Next element that mathes `selector`
+ */
+Node.prototype.nextUntil = function (selector) {
+	const siblings = [...this.parentNode.querySelectorAll(selector)];
+	const index = siblings.indexOf(this);
+	return siblings[index + 1];
+};
+
+// Safari doesn't have this!
+window.requestIdleCallback =
+	window.requestIdleCallback ||
+	function (fn) {
+		setTimeout(fn, 10);
 	};
 
-	// Safari doesn't have this!
-	window.requestIdleCallback =
-		window.requestIdleCallback ||
-		function (fn) {
-			setTimeout(fn, 10);
-		};
+/*
+ * @param  Selector that should match for next siblings
+ * @return element Next element that mathes `selector`
+ */
+Node.prototype.previousUntil = function (selector) {
+	const siblings = [...this.parentNode.querySelectorAll(selector)];
+	const index = siblings.indexOf(this);
+	return siblings[index - 1];
+};
 
-	/*
-	 * @param  Selector that should match for next siblings
-	 * @return element Next element that mathes `selector`
-	 */
-	Node.prototype.previousUntil = function (selector) {
-		const siblings = [...this.parentNode.querySelectorAll(selector)];
-		const index = siblings.indexOf(this);
-		return siblings[index - 1];
-	};
-
-	// https://github.com/substack/semver-compare/blob/master/index.js
-	export function semverCompare(a, b) {
-		var pa = a.split('.');
-		var pb = b.split('.');
-		for (var i = 0; i < 3; i++) {
-			var na = Number(pa[i]);
-			var nb = Number(pb[i]);
-			if (na > nb) {
-				return 1;
-			}
-			if (nb > na) {
-				return -1;
-			}
-			if (!isNaN(na) && isNaN(nb)) {
-				return 1;
-			}
-			if (isNaN(na) && !isNaN(nb)) {
-				return -1;
-			}
+// https://github.com/substack/semver-compare/blob/master/index.js
+export function semverCompare(a, b) {
+	var pa = a.split('.');
+	var pb = b.split('.');
+	for (var i = 0; i < 3; i++) {
+		var na = Number(pa[i]);
+		var nb = Number(pb[i]);
+		if (na > nb) {
+			return 1;
 		}
-		return 0;
-	}
-
-	export function generateRandomId(len) {
-		var length = len || 10;
-		var id = '';
-		for (var i = length; i--;) {
-			id += alphaNum[~~(Math.random() * alphaNum.length)];
+		if (nb > na) {
+			return -1;
 		}
-		return id;
-	}
-
-	export function onButtonClick(btn, listener) {
-		btn.addEventListener('click', function buttonClickListener(e) {
-			listener(e);
-			return false;
-		});
-	}
-
-	export function log() {
-		if (window.DEBUG) {
-			console.log(Date.now(), ...arguments);
+		if (!isNaN(na) && isNaN(nb)) {
+			return 1;
+		}
+		if (isNaN(na) && !isNaN(nb)) {
+			return -1;
 		}
 	}
+	return 0;
+}
 
-	/**
-	 * Adds timed limit on the loops found in the passed code.
-	 * Contributed by Ariya Hidayat!
-	 * @param code {string}	Code to be protected from infinite loops.
-	 */
-	export function addInfiniteLoopProtection(code, {
-		timeout
-	}) {
-		var loopId = 1;
-		var patches = [];
-		var varPrefix = '_wmloopvar';
-		var varStr = 'var %d = Date.now();\n';
-		var checkStr = `\nif (Date.now() - %d > ${timeout}) { window.top.previewException(new Error("Infinite loop")); break;}\n`;
+export function generateRandomId(len) {
+	var length = len || 10;
+	var id = '';
+	for (var i = length; i--;) {
+		id += alphaNum[~~(Math.random() * alphaNum.length)];
+	}
+	return id;
+}
 
-		esprima.parse(code, {
+export function onButtonClick(btn, listener) {
+	btn.addEventListener('click', function buttonClickListener(e) {
+		listener(e);
+		return false;
+	});
+}
+
+export function log() {
+	if (window.DEBUG) {
+		console.log(Date.now(), ...arguments);
+	}
+}
+
+/**
+ * Adds timed limit on the loops found in the passed code.
+ * Contributed by Ariya Hidayat!
+ * @param code {string}	Code to be protected from infinite loops.
+ */
+export function addInfiniteLoopProtection(code, {
+	timeout
+}) {
+	var loopId = 1;
+	var patches = [];
+	var varPrefix = '_wmloopvar';
+	var varStr = 'var %d = Date.now();\n';
+	var checkStr = `\nif (Date.now() - %d > ${timeout}) { window.top.previewException(new Error("Infinite loop")); break;}\n`;
+
+	esprima.parse(
+		code, {
 			tolerant: true,
 			range: true,
 			jsx: true
-		}, function (
-			node
-		) {
+		},
+		function (node) {
 			switch (node.type) {
 				case 'DoWhileStatement':
 				case 'ForStatement':
@@ -145,159 +154,263 @@
 				default:
 					break;
 			}
+		}
+	);
+
+	/* eslint-disable no-param-reassign */
+	patches
+		.sort(function (a, b) {
+			return b.pos - a.pos;
+		})
+		.forEach(function (patch) {
+			code = code.slice(0, patch.pos) + patch.str + code.slice(patch.pos);
 		});
 
-		/* eslint-disable no-param-reassign */
-		patches
-			.sort(function (a, b) {
-				return b.pos - a.pos;
-			})
-			.forEach(function (patch) {
-				code = code.slice(0, patch.pos) + patch.str + code.slice(patch.pos);
-			});
+	/* eslint-disable no-param-reassign */
+	return code;
+}
 
-		/* eslint-disable no-param-reassign */
-		return code;
+export function getHumanDate(timestamp) {
+	var d = new Date(timestamp);
+	var retVal =
+		d.getDate() +
+		' ' + [
+			'January',
+			'February',
+			'March',
+			'April',
+			'May',
+			'June',
+			'July',
+			'August',
+			'September',
+			'October',
+			'November',
+			'December'
+		][d.getMonth()] +
+		' ' +
+		d.getFullYear();
+	return retVal;
+}
+
+// create a one-time event
+export function once(node, type, callback) {
+	// create event
+	node.addEventListener(type, function (e) {
+		// remove event
+		e.target.removeEventListener(type, arguments.callee);
+		// call handler
+		return callback(e);
+	});
+}
+
+export function downloadFile(fileName, blob) {
+	function downloadWithAnchor() {
+		var a = document.createElement('a');
+		a.href = window.URL.createObjectURL(blob);
+		a.download = fileName;
+		a.style.display = 'none';
+		document.body.appendChild(a);
+		a.click();
+		a.remove();
 	}
-
-	export function getHumanDate(timestamp) {
-		var d = new Date(timestamp);
-		var retVal =
-			d.getDate() +
-			' ' + [
-				'January',
-				'February',
-				'March',
-				'April',
-				'May',
-				'June',
-				'July',
-				'August',
-				'September',
-				'October',
-				'November',
-				'December'
-			][d.getMonth()] +
-			' ' +
-			d.getFullYear();
-		return retVal;
-	}
-
-	// create a one-time event
-	export function once(node, type, callback) {
-		// create event
-		node.addEventListener(type, function (e) {
-			// remove event
-			e.target.removeEventListener(type, arguments.callee);
-			// call handler
-			return callback(e);
-		});
-	}
-
-	export function downloadFile(fileName, blob) {
-		function downloadWithAnchor() {
-			var a = document.createElement('a');
-			a.href = window.URL.createObjectURL(blob);
-			a.download = fileName;
-			a.style.display = 'none';
-			document.body.appendChild(a);
-			a.click();
-			a.remove();
-		}
-		if (window.IS_EXTENSION) {
-			chrome.downloads.download({
-					url: window.URL.createObjectURL(blob),
-					filename: fileName,
-					saveAs: true
-				},
-				() => {
-					// If there was an error, just download the file using ANCHOR method.
-					if (chrome.runtime.lastError) {
-						downloadWithAnchor();
-					}
-				}
-			);
-		} else {
-			downloadWithAnchor();
-		}
-	}
-
-	export function writeFile(name, blob, cb) {
-		var fileWritten = false;
-
-		function getErrorHandler(type) {
-			return function () {
-				log(arguments);
-				trackEvent('fn', 'error', type);
-				// When there are too many write errors, show a message.
-				writeFile.errorCount = (writeFile.errorCount || 0) + 1;
-				if (writeFile.errorCount === 4) {
-					setTimeout(function () {
-						alert(
-							"Oops! Seems like your preview isn't updating. It's recommended to switch to the web app: https://webmakerapp.com/app/.\n\n If you still want to get the extension working, please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart browser\n - Update browser\n - Reinstall Web Maker (don't forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp."
-						);
-						trackEvent('ui', 'writeFileMessageSeen');
-					}, 1000);
-				}
-			};
-		}
-
-		// utils.log('writing file ', name);
-		window.webkitRequestFileSystem(
-			window.TEMPORARY,
-			1024 * 1024 * 5,
-			function (fs) {
-				fs.root.getFile(
-					name, {
-						create: true
-					},
-					function (fileEntry) {
-						fileEntry.createWriter(fileWriter => {
-							function onWriteComplete() {
-								if (fileWritten) {
-									// utils.log('file written ', name);
-									return cb();
-								}
-								fileWritten = true;
-								// Set the write pointer to starting of file
-								fileWriter.seek(0);
-								fileWriter.write(blob);
-								return false;
-							}
-							fileWriter.onwriteend = onWriteComplete;
-							// Empty the file contents
-							fileWriter.truncate(0);
-							// utils.log('truncating file ', name);
-						}, getErrorHandler('createWriterFail'));
-					},
-					getErrorHandler('getFileFail')
-				);
-			},
-			getErrorHandler('webkitRequestFileSystemFail')
-		);
-	}
-
-	export function loadJS(src) {
-		var d = deferred();
-		var ref = window.document.getElementsByTagName('script')[0];
-		var script = window.document.createElement('script');
-		script.src = src;
-		script.async = true;
-		ref.parentNode.insertBefore(script, ref);
-		script.onload = function () {
-			d.resolve();
-		};
-		return d.promise;
-	};
-
-	window.chrome = window.chrome || {};
-	window.chrome.i18n = {
-		getMessage: () => {}
-	};
-
-	window.IS_EXTENSION = !!window.chrome.extension;
 	if (window.IS_EXTENSION) {
-		document.body.classList.add('is-extension');
+		chrome.downloads.download({
+				url: window.URL.createObjectURL(blob),
+				filename: fileName,
+				saveAs: true
+			},
+			() => {
+				// If there was an error, just download the file using ANCHOR method.
+				if (chrome.runtime.lastError) {
+					downloadWithAnchor();
+				}
+			}
+		);
 	} else {
-		document.body.classList.add('is-app');
+		downloadWithAnchor();
 	}
+}
+
+export function writeFile(name, blob, cb) {
+	var fileWritten = false;
+
+	function getErrorHandler(type) {
+		return function () {
+			log(arguments);
+			trackEvent('fn', 'error', type);
+			// When there are too many write errors, show a message.
+			writeFile.errorCount = (writeFile.errorCount || 0) + 1;
+			if (writeFile.errorCount === 4) {
+				setTimeout(function () {
+					alert(
+						"Oops! Seems like your preview isn't updating. It's recommended to switch to the web app: https://webmakerapp.com/app/.\n\n If you still want to get the extension working, please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart browser\n - Update browser\n - Reinstall Web Maker (don't forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp."
+					);
+					trackEvent('ui', 'writeFileMessageSeen');
+				}, 1000);
+			}
+		};
+	}
+
+	// utils.log('writing file ', name);
+	window.webkitRequestFileSystem(
+		window.TEMPORARY,
+		1024 * 1024 * 5,
+		function (fs) {
+			fs.root.getFile(
+				name, {
+					create: true
+				},
+				function (fileEntry) {
+					fileEntry.createWriter(fileWriter => {
+						function onWriteComplete() {
+							if (fileWritten) {
+								// utils.log('file written ', name);
+								return cb();
+							}
+							fileWritten = true;
+							// Set the write pointer to starting of file
+							fileWriter.seek(0);
+							fileWriter.write(blob);
+							return false;
+						}
+						fileWriter.onwriteend = onWriteComplete;
+						// Empty the file contents
+						fileWriter.truncate(0);
+						// utils.log('truncating file ', name);
+					}, getErrorHandler('createWriterFail'));
+				},
+				getErrorHandler('getFileFail')
+			);
+		},
+		getErrorHandler('webkitRequestFileSystemFail')
+	);
+}
+
+export function loadJS(src) {
+	var d = deferred();
+	var ref = window.document.getElementsByTagName('script')[0];
+	var script = window.document.createElement('script');
+	script.src = src;
+	script.async = true;
+	ref.parentNode.insertBefore(script, ref);
+	script.onload = function () {
+		d.resolve();
+	};
+	return d.promise;
+}
+
+export function getCompleteHtml(html, css, js, item, isForExport) {
+	if (!item) {
+		return '';
+	}
+	var externalJs = item.externalLibs.js
+		.split('\n')
+		.reduce(function (scripts, url) {
+			return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
+		}, '');
+	var externalCss = item.externalLibs.css
+		.split('\n')
+		.reduce(function (links, url) {
+			return (
+				links +
+				(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
+			);
+		}, '');
+	var contents =
+		'<!DOCTYPE html>\n' +
+		'<html>\n<head>\n' +
+		'<meta charset="UTF-8" />\n' +
+		externalCss +
+		'\n' +
+		'<style id="webmakerstyle">\n' +
+		css +
+		'\n</style>\n' +
+		'</head>\n' +
+		'<body>\n' +
+		html +
+		'\n' +
+		externalJs +
+		'\n';
+
+	if (!isForExport) {
+		contents +=
+			'<script src="' +
+			(chrome.extension ?
+				chrome.extension.getURL('lib/screenlog.js') :
+				`${location.origin}${BASE_PATH}/lib/screenlog.js`) +
+			'"></script>';
+	}
+
+	if (item.jsMode === JsModes.ES6) {
+		contents +=
+			'<script src="' +
+			(chrome.extension ?
+				chrome.extension.getURL('lib/transpilers/babel-polyfill.min.js') :
+				`${
+						location.origin
+					}${BASE_PATH}/lib/transpilers/babel-polyfill.min.js`) +
+			'"></script>';
+	}
+
+	if (typeof js === 'string') {
+		contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';
+	} else {
+		var origin = chrome.i18n.getMessage() ?
+			`chrome-extension://${chrome.i18n.getMessage('@@extension_id')}` :
+			`${location.origin}`;
+		contents +=
+			'<script src="' + `filesystem:${origin}/temporary/script.js` + '">';
+	}
+	contents += '\n</script>\n</body>\n</html>';
+
+	return contents;
+}
+
+export function saveAsHtml(item) {
+	var htmlPromise = computeHtml(item.html, item.htmlMode);
+	var cssPromise = computeCss(item.css, item.cssMode);
+	var jsPromise = computeJs(item.js, item.jsMode, false);
+	Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
+		var html = result[0],
+			css = result[1],
+			js = result[2];
+
+		var fileContent = getCompleteHtml(html, css, js, item, true);
+
+		var d = new Date();
+		var fileName = [
+			'web-maker',
+			d.getFullYear(),
+			d.getMonth() + 1,
+			d.getDate(),
+			d.getHours(),
+			d.getMinutes(),
+			d.getSeconds()
+		].join('-');
+
+		if (item.title) {
+			fileName = item.title;
+		}
+		fileName += '.html';
+
+		var blob = new Blob([fileContent], {
+			type: 'text/html;charset=UTF-8'
+		});
+		downloadFile(fileName, blob);
+
+		trackEvent('fn', 'saveFileComplete');
+	});
+}
+
+window.chrome = window.chrome || {};
+window.chrome.i18n = {
+	getMessage: () => {}
+};
+
+window.IS_EXTENSION = !!window.chrome.extension;
+if (window.IS_EXTENSION) {
+	document.body.classList.add('is-extension');
+} else {
+	document.body.classList.add('is-app');
+}

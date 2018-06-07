@@ -124,7 +124,9 @@ export default class Footer extends Component {
 					<a
 						onClick={this.props.notificationsBtnClickHandler}
 						id="notificationsBtn"
-						class="notifications-btn  mode-btn  hint--top-left  hint--rounded"
+						class={`notifications-btn  mode-btn  hint--top-left  hint--rounded ${
+							this.props.hasUnseenChangelog ? 'has-new' : ''
+						}`}
 						aria-label="Notifications"
 					>
 						<svg viewBox="0 0 24 24">

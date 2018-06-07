@@ -9,7 +9,7 @@ import AddLibrary from './AddLibrary.jsx';
 import Modal from './Modal.jsx';
 import HelpModal from './HelpModal.jsx';
 import Login from './Login.jsx';
-import { log, generateRandomId } from '../utils';
+import { log, generateRandomId, semverCompare } from '../utils';
 import { itemService } from '../itemService';
 import '../db';
 import Notifications from './Notifications';
@@ -33,6 +33,7 @@ const LocalStorageKeys = {
 	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
 };
 const UNSAVED_WARNING_COUNT = 15;
+const version = '3.2.0';
 
 export default class App extends Component {
 	constructor() {
@@ -167,6 +168,38 @@ export default class App extends Component {
 			Object.assign(this.state.prefs, result);
 			this.setState({ prefs: this.state.prefs });
 			this.updateSetting();
+		});
+
+		// Check for new version notifications
+		db.getUserLastSeenVersion().then(lastSeenVersion => {
+			// Check if new user
+			if (!lastSeenVersion) {
+				this.setState({
+					isOnboardModalOpen: true
+				});
+				if (document.cookie.indexOf('onboarded') === -1) {
+					trackEvent('ui', 'onboardModalSeen', version);
+					document.cookie = 'onboarded=1';
+				}
+				window.db.setUserLastSeenVersion(version);
+				// set some initial preferences on closing the onboard modal
+				// Old onboarding.
+				// utils.once(document, 'overlaysClosed', function() {});
+			}
+			// If its an upgrade
+			if (
+				lastSeenVersion &&
+				semverCompare(lastSeenVersion, version) === -1 &&
+				!window.localStorage.pledgeModalSeen
+			) {
+				scope.openSupportDeveloperModal();
+				window.localStorage.pledgeModalSeen = true;
+			}
+
+			if (!lastSeenVersion || semverCompare(lastSeenVersion, version) === -1) {
+				this.setState({ hasUnseenChangelog: true });
+				this.hasSeenNotifications = false;
+			}
 		});
 	}
 	updateProfileUi() {
@@ -755,6 +788,17 @@ export default class App extends Component {
 
 		this.contentWrap.detachPreview();
 	}
+	notificationsBtnClickHandler() {
+		this.setState({ isNotificationsModalOpen: true });
+
+		if (this.state.isNotificationsModalOpen && !this.hasSeenNotifications) {
+			this.hasSeenNotifications = true;
+			this.setState({ hasUnseenChangelog: false });
+			window.db.setUserLastSeenVersion(version);
+		}
+		trackEvent('ui', 'notificationButtonClick', version);
+		return false;
+	}
 
 	render() {
 		return (
@@ -791,7 +835,7 @@ export default class App extends Component {
 							this.setState({ isSettingsModalOpen: true })
 						}
 						notificationsBtnClickHandler={() =>
-							this.setState({ isNotificationsModalOpen: true })
+							this.setState({ notificationsBtnClickHandler: true })
 						}
 						supportDeveloperBtnClickHandler={() =>
 							this.setState({
@@ -801,6 +845,7 @@ export default class App extends Component {
 						detachedPreviewBtnHandler={this.detachedPreviewBtnHandler.bind(
 							this
 						)}
+						hasUnseenChangelog={this.state.hasUnseenChangelog}
 					/>
 				</div>
 

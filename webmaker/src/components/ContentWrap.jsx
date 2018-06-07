@@ -197,6 +197,9 @@ export default class ContentWrap extends Component {
 	isValidItem(item) {
 		return !!item.title;
 	}
+	shouldComponentUpdate(nextProps, nextState) {
+		return this.state.isConsoleOpen !== nextState.isConsoleOpen;
+	}
 	componentDidUpdate() {
 		// HACK: becuase its a DOM manipulation
 		window.logCountEl.textContent = this.logCount;
@@ -241,8 +244,10 @@ export default class ContentWrap extends Component {
 			prefs.fontSize,
 			10
 		)}px`;
-
-		// consoleEl.querySelector('.CodeMirror').style.fontSize = prefs.fontSize;
+		window.consoleEl.querySelector('.CodeMirror').style.fontSize = `${parseInt(
+			prefs.fontSize,
+			10
+		)}px`;
 
 		// Replace correct css file in LINK tags's href
 		window.editorThemeLinkTag.href = `lib/codemirror/theme/${
@@ -257,6 +262,7 @@ export default class ContentWrap extends Component {
 		// window.customEditorFontInput.classList[
 		// 	prefs.editorFont === 'other' ? 'remove' : 'add'
 		// ]('hide');
+		this.consoleCm.setOption('theme', prefs.editorTheme);
 
 		['html', 'js', 'css'].forEach(type => {
 			this.cm[type].setOption('indentWithTabs', prefs.indentWith !== 'spaces');
@@ -527,7 +533,6 @@ export default class ContentWrap extends Component {
 	}
 
 	onMessageFromConsole() {
-		const self = this;
 		/* eslint-disable no-param-reassign */
 		[...arguments].forEach(arg => {
 			if (
@@ -582,6 +587,24 @@ export default class ContentWrap extends Component {
 	clearConsoleBtnClickHandler() {
 		this.clearConsole();
 		trackEvent('ui', 'consoleClearBtnClick');
+	}
+
+	evalConsoleExpr(e) {
+		// Clear console on CTRL + L
+		if ((e.which === 76 || e.which === 12) && e.ctrlKey) {
+			this.clearConsole();
+			trackEvent('ui', 'consoleClearKeyboardShortcut');
+		} else if (e.which === 13) {
+			this.onMessageFromConsole('> ' + e.target.value);
+
+			/* eslint-disable no-underscore-dangle */
+			this.frame.contentWindow._wmEvaluate(e.target.value);
+
+			/* eslint-enable no-underscore-dangle */
+
+			e.target.value = '';
+			trackEvent('fn', 'evalConsoleExpr');
+		}
 	}
 
 	render() {
@@ -826,7 +849,10 @@ export default class ContentWrap extends Component {
 							<svg width="18" height="18" fill="#346fd2">
 								Chevron
 							</svg>
-							<input d-keyup="evalConsoleExpr" class="console-exec-input" />
+							<input
+								onKeyUp={this.evalConsoleExpr.bind(this)}
+								class="console-exec-input"
+							/>
 						</div>
 					</div>
 				</div>

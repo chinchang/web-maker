@@ -23,6 +23,7 @@ import 'firebase/auth';
 import Profile from './Profile';
 import { auth } from '../auth';
 import SupportDeveloperModal from './SupportDeveloperModal';
+import KeyboardShortcutsModal from './KeyboardShortcutsModal';
 
 if (module.hot) {
 	require('preact/debug');
@@ -49,6 +50,7 @@ export default class App extends Component {
 			isLoginModalOpen: false,
 			isProfileModalOpen: false,
 			isSupportDeveloperModalOpen: false,
+			isKeyboardShortcutsModalOpen: false,
 			prefs: {},
 			currentItem: {
 				title: '',
@@ -438,7 +440,9 @@ export default class App extends Component {
 			) {
 				// Ctrl/⌘ + Shift + ?
 				event.preventDefault();
-				// scope.toggleModal(keyboardShortcutsModal);
+				this.setState({
+					isKeyboardShortcutsModalOpen: !this.state.isKeyboardShortcutsModalOpen
+				});
 				trackEvent('ui', 'showKeyboardShortcutsShortcut');
 			} else if (event.keyCode === 27) {
 				this.closeAllOverlays();
@@ -668,7 +672,6 @@ export default class App extends Component {
 		this.contentWrap.applyCodemirrorSettings(this.state.prefs);
 
 		/*
-		scope.consoleCm.setOption('theme', $('[data-setting=editorTheme]').value);
 		scope.acssSettingsCm.setOption(
 			'theme',
 			$('[data-setting=editorTheme]').value
@@ -804,6 +807,10 @@ export default class App extends Component {
 		trackEvent('ui', 'saveHtmlClick');
 		e.preventDefault();
 	}
+	runBtnClickHandler() {
+		this.contentWrap.setPreviewContent(true, true);
+		trackEvent('ui', 'runBtnClick');
+	}
 
 	render() {
 		return (
@@ -817,6 +824,7 @@ export default class App extends Component {
 						loginBtnHandler={this.loginBtnClickHandler.bind(this)}
 						profileBtnHandler={this.profileBtnClickHandler.bind(this)}
 						addLibraryBtnHandler={this.openAddLibrary.bind(this)}
+						runBtnClickHandler={this.runBtnClickHandler.bind(this)}
 						isFetchingItems={this.state.isFetchingItems}
 						isSaving={this.state.isSaving}
 						title={this.state.currentItem.title}
@@ -852,6 +860,9 @@ export default class App extends Component {
 						)}
 						codepenBtnClickHandler={this.codepenBtnClickHandler.bind(this)}
 						saveHtmlBtnClickHandler={this.saveHtmlBtnClickHandler.bind(this)}
+						keyboardShortcutsBtnClickHandler={() =>
+							this.setState({ isKeyboardShortcutsModalOpen: true })
+						}
 						hasUnseenChangelog={this.state.hasUnseenChangelog}
 					/>
 				</div>
@@ -934,9 +945,15 @@ export default class App extends Component {
 					closeHandler={() => this.setState({ isHelpModalOpen: false })}
 				/>
 				<SupportDeveloperModal
-					isOpen={this.state.isSupportDeveloperModalOpen}
+					show={this.state.isSupportDeveloperModalOpen}
 					closeHandler={() =>
 						this.setState({ isSupportDeveloperModalOpen: false })
+					}
+				/>
+				<KeyboardShortcutsModal
+					show={this.state.isKeyboardShortcutsModalOpen}
+					closeHandler={() =>
+						this.setState({ isKeyboardShortcutsModalOpen: false })
 					}
 				/>
 

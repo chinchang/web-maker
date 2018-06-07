@@ -118,7 +118,9 @@ export default class UserCodeMirror extends Component {
 				) {
 					return;
 				}
-				CodeMirror.commands.autocomplete(cm, null, { completeSingle: false });
+				CodeMirror.commands.autocomplete(this.cm, null, {
+					completeSingle: false
+				});
 			});
 		}
 		this.props.onCreation(this.cm);

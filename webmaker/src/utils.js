@@ -30,9 +30,19 @@ var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
  * @return element Next element that mathes `selector`
  */
 Node.prototype.nextUntil = function (selector) {
-	const siblings = [...this.parentNode.querySelectorAll(selector)];
+	const siblings = Array.from(this.parentNode.querySelectorAll(selector));
 	const index = siblings.indexOf(this);
 	return siblings[index + 1];
+};
+
+/*
+ * @param  Selector that should match for next siblings
+ * @return element Next element that mathes `selector`
+ */
+Node.prototype.previousUntil = function (selector) {
+	const siblings = Array.from(this.parentNode.querySelectorAll(selector));
+	const index = siblings.indexOf(this);
+	return siblings[index - 1];
 };
 
 // Safari doesn't have this!
@@ -41,16 +51,6 @@ window.requestIdleCallback =
 	function (fn) {
 		setTimeout(fn, 10);
 	};
-
-/*
- * @param  Selector that should match for next siblings
- * @return element Next element that mathes `selector`
- */
-Node.prototype.previousUntil = function (selector) {
-	const siblings = [...this.parentNode.querySelectorAll(selector)];
-	const index = siblings.indexOf(this);
-	return siblings[index - 1];
-};
 
 // https://github.com/substack/semver-compare/blob/master/index.js
 export function semverCompare(a, b) {

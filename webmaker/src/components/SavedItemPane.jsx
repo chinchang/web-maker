@@ -16,11 +16,58 @@ export default class SavedItemPane extends Component {
 		e.stopPropagation();
 		this.props.itemForkBtnClickHandler(item);
 	}
+	keyDownHandler(event) {
+		if (!this.props.isOpen) {
+			return;
+		}
+
+		const isCtrlOrMetaPressed = event.ctrlKey || event.metaKey;
+		const isForkKeyPressed = isCtrlOrMetaPressed && event.keyCode === 70;
+		const isDownKeyPressed = event.keyCode === 40;
+		const isUpKeyPressed = event.keyCode === 38;
+		const isEnterKeyPressed = event.keyCode === 13;
+
+		const selectedItemElement = $('.js-saved-item-tile.selected');
+		const havePaneItems = $all('.js-saved-item-tile').length !== 0;
+
+		if ((isDownKeyPressed || isUpKeyPressed) && havePaneItems) {
+			const method = isDownKeyPressed ? 'nextUntil' : 'previousUntil';
+
+			if (selectedItemElement) {
+				selectedItemElement.classList.remove('selected');
+				selectedItemElement[method](
+					'.js-saved-item-tile:not(.hide)'
+				).classList.add('selected');
+			} else {
+				$('.js-saved-item-tile:not(.hide)').classList.add('selected');
+			}
+			$('.js-saved-item-tile.selected').scrollIntoView(false);
+		}
+
+		if (isEnterKeyPressed && selectedItemElement) {
+			const item = this.props.items.filter(
+				item => (item.id = selectedItemElement.dataset.itemId)
+			)[0];
+			this.props.itemClickHandler(item);
+		}
+
+		// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
+		if (isForkKeyPressed) {
+			event.preventDefault();
+			const item = this.props.items.filter(
+				item => (item.id = selectedItemElement.dataset.itemId)
+			)[0];
+			this.props.itemForkBtnClickHandler(item);
+			trackEvent('ui', 'forkKeyboardShortcut');
+		}
+	}
+
 	render() {
 		return (
 			<div
 				id="js-saved-items-pane"
 				class={`saved-items-pane ${this.props.isOpen ? 'is-open' : ''}`}
+				onKeyDown={this.keyDownHandler.bind(this)}
 			>
 				<button
 					onClick={this.onCloseIntent.bind(this)}

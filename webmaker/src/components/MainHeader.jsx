@@ -17,7 +17,7 @@ export default class Header extends Component {
 						id="runBtn"
 						class="hide flex flex-v-center hint--rounded hint--bottom-left"
 						aria-label="Run preview (Ctrl/⌘ + Shift + 5)"
-						d-click="onRunBtnClick"
+						onClick={this.props.runBtnClickHandler}
 					>
 						<svg style="width: 14px; height: 14px;">
 							<use xlinkHref="#play-icon" />

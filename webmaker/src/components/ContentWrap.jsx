@@ -8,6 +8,7 @@ import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
 import CodeMirrorBox from './CodeMirrorBox';
 import { deferred } from '../deferred';
+import CssSettingsModal from './CssSettingsModal';
 
 const BASE_PATH = chrome.extension || window.DEBUG ? '/' : '/app';
 const minCodeWrapSize = 33;
@@ -159,6 +160,7 @@ export default class ContentWrap extends Component {
 			? this.detachedWindow.document.querySelector('iframe')
 			: this.frame;
 
+		const cssMode = this.props.currentItem.cssMode;
 		// If just CSS was changed (and everything shudn't be empty),
 		// change the styles inside the iframe.
 		if (
@@ -166,9 +168,12 @@ export default class ContentWrap extends Component {
 			currentCode.html === this.codeInPreview.html &&
 			currentCode.js === this.codeInPreview.js
 		) {
-			computeCss(currentCode.css, this.props.currentItem.cssMode).then(function(
-				css
-			) {
+			computeCss(
+				cssMode === CssModes.ACSS ? currentCode.html : currentCode.css,
+				cssMode,
+				this.props.currentItem.cssSettings
+			).then(function(css) {
+				this.cm.css.setValue(css);
 				if (targetFrame.contentDocument.querySelector('#webmakerstyle')) {
 					targetFrame.contentDocument.querySelector(
 						'#webmakerstyle'
@@ -181,11 +186,15 @@ export default class ContentWrap extends Component {
 				this.props.currentItem.htmlMode
 			);
 			var cssPromise = computeCss(
-				currentCode.css,
-				this.props.currentItem.cssMode
+				cssMode === CssModes.ACSS ? currentCode.html : currentCode.css,
+				cssMode,
+				this.props.currentItem.cssSettings
 			);
 			var jsPromise = computeJs(currentCode.js, this.props.currentItem.jsMode);
 			Promise.all([htmlPromise, cssPromise, jsPromise]).then(result => {
+				if (result[1]) {
+					this.cm.css.setValue(result[1]);
+				}
 				this.createPreviewFile(result[0], result[1], result[2]);
 			});
 		}
@@ -198,7 +207,10 @@ export default class ContentWrap extends Component {
 		return !!item.title;
 	}
 	shouldComponentUpdate(nextProps, nextState) {
-		return this.state.isConsoleOpen !== nextState.isConsoleOpen;
+		return (
+			this.state.isConsoleOpen !== nextState.isConsoleOpen ||
+			this.state.isCssSettingsModalOpen !== nextState.isCssSettingsModalOpen
+		);
 	}
 	componentDidUpdate() {
 		// HACK: becuase its a DOM manipulation
@@ -457,9 +469,9 @@ export default class ContentWrap extends Component {
 		cssModeLabel.parentElement.querySelector('select').value = value;
 		this.cm.css.setOption('mode', modes[value].cmMode);
 		this.cm.css.setOption('readOnly', modes[value].cmDisable);
-		// cssSettingsBtn.classList[modes[value].hasSettings ? 'remove' : 'add'](
-		// 'hide'
-		// );
+		window.cssSettingsBtn.classList[
+			modes[value].hasSettings ? 'remove' : 'add'
+		]('hide');
 		CodeMirror.autoLoadMode(
 			this.cm.css,
 			modes[value].cmPath || modes[value].cmMode
@@ -606,6 +618,14 @@ export default class ContentWrap extends Component {
 			trackEvent('fn', 'evalConsoleExpr');
 		}
 	}
+	cssSettingsBtnClickHandler() {
+		this.setState({ isCssSettingsModalOpen: true });
+		trackEvent('ui', 'cssSettingsBtnClick');
+	}
+	cssSettingsChangeHandler(settings) {
+		this.props.onCodeSettingsChange('css', settings);
+		this.setPreviewContent(true);
+	}
 
 	render() {
 		return (
@@ -714,10 +734,12 @@ export default class ContentWrap extends Component {
 									href="#"
 									id="cssSettingsBtn"
 									title="Atomic CSS configuration"
-									d-click="openCssSettingsModal"
+									onClick={this.cssSettingsBtnClickHandler.bind(this)}
 									class="code-wrap__header-btn hide"
 								>
-									Settings
+									<svg>
+										<use xlinkHref="#settings-icon" />
+									</svg>
 								</a>
 								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
@@ -739,7 +761,6 @@ export default class ContentWrap extends Component {
 							onChange={this.onCssCodeChange.bind(this)}
 							onCreation={el => (this.cm.css = el)}
 						/>
-						{/* Inlet(scope.cm.css); */}
 					</div>
 					<div
 						data-code-wrap-id="2"
@@ -855,6 +876,15 @@ export default class ContentWrap extends Component {
 							/>
 						</div>
 					</div>
+					<CssSettingsModal
+						show={this.state.isCssSettingsModalOpen}
+						closeHandler={() =>
+							this.setState({ isCssSettingsModalOpen: false })
+						}
+						onChange={this.cssSettingsChangeHandler.bind(this)}
+						settings={this.props.currentItem.cssSettings}
+						editorTheme={this.props.prefs.editorTheme}
+					/>
 				</div>
 			</SplitPane>
 		);

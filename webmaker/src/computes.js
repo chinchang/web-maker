@@ -21,7 +21,7 @@ export function computeHtml(code, mode) {
 
 	return d.promise;
 }
-export function computeCss(code, mode) {
+export function computeCss(code, mode, settings) {
 	var d = deferred();
 	// cleanupErrors('css');
 
@@ -77,19 +77,18 @@ export function computeCss(code, mode) {
 		if (!window.atomizer) {
 			d.resolve('');
 		} else {
-			const html = scope.cm.html.getValue();
+			const html = code;
 			const foundClasses = atomizer.findClassNames(html);
 			var finalConfig;
 			try {
 				finalConfig = atomizer.getConfig(
 					foundClasses,
-					JSON.parse(scope.acssSettingsCm.getValue())
+					JSON.parse(settings.acssConfig)
 				);
 			} catch (e) {
 				finalConfig = atomizer.getConfig(foundClasses, {});
 			}
 			const acss = atomizer.getCss(finalConfig);
-			scope.cm.css.setValue(acss);
 			d.resolve(acss);
 		}
 	}

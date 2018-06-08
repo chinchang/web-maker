@@ -14,6 +14,12 @@ export default class CodeMirrorBox extends Component {
 	initEditor() {
 		const options = this.props.options;
 		this.cm = CodeMirror.fromTextArea(this.textarea, this.props.options);
+		if (this.props.onChange) {
+			this.cm.on('change', this.props.onChange);
+		}
+		if (this.props.onBlur) {
+			this.cm.on('blur', this.props.onBlur);
+		}
 		this.props.onCreation(this.cm);
 	}
 

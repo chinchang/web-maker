@@ -526,14 +526,6 @@ export default class App extends Component {
 	}
 
 	saveCode(key) {
-		// currentItem.htmlMode = htmlMode;
-		// currentItem.cssMode = cssMode;
-		// currentItem.jsMode = jsMode;
-		if (modes['css' || cssMode].hasSettings) {
-			this.state.currentItem.cssSettings = {
-				acssConfig: scope.acssSettingsCm.getValue()
-			};
-		}
 		this.state.currentItem.updatedOn = Date.now();
 		this.state.currentItem.layoutMode = this.state.currentLayoutMode;
 
@@ -625,6 +617,11 @@ export default class App extends Component {
 			}
 		}
 	}
+	onCodeSettingsChange(type, settings) {
+		this.state.currentItem[`${type}Settings`] = {
+			acssConfig: settings
+		};
+	}
 
 	titleInputBlurHandler(e) {
 		this.state.currentItem.title = e.target.value;
@@ -678,11 +675,6 @@ export default class App extends Component {
 
 		this.contentWrap.applyCodemirrorSettings(this.state.prefs);
 
-		/*
-		scope.acssSettingsCm.setOption(
-			'theme',
-			$('[data-setting=editorTheme]').value
-		); */
 		if (prefs.autoSave) {
 			if (!this.autoSaveInterval) {
 				this.autoSaveInterval = setInterval(() => {
@@ -872,6 +864,7 @@ export default class App extends Component {
 						currentLayoutMode={this.state.currentLayoutMode}
 						currentItem={this.state.currentItem}
 						onCodeChange={this.onCodeChange.bind(this)}
+						onCodeSettingsChange={this.onCodeSettingsChange.bind(this)}
 						onCodeModeChange={this.onCodeModeChange.bind(this)}
 						onRef={comp => (this.contentWrap = comp)}
 						prefs={this.state.prefs}

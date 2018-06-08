@@ -9,7 +9,14 @@ import AddLibrary from './AddLibrary.jsx';
 import Modal from './Modal.jsx';
 import HelpModal from './HelpModal.jsx';
 import Login from './Login.jsx';
-import { log, generateRandomId, semverCompare, saveAsHtml } from '../utils';
+import {
+	log,
+	generateRandomId,
+	semverCompare,
+	saveAsHtml,
+	handleDownloadsPermission,
+	downloadFile
+} from '../utils';
 import { itemService } from '../itemService';
 import '../db';
 import Notifications from './Notifications';
@@ -811,6 +818,35 @@ export default class App extends Component {
 		this.contentWrap.setPreviewContent(true, true);
 		trackEvent('ui', 'runBtnClick');
 	}
+	exportItems() {
+		handleDownloadsPermission().then(() => {
+			this.fetchItems().then(items => {
+				var d = new Date();
+				var fileName = [
+					'web-maker-export',
+					d.getFullYear(),
+					d.getMonth() + 1,
+					d.getDate(),
+					d.getHours(),
+					d.getMinutes(),
+					d.getSeconds()
+				].join('-');
+				fileName += '.json';
+				var blob = new Blob([JSON.stringify(items, false, 2)], {
+					type: 'application/json;charset=UTF-8'
+				});
+
+				downloadFile(fileName, blob);
+
+				trackEvent('fn', 'exportItems');
+			});
+		});
+	}
+	exportBtnClickHandler(e) {
+		this.exportItems();
+		e.preventDefault();
+		trackEvent('ui', 'exportBtnClicked');
+	}
 
 	render() {
 		return (
@@ -874,6 +910,7 @@ export default class App extends Component {
 					itemClickHandler={this.itemClickHandler.bind(this)}
 					itemRemoveBtnClickHandler={this.itemRemoveBtnClickHandler.bind(this)}
 					itemForkBtnClickHandler={this.itemForkBtnClickHandler.bind(this)}
+					exportBtnClickHandler={this.exportBtnClickHandler.bind(this)}
 				/>
 				<div class="alerts-container" id="js-alerts-container" />
 				<form

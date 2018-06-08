@@ -403,6 +403,37 @@ export function saveAsHtml(item) {
 	});
 }
 
+export function handleDownloadsPermission() {
+	var d = deferred();
+	if (!window.IS_EXTENSION) {
+		d.resolve();
+		return d.promise;
+	}
+	chrome.permissions.contains({
+			permissions: ['downloads']
+		},
+		function (result) {
+			if (result) {
+				d.resolve();
+			} else {
+				chrome.permissions.request({
+						permissions: ['downloads']
+					},
+					function (granted) {
+						if (granted) {
+							trackEvent('fn', 'downloadsPermGiven');
+							d.resolve();
+						} else {
+							d.reject();
+						}
+					}
+				);
+			}
+		}
+	);
+	return d.promise;
+}
+
 window.chrome = window.chrome || {};
 window.chrome.i18n = {
 	getMessage: () => {}

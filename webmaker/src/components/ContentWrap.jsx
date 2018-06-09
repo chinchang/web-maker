@@ -85,7 +85,6 @@ export default class ContentWrap extends Component {
 			}
 		}, this.updateDelay);
 	}
-	clearConsole() {}
 
 	createPreviewFile(html, css, js) {
 		const shouldInlineJs =
@@ -235,6 +234,8 @@ export default class ContentWrap extends Component {
 		this.cm.html.refresh();
 		this.cm.css.refresh();
 		this.cm.js.refresh();
+
+		this.clearConsole();
 
 		// Set preview only when all modes are updated so that preview doesn't generate on partially
 		// correct modes and also doesn't happen 3 times.
@@ -625,6 +626,9 @@ export default class ContentWrap extends Component {
 	cssSettingsChangeHandler(settings) {
 		this.props.onCodeSettingsChange('css', settings);
 		this.setPreviewContent(true);
+	}
+	getDemoFrame(callback) {
+		callback(this.frame);
 	}
 
 	render() {

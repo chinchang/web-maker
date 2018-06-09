@@ -55,7 +55,7 @@ export default class Footer extends Component {
 						href=""
 						id="screenshotBtn"
 						class="mode-btn  hint--rounded  hint--top-left show-when-extension"
-						d-click="takeScreenshot"
+						onClick={this.props.screenshotBtnClickHandler}
 						aria-label="Take screenshot of preview"
 					>
 						<svg style="width:24px;height:24px" viewBox="0 0 24 24">

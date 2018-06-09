@@ -31,6 +31,7 @@ import Profile from './Profile';
 import { auth } from '../auth';
 import SupportDeveloperModal from './SupportDeveloperModal';
 import KeyboardShortcutsModal from './KeyboardShortcutsModal';
+import { takeScreenshot } from '../takeScreenshot';
 
 if (module.hot) {
 	require('preact/debug');
@@ -839,6 +840,12 @@ export default class App extends Component {
 		e.preventDefault();
 		trackEvent('ui', 'exportBtnClicked');
 	}
+	screenshotBtnClickHandler() {
+		this.contentWrap.getDemoFrame(frame => {
+			takeScreenshot(frame.getBoundingClientRect());
+		});
+		e.preventDefault();
+	}
 
 	render() {
 		return (
@@ -892,6 +899,9 @@ export default class App extends Component {
 						keyboardShortcutsBtnClickHandler={() =>
 							this.setState({ isKeyboardShortcutsModalOpen: true })
 						}
+						screenshotBtnClickHandler={this.screenshotBtnClickHandler.bind(
+							this
+						)}
 						hasUnseenChangelog={this.state.hasUnseenChangelog}
 					/>
 				</div>

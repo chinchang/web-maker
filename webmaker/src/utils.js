@@ -13,6 +13,7 @@ import {
 import {
 	deferred
 } from './deferred';
+const esprima = require('esprima');
 
 window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
 window.$ = document.querySelector.bind(document);

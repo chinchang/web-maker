@@ -134,6 +134,21 @@ export default class ContentWrap extends Component {
 			});
 		}
 	}
+	cleanupErrors(lang) {
+		this.cm[lang].clearGutter('error-gutter');
+	}
+
+	showErrors(lang, errors) {
+		var editor = this.cm[lang];
+		errors.forEach(function(e) {
+			editor.operation(function() {
+				var n = document.createElement('div');
+				n.setAttribute('data-title', e.message);
+				n.classList.add('gutter-error-marker');
+				editor.setGutterMarker(e.lineNumber, 'error-gutter', n);
+			});
+		});
+	}
 
 	/**
 	 * Generates the preview from the current code.
@@ -148,6 +163,9 @@ export default class ContentWrap extends Component {
 		if (!this.props.prefs.preserveConsoleLogs) {
 			this.clearConsole();
 		}
+		this.cleanupErrors('html');
+		this.cleanupErrors('css');
+		this.cleanupErrors('js');
 
 		var currentCode = {
 			html: this.cmCodes.html,
@@ -171,12 +189,15 @@ export default class ContentWrap extends Component {
 				cssMode === CssModes.ACSS ? currentCode.html : currentCode.css,
 				cssMode,
 				this.props.currentItem.cssSettings
-			).then(function(css) {
-				this.cm.css.setValue(css);
+			).then(result => {
+				if (cssMode === CssModes.ACSS) {
+					this.cm.css.setValue(result.code || '');
+				}
 				if (targetFrame.contentDocument.querySelector('#webmakerstyle')) {
 					targetFrame.contentDocument.querySelector(
 						'#webmakerstyle'
-					).textContent = css;
+					).textContent =
+						result.code || '';
 				}
 			});
 		} else {
@@ -189,12 +210,27 @@ export default class ContentWrap extends Component {
 				cssMode,
 				this.props.currentItem.cssSettings
 			);
-			var jsPromise = computeJs(currentCode.js, this.props.currentItem.jsMode);
+			var jsPromise = computeJs(
+				currentCode.js,
+				this.props.currentItem.jsMode,
+				true,
+				this.props.prefs.infiniteLoopTimeout
+			);
 			Promise.all([htmlPromise, cssPromise, jsPromise]).then(result => {
-				if (result[1]) {
-					this.cm.css.setValue(result[1]);
+				if (cssMode === CssModes.ACSS) {
+					this.cm.css.setValue(result[1].code || '');
 				}
-				this.createPreviewFile(result[0], result[1], result[2]);
+
+				this.createPreviewFile(
+					result[0].code || '',
+					result[1].code || '',
+					result[2].code || ''
+				);
+				result.forEach(result => {
+					if (result.errors) {
+						this.showErrors(result.errors.lang, result.errors.data);
+					}
+				});
 			});
 		}
 

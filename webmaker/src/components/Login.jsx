@@ -9,6 +9,18 @@ export default class Login extends Component {
 		trackEvent('ui', 'loginProviderClick', provider);
 		auth.login(provider);
 	}
+	componentDidMount() {
+		window.db.local.get(
+			{
+				lastAuthProvider: ''
+			},
+			result => {
+				if (result.lastAuthProvider) {
+					document.body.classList.add(`last-login-${result.lastAuthProvider}`);
+				}
+			}
+		);
+	}
 	render() {
 		return (
 			<div>

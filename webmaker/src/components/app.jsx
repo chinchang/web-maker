@@ -202,7 +202,7 @@ export default class App extends Component {
 				semverCompare(lastSeenVersion, version) === -1 &&
 				!window.localStorage.pledgeModalSeen
 			) {
-				scope.openSupportDeveloperModal();
+				this.openSupportDeveloperModal();
 				window.localStorage.pledgeModalSeen = true;
 			}
 
@@ -846,6 +846,18 @@ export default class App extends Component {
 		});
 		e.preventDefault();
 	}
+	openSupportDeveloperModal(e) {
+		// this.closeAllModals();
+		this.setState({
+			isSupportDeveloperModalOpen: true
+		});
+		if (e) {
+			trackEvent('ui', e.target.dataset.eventAction);
+		}
+	}
+	supportDeveloperBtnClickHandler(e) {
+		this.openSupportDeveloperModal(e);
+	}
 
 	render() {
 		return (
@@ -886,11 +898,9 @@ export default class App extends Component {
 						notificationsBtnClickHandler={() =>
 							this.setState({ notificationsBtnClickHandler: true })
 						}
-						supportDeveloperBtnClickHandler={() =>
-							this.setState({
-								isSupportDeveloperModalOpen: true
-							})
-						}
+						supportDeveloperBtnClickHandler={this.supportDeveloperBtnClickHandler.bind(
+							this
+						)}
 						detachedPreviewBtnHandler={this.detachedPreviewBtnHandler.bind(
 							this
 						)}

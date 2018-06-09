@@ -2,31 +2,48 @@ import {
 	deferred
 } from './deferred';
 import {
+	addInfiniteLoopProtection
+} from './utils';
+import {
 	HtmlModes,
 	CssModes,
 	JsModes
 } from './codeModes';
+
+const esprima = require('esprima');
 
 // computeHtml, computeCss & computeJs evaluate the final code according
 // to whatever mode is selected and resolve the returned promise with the code.
 export function computeHtml(code, mode) {
 	var d = deferred();
 	if (mode === HtmlModes.HTML) {
-		d.resolve(code);
+		d.resolve({
+			code
+		});
 	} else if (mode === HtmlModes.MARKDOWN) {
-		d.resolve(window.marked ? marked(code) : code);
+		d.resolve(window.marked ? {
+			code: marked(code)
+		} : {
+			code
+		});
 	} else if (mode === HtmlModes.JADE) {
-		d.resolve(window.jade ? jade.render(code) : code);
+		d.resolve(window.jade ? {
+			code: jade.render(code)
+		} : {
+			code
+		});
 	}
 
 	return d.promise;
 }
 export function computeCss(code, mode, settings) {
 	var d = deferred();
-	// cleanupErrors('css');
+	var errors;
 
 	if (mode === CssModes.CSS) {
-		d.resolve(code);
+		d.resolve({
+			code
+		});
 	} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
 		if (window.sass && code) {
 			window.sass.compile(
@@ -36,27 +53,44 @@ export function computeCss(code, mode, settings) {
 				function (result) {
 					// Something was wrong
 					if (result.line && result.message) {
-						showErrors('css', [{
-							lineNumber: result.line - 1,
-							message: result.message
-						}]);
+						errors = {
+							lang: 'css',
+							data: [{
+								lineNumber: result.line - 1,
+								message: result.message
+							}]
+						};
 					}
-					d.resolve(result.text);
+					d.resolve({
+						code: result.text,
+						errors
+					});
 				}
 			);
 		} else {
-			d.resolve(code);
+			d.resolve({
+				code
+			});
 		}
 	} else if (mode === CssModes.LESS) {
 		less.render(code).then(
 			function (result) {
-				d.resolve(result.css);
+				d.resolve({
+					code: result.css
+				});
 			},
 			function (error) {
-				showErrors('css', [{
-					lineNumber: error.line,
-					message: error.message
-				}]);
+				errors = {
+					lang: 'css',
+					data: [{
+						lineNumber: error.line,
+						message: error.message
+					}]
+				};
+				d.resolve({
+					code: '',
+					errors
+				})
 			}
 		);
 	} else if (mode === CssModes.STYLUS) {
@@ -66,16 +100,24 @@ export function computeCss(code, mode, settings) {
 				// Last line of message is the actual message
 				var tempArr = error.message.split('\n');
 				tempArr.pop(); // This is empty string in the end
-				showErrors('css', [{
-					lineNumber: +error.message.match(/stylus:(\d+):/)[1] - 298,
-					message: tempArr.pop()
-				}]);
+				errors = {
+					lang: 'css',
+					data: [{
+						lineNumber: +error.message.match(/stylus:(\d+):/)[1] - 298,
+						message: tempArr.pop()
+					}]
+				};
 			}
-			d.resolve(result);
+			d.resolve({
+				code: result,
+				errors
+			});
 		});
 	} else if (mode === CssModes.ACSS) {
 		if (!window.atomizer) {
-			d.resolve('');
+			d.resolve({
+				code: ''
+			});
 		} else {
 			const html = code;
 			const foundClasses = atomizer.findClassNames(html);
@@ -89,41 +131,50 @@ export function computeCss(code, mode, settings) {
 				finalConfig = atomizer.getConfig(foundClasses, {});
 			}
 			const acss = atomizer.getCss(finalConfig);
-			d.resolve(acss);
+			d.resolve({
+				code: acss
+			});
 		}
 	}
 
 	return d.promise;
 }
-export function computeJs(code, mode, shouldPreventInfiniteLoops) {
-	var d = deferred();
 
-	// cleanupErrors('js');
+export function computeJs(code, mode, shouldPreventInfiniteLoops, infiniteLoopTimeout) {
+	var d = deferred();
+	var errors;
+
 	if (!code) {
 		d.resolve('');
 		return d.promise;
 	}
 
 	if (mode === JsModes.JS) {
-		d.resolve(code);
-		return d.promise;
-
 		try {
 			esprima.parse(code, {
 				tolerant: true
 			});
 		} catch (e) {
-			showErrors('js', [{
-				lineNumber: e.lineNumber - 1,
-				message: e.description
-			}]);
+			errors = {
+				lang: 'js',
+				data: [{
+					lineNumber: e.lineNumber - 1,
+					message: e.description
+				}]
+			};
 		} finally {
 			if (shouldPreventInfiniteLoops !== false) {
-				code = utils.addInfiniteLoopProtection(code, {
-					timeout: prefs.infiniteLoopTimeout
+				// If errors are found in last parse, we don't run infinite loop
+				// protection otherwise it will again throw error.
+				code = errors ? code : addInfiniteLoopProtection(code, {
+					timeout: infiniteLoopTimeout
 				});
 			}
-			d.resolve(code);
+
+			d.resolve({
+				code,
+				errors
+			});
 		}
 	} else if (mode === JsModes.COFFEESCRIPT) {
 		if (!window.CoffeeScript) {
@@ -135,17 +186,23 @@ export function computeJs(code, mode, shouldPreventInfiniteLoops) {
 				bare: true
 			});
 		} catch (e) {
-			showErrors('js', [{
-				lineNumber: e.location.first_line,
-				message: e.message
-			}]);
+			errors = {
+				lang: 'js',
+				data: [{
+					lineNumber: e.location.first_line,
+					message: e.message
+				}]
+			};
 		} finally {
 			if (shouldPreventInfiniteLoops !== false) {
-				code = utils.addInfiniteLoopProtection(code, {
-					timeout: prefs.infiniteLoopTimeout
+				code = errors ? code : addInfiniteLoopProtection(code, {
+					timeout: infiniteLoopTimeout
 				});
 			}
-			d.resolve(code);
+			d.resolve({
+				code,
+				errors
+			});
 		}
 	} else if (mode === JsModes.ES6) {
 		if (!window.Babel) {
@@ -158,25 +215,33 @@ export function computeJs(code, mode, shouldPreventInfiniteLoops) {
 				jsx: true
 			});
 		} catch (e) {
-			showErrors('js', [{
-				lineNumber: e.lineNumber - 1,
-				message: e.description
-			}]);
+			errors = {
+				lang: 'js',
+				data: [{
+					lineNumber: e.lineNumber - 1,
+					message: e.description
+				}]
+			};
 		} finally {
 			code = Babel.transform(code, {
 				presets: ['latest', 'stage-2', 'react']
 			}).code;
 			if (shouldPreventInfiniteLoops !== false) {
-				code = utils.addInfiniteLoopProtection(code, {
-					timeout: prefs.infiniteLoopTimeout
+				code = errors ? code : addInfiniteLoopProtection(code, {
+					timeout: infiniteLoopTimeout
 				});
 			}
-			d.resolve(code);
+			d.resolve({
+				code,
+				errors
+			});
 		}
 	} else if (mode === JsModes.TS) {
 		try {
 			if (!window.ts) {
-				d.resolve('');
+				d.resolve({
+					code: ''
+				});
 				return d.promise;
 			}
 			code = ts.transpileModule(code, {
@@ -189,25 +254,29 @@ export function computeJs(code, mode, shouldPreventInfiniteLoops) {
 			});
 			if (code.diagnostics.length) {
 				/* eslint-disable no-throw-literal */
-				throw {
-					description: code.diagnostics[0].messageText,
-					lineNumber: ts.getLineOfLocalPosition(
-						code.diagnostics[0].file,
-						code.diagnostics[0].start
-					)
+				errors = {
+					lang: 'js',
+					data: [{
+						message: code.diagnostics[0].messageText,
+						lineNumber: ts.getLineOfLocalPosition(
+							code.diagnostics[0].file,
+							code.diagnostics[0].start
+						) - 1
+					}]
 				};
 			}
-			if (shouldPreventInfiniteLoops !== false) {
-				code = utils.addInfiniteLoopProtection(code.outputText, {
-					timeout: prefs.infiniteLoopTimeout
+			code = code.outputText;
+			if (shouldPreventInfiniteLoops !== false && !errors) {
+				code = addInfiniteLoopProtection(code, {
+					timeout: infiniteLoopTimeout
 				});
 			}
-			d.resolve(code);
+			d.resolve({
+				code,
+				errors
+			});
 		} catch (e) {
-			showErrors('js', [{
-				lineNumber: e.lineNumber - 1,
-				message: e.description
-			}]);
+
 		}
 	}
 

@@ -27,7 +27,7 @@ export default class Modal extends Component {
 
 		return (
 			<div
-				class="modal is-modal-visible"
+				class={`${this.props.extraClasses || ''} modal is-modal-visible`}
 				ref={el => (this.overlayEl = el)}
 				onClick={this.onOverlayClick.bind(this)}
 			>

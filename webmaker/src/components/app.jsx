@@ -32,6 +32,7 @@ import { auth } from '../auth';
 import SupportDeveloperModal from './SupportDeveloperModal';
 import KeyboardShortcutsModal from './KeyboardShortcutsModal';
 import { takeScreenshot } from '../takeScreenshot';
+import AskToImportModal from './AskToImportModal';
 
 if (module.hot) {
 	require('preact/debug');
@@ -107,7 +108,7 @@ export default class App extends Component {
 							return;
 						}
 						this.oldSavedItems = items;
-						// window.oldSavedCreationsCountEl.textContent = items.length;
+						this.oldSavedCreationsCount = items.length;
 						this.setState({
 							isAskToImportModalOpen: true
 						});
@@ -967,6 +968,7 @@ export default class App extends Component {
 					<Notifications />
 				</Modal>
 				<Modal
+					extraClasses="modal--settings"
 					show={this.state.isSettingsModalOpen}
 					closeHandler={() => this.setState({ isSettingsModalOpen: false })}
 				>
@@ -976,6 +978,7 @@ export default class App extends Component {
 					/>
 				</Modal>
 				<Modal
+					extraClasses="login-modal"
 					show={this.state.isLoginModalOpen}
 					closeHandler={() => this.setState({ isLoginModalOpen: false })}
 				>
@@ -1005,6 +1008,11 @@ export default class App extends Component {
 					closeHandler={() =>
 						this.setState({ isKeyboardShortcutsModalOpen: false })
 					}
+				/>
+				<AskToImportModal
+					show={this.state.isAskToImportModalOpen}
+					closeHandler={() => this.setState({ isAskToImportModalOpen: false })}
+					oldSavedCreationsCount={this.oldSavedCreationsCount}
 				/>
 
 				<div class="modal-overlay" />

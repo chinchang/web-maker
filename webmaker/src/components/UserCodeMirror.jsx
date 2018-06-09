@@ -31,6 +31,10 @@ import 'codemirror/mode/htmlmixed/htmlmixed.js';
 import 'codemirror/keymap/sublime.js';
 import 'codemirror/keymap/vim.js';
 
+import emmet from '@emmetio/codemirror-plugin';
+
+emmet(CodeMirror);
+
 export default class UserCodeMirror extends Component {
 	componentDidMount() {
 		this.initEditor();

@@ -4,7 +4,11 @@ import Modal from './Modal';
 export default class SupportDeveloperModal extends Component {
 	render() {
 		return (
-			<Modal show={this.props.show} closeHandler={this.props.closeHandler}>
+			<Modal
+				extraClasses="pledge-modal"
+				show={this.props.show}
+				closeHandler={this.props.closeHandler}
+			>
 				<div class="tac">
 					<h1>Support the Developer</h1>
 					<p>

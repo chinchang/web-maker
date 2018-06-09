@@ -27,7 +27,9 @@
     "preact-render-spy": "^1.2.1"
   },
   "dependencies": {
+    "@emmetio/codemirror-plugin": "^0.5.4",
     "codemirror": "^5.37.0",
+    "esprima": "^4.0.0",
     "firebase": "^5.0.4",
     "preact": "^8.2.6",
     "preact-compat": "^3.17.0",

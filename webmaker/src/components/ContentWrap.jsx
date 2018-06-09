@@ -733,8 +733,8 @@ export default class ContentWrap extends Component {
 								profile: 'xhtml',
 								gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
 								noAutocomplete: true,
-								matchTags: { bothTags: true }
-								// emmet: true
+								matchTags: { bothTags: true },
+								emmet: true
 							}}
 							onChange={this.onHtmlCodeChange.bind(this)}
 							onCreation={el => (this.cm.html = el)}
@@ -795,8 +795,8 @@ export default class ContentWrap extends Component {
 									'error-gutter',
 									'CodeMirror-linenumbers',
 									'CodeMirror-foldgutter'
-								]
-								// emmet: true
+								],
+								emmet: true
 							}}
 							onChange={this.onCssCodeChange.bind(this)}
 							onCreation={el => (this.cm.css = el)}

@@ -5,6 +5,24 @@ import { itemService } from '../itemService';
 import { alertsService } from '../notifications';
 
 export default class SavedItemPane extends Component {
+	constructor(props) {
+		super(props);
+		this.items = [];
+		this.state = {
+			filteredItems: []
+		};
+	}
+	componentWillUpdate(nextProps) {
+		if (this.props.items !== nextProps.items) {
+			this.items = Object.values(nextProps.items);
+			this.items.sort(function(a, b) {
+				return b.updatedOn - a.updatedOn;
+			});
+			this.setState({
+				filteredItems: this.items
+			});
+		}
+	}
 	onCloseIntent() {
 		this.props.closeHandler();
 	}
@@ -48,18 +66,15 @@ export default class SavedItemPane extends Component {
 		}
 
 		if (isEnterKeyPressed && selectedItemElement) {
-			const item = this.props.items.filter(
-				item => (item.id = selectedItemElement.dataset.itemId)
-			)[0];
+			const item = this.props.items[selectedItemElement.dataset.itemId];
+			console.log('opening', item);
 			this.props.itemClickHandler(item);
 		}
 
 		// Fork shortcut inside saved creations panel with Ctrl/⌘ + F
 		if (isForkKeyPressed) {
 			event.preventDefault();
-			const item = this.props.items.filter(
-				item => (item.id = selectedItemElement.dataset.itemId)
-			)[0];
+			const item = this.props.items[selectedItemElement.dataset.itemId];
 			this.props.itemForkBtnClickHandler(item);
 			trackEvent('ui', 'forkKeyboardShortcut');
 		}
@@ -147,6 +162,23 @@ export default class SavedItemPane extends Component {
 		e.preventDefault();
 	}
 
+	searchInputHandler(e) {
+		const text = e.target.value;
+		let el;
+		if (!text) {
+			this.setState({
+				filteredItems: this.items
+			});
+		} else {
+			this.setState({
+				filteredItems: this.items.filter(
+					item => item.title.toLowerCase().indexOf(text) !== -1
+				)
+			});
+		}
+		trackEvent('ui', 'searchInputType');
+	}
+
 	render() {
 		return (
 			<div
@@ -162,12 +194,7 @@ export default class SavedItemPane extends Component {
 					X
 				</button>
 				<div class="flex flex-v-center" style="justify-content: space-between;">
-					<h3>
-						My Library{' '}
-						<span id="savedItemCountEl">
-							{this.props.items ? this.props.items.length : 0}
-						</span>
-					</h3>
+					<h3>My Library ({this.items.length})</h3>
 
 					<div class="main-header__btn-wrap">
 						<a
@@ -192,42 +219,42 @@ export default class SavedItemPane extends Component {
 					type=""
 					id="searchInput"
 					class="search-input"
-					d-input="onSearchInputChange"
+					onInput={this.searchInputHandler.bind(this)}
 					placeholder="Search your creations here..."
 				/>
 
 				<div id="js-saved-items-wrap" class="saved-items-pane__container">
-					{this.props.items &&
-						this.props.items.length &&
-						this.props.items.map(item => (
-							<div
-								class="js-saved-item-tile saved-item-tile"
-								data-item-id={item.id}
-								onClick={this.itemClickHandler.bind(this, item)}
-							>
-								<div class="saved-item-tile__btns">
-									<a
-										class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium"
-										aria-label="Creates a duplicate of this creation (Ctrl/⌘ + F)"
-										onClick={this.itemForkBtnClickHandler.bind(this, item)}
-									>
-										Fork<span class="show-when-selected">(Ctrl/⌘ + F)</span>
-									</a>
-									<a
-										class="js-saved-item-tile__remove-btn  saved-item-tile__btn hint--left"
-										aria-label="Remove"
-										onClick={this.itemRemoveBtnClickHandler.bind(this, item)}
-									>
-										X
-									</a>
-								</div>
-								<h3 class="saved-item-tile__title">{item.title}</h3>
-								<span class="saved-item-tile__meta">
-									Last updated: {getHumanDate(item.updatedOn)}
-								</span>
+					{!this.state.filteredItems.length &&
+						!this.items.length && <div class="mt-1">No match found.</div>}
+					{this.state.filteredItems.map(item => (
+						<div
+							class="js-saved-item-tile saved-item-tile"
+							data-item-id={item.id}
+							onClick={this.itemClickHandler.bind(this, item)}
+						>
+							<div class="saved-item-tile__btns">
+								<a
+									class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium"
+									aria-label="Creates a duplicate of this creation (Ctrl/⌘ + F)"
+									onClick={this.itemForkBtnClickHandler.bind(this, item)}
+								>
+									Fork<span class="show-when-selected">(Ctrl/⌘ + F)</span>
+								</a>
+								<a
+									class="js-saved-item-tile__remove-btn  saved-item-tile__btn hint--left"
+									aria-label="Remove"
+									onClick={this.itemRemoveBtnClickHandler.bind(this, item)}
+								>
+									X
+								</a>
 							</div>
-						))}
-					{!(this.props.items && this.props.items.length) && (
+							<h3 class="saved-item-tile__title">{item.title}</h3>
+							<span class="saved-item-tile__meta">
+								Last updated: {getHumanDate(item.updatedOn)}
+							</span>
+						</div>
+					))}
+					{!this.items.length && (
 						<h2 class="opacity--30">Nothing saved here.</h2>
 					)}
 				</div>

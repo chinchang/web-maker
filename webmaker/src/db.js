@@ -41,6 +41,10 @@ import {
 				}
 			}, FAUX_DELAY);
 			/* eslint-enable consistent-return */
+		},
+		remove: (key, cb) => {
+			window.localStorage.removeItem(key);
+			setTimeout(() => cb(), FAUX_DELAY);
 		}
 	};
 	const dbLocalAlias = chrome && chrome.storage ? chrome.storage.local : local;

@@ -17,7 +17,8 @@ export default class ContentWrap extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isConsoleOpen: false
+			isConsoleOpen: false,
+			isCssSettingsModalOpen: false
 		};
 		this.updateTimer = null;
 		this.updateDelay = 500;
@@ -33,6 +34,7 @@ export default class ContentWrap extends Component {
 
 		window.onMessageFromConsole = this.onMessageFromConsole.bind(this);
 
+		window.previewException = this.previewException.bind(this);
 		// `clearConsole` is on window because it gets called from inside iframe also.
 		window.clearConsole = this.clearConsole.bind(this);
 	}
@@ -285,14 +287,13 @@ export default class ContentWrap extends Component {
 		if (!this.cm) {
 			return;
 		}
-		$('#js-html-code').querySelector('.CodeMirror').style.fontSize = $(
-			'#js-css-code'
-		).querySelector('.CodeMirror').style.fontSize = $(
-			'#js-js-code'
-		).querySelector('.CodeMirror').style.fontSize = `${parseInt(
-			prefs.fontSize,
-			10
-		)}px`;
+		htmlCodeEl.querySelector(
+			'.CodeMirror'
+		).style.fontSize = cssCodeEl.querySelector(
+			'.CodeMirror'
+		).style.fontSize = jsCodeEl.querySelector(
+			'.CodeMirror'
+		).style.fontSize = `${parseInt(prefs.fontSize, 10)}px`;
 		window.consoleEl.querySelector('.CodeMirror').style.fontSize = `${parseInt(
 			prefs.fontSize,
 			10
@@ -350,10 +351,11 @@ export default class ContentWrap extends Component {
 	updateCodeWrapCollapseStates() {
 		// This is debounced!
 		clearTimeout(this.updateCodeWrapCollapseStates.timeout);
-		updateCodeWrapCollapseStates.timeout = setTimeout(function() {
+		this.updateCodeWrapCollapseStates.timeout = setTimeout(() => {
+			const { currentLayoutMode } = this.props;
 			const prop =
 				currentLayoutMode === 2 || currentLayoutMode === 5 ? 'width' : 'height';
-			[htmlCode, cssCode, jsCode].forEach(function(el) {
+			[htmlCodeEl, cssCodeEl, jsCodeEl].forEach(function(el) {
 				const bounds = el.getBoundingClientRect();
 				const size = bounds[prop];
 				if (size < 100) {
@@ -617,6 +619,11 @@ export default class ContentWrap extends Component {
 		/* eslint-enable no-param-reassign */
 	}
 
+	previewException(error) {
+		console.error('Possible infinite loop detected.', error.stack);
+		this.onMessageFromConsole('Possible infinite loop detected.', error.stack);
+	}
+
 	toggleConsole() {
 		this.setState({ isConsoleOpen: !this.state.isConsoleOpen });
 		trackEvent('ui', 'consoleToggle');
@@ -690,14 +697,15 @@ export default class ContentWrap extends Component {
 							: 'vertical'
 					}
 					onDragStart={this.codeSplitDragStart.bind(this)}
-					onDragend={this.codeSplitDragEnd.bind(this)}
+					onDragEnd={this.codeSplitDragEnd.bind(this)}
 					onSplit={splitInstance => (this.codeSplitInstance = splitInstance)}
 				>
 					<div
 						data-code-wrap-id="0"
-						id="js-html-code"
+						id="htmlCodeEl"
 						data-type="html"
 						class="code-wrap"
+						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 					>
 						<div
 							class="js-code-wrap__header  code-wrap__header"
@@ -742,9 +750,10 @@ export default class ContentWrap extends Component {
 					</div>
 					<div
 						data-code-wrap-id="1"
-						id="js-css-code"
+						id="cssCodeEl"
 						data-type="css"
 						class="code-wrap"
+						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 					>
 						<div
 							class="js-code-wrap__header  code-wrap__header"
@@ -804,9 +813,10 @@ export default class ContentWrap extends Component {
 					</div>
 					<div
 						data-code-wrap-id="2"
-						id="js-js-code"
+						id="jsCodeEl"
 						data-type="js"
 						class="code-wrap"
+						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 					>
 						<div
 							class="js-code-wrap__header  code-wrap__header"

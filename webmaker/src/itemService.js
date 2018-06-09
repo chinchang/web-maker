@@ -159,7 +159,7 @@ export const itemService = {
 		// When not logged in
 		if (!window.user) {
 			var d = deferred();
-			db.local.remove(id, d.resolve);
+			window.db.local.remove(id, d.resolve);
 			return d.promise;
 		}
 		const remoteDb = await window.db.getDb();
@@ -211,7 +211,7 @@ export const itemService = {
 				},
 				function (result) {
 					delete result.items[itemId];
-					db.local.set({
+					window.db.local.set({
 						items: result.items
 					});
 				}

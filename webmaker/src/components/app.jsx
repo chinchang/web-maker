@@ -54,12 +54,14 @@ export default class App extends Component {
 			isSavedItemPaneOpen: false,
 			isModalOpen: false,
 			isAddLibraryModalOpen: false,
+			isSettingsModalOpen: false,
 			isHelpModalOpen: false,
 			isNotificationsModalOpen: false,
 			isLoginModalOpen: false,
 			isProfileModalOpen: false,
 			isSupportDeveloperModalOpen: false,
 			isKeyboardShortcutsModalOpen: false,
+			isAskToImportModalOpen: false,
 			prefs: {},
 			currentItem: {
 				title: '',
@@ -269,28 +271,26 @@ export default class App extends Component {
 		this.setCurrentItem(item).then(() => this.refreshEditor());
 		alertsService.add('Saved item loaded');
 	}
-	removeItem(itemId) {
-		var answer = confirm(
-			`Are you sure you want to delete "${savedItems[itemId].title}"?`
-		);
+	removeItem(item) {
+		var answer = confirm(`Are you sure you want to delete "${item.title}"?`);
 		if (!answer) {
 			return;
 		}
 
 		// Remove from items list
-		itemService.unsetItemForUser(itemId);
+		itemService.unsetItemForUser(item.id);
 
 		// Remove individual item too.
-		itemService.removeItem(itemId).then(() => {
-			alertsService.add('Item removed.');
+		itemService.removeItem(item.id).then(() => {
+			alertsService.add('Item removed.', item);
 			// This item is open in the editor. Lets open a new one.
-			if (this.state.currentItem.id === itemId) {
+			if (this.state.currentItem.id === item.id) {
 				this.createNewItem();
 			}
 		});
 
 		// Remove from cached list
-		delete this.state.savedItems[itemId];
+		delete this.state.savedItems[item.id];
 		this.setState({
 			savedItems: { ...this.state.savedItems }
 		});
@@ -327,9 +327,7 @@ export default class App extends Component {
 		const savedItemsPane = $('#js-saved-items-pane');
 		// TODO: sort desc. by updation date
 		this.setState({
-			savedItems: items.sort(function(a, b) {
-				return b.updatedOn - a.updatedOn;
-			})
+			savedItems: { ...this.state.savedItems }
 		});
 
 		this.toggleSavedItemsPane();
@@ -727,8 +725,8 @@ export default class App extends Component {
 		}, 350);
 		this.toggleSavedItemsPane();
 	}
-	itemRemoveBtnClickHandler(itemId) {
-		this.removeItem(itemId);
+	itemRemoveBtnClickHandler(item) {
+		this.removeItem(item);
 	}
 	itemForkBtnClickHandler(item) {
 		this.toggleSavedItemsPane();
@@ -858,6 +856,27 @@ export default class App extends Component {
 	}
 	supportDeveloperBtnClickHandler(e) {
 		this.openSupportDeveloperModal(e);
+	}
+
+	/**
+	 * Called from inside ask-to-import-modal
+	 */
+	dontAskToImportAnymore(e) {
+		this.setState({ isAskToImportModalOpen: false });
+		window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS] = true;
+		if (e) {
+			trackEvent('ui', 'dontAskToImportBtnClick');
+		}
+	}
+
+	/**
+	 * Called from inside ask-to-import-modal
+	 */
+	importCreationsAndSettingsIntoApp() {
+		this.mergeImportedItems(this.oldSavedItems).then(() => {
+			trackEvent('fn', 'oldItemsImported');
+			this.dontAskToImportAnymore();
+		});
 	}
 
 	render() {
@@ -1013,6 +1032,10 @@ export default class App extends Component {
 					show={this.state.isAskToImportModalOpen}
 					closeHandler={() => this.setState({ isAskToImportModalOpen: false })}
 					oldSavedCreationsCount={this.oldSavedCreationsCount}
+					importBtnClickHandler={this.importCreationsAndSettingsIntoApp.bind(
+						this
+					)}
+					dontAskBtnClickHandler={this.dontAskToImportAnymore.bind(this)}
 				/>
 
 				<div class="modal-overlay" />

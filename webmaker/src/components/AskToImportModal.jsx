@@ -22,11 +22,11 @@ export default class AskToImportModal extends Component {
 						them anytime on this browser.
 					</p>
 					<div class="flex flex-h-end">
-						<button d-click="dontAskToImportAnymore" class="btn">
+						<button onClick={this.props.dontAskBtnClickHandler} class="btn">
 							Don't ask me again
 						</button>
 						<button
-							d-click="importCreationsAndSettingsIntoApp"
+							onClick={this.props.importBtnClickHandler}
 							class="btn btn--primary ml-1"
 						>
 							Yes, please import

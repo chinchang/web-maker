@@ -246,7 +246,9 @@ export default class ContentWrap extends Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		return (
 			this.state.isConsoleOpen !== nextState.isConsoleOpen ||
-			this.state.isCssSettingsModalOpen !== nextState.isCssSettingsModalOpen
+			this.state.isCssSettingsModalOpen !== nextState.isCssSettingsModalOpen ||
+			this.state.codeSplitSizes != nextState.codeSplitSizes ||
+			this.state.mainSplitSizes != nextState.mainSplitSizes
 		);
 	}
 	componentDidUpdate() {
@@ -262,7 +264,6 @@ export default class ContentWrap extends Component {
 		this.props.onRef(this);
 	}
 	refreshEditor() {
-		console.log('ContentWrap refresh editor');
 		this.cmCodes.html = this.props.currentItem.html;
 		this.cmCodes.css = this.props.currentItem.css;
 		this.cmCodes.js = this.props.currentItem.js;
@@ -330,23 +331,6 @@ export default class ContentWrap extends Component {
 		});
 	}
 
-	// Returns the sizes of main code & preview panes.
-	getMainSplitSizesToApply() {
-		var mainSplitSizes;
-		const { currentItem, currentLayoutMode } = this.props;
-		if (currentItem && currentItem.mainSizes) {
-			// For layout mode 3, main panes are reversed using flex-direction.
-			// So we need to apply the saved sizes in reverse order.
-			mainSplitSizes =
-				currentLayoutMode === 3
-					? [currentItem.mainSizes[1], currentItem.mainSizes[0]]
-					: currentItem.mainSizes;
-		} else {
-			mainSplitSizes = currentLayoutMode === 5 ? [75, 25] : [50, 50];
-		}
-		return mainSplitSizes;
-	}
-
 	// Check all the code wrap if they are minimized or maximized
 	updateCodeWrapCollapseStates() {
 		// This is debounced!
@@ -410,11 +394,29 @@ export default class ContentWrap extends Component {
 	}
 
 	resetSplitting() {
-		const codeSplitSizes = this.getCodeSplitSizes();
 		this.setState({
-			codeSplitSizes: this.codeSplitSizes
+			codeSplitSizes: this.getCodeSplitSizes(),
+			mainSplitSizes: this.getMainSplitSizesToApply()
 		});
 	}
+
+	// Returns the sizes of main code & preview panes.
+	getMainSplitSizesToApply() {
+		var mainSplitSizes;
+		const { currentItem, currentLayoutMode } = this.props;
+		if (currentItem && currentItem.mainSizes) {
+			// For layout mode 3, main panes are reversed using flex-direction.
+			// So we need to apply the saved sizes in reverse order.
+			mainSplitSizes =
+				currentLayoutMode === 3
+					? [currentItem.mainSizes[1], currentItem.mainSizes[0]]
+					: currentItem.mainSizes;
+		} else {
+			mainSplitSizes = currentLayoutMode === 5 ? [75, 25] : [50, 50];
+		}
+		return mainSplitSizes;
+	}
+
 	getCodeSplitSizes() {
 		if (this.props.currentItem && this.props.currentItem.sizes) {
 			return this.props.currentItem.sizes;
@@ -678,8 +680,9 @@ export default class ContentWrap extends Component {
 		return (
 			<SplitPane
 				class="content-wrap  flex  flex-grow"
-				sizes={this.getMainSplitSizesToApply()}
+				sizes={this.state.mainSplitSizes}
 				minSize={150}
+				style=""
 				direction={
 					this.props.currentLayoutMode === 2 ? 'vertical' : 'horizontal'
 				}
@@ -863,7 +866,7 @@ export default class ContentWrap extends Component {
 						{/* Inlet(scope.cm.js); */}
 					</div>
 				</SplitPane>
-				<div class="demo-side" id="js-demo-side">
+				<div class="demo-side" id="js-demo-side" style="">
 					<iframe
 						ref={el => (this.frame = el)}
 						src="about://blank"

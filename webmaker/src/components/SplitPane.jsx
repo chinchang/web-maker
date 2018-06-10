@@ -33,9 +33,8 @@ export class SplitPane extends Component {
 		if (this.props.onDragStart) {
 			options.onDragStart = this.props.onDragStart;
 		}
-		// debugger;
-		// log('SIZE UPDATED', options);
 
+		// log('SIZE UPDATTED', ...options);
 		this.splitInstance = Split(
 			this.props.children.map(node => '#' + node.attributes.id),
 			options

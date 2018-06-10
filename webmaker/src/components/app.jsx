@@ -148,7 +148,7 @@ export default class App extends Component {
 				code: ''
 			},
 			result => {
-				// this.toggleLayout(result.layoutMode);
+				this.toggleLayout(result.layoutMode);
 				this.state.prefs.layoutMode = result.layoutMode;
 				if (result.code) {
 					lastCode = result.code;
@@ -324,11 +324,11 @@ export default class App extends Component {
 	}
 
 	populateItemsInSavedPane(items) {
-		const savedItemsPane = $('#js-saved-items-pane');
 		// TODO: sort desc. by updation date
 		this.setState({
 			savedItems: { ...this.state.savedItems }
 		});
+		var a = 343478798793397;
 
 		this.toggleSavedItemsPane();
 		// HACK: Set overflow after sometime so that the items can animate without getting cropped.
@@ -493,6 +493,7 @@ export default class App extends Component {
 		mode = window.innerWidth < 500 ? 2 : mode;
 
 		if (this.state.currentLayoutMode === mode) {
+			this.contentWrap.resetSplitting();
 			// mainSplitInstance.setSizes(getMainSplitSizesToApply());
 			// codeSplitInstance.setSizes(currentItem.sizes || [33.33, 33.33, 33.33]);
 			this.setState({ currentLayoutMode: mode });
@@ -516,6 +517,48 @@ export default class App extends Component {
 		trackEvent('ui', 'toggleLayoutClick', layoutId);
 		this.toggleLayout(layoutId);
 	}
+
+	// Calculates the sizes of html, css & js code panes.
+	getCodePaneSizes() {
+		var sizes;
+		const currentLayoutMode = this.state.currentLayoutMode;
+		var dimensionProperty =
+			currentLayoutMode === 2 || currentLayoutMode === 5 ? 'width' : 'height';
+		try {
+			sizes = [
+				htmlCodeEl.style[dimensionProperty],
+				cssCodeEl.style[dimensionProperty],
+				jsCodeEl.style[dimensionProperty]
+			];
+		} catch (e) {
+			sizes = [33.33, 33.33, 33.33];
+		} finally {
+			/* eslint-disable no-unsafe-finally */
+			return sizes;
+
+			/* eslint-enable no-unsafe-finally */
+		}
+	}
+
+	// Calculates the current sizes of code & preview panes.
+	getMainPaneSizes() {
+		var sizes;
+		const currentLayoutMode = this.state.currentLayoutMode;
+		var dimensionProperty = currentLayoutMode === 2 ? 'height' : 'width';
+		try {
+			sizes = [
+				+$('#js-code-side').style[dimensionProperty].match(/([\d.]+)%/)[1],
+				+$('#js-demo-side').style[dimensionProperty].match(/([\d.]+)%/)[1]
+			];
+		} catch (e) {
+			sizes = [50, 50];
+		} finally {
+			/* eslint-disable no-unsafe-finally */
+			return sizes;
+
+			/* eslint-enable no-unsafe-finally */
+		}
+	}
 	saveSetting(setting, value) {
 		const d = deferred();
 		const obj = {
@@ -529,8 +572,8 @@ export default class App extends Component {
 		this.state.currentItem.updatedOn = Date.now();
 		this.state.currentItem.layoutMode = this.state.currentLayoutMode;
 
-		// currentItem.sizes = getCodePaneSizes();
-		// currentItem.mainSizes = getMainPaneSizes();
+		this.state.currentItem.sizes = this.getCodePaneSizes();
+		this.state.currentItem.mainSizes = this.getMainPaneSizes();
 
 		log('saving key', key || this.state.currentItem.id, this.state.currentItem);
 

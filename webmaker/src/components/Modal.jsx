@@ -21,6 +21,10 @@ export default class Modal extends Component {
 		document.body.classList[this.props.show ? 'add' : 'remove'](
 			'overlay-visible'
 		);
+
+		if (this.props.show) {
+			this.overlayEl.querySelector('.js-modal__close-btn').focus();
+		}
 	}
 	render() {
 		if (!this.props.show) return null;

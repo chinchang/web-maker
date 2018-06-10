@@ -417,6 +417,8 @@ export default class App extends Component {
 		});
 	}
 	componentDidMount() {
+		document.body.style.height = `${window.innerHeight}px`;
+
 		// Editor keyboard shortucuts
 		window.addEventListener('keydown', event => {
 			// TODO: refactor common listener code
@@ -958,9 +960,9 @@ export default class App extends Component {
 						settingsBtnClickHandler={() =>
 							this.setState({ isSettingsModalOpen: true })
 						}
-						notificationsBtnClickHandler={() =>
-							this.setState({ notificationsBtnClickHandler: true })
-						}
+						notificationsBtnClickHandler={this.notificationsBtnClickHandler.bind(
+							this
+						)}
 						supportDeveloperBtnClickHandler={this.supportDeveloperBtnClickHandler.bind(
 							this
 						)}

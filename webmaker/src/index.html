@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 	<head>
 		<meta charset="utf-8">
 		<title>Web Maker</title>
@@ -9,72 +10,72 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<link rel="manifest" href="<%= htmlWebpackPlugin.files.publicPath %>manifest.json">
 		<% if (htmlWebpackPlugin.options.manifest.theme_color) { %>
-		<meta name="theme-color" content="<%= htmlWebpackPlugin.options.manifest.theme_color %>">
-		<% } %>
-		<% for (var chunk of webpack.chunks) { %>
-		<% if (chunk.names.length === 1 && chunk.names[0] === 'polyfills') continue; %>
-		<% for (var file of chunk.files) { %>
-		<% if (htmlWebpackPlugin.options.preload && file.match(/\.(js|css)$/)) { %>
-		<link rel="preload" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':'script' %>">
-		<% } else if (file.match(/manifest\.json$/)) { %>
-		<link rel="manifest" href="<%= htmlWebpackPlugin.files.publicPath + file %>">
-		<% } %>
-		<% } %>
-		<% } %>
+			<meta name="theme-color" content="<%= htmlWebpackPlugin.options.manifest.theme_color %>">
+			<% } %>
+				<% for (var chunk of webpack.chunks) { %>
+					<% if (chunk.names.length === 1 && chunk.names[0] === 'polyfills') continue; %>
+						<% for (var file of chunk.files) { %>
+							<% if (htmlWebpackPlugin.options.preload && file.match(/\.(js|css)$/)) { %>
+								<link rel="preload" href="<%= htmlWebpackPlugin.files.publicPath + file %>" as="<%= file.match(/\.css$/)?'style':'script' %>">
+								<% } else if (file.match(/manifest\.json$/)) { %>
+									<link rel="manifest" href="<%= htmlWebpackPlugin.files.publicPath + file %>">
+									<% } %>
+										<% } %>
+											<% } %>
 
 
-		<style>
-			/* Critically acclaimed CSS */
+												<style>
+													/* Critically acclaimed CSS */
 
-			.saved-items-pane {
-				position: fixed;
-				right: 0;
-				top: 0;
-				bottom: 0;
-				width: 450px;
-				transform: translateX(100%);
-			}
+													.saved-items-pane {
+														position: fixed;
+														right: 0;
+														top: 0;
+														bottom: 0;
+														width: 450px;
+														transform: translateX(100%);
+													}
 
-			.modal {
-				visibility: hidden;
-			}
+													.modal {
+														visibility: hidden;
+													}
 
-		</style>
+												</style>
 
-		<!-- build:css vendor.css -->
-		<link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
-		<link rel="stylesheet" href="lib/codemirror/addon/hint/show-hint.css">
-		<link rel="stylesheet" href="lib/codemirror/addon/fold/foldgutter.css">
-		<link rel="stylesheet" href="lib/codemirror/addon/dialog/dialog.css">
-		<link rel="stylesheet" href="lib/hint.min.css">
-		<link rel="stylesheet" href="lib/inlet.css">
-		<!-- endbuild -->
+												<!-- build:css vendor.css -->
+												<link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
+												<link rel="stylesheet" href="lib/codemirror/addon/hint/show-hint.css">
+												<link rel="stylesheet" href="lib/codemirror/addon/fold/foldgutter.css">
+												<link rel="stylesheet" href="lib/codemirror/addon/dialog/dialog.css">
+												<link rel="stylesheet" href="lib/hint.min.css">
+												<link rel="stylesheet" href="lib/inlet.css">
+												<!-- endbuild -->
 
-		<link rel="stylesheet" id="editorThemeLinkTag" href="lib/codemirror/theme/monokai.css"></link>
+												<link rel="stylesheet" id="editorThemeLinkTag" href="lib/codemirror/theme/monokai.css"></link>
 
-		<!-- build:css style.css -->
-		<link rel="stylesheet" href="style.css">
-		<!-- endbuild -->
+												<!-- build:css style.css -->
+												<link rel="stylesheet" href="style.css">
+												<!-- endbuild -->
 
-		<style id="fontStyleTemplate" type="template">
-			@font-face { font-family: 'fontname'; font-style: normal; font-weight: 400; src: url(fontname.ttf) format('truetype'); unicode-range:
-			U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD,
-			U+F000; } .Codemirror pre { font-family: 'fontname', monospace; }
-		</style>
-		<style type="text/css" id="fontStyleTag">
-			@font-face {
-				font-family: 'FiraCode';
-				font-style: normal;
-				font-weight: 400;
-				src: url(FiraCode.ttf) format('truetype');
-				unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-			}
+												<style id="fontStyleTemplate" type="template">
+													@font-face { font-family: 'fontname'; font-style: normal; font-weight: 400; src: url(fontname.ttf) format('truetype'); unicode-range:
+													U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF,
+													U+EFFD, U+F000; } .CodeMirror pre { font-family: 'fontname', monospace; }
+												</style>
+												<style type="text/css" id="fontStyleTag">
+													@font-face {
+														font-family: 'FiraCode';
+														font-style: normal;
+														font-weight: 400;
+														src: url(FiraCode.ttf) format('truetype');
+														unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+													}
 
-			.Codemirror pre {
-				font-family: 'FiraCode', monospace;
-			}
+													.CodeMirror pre {
+														font-family: 'FiraCode', monospace;
+													}
 
-		</style>
+												</style>
 	</head>
 
 	<body>
@@ -87,10 +88,12 @@
 		<%= htmlWebpackPlugin.options.ssr({
 			url: '/'
 		}) %>
-		<script defer src="<%= htmlWebpackPlugin.files.chunks['bundle'].entry %>"></script>
-		<script>
-			window.fetch || document.write('<script src="<%= htmlWebpackPlugin.files.chunks["polyfills"].entry %>"><\/script>')
-		</script>
+			<script defer src="<%= htmlWebpackPlugin.files.chunks['bundle'].entry %>"></script>
+			<script>
+				window.fetch || document.write('<script src="<%= htmlWebpackPlugin.files.chunks["polyfills"].entry %>"><\/script>')
+
+			</script>
 
 	</body>
+
 </html>

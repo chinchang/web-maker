@@ -159,14 +159,16 @@ export default class Settings extends Component {
 								<option disabled="disabled">----</option>
 								<option value="other">Other font from system</option>
 							</select>
-							<input
-								id="customEditorFontInput"
-								type="text"
-								value={this.props.prefs.editorCustomFont}
-								placeholder="Custom font name here"
-								data-setting="editorCustomFont"
-								onChange={this.updateSetting.bind(this)}
-							/>
+							{this.props.prefs.editorFont === 'other' && (
+								<input
+									id="customEditorFontInput"
+									type="text"
+									value={this.props.prefs.editorCustomFont}
+									placeholder="Custom font name here"
+									data-setting="editorCustomFont"
+									onChange={this.updateSetting.bind(this)}
+								/>
+							)}
 						</label>
 						<label class="line">
 							Font Size{' '}

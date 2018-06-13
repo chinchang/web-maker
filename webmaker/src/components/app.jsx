@@ -33,6 +33,7 @@ import SupportDeveloperModal from './SupportDeveloperModal';
 import KeyboardShortcutsModal from './KeyboardShortcutsModal';
 import { takeScreenshot } from '../takeScreenshot';
 import AskToImportModal from './AskToImportModal';
+import { Alerts } from './Alerts';
 
 if (module.hot) {
 	require('preact/debug');
@@ -990,7 +991,9 @@ export default class App extends Component {
 					itemForkBtnClickHandler={this.itemForkBtnClickHandler.bind(this)}
 					exportBtnClickHandler={this.exportBtnClickHandler.bind(this)}
 				/>
-				<div class="alerts-container" id="js-alerts-container" />
+
+				<Alerts />
+
 				<form
 					style="display:none;"
 					action="https://codepen.io/pen/define"

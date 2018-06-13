@@ -225,7 +225,7 @@ export default class SavedItemPane extends Component {
 
 				<div id="js-saved-items-wrap" class="saved-items-pane__container">
 					{!this.state.filteredItems.length &&
-						!this.items.length && <div class="mt-1">No match found.</div>}
+						this.items.length && <div class="mt-1">No match found.</div>}
 					{this.state.filteredItems.map(item => (
 						<div
 							class="js-saved-item-tile saved-item-tile"

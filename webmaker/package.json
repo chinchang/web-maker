@@ -29,6 +29,7 @@
   "dependencies": {
     "@emmetio/codemirror-plugin": "^0.5.4",
     "codemirror": "^5.37.0",
+    "copy-webpack-plugin": "^4.5.1",
     "esprima": "^4.0.0",
     "firebase": "^5.0.4",
     "preact": "^8.2.6",

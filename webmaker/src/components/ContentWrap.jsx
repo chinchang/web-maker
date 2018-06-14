@@ -248,7 +248,8 @@ export default class ContentWrap extends Component {
 			this.state.isConsoleOpen !== nextState.isConsoleOpen ||
 			this.state.isCssSettingsModalOpen !== nextState.isCssSettingsModalOpen ||
 			this.state.codeSplitSizes != nextState.codeSplitSizes ||
-			this.state.mainSplitSizes != nextState.mainSplitSizes
+			this.state.mainSplitSizes != nextState.mainSplitSizes ||
+			this.props.currentLayoutMode !== nextProps.currentLayoutMode
 		);
 	}
 	componentDidUpdate() {
@@ -921,7 +922,7 @@ export default class ContentWrap extends Component {
 							class="console__prompt flex flex-v-center"
 						>
 							<svg width="18" height="18" fill="#346fd2">
-								Chevron
+								<use xlinkHref="#chevron-icon" />
 							</svg>
 							<input
 								onKeyUp={this.evalConsoleExpr.bind(this)}

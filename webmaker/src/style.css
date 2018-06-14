@@ -275,6 +275,8 @@ body:not(.light-version).overlay-visible .main-container {
 }
 
 .content-wrap {
+	/* HACK:  */
+	height: 1px;
 	/* HACK: 70px is approx header+footer. This is required to because
 	on FF the content-wrap goes beyond the flex parent otherwise. */
 	max-height: calc(100% - 70px);
@@ -695,10 +697,17 @@ body>#demo-frame {
 	justify-content: center;
 	z-index: 2000;
 	visibility: hidden;
-	background-color: rgba(102, 51, 153, 0.7);
-	background-color: rgba(0, 0, 0, 0.7);
+	/* background-color: rgba(102, 51, 153, 0.7); */
+	/* background-color: rgba(0, 0, 0, 0.7); */
 	/* To prevent scroll repaint inside modal */
 	will-change: transform;
+}
+
+@keyframes anim-modal-overlay {
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
 }
 
 .modal__close-btn {
@@ -733,9 +742,16 @@ body>#demo-frame {
 	box-sizing: border-box;
 	overflow-y: auto;
 	pointer-events: auto;
-	transition-property: transform, opacity;
-	transition-duration: 0.19s;
 	transform: translateY(50px) scale(0.95);
+	animation: anim-modal 300ms ease forwards;
+	animation-delay: 150ms;
+}
+
+@keyframes anim-modal {
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
 }
 
 @media screen and (max-width: 900px) {
@@ -749,9 +765,9 @@ body>#demo-frame {
 }
 
 .is-modal-visible .modal__content {
-	transition-duration: 0.3s;
-	transform: translateY(0px) scale(1);
-	opacity: 1;
+	/* transition-duration: 0.3s; */
+	/* transform: translateY(0px) scale(1); */
+	/* opacity: 1; */
 }
 
 .modal-overlay {
@@ -1281,6 +1297,8 @@ body>#demo-frame {
 	height: 35vh;
 	left: 0;
 	right: 0;
+	display: flex;
+	flex-direction: column;
 	transform: translateY(0);
 	transition: transform 0.4s cubic-bezier(0.76, 0.01, 0.13, 0.9);
 }
@@ -1290,7 +1308,11 @@ body>#demo-frame {
 }
 
 .console .CodeMirror {
-	height: calc(100% - 55px);
+	height: calc(100% - 30px);
+}
+
+.console__log {
+	flex: 1;
 }
 
 .console-exec-input {

@@ -502,7 +502,6 @@ export default class App extends Component {
 			this.setState({ currentLayoutMode: mode });
 			return;
 		}
-		this.setState({ currentLayoutMode: mode });
 		// Remove all layout classes
 		[1, 2, 3, 4, 5].forEach(layoutNumber => {
 			window[`layoutBtn${layoutNumber}`].classList.remove('selected');
@@ -511,8 +510,10 @@ export default class App extends Component {
 		$('#layoutBtn' + mode).classList.add('selected');
 		document.body.classList.add('layout-' + mode);
 
-		this.contentWrap.resetSplitting();
-		this.contentWrap.setPreviewContent(true);
+		this.setState({ currentLayoutMode: mode }, () => {
+			this.contentWrap.resetSplitting();
+			this.contentWrap.setPreviewContent(true);
+		});
 	}
 
 	layoutBtnClickHandler(layoutId) {

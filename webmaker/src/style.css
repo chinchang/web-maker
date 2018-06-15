@@ -722,6 +722,8 @@ body>#demo-frame {
 	position: absolute;
 	right: 10px;
 	top: 10px;
+	text-transform: uppercase;
+	font-weight: 700;
 	opacity: 0.8;
 	transition: 0.25s ease;
 }

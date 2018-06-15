@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { jsLibs, cssLibs } from '../libraryList';
 import { trackEvent } from '../analytics';
+import { LibraryAutoSuggest } from './LibraryAutoSuggest';
 
 export default class AddLibrary extends Component {
 	constructor(props) {
@@ -20,6 +21,10 @@ export default class AddLibrary extends Component {
 			this.setState({
 				js: `${this.state.js}\n${target.value}`
 			});
+		} else {
+			this.setState({
+				css: `${this.state.css}\n${target.value}`
+			});
 		}
 
 		trackEvent('ui', 'addLibrarySelect', target.selectedOptions[0].label);
@@ -27,17 +32,51 @@ export default class AddLibrary extends Component {
 		// Reset the select to the default value
 		target.value = '';
 	}
+	textareaBlurHandler(e, textarea) {
+		const target = e ? e.target : textarea;
+		const type = target.dataset.lang;
+		if (type === 'js') {
+			this.setState({
+				js: target.value || ''
+			});
+		} else {
+			this.setState({
+				css: target.value || ''
+			});
+		}
+
+		// trackEvent('ui', 'addLibrarySelect', target.selectedOptions[0].label);
+		this.props.onChange({ js: this.state.js, css: this.state.css });
+	}
+	suggestionSelectHandler(value) {
+		const textarea = value.match(/\.js$/)
+			? window.externalJsTextarea
+			: window.externalCssTextarea;
+		textarea.value = `${textarea.value}\n${value}`;
+		window.externalLibrarySearchInput.value = '';
+		this.textareaBlurHandler(null, textarea);
+	}
 	render() {
 		return (
 			<div>
 				<h1>Add Library</h1>
 
-				<input
-					type="text"
-					id="externalLibrarySearchInput"
-					class="full-width"
-					placeholder="Type here to search libraries"
-				/>
+				<div class="flex">
+					<svg style="width: 30px; height: 30px;fill:#999">
+						<use xlinkHref="#search" />
+					</svg>
+					<LibraryAutoSuggest
+						fullWidth
+						onSelect={this.suggestionSelectHandler.bind(this)}
+					>
+						<input
+							type="text"
+							id="externalLibrarySearchInput"
+							class="full-width"
+							placeholder="Type here to search libraries"
+						/>
+					</LibraryAutoSuggest>
+				</div>
 				<div class="tar opacity--70">
 					<small>Powered by cdnjs</small>
 				</div>
@@ -66,7 +105,9 @@ export default class AddLibrary extends Component {
 					</select>
 				</div>
 
-				<h3>JavaScript</h3>
+				<h3 class="mb-0">JS</h3>
+				<p class="mt-0 help-text">Put each library in new line</p>
+
 				<p style="font-size: 0.8em;" class="show-when-extension opacity--70">
 					Note: You can load external scripts from following domains: localhost,
 					https://ajax.googleapis.com, https://code.jquery.com,
@@ -76,23 +117,27 @@ export default class AddLibrary extends Component {
 				</p>
 
 				<textarea
-					onBlur={this.props.onChange}
+					onBlur={this.textareaBlurHandler.bind(this)}
+					data-lang="js"
 					class="full-width"
-					id=""
+					id="externalJsTextarea"
 					cols="30"
 					rows="5"
-					placeholder="Start typing name of a library. Put each library in new line"
+					placeholder="Put each library in new line"
 					value={this.state.js}
 				/>
 
-				<h3>CSS</h3>
+				<h3 class="mb-0">CSS</h3>
+				<p class="mt-0 help-text">Put each library in new line</p>
 				<textarea
-					onBlur={this.props.onChange}
+					onBlur={this.textareaBlurHandler.bind(this)}
+					data-lang="css"
 					class="full-width"
-					id=""
+					id="externalCssTextarea"
 					cols="30"
 					rows="5"
-					placeholder="Start typing name of a library. Put each library in new line"
+					placeholder="Put each library in new line"
+					value={this.state.css}
 				/>
 			</div>
 		);

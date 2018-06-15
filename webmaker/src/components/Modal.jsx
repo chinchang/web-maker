@@ -17,12 +17,12 @@ export default class Modal extends Component {
 			this.props.closeHandler();
 		}
 	}
-	componentDidUpdate() {
+	componentDidUpdate(prevProps) {
 		document.body.classList[this.props.show ? 'add' : 'remove'](
 			'overlay-visible'
 		);
 
-		if (this.props.show) {
+		if (this.props.show && !prevProps.show) {
 			this.overlayEl.querySelector('.js-modal__close-btn').focus();
 		}
 	}
@@ -37,6 +37,7 @@ export default class Modal extends Component {
 			>
 				<div class="modal__content">
 					<button
+						type="button"
 						onClick={this.props.closeHandler}
 						aria-label="Close modal"
 						title="Close"

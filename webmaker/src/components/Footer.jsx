@@ -1,5 +1,4 @@
 import { h, Component } from 'preact';
-import Modal from './Modal.jsx';
 import { A } from './common';
 
 export default class Footer extends Component {

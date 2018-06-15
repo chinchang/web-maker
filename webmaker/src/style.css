@@ -108,6 +108,14 @@ p {
 	margin-bottom: 2rem;
 }
 
+.mb-0 {
+	margin-bottom: 0;
+}
+
+.mt-0 {
+	margin-top: 0;
+}
+
 @media screen and (max-width: 500px) {
 	.block--mobile {
 		display: block;
@@ -1445,7 +1453,6 @@ body:not(.is-app) .show-when-app {
 .help-text {
 	font-size: 0.9em;
 	color: #616465;
-	padding-left: 1em;
 }
 
 .social-login-btn:after,

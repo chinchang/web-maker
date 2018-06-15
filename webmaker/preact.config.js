@@ -1,4 +1,5 @@
 import CopyWebpackPlugin from 'copy-webpack-plugin'
+var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 
 /**
  * Function that mutates original webpack config.
@@ -11,6 +12,15 @@ import CopyWebpackPlugin from 'copy-webpack-plugin'
 export default function (config, env, helpers) {
 	if (env.isProd) {
 		config.devtool = false; // disable sourcemaps
+
+		config.plugins.push(
+			new CommonsChunkPlugin({
+				name: 'vendor',
+				minChunks: ({
+					resource
+				}) => /node_modules/.test(resource),
+			})
+		);
 
 		config.plugins.push(new CopyWebpackPlugin([{
 				context: `${__dirname}/src/assets`,

@@ -2203,6 +2203,10 @@ coa@~1.0.1:
   dependencies:
     q "^1.1.2"
 
+code-blast-codemirror@chinchang/code-blast-codemirror#web-maker:
+  version "0.0.0"
+  resolved "https://codeload.github.com/chinchang/code-blast-codemirror/tar.gz/419e564f1053f1d0fe1648914be04dbaff6d655b"
+
 code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"

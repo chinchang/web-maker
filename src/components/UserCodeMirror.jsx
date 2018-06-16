@@ -30,6 +30,7 @@ import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/mode/htmlmixed/htmlmixed.js';
 import 'codemirror/keymap/sublime.js';
 import 'codemirror/keymap/vim.js';
+import 'code-blast-codemirror/code-blast.js';
 
 import emmet from '@emmetio/codemirror-plugin';
 

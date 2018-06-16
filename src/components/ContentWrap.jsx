@@ -127,8 +127,8 @@ export default class ContentWrap extends Component {
 						? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
 						: `${location.origin}`;
 					var src = `filesystem:${origin}/temporary/preview.html`;
-					if (scope.detachedWindow) {
-						scope.detachedWindow.postMessage(src, '*');
+					if (this.detachedWindow) {
+						this.detachedWindow.postMessage(src, '*');
 					} else {
 						frame.src = src;
 					}

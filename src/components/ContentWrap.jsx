@@ -676,6 +676,9 @@ export default class ContentWrap extends Component {
 	getDemoFrame(callback) {
 		callback(this.frame);
 	}
+	editorFocusHandler(editor) {
+		this.props.onEditorFocus(editor);
+	}
 
 	render() {
 		return (
@@ -750,6 +753,7 @@ export default class ContentWrap extends Component {
 							}}
 							onChange={this.onHtmlCodeChange.bind(this)}
 							onCreation={el => (this.cm.html = el)}
+							onFocus={this.editorFocusHandler.bind(this)}
 						/>
 					</div>
 					<div
@@ -813,6 +817,7 @@ export default class ContentWrap extends Component {
 							}}
 							onChange={this.onCssCodeChange.bind(this)}
 							onCreation={el => (this.cm.css = el)}
+							onFocus={this.editorFocusHandler.bind(this)}
 						/>
 					</div>
 					<div
@@ -863,6 +868,7 @@ export default class ContentWrap extends Component {
 							autoComplete={this.props.prefs.autoComplete}
 							onChange={this.onJsCodeChange.bind(this)}
 							onCreation={el => (this.cm.js = el)}
+							onFocus={this.editorFocusHandler.bind(this)}
 						/>
 						{/* Inlet(scope.cm.js); */}
 					</div>

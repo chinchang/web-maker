@@ -12,7 +12,6 @@ import 'codemirror/addon/fold/xml-fold.js';
 import 'codemirror/addon/fold/indent-fold.js';
 import 'codemirror/addon/fold/comment-fold.js';
 import 'codemirror/addon/fold/brace-fold.js';
-// import 'codemirror/addon/mode/loadmode.js';
 import 'codemirror/addon/hint/show-hint.js';
 import 'codemirror/addon/hint/javascript-hint.js';
 import 'codemirror/addon/hint/xml-hint.js';
@@ -106,7 +105,7 @@ export default class UserCodeMirror extends Component {
 			}
 		});
 		this.cm.on('focus', editor => {
-			// editorWithFocus = editor;
+			if (typeof this.props.onFocus === 'function') this.props.onFocus(editor);
 		});
 		this.cm.on('change', this.props.onChange);
 		this.cm.addKeyMap({

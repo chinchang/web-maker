@@ -69,6 +69,7 @@ export default class SavedItemPane extends Component {
 			const item = this.props.items[selectedItemElement.dataset.itemId];
 			console.log('opening', item);
 			this.props.itemClickHandler(item);
+			trackEvent('ui', 'openItemKeyboardShortcut');
 		}
 
 		// Fork shortcut inside saved creations panel with Ctrl/⌘ + F

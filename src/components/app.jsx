@@ -413,6 +413,9 @@ export default class App extends Component {
 		this.setState({ isAddLibraryModalOpen: true });
 	}
 	closeSavedItemsPane() {
+		if (this.editorWithFocus) {
+			this.editorWithFocus.focus();
+		}
 		this.setState({
 			isSavedItemPaneOpen: false
 		});
@@ -462,7 +465,7 @@ export default class App extends Component {
 
 	closeAllOverlays() {
 		if (this.state.isSavedItemPaneOpen) {
-			this.setState({ isSavedItemPaneOpen: false });
+			this.closeSavedItemsPane();
 		}
 	}
 	onExternalLibChange(newValues) {
@@ -926,6 +929,10 @@ export default class App extends Component {
 		});
 	}
 
+	editorFocusHandler(editor) {
+		this.editorWithFocus = editor;
+	}
+
 	render() {
 		return (
 			<div>
@@ -954,6 +961,7 @@ export default class App extends Component {
 						onCodeModeChange={this.onCodeModeChange.bind(this)}
 						onRef={comp => (this.contentWrap = comp)}
 						prefs={this.state.prefs}
+						onEditorFocus={this.editorFocusHandler.bind(this)}
 					/>
 					<div class="global-console-container" id="globalConsoleContainerEl" />
 					<Footer

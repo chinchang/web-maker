@@ -1,27 +1,21 @@
 {
-	"name": "Web Maker",
-	"version": "3.2.0",
-	"manifest_version": 2,
-	"description": "Blazing fast & offline playground for your web experiments",
-	"homepage_url": "https://webmakerapp.com",
-	"permissions": ["storage", "tabs", "<all_urls>"],
-	"optional_permissions": ["downloads"],
-	"content_security_policy":
-		"script-src 'self' filesystem: http://localhost:* https://localhost:* https://apis.google.com https://ajax.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://unpkg.com https://maxcdn.com https://cdn77.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net/ https://*.stripe.com/ https://builds.framerjs.com/ https://rawgit.com https://wzrd.in https://www.gstatic.com https://semantic-ui.com https://www.google-analytics.com 'unsafe-eval'; object-src 'self'",
-	"options_ui": {
-		"page": "options.html",
-		"chrome_style": true
-	},
-	"browser_action": {
-		"default_title": "Start Web Maker",
-		"default_icon": "icon-16.png"
-	},
-	"background": {
-		"scripts": ["eventPage.js"],
-		"persistent": false
-	},
-	"icons": {
-		"16": "icon-16.png",
-		"48": "icon-48.png"
-	}
+  "name": "webmaker",
+  "short_name": "webmaker",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff",
+  "theme_color": "#673ab8",
+  "icons": [
+    {
+      "src": "/assets/icons/android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/assets/icons/android-chrome-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
 }

@@ -13,6 +13,12 @@ export default function (config, env, helpers) {
 	if (env.isProd) {
 		config.devtool = false; // disable sourcemaps
 
+		const htmlWebpackPlugin = helpers.getPluginsByName(config, 'HtmlWebpackPlugin')[0];
+		Object.assign(htmlWebpackPlugin.plugin.options.minify, {
+			removeComments: false,
+			collapseWhitespace: false
+		})
+
 		config.plugins.push(
 			new CommonsChunkPlugin({
 				name: 'vendor',

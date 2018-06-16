@@ -4,7 +4,7 @@
 	"description": "A blazing fast & offline web playground",
 	"scripts": {
 		"start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-		"build": "preact build",
+		"build": "preact build --template src/index.html --no-prerender",
 		"serve": "preact build && preact serve",
 		"dev": "preact watch --template src/index.html --https --no-prerender",
 		"lint": "eslint src",

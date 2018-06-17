@@ -36,6 +36,28 @@ export default class ContentWrap extends Component {
 		// `clearConsole` is on window because it gets called from inside iframe also.
 		window.clearConsole = this.clearConsole.bind(this);
 	}
+	shouldComponentUpdate(nextProps, nextState) {
+		return (
+			this.state.isConsoleOpen !== nextState.isConsoleOpen ||
+			this.state.isCssSettingsModalOpen !== nextState.isCssSettingsModalOpen ||
+			this.state.codeSplitSizes != nextState.codeSplitSizes ||
+			this.state.mainSplitSizes != nextState.mainSplitSizes ||
+			this.props.currentLayoutMode !== nextProps.currentLayoutMode ||
+			this.props.currentItem !== nextProps.currentItem
+		);
+	}
+	componentDidUpdate() {
+		// HACK: becuase its a DOM manipulation
+		window.logCountEl.textContent = this.logCount;
+
+		// log('🚀', 'didupdate', this.props.currentItem);
+		// if (this.isValidItem(this.props.currentItem)) {
+		// this.refreshEditor();
+		// }
+	}
+	componentDidMount() {
+		this.props.onRef(this);
+	}
 
 	onHtmlCodeChange(editor, change) {
 		this.cmCodes.html = editor.getValue();
@@ -240,27 +262,6 @@ export default class ContentWrap extends Component {
 	}
 	isValidItem(item) {
 		return !!item.title;
-	}
-	shouldComponentUpdate(nextProps, nextState) {
-		return (
-			this.state.isConsoleOpen !== nextState.isConsoleOpen ||
-			this.state.isCssSettingsModalOpen !== nextState.isCssSettingsModalOpen ||
-			this.state.codeSplitSizes != nextState.codeSplitSizes ||
-			this.state.mainSplitSizes != nextState.mainSplitSizes ||
-			this.props.currentLayoutMode !== nextProps.currentLayoutMode
-		);
-	}
-	componentDidUpdate() {
-		// HACK: becuase its a DOM manipulation
-		window.logCountEl.textContent = this.logCount;
-
-		// log('🚀', 'didupdate', this.props.currentItem);
-		// if (this.isValidItem(this.props.currentItem)) {
-		// this.refreshEditor();
-		// }
-	}
-	componentDidMount() {
-		this.props.onRef(this);
 	}
 	refreshEditor() {
 		this.cmCodes.html = this.props.currentItem.html;
@@ -488,11 +489,6 @@ export default class ContentWrap extends Component {
 	updateHtmlMode(value) {
 		this.props.onCodeModeChange('html', value);
 		this.props.currentItem.htmlMode = value;
-		const htmlModeLabel = $('#js-html-mode-label');
-
-		htmlModeLabel.textContent = modes[value].label;
-		// FIXME - use a better selector for the mode selectbox
-		htmlModeLabel.parentElement.querySelector('select').value = value;
 		this.cm.html.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(
 			this.cm.html,
@@ -503,10 +499,6 @@ export default class ContentWrap extends Component {
 	updateCssMode(value) {
 		this.props.onCodeModeChange('css', value);
 		this.props.currentItem.cssMode = value;
-		const cssModeLabel = $('#js-css-mode-label');
-		cssModeLabel.textContent = modes[value].label;
-		// FIXME - use a better selector for the mode selectbox
-		cssModeLabel.parentElement.querySelector('select').value = value;
 		this.cm.css.setOption('mode', modes[value].cmMode);
 		this.cm.css.setOption('readOnly', modes[value].cmDisable);
 		window.cssSettingsBtn.classList[
@@ -521,11 +513,6 @@ export default class ContentWrap extends Component {
 	updateJsMode(value) {
 		this.props.onCodeModeChange('js', value);
 		this.props.currentItem.jsMode = value;
-		const jsModeLabel = $('#js-js-mode-label');
-
-		jsModeLabel.textContent = modes[value].label;
-		// FIXME - use a better selector for the mode selectbox
-		jsModeLabel.parentElement.querySelector('select').value = value;
 		this.cm.js.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(
 			this.cm.js,
@@ -718,14 +705,15 @@ export default class ContentWrap extends Component {
 							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
 						>
 							<label class="btn-group" dropdow title="Click to change">
-								<span id="js-html-mode-label" class="code-wrap__header-label">
-									HTML
+								<span class="code-wrap__header-label">
+									{modes[this.props.currentItem.htmlMode || 'html'].label}
 								</span>
 								<span class="caret" />
 								<select
 									data-type="html"
 									class="js-mode-select  hidden-select"
 									onChange={this.codeModeChangeHandler.bind(this)}
+									value={this.props.currentItem.htmlMode}
 								>
 									<option value="html">HTML</option>
 									<option value="markdown">Markdown</option>
@@ -767,14 +755,15 @@ export default class ContentWrap extends Component {
 							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
 						>
 							<label class="btn-group" title="Click to change">
-								<span id="js-css-mode-label" class="code-wrap__header-label">
-									CSS
+								<span class="code-wrap__header-label">
+									{modes[this.props.currentItem.cssMode || 'css'].label}
 								</span>
 								<span class="caret" />
 								<select
 									data-type="css"
 									class="js-mode-select  hidden-select"
 									onChange={this.codeModeChangeHandler.bind(this)}
+									value={this.props.currentItem.cssMode}
 								>
 									<option value="css">CSS</option>
 									<option value="scss">SCSS</option>
@@ -831,14 +820,15 @@ export default class ContentWrap extends Component {
 							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
 						>
 							<label class="btn-group" title="Click to change">
-								<span id="js-js-mode-label" class="code-wrap__header-label">
-									JS
+								<span class="code-wrap__header-label">
+									{modes[this.props.currentItem.jsMode || 'js'].label}
 								</span>
 								<span class="caret" />
 								<select
 									data-type="js"
 									class="js-mode-select  hidden-select"
 									onChange={this.codeModeChangeHandler.bind(this)}
+									value={this.props.currentItem.jsMode}
 								>
 									<option value="js">JS</option>
 									<option value="coffee">CoffeeScript</option>

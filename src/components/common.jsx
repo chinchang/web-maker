@@ -1,5 +1,4 @@
 import { h, Component } from 'preact';
-import { log } from '../utils';
 import { trackEvent } from '../analytics';
 
 class Clickable extends Component {

@@ -90,7 +90,7 @@ export class LibraryAutoSuggest extends Component {
 	onKeyDown(event) {
 		var selectedItemElement;
 		if (!this.isShowingSuggestions) {
-			return false;
+			return;
 		}
 
 		if (event.keyCode === 27) {

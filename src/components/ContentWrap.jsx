@@ -11,6 +11,9 @@ import { deferred } from '../deferred';
 import CssSettingsModal from './CssSettingsModal';
 const minCodeWrapSize = 33;
 
+/* global htmlCodeEl, jsCodeEl, cssCodeEl, logCountEl
+*/
+
 export default class ContentWrap extends Component {
 	constructor(props) {
 		super(props);
@@ -141,8 +144,8 @@ export default class ContentWrap extends Component {
 		} else {
 			// we need to store user script in external JS file to prevent inline-script
 			// CSP from affecting it.
-			writeFile('script.js', blobjs, function() {
-				writeFile('preview.html', blob, function() {
+			writeFile('script.js', blobjs, () => {
+				writeFile('preview.html', blob, () => {
 					var origin = chrome.i18n.getMessage()
 						? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
 						: `${location.origin}`;
@@ -150,7 +153,7 @@ export default class ContentWrap extends Component {
 					if (this.detachedWindow) {
 						this.detachedWindow.postMessage(src, '*');
 					} else {
-						frame.src = src;
+						this.frame.src = src;
 					}
 				});
 			});
@@ -248,9 +251,9 @@ export default class ContentWrap extends Component {
 					result[1].code || '',
 					result[2].code || ''
 				);
-				result.forEach(result => {
-					if (result.errors) {
-						this.showErrors(result.errors.lang, result.errors.data);
+				result.forEach(resultItem => {
+					if (resultItem.errors) {
+						this.showErrors(resultItem.errors.lang, resultItem.errors.data);
 					}
 				});
 			});

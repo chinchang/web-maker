@@ -1,4 +1,5 @@
 import { handleDownloadsPermission } from './utils';
+import { trackEvent } from './analytics';
 
 function saveScreenshot(dataURI) {
 	// convert base64 to raw binary data held in a string
@@ -91,6 +92,7 @@ export function takeScreenshot(boundRect) {
 		s.textContent =
 			'[class*="hint"]:after, [class*="hint"]:before { display: none!important; }';
 		document.body.appendChild(s);
+		import { trackEvent } from './analytics';
 
 		function onImgLoad(image) {
 			var c = document.createElement('canvas');

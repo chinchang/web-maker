@@ -183,6 +183,8 @@
 		"yoda": ["error", "never"],
 		"brace-style": "off",
 		"lines-around-comment": "off",
+		"arrow-body-style": "off",
+		"indent": "off",
 		"react/sort-comp": "off",
 		"react/jsx-no-bind": "off"
 	},

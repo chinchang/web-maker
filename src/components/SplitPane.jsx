@@ -1,6 +1,5 @@
 import { h, Component } from 'preact';
 import Split from 'split.js';
-import { log } from '../utils';
 
 export class SplitPane extends Component {
 	// shouldComponentUpdate(nextProps, nextState) {
@@ -34,7 +33,6 @@ export class SplitPane extends Component {
 			options.onDragStart = this.props.onDragStart;
 		}
 
-		// log('SIZE UPDATTED', ...options);
 		this.splitInstance = Split(
 			this.props.children.map(node => '#' + node.attributes.id),
 			options

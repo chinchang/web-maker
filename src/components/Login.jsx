@@ -1,5 +1,4 @@
 import { h, Component } from 'preact';
-import { jsLibs, cssLibs } from '../libraryList';
 import { trackEvent } from '../analytics';
 import { auth } from '../auth';
 

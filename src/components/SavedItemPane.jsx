@@ -165,7 +165,6 @@ export default class SavedItemPane extends Component {
 
 	searchInputHandler(e) {
 		const text = e.target.value;
-		let el;
 		if (!text) {
 			this.setState({
 				filteredItems: this.items

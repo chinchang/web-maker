@@ -19,7 +19,7 @@ export default class Modal extends Component {
 		}
 	}
 	componentDidUpdate(prevProps) {
-		if (this.props.show != prevProps.show) {
+		if (this.props.show !== prevProps.show) {
 			document.body.classList[this.props.show ? 'add' : 'remove'](
 				'overlay-visible'
 			);

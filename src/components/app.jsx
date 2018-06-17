@@ -1,6 +1,9 @@
+/* global htmlCodeEl, cssCodeEl, jsCodeEl, runBtn
+*/
+
 import { h, Component } from 'preact';
 
-import MainHeader from './MainHeader.jsx';
+import { MainHeader } from './MainHeader.jsx';
 import ContentWrap from './ContentWrap.jsx';
 import Footer from './Footer.jsx';
 import SavedItemPane from './SavedItemPane.jsx';
@@ -27,10 +30,10 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import { Profile } from './Profile';
 import { auth } from '../auth';
-import SupportDeveloperModal from './SupportDeveloperModal';
+import { SupportDeveloperModal } from './SupportDeveloperModal';
 import { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
 import { takeScreenshot } from '../takeScreenshot';
-import AskToImportModal from './AskToImportModal';
+import { AskToImportModal } from './AskToImportModal';
 import { Alerts } from './Alerts';
 import Portal from 'preact-portal';
 import { HelpModal } from './HelpModal';
@@ -329,7 +332,6 @@ export default class App extends Component {
 		this.setState({
 			savedItems: { ...this.state.savedItems }
 		});
-		var a = 343478798793397;
 
 		this.toggleSavedItemsPane();
 		// HACK: Set overflow after sometime so that the items can animate without getting cropped.
@@ -409,12 +411,11 @@ export default class App extends Component {
 		this.setState({ isAddLibraryModalOpen: true });
 	}
 	closeSavedItemsPane() {
-		document.body.classList[this.state.isSavedItemPaneOpen ? 'add' : 'remove'](
-			'overlay-visible'
-		);
 		this.setState({
 			isSavedItemPaneOpen: false
 		});
+		document.body.classList.remove('overlay-visible');
+
 		if (this.editorWithFocus) {
 			this.editorWithFocus.focus();
 		}
@@ -611,8 +612,8 @@ export default class App extends Component {
 			window.localStorage[LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN] = true;
 			if (!answer) {
 				trackEvent('ui', LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN, 'login');
-				closeAllOverlays();
-				loginModal.classList.add('is-modal-visible');
+				this.closeAllOverlays();
+				this.setState({ isLoginModalOpen: true });
 				return;
 			}
 			trackEvent('ui', LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN, 'local');
@@ -817,7 +818,6 @@ export default class App extends Component {
 		return false;
 	}
 	codepenBtnClickHandler(e) {
-		debugger;
 		if (this.state.currentItem.cssMode === CssModes.ACSS) {
 			alert("Oops! CodePen doesn't supports Atomic CSS currently.");
 			e.preventDefault();
@@ -888,7 +888,7 @@ export default class App extends Component {
 		e.preventDefault();
 		trackEvent('ui', 'exportBtnClicked');
 	}
-	screenshotBtnClickHandler() {
+	screenshotBtnClickHandler(e) {
 		this.contentWrap.getDemoFrame(frame => {
 			takeScreenshot(frame.getBoundingClientRect());
 		});
@@ -1203,8 +1203,7 @@ export default class App extends Component {
 							<path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
 						</symbol>
 						<symbol id="loader-icon" viewBox="0 0 44 44">
-							{'{'}/* By Sam Herbert (@sherb), for everyone. More @
-							http://goo.gl/7AJzbL */{'}'}
+							{/* By Sam Herbert (@sherb), for everyone. More http://goo.gl/7AJzbL */}
 							<g fill="none" fillRule="evenodd" strokeWidth={10}>
 								<circle cx={22} cy={22} r={1}>
 									<animate

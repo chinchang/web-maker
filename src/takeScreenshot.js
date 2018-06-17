@@ -1,6 +1,4 @@
-import {
-	handleDownloadsPermission
-} from "./utils";
+import { handleDownloadsPermission } from './utils';
 
 function saveScreenshot(dataURI) {
 	// convert base64 to raw binary data held in a string
@@ -45,10 +43,11 @@ function saveScreenshot(dataURI) {
 			'/temporary/' +
 			fileName;
 
-		chrome.downloads.download({
+		chrome.downloads.download(
+			{
 				url: filePath
 			},
-			function () {
+			function() {
 				// If there was an error, just open the screenshot in a tab.
 				// This happens in incognito mode where extension cannot access filesystem.
 				if (chrome.runtime.lastError) {
@@ -68,7 +67,8 @@ function saveScreenshot(dataURI) {
 		size,
 		fs => {
 			fs.root.getFile(
-				fileName, {
+				fileName,
+				{
 					create: true
 				},
 				fileEntry => {
@@ -116,13 +116,13 @@ export function takeScreenshot(boundRect) {
 		}
 
 		setTimeout(() => {
-			debugger
 			chrome.tabs.captureVisibleTab(
-				null, {
+				null,
+				{
 					format: 'png',
 					quality: 100
 				},
-				function (dataURI) {
+				function(dataURI) {
 					s.remove();
 					if (dataURI) {
 						var image = new Image();
@@ -135,4 +135,4 @@ export function takeScreenshot(boundRect) {
 
 		trackEvent('ui', 'takeScreenshotBtnClick');
 	});
-};
+}

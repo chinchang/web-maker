@@ -17,8 +17,15 @@ const esprima = require('esprima');
 
 window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
 window.$ = document.querySelector.bind(document);
+
+window.chrome = window.chrome || {};
+window.chrome.i18n = {
+	getMessage: () => {}
+};
+
 window.$all = selector => [...document.querySelectorAll(selector)];
-const BASE_PATH = chrome.extension || window.DEBUG ? '/' : '/app';
+window.IS_EXTENSION = !!window.chrome.extension;
+export const BASE_PATH = window.chrome.extension || window.DEBUG ? '/' : '/app';
 
 var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
@@ -435,12 +442,6 @@ export function handleDownloadsPermission() {
 	return d.promise;
 }
 
-window.chrome = window.chrome || {};
-window.chrome.i18n = {
-	getMessage: () => {}
-};
-
-window.IS_EXTENSION = !!window.chrome.extension;
 if (window.IS_EXTENSION) {
 	document.body.classList.add('is-extension');
 } else {

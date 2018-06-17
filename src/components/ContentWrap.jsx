@@ -2,15 +2,13 @@ import { h, Component } from 'preact';
 import UserCodeMirror from './UserCodeMirror.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
-import { log, writeFile, loadJS, getCompleteHtml } from '../utils';
+import { log, writeFile, loadJS, getCompleteHtml, BASE_PATH } from '../utils';
 import { SplitPane } from './SplitPane.jsx';
 import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
 import CodeMirrorBox from './CodeMirrorBox';
 import { deferred } from '../deferred';
 import CssSettingsModal from './CssSettingsModal';
-
-const BASE_PATH = chrome.extension || window.DEBUG ? '/' : '/app';
 const minCodeWrapSize = 33;
 
 export default class ContentWrap extends Component {

@@ -1,5 +1,4 @@
-export const jsLibs = [
-	{
+export const jsLibs = [{
 		url: 'https://code.jquery.com/jquery-3.2.1.min.js',
 		label: 'jQuery',
 		type: 'js'

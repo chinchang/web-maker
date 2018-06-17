@@ -37,6 +37,11 @@ export default class CssSettingsModal extends Component {
 						onBlur={cm => this.props.onChange(cm.getValue())}
 					/>
 				</div>
+				<div class="flex flex-h-end">
+					<button class="btn" onClick={this.props.closeHandler}>
+						Apply and Close
+					</button>
+				</div>
 			</Modal>
 		);
 	}

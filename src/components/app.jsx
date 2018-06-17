@@ -34,6 +34,7 @@ import KeyboardShortcutsModal from './KeyboardShortcutsModal';
 import { takeScreenshot } from '../takeScreenshot';
 import AskToImportModal from './AskToImportModal';
 import { Alerts } from './Alerts';
+import Portal from 'preact-portal';
 
 if (module.hot) {
 	require('preact/debug');
@@ -342,10 +343,6 @@ export default class App extends Component {
 			window.searchInput.focus();
 		} else {
 			window.searchInput.value = '';
-			// Give last focused editor, focus again
-			// if (editorWithFocus) {
-			// editorWithFocus.focus();
-			// }
 		}
 		document.body.classList[this.state.isSavedItemPaneOpen ? 'add' : 'remove'](
 			'overlay-visible'
@@ -413,12 +410,15 @@ export default class App extends Component {
 		this.setState({ isAddLibraryModalOpen: true });
 	}
 	closeSavedItemsPane() {
-		if (this.editorWithFocus) {
-			this.editorWithFocus.focus();
-		}
+		document.body.classList[this.state.isSavedItemPaneOpen ? 'add' : 'remove'](
+			'overlay-visible'
+		);
 		this.setState({
 			isSavedItemPaneOpen: false
 		});
+		if (this.editorWithFocus) {
+			this.editorWithFocus.focus();
+		}
 	}
 	componentDidMount() {
 		document.body.style.height = `${window.innerHeight}px`;
@@ -1095,7 +1095,9 @@ export default class App extends Component {
 					dontAskBtnClickHandler={this.dontAskToImportAnymore.bind(this)}
 				/>
 
-				<div class="modal-overlay" />
+				<Portal into="body">
+					<div class="modal-overlay" />
+				</Portal>
 
 				<svg
 					version="1.1"

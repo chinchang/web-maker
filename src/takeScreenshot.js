@@ -92,7 +92,6 @@ export function takeScreenshot(boundRect) {
 		s.textContent =
 			'[class*="hint"]:after, [class*="hint"]:before { display: none!important; }';
 		document.body.appendChild(s);
-		import { trackEvent } from './analytics';
 
 		function onImgLoad(image) {
 			var c = document.createElement('canvas');

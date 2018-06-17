@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 import UserCodeMirror from './UserCodeMirror.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
-import { log, writeFile, loadJS, getCompleteHtml, BASE_PATH } from '../utils';
+import { log, writeFile, loadJS, getCompleteHtml } from '../utils';
 import { SplitPane } from './SplitPane.jsx';
 import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
@@ -40,8 +40,8 @@ export default class ContentWrap extends Component {
 		return (
 			this.state.isConsoleOpen !== nextState.isConsoleOpen ||
 			this.state.isCssSettingsModalOpen !== nextState.isCssSettingsModalOpen ||
-			this.state.codeSplitSizes != nextState.codeSplitSizes ||
-			this.state.mainSplitSizes != nextState.mainSplitSizes ||
+			this.state.codeSplitSizes !== nextState.codeSplitSizes ||
+			this.state.mainSplitSizes !== nextState.mainSplitSizes ||
 			this.props.currentLayoutMode !== nextProps.currentLayoutMode ||
 			this.props.currentItem !== nextProps.currentItem
 		);
@@ -420,9 +420,8 @@ export default class ContentWrap extends Component {
 	getCodeSplitSizes() {
 		if (this.props.currentItem && this.props.currentItem.sizes) {
 			return this.props.currentItem.sizes;
-		} else {
-			return [33.33, 33.33, 33.33];
 		}
+		return [33.33, 33.33, 33.33];
 	}
 
 	mainSplitDragEndHandler() {

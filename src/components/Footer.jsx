@@ -148,7 +148,11 @@ export default class Footer extends Component {
 						</svg>
 					</A>
 				</div>
-				<a href="https://webmakerapp.com/" target="_blank">
+				<a
+					href="https://webmakerapp.com/"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
 					<div class="logo" />
 				</a>
 				&copy;
@@ -189,6 +193,7 @@ export default class Footer extends Component {
 					aria-label="Tweet about 'Web Maker'"
 					href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
 					target="_blank"
+					rel="noopener noreferrer"
 				>
 					<svg
 						style={{
@@ -206,6 +211,7 @@ export default class Footer extends Component {
 					class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile"
 					aria-label="Support the developer by pledging some amount"
 					target="_blank"
+					rel="noopener noreferrer"
 				>
 					Support the developer
 				</A>

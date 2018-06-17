@@ -22,7 +22,11 @@ export default class CssSettingsModal extends Component {
 				<h1>Atomic CSS Settings</h1>
 				<h3>
 					Configure Atomizer settings.{' '}
-					<a href="https://github.com/acss-io/atomizer#api" target="_blank">
+					<a
+						href="https://github.com/acss-io/atomizer#api"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
 						Read more
 					</a>{' '}
 					about available settings.

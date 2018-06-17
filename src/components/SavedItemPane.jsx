@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { getHumanDate } from '../utils';
+import { log, getHumanDate } from '../utils';
 import { trackEvent } from '../analytics';
 import { itemService } from '../itemService';
 import { alertsService } from '../notifications';

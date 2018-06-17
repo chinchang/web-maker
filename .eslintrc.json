@@ -3,7 +3,7 @@
 		"browser": true
 	},
 	"parser": "babel-eslint",
-	"extends": "eslint:recommended",
+	"extends": ["eslint:recommended", "eslint-config-synacor"],
 	"rules": {
 		"accessor-pairs": "error",
 
@@ -26,7 +26,13 @@
 		"eol-last": "off",
 		"eqeqeq": "error",
 		"func-names": "off",
-		"func-style": ["error", "declaration", { "allowArrowFunctions": true }],
+		"func-style": [
+			"error",
+			"declaration",
+			{
+				"allowArrowFunctions": true
+			}
+		],
 		"generator-star-spacing": "error",
 		"global-require": "off",
 		"guard-for-in": "error",
@@ -165,7 +171,7 @@
 				"before": false
 			}
 		],
-		"sort-imports": "error",
+		"sort-imports": "off",
 		"sort-vars": "off",
 		"strict": ["error", "never"],
 		"template-curly-spacing": "error",
@@ -174,7 +180,11 @@
 		"vars-on-top": "off",
 		"wrap-regex": "error",
 		"yield-star-spacing": "error",
-		"yoda": ["error", "never"]
+		"yoda": ["error", "never"],
+		"brace-style": "off",
+		"lines-around-comment": "off",
+		"react/sort-comp": "off",
+		"react/jsx-no-bind": "off"
 	},
 	"globals": {
 		"ArrayBuffer": true,

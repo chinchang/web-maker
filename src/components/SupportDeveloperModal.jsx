@@ -13,12 +13,20 @@ export default class SupportDeveloperModal extends Component {
 					<h1>Support the Developer</h1>
 					<p>
 						Hi,{' '}
-						<a href="https://kushagragour.in" target="_blank">
+						<a
+							href="https://kushagragour.in"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
 							Kushagra
 						</a>{' '}
 						here! Web Maker is a free and open-source project. To keep myself
 						motivated for working on such open-source and free{' '}
-						<a href="https://kushagragour.in/lab/" target="_blank">
+						<a
+							href="https://kushagragour.in/lab/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
 							side projects
 						</a>, I am accepting donations. Your pledge, no matter how small,
 						will act as an appreciation towards my work and keep me going
@@ -35,6 +43,7 @@ export default class SupportDeveloperModal extends Component {
 							class="onboard-selection"
 							href="https://patreon.com/kushagra"
 							target="_blank"
+							rel="noopener noreferrer"
 							aria-label="Make a monthly pledge on Patreon"
 						>
 							<img src="patreon.png" height="60" alt="Become a patron image" />
@@ -47,6 +56,7 @@ export default class SupportDeveloperModal extends Component {
 					<a
 						href="https://www.paypal.me/kushagragour"
 						target="_blank"
+						rel="noopener noreferrer"
 						aria-label="Make a one time donation on Paypal"
 					>
 						Or, make a one time donation

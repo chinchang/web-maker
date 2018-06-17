@@ -1,5 +1,4 @@
 import { h, Component } from 'preact';
-import { log } from '../utils';
 
 export class Alerts extends Component {
 	shouldComponentUpdate(nextProps, nextState) {

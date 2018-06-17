@@ -7,7 +7,7 @@
 		"build": "preact build --template src/index.html --no-prerender",
 		"serve": "preact build && preact serve",
 		"dev": "preact watch --template src/index.html --https --no-prerender",
-		"lint": "eslint src",
+		"lint": "eslint src/components/*.jsx",
 		"test": "jest ./tests",
 		"precommit": "lint-staged"
 	},

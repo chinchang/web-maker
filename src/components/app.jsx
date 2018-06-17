@@ -1,5 +1,4 @@
 import { h, Component } from 'preact';
-import { Router } from 'preact-router';
 
 import MainHeader from './MainHeader.jsx';
 import ContentWrap from './ContentWrap.jsx';
@@ -7,7 +6,6 @@ import Footer from './Footer.jsx';
 import SavedItemPane from './SavedItemPane.jsx';
 import AddLibrary from './AddLibrary.jsx';
 import Modal from './Modal.jsx';
-import HelpModal from './HelpModal.jsx';
 import Login from './Login.jsx';
 import {
 	log,
@@ -19,7 +17,7 @@ import {
 } from '../utils';
 import { itemService } from '../itemService';
 import '../db';
-import Notifications from './Notifications';
+import { Notifications } from './Notifications';
 import Settings from './Settings.jsx';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { trackEvent } from '../analytics';
@@ -27,14 +25,15 @@ import { deferred } from '../deferred';
 import { alertsService } from '../notifications';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import Profile from './Profile';
+import { Profile } from './Profile';
 import { auth } from '../auth';
 import SupportDeveloperModal from './SupportDeveloperModal';
-import KeyboardShortcutsModal from './KeyboardShortcutsModal';
+import { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
 import { takeScreenshot } from '../takeScreenshot';
 import AskToImportModal from './AskToImportModal';
 import { Alerts } from './Alerts';
 import Portal from 'preact-portal';
+import { HelpModal } from './HelpModal';
 
 if (module.hot) {
 	require('preact/debug');

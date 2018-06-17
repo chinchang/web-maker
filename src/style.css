@@ -252,7 +252,7 @@ textarea {
 
 .star:after {
 	content: '★';
-	color: #eee333;
+	color: currentColor;
 }
 
 /* used to show keyboard specific content when something is keyboard focused */

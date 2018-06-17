@@ -6,6 +6,87 @@ export function Notifications() {
 			<h1>Whats new?</h1>
 
 			<div class="notification">
+				<span class="notification__version">3.2.0</span>
+				<ul>
+					<li>
+						<strong>🚀 Loop timeout setting</strong>: You now have a setting to
+						tweak the maximum timeout of a loop iteration before it's marked as
+						infinite loop.
+					</li>
+					<li>
+						<strong>♿️ Accessibility</strong>: Modals now have proper keyboard
+						navigation integrated.
+					</li>
+					<li>
+						<strong>♿️ Accessibility</strong>: Color contrast improvements.
+					</li>
+					<li>
+						🚀 Popular libraries list updated. Thanks
+						<a href="https://github.com/diomed" target="_blank">
+							@diomed
+						</a>{' '}
+						&{' '}
+						<a href="https://github.com/leninalbertolp" target="_blank">
+							@leninalbertolp
+						</a>
+					</li>
+					<li>
+						<strong>🔧 Bugfix</strong>: Modal take up appropriate width instead
+						of spanning full width.
+					</li>
+
+					<br />
+					<li>
+						<strong>🚀 Announcement</strong>: Hi! I am Kushagra Gour (creator of
+						Web Maker) and I have launched a
+						<a href="https://patreon.com/kushagra" target="_blank">
+							Patreon campaign
+						</a>. If you love Web Maker, consider pledging to
+						<a href="https://patreon.com/kushagra" target="_blank">
+							support me
+						</a>{' '}
+						:)
+					</li>
+					<li>
+						<a
+							href="https://github.com/chinchang/web-maker/issues"
+							target="_blank"
+						>
+							Suggest features or report bugs.
+						</a>
+					</li>
+					<li>
+						Web Maker now has more than 50K weekly active users! Thank you for
+						being a part of this community of awesome developers. If you find
+						Web Maker helpful,
+						<a
+							href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
+							target="_blank"
+							class="btn"
+						>
+							Please rate Web Maker <span class="star" />
+						</a>&nbsp;
+						<a
+							href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
+							target="_blank"
+							target="_blank"
+							class="btn"
+						>
+							Share it
+						</a>&nbsp;
+						<a
+							aria-label="Support the developer"
+							d-click="openSupportDeveloperModal"
+							data-event-action="supportDeveloperChangelogBtnClick"
+							class="btn btn-icon"
+						>
+							Support the developer
+						</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="notification">
 				<span class="notification__version">3.1.1</span>
 				<ul>
 					<li>

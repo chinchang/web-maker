@@ -11,9 +11,8 @@ export function HelpModal(props) {
 
 			<div>
 				<p>
-					Made with
-					<span style="margin-right: 8px;">💖</span> &
-					<span style="margin-right: 8px;">🙌</span> by
+					Made with <span style="margin-right: 8px;">💖</span> &{' '}
+					<span style="margin-right: 8px;">🙌</span> by{' '}
 					<a
 						href="https://twitter.com/chinchang457"
 						target="_blank"
@@ -28,7 +27,7 @@ export function HelpModal(props) {
 					</a>.
 				</p>
 				<p>
-					Tweet out your feature requests, comments & suggestions to
+					Tweet out your feature requests, comments & suggestions to{' '}
 					<a
 						target="_blank"
 						rel="noopener noreferrer"
@@ -38,7 +37,7 @@ export function HelpModal(props) {
 					</a>.
 				</p>
 				<p>
-					Like this extension? Please
+					Like this extension? Please{' '}
 					<a
 						href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
 						target="_blank"
@@ -57,7 +56,7 @@ export function HelpModal(props) {
 						<svg>
 							<use xlinkHref="#gift-icon" />
 						</svg>Support the developer
-					</button>
+					</button>{' '}
 					<a
 						aria-label="Rate Web Maker"
 						href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
@@ -68,7 +67,7 @@ export function HelpModal(props) {
 						<svg>
 							<use xlinkHref="#heart-icon" />
 						</svg>Share Web Maker
-					</a>
+					</a>{' '}
 					<a
 						aria-label="Chat"
 						href="https://web-maker.slack.com"
@@ -79,7 +78,7 @@ export function HelpModal(props) {
 						<svg>
 							<use xlinkHref="#chat-icon" />
 						</svg>Chat
-					</a>
+					</a>{' '}
 					<a
 						aria-label="Report a Bug"
 						href="https://github.com/chinchang/web-maker/issues"
@@ -179,7 +178,7 @@ export function HelpModal(props) {
 
 				<p>
 					<h3>License</h3>
-					"Web Maker" is
+					"Web Maker" is{' '}
 					<a
 						target="_blank"
 						rel="noopener noreferrer"
@@ -187,7 +186,7 @@ export function HelpModal(props) {
 					>
 						open-source
 					</a>{' '}
-					under the
+					under the{' '}
 					<a
 						href="https://opensource.org/licenses/MIT"
 						target="_blank"

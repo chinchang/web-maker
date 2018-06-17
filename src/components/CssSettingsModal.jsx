@@ -42,7 +42,7 @@ export default class CssSettingsModal extends Component {
 					/>
 				</div>
 				<div class="flex flex-h-end">
-					<button class="btn" onClick={this.props.closeHandler}>
+					<button class="btn btn--primary" onClick={this.props.closeHandler}>
 						Apply and Close
 					</button>
 				</div>

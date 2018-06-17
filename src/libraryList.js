@@ -1,4 +1,5 @@
-export const jsLibs = [{
+export const jsLibs = [
+	{
 		url: 'https://code.jquery.com/jquery-3.2.1.min.js',
 		label: 'jQuery',
 		type: 'js'
@@ -55,6 +56,23 @@ export const jsLibs = [{
 	{
 		url: 'https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js',
 		label: 'D3',
+		type: 'js'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.min.js',
+		label: 'P5.js',
+		type: 'js'
+	},
+	{
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.min.js',
+		label: 'P5.js DOM',
+		type: 'js'
+	},
+	{
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.min.js',
+		label: 'P5.js Sound',
 		type: 'js'
 	},
 	{

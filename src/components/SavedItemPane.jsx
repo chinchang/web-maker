@@ -3,6 +3,7 @@ import { log, getHumanDate } from '../utils';
 import { trackEvent } from '../analytics';
 import { itemService } from '../itemService';
 import { alertsService } from '../notifications';
+import { deferred } from '../deferred';
 
 export default class SavedItemPane extends Component {
 	constructor(props) {
@@ -21,6 +22,11 @@ export default class SavedItemPane extends Component {
 			this.setState({
 				filteredItems: this.items
 			});
+		}
+	}
+	componentDidUpdate(prevProps) {
+		if (this.props.isOpen && !prevProps.isOpen) {
+			window.searchInput.value = '';
 		}
 	}
 	onCloseIntent() {
@@ -124,8 +130,7 @@ export default class SavedItemPane extends Component {
 		} else {
 			d.resolve();
 		}
-		// FIXME: Move from here
-		// toggleSavedItemsPane(false);
+		this.props.closeHandler();
 
 		return d.promise;
 	}
@@ -216,7 +221,6 @@ export default class SavedItemPane extends Component {
 					</div>
 				</div>
 				<input
-					type=""
 					id="searchInput"
 					class="search-input"
 					onInput={this.searchInputHandler.bind(this)}

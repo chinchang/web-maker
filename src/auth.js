@@ -1,8 +1,6 @@
-import {
-	trackEvent
-} from './analytics';
-
-import firebase from 'firebase/app'
+import { trackEvent } from './analytics';
+import firebase from 'firebase/app';
+import { log } from './utils';
 
 export const auth = {
 	logout() {
@@ -24,15 +22,15 @@ export const auth = {
 		return firebase
 			.auth()
 			.signInWithPopup(provider)
-			.then(function () {
+			.then(function() {
 				trackEvent('fn', 'loggedIn', providerName);
 				// Save to recommend next time
 				window.db.local.set({
 					lastAuthProvider: providerName
 				});
 			})
-			.catch(function (error) {
-				utils.log(error);
+			.catch(function(error) {
+				log(error);
 				if (error.code === 'auth/account-exists-with-different-credential') {
 					alert(
 						'You have already signed up with the same email using different social login'
@@ -40,4 +38,4 @@ export const auth = {
 				}
 			});
 	}
-}
+};

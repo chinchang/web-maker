@@ -1,13 +1,9 @@
 import './firebaseInit';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import {
-	deferred
-} from './deferred';
-import {
-	trackEvent
-} from './analytics';
-
+import { deferred } from './deferred';
+import { trackEvent } from './analytics';
+import { log } from './utils';
 
 (() => {
 	const FAUX_DELAY = 1;
@@ -54,7 +50,7 @@ import {
 		if (dbPromise) {
 			return dbPromise;
 		}
-		utils.log('Initializing firestore');
+		log('Initializing firestore');
 		dbPromise = new Promise((resolve, reject) => {
 			if (db) {
 				return resolve(db);
@@ -62,17 +58,17 @@ import {
 			return firebase
 				.firestore()
 				.enablePersistence()
-				.then(function () {
+				.then(function() {
 					// Initialize Cloud Firestore through firebase
 					db = firebase.firestore();
 					// const settings = {
 					// 	timestampsInSnapshots: true
 					// };
 					// db.settings(settings);
-					utils.log('firebase db ready', db);
+					log('firebase db ready', db);
 					resolve(db);
 				})
-				.catch(function (err) {
+				.catch(function(err) {
 					reject(err.code);
 					if (err.code === 'failed-precondition') {
 						// Multiple tabs open, persistence can only be enabled
@@ -95,7 +91,8 @@ import {
 		const d = deferred();
 		// Will be chrome.storage.sync in extension environment,
 		// otherwise will fallback to localstorage
-		dbSyncAlias.get({
+		dbSyncAlias.get(
+			{
 				lastSeenVersion: ''
 			},
 			result => {
@@ -111,18 +108,17 @@ import {
 		// Setting the `lastSeenVersion` in localStorage(sync for extension) always
 		// because next time we need to fetch it irrespective of the user being
 		// logged in or out quickly from local storage.
-		dbSyncAlias.set({
+		dbSyncAlias.set(
+			{
 				lastSeenVersion: version
 			},
-			function () {}
+			function() {}
 		);
 		if (window.user) {
 			const remoteDb = await getDb();
-			remoteDb
-				.doc(`users/${window.user.uid}`)
-				.update({
-					lastSeenVersion: version
-				});
+			remoteDb.doc(`users/${window.user.uid}`).update({
+				lastSeenVersion: version
+			});
 		}
 	}
 
@@ -133,9 +129,12 @@ import {
 			.get()
 			.then(doc => {
 				if (!doc.exists)
-					return remoteDb.doc(`users/${userId}`).set({}, {
-						merge: true
-					});
+					return remoteDb.doc(`users/${userId}`).set(
+						{},
+						{
+							merge: true
+						}
+					);
 				const user = doc.data();
 				Object.assign(window.user, user);
 				return user;

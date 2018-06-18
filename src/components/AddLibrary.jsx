@@ -81,7 +81,7 @@ export default class AddLibrary extends Component {
 					<small>Powered by cdnjs</small>
 				</div>
 				<div style="margin:20px 0;">
-					Choose from popular libraries:
+					Choose from popular libraries:{' '}
 					<select
 						name=""
 						id="js-add-library-select"

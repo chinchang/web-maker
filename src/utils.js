@@ -1,18 +1,8 @@
-import {
-	trackEvent
-} from './analytics';
+import { trackEvent } from './analytics';
 
-import {
-	computeHtml,
-	computeCss,
-	computeJs
-} from './computes';
-import {
-	JsModes
-} from './codeModes';
-import {
-	deferred
-} from './deferred';
+import { computeHtml, computeCss, computeJs } from './computes';
+import { JsModes } from './codeModes';
+import { deferred } from './deferred';
 const esprima = require('esprima');
 
 window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
@@ -37,7 +27,7 @@ var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
  * @param  Selector that should match for next siblings
  * @return element Next element that mathes `selector`
  */
-Node.prototype.nextUntil = function (selector) {
+Node.prototype.nextUntil = function(selector) {
 	const siblings = Array.from(this.parentNode.querySelectorAll(selector));
 	const index = siblings.indexOf(this);
 	return siblings[index + 1];
@@ -47,7 +37,7 @@ Node.prototype.nextUntil = function (selector) {
  * @param  Selector that should match for next siblings
  * @return element Next element that mathes `selector`
  */
-Node.prototype.previousUntil = function (selector) {
+Node.prototype.previousUntil = function(selector) {
 	const siblings = Array.from(this.parentNode.querySelectorAll(selector));
 	const index = siblings.indexOf(this);
 	return siblings[index - 1];
@@ -56,7 +46,7 @@ Node.prototype.previousUntil = function (selector) {
 // Safari doesn't have this!
 window.requestIdleCallback =
 	window.requestIdleCallback ||
-	function (fn) {
+	function(fn) {
 		setTimeout(fn, 10);
 	};
 
@@ -86,7 +76,7 @@ export function semverCompare(a, b) {
 export function generateRandomId(len) {
 	var length = len || 10;
 	var id = '';
-	for (var i = length; i--;) {
+	for (var i = length; i--; ) {
 		id += alphaNum[~~(Math.random() * alphaNum.length)];
 	}
 	return id;
@@ -110,9 +100,7 @@ export function log() {
  * Contributed by Ariya Hidayat!
  * @param code {string}	Code to be protected from infinite loops.
  */
-export function addInfiniteLoopProtection(code, {
-	timeout
-}) {
+export function addInfiniteLoopProtection(code, { timeout }) {
 	var loopId = 1;
 	var patches = [];
 	var varPrefix = '_wmloopvar';
@@ -120,12 +108,13 @@ export function addInfiniteLoopProtection(code, {
 	var checkStr = `\nif (Date.now() - %d > ${timeout}) { window.top.previewException(new Error("Infinite loop")); break;}\n`;
 
 	esprima.parse(
-		code, {
+		code,
+		{
 			tolerant: true,
 			range: true,
 			jsx: true
 		},
-		function (node) {
+		function(node) {
 			switch (node.type) {
 				case 'DoWhileStatement':
 				case 'ForStatement':
@@ -167,10 +156,10 @@ export function addInfiniteLoopProtection(code, {
 
 	/* eslint-disable no-param-reassign */
 	patches
-		.sort(function (a, b) {
+		.sort(function(a, b) {
 			return b.pos - a.pos;
 		})
-		.forEach(function (patch) {
+		.forEach(function(patch) {
 			code = code.slice(0, patch.pos) + patch.str + code.slice(patch.pos);
 		});
 
@@ -182,7 +171,8 @@ export function getHumanDate(timestamp) {
 	var d = new Date(timestamp);
 	var retVal =
 		d.getDate() +
-		' ' + [
+		' ' +
+		[
 			'January',
 			'February',
 			'March',
@@ -204,7 +194,7 @@ export function getHumanDate(timestamp) {
 // create a one-time event
 export function once(node, type, callback) {
 	// create event
-	node.addEventListener(type, function (e) {
+	node.addEventListener(type, function(e) {
 		// remove event
 		e.target.removeEventListener(type, arguments.callee);
 		// call handler
@@ -223,7 +213,8 @@ export function downloadFile(fileName, blob) {
 		a.remove();
 	}
 	if (window.IS_EXTENSION) {
-		chrome.downloads.download({
+		chrome.downloads.download(
+			{
 				url: window.URL.createObjectURL(blob),
 				filename: fileName,
 				saveAs: true
@@ -244,13 +235,13 @@ export function writeFile(name, blob, cb) {
 	var fileWritten = false;
 
 	function getErrorHandler(type) {
-		return function () {
+		return function() {
 			log(arguments);
 			trackEvent('fn', 'error', type);
 			// When there are too many write errors, show a message.
 			writeFile.errorCount = (writeFile.errorCount || 0) + 1;
 			if (writeFile.errorCount === 4) {
-				setTimeout(function () {
+				setTimeout(function() {
 					alert(
 						"Oops! Seems like your preview isn't updating. It's recommended to switch to the web app: https://webmakerapp.com/app/.\n\n If you still want to get the extension working, please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart browser\n - Update browser\n - Reinstall Web Maker (don't forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp."
 					);
@@ -264,12 +255,13 @@ export function writeFile(name, blob, cb) {
 	window.webkitRequestFileSystem(
 		window.TEMPORARY,
 		1024 * 1024 * 5,
-		function (fs) {
+		function(fs) {
 			fs.root.getFile(
-				name, {
+				name,
+				{
 					create: true
 				},
-				function (fileEntry) {
+				function(fileEntry) {
 					fileEntry.createWriter(fileWriter => {
 						function onWriteComplete() {
 							if (fileWritten) {
@@ -302,7 +294,7 @@ export function loadJS(src) {
 	script.src = src;
 	script.async = true;
 	ref.parentNode.insertBefore(script, ref);
-	script.onload = function () {
+	script.onload = function() {
 		d.resolve();
 	};
 	return d.promise;
@@ -314,12 +306,12 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 	}
 	var externalJs = item.externalLibs.js
 		.split('\n')
-		.reduce(function (scripts, url) {
+		.reduce(function(scripts, url) {
 			return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
 		}, '');
 	var externalCss = item.externalLibs.css
 		.split('\n')
-		.reduce(function (links, url) {
+		.reduce(function(links, url) {
 			return (
 				links +
 				(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
@@ -344,29 +336,29 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 	if (!isForExport) {
 		contents +=
 			'<script src="' +
-			(chrome.extension ?
-				chrome.extension.getURL('lib/screenlog.js') :
-				`${location.origin}${BASE_PATH}/lib/screenlog.js`) +
+			(chrome.extension
+				? chrome.extension.getURL('lib/screenlog.js')
+				: `${location.origin}${BASE_PATH}/lib/screenlog.js`) +
 			'"></script>';
 	}
 
 	if (item.jsMode === JsModes.ES6) {
 		contents +=
 			'<script src="' +
-			(chrome.extension ?
-				chrome.extension.getURL('lib/transpilers/babel-polyfill.min.js') :
-				`${
+			(chrome.extension
+				? chrome.extension.getURL('lib/transpilers/babel-polyfill.min.js')
+				: `${
 						location.origin
-					}${BASE_PATH}/lib/transpilers/babel-polyfill.min.js`) +
+				  }${BASE_PATH}/lib/transpilers/babel-polyfill.min.js`) +
 			'"></script>';
 	}
 
 	if (typeof js === 'string') {
 		contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';
 	} else {
-		var origin = chrome.i18n.getMessage() ?
-			`chrome-extension://${chrome.i18n.getMessage('@@extension_id')}` :
-			`${location.origin}`;
+		var origin = chrome.i18n.getMessage()
+			? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
+			: `${location.origin}`;
 		contents +=
 			'<script src="' + `filesystem:${origin}/temporary/script.js` + '">';
 	}
@@ -379,10 +371,10 @@ export function saveAsHtml(item) {
 	var htmlPromise = computeHtml(item.html, item.htmlMode);
 	var cssPromise = computeCss(item.css, item.cssMode);
 	var jsPromise = computeJs(item.js, item.jsMode, false);
-	Promise.all([htmlPromise, cssPromise, jsPromise]).then(function (result) {
-		var html = result[0],
-			css = result[1],
-			js = result[2];
+	Promise.all([htmlPromise, cssPromise, jsPromise]).then(function(result) {
+		var html = result[0].code,
+			css = result[1].code,
+			js = result[2].code;
 
 		var fileContent = getCompleteHtml(html, css, js, item, true);
 
@@ -417,17 +409,19 @@ export function handleDownloadsPermission() {
 		d.resolve();
 		return d.promise;
 	}
-	chrome.permissions.contains({
+	chrome.permissions.contains(
+		{
 			permissions: ['downloads']
 		},
-		function (result) {
+		function(result) {
 			if (result) {
 				d.resolve();
 			} else {
-				chrome.permissions.request({
+				chrome.permissions.request(
+					{
 						permissions: ['downloads']
 					},
-					function (granted) {
+					function(granted) {
 						if (granted) {
 							trackEvent('fn', 'downloadsPermGiven');
 							d.resolve();

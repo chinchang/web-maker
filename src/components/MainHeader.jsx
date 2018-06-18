@@ -34,7 +34,7 @@ export function MainHeader(props) {
 					class="flex-v-center hint--rounded hint--bottom-left"
 					aria-label="Add a JS/CSS library"
 				>
-					Add library
+					Add library{' '}
 					<span
 						id="js-external-lib-count"
 						style={`display:${props.externalLibCount ? 'inline' : 'none'}`}

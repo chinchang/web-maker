@@ -1,4 +1,4 @@
-import { handleDownloadsPermission } from './utils';
+import { handleDownloadsPermission, log } from './utils';
 import { trackEvent } from './analytics';
 
 function saveScreenshot(dataURI) {
@@ -59,7 +59,7 @@ function saveScreenshot(dataURI) {
 	}
 
 	function errorHandler(e) {
-		utils.log(e);
+		log(e);
 	}
 
 	// create a blob for writing to a file

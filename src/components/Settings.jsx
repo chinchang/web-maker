@@ -19,7 +19,7 @@ function CheckboxSetting({
 				checked={pref}
 				onChange={onChange}
 				data-setting={name}
-			/>
+			/>{' '}
 			{label}
 		</label>
 	);

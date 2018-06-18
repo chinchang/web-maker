@@ -234,6 +234,7 @@ export default class App extends Component {
 		this.toggleLayout(
 			this.state.currentItem.layoutMode || this.state.prefs.layoutMode
 		);
+		this.updateExternalLibCount();
 		this.contentWrap.refreshEditor();
 	}
 	// Creates a new item with passed item's contents
@@ -822,7 +823,9 @@ export default class App extends Component {
 	}
 	codepenBtnClickHandler(e) {
 		if (this.state.currentItem.cssMode === CssModes.ACSS) {
-			alert("Oops! CodePen doesn't supports Atomic CSS currently.");
+			alert(
+				"Oops! CodePen doesn't supports Atomic CSS currently. \nHere is something you can still do -> https://medium.com/web-maker/sharing-your-atomic-css-work-on-codepen-a402001b26ab"
+			);
 			e.preventDefault();
 			return;
 		}
@@ -933,6 +936,9 @@ export default class App extends Component {
 
 	editorFocusHandler(editor) {
 		this.editorWithFocus = editor;
+	}
+	modalOverlayClickHandler() {
+		this.closeAllOverlays();
 	}
 
 	render() {
@@ -1103,7 +1109,10 @@ export default class App extends Component {
 				/>
 
 				<Portal into="body">
-					<div class="modal-overlay" />
+					<div
+						class="modal-overlay"
+						onClick={this.modalOverlayClickHandler.bind(this)}
+					/>
 				</Portal>
 
 				<Icons />

@@ -1,9 +1,7 @@
-import {
-	deferred
-} from './deferred';
+import { deferred } from './deferred';
+import { log } from 'util';
 
 export const itemService = {
-
 	async getItem(id) {
 		var remoteDb = await window.db.getDb();
 		return remoteDb
@@ -32,11 +30,11 @@ export const itemService = {
 	},
 
 	async getAllItems() {
-		var t = Date.now()
+		var t = Date.now();
 		var d = deferred();
 		let itemIds = await this.getUserItemIds();
 		itemIds = Object.getOwnPropertyNames(itemIds || {});
-		utils.log('itemids', itemIds);
+		log('itemids', itemIds);
 
 		if (!itemIds.length) {
 			d.resolve([]);
@@ -46,16 +44,19 @@ export const itemService = {
 		remoteDb
 			.collection('items')
 			.where('createdBy', '==', window.user.uid)
-			.onSnapshot(function (querySnapshot) {
-				querySnapshot.forEach(function (doc) {
-					items.push(doc.data());
-				});
-				utils.log('Items fetched in ', Date.now() - t, 'ms')
+			.onSnapshot(
+				function(querySnapshot) {
+					querySnapshot.forEach(function(doc) {
+						items.push(doc.data());
+					});
+					log('Items fetched in ', Date.now() - t, 'ms');
 
-				d.resolve(items);
-			}, function () {
-				d.resolve([])
-			});
+					d.resolve(items);
+				},
+				function() {
+					d.resolve([]);
+				}
+			);
 		return d.promise;
 	},
 
@@ -91,7 +92,7 @@ export const itemService = {
 		}
 		if (window.user) {
 			var remoteDb = await window.db.getDb();
-			utils.log(`Starting to save item ${id}`);
+			log(`Starting to save item ${id}`);
 			item.createdBy = window.user.uid;
 			remotePromise = remoteDb
 				.collection('items')
@@ -100,7 +101,7 @@ export const itemService = {
 					merge: true
 				})
 				.then(arg => {
-					utils.log('Document written', arg);
+					log('Document written', arg);
 					d.resolve();
 				})
 				.catch(d.reject);
@@ -120,10 +121,11 @@ export const itemService = {
 			// save new items
 			window.db.local.set(items, d.resolve);
 			// Push in new item IDs
-			window.db.local.get({
+			window.db.local.get(
+				{
 					items: {}
 				},
-				function (result) {
+				function(result) {
 					/* eslint-disable guard-for-in */
 					for (var id in items) {
 						result.items[id] = true;
@@ -163,24 +165,25 @@ export const itemService = {
 			return d.promise;
 		}
 		const remoteDb = await window.db.getDb();
-		utils.log(`Starting to save item ${id}`);
+		log(`Starting to save item ${id}`);
 		return remoteDb
 			.collection('items')
 			.doc(id)
 			.delete()
 			.then(arg => {
-				utils.log('Document removed', arg);
+				log('Document removed', arg);
 			})
-			.catch(error => utils.log(error));
+			.catch(error => log(error));
 	},
 
 	async setItemForUser(itemId) {
 		// When not logged in
 		if (!window.user) {
-			return window.db.local.get({
+			return window.db.local.get(
+				{
 					items: {}
 				},
-				function (result) {
+				function(result) {
 					result.items[itemId] = true;
 					window.db.local.set({
 						items: result.items
@@ -196,20 +199,21 @@ export const itemService = {
 				[`items.${itemId}`]: true
 			})
 			.then(arg => {
-				utils.log(`Item ${itemId} set for user`, arg);
+				log(`Item ${itemId} set for user`, arg);
 				window.user.items = window.user.items || {};
 				window.user.items[itemId] = true;
 			})
-			.catch(error => utils.log(error));
+			.catch(error => log(error));
 	},
 
 	async unsetItemForUser(itemId) {
 		// When not logged in
 		if (!window.user) {
-			return window.db.local.get({
+			return window.db.local.get(
+				{
 					items: {}
 				},
-				function (result) {
+				function(result) {
 					delete result.items[itemId];
 					window.db.local.set({
 						items: result.items
@@ -226,8 +230,8 @@ export const itemService = {
 			})
 			.then(arg => {
 				delete window.user.items[itemId];
-				utils.log(`Item ${itemId} unset for user`, arg);
+				log(`Item ${itemId} unset for user`, arg);
 			})
-			.catch(error => utils.log(error));
+			.catch(error => log(error));
 	}
-}
+};

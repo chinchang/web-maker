@@ -87,13 +87,14 @@ export function OnboardingModal(props) {
 				<a
 					href="https://medium.com/web-maker/importing-exporting-your-creations-d92e7de5c3dc"
 					target="_blank"
+					rel="noopener noreferrer"
 				>
 					Learn how to export/import
 				</a>.
 			</p>
 
 			<p class="tac">
-				<button class="btn btn--primary" d-click="closeAllOverlays">
+				<button class="btn btn--primary" onClick={props.closeHandler}>
 					Lets start!
 				</button>
 			</p>

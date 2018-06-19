@@ -108,10 +108,7 @@ export default class App extends Component {
 				alertsService.add('You are now logged in!');
 				this.setState({ user });
 				window.user = user;
-				if (
-					!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS] &&
-					window.oldSavedCreationsCountEl
-				) {
+				if (!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS]) {
 					this.fetchItems(false, true).then(items => {
 						if (!items.length) {
 							return;
@@ -204,7 +201,7 @@ export default class App extends Component {
 				window.db.setUserLastSeenVersion(version);
 				// set some initial preferences on closing the onboard modal
 				// Old onboarding.
-				// utils.once(document, 'overlaysClosed', function() {});
+				//once(document, 'overlaysClosed', function() {});
 			}
 			// If its an upgrade
 			if (
@@ -365,7 +362,7 @@ export default class App extends Component {
 		var items = [];
 		if (window.user && !shouldFetchLocally) {
 			items = await itemService.getAllItems();
-			utils.log('got items');
+			log('got items');
 			if (shouldSaveGlobally) {
 				items.forEach(item => {
 					this.state.savedItems[item.id] = item;
@@ -715,9 +712,9 @@ export default class App extends Component {
 							[`settings.${settingName}`]: this.state.prefs[settingName]
 						})
 						.then(arg => {
-							utils.log(`Setting "${settingName}" for user`, arg);
+							log(`Setting "${settingName}" for user`, arg);
 						})
-						.catch(error => utils.log(error));
+						.catch(error => log(error));
 				});
 			}
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
@@ -771,6 +768,8 @@ export default class App extends Component {
 		}
 		trackEvent('fn', 'loggedOut');
 		auth.logout();
+		this.setState({ isProfileModalOpen: false });
+		alertsService.add('Log out successfull');
 	}
 
 	itemClickHandler(item) {

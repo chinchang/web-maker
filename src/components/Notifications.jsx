@@ -1,6 +1,7 @@
 import { h } from 'preact';
+import { A } from './common';
 
-export function Notifications() {
+export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
@@ -74,14 +75,15 @@ export function Notifications() {
 						>
 							Share it
 						</a>&nbsp;
-						<a
+						<A
 							aria-label="Support the developer"
-							d-click="openSupportDeveloperModal"
+							onClick={props.onSupportBtnClick}
 							data-event-action="supportDeveloperChangelogBtnClick"
+							data-event-category="ui"
 							class="btn btn-icon"
 						>
 							Support the developer
-						</a>
+						</A>
 					</li>
 				</ul>
 			</div>

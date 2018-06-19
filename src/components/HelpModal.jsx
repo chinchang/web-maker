@@ -1,5 +1,6 @@
 import { h } from 'preact';
-import Modal from './Modal.jsx';
+import Modal from './Modal';
+import { Button } from './common';
 
 export function HelpModal(props) {
 	return (
@@ -47,16 +48,17 @@ export function HelpModal(props) {
 					</a>.
 				</p>
 				<p>
-					<button
+					<Button
 						aria-label="Support the developer"
-						d-click="openSupportDeveloperModal"
+						onClick={props.onSupportBtnClick}
 						data-event-action="supportDeveloperHelpBtnClick"
+						data-event-category="ui"
 						class="btn btn-icon"
 					>
 						<svg>
 							<use xlinkHref="#gift-icon" />
 						</svg>Support the developer
-					</button>{' '}
+					</Button>{' '}
 					<a
 						aria-label="Rate Web Maker"
 						href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"

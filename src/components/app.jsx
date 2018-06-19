@@ -219,6 +219,7 @@ export default class App extends Component {
 			}
 		});
 	}
+
 	updateProfileUi() {
 		if (this.state.user) {
 			document.body.classList.add('is-logged-in');
@@ -459,7 +460,7 @@ export default class App extends Component {
 				});
 				trackEvent('ui', 'showKeyboardShortcutsShortcut');
 			} else if (event.keyCode === 27) {
-				this.closeAllOverlays();
+				this.closeSavedItemsPane();
 			}
 		});
 	}
@@ -468,6 +469,19 @@ export default class App extends Component {
 		if (this.state.isSavedItemPaneOpen) {
 			this.closeSavedItemsPane();
 		}
+
+		this.setState({
+			isAddLibraryModalOpen: false,
+			isSettingsModalOpen: false,
+			isHelpModalOpen: false,
+			isNotificationsModalOpen: false,
+			isLoginModalOpen: false,
+			isProfileModalOpen: false,
+			isSupportDeveloperModalOpen: false,
+			isKeyboardShortcutsModalOpen: false,
+			isAskToImportModalOpen: false,
+			isOnboardModalOpen: false
+		});
 	}
 	onExternalLibChange(newValues) {
 		log('onExternalLibChange');
@@ -899,14 +913,11 @@ export default class App extends Component {
 		});
 		e.preventDefault();
 	}
-	openSupportDeveloperModal(e) {
-		// this.closeAllModals();
+	openSupportDeveloperModal() {
+		this.closeAllOverlays();
 		this.setState({
 			isSupportDeveloperModalOpen: true
 		});
-		if (e) {
-			trackEvent('ui', e.target.dataset.eventAction);
-		}
 	}
 	supportDeveloperBtnClickHandler(e) {
 		this.openSupportDeveloperModal(e);
@@ -1048,7 +1059,9 @@ export default class App extends Component {
 						this.setState({ isNotificationsModalOpen: false })
 					}
 				>
-					<Notifications />
+					<Notifications
+						onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
+					/>
 				</Modal>
 				<Modal
 					extraClasses="modal--settings"
@@ -1079,6 +1092,7 @@ export default class App extends Component {
 				<HelpModal
 					show={this.state.isHelpModalOpen}
 					closeHandler={() => this.setState({ isHelpModalOpen: false })}
+					onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
 				/>
 				<SupportDeveloperModal
 					show={this.state.isSupportDeveloperModalOpen}

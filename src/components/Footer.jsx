@@ -207,6 +207,7 @@ export default class Footer extends Component {
 				</a>
 				<A
 					onClick={this.props.supportDeveloperBtnClickHandler}
+					data-event-category="ui"
 					data-event-action="supportDeveloperFooterBtnClick"
 					class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile"
 					aria-label="Support the developer by pledging some amount"

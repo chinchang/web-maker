@@ -8,7 +8,7 @@ class Clickable extends Component {
 			el.getAttribute('data-event-category'),
 			el.getAttribute('data-event-action')
 		);
-		this.props.onClick();
+		this.props.onClick(e);
 	}
 	render() {
 		const { onClick, Tag, ...props } = this.props;

@@ -90,7 +90,7 @@ gulp.task('useRef', function() {
 
 gulp.task('concatSwRegistration', function() {
 	gulp
-		.src(['app/service-worker-registration.js', 'app/script.js'])
+		.src(['src/service-worker-registration.js', 'app/script.js'])
 		.pipe(concat('script.js'))
 		.pipe(gulp.dest('app'));
 });

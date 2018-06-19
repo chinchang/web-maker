@@ -109,6 +109,14 @@ p {
 	margin-bottom: 2rem;
 }
 
+.mt-1 {
+	margin-top: 1rem;
+}
+
+.mt-2 {
+	margin-top: 2rem;
+}
+
 .mb-0 {
 	margin-bottom: 0;
 }

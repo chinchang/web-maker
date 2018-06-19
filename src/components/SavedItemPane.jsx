@@ -228,8 +228,9 @@ export default class SavedItemPane extends Component {
 				/>
 
 				<div id="js-saved-items-wrap" class="saved-items-pane__container">
-					{!this.state.filteredItems.length &&
-						this.items.length && <div class="mt-1">No match found.</div>}
+					{!this.state.filteredItems.length && this.items.length ? (
+						<div class="mt-1">No match found.</div>
+					) : null}
 					{this.state.filteredItems.map(item => (
 						<div
 							class="js-saved-item-tile saved-item-tile"
@@ -258,9 +259,9 @@ export default class SavedItemPane extends Component {
 							</span>
 						</div>
 					))}
-					{!this.items.length && (
+					{!this.items.length ? (
 						<h2 class="opacity--30">Nothing saved here.</h2>
-					)}
+					) : null}
 				</div>
 			</div>
 		);

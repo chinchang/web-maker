@@ -97,7 +97,7 @@ gulp.task('concatSwRegistration', function() {
 
 gulp.task('minify', function() {
 	minifyJs('app/script.js');
-	// minifyJs('app/vendor.js');
+	minifyJs('app/vendor.js');
 	minifyJs('app/lib/screenlog.js');
 
 	gulp

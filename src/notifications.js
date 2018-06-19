@@ -10,7 +10,7 @@ function addNotification(msg) {
 	noticationContainerEL.classList.add('is-active');
 
 	clearTimeout(hideTimeout);
-	hideTimeout = setTimeout(function () {
+	hideTimeout = setTimeout(function() {
 		noticationContainerEL.classList.remove('is-active');
 	}, 2000);
 }
@@ -18,3 +18,4 @@ function addNotification(msg) {
 export const alertsService = {
 	add: addNotification
 };
+window.alertsService = alertsService;

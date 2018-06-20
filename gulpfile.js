@@ -10,6 +10,7 @@ const concat = require('gulp-concat');
 const babelMinify = require('babel-minify');
 const child_process = require('child_process');
 const merge = require('merge-stream');
+const zip = require('gulp-zip');
 
 function minifyJs(fileName) {
 	const content = fs.readFileSync(fileName, 'utf8');
@@ -152,6 +153,33 @@ gulp.task('generate-service-worker', function(callback) {
 	);
 });
 
+gulp.task('packageExtension', function() {
+	child_process.execSync('cp -R app extension/');
+	child_process.execSync('cp src/manifest.json extension');
+	child_process.execSync('cp src/options.js extension');
+	child_process.execSync('cp src/options.html extension');
+	child_process.execSync('cp src/eventPage.js extension');
+	child_process.execSync('cp src/icon-16.png extension');
+	child_process.execSync(
+		'rm -rf extension/service-worker.js extension/partials'
+	);
+	return merge(
+		gulp
+			.src('build/bundle.*.js')
+			.pipe(rename('script.js'))
+			.pipe(gulp.dest('extension')),
+		gulp
+			.src('build/vendor.*.js')
+			.pipe(rename('vendor.js'))
+			.pipe(gulp.dest('extension')),
+
+		gulp
+			.src('extension/*')
+			.pipe(zip('extension.zip'))
+			.pipe(gulp.dest('./'))
+	);
+});
+
 gulp.task('cleanup', function() {
 	return child_process.execSync('rm -rf build');
 });
@@ -165,6 +193,7 @@ gulp.task('release', function(callback) {
 		'concatSwRegistration',
 		'minify',
 		'generate-service-worker',
+		'packageExtension',
 		'cleanup',
 		function(error) {
 			if (error) {

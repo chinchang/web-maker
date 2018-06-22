@@ -137,6 +137,12 @@ p {
 	}
 }
 
+@media screen and (min-width: 501px) {
+	.show-on-mobile {
+		display: none;
+	}
+}
+
 hr {
 	background: 0;
 	border: 0;
@@ -201,6 +207,7 @@ textarea {
 	cursor: pointer;
 	letter-spacing: 0.2px;
 	line-height: 1;
+	white-space: nowrap;
 	transition: box-shadow 0.2s ease;
 }
 
@@ -571,6 +578,7 @@ body > #demo-frame {
 	line-height: 20px;
 	height: 20px;
 	letter-spacing: 0.6px;
+	white-space: nowrap;
 	color: #9297b3;
 	border-radius: 3px;
 	margin-left: 10px;
@@ -1231,17 +1239,6 @@ body > #demo-frame {
 	border-radius: 10px;
 	box-shadow: 0 16px 22px rgba(0, 0, 0, 0.1);
 	flex: 1;
-	opacity: 0;
-	animation: onboard-step-show 0.6s ease forwards;
-	animation-delay: 0.1s;
-}
-
-.onboard-step:nth-child(2) {
-	animation-delay: 0.2s;
-}
-
-.onboard-step:nth-child(3) {
-	animation-delay: 0.4s;
 }
 
 .onboard-step__icon {
@@ -1250,17 +1247,6 @@ body > #demo-frame {
 	stroke: #e79f80;
 	width: 80px;
 	height: 80px;
-}
-
-@keyframes onboard-step-show {
-	from {
-		transform: translateY(10px);
-		opacity: 0;
-	}
-	to {
-		transform: translateY(0);
-		opacity: 1;
-	}
 }
 
 .autocomplete-dropdown {
@@ -1498,6 +1484,9 @@ body:not(.is-app) .show-when-app {
 @media screen and (max-width: 500px) {
 	body {
 		font-size: 70%;
+	}
+	.flex--desk {
+		display: flex;
 	}
 	.main-header {
 		overflow-x: auto;

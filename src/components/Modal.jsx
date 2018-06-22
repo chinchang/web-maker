@@ -7,6 +7,10 @@ export default class Modal extends Component {
 	}
 	componentWillUnmount() {
 		window.removeEventListener('keydown', this.onKeyDownHandler.bind(this));
+		if (this.focusGrabber) {
+			this.focusGrabber.remove();
+			this.focusGrabber = null;
+		}
 	}
 	onKeyDownHandler(e) {
 		if (e.keyCode === 27) {
@@ -28,6 +32,21 @@ export default class Modal extends Component {
 				setTimeout(() => {
 					this.overlayEl.querySelector('.js-modal__close-btn').focus();
 				}, 0);
+
+				/* We insert a dummy hidden input which will take focus as soon as focus
+				escapes the modal, instead of focus going outside modal because modal
+				is last focusable element. */
+				this.focusGrabber = document.createElement('input');
+				this.focusGrabber.setAttribute(
+					'style',
+					'height:0;opacity:0;overflow:hidden;width:0;'
+				);
+				setTimeout(() => {
+					document.body.appendChild(this.focusGrabber);
+				}, 10);
+			} else {
+				this.focusGrabber.remove();
+				this.focusGrabber = null;
 			}
 		}
 	}

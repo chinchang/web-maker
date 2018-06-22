@@ -463,6 +463,20 @@ export default class App extends Component {
 				this.closeSavedItemsPane();
 			}
 		});
+
+		// Basic Focus trapping
+		window.addEventListener('focusin', e => {
+			if (document.body.classList.contains('overlay-visible')) {
+				const modal = $('.is-modal-visible');
+				if (!modal) {
+					return;
+				}
+				if (!modal.contains(e.target)) {
+					e.preventDefault();
+					modal.querySelector('.js-modal__close-btn').focus();
+				}
+			}
+		});
 	}
 
 	closeAllOverlays() {

@@ -40,7 +40,8 @@ gulp.task('copyFiles', function() {
 				'src/detached-window.js',
 				'src/icon-48.png',
 				'src/icon-128.png',
-				'src/patreon.png'
+				'src/patreon.png',
+				'manifest.json'
 			])
 			.pipe(gulp.dest('app')),
 

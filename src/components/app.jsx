@@ -513,6 +513,9 @@ export default class App extends Component {
 	updateExternalLibCount() {
 		// Calculate no. of external libs
 		var noOfExternalLibs = 0;
+		if (!this.state.currentItem.externalLibs) {
+			return;
+		}
 		noOfExternalLibs += this.state.currentItem.externalLibs.js
 			.split('\n')
 			.filter(lib => !!lib).length;

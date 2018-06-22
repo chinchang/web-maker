@@ -307,19 +307,23 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 	if (!item) {
 		return '';
 	}
-	var externalJs = item.externalLibs.js
-		.split('\n')
-		.reduce(function(scripts, url) {
-			return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
-		}, '');
-	var externalCss = item.externalLibs.css
-		.split('\n')
-		.reduce(function(links, url) {
-			return (
-				links +
-				(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
-			);
-		}, '');
+	var externalJs = '',
+		externalCss = '';
+	if (item.externalLibs) {
+		externalJs = item.externalLibs.js
+			.split('\n')
+			.reduce(function(scripts, url) {
+				return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
+			}, '');
+		externalCss = item.externalLibs.css
+			.split('\n')
+			.reduce(function(links, url) {
+				return (
+					links +
+					(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
+				);
+			}, '');
+	}
 	var contents =
 		'<!DOCTYPE html>\n' +
 		'<html>\n<head>\n' +

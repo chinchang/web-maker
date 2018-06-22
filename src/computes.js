@@ -1,42 +1,45 @@
-import {
-	deferred
-} from './deferred';
-import {
-	addInfiniteLoopProtection
-} from './utils';
-import {
-	HtmlModes,
-	CssModes,
-	JsModes
-} from './codeModes';
+import { deferred } from './deferred';
+import { addInfiniteLoopProtection } from './utils';
+import { HtmlModes, CssModes, JsModes } from './codeModes';
 
 const esprima = require('esprima');
 
 // computeHtml, computeCss & computeJs evaluate the final code according
 // to whatever mode is selected and resolve the returned promise with the code.
-export function computeHtml(code, mode) {
+export function computeHtml(userCode, mode) {
+	var code = userCode;
 	var d = deferred();
 	if (mode === HtmlModes.HTML) {
 		d.resolve({
 			code
 		});
 	} else if (mode === HtmlModes.MARKDOWN) {
-		d.resolve(window.marked ? {
-			code: marked(code)
-		} : {
-			code
-		});
+		d.resolve(
+			window.marked
+				? {
+						code: marked(code)
+				  }
+				: {
+						code
+				  }
+		);
 	} else if (mode === HtmlModes.JADE) {
-		d.resolve(window.jade ? {
-			code: jade.render(code)
-		} : {
-			code
-		});
+		d.resolve(
+			window.jade
+				? {
+						code: jade.render(code)
+				  }
+				: {
+						code
+				  }
+		);
 	}
 
 	return d.promise;
 }
-export function computeCss(code, mode, settings) {
+export function computeCss(userCode, mode, settings) {
+	var code = userCode;
+
 	var d = deferred();
 	var errors;
 
@@ -47,18 +50,21 @@ export function computeCss(code, mode, settings) {
 	} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
 		if (window.sass && code) {
 			window.sass.compile(
-				code, {
+				code,
+				{
 					indentedSyntax: mode === CssModes.SASS
 				},
-				function (result) {
+				function(result) {
 					// Something was wrong
 					if (result.line && result.message) {
 						errors = {
 							lang: 'css',
-							data: [{
-								lineNumber: result.line - 1,
-								message: result.message
-							}]
+							data: [
+								{
+									lineNumber: result.line - 1,
+									message: result.message
+								}
+							]
 						};
 					}
 					d.resolve({
@@ -74,27 +80,29 @@ export function computeCss(code, mode, settings) {
 		}
 	} else if (mode === CssModes.LESS) {
 		less.render(code).then(
-			function (result) {
+			function(result) {
 				d.resolve({
 					code: result.css
 				});
 			},
-			function (error) {
+			function(error) {
 				errors = {
 					lang: 'css',
-					data: [{
-						lineNumber: error.line,
-						message: error.message
-					}]
+					data: [
+						{
+							lineNumber: error.line,
+							message: error.message
+						}
+					]
 				};
 				d.resolve({
 					code: '',
 					errors
-				})
+				});
 			}
 		);
 	} else if (mode === CssModes.STYLUS) {
-		stylus(code).render(function (error, result) {
+		stylus(code).render(function(error, result) {
 			if (error) {
 				window.err = error;
 				// Last line of message is the actual message
@@ -102,10 +110,12 @@ export function computeCss(code, mode, settings) {
 				tempArr.pop(); // This is empty string in the end
 				errors = {
 					lang: 'css',
-					data: [{
-						lineNumber: +error.message.match(/stylus:(\d+):/)[1] - 298,
-						message: tempArr.pop()
-					}]
+					data: [
+						{
+							lineNumber: +error.message.match(/stylus:(\d+):/)[1] - 298,
+							message: tempArr.pop()
+						}
+					]
 				};
 			}
 			d.resolve({
@@ -140,7 +150,15 @@ export function computeCss(code, mode, settings) {
 	return d.promise;
 }
 
-export function computeJs(code, mode, shouldPreventInfiniteLoops, infiniteLoopTimeout) {
+/* eslint-disable max-params */
+/* eslint-disable complexity */
+export function computeJs(
+	userCode,
+	mode,
+	shouldPreventInfiniteLoops,
+	infiniteLoopTimeout
+) {
+	var code = userCode;
 	var d = deferred();
 	var errors;
 
@@ -157,18 +175,22 @@ export function computeJs(code, mode, shouldPreventInfiniteLoops, infiniteLoopTi
 		} catch (e) {
 			errors = {
 				lang: 'js',
-				data: [{
-					lineNumber: e.lineNumber - 1,
-					message: e.description
-				}]
+				data: [
+					{
+						lineNumber: e.lineNumber - 1,
+						message: e.description
+					}
+				]
 			};
 		} finally {
 			if (shouldPreventInfiniteLoops !== false) {
 				// If errors are found in last parse, we don't run infinite loop
 				// protection otherwise it will again throw error.
-				code = errors ? code : addInfiniteLoopProtection(code, {
-					timeout: infiniteLoopTimeout
-				});
+				code = errors
+					? code
+					: addInfiniteLoopProtection(code, {
+							timeout: infiniteLoopTimeout
+					  });
 			}
 
 			d.resolve({
@@ -188,16 +210,20 @@ export function computeJs(code, mode, shouldPreventInfiniteLoops, infiniteLoopTi
 		} catch (e) {
 			errors = {
 				lang: 'js',
-				data: [{
-					lineNumber: e.location.first_line,
-					message: e.message
-				}]
+				data: [
+					{
+						lineNumber: e.location.first_line,
+						message: e.message
+					}
+				]
 			};
 		} finally {
 			if (shouldPreventInfiniteLoops !== false) {
-				code = errors ? code : addInfiniteLoopProtection(code, {
-					timeout: infiniteLoopTimeout
-				});
+				code = errors
+					? code
+					: addInfiniteLoopProtection(code, {
+							timeout: infiniteLoopTimeout
+					  });
 			}
 			d.resolve({
 				code,
@@ -217,19 +243,23 @@ export function computeJs(code, mode, shouldPreventInfiniteLoops, infiniteLoopTi
 		} catch (e) {
 			errors = {
 				lang: 'js',
-				data: [{
-					lineNumber: e.lineNumber - 1,
-					message: e.description
-				}]
+				data: [
+					{
+						lineNumber: e.lineNumber - 1,
+						message: e.description
+					}
+				]
 			};
 		} finally {
 			code = Babel.transform(code, {
 				presets: ['latest', 'stage-2', 'react']
 			}).code;
 			if (shouldPreventInfiniteLoops !== false) {
-				code = errors ? code : addInfiniteLoopProtection(code, {
-					timeout: infiniteLoopTimeout
-				});
+				code = errors
+					? code
+					: addInfiniteLoopProtection(code, {
+							timeout: infiniteLoopTimeout
+					  });
 			}
 			d.resolve({
 				code,
@@ -256,13 +286,16 @@ export function computeJs(code, mode, shouldPreventInfiniteLoops, infiniteLoopTi
 				/* eslint-disable no-throw-literal */
 				errors = {
 					lang: 'js',
-					data: [{
-						message: code.diagnostics[0].messageText,
-						lineNumber: ts.getLineOfLocalPosition(
-							code.diagnostics[0].file,
-							code.diagnostics[0].start
-						) - 1
-					}]
+					data: [
+						{
+							message: code.diagnostics[0].messageText,
+							lineNumber:
+								ts.getLineOfLocalPosition(
+									code.diagnostics[0].file,
+									code.diagnostics[0].start
+								) - 1
+						}
+					]
 				};
 			}
 			code = code.outputText;
@@ -275,10 +308,10 @@ export function computeJs(code, mode, shouldPreventInfiniteLoops, infiniteLoopTi
 				code,
 				errors
 			});
-		} catch (e) {
-
-		}
+		} catch (e) {}
 	}
 
 	return d.promise;
 }
+/* eslint-enable max-params */
+/* eslint-enable complexity */

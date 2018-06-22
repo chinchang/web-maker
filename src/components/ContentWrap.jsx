@@ -559,7 +559,8 @@ export default class ContentWrap extends Component {
 		setTimeout(() => {
 			this.setPreviewContent(true);
 		}, 1500);
-		function checkWindow() {
+
+		var intervalID = window.setInterval(checkWindow => {
 			if (this.detachedWindow && this.detachedWindow.closed) {
 				clearInterval(intervalID);
 				document.body.classList.remove('is-detached-mode');
@@ -569,8 +570,7 @@ export default class ContentWrap extends Component {
 				// getting reflected while detached window was open)
 				this.setPreviewContent(true);
 			}
-		}
-		var intervalID = window.setInterval(checkWindow.bind(this), 500);
+		}, 500);
 	}
 
 	onMessageFromConsole() {

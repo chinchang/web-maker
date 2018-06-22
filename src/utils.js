@@ -300,7 +300,10 @@ export function loadJS(src) {
 	return d.promise;
 }
 
+/* eslint-disable max-params */
 export function getCompleteHtml(html, css, js, item, isForExport) {
+	/* eslint-enable max-params */
+
 	if (!item) {
 		return '';
 	}

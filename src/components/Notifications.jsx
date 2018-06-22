@@ -23,11 +23,19 @@ export function Notifications(props) {
 					</li>
 					<li>
 						🚀 Popular libraries list updated. Thanks
-						<a href="https://github.com/diomed" target="_blank">
+						<a
+							href="https://github.com/diomed"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
 							@diomed
 						</a>{' '}
 						&{' '}
-						<a href="https://github.com/leninalbertolp" target="_blank">
+						<a
+							href="https://github.com/leninalbertolp"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
 							@leninalbertolp
 						</a>
 					</li>
@@ -40,10 +48,18 @@ export function Notifications(props) {
 					<li>
 						<strong>🚀 Announcement</strong>: Hi! I am Kushagra Gour (creator of
 						Web Maker) and I have launched a
-						<a href="https://patreon.com/kushagra" target="_blank">
+						<a
+							href="https://patreon.com/kushagra"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
 							Patreon campaign
 						</a>. If you love Web Maker, consider pledging to
-						<a href="https://patreon.com/kushagra" target="_blank">
+						<a
+							href="https://patreon.com/kushagra"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
 							support me
 						</a>{' '}
 						:)
@@ -52,6 +68,7 @@ export function Notifications(props) {
 						<a
 							href="https://github.com/chinchang/web-maker/issues"
 							target="_blank"
+							rel="noopener noreferrer"
 						>
 							Suggest features or report bugs.
 						</a>
@@ -63,6 +80,7 @@ export function Notifications(props) {
 						<a
 							href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
 							target="_blank"
+							rel="noopener noreferrer"
 							class="btn"
 						>
 							Please rate Web Maker <span class="star" />
@@ -70,7 +88,7 @@ export function Notifications(props) {
 						<a
 							href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
 							target="_blank"
-							target="_blank"
+							rel="noopener noreferrer"
 							class="btn"
 						>
 							Share it

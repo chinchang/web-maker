@@ -1,6 +1,4 @@
-import {
-	log
-} from "./utils";
+import { log } from './utils';
 
 /* global ga */
 
@@ -13,10 +11,10 @@ export function trackEvent(category, action, label, value) {
 	if (window.ga) {
 		ga('send', 'event', category, action, label, value);
 	}
-};
+}
 
 // if online, load after sometime
-if (false && navigator.onLine && !window.DEBUG) {
+if (navigator.onLine && !window.DEBUG) {
 	/* eslint-disable */
 
 	// prettier-ignore

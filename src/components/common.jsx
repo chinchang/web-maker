@@ -11,7 +11,10 @@ class Clickable extends Component {
 		this.props.onClick(e);
 	}
 	render() {
+		/* eslint-disable no-unused-vars */
 		const { onClick, Tag, ...props } = this.props;
+		/* eslint-enable no-unused-vars */
+
 		return <Tag onClick={this.handleClick.bind(this)} {...props} />;
 	}
 }

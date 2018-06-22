@@ -7,7 +7,7 @@
 		"build": "preact build --template src/index.html --no-prerender",
 		"serve": "preact build && preact serve",
 		"dev": "preact watch --template src/index.html --https --no-prerender",
-		"lint": "eslint src/*.js src/components/*.jsx",
+		"lint": "eslint src",
 		"test": "jest ./tests",
 		"precommit": "lint-staged"
 	},
@@ -15,7 +15,10 @@
 		"extends": "eslint-config-synacor"
 	},
 	"eslintIgnore": [
-		"build/*"
+		"build/*",
+		"src/lib/",
+		"src/tests/",
+		"src/CodeMirror.js"
 	],
 	"lint-staged": {
 		"*.{js,jsx,json,css,md}": [

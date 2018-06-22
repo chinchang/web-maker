@@ -33,16 +33,22 @@ export class SplitPane extends Component {
 			options.onDragStart = this.props.onDragStart;
 		}
 
+		/* eslint-disable new-cap */
 		this.splitInstance = Split(
 			this.props.children.map(node => '#' + node.attributes.id),
 			options
 		);
+		/* eslint-enable new-cap */
+
 		if (this.props.onSplit) {
 			this.props.onSplit(this.splitInstance);
 		}
 	}
 	render() {
+		/* eslint-disable no-unused-vars */
 		const { children, ...props } = this.props;
+		/* eslint-enable no-unused-vars */
+
 		return <div {...props}>{this.props.children}</div>;
 	}
 }

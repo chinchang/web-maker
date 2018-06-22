@@ -1,8 +1,11 @@
 language: node_js
 node_js:
-  - '8.1.2'
+  - '10.1.0'
 install:
   - npm install -g eslint
   - npm install -g babel-eslint
+  - npm install -g eslint-plugin-react
+  - npm install -g eslint-plugin-mocha
+  - npm install -g eslint-config-synacor
 script:
   - npm run lint

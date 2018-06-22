@@ -4,6 +4,7 @@ node_js:
 install:
   - npm install -g eslint
   - npm install -g babel-eslint
+  - npm install -g eslint-plugin-react
   - npm install -g eslint-config-synacor
 script:
   - npm run lint

@@ -34,6 +34,7 @@ gulp.task('copyFiles', function() {
 			.pipe(gulp.dest('app/lib/codemirror/mode')),
 		gulp.src('src/lib/transpilers/*').pipe(gulp.dest('app/lib/transpilers')),
 		gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib')),
+		gulp.src('icons/*').pipe(gulp.dest('app/icons')),
 		gulp
 			.src([
 				'src/preview.html',

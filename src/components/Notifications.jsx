@@ -1,51 +1,37 @@
 import { h } from 'preact';
 import { A } from './common';
 
-export function Notifications(props) {
+function NotificationItem({ type, children }) {
+	var strongTag;
+	if (type === 'bug') {
+		strongTag = <strong>🔧 Bugfix</strong>;
+	} else if (type === 'a11y') {
+		strongTag = <strong>♿️ Accessibility</strong>;
+	}
 	return (
-		<div>
-			<h1>Whats new?</h1>
+		<li>
+			{strongTag}: {children}
+		</li>
+	);
+}
 
-			<div class="notification">
-				<span class="notification__version">3.2.0</span>
-				<ul>
-					<li>
-						<strong>🚀 Loop timeout setting</strong>: You now have a setting to
-						tweak the maximum timeout of a loop iteration before it's marked as
-						infinite loop.
-					</li>
-					<li>
-						<strong>♿️ Accessibility</strong>: Modals now have proper keyboard
-						navigation integrated.
-					</li>
-					<li>
-						<strong>♿️ Accessibility</strong>: Color contrast improvements.
-					</li>
-					<li>
-						🚀 Popular libraries list updated. Thanks
-						<a
-							href="https://github.com/diomed"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							@diomed
-						</a>{' '}
-						&{' '}
-						<a
-							href="https://github.com/leninalbertolp"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							@leninalbertolp
-						</a>
-					</li>
-					<li>
-						<strong>🔧 Bugfix</strong>: Modal take up appropriate width instead
-						of spanning full width.
-					</li>
+function ThanksTo({ name, url }) {
+	return (
+		<a href={url} target="_blank" rel="noopener noreferrer">
+			{' '}
+			{name}
+		</a>
+	);
+}
 
-					<br />
-					<li>
+function Notification({ version, isLatest, ...props }) {
+	return (
+		<div class="notification">
+			<span class="notification__version">{version}</span>
+			<ul>{props.children}</ul>
+			{isLatest ? (
+				<div class="mt-2">
+					<p>
 						<strong>🚀 Announcement</strong>: Hi! I am Kushagra Gour (creator of
 						Web Maker) and I have launched a
 						<a
@@ -53,6 +39,7 @@ export function Notifications(props) {
 							target="_blank"
 							rel="noopener noreferrer"
 						>
+							{' '}
 							Patreon campaign
 						</a>. If you love Web Maker, consider pledging to
 						<a
@@ -60,11 +47,12 @@ export function Notifications(props) {
 							target="_blank"
 							rel="noopener noreferrer"
 						>
+							{' '}
 							support me
 						</a>{' '}
 						:)
-					</li>
-					<li>
+					</p>
+					<p>
 						<a
 							href="https://github.com/chinchang/web-maker/issues"
 							target="_blank"
@@ -72,11 +60,11 @@ export function Notifications(props) {
 						>
 							Suggest features or report bugs.
 						</a>
-					</li>
-					<li>
+					</p>
+					<p>
 						Web Maker now has more than 50K weekly active users! Thank you for
 						being a part of this community of awesome developers. If you find
-						Web Maker helpful,
+						Web Maker helpful,{' '}
 						<a
 							href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
 							target="_blank"
@@ -102,60 +90,104 @@ export function Notifications(props) {
 						>
 							Support the developer
 						</A>
-					</li>
-				</ul>
-			</div>
+					</p>
+				</div>
+			) : null}
+		</div>
+	);
+}
+export function Notifications(props) {
+	return (
+		<div>
+			<h1>Whats new?</h1>
 
-			<div class="notification">
-				<span class="notification__version">3.1.1</span>
-				<ul>
-					<li>
-						<strong>Bugfix</strong>: Fix the "Run" button not refreshing the
-						preview after release 3.0.4.
-					</li>
-				</ul>
-			</div>
+			<Notification version="3.3.0" isLatest={true} {...props}>
+				<li>
+					<strong>🔥 [Dev] Code Refactor</strong>: I rewrote Web Maker. Yes, Web
+					Maker's codebase has been ported from plain JS to{' '}
+					<a
+						href="https://preactjs.com/"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						Preact
+					</a>. What does this mean for you as a end-user? This means that now
+					that the code is much smaller, more modular and maintainable. Hence,
+					future features can be developed more rapidly. So fasten your seat
+					belts, and get ready to use loads of new features coming your way in
+					next releases!<br />
+					<a
+						href="https://medium.com/web-maker/web-maker-ported-to-preact-85af98be8683"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						Read more about this big code refactor
+					</a>.
+				</li>
+			</Notification>
 
-			<div class="notification">
-				<span class="notification__version">3.1.0</span>
-				<ul>
-					<li>
-						<strong>Mobile Support (app only).</strong>: Make the Web Maker app
-						usable on mobile. This is only for web app as Chrome extensions
-						don't run on mobile.
-					</li>
-				</ul>
-			</div>
-			<div class="notification">
-				<span class="notification__version">3.0.4</span>
-				<ul>
-					<li>
-						<strong>Bugfix</strong>: Guarantee code doesn't execute when "auto
-						preview" is off.
-					</li>
-					<li>
-						Add link to our new
-						<a
-							href="https://web-maker.slack.com"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							Slack channel
-						</a>{' '}
-						🤗.
-					</li>
-				</ul>
-			</div>
+			<Notification version="3.2.0" {...props}>
+				<li>
+					<strong>🚀 Loop timeout setting</strong>: You now have a setting to
+					tweak the maximum timeout of a loop iteration before it's marked as
+					infinite loop.
+				</li>
+				<NotificationItem type="a11y">
+					Modals now have proper keyboard navigation integrated.
+				</NotificationItem>
+				<NotificationItem type="a11y">
+					Color contrast improvements.
+				</NotificationItem>
+				<li>
+					🚀 Popular libraries list updated. Thanks
+					<ThanksTo url="https://github.com/diomed" name="@diomed" /> &{' '}
+					<ThanksTo
+						url="https://github.com/leninalbertolp"
+						name="@leninalbertolp"
+					/>
+				</li>
+				<NotificationItem type="bug">
+					Modal take up appropriate width instead of spanning full width.
+				</NotificationItem>
+			</Notification>
 
-			<div class="notification">
-				<span class="notification__version">3.0.3</span>
-				<ul>
-					<li>
-						<strong>Bugfix (extension)</strong>: "Save as HTML" file saves with
-						correct extension.
-					</li>
-				</ul>
-			</div>
+			<Notification version="3.1.1" {...props}>
+				<NotificationItem type="bug">
+					Fix the "Run" button not refreshing the preview after release 3.0.4.
+				</NotificationItem>
+			</Notification>
+
+			<Notification version="3.1.0" {...props}>
+				<li>
+					<strong>Mobile Support (app only).</strong>: Make the Web Maker app
+					usable on mobile. This is only for web app as Chrome extensions don't
+					run on mobile.
+				</li>
+			</Notification>
+
+			<Notification version="3.0.4" {...props}>
+				<NotificationItem type="bug">
+					Guarantee code doesn't execute when "auto preview" is off.
+				</NotificationItem>
+				<li>
+					Add link to our new
+					<a
+						href="https://web-maker.slack.com"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						Slack channel
+					</a>{' '}
+					🤗.
+				</li>
+			</Notification>
+
+			<Notification version="3.0.3" {...props}>
+				<li>
+					<strong>Bugfix (extension)</strong>: "Save as HTML" file saves with
+					correct extension.
+				</li>
+			</Notification>
 
 			<div class="notification">
 				<span class="notification__version">3.0.1</span>
@@ -167,6 +199,7 @@ export function Notifications(props) {
 							target="_blank"
 							rel="noopener noreferrer"
 						>
+							{' '}
 							Read the blog post about it
 						</a>.
 					</li>
@@ -218,35 +251,21 @@ export function Notifications(props) {
 						>
 							Tailwind CSS
 						</a>{' '}
-						added to popular CSS libraries list. Thanks
-						<a
-							href="https://github.com/diomed"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							diomed
-						</a>.
+						added to popular CSS libraries list. Thanks{' '}
+						<ThanksTo url="https://github.com/diomed" name="diomed" />.
 					</li>
 					<li>
-						Popular libraries list updated. Thanks
-						<a
-							href="https://github.com/diomed"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							diomed
-						</a>.
+						Popular libraries list updated. Thanks{' '}
+						<ThanksTo url="https://github.com/diomed" name="diomed" />.
 					</li>
 					<li>
 						<strong>Dev</strong>: Bug fixes and code refactoring to make things
-						simple. Thanks
-						<a
-							href="https://github.com/iamandrewluca"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							iamandrewluca
-						</a>.
+						simple.{' '}
+						<ThanksTo
+							url="https://github.com/iamandrewluca"
+							name="iamandrewluca"
+						/>{' '}
+						.
 					</li>
 				</ul>
 			</div>

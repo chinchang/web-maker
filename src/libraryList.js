@@ -59,23 +59,6 @@ export const jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.min.js',
-		label: 'P5.js',
-		type: 'js'
-	},
-	{
-		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.min.js',
-		label: 'P5.js DOM',
-		type: 'js'
-	},
-	{
-		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.min.js',
-		label: 'P5.js Sound',
-		type: 'js'
-	},
-	{
 		url:
 			'https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js',
 		label: 'Underscore',

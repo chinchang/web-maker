@@ -117,7 +117,7 @@ export function Notifications(props) {
 					belts, and get ready to use loads of new features coming your way in
 					next releases!<br />
 					<a
-						href="https://medium.com/web-maker/web-maker-ported-to-preact-85af98be8683"
+						href="https://medium.com/web-maker/web-maker-is-now-in-preact-85af98be8683"
 						target="_blank"
 						rel="noopener noreferrer"
 					>

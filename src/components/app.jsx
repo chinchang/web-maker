@@ -1109,7 +1109,7 @@ export default class App extends Component {
 					show={this.state.isHelpModalOpen}
 					closeHandler={() => this.setState({ isHelpModalOpen: false })}
 					onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
-					version={version}
+					version="3.3.1"
 				/>
 				<SupportDeveloperModal
 					show={this.state.isSupportDeveloperModalOpen}

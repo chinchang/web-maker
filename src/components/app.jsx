@@ -49,13 +49,12 @@ const LocalStorageKeys = {
 	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
 };
 const UNSAVED_WARNING_COUNT = 15;
-const version = '3.2.0';
+const version = '3.3.0';
 
 export default class App extends Component {
 	constructor() {
 		super();
 		this.AUTO_SAVE_INTERVAL = 15000; // 15 seconds
-
 		this.state = {
 			isSavedItemPaneOpen: false,
 			isModalOpen: false,
@@ -1110,6 +1109,7 @@ export default class App extends Component {
 					show={this.state.isHelpModalOpen}
 					closeHandler={() => this.setState({ isHelpModalOpen: false })}
 					onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
+					version={version}
 				/>
 				<SupportDeveloperModal
 					show={this.state.isSupportDeveloperModalOpen}

@@ -11,6 +11,7 @@ const babelMinify = require('babel-minify');
 const child_process = require('child_process');
 const merge = require('merge-stream');
 const zip = require('gulp-zip');
+var packageJson = JSON.parse(fs.readFileSync('./package.json'));
 
 function minifyJs(fileName) {
 	const content = fs.readFileSync(fileName, 'utf8');
@@ -177,7 +178,7 @@ gulp.task('packageExtension', function() {
 
 		gulp
 			.src('extension/*')
-			.pipe(zip('extension.zip'))
+			.pipe(zip(`extension-${packageJson.version}.zip`))
 			.pipe(gulp.dest('./'))
 	);
 });

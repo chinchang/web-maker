@@ -18,7 +18,8 @@
 		"build/*",
 		"src/lib/",
 		"src/tests/",
-		"src/CodeMirror.js"
+		"src/CodeMirror.js",
+		"src/detached-window.js"
 	],
 	"lint-staged": {
 		"*.{js,jsx,json,css,md}": [

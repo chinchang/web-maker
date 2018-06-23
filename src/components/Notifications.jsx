@@ -124,6 +124,13 @@ export function Notifications(props) {
 						Read more about this big code refactor
 					</a>.
 				</li>
+				<li>
+					<a href="https://p5js.org/" target="_blank" rel="noopener noreferrer">
+						p5.js
+					</a>{' '}
+					added to popular JS libraries list. Thanks{' '}
+					<ThanksTo url="https://github.com/nucliweb" name="@nucliweb" />.
+				</li>
 			</Notification>
 
 			<Notification version="3.2.0" {...props}>

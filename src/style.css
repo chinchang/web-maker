@@ -125,7 +125,7 @@ p {
 	margin-top: 0;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
 	.block--mobile {
 		display: block;
 	}
@@ -137,9 +137,12 @@ p {
 	}
 }
 
-@media screen and (min-width: 501px) {
+@media screen and (min-width: 601px) {
 	.show-on-mobile {
 		display: none;
+	}
+	.flex--desk {
+		display: flex;
 	}
 }
 
@@ -1481,12 +1484,9 @@ body:not(.is-app) .show-when-app {
 	visibility: visible;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
 	body {
 		font-size: 70%;
-	}
-	.flex--desk {
-		display: flex;
 	}
 	.main-header {
 		overflow-x: auto;

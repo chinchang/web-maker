@@ -528,7 +528,7 @@ export default class App extends Component {
 	}
 	toggleLayout(mode) {
 		/* eslint-disable no-param-reassign */
-		mode = window.innerWidth < 500 ? 2 : mode;
+		mode = window.innerWidth < 600 ? 2 : mode;
 
 		if (this.state.currentLayoutMode === mode) {
 			this.contentWrap.resetSplitting();

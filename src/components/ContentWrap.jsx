@@ -379,6 +379,7 @@ export default class ContentWrap extends Component {
 			this.codeSplitInstance.setSizes(arr);
 			codeWrapEl.classList.add('is-maximized');
 		}
+		this.updateSplits();
 	}
 
 	collapseBtnHandler(e) {
@@ -401,6 +402,12 @@ export default class ContentWrap extends Component {
 			codeSplitSizes: this.getCodeSplitSizes(),
 			mainSplitSizes: this.getMainSplitSizesToApply()
 		});
+	}
+	updateSplits() {
+		this.props.onSplitUpdate();
+		// Not using setState to avoid re-render
+		this.state.codeSplitSizes = this.props.currentItem.sizes;
+		this.state.mainSplitSizes = this.props.currentItem.mainSizes;
 	}
 
 	// Returns the sizes of main code & preview panes.
@@ -435,6 +442,7 @@ export default class ContentWrap extends Component {
 				this.setPreviewContent(true);
 			}, 1);
 		}
+		this.updateSplits();
 	}
 	codeSplitDragStart() {
 		document.body.classList.add('is-dragging');
@@ -442,6 +450,7 @@ export default class ContentWrap extends Component {
 	codeSplitDragEnd() {
 		this.updateCodeWrapCollapseStates();
 		document.body.classList.remove('is-dragging');
+		this.updateSplits();
 	}
 	/**
 	 * Loaded the code comiler based on the mode selected
@@ -879,7 +888,7 @@ export default class ContentWrap extends Component {
 							<div
 								class="js-console__header  code-wrap__header"
 								title="Double click to toggle console"
-								onDblClick={this.toggleConsole.bind(this)}
+								onDblClick={this.consoleHeaderDblClickHandler.bind(this)}
 							>
 								<span class="code-wrap__header-label">
 									Console (<span id="logCountEl">0</span>)

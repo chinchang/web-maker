@@ -967,6 +967,12 @@ export default class App extends Component {
 		this.closeAllOverlays();
 	}
 
+	splitUpdateHandler(mainSplitInstance, codeSplitInstance) {
+		// Not using setState to avoid re-render
+		this.state.currentItem.sizes = this.getCodePaneSizes();
+		this.state.currentItem.mainSizes = this.getMainPaneSizes();
+	}
+
 	render() {
 		return (
 			<div>
@@ -996,6 +1002,7 @@ export default class App extends Component {
 						onRef={comp => (this.contentWrap = comp)}
 						prefs={this.state.prefs}
 						onEditorFocus={this.editorFocusHandler.bind(this)}
+						onSplitUpdate={this.splitUpdateHandler.bind(this)}
 					/>
 					<div class="global-console-container" id="globalConsoleContainerEl" />
 					<Footer

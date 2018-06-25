@@ -114,7 +114,7 @@ export default class UserCodeMirror extends Component {
 		if (!options.noAutocomplete) {
 			this.cm.on('inputRead', (editor, input) => {
 				if (
-					!this.props.autoComplete ||
+					!this.props.prefs.autoComplete ||
 					input.origin !== '+input' ||
 					input.text[0] === ';' ||
 					input.text[0] === ',' ||

@@ -46,7 +46,8 @@ export default class ContentWrap extends Component {
 			this.state.codeSplitSizes !== nextState.codeSplitSizes ||
 			this.state.mainSplitSizes !== nextState.mainSplitSizes ||
 			this.props.currentLayoutMode !== nextProps.currentLayoutMode ||
-			this.props.currentItem !== nextProps.currentItem
+			this.props.currentItem !== nextProps.currentItem ||
+			this.props.prefs !== nextProps.prefs
 		);
 	}
 	componentDidUpdate() {
@@ -748,6 +749,7 @@ export default class ContentWrap extends Component {
 								matchTags: { bothTags: true },
 								emmet: true
 							}}
+							prefs={this.props.prefs}
 							onChange={this.onHtmlCodeChange.bind(this)}
 							onCreation={el => (this.cm.html = el)}
 							onFocus={this.editorFocusHandler.bind(this)}
@@ -813,6 +815,7 @@ export default class ContentWrap extends Component {
 								],
 								emmet: true
 							}}
+							prefs={this.props.prefs}
 							onChange={this.onCssCodeChange.bind(this)}
 							onCreation={el => (this.cm.css = el)}
 							onFocus={this.editorFocusHandler.bind(this)}
@@ -864,6 +867,7 @@ export default class ContentWrap extends Component {
 									'CodeMirror-foldgutter'
 								]
 							}}
+							prefs={this.props.prefs}
 							autoComplete={this.props.prefs.autoComplete}
 							onChange={this.onJsCodeChange.bind(this)}
 							onCreation={el => (this.cm.js = el)}

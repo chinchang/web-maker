@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { A } from './common';
+import { Button } from './common';
 
 const DEFAULT_PROFILE_IMG =
 	"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='#ccc' d='M12,19.2C9.5,19.2 7.29,17.92 6,16C6.03,14 10,12.9 12,12.9C14,12.9 17.97,14 18,16C16.71,17.92 14.5,19.2 12,19.2M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z' /%3E%3C/svg%3E";
@@ -16,7 +16,7 @@ export function MainHeader(props) {
 				onBlur={props.titleInputBlurHandler}
 			/>
 			<div class="main-header__btn-wrap  flex  flex-v-center">
-				<a
+				<button
 					id="runBtn"
 					class="hide flex flex-v-center hint--rounded hint--bottom-left"
 					aria-label="Run preview (Ctrl/⌘ + Shift + 5)"
@@ -25,9 +25,9 @@ export function MainHeader(props) {
 					<svg style="width: 14px; height: 14px;">
 						<use xlinkHref="#play-icon" />
 					</svg>Run
-				</a>
+				</button>
 
-				<A
+				<Button
 					onClick={props.addLibraryBtnHandler}
 					data-event-category="ui"
 					data-event-action="addLibraryButtonClick"
@@ -42,9 +42,9 @@ export function MainHeader(props) {
 					>
 						{props.externalLibCount}
 					</span>
-				</A>
+				</Button>
 
-				<a
+				<button
 					class="flex  flex-v-center hint--rounded hint--bottom-left"
 					aria-label="Start a new creation"
 					onClick={props.newBtnHandler}
@@ -55,8 +55,8 @@ export function MainHeader(props) {
 					>
 						<path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
 					</svg>New
-				</a>
-				<a
+				</button>
+				<button
 					id="saveBtn"
 					class={`flex  flex-v-center hint--rounded hint--bottom-left ${
 						props.isSaving ? 'is-loading' : ''
@@ -74,8 +74,8 @@ export function MainHeader(props) {
 						<use xlinkHref="#loader-icon" />
 					</svg>
 					Save
-				</a>
-				<a
+				</button>
+				<button
 					id="openItemsBtn"
 					class={`flex  flex-v-center hint--rounded hint--bottom-left ${
 						props.isFetchingItems ? 'is-loading' : ''
@@ -93,8 +93,8 @@ export function MainHeader(props) {
 						<use xlinkHref="#loader-icon" />
 					</svg>
 					Open
-				</a>
-				<A
+				</button>
+				<Button
 					onClick={props.loginBtnHandler}
 					data-event-category="ui"
 					data-event-action="loginButtonClick"
@@ -102,8 +102,8 @@ export function MainHeader(props) {
 					aria-label="Login/Signup"
 				>
 					Login/Signup
-				</A>
-				<A
+				</Button>
+				<Button
 					onClick={props.profileBtnHandler}
 					data-event-category="ui"
 					data-event-action="headerAvatarClick"
@@ -116,7 +116,7 @@ export function MainHeader(props) {
 						src={props.user ? props.user.photoURL || DEFAULT_PROFILE_IMG : ''}
 						class="main-header__avatar-img"
 					/>
-				</A>
+				</Button>
 			</div>
 		</div>
 	);

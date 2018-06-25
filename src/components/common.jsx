@@ -19,10 +19,6 @@ class Clickable extends Component {
 	}
 }
 
-export function A(props) {
-	return <Clickable Tag={'a'} {...props} />;
-}
-
 export function Button(props) {
 	return <Clickable Tag={'button'} {...props} />;
 }

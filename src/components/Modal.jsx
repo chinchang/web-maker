@@ -66,7 +66,7 @@ export default class Modal extends Component {
 							onClick={this.props.closeHandler}
 							aria-label="Close modal"
 							title="Close"
-							class="js-modal__close-btn  modal__close-btn"
+							class="js-modal__close-btn modal__close-btn"
 						>
 							Close
 						</button>

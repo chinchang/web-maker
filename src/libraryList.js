@@ -86,13 +86,20 @@ export const jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.min.js',
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.min.js',
 		label: 'p5.js DOM',
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.min.js',
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.min.js',
 		label: 'p5.js Sound',
+		type: 'js'
+	},
+	{
+		url: 'https://unpkg.com/rxjs/bundles/rxjs.umd.min.js',
+		label: 'RxJS',
 		type: 'js'
 	}
 ];

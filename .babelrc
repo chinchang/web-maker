@@ -1,11 +1,5 @@
 {
-	"presets": [
-	   "react",
-	   "env"
-	],
-	"plugins": [
-		["transform-react-jsx", {
-		  "pragma": "h"
-		}]
-	  ]
-  }
+    "presets": [ 
+        ["preact-cli/babel", { "modules": "commonjs" }]
+    ]
+}

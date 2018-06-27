@@ -24,6 +24,7 @@ gulp.task('copyFiles', [], function() {
 	gulp.src('src/lib/transpilers/*').pipe(gulp.dest('app/lib/transpilers'));
 	gulp.src('src/partials/*').pipe(gulp.dest('app/partials'));
 	gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib'));
+	gulp.src('src/lib/bundle.js').pipe(gulp.dest('app/lib'));
 	gulp.src('src/preview.html').pipe(gulp.dest('app'));
 	gulp.src('src/detached-window.js').pipe(gulp.dest('app'));
 	gulp.src('src/icon-48.png').pipe(gulp.dest('app'));

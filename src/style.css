@@ -1354,3 +1354,8 @@ while the theme CSS file is loading */
 }
 .cm-s-midnight .CodeMirror-activeline- background{
  background: #253540; }
+
+#screenshotBtn svg path {
+	stroke: rgba(255, 255, 255, 0.2);
+	stroke-width: 5px;
+}

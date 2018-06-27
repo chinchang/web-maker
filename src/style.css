@@ -34,12 +34,8 @@ p {
 }
 
 button {
-	background-color: transparent;
-	border: 0;
 	font-family: inherit;
 	font-size: 100%;
-	outline: 0;
-	padding: 0;
 }
 
 .hide {
@@ -667,6 +663,9 @@ body > #demo-frame {
 }
 
 .mode-btn {
+	background: transparent;
+	border: 0;
+	padding: 0;
 	margin-left: 10px;
 	display: inline-block;
 }
@@ -677,6 +676,9 @@ body > #demo-frame {
 
 .footer__link {
 	display: inline-block;
+	background: transparent;
+	border: 0;
+	padding: 0;
 	margin-right: 5px;
 	position: relative;
 	top: 2px;
@@ -762,6 +764,7 @@ body > #demo-frame {
 	top: 1rem;
 	text-transform: uppercase;
 	font-weight: 700;
+	font-size: 0.8rem;
 	opacity: 0.8;
 	transition: 0.25s ease;
 	border: 1px solid black;

@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { A } from './common';
+import { Button } from './common';
 
 export default class Footer extends Component {
 	constructor(props) {
@@ -15,8 +15,8 @@ export default class Footer extends Component {
 	render() {
 		return (
 			<div id="footer" class="footer">
-				<div class="footer__right  fr">
-					<a
+				<div class="footer__right fr">
+					<button
 						onClick={this.props.saveHtmlBtnClickHandler}
 						id="saveHtmlBtn"
 						class="mode-btn  hint--rounded  hint--top-left hide-on-mobile"
@@ -25,7 +25,7 @@ export default class Footer extends Component {
 						<svg viewBox="0 0 24 24">
 							<path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
 						</svg>
-					</a>
+					</button>
 					<svg style="display: none;" xmlns="http://www.w3.org/2000/svg">
 						<symbol id="codepen-logo" viewBox="0 0 120 120">
 							<path
@@ -39,8 +39,7 @@ export default class Footer extends Component {
 						</symbol>
 					</svg>
 
-					<a
-						href=""
+					<button
 						onClick={this.props.codepenBtnClickHandler}
 						id="codepenBtn"
 						class="mode-btn  hint--rounded  hint--top-left  hide-on-mobile"
@@ -49,10 +48,9 @@ export default class Footer extends Component {
 						<svg>
 							<use xlinkHref="#codepen-logo" />
 						</svg>
-					</a>
+					</button>
 
-					<a
-						href=""
+					<button
 						id="screenshotBtn"
 						class="mode-btn  hint--rounded  hint--top-left show-when-extension"
 						onClick={this.props.screenshotBtnClickHandler}
@@ -61,11 +59,11 @@ export default class Footer extends Component {
 						<svg style="width:24px;height:24px" viewBox="0 0 24 24">
 							<path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z" />
 						</svg>
-					</a>
+					</button>
 
 					<div class="footer__separator hide-on-mobile" />
 
-					<a
+					<button
 						onClick={this.layoutBtnClickhandler.bind(this, 1)}
 						id="layoutBtn1"
 						class="mode-btn hide-on-mobile"
@@ -73,8 +71,8 @@ export default class Footer extends Component {
 						<svg viewBox="0 0 100 100" style="transform:rotate(-90deg)">
 							<use xlinkHref="#mode-icon" />
 						</svg>
-					</a>
-					<a
+					</button>
+					<button
 						onClick={this.layoutBtnClickhandler.bind(this, 2)}
 						id="layoutBtn2"
 						class="mode-btn hide-on-mobile"
@@ -82,8 +80,8 @@ export default class Footer extends Component {
 						<svg viewBox="0 0 100 100">
 							<use xlinkHref="#mode-icon" />
 						</svg>
-					</a>
-					<a
+					</button>
+					<button
 						onClick={this.layoutBtnClickhandler.bind(this, 3)}
 						id="layoutBtn3"
 						class="mode-btn hide-on-mobile"
@@ -91,8 +89,8 @@ export default class Footer extends Component {
 						<svg viewBox="0 0 100 100" style="transform:rotate(90deg)">
 							<use xlinkHref="#mode-icon" />
 						</svg>
-					</a>
-					<a
+					</button>
+					<button
 						onClick={this.layoutBtnClickhandler.bind(this, 5)}
 						id="layoutBtn5"
 						class="mode-btn hide-on-mobile"
@@ -100,8 +98,8 @@ export default class Footer extends Component {
 						<svg viewBox="0 0 100 100">
 							<use xlinkHref="#vertical-mode-icon" />
 						</svg>
-					</a>
-					<a
+					</button>
+					<button
 						onClick={this.layoutBtnClickhandler.bind(this, 4)}
 						id="layoutBtn4"
 						class="mode-btn hint--top-left hint--rounded  hide-on-mobile"
@@ -110,8 +108,8 @@ export default class Footer extends Component {
 						<svg viewBox="0 0 100 100">
 							<rect x="0" y="0" width="100" height="100" />
 						</svg>
-					</a>
-					<a
+					</button>
+					<button
 						class="mode-btn hint--top-left hint--rounded hide-on-mobile"
 						aria-label="Detach Preview"
 						onClick={this.props.detachedPreviewBtnHandler}
@@ -119,11 +117,11 @@ export default class Footer extends Component {
 						<svg viewBox="0 0 24 24">
 							<path d="M22,17V7H6V17H22M22,5A2,2 0 0,1 24,7V17C24,18.11 23.1,19 22,19H16V21H18V23H10V21H12V19H6C4.89,19 4,18.11 4,17V7A2,2 0 0,1 6,5H22M2,3V15H0V3A2,2 0 0,1 2,1H20V3H2Z" />
 						</svg>
-					</a>
+					</button>
 
 					<div class="footer__separator" />
 
-					<a
+					<button
 						onClick={this.props.notificationsBtnClickHandler}
 						id="notificationsBtn"
 						class={`notifications-btn  mode-btn  hint--top-left  hint--rounded ${
@@ -135,8 +133,8 @@ export default class Footer extends Component {
 							<path d="M14,20A2,2 0 0,1 12,22A2,2 0 0,1 10,20H14M12,2A1,1 0 0,1 13,3V4.08C15.84,4.56 18,7.03 18,10V16L21,19H3L6,16V10C6,7.03 8.16,4.56 11,4.08V3A1,1 0 0,1 12,2Z" />
 						</svg>
 						<span class="notifications-btn__dot" />
-					</a>
-					<A
+					</button>
+					<Button
 						onClick={this.props.settingsBtnClickHandler}
 						data-event-category="ui"
 						data-event-action="settingsBtnClick"
@@ -146,7 +144,7 @@ export default class Footer extends Component {
 						<svg>
 							<use xlinkHref="#settings-icon" />
 						</svg>
-					</A>
+					</Button>
 				</div>
 				<a
 					href="https://webmakerapp.com/"
@@ -157,7 +155,7 @@ export default class Footer extends Component {
 				</a>
 				&copy;
 				<span class="web-maker-with-tag">Web Maker</span> &nbsp;&nbsp;
-				<A
+				<Button
 					onClick={this.props.helpBtnClickHandler}
 					data-event-category="ui"
 					data-event-action="helpButtonClick"
@@ -170,12 +168,12 @@ export default class Footer extends Component {
 					>
 						<path d="M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z" />
 					</svg>
-				</A>
-				<A
+				</Button>
+				<Button
 					onClick={this.props.keyboardShortcutsBtnClickHandler}
 					data-event-category="ui"
 					data-event-action="keyboardShortcutButtonClick"
-					class="footer__link  hint--rounded  hint--top-right hide-on-mobile"
+					class="footer__link hint--rounded  hint--top-right hide-on-mobile"
 					aria-label="Keyboard shortcuts"
 				>
 					<svg
@@ -187,7 +185,7 @@ export default class Footer extends Component {
 					>
 						<use xlinkHref="#keyboard-icon" />
 					</svg>
-				</A>
+				</Button>
 				<a
 					class="footer__link  hint--rounded  hint--top-right"
 					aria-label="Tweet about 'Web Maker'"
@@ -205,17 +203,15 @@ export default class Footer extends Component {
 						<use xlinkHref="#twitter-icon" />
 					</svg>
 				</a>
-				<A
+				<Button
 					onClick={this.props.supportDeveloperBtnClickHandler}
 					data-event-category="ui"
 					data-event-action="supportDeveloperFooterBtnClick"
-					class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile"
+					class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
 					aria-label="Support the developer by pledging some amount"
-					target="_blank"
-					rel="noopener noreferrer"
 				>
 					Support the developer
-				</A>
+				</Button>
 			</div>
 		);
 	}

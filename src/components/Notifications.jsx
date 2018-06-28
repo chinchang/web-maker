@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { A } from './common';
+import { Button } from './common';
 
 function NotificationItem({ type, children }) {
 	var strongTag;
@@ -81,7 +81,7 @@ function Notification({ version, isLatest, ...props }) {
 						>
 							Share it
 						</a>&nbsp;
-						<A
+						<Button
 							aria-label="Support the developer"
 							onClick={props.onSupportBtnClick}
 							data-event-action="supportDeveloperChangelogBtnClick"
@@ -89,7 +89,7 @@ function Notification({ version, isLatest, ...props }) {
 							class="btn btn-icon"
 						>
 							Support the developer
-						</A>
+						</Button>
 					</p>
 				</div>
 			) : null}

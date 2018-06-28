@@ -33,6 +33,11 @@ p {
 	line-height: 1.65;
 }
 
+button {
+	font-family: inherit;
+	font-size: 100%;
+}
+
 .hide {
 	display: none !important;
 }
@@ -123,6 +128,10 @@ p {
 
 .mt-0 {
 	margin-top: 0;
+}
+
+.support-link {
+	color: #d61237;
 }
 
 @media screen and (max-width: 600px) {
@@ -575,7 +584,7 @@ body > #demo-frame {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-.main-header__btn-wrap > a {
+.main-header__btn-wrap > button {
 	font-size: 0.8em;
 	font-weight: bold;
 	line-height: 20px;
@@ -597,7 +606,7 @@ body > #demo-frame {
 	text-transform: uppercase;
 }
 
-.main-header__btn-wrap > a > svg {
+.main-header__btn-wrap > button > svg {
 	fill: #9297b3;
 	margin-right: 4px;
 }
@@ -654,6 +663,9 @@ body > #demo-frame {
 }
 
 .mode-btn {
+	background: transparent;
+	border: 0;
+	padding: 0;
 	margin-left: 10px;
 	display: inline-block;
 }
@@ -664,17 +676,20 @@ body > #demo-frame {
 
 .footer__link {
 	display: inline-block;
+	background: transparent;
+	border: 0;
+	padding: 0;
 	margin-right: 5px;
 	position: relative;
 	top: 2px;
 }
 
-.footer a > svg {
+.footer button > svg {
 	transition: 0.3s ease;
 	fill: rgba(255, 255, 255, 0.2);
 }
 
-.footer a:hover svg {
+.footer button:hover svg {
 	fill: rgba(255, 255, 255, 0.45);
 }
 
@@ -745,12 +760,16 @@ body > #demo-frame {
 
 .modal__close-btn {
 	position: absolute;
-	right: 10px;
-	top: 10px;
+	right: 1rem;
+	top: 1rem;
 	text-transform: uppercase;
 	font-weight: 700;
+	font-size: 0.8rem;
 	opacity: 0.8;
 	transition: 0.25s ease;
+	border: 1px solid black;
+	border-radius: 2px;
+	padding: 0.2rem 0.5rem;
 }
 
 .modal__close-btn > svg {

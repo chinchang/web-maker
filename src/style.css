@@ -585,6 +585,7 @@ body > #demo-frame {
 }
 
 .main-header__btn-wrap > button {
+	box-sizing: content-box;
 	font-size: 0.8em;
 	font-weight: bold;
 	line-height: 20px;
@@ -611,15 +612,15 @@ body > #demo-frame {
 	margin-right: 4px;
 }
 
-.main-header__btn-wrap > a.is-marked > svg {
+.main-header__btn-wrap > .is-marked > svg {
 	fill: crimson;
 }
 
-.main-header__btn-wrap > a:hover {
+.main-header__btn-wrap > button:hover {
 	border-color: rgba(146, 151, 179, 0.5);
 }
 
-.main-header__btn-wrap > a.is-loading {
+.main-header__btn-wrap > .is-loading {
 	pointer-events: none;
 	opacity: 0.4;
 }
@@ -684,11 +685,13 @@ body > #demo-frame {
 	top: 2px;
 }
 
+.footer a > svg,
 .footer button > svg {
 	transition: 0.3s ease;
 	fill: rgba(255, 255, 255, 0.2);
 }
 
+.footer a:hover svg,
 .footer button:hover svg {
 	fill: rgba(255, 255, 255, 0.45);
 }

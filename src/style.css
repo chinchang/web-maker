@@ -573,6 +573,8 @@ body > #demo-frame {
 }
 
 .footer {
+	display: flex;
+	justify-content: space-between;
 	/* Because .console is 6 */
 	z-index: 6;
 }
@@ -852,7 +854,8 @@ body > #demo-frame {
 }
 
 .pledge-modal .modal__content,
-.ask-to-import-modal .modal__content {
+.ask-to-import-modal .modal__content,
+.modal--small .modal__content {
 	max-width: 800px;
 }
 
@@ -1504,6 +1507,16 @@ body:not(.is-app) .show-when-app {
 .last-login-google .social-login-btn--google:before,
 .last-login-google .social-login-btn--google:after {
 	visibility: visible;
+}
+
+.footer__js13k-text {
+	padding: 1px 9px;
+	text-transform: uppercase;
+	background: #b12a34;
+	color: white;
+	border-radius: 3px;
+	letter-spacing: 0.7px;
+	margin-left: 1rem;
 }
 
 @media screen and (max-width: 600px) {

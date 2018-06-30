@@ -286,6 +286,14 @@ export default class Settings extends Component {
 						pref={this.props.prefs.isCodeBlastOn}
 						onChange={this.updateSetting.bind(this)}
 					/>
+
+					<CheckboxSetting
+						title="Get ready to build some games at JS13KGames"
+						label="JS13KGames Mode"
+						name="isJs13kModeOn"
+						pref={this.props.prefs.isJs13kModeOn}
+						onChange={this.updateSetting.bind(this)}
+					/>
 				</p>
 
 				<hr />

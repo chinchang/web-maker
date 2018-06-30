@@ -378,7 +378,7 @@ export function saveAsHtml(item) {
 	var htmlPromise = computeHtml(item.html, item.htmlMode);
 	var cssPromise = computeCss(item.css, item.cssMode);
 	var jsPromise = computeJs(item.js, item.jsMode, false);
-	Promise.all([htmlPromise, cssPromise, jsPromise]).then(function(result) {
+	Promise.all([htmlPromise, cssPromise, jsPromise]).then(result => {
 		var html = result[0].code,
 			css = result[1].code,
 			js = result[2].code;

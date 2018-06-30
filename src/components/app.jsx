@@ -10,13 +10,15 @@ import SavedItemPane from './SavedItemPane.jsx';
 import AddLibrary from './AddLibrary.jsx';
 import Modal from './Modal.jsx';
 import Login from './Login.jsx';
+import { computeHtml, computeCss, computeJs } from '../computes';
 import {
 	log,
 	generateRandomId,
 	semverCompare,
 	saveAsHtml,
 	handleDownloadsPermission,
-	downloadFile
+	downloadFile,
+	getCompleteHtml
 } from '../utils';
 import { itemService } from '../itemService';
 import '../db';
@@ -38,7 +40,9 @@ import { Alerts } from './Alerts';
 import Portal from 'preact-portal';
 import { HelpModal } from './HelpModal';
 import { OnboardingModal } from './OnboardingModal';
+import { Js13KModal } from './Js13KModal';
 import { Icons } from './Icons';
+import JSZip from 'jszip';
 
 if (module.hot) {
 	require('preact/debug');
@@ -68,6 +72,7 @@ export default class App extends Component {
 			isKeyboardShortcutsModalOpen: false,
 			isAskToImportModalOpen: false,
 			isOnboardModalOpen: false,
+			isJs13KModalOpen: false,
 			prefs: {},
 			currentItem: {
 				title: '',
@@ -96,7 +101,8 @@ export default class App extends Component {
 			lightVersion: false,
 			lineWrap: true,
 			infiniteLoopTimeout: 1000,
-			layoutMode: 2
+			layoutMode: 2,
+			isJs13kModeOn: false
 		};
 		this.prefs = {};
 
@@ -493,7 +499,8 @@ export default class App extends Component {
 			isSupportDeveloperModalOpen: false,
 			isKeyboardShortcutsModalOpen: false,
 			isAskToImportModalOpen: false,
-			isOnboardModalOpen: false
+			isOnboardModalOpen: false,
+			isJs13KModalOpen: false
 		});
 	}
 	onExternalLibChange(newValues) {
@@ -697,6 +704,7 @@ export default class App extends Component {
 				});
 			}
 		}
+		this.calculateCodeSize();
 	}
 	onCodeSettingsChange(type, settings) {
 		this.state.currentItem[`${type}Settings`] = {
@@ -973,6 +981,138 @@ export default class App extends Component {
 		this.state.currentItem.mainSizes = this.getMainPaneSizes();
 	}
 
+	/**
+	 * Calculate byte size of a text snippet
+	 * @author Lea Verou
+	 * MIT License
+	 */
+	calculateTextSize(text) {
+		if (!text) {
+			return 0;
+		}
+		var crlf = /(\r?\n|\r)/g,
+			whitespace = /(\r?\n|\r|\s+)/g;
+
+		const ByteSize = {
+			count: function(text, options) {
+				// Set option defaults
+				options = options || {};
+				options.lineBreaks = options.lineBreaks || 1;
+				options.ignoreWhitespace = options.ignoreWhitespace || false;
+
+				var length = text.length,
+					nonAscii = length - text.replace(/[\u0100-\uFFFF]/g, '').length,
+					lineBreaks = length - text.replace(crlf, '').length;
+
+				if (options.ignoreWhitespace) {
+					// Strip whitespace
+					text = text.replace(whitespace, '');
+
+					return text.length + nonAscii;
+				} else {
+					return (
+						length +
+						nonAscii +
+						Math.max(0, options.lineBreaks * (lineBreaks - 1))
+					);
+				}
+			},
+
+			format: function(count, plainText) {
+				var level = 0;
+
+				while (count > 1024) {
+					count /= 1024;
+					level++;
+				}
+
+				// Round to 2 decimals
+				count = Math.round(count * 100) / 100;
+
+				level = ['', 'K', 'M', 'G', 'T'][level];
+
+				return (
+					(plainText ? count : '<strong>' + count + '</strong>') +
+					' ' +
+					level +
+					'B'
+				);
+			}
+		};
+
+		return ByteSize.count(text);
+	}
+	getExternalLibCode() {
+		const item = this.state.currentItem;
+		var libs = (item.externalLibs && item.externalLibs.js) || '';
+		libs += ('\n' + item.externalLibs && item.externalLibs.css) || '';
+		libs = libs.split('\n').filter(lib => lib);
+		return libs.map(lib =>
+			fetch(lib)
+				.then(res => res.text())
+				.then(data => {
+					return {
+						code: data,
+						url: 'dsfds'
+					};
+				})
+		);
+	}
+	calculateCodeSize() {
+		const item = this.state.currentItem;
+		var htmlPromise = computeHtml(item.html, item.htmlMode);
+		var cssPromise = computeCss(item.css, item.cssMode);
+		var jsPromise = computeJs(item.js, item.jsMode, false);
+		Promise.all([
+			htmlPromise,
+			cssPromise,
+			jsPromise,
+			...this.getExternalLibCode()
+		]).then(result => {
+			var html = result[0].code || '',
+				css = result[1].code || '',
+				js = result[2].code || '';
+
+			var fileContent = getCompleteHtml(html, css, js, item, true);
+
+			var zip = new JSZip();
+			// Add an top-level, arbitrary text file with contents
+			zip.file('index.html', fileContent);
+			[result[3]].map(externalLib =>
+				zip.file(externalLib.name, externalLib.code)
+			);
+
+			console.log('ORIGINAL', this.calculateTextSize(fileContent));
+
+			var promise = null;
+			if (0 && JSZip.support.uint8array) {
+				promise = zip.generateAsync({ type: 'uint8array' });
+			} else {
+				promise = zip.generateAsync({
+					type: 'string',
+					compression: 'DEFLATE',
+					compressionOptions: {
+						level: 9
+					}
+				});
+			}
+
+			promise.then(data => {
+				const zipContent = data;
+				const size = this.calculateTextSize(data);
+				this.setState({
+					codeSize: size
+				});
+			});
+		});
+	}
+
+	js13KBtnClickHandler() {
+		this.setState({
+			isJs13KModalOpen: true
+		});
+	}
+
 	render() {
 		return (
 			<div>
@@ -1006,6 +1146,7 @@ export default class App extends Component {
 					/>
 					<div class="global-console-container" id="globalConsoleContainerEl" />
 					<Footer
+						prefs={this.state.prefs}
 						layoutBtnClickHandler={this.layoutBtnClickHandler.bind(this)}
 						helpBtnClickHandler={() => this.setState({ isHelpModalOpen: true })}
 						settingsBtnClickHandler={() =>
@@ -1028,7 +1169,9 @@ export default class App extends Component {
 						screenshotBtnClickHandler={this.screenshotBtnClickHandler.bind(
 							this
 						)}
+						onJs13KBtnClick={this.js13KBtnClickHandler.bind(this)}
 						hasUnseenChangelog={this.state.hasUnseenChangelog}
+						codeSize={this.state.codeSize}
 					/>
 				</div>
 
@@ -1143,6 +1286,11 @@ export default class App extends Component {
 				<OnboardingModal
 					show={this.state.isOnboardModalOpen}
 					closeHandler={() => this.setState({ isOnboardModalOpen: false })}
+				/>
+
+				<Js13KModal
+					show={this.state.isJs13KModalOpen}
+					closeHandler={() => this.setState({ isJs13KModalOpen: false })}
 				/>
 
 				<Portal into="body">

@@ -1,6 +1,41 @@
 import { h, Component } from 'preact';
 import { Button } from './common';
 
+class JS13K extends Component {
+	constructor(props) {
+		super(props);
+		const compoDate = new Date('August 13 2018 11:00 GMT');
+		var now = new Date();
+		var daysLeft;
+		if (+compoDate > +now) {
+			daysLeft = Math.floor((compoDate - now) / 1000 / 3600 / 24);
+		}
+		this.setState({
+			daysLeft
+		});
+	}
+
+	render() {
+		return (
+			<div class="flex flex-v-center">
+				<img
+					src="http://js13kgames.com/img/js13kgames.png"
+					alt="JS13K Games logo"
+					height="24"
+				/>{' '}
+				<div class="footer__js13k-text">{this.state.daysLeft} days to go</div>
+				<div
+					style={{
+						color: this.props.codeSize > 10 ? 'crimson' : 'limegreen'
+					}}
+				>
+					{(this.props.codeSize / 1024).toFixed(2)} KB/ 13KB
+				</div>
+			</div>
+		);
+	}
+}
+
 export default class Footer extends Component {
 	constructor(props) {
 		super(props);
@@ -15,7 +50,83 @@ export default class Footer extends Component {
 	render() {
 		return (
 			<div id="footer" class="footer">
-				<div class="footer__right fr">
+				<div>
+					<a
+						href="https://webmakerapp.com/"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<div class="logo" />
+					</a>
+					&copy;
+					<span class="web-maker-with-tag">Web Maker</span> &nbsp;&nbsp;
+					<Button
+						onClick={this.props.helpBtnClickHandler}
+						data-event-category="ui"
+						data-event-action="helpButtonClick"
+						class="footer__link  hint--rounded  hint--top-right"
+						aria-label="Help"
+					>
+						<svg
+							style="width:20px; height:20px; vertical-align:text-bottom"
+							viewBox="0 0 24 24"
+						>
+							<path d="M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z" />
+						</svg>
+					</Button>
+					<Button
+						onClick={this.props.keyboardShortcutsBtnClickHandler}
+						data-event-category="ui"
+						data-event-action="keyboardShortcutButtonClick"
+						class="footer__link hint--rounded  hint--top-right hide-on-mobile"
+						aria-label="Keyboard shortcuts"
+					>
+						<svg
+							style={{
+								width: '20px',
+								height: '20px',
+								verticalAlign: 'text-bottom'
+							}}
+						>
+							<use xlinkHref="#keyboard-icon" />
+						</svg>
+					</Button>
+					<a
+						class="footer__link  hint--rounded  hint--top-right"
+						aria-label="Tweet about 'Web Maker'"
+						href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<svg
+							style={{
+								width: '20px',
+								height: '20px',
+								verticalAlign: 'text-bottom'
+							}}
+						>
+							<use xlinkHref="#twitter-icon" />
+						</svg>
+					</a>
+					<Button
+						onClick={this.props.supportDeveloperBtnClickHandler}
+						data-event-category="ui"
+						data-event-action="supportDeveloperFooterBtnClick"
+						class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
+						aria-label="Support the developer by pledging some amount"
+					>
+						Donate
+					</Button>
+				</div>
+
+				{this.props.prefs.isJs13kModeOn ? (
+					<div class="flex">
+						<JS13K codeSize={this.props.codeSize} />
+						<button onClick={this.props.onJs13KBtnClick}>Help</button>
+					</div>
+				) : null}
+
+				<div class="footer__right">
 					<button
 						onClick={this.props.saveHtmlBtnClickHandler}
 						id="saveHtmlBtn"
@@ -150,72 +261,6 @@ export default class Footer extends Component {
 						</svg>
 					</Button>
 				</div>
-				<a
-					href="https://webmakerapp.com/"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<div class="logo" />
-				</a>
-				&copy;
-				<span class="web-maker-with-tag">Web Maker</span> &nbsp;&nbsp;
-				<Button
-					onClick={this.props.helpBtnClickHandler}
-					data-event-category="ui"
-					data-event-action="helpButtonClick"
-					class="footer__link  hint--rounded  hint--top-right"
-					aria-label="Help"
-				>
-					<svg
-						style="width:20px; height:20px; vertical-align:text-bottom"
-						viewBox="0 0 24 24"
-					>
-						<path d="M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z" />
-					</svg>
-				</Button>
-				<Button
-					onClick={this.props.keyboardShortcutsBtnClickHandler}
-					data-event-category="ui"
-					data-event-action="keyboardShortcutButtonClick"
-					class="footer__link hint--rounded  hint--top-right hide-on-mobile"
-					aria-label="Keyboard shortcuts"
-				>
-					<svg
-						style={{
-							width: '20px',
-							height: '20px',
-							verticalAlign: 'text-bottom'
-						}}
-					>
-						<use xlinkHref="#keyboard-icon" />
-					</svg>
-				</Button>
-				<a
-					class="footer__link  hint--rounded  hint--top-right"
-					aria-label="Tweet about 'Web Maker'"
-					href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<svg
-						style={{
-							width: '20px',
-							height: '20px',
-							verticalAlign: 'text-bottom'
-						}}
-					>
-						<use xlinkHref="#twitter-icon" />
-					</svg>
-				</a>
-				<Button
-					onClick={this.props.supportDeveloperBtnClickHandler}
-					data-event-category="ui"
-					data-event-action="supportDeveloperFooterBtnClick"
-					class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
-					aria-label="Support the developer by pledging some amount"
-				>
-					Support the developer
-				</Button>
 			</div>
 		);
 	}

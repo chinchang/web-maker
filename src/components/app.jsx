@@ -1076,11 +1076,11 @@ export default class App extends Component {
 			var fileContent = getCompleteHtml(html, css, js, item, true);
 
 			var zip = new JSZip();
-			// Add an top-level, arbitrary text file with contents
 			zip.file('index.html', fileContent);
-			[result[3]].map(externalLib =>
-				zip.file(externalLib.name, externalLib.code)
-			);
+			for (let i = 3; i < result.length; i++) {
+				const externalLib = result[i];
+				zip.file(externalLib.name, externalLib.code);
+			}
 
 			console.log('ORIGINAL', this.calculateTextSize(fileContent));
 

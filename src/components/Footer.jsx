@@ -16,6 +16,9 @@ class JS13K extends Component {
 	}
 
 	render() {
+		const codeSizeInKb = this.props.codeSize
+			? (this.props.codeSize / 1024).toFixed(2)
+			: 0;
 		return (
 			<div class="flex flex-v-center">
 				<img
@@ -23,13 +26,16 @@ class JS13K extends Component {
 					alt="JS13K Games logo"
 					height="24"
 				/>{' '}
-				<div class="footer__js13k-text">{this.state.daysLeft} days to go</div>
+				<div class="footer__js13k-days-left">
+					{this.state.daysLeft} days to go
+				</div>
 				<div
+					class="footer__js13k-code-size"
 					style={{
-						color: this.props.codeSize > 10 ? 'crimson' : 'limegreen'
+						color: codeSizeInKb > 10 ? 'crimson' : 'limegreen'
 					}}
 				>
-					{(this.props.codeSize / 1024).toFixed(2)} KB/ 13KB
+					{codeSizeInKb} KB/ 13KB
 				</div>
 			</div>
 		);
@@ -120,9 +126,11 @@ export default class Footer extends Component {
 				</div>
 
 				{this.props.prefs.isJs13kModeOn ? (
-					<div class="flex">
+					<div class="flex flex-v-center">
 						<JS13K codeSize={this.props.codeSize} />
-						<button onClick={this.props.onJs13KBtnClick}>Help</button>
+						<button class="dark-btn" onClick={this.props.onJs13KBtnClick}>
+							JS13KGames Help
+						</button>
 					</div>
 				) : null}
 

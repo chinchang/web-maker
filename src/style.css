@@ -15,8 +15,7 @@ body {
 	font-size: 87.5%;
 	/* speocifically for mobile when keyboard is open */
 	position: relative;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
-		sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
 h1 {
@@ -188,7 +187,7 @@ label {
 	margin-left: 8px;
 }
 
-a > svg {
+a>svg {
 	fill: rgba(255, 255, 255, 0.2);
 }
 
@@ -224,8 +223,7 @@ textarea {
 }
 
 .btn--primary {
-	background: var(--color-button)
-		linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0px, transparent);
+	background: var(--color-button) linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0px, transparent);
 	color: white;
 }
 
@@ -251,7 +249,7 @@ textarea {
 	outline-offset: 1px;
 }
 
-.btn-icon > svg {
+.btn-icon>svg {
 	width: 20px;
 	height: 20px;
 	fill: currentColor;
@@ -259,7 +257,7 @@ textarea {
 	margin-right: 8px;
 }
 
-.btn--big > svg {
+.btn--big>svg {
 	width: 25px;
 	height: 25px;
 	margin-right: 12px;
@@ -269,7 +267,7 @@ textarea {
 	display: none;
 }
 
-.is-loading > svg {
+.is-loading>svg {
 	display: none;
 }
 
@@ -365,7 +363,7 @@ body:not(.light-version).overlay-visible .main-container {
 	display: none;
 }
 
-.layout-4 .code-side + .gutter {
+.layout-4 .code-side+.gutter {
 	display: none;
 }
 
@@ -452,7 +450,7 @@ body:not(.light-version).overlay-visible .main-container {
 }
 
 .code-wrap__header-btn,
-.code-wrap__header-btn > svg {
+.code-wrap__header-btn>svg {
 	width: 18px;
 	height: 18px;
 }
@@ -558,7 +556,7 @@ li.CodeMirror-hint-active {
 
 /* When demo frame is in detached window */
 
-body > #demo-frame {
+body>#demo-frame {
 	height: 100%;
 	/* Because console is no more here */
 }
@@ -587,7 +585,7 @@ body > #demo-frame {
 }
 
 .btn--dark,
-.main-header__btn-wrap > button {
+.main-header__btn-wrap>button {
 	box-sizing: content-box;
 	font-size: 0.8em;
 	font-weight: bold;
@@ -600,22 +598,18 @@ body > #demo-frame {
 	margin-left: 10px;
 	padding: 0px 8px;
 	border: 1px solid rgba(0, 0, 0, 0.9);
-	background: linear-gradient(
-		180deg,
-		rgba(0, 0, 0, 0.5) 0,
-		rgba(255, 255, 255, 0.1) 100%
-	);
+	background: linear-gradient( 180deg, rgba(0, 0, 0, 0.5) 0, rgba(255, 255, 255, 0.1) 100%);
 	/*text-shadow: 0px 1px 1px rgba(0,0,0,1);*/
 	box-shadow: 0 -1px 0px 0 rgba(255, 255, 255, 0.15);
 	text-transform: uppercase;
 }
 
-.btn--dark > svg {
+.btn--dark>svg {
 	fill: #9297b3;
 	margin-right: 4px;
 }
 
-.main-header__btn-wrap > .is-marked > svg {
+.main-header__btn-wrap>.is-marked>svg {
 	fill: crimson;
 }
 
@@ -623,7 +617,7 @@ body > #demo-frame {
 	border-color: rgba(146, 151, 179, 0.5);
 }
 
-.main-header__btn-wrap > .is-loading {
+.main-header__btn-wrap>.is-loading {
 	pointer-events: none;
 	opacity: 0.4;
 }
@@ -688,8 +682,8 @@ body > #demo-frame {
 	top: 2px;
 }
 
-.footer a > svg,
-.footer button > svg {
+.footer a>svg,
+.footer button>svg {
 	transition: 0.3s ease;
 	fill: rgba(255, 255, 255, 0.2);
 }
@@ -778,7 +772,7 @@ body > #demo-frame {
 	padding: 0.2rem 0.5rem;
 }
 
-.modal__close-btn > svg {
+.modal__close-btn>svg {
 	fill: black;
 	width: 30px;
 	height: 30px;
@@ -884,8 +878,8 @@ body > #demo-frame {
 }
 
 .overlay-visible .modal-overlay,
-.is-modal-visible ~ .modal-overlay,
-.saved-items-pane.is-open ~ .modal-overlay {
+.is-modal-visible~.modal-overlay,
+.saved-items-pane.is-open~.modal-overlay {
 	opacity: 1;
 	visibility: visible;
 }
@@ -978,7 +972,7 @@ body > #demo-frame {
 	animation-delay: 0.75s;
 }
 
-.saved-item-tile:nth-child(n + 12) {
+.saved-item-tile:nth-child(n+12) {
 	animation-delay: 0.8s;
 }
 
@@ -1168,24 +1162,24 @@ body > #demo-frame {
 	background: white;
 }
 
-.dropdown__menu > li > a {
+.dropdown__menu>li>a {
 	display: block;
 	padding: 6px 15px;
 	color: #333;
 	cursor: pointer;
 }
 
-.dropdown__menu > li.selected > a,
-.dropdown__menu > li > a:hover {
+.dropdown__menu>li.selected>a,
+.dropdown__menu>li>a:hover {
 	background: var(--color-sidebar);
 	color: white;
 }
 
-.dropdown__menu > li:not(:last-child) {
+.dropdown__menu>li:not(:last-child) {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.open > .dropdown__menu,
+.open>.dropdown__menu,
 .dropdown__menu.is-open {
 	opacity: 1;
 	visibility: visible;
@@ -1469,8 +1463,7 @@ body:not(.is-app) .show-when-app {
 	width: 80px;
 	height: 80px;
 	border-radius: 50%;
-	background: white
-		url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width:32px;height:32px" viewBox="0 0 24 24"><path fill="limegreen" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z" /></svg>');
+	background: white url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width:32px;height:32px" viewBox="0 0 24 24"><path fill="limegreen" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z" /></svg>');
 }
 
 .bookmarklet {
@@ -1509,13 +1502,16 @@ body:not(.is-app) .show-when-app {
 	visibility: visible;
 }
 
-.footer__js13k-text {
+.footer__js13k-days-left {
 	padding: 1px 9px;
 	text-transform: uppercase;
 	background: #b12a34;
 	color: white;
 	border-radius: 3px;
 	letter-spacing: 0.7px;
+}
+
+.footer__js13k-code-size {
 	margin-left: 1rem;
 }
 

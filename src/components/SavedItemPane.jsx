@@ -212,7 +212,7 @@ export default class SavedItemPane extends Component {
 						<button
 							onClick={this.importBtnClickHandler.bind(this)}
 							class="btn--dark hint--bottom-left hint--rounded hint--medium"
-							aria-label="Only the file that you export through the 'Export' button can be imported."
+							aria-label="Import your creations. Only the file that you export through the 'Export' button can be imported."
 						>
 							Import
 						</button>

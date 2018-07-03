@@ -20,7 +20,7 @@ export default class Footer extends Component {
 						onClick={this.props.saveHtmlBtnClickHandler}
 						id="saveHtmlBtn"
 						class="mode-btn  hint--rounded  hint--top-left hide-on-mobile"
-						data-hint="Save as HTML file"
+						aria-label="Save as HTML file"
 					>
 						<svg viewBox="0 0 24 24">
 							<path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
@@ -67,6 +67,7 @@ export default class Footer extends Component {
 						onClick={this.layoutBtnClickhandler.bind(this, 1)}
 						id="layoutBtn1"
 						class="mode-btn hide-on-mobile"
+						aria-label="Switch to layout with preview on right"
 					>
 						<svg viewBox="0 0 100 100" style="transform:rotate(-90deg)">
 							<use xlinkHref="#mode-icon" />
@@ -76,6 +77,7 @@ export default class Footer extends Component {
 						onClick={this.layoutBtnClickhandler.bind(this, 2)}
 						id="layoutBtn2"
 						class="mode-btn hide-on-mobile"
+						aria-label="Switch to layout with preview on bottom"
 					>
 						<svg viewBox="0 0 100 100">
 							<use xlinkHref="#mode-icon" />
@@ -85,6 +87,7 @@ export default class Footer extends Component {
 						onClick={this.layoutBtnClickhandler.bind(this, 3)}
 						id="layoutBtn3"
 						class="mode-btn hide-on-mobile"
+						aria-label="Switch to layout with preview on left"
 					>
 						<svg viewBox="0 0 100 100" style="transform:rotate(90deg)">
 							<use xlinkHref="#mode-icon" />
@@ -94,6 +97,7 @@ export default class Footer extends Component {
 						onClick={this.layoutBtnClickhandler.bind(this, 5)}
 						id="layoutBtn5"
 						class="mode-btn hide-on-mobile"
+						aria-label="Switch to layout with all vertical panes"
 					>
 						<svg viewBox="0 0 100 100">
 							<use xlinkHref="#vertical-mode-icon" />
@@ -103,7 +107,7 @@ export default class Footer extends Component {
 						onClick={this.layoutBtnClickhandler.bind(this, 4)}
 						id="layoutBtn4"
 						class="mode-btn hint--top-left hint--rounded  hide-on-mobile"
-						aria-label="Full Screen"
+						aria-label="Switch to full screen preview"
 					>
 						<svg viewBox="0 0 100 100">
 							<rect x="0" y="0" width="100" height="100" />
@@ -127,7 +131,7 @@ export default class Footer extends Component {
 						class={`notifications-btn  mode-btn  hint--top-left  hint--rounded ${
 							this.props.hasUnseenChangelog ? 'has-new' : ''
 						}`}
-						aria-label="Notifications"
+						aria-label="See Changelog"
 					>
 						<svg viewBox="0 0 24 24">
 							<path d="M14,20A2,2 0 0,1 12,22A2,2 0 0,1 10,20H14M12,2A1,1 0 0,1 13,3V4.08C15.84,4.56 18,7.03 18,10V16L21,19H3L6,16V10C6,7.03 8.16,4.56 11,4.08V3A1,1 0 0,1 12,2Z" />

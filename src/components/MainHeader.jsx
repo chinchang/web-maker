@@ -18,7 +18,7 @@ export function MainHeader(props) {
 			<div class="main-header__btn-wrap  flex  flex-v-center">
 				<button
 					id="runBtn"
-					class="hide flex flex-v-center hint--rounded hint--bottom-left"
+					class="hide btn--dark flex flex-v-center hint--rounded hint--bottom-left"
 					aria-label="Run preview (Ctrl/⌘ + Shift + 5)"
 					onClick={props.runBtnClickHandler}
 				>
@@ -31,7 +31,7 @@ export function MainHeader(props) {
 					onClick={props.addLibraryBtnHandler}
 					data-event-category="ui"
 					data-event-action="addLibraryButtonClick"
-					class="flex-v-center hint--rounded hint--bottom-left"
+					class="btn--dark flex-v-center hint--rounded hint--bottom-left"
 					aria-label="Add a JS/CSS library"
 				>
 					Add library{' '}
@@ -45,7 +45,7 @@ export function MainHeader(props) {
 				</Button>
 
 				<button
-					class="flex  flex-v-center hint--rounded hint--bottom-left"
+					class="btn--dark flex  flex-v-center hint--rounded hint--bottom-left"
 					aria-label="Start a new creation"
 					onClick={props.newBtnHandler}
 				>
@@ -58,7 +58,7 @@ export function MainHeader(props) {
 				</button>
 				<button
 					id="saveBtn"
-					class={`flex  flex-v-center hint--rounded hint--bottom-left ${
+					class={`btn--dark flex  flex-v-center hint--rounded hint--bottom-left ${
 						props.isSaving ? 'is-loading' : ''
 					} ${props.unsavedEditCount ? 'is-marked' : 0}`}
 					aria-label="Save current creation (Ctrl/⌘ + S)"
@@ -77,7 +77,7 @@ export function MainHeader(props) {
 				</button>
 				<button
 					id="openItemsBtn"
-					class={`flex  flex-v-center hint--rounded hint--bottom-left ${
+					class={`btn--dark flex flex-v-center hint--rounded hint--bottom-left ${
 						props.isFetchingItems ? 'is-loading' : ''
 					}`}
 					aria-label="Open a saved creation (Ctrl/⌘ + O)"
@@ -98,7 +98,7 @@ export function MainHeader(props) {
 					onClick={props.loginBtnHandler}
 					data-event-category="ui"
 					data-event-action="loginButtonClick"
-					class="hide-on-login flex  flex-v-center  hint--rounded  hint--bottom-left"
+					class="hide-on-login btn--dark flex  flex-v-center  hint--rounded  hint--bottom-left"
 					aria-label="Login/Signup"
 				>
 					Login/Signup
@@ -108,7 +108,7 @@ export function MainHeader(props) {
 					data-event-category="ui"
 					data-event-action="headerAvatarClick"
 					aria-label="See profile or Logout"
-					class="hide-on-logout hint--rounded  hint--bottom-left"
+					class="hide-on-logout btn--dark hint--rounded  hint--bottom-left"
 				>
 					<img
 						id="headerAvatarImg"

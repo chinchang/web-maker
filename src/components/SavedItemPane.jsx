@@ -201,23 +201,21 @@ export default class SavedItemPane extends Component {
 				<div class="flex flex-v-center" style="justify-content: space-between;">
 					<h3>My Library ({this.items.length})</h3>
 
-					<div class="main-header__btn-wrap">
-						<a
+					<div>
+						<button
 							onClick={this.props.exportBtnClickHandler}
-							href=""
-							class="btn btn-icon hint--bottom-left hint--rounded hint--medium"
+							class="btn--dark hint--bottom-left hint--rounded hint--medium"
 							aria-label="Export all your creations into a single importable file."
 						>
 							Export
-						</a>
-						<a
+						</button>
+						<button
 							onClick={this.importBtnClickHandler.bind(this)}
-							href=""
-							class="btn btn-icon hint--bottom-left hint--rounded hint--medium"
+							class="btn--dark hint--bottom-left hint--rounded hint--medium"
 							aria-label="Only the file that you export through the 'Export' button can be imported."
 						>
 							Import
-						</a>
+						</button>
 					</div>
 				</div>
 				<input

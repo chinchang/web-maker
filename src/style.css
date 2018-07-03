@@ -244,7 +244,7 @@ textarea {
 	box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.25);
 }
 
-.btn:focus {
+[class*='btn']:focus {
 	outline-width: 4px;
 	outline-color: #b76b29;
 	outline-style: solid;
@@ -584,6 +584,7 @@ body > #demo-frame {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.14);
 }
 
+.btn--dark,
 .main-header__btn-wrap > button {
 	box-sizing: content-box;
 	font-size: 0.8em;
@@ -607,7 +608,7 @@ body > #demo-frame {
 	text-transform: uppercase;
 }
 
-.main-header__btn-wrap > button > svg {
+.btn--dark > svg {
 	fill: #9297b3;
 	margin-right: 4px;
 }
@@ -616,7 +617,7 @@ body > #demo-frame {
 	fill: crimson;
 }
 
-.main-header__btn-wrap > button:hover {
+.btn--dark:hover {
 	border-color: rgba(146, 151, 179, 0.5);
 }
 
@@ -1358,7 +1359,6 @@ body > #demo-frame {
 	background: rgba(0, 0, 0, 0.3);
 	color: white;
 	border: 0;
-	outline: 0;
 }
 
 .console:not(.is-minimized) .code-wrap__header {

@@ -1,11 +1,10 @@
 {
 	"name": "web-maker",
-	"version": "3.3.1",
+	"version": "3.3.2",
 	"description": "A blazing fast & offline web playground",
 	"scripts": {
 		"start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-		"build":
-			"preact build --template src/index.html --no-prerender --service-worker false",
+		"build": "preact build --template src/index.html --no-prerender --service-worker false",
 		"serve": "preact build && preact serve",
 		"dev": "preact watch --template src/index.html --https --no-prerender",
 		"lint": "eslint src",
@@ -23,7 +22,10 @@
 		"src/detached-window.js"
 	],
 	"lint-staged": {
-		"*.{js,jsx,json,css,md}": ["prettier --write", "git add"]
+		"*.{js,jsx,json,css,md}": [
+			"prettier --write",
+			"git add"
+		]
 	},
 	"devDependencies": {
 		"babel-eslint": "^7.2.3",
@@ -67,13 +69,19 @@
 	},
 	"jest": {
 		"verbose": true,
-		"setupFiles": ["<rootDir>/src/tests/__mocks__/browserMocks.js"],
+		"setupFiles": [
+			"<rootDir>/src/tests/__mocks__/browserMocks.js"
+		],
 		"testURL": "http://localhost:8080",
-		"moduleFileExtensions": ["js", "jsx"],
-		"moduleDirectories": ["node_modules"],
+		"moduleFileExtensions": [
+			"js",
+			"jsx"
+		],
+		"moduleDirectories": [
+			"node_modules"
+		],
 		"moduleNameMapper": {
-			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
-				"<rootDir>/src/tests/__mocks__/fileMock.js",
+			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/tests/__mocks__/fileMock.js",
 			"\\.(css|less|scss)$": "identity-obj-proxy",
 			"^./style$": "identity-obj-proxy",
 			"^preact$": "<rootDir>/node_modules/preact/dist/preact.min.js",
@@ -83,12 +91,20 @@
 			"^react-addons-css-transition-group$": "preact-css-transition-group"
 		}
 	},
-	"browserslist": ["last 3 Chrome versions", "last 3 Firefox versions"],
+	"browserslist": [
+		"last 3 Chrome versions",
+		"last 3 Firefox versions"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/chinchang/web-maker.git"
 	},
-	"keywords": ["frontend", "playground", "web", "editor"],
+	"keywords": [
+		"frontend",
+		"playground",
+		"web",
+		"editor"
+	],
 	"author": "Kushagra Gour",
 	"license": "MIT",
 	"bugs": {

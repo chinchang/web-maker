@@ -101,7 +101,26 @@ export function Notifications(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="3.3.0" isLatest={true} {...props}>
+			<Notification version="3.3.2" isLatest={true} {...props}>
+				<NotificationItem type="a11y">
+					Improper links are now buttons with proper focus indication and
+					screen-reader support. Thanks{' '}
+					<ThanksTo url="https://github.com/jpsc" name="@jpsc" />
+				</NotificationItem>
+				<NotificationItem type="bug">
+					Auto-complete suggestions are now working.
+				</NotificationItem>
+				<NotificationItem type="bug">
+					Fixes resetting pane sizes when opening any popup or console.
+				</NotificationItem>
+				<li>
+					<strong>[Dev] Tests</strong>: We now have one running automated test
+					:) More to come. Thanks{' '}
+					<ThanksTo url="https://github.com/DanielRuf" name="@DanielRuf" />
+				</li>
+			</Notification>
+
+			<Notification version="3.3.0" {...props}>
 				<li>
 					<strong>🔥 [Dev] Code Refactor</strong>: I rewrote Web Maker. Yes, Web
 					Maker's codebase has been ported from plain JS to{' '}

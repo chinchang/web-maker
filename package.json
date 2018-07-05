@@ -3,34 +3,116 @@
 	"version": "0.9.1",
 	"description": "A blazing fast & offline sequence diagram generator",
 	"main": "index.html",
-	"devDependencies": {
-		"babel-eslint": "^7.2.3",
-		"babel-minify": "^0.2.0",
-		"css-loader": "^0.28.11",
-		"eslint": "^4.1.1",
-		"eslint-config-prettier": "^2.3.0",
-		"extract-text-webpack-plugin": "^3.0.2",
-		"gulp": "^3.9.1",
-		"gulp-clean-css": "^3.9.2",
-		"gulp-uglify": "^3.0.0",
-		"gulp-useref": "^3.1.3",
-		"path": "^0.12.7",
-		"prettier": "^1.5.2",
-		"require": "^2.4.20",
-		"style-loader": "^0.20.3",
-		"sw-precache": "^5.2.0",
-		"webpack": "^4.12.2",
-		"webpack-cli": "^3.0.8"
-	},
 	"scripts": {
+		"start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
+		"build": "preact build --template src/index.html --no-prerender --service-worker false",
+		"serve": "preact build && preact serve",
+		"dev": "preact watch --template src/index.html --https --no-prerender",
+		"lint": "eslint src",
+		"test": "jest ./tests",
 		"update-core": "yarn unlink vue-sequence sequence-parser && yarn add vue-sequence sequence-parser",
 		"deploy": "aws s3 sync ./app s3://app.zenuml.com",
 		"upload": "webstore upload --source src.zip --extension-id kcpganeflmhffnlofpdmcjklmdpbbmef --client-id 457917008826-p6qkd4tkbbutbae4j7uc2p39a76lfjlr.apps.googleusercontent.com --client-secret Tpn2bjvBOta3wTxibEekcV1J --refresh-token 1/akghPiY7_ZQd6TZq79rRZNnkxqXIWHjpW9T9YZMG8Dw",
 		"pub": "webstore publish --extension-id kcpganeflmhffnlofpdmcjklmdpbbmef --client-id 457917008826-p6qkd4tkbbutbae4j7uc2p39a76lfjlr.apps.googleusercontent.com --client-secret Tpn2bjvBOta3wTxibEekcV1J --refresh-token 1/akghPiY7_ZQd6TZq79rRZNnkxqXIWHjpW9T9YZMG8Dw",
-		"build": "webpack",
 		"install": "ln -sf ../../git-hooks/pre-commit .git/hooks/pre-commit",
-		"lint": "eslint src/*.js"
+		"precommit": "lint-staged"
 	},
+	"eslintConfig": {
+		"extends": "eslint-config-synacor"
+	},
+	"eslintIgnore": [
+		"build/*",
+		"src/lib/",
+		"src/tests/",
+		"src/CodeMirror.js",
+		"src/detached-window.js"
+	],
+	"lint-staged": {
+		"*.{js,jsx,json,css,md}": [
+			"prettier --write",
+			"git add"
+		]
+	},
+	"devDependencies": {
+		"babel-eslint": "^7.2.3",
+		"babel-minify": "^0.2.0",
+		"css-loader": "^0.28.11",
+		"eslint": "^4.9.0",
+		"eslint-config-prettier": "^2.3.0",
+		"eslint-config-synacor": "^2.0.2",
+		"extract-text-webpack-plugin": "^3.0.2",
+		"gulp": "^3.9.1",
+		"gulp-clean-css": "^3.9.2",
+		"gulp-concat": "^2.6.1",
+		"gulp-rename": "^1.3.0",
+		"gulp-uglify": "^3.0.0",
+		"gulp-useref": "^3.1.3",
+		"gulp-zip": "^4.1.0",
+		"husky": "^0.14.3",
+		"identity-obj-proxy": "^3.0.0",
+		"if-env": "^1.0.0",
+		"jest": "^21.2.1",
+		"lint-staged": "^7.2.0",
+		"merge-stream": "^1.0.1",
+		"path": "^0.12.7",
+		"preact-cli": "^2.1.0",
+		"preact-render-spy": "^1.2.1",
+		"prettier": "^1.10.2",
+		"require": "^2.4.20",
+		"run-sequence": "^2.2.1",
+		"style-loader": "^0.20.3",
+		"sw-precache": "^5.2.0",
+		"webpack": "webpack-3"
+	},
+	"dependencies": {
+		"@emmetio/codemirror-plugin": "^0.5.4",
+		"babel-polyfill": "^6.23.0",
+		"babel-preset-env": "^1.7.0",
+		"babel-preset-react": "^6.24.1",
+		"babel-standalone": "^6.25.0",
+		"code-blast-codemirror": "chinchang/code-blast-codemirror#web-maker",
+		"codemirror": "^5.37.0",
+		"copy-webpack-plugin": "^4.5.1",
+		"esprima": "^4.0.0",
+		"firebase": "^5.0.4",
+		"preact": "^8.2.6",
+		"preact-compat": "^3.17.0",
+		"preact-portal": "^1.1.3",
+		"preact-router": "^2.5.7",
+		"sequence-parser": "^0.5.13",
+		"split.js": "1.3.4",
+		"vue": "^2.5.16",
+		"vue-sequence": "^0.5.34",
+		"vuex": "^3.0.1"
+	},
+	"jest": {
+		"verbose": true
+	},
+	"setupFiles": [
+		"<rootDir>/src/tests/__mocks__/browserMocks.js"
+	],
+	"testURL": "http://localhost:8080",
+	"moduleFileExtensions": [
+		"js",
+		"jsx"
+	],
+	"moduleDirectories": [
+		"node_modules"
+	],
+	"moduleNameMapper": {
+		"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/tests/__mocks__/fileMock.js",
+		"\\.(css|less|scss)$": "identity-obj-proxy",
+		"^./style$": "identity-obj-proxy",
+		"^preact$": "<rootDir>/node_modules/preact/dist/preact.min.js",
+		"^react$": "preact-compat",
+		"^react-dom$": "preact-compat",
+		"^create-react-class$": "preact-compat/lib/create-react-class",
+		"^react-addons-css-transition-group$": "preact-css-transition-group"
+	},
+	"browserslist": [
+		"last 3 Chrome versions",
+		"last 3 Firefox versions"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/ZenUml/web-sequence.git"
@@ -46,14 +128,5 @@
 	"bugs": {
 		"url": "https://github.com/ZenUml/web-sequence/issues"
 	},
-	"homepage": "http://zenuml.com",
-	"dependencies": {
-		"@emmetio/codemirror-plugin": "^0.3.5",
-		"babel-polyfill": "^6.23.0",
-		"babel-standalone": "^6.25.0",
-		"sequence-parser": "^0.5.13",
-		"vue": "^2.5.16",
-		"vue-sequence": "^0.5.34",
-		"vuex": "^3.0.1"
-	}
+	"homepage": "http://zenuml.com"
 }

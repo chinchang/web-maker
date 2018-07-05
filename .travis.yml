@@ -1,8 +1,17 @@
 language: node_js
 node_js:
-  - '8.1.2'
+  - '10'
 install:
+  - npm i -g npm@latest
   - npm install -g eslint
   - npm install -g babel-eslint
+  - npm install -g eslint-plugin-react
+  - npm install -g eslint-plugin-mocha
+  - npm install -g eslint-config-synacor
 script:
   - npm run lint
+  - npm ci
+  - npm run test
+cache:
+  directories:
+    - '$HOME/.npm'

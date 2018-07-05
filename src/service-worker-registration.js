@@ -18,9 +18,9 @@
 
 if (
 	'serviceWorker' in navigator &&
+	location.protocol === 'https:' &&
 	document.cookie.indexOf('wmdebug') === -1 &&
 	location.href.indexOf('chrome-extension://') === -1 &&
-	location.href.indexOf('localhost') === -1 &&
 	location.href.indexOf('192.168') === -1
 ) {
 	// Delay registration until after the page has loaded, to ensure that our

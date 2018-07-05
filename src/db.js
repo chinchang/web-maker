@@ -1,3 +1,10 @@
+import './firebaseInit';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import { deferred } from './deferred';
+import { trackEvent } from './analytics';
+import { log } from './utils';
+
 (() => {
 	const FAUX_DELAY = 1;
 
@@ -30,6 +37,10 @@
 				}
 			}, FAUX_DELAY);
 			/* eslint-enable consistent-return */
+		},
+		remove: (key, cb) => {
+			window.localStorage.removeItem(key);
+			setTimeout(() => cb(), FAUX_DELAY);
 		}
 	};
 	const dbLocalAlias = chrome && chrome.storage ? chrome.storage.local : local;
@@ -39,7 +50,7 @@
 		if (dbPromise) {
 			return dbPromise;
 		}
-		utils.log('Initializing firestore');
+		log('Initializing firestore');
 		dbPromise = new Promise((resolve, reject) => {
 			if (db) {
 				return resolve(db);
@@ -50,7 +61,11 @@
 				.then(function() {
 					// Initialize Cloud Firestore through firebase
 					db = firebase.firestore();
-					utils.log('firebase db ready', db);
+					// const settings = {
+					// 	timestampsInSnapshots: true
+					// };
+					// db.settings(settings);
+					log('firebase db ready', db);
 					resolve(db);
 				})
 				.catch(function(err) {
@@ -61,7 +76,7 @@
 						alert(
 							"Opening Web Maker web app in multiple tabs isn't supported at present and it seems like you already have it opened in another tab. Please use in one tab."
 						);
-						window.trackEvent('fn', 'multiTabError');
+						trackEvent('fn', 'multiTabError');
 					} else if (err.code === 'unimplemented') {
 						// The current browser does not support all of the
 						// features required to enable persistence
@@ -101,9 +116,9 @@
 		);
 		if (window.user) {
 			const remoteDb = await getDb();
-			remoteDb
-				.doc(`users/${window.user.uid}`)
-				.update({ lastSeenVersion: version });
+			remoteDb.doc(`users/${window.user.uid}`).update({
+				lastSeenVersion: version
+			});
 		}
 	}
 
@@ -114,7 +129,12 @@
 			.get()
 			.then(doc => {
 				if (!doc.exists)
-					return remoteDb.doc(`users/${userId}`).set({}, { merge: true });
+					return remoteDb.doc(`users/${userId}`).set(
+						{},
+						{
+							merge: true
+						}
+					);
 				const user = doc.data();
 				Object.assign(window.user, user);
 				return user;

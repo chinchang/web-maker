@@ -128,7 +128,7 @@ export default class Footer extends Component {
 				{this.props.prefs.isJs13kModeOn ? (
 					<div class="flex flex-v-center">
 						<JS13K codeSize={this.props.codeSize} />
-						<button class="dark-btn" onClick={this.props.onJs13KBtnClick}>
+						<button class="btn--dark" onClick={this.props.onJs13KBtnClick}>
 							JS13KGames Help
 						</button>
 					</div>

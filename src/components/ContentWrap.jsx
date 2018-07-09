@@ -934,6 +934,7 @@ export default class ContentWrap extends Component {
 								<use xlinkHref="#chevron-icon" />
 							</svg>
 							<input
+								tabIndex={this.state.isConsoleOpen ? 0 : -1}
 								onKeyUp={this.evalConsoleExpr.bind(this)}
 								class="console-exec-input"
 							/>

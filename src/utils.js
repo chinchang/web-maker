@@ -345,7 +345,9 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 			'<script src="' +
 			(chrome.extension
 				? chrome.extension.getURL('lib/screenlog.js')
-				: `${location.origin}${BASE_PATH}/lib/screenlog.js`) +
+				: `${location.origin}${
+						window.DEBUG ? '' : BASE_PATH
+				  }/lib/screenlog.js`) +
 			'"></script>';
 	}
 

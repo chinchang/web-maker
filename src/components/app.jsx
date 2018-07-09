@@ -41,6 +41,7 @@ import Portal from 'preact-portal';
 import { HelpModal } from './HelpModal';
 import { OnboardingModal } from './OnboardingModal';
 import { Js13KModal } from './Js13KModal';
+import { CreateNewModal } from './CreateNewModal';
 import { Icons } from './Icons';
 import JSZip from 'jszip';
 
@@ -59,8 +60,7 @@ export default class App extends Component {
 	constructor() {
 		super();
 		this.AUTO_SAVE_INTERVAL = 15000; // 15 seconds
-		this.state = {
-			isSavedItemPaneOpen: false,
+		this.modalDefaultStates = {
 			isModalOpen: false,
 			isAddLibraryModalOpen: false,
 			isSettingsModalOpen: false,
@@ -73,6 +73,11 @@ export default class App extends Component {
 			isAskToImportModalOpen: false,
 			isOnboardModalOpen: false,
 			isJs13KModalOpen: false,
+			isCreateNewModalOpen: false
+		};
+		this.state = {
+			isSavedItemPaneOpen: false,
+			...this.modalDefaultStates,
 			prefs: {},
 			currentItem: {
 				title: '',
@@ -490,17 +495,7 @@ export default class App extends Component {
 		}
 
 		this.setState({
-			isAddLibraryModalOpen: false,
-			isSettingsModalOpen: false,
-			isHelpModalOpen: false,
-			isNotificationsModalOpen: false,
-			isLoginModalOpen: false,
-			isProfileModalOpen: false,
-			isSupportDeveloperModalOpen: false,
-			isKeyboardShortcutsModalOpen: false,
-			isAskToImportModalOpen: false,
-			isOnboardModalOpen: false,
-			isJs13KModalOpen: false
+			...this.modalDefaultStates
 		});
 	}
 	onExternalLibChange(newValues) {
@@ -704,7 +699,9 @@ export default class App extends Component {
 				});
 			}
 		}
-		this.calculateCodeSize();
+		if (this.state.prefs.isJs13kModeOn) {
+			this.calculateCodeSize();
+		}
 	}
 	onCodeSettingsChange(type, settings) {
 		this.state.currentItem[`${type}Settings`] = {
@@ -832,10 +829,14 @@ export default class App extends Component {
 				'You have unsaved changes. Do you still want to create something new?'
 			);
 			if (shouldDiscard) {
-				this.createNewItem();
+				this.setState({
+					isCreateNewModalOpen: true
+				});
 			}
 		} else {
-			this.createNewItem();
+			this.setState({
+				isCreateNewModalOpen: true
+			});
 		}
 	}
 	openBtnClickHandler() {
@@ -1112,6 +1113,19 @@ export default class App extends Component {
 			isJs13KModalOpen: true
 		});
 	}
+	blankTemplateSelectHandler() {
+		this.createNewItem();
+		this.setState({ isCreateNewModalOpen: false });
+	}
+
+	templateSelectHandler(template) {
+		fetch(`templates/template-${template.id}.json`)
+			.then(res => res.json())
+			.then(json => {
+				this.forkItem(json);
+			});
+		this.setState({ isCreateNewModalOpen: false });
+	}
 
 	render() {
 		return (
@@ -1291,6 +1305,13 @@ export default class App extends Component {
 				<Js13KModal
 					show={this.state.isJs13KModalOpen}
 					closeHandler={() => this.setState({ isJs13KModalOpen: false })}
+				/>
+
+				<CreateNewModal
+					show={this.state.isCreateNewModalOpen}
+					closeHandler={() => this.setState({ isCreateNewModalOpen: false })}
+					onBlankTemplateSelect={this.blankTemplateSelectHandler.bind(this)}
+					onTemplateSelect={this.templateSelectHandler.bind(this)}
 				/>
 
 				<Portal into="body">

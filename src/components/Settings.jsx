@@ -304,7 +304,7 @@ export default class Settings extends Component {
 						class="line"
 						title="This timeout is used to indentify a possible infinite loop and prevent it."
 					>
-						Maximum time allowed in a loop iteration
+						Maximum time allowed in a loop iteration{' '}
 						<input
 							type="number"
 							value={this.props.prefs.infiniteLoopTimeout}

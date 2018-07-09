@@ -21,11 +21,7 @@ class JS13K extends Component {
 			: 0;
 		return (
 			<div class="flex flex-v-center">
-				<img
-					src="http://js13kgames.com/img/js13kgames.png"
-					alt="JS13K Games logo"
-					height="24"
-				/>{' '}
+				<img src="js13kgames.png" alt="JS13K Games logo" height="24" />{' '}
 				<div class="footer__js13k-days-left">
 					{this.state.daysLeft} days to go
 				</div>

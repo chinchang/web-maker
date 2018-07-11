@@ -9,6 +9,10 @@ Web Sequence  [![Gitter](https://badges.gitter.im/zenuml/Lobby.svg)](https://git
 
 ### Development
 
+#### Enable/Disable DEBUG
+
+In Chrome console, type in `document.cookie='DEBUG=true'` or `document.cookie='DEBUG=;max-age=1'`.
+
 ````
 $ yarn link vue-sequence # use un-uglyfied version
 $ webpack                # build bundle.js to src/lib

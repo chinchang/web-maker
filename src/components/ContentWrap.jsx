@@ -710,6 +710,7 @@ export default class ContentWrap extends Component {
 						id="htmlCodeEl"
 						data-type="html"
 						class="code-wrap"
+						style="display: none"
 						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 					>
 						<div

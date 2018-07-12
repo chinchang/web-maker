@@ -32,6 +32,7 @@ export function MainHeader(props) {
 					data-event-category="ui"
 					data-event-action="addLibraryButtonClick"
 					class="btn--dark flex-v-center hint--rounded hint--bottom-left"
+					style="display: none"
 					aria-label="Add a JS/CSS library"
 				>
 					Add library{' '}

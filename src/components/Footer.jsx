@@ -151,14 +151,14 @@ export default class Footer extends Component {
 					</Button>
 				</div>
 				<a
-					href="https://webmakerapp.com/"
+					href="https://www.ZenUML.com/"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
 					<div class="logo" />
 				</a>
 				&copy;
-				<span class="web-maker-with-tag">Web Maker</span> &nbsp;&nbsp;
+				<span class="web-maker-with-tag">ZenUML</span> &nbsp;&nbsp;
 				<Button
 					onClick={this.props.helpBtnClickHandler}
 					data-event-category="ui"

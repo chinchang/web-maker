@@ -23,7 +23,9 @@ function minifyJs(fileName) {
 }
 gulp.task('runWebpack', function() {
 	return child_process.execSync('yarn run build');
-});gulp.task('copyFiles',  function() {return merge(
+});
+gulp.task('copyFiles',  function() {
+	return merge(
 	gulp
 		.src('src/lib/codemirror/theme/*')
 		.pipe(gulp.dest('app/lib/codemirror/theme')),
@@ -33,21 +35,23 @@ gulp.task('runWebpack', function() {
 	gulp.src('src/lib/transpilers/*').pipe(gulp.dest('app/lib/transpilers')),
 	gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib')),
 	gulp.src('icons/*').pipe(gulp.dest('app/icons')),
-	gulp.src('src/lib/bundle.js').pipe(gulp.dest('app/lib'));gulp.src(['src/preview.html',
+	gulp.src(['src/preview.html',
 				'src/detached-window.js',
 				'src/icon-48.png',
 				'src/icon-128.png',
 				'src/patreon.png',
 				'manifest.json'
 			]).pipe(gulp.dest('app')),
-	gulp.src('build/bundle.*.js')
+	  gulp.src('build/bundle.*.js')
 			.pipe(rename('script.js'))
 			.pipe(gulp.dest('app')),
 		gulp
 			.src('build/vendor.*.js')
-			.pipe(rename('vendor.js')).pipe(gulp.dest('app')),
-// Following CSS are copied to build/ folder where they'll be referenced by
-		// useRef plugin to concat into one.	gulp.src('src/lib/codemirror/lib/codemirror.css')
+			.pipe(rename('vendor.js'))
+			.pipe(gulp.dest('app')),
+    // Following CSS are copied to build/ folder where they'll be referenced by
+		// useRef plugin to concat into one.
+	  gulp.src('src/lib/codemirror/lib/codemirror.css')
 			.pipe(gulp.dest('build/lib/codemirror/lib')),
 		gulp
 			.src('src/lib/codemirror/addon/hint/show-hint.css')
@@ -59,16 +63,17 @@ gulp.task('runWebpack', function() {
 			.src('src/lib/codemirror/addon/dialog/dialog.css')
 			.pipe(gulp.dest('build/lib/codemirror/addon/dialog')),
 		gulp.src('src/lib/hint.min.css').pipe(gulp.dest('build/lib')),
-	gulp.src('src/lib/inlet.css').pipe(gulp.dest('build/lib')),
-	gulp.src('src/style.css').pipe(gulp.dest('build')),
-	gulp
-		.src([
-			'src/FiraCode.ttf',
-			'src/FixedSys.ttf',
-			'src/Inconsolata.ttf',
-			'src/Monoid.ttf'
-		])
-		.pipe(gulp.dest('app')));
+		gulp.src('src/lib/inlet.css').pipe(gulp.dest('build/lib')),
+		gulp.src('src/style.css').pipe(gulp.dest('build')),
+		gulp
+			.src([
+				'src/FiraCode.ttf',
+				'src/FixedSys.ttf',
+				'src/Inconsolata.ttf',
+				'src/Monoid.ttf'
+			])
+			.pipe(gulp.dest('app'))
+	);
 });
 
 // Generate script.js, vendor.js, style.css and vendor.css and index.html under ./app/

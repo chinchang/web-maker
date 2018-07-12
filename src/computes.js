@@ -7,7 +7,7 @@ const esprima = require('esprima');
 // computeHtml, computeCss & computeJs evaluate the final code according
 // to whatever mode is selected and resolve the returned promise with the code.
 export function computeHtml(userCode, mode) {
-	var code = userCode;
+	var code = '<main id="demo">\n' + '    <seq-diagram></seq-diagram>\n' + '  </main>';;
 	var d = deferred();
 	if (mode === HtmlModes.HTML) {
 		d.resolve({
@@ -158,7 +158,9 @@ export function computeJs(
 	shouldPreventInfiniteLoops,
 	infiniteLoopTimeout
 ) {
-	var code = userCode;
+	// var code = userCode;
+	console.log('code:', JSON.stringify(userCode))
+	let code = 'app.$store.commit(\'code\', ' + JSON.stringify(userCode) + ');';
 	var d = deferred();
 	var errors;
 

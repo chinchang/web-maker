@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { SeqDiagram, Store } from 'vue-sequence'
+import { Version, SeqDiagram, Store } from 'vue-sequence'
 
 import 'vue-sequence/dist/vue-sequence.css'
 
@@ -20,3 +20,5 @@ window.app = new Vue({
   el: '#demo',
   store
 })
+
+console.log('Use vue-sequence', Version)

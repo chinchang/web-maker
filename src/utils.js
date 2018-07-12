@@ -348,6 +348,12 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 				: `${location.origin}${BASE_PATH}/lib/screenlog.js`) +
 			'"></script>';
 	}
+	contents +=
+		'<script src="' +
+		(chrome.extension
+			? chrome.extension.getURL('lib/bundle.js')
+			: `${location.origin}${BASE_PATH}/lib/bundle.js`)+
+		'"></script>';
 
 	if (item.jsMode === JsModes.ES6) {
 		contents +=

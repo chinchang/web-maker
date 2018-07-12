@@ -113,6 +113,7 @@ export default class ContentWrap extends Component {
 	}
 
 	createPreviewFile(html, css, js) {
+		// isNotChrome
 		const shouldInlineJs =
 			!window.webkitRequestFileSystem || !window.IS_EXTENSION;
 		var contents = getCompleteHtml(

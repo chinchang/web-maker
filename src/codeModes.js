@@ -34,7 +34,7 @@ modes[HtmlModes.JADE] = {
 	codepenVal: 'pug'
 };
 modes[JsModes.JS] = {
-	label: 'JS',
+	label: 'ZenUML',
 	cmMode: 'javascript',
 	codepenVal: 'none'
 };

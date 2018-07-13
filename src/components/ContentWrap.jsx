@@ -839,10 +839,11 @@ export default class ContentWrap extends Component {
 								<span class="code-wrap__header-label">
 									{modes[this.props.currentItem.jsMode || 'js'].label}
 								</span>
-								<span class="caret" />
+								<span class="caret" style="display:none" />
 								<select
 									data-type="js"
 									class="js-mode-select  hidden-select"
+									style="display: none"
 									onChange={this.codeModeChangeHandler.bind(this)}
 									value={this.props.currentItem.jsMode}
 								>

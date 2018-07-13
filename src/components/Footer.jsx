@@ -212,6 +212,7 @@ export default class Footer extends Component {
 					data-event-category="ui"
 					data-event-action="supportDeveloperFooterBtnClick"
 					class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
+					style="display:none"
 					aria-label="Support the developer by pledging some amount"
 				>
 					Support the developer

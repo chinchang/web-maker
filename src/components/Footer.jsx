@@ -43,6 +43,7 @@ export default class Footer extends Component {
 						onClick={this.props.codepenBtnClickHandler}
 						id="codepenBtn"
 						class="mode-btn  hint--rounded  hint--top-left  hide-on-mobile"
+						style="display: none"
 						aria-label="Edit on CodePen"
 					>
 						<svg>

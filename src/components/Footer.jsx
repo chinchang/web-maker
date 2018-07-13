@@ -192,8 +192,8 @@ export default class Footer extends Component {
 				</Button>
 				<a
 					class="footer__link  hint--rounded  hint--top-right"
-					aria-label="Tweet about 'Web Maker'"
-					href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
+					aria-label="Tweet about 'Web Sequence'"
+					href="http://twitter.com/share?url=https://zenuml.com/&text=Web Sequence - A blazing fast %26 offline UML sequence diagram generator! via @ZenUML&related=webmakerApp&hashtags=UML,sequence,playground,offline"
 					target="_blank"
 					rel="noopener noreferrer"
 				>

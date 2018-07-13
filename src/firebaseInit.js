@@ -1,11 +1,11 @@
 import firebase from 'firebase/app';
 // import 'firebase/firestore';
 const config = {
-	apiKey: 'AIzaSyBl8Dz7ZOE7aP75mipYl2zKdLSRzBU2fFc',
-	authDomain: 'web-maker-app.firebaseapp.com',
-	databaseURL: 'https://web-maker-app.firebaseio.com',
-	projectId: 'web-maker-app',
-	storageBucket: 'web-maker-app.appspot.com',
-	messagingSenderId: '560473480645'
+	apiKey: 'AIzaSyCBEg3VpY6UjXNnDzvXieSYx13Q63Rs-a0',
+	authDomain: 'web-sequence-local.firebaseapp.com',
+	databaseURL: 'https://web-sequence-local.firebaseio.com/',
+	projectId: 'web-sequence-local',
+	storageBucket: 'web-sequence-local.appspot.com',
+	messagingSenderId: '542187884961'
 };
 firebase.initializeApp(config);

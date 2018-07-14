@@ -137,6 +137,7 @@ export default class Footer extends Component {
 						class={`notifications-btn  mode-btn  hint--top-left  hint--rounded ${
 							this.props.hasUnseenChangelog ? 'has-new' : ''
 						}`}
+						style="display: none"
 						aria-label="See Changelog"
 					>
 						<svg viewBox="0 0 24 24">

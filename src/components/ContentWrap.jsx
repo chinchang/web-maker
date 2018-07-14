@@ -890,6 +890,7 @@ export default class ContentWrap extends Component {
 					<div
 						id="consoleEl"
 						class={`console ${this.state.isConsoleOpen ? '' : 'is-minimized'}`}
+						style="display: none"
 					>
 						<div id="consoleLogEl" class="console__log">
 							<div

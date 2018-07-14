@@ -10,7 +10,7 @@ export function HelpModal(props) {
 				<small style="font-size:14px;"> v2.0.0</small>
 				<div class="flex">
 					<div class="onboard-step">
-						<img src="./animation/10s.gif" alt="Middleman logo"/>
+						<img src="./animation/10s.gif" alt="Middleman logo" />
 					</div>
 				</div>
 				<p>

@@ -7,7 +7,11 @@ const esprima = require('esprima');
 // computeHtml, computeCss & computeJs evaluate the final code according
 // to whatever mode is selected and resolve the returned promise with the code.
 export function computeHtml(userCode, mode) {
-	var code = '<main id="demo">\n' + '    <seq-diagram></seq-diagram>\n' + '  </main>';;
+	var code =
+		'<main id="demo">\n' + '<button onclick="downloadPng()">\n' +
+		'  PNG\n' +
+		'</button>' + ' <div id="diagram">   <seq-diagram></seq-diagram>\n </div>' + '  </main>';
+
 	var d = deferred();
 	if (mode === HtmlModes.HTML) {
 		d.resolve({

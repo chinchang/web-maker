@@ -292,7 +292,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_sequence___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue_sequence__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_sequence_dist_vue_sequence_css__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_sequence_dist_vue_sequence_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vue_sequence_dist_vue_sequence_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_dom_to_image__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_dom_to_image___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_dom_to_image__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_file_saver__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_file_saver___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_file_saver__);
 /* eslint-disable sort-imports */
+
+
 
 
 
@@ -315,7 +321,18 @@ window.app = new __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */]({
   store
 })
 
-console.log('Use vue-sequence', __WEBPACK_IMPORTED_MODULE_2_vue_sequence__["Version"])
+window.domtoimage = __WEBPACK_IMPORTED_MODULE_4_dom_to_image___default.a
+window.saveAs = __WEBPACK_IMPORTED_MODULE_5_file_saver___default.a.saveAs
+
+function downloadPng() {
+	var node = document.getElementById('diagram')
+	__WEBPACK_IMPORTED_MODULE_4_dom_to_image___default.a.toBlob(document.getElementById('diagram'))
+		.then(function (blob) {
+			window.saveAs(blob, 'zenuml.png');
+		});
+}
+window.downloadPng = downloadPng
+console.log('Using vue-sequence', __WEBPACK_IMPORTED_MODULE_2_vue_sequence__["Version"])
 
 
 /***/ }),
@@ -12569,7 +12586,7 @@ exports = module.exports = __webpack_require__(10)(false);
 
 
 // module
-exports.push([module.i, ".lifeline[data-v-3a05119c]{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;margin:0 20px}.lifeline .line[data-v-3a05119c]{-webkit-box-flex:1;-ms-flex:1;flex:1;margin-left:50%;border-left-width:1px}.lifeline>.participant[data-v-3a05119c]{z-index:100}.life-line-layer[data-v-fb6dccc2]{display:-webkit-box;display:-ms-flexbox;display:flex;white-space:nowrap;position:absolute;height:100%}.lifeline.starter[data-v-fb6dccc2]{-webkit-transform:translateX(6px);transform:translateX(6px)}.lifeline.starter.hidden[data-v-fb6dccc2]{visibility:hidden}.starter[data-v-fb6dccc2] .participant{border-radius:50%}.point[data-v-0c439f49]{position:absolute;margin-top:-12px;right:10px}.fill svg.arrow polyline[data-v-0c439f49]{fill:gray}.right-to-left.point[data-v-0c439f49]{left:0;right:auto}.right-to-left.point>svg>polyline.right[data-v-0c439f49]{display:none}.right-to-left.point>svg>polyline.left[data-v-0c439f49]{display:inline}.point>svg>polyline.left[data-v-0c439f49]{display:none}.message[data-v-54e178b4]{width:calc(100% - 14px);border-bottom-width:2px;white-space:nowrap}.sync>.message[data-v-54e178b4]{left:6px}.occurrence[data-v-2db2f782]{margin-top:-2px}.interaction.creation[data-v-847c13d4]{text-align:right}.interaction.creation.right-to-left[data-v-847c13d4]{-webkit-transform:translateX(-100%);transform:translateX(-100%);text-align:left}.participant.place-holder[data-v-847c13d4]{visibility:hidden;margin-top:-10px}.creation>.message.invocation[data-v-847c13d4]{top:10px}.creation.right-to-left>.message.invocation[data-v-847c13d4]{left:-6px;margin-left:auto}.right-to-left>.occurrence[data-v-847c13d4]{left:-8px}.interaction.right-to-left[data-v-7d10f308]{-webkit-transform:translateX(-100%);transform:translateX(-100%)}.interaction .invisible-occurrence[data-v-47bc376e]{height:20px}.interaction.async[data-v-47bc376e] .message{width:100%}.message.self[data-v-73173c5e]{height:34px}.sync>.message.self[data-v-73173c5e]{left:6px}.message .name[data-v-73173c5e]{position:relative;left:30px;white-space:nowrap}.self>.message .name[data-v-73173c5e]{text-align:left}.message.self svg.arrow polyline[data-v-73173c5e]{fill:none}.message.self svg.arrow polyline.head[data-v-73173c5e]{fill:gray}.self>.comments[data-v-3c4c2ed2]{-webkit-transform:translateY(-4px);transform:translateY(-4px)}.divider[data-v-cd27a038]{border-bottom-width:1px;margin:10px 4px}.comments{position:relative;text-align:left;border:1px solid transparent;background:#fff;padding:5px;width:300px;font-size:.8em;font-style:italic;line-height:1em;opacity:.5}.comments:hover{color:#000}.fragment>.comments{width:100%;border-bottom:1px solid gray;border-top:none;border-left:none;border-right:none}.message-layer[data-v-67b32d50]{padding-top:60px;padding-bottom:40px}.interaction{margin-top:10px;margin-bottom:5px}.interaction,.message{position:relative}.message.return{position:absolute;bottom:0}.message>.name{font-size:13px;text-align:center}.message svg{position:absolute}.message svg.arrow polyline{stroke:gray;fill:none;stroke-width:1.5;stroke-linejoin:round}.occurrence{position:relative;width:16px;left:calc(100% - 8px);padding:16px 0;padding-left:6px;border-width:2px}.interaction.right-to-left>.occurrence{left:-8px}.interaction.self>.occurrence{left:-8px;margin-top:-10px}.fragment{border-width:1px;margin:2px 0}.fragment .header label{padding:0 10px}.fragment .header .name label{padding:0 10px;background:hsla(0,0%,67%,.1)}*,:after,:before{-webkit-box-sizing:inherit;box-sizing:inherit}.sequence-diagram{position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;line-height:normal;text-align:left}.participant{padding:8px 4px;min-width:88px;max-width:250px;text-align:center}.sequence-diagram{font-family:Helvetica,Verdana,serif;font-size:16px;background-color:#fafafa}.sequence-diagram .participant{font-weight:700;background:#fff}.sequence-diagram .occurrence,.sequence-diagram .participant{border:2px solid rgba(3,3,3,.05)}.sequence-diagram .message{border-bottom-color:gray}.sequence-diagram .occurrence{background-color:#d3d3d3}.sequence-diagram .fragment{border-style:solid;border-color:#aaa;border-radius:2px;background:#fafafa;opacity:.9}.sequence-diagram .fragment .header .name label{color:#555;font-weight:700}.sequence-diagram .fragment.alt div.divider{border-bottom-style:dashed;border-bottom-color:#555}.sequence-diagram .lifeline .line{border-left-style:dashed;border-left-color:gray}", ""]);
+exports.push([module.i, ".lifeline[data-v-3a05119c]{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;margin:0 20px}.lifeline .line[data-v-3a05119c]{-webkit-box-flex:1;-ms-flex:1;flex:1;margin-left:50%;border-left-width:1px}.lifeline>.participant[data-v-3a05119c]{z-index:100}.life-line-layer[data-v-fb6dccc2]{display:-webkit-box;display:-ms-flexbox;display:flex;white-space:nowrap;position:absolute;height:100%}.lifeline.starter[data-v-fb6dccc2]{-webkit-transform:translateX(6px);transform:translateX(6px)}.lifeline.starter.hidden[data-v-fb6dccc2]{visibility:hidden}.starter[data-v-fb6dccc2] .participant{border-radius:50%}.point[data-v-0c439f49]{position:absolute;margin-top:-12px;right:10px}.fill svg.arrow polyline[data-v-0c439f49]{fill:gray}.right-to-left.point[data-v-0c439f49]{left:0;right:auto}.right-to-left.point>svg>polyline.right[data-v-0c439f49]{display:none}.right-to-left.point>svg>polyline.left[data-v-0c439f49]{display:inline}.point>svg>polyline.left[data-v-0c439f49]{display:none}.message[data-v-54e178b4]{width:calc(100% - 14px);border-bottom-width:2px;white-space:nowrap}.sync>.message[data-v-54e178b4]{left:6px}.occurrence[data-v-2db2f782]{margin-top:-2px}.interaction.creation[data-v-847c13d4]{text-align:right}.interaction.creation.right-to-left[data-v-847c13d4]{-webkit-transform:translateX(-100%);transform:translateX(-100%);text-align:left}.participant.place-holder[data-v-847c13d4]{visibility:hidden;margin-top:-10px}.creation>.message.invocation[data-v-847c13d4]{top:10px}.creation.right-to-left>.message.invocation[data-v-847c13d4]{left:-6px;margin-left:auto}.right-to-left>.occurrence[data-v-847c13d4]{left:-8px}.interaction.right-to-left[data-v-7d10f308]{-webkit-transform:translateX(-100%);transform:translateX(-100%)}.interaction .invisible-occurrence[data-v-47bc376e]{height:20px}.interaction.async[data-v-47bc376e] .message{width:100%}.message.self[data-v-73173c5e]{height:34px}.sync>.message.self[data-v-73173c5e]{left:6px}.message .name[data-v-73173c5e]{position:relative;left:30px;white-space:nowrap}.self>.message .name[data-v-73173c5e]{text-align:left}.message.self svg.arrow polyline[data-v-73173c5e]{fill:none}.message.self svg.arrow polyline.head[data-v-73173c5e]{fill:gray}.self>.comments[data-v-3c4c2ed2]{-webkit-transform:translateY(-4px);transform:translateY(-4px)}.divider[data-v-cd27a038]{border-bottom-width:1px;margin:10px 4px}.comments{position:relative;text-align:left;border:1px solid transparent;background:#fff;padding:5px;width:300px;font-size:.8em;font-style:italic;line-height:1em;opacity:.5}.comments:hover{color:#000}.fragment>.comments{width:100%;border-bottom:1px solid gray;border-top:none;border-left:none;border-right:none}.message-layer[data-v-67b32d50]{padding-top:60px;padding-bottom:40px}.interaction{margin-top:10px;margin-bottom:5px}.interaction,.message{position:relative}.message.return{position:absolute;bottom:0}.message>.name{font-size:13px;text-align:center}.message svg{position:absolute}.message svg.arrow polyline{stroke:gray;fill:none;stroke-width:1.5;stroke-linejoin:round}.occurrence{position:relative;width:16px;left:calc(100% - 8px);padding:16px 0;padding-left:6px;border-width:2px}.interaction.right-to-left>.occurrence{left:-8px}.interaction.self>.occurrence{left:-8px;margin-top:-10px}.fragment{border-width:1px;margin:2px 0}.fragment .header label{padding:0 10px}.fragment .header .name label{padding:0 10px;background:hsla(0,0%,67%,.1)}*,:after,:before{-webkit-box-sizing:inherit;box-sizing:inherit}.sequence-diagram{position:relative;-webkit-box-sizing:border-box;box-sizing:border-box;line-height:normal;text-align:left}.participant{padding:8px 4px;min-width:88px;max-width:250px;text-align:center}.sequence-diagram{font-family:Helvetica,Verdana,serif;font-size:16px}.sequence-diagram .participant{font-weight:700;background:#fff}.sequence-diagram .occurrence,.sequence-diagram .participant{border:2px solid rgba(3,3,3,.05)}.sequence-diagram .message{border-bottom-color:gray}.sequence-diagram .occurrence{background-color:#d3d3d3}.sequence-diagram .fragment{border-style:solid;border-color:#aaa;border-radius:2px;background:#fafafa;opacity:.9}.sequence-diagram .fragment .header .name label{color:#555;font-weight:700}.sequence-diagram .fragment.alt div.divider{border-bottom-style:dashed;border-bottom-color:#555}.sequence-diagram .lifeline .line{border-left-style:dashed;border-left-color:gray}", ""]);
 
 // exports
 
@@ -13132,6 +13149,1084 @@ module.exports = function (css) {
 	return fixedCss;
 };
 
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function (global) {
+    'use strict';
+
+    var util = newUtil();
+    var inliner = newInliner();
+    var fontFaces = newFontFaces();
+    var images = newImages();
+
+    // Default impl options
+    var defaultOptions = {
+        // Default is to fail on error, no placeholder
+        imagePlaceholder: undefined,
+        // Default cache bust is false, it will use the cache
+        cacheBust: false
+    };
+
+    var domtoimage = {
+        toSvg: toSvg,
+        toPng: toPng,
+        toJpeg: toJpeg,
+        toBlob: toBlob,
+        toPixelData: toPixelData,
+        impl: {
+            fontFaces: fontFaces,
+            images: images,
+            util: util,
+            inliner: inliner,
+            options: {}
+        }
+    };
+
+    if (true)
+        module.exports = domtoimage;
+    else
+        global.domtoimage = domtoimage;
+
+
+    /**
+     * @param {Node} node - The DOM Node object to render
+     * @param {Object} options - Rendering options
+     * @param {Function} options.filter - Should return true if passed node should be included in the output
+     *          (excluding node means excluding it's children as well). Not called on the root node.
+     * @param {String} options.bgcolor - color for the background, any valid CSS color value.
+     * @param {Number} options.width - width to be applied to node before rendering.
+     * @param {Number} options.height - height to be applied to node before rendering.
+     * @param {Object} options.style - an object whose properties to be copied to node's style before rendering.
+     * @param {Number} options.quality - a Number between 0 and 1 indicating image quality (applicable to JPEG only), defaults to 1.0.
+     * @param {String} options.imagePlaceholder - dataURL to use as a placeholder for failed images, default behaviour is to fail fast on images we can't fetch
+     * @param {Boolean} options.cacheBust - set to true to cache bust by appending the time to the request url
+     * @return {Promise} - A promise that is fulfilled with a SVG image data URL
+     * */
+    function toSvg(node, options) {
+        options = options || {};
+        copyOptions(options);
+        return Promise.resolve(node)
+            .then(function (node) {
+                return cloneNode(node, options.filter, true);
+            })
+            .then(embedFonts)
+            .then(inlineImages)
+            .then(applyOptions)
+            .then(function (clone) {
+                return makeSvgDataUri(clone,
+                    options.width || util.width(node),
+                    options.height || util.height(node)
+                );
+            });
+
+        function applyOptions(clone) {
+            if (options.bgcolor) clone.style.backgroundColor = options.bgcolor;
+
+            if (options.width) clone.style.width = options.width + 'px';
+            if (options.height) clone.style.height = options.height + 'px';
+
+            if (options.style)
+                Object.keys(options.style).forEach(function (property) {
+                    clone.style[property] = options.style[property];
+                });
+
+            return clone;
+        }
+    }
+
+    /**
+     * @param {Node} node - The DOM Node object to render
+     * @param {Object} options - Rendering options, @see {@link toSvg}
+     * @return {Promise} - A promise that is fulfilled with a Uint8Array containing RGBA pixel data.
+     * */
+    function toPixelData(node, options) {
+        return draw(node, options || {})
+            .then(function (canvas) {
+                return canvas.getContext('2d').getImageData(
+                    0,
+                    0,
+                    util.width(node),
+                    util.height(node)
+                ).data;
+            });
+    }
+
+    /**
+     * @param {Node} node - The DOM Node object to render
+     * @param {Object} options - Rendering options, @see {@link toSvg}
+     * @return {Promise} - A promise that is fulfilled with a PNG image data URL
+     * */
+    function toPng(node, options) {
+        return draw(node, options || {})
+            .then(function (canvas) {
+                return canvas.toDataURL();
+            });
+    }
+
+    /**
+     * @param {Node} node - The DOM Node object to render
+     * @param {Object} options - Rendering options, @see {@link toSvg}
+     * @return {Promise} - A promise that is fulfilled with a JPEG image data URL
+     * */
+    function toJpeg(node, options) {
+        options = options || {};
+        return draw(node, options)
+            .then(function (canvas) {
+                return canvas.toDataURL('image/jpeg', options.quality || 1.0);
+            });
+    }
+
+    /**
+     * @param {Node} node - The DOM Node object to render
+     * @param {Object} options - Rendering options, @see {@link toSvg}
+     * @return {Promise} - A promise that is fulfilled with a PNG image blob
+     * */
+    function toBlob(node, options) {
+        return draw(node, options || {})
+            .then(util.canvasToBlob);
+    }
+
+    function copyOptions(options) {
+        // Copy options to impl options for use in impl
+        if(typeof(options.imagePlaceholder) === 'undefined') {
+            domtoimage.impl.options.imagePlaceholder = defaultOptions.imagePlaceholder;
+        } else {
+            domtoimage.impl.options.imagePlaceholder = options.imagePlaceholder;
+        }
+
+        if(typeof(options.cacheBust) === 'undefined') {
+            domtoimage.impl.options.cacheBust = defaultOptions.cacheBust;
+        } else {
+            domtoimage.impl.options.cacheBust = options.cacheBust;
+        }
+    }
+
+    function draw(domNode, options) {
+        return toSvg(domNode, options)
+            .then(util.makeImage)
+            .then(util.delay(100))
+            .then(function (image) {
+                var canvas = newCanvas(domNode);
+                var ctx = canvas.getContext('2d');
+                ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+                ctx.drawImage(image, 0, 0);
+                return canvas;
+            });
+
+        function newCanvas(domNode) {
+            var canvas = document.createElement('canvas');
+            canvas.width = options.width || window.devicePixelRatio * util.width(domNode);
+            canvas.height = options.height || window.devicePixelRatio * util.height(domNode);
+
+            if (options.bgcolor) {
+                var ctx = canvas.getContext('2d');
+                ctx.fillStyle = options.bgcolor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            return canvas;
+        }
+    }
+
+    function cloneNode(node, filter, root) {
+        if (!root && filter && !filter(node)) return Promise.resolve();
+
+        return Promise.resolve(node)
+            .then(makeNodeCopy)
+            .then(function (clone) {
+                return cloneChildren(node, clone, filter);
+            })
+            .then(function (clone) {
+                return processClone(node, clone);
+            });
+
+        function makeNodeCopy(node) {
+            if (node instanceof HTMLCanvasElement) return util.makeImage(node.toDataURL());
+            return node.cloneNode(false);
+        }
+
+        function cloneChildren(original, clone, filter) {
+            var children = original.childNodes;
+            if (children.length === 0) return Promise.resolve(clone);
+
+            return cloneChildrenInOrder(clone, util.asArray(children), filter)
+                .then(function () {
+                    return clone;
+                });
+
+            function cloneChildrenInOrder(parent, children, filter) {
+                var done = Promise.resolve();
+                children.forEach(function (child) {
+                    done = done
+                        .then(function () {
+                            return cloneNode(child, filter);
+                        })
+                        .then(function (childClone) {
+                            if (childClone) parent.appendChild(childClone);
+                        });
+                });
+                return done;
+            }
+        }
+
+        function processClone(original, clone) {
+            if (!(clone instanceof Element)) return clone;
+
+            return Promise.resolve()
+                .then(cloneStyle)
+                .then(clonePseudoElements)
+                .then(copyUserInput)
+                .then(fixSvg)
+                .then(function () {
+                    return clone;
+                });
+
+            function cloneStyle() {
+                copyStyle(window.getComputedStyle(original), clone.style);
+
+                function copyStyle(source, target) {
+                    target.fontStretch == '';
+                    if (source.cssText) {
+                        target.cssText = source.cssText;
+                        target.font = source.font; // here, we re-assign the font prop.
+                    } else {
+                        copyProperties(source, target);
+                    }
+                    target.fontStretch = 'normal';
+
+                    function copyProperties(source, target) {
+                        util.asArray(source).forEach(function (name) {
+                            target.setProperty(
+                                name,
+                                source.getPropertyValue(name),
+                                source.getPropertyPriority(name)
+                            );
+                        });
+                    }
+                }
+            }
+
+            function clonePseudoElements() {
+                [':before', ':after'].forEach(function (element) {
+                    clonePseudoElement(element);
+                });
+
+                function clonePseudoElement(element) {
+                    var style = window.getComputedStyle(original, element);
+                    var content = style.getPropertyValue('content');
+
+                    if (content === '' || content === 'none') return;
+
+                    var className = util.uid();
+                    clone.className = clone.className + ' ' + className;
+                    var styleElement = document.createElement('style');
+                    styleElement.appendChild(formatPseudoElementStyle(className, element, style));
+                    clone.appendChild(styleElement);
+
+                    function formatPseudoElementStyle(className, element, style) {
+                        var selector = '.' + className + ':' + element;
+                        var cssText = style.cssText ? formatCssText(style) : formatCssProperties(style);
+                        return document.createTextNode(selector + '{' + cssText + '}');
+
+                        function formatCssText(style) {
+                            var content = style.getPropertyValue('content');
+                            return style.cssText + ' content: ' + content + ';';
+                        }
+
+                        function formatCssProperties(style) {
+
+                            return util.asArray(style)
+                                .map(formatProperty)
+                                .join('; ') + ';';
+
+                            function formatProperty(name) {
+                                return name + ': ' +
+                                    style.getPropertyValue(name) +
+                                    (style.getPropertyPriority(name) ? ' !important' : '');
+                            }
+                        }
+                    }
+                }
+            }
+
+            function copyUserInput() {
+                if (original instanceof HTMLTextAreaElement) clone.innerHTML = original.value;
+                if (original instanceof HTMLInputElement) clone.setAttribute("value", original.value);
+            }
+
+            function fixSvg() {
+                if (!(clone instanceof SVGElement)) return;
+                clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+
+                if (!(clone instanceof SVGRectElement)) return;
+                ['width', 'height'].forEach(function (attribute) {
+                    var value = clone.getAttribute(attribute);
+                    if (!value) return;
+
+                    clone.style.setProperty(attribute, value);
+                });
+            }
+        }
+    }
+
+    function embedFonts(node) {
+        return fontFaces.resolveAll()
+            .then(function (cssText) {
+                var styleNode = document.createElement('style');
+                node.appendChild(styleNode);
+                styleNode.appendChild(document.createTextNode(cssText));
+                return node;
+            });
+    }
+
+    function inlineImages(node) {
+        return images.inlineAll(node)
+            .then(function () {
+                return node;
+            });
+    }
+
+    function makeSvgDataUri(node, width, height) {
+        return Promise.resolve(node)
+            .then(function (node) {
+                node.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+                return new XMLSerializer().serializeToString(node);
+            })
+            .then(util.escapeXhtml)
+            .then(function (xhtml) {
+                return '<foreignObject x="0" y="0" width="100%" height="100%">' + xhtml + '</foreignObject>';
+            })
+            .then(function (foreignObject) {
+                return '<svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height + '">' +
+                    foreignObject + '</svg>';
+            })
+            .then(function (svg) {
+                return 'data:image/svg+xml;charset=utf-8,' + svg;
+            });
+    }
+
+    function newUtil() {
+        return {
+            escape: escape,
+            parseExtension: parseExtension,
+            mimeType: mimeType,
+            dataAsUrl: dataAsUrl,
+            isDataUrl: isDataUrl,
+			isSrcAsDataUrl: isSrcAsDataUrl,
+			canvasToBlob: canvasToBlob,
+            resolveUrl: resolveUrl,
+            getAndEncode: getAndEncode,
+            uid: uid(),
+            delay: delay,
+            asArray: asArray,
+            escapeXhtml: escapeXhtml,
+            makeImage: makeImage,
+            width: width,
+            height: height
+        };
+
+        function mimes() {
+            /*
+             * Only WOFF and EOT mime types for fonts are 'real'
+             * see http://www.iana.org/assignments/media-types/media-types.xhtml
+             */
+            var WOFF = 'application/font-woff';
+            var JPEG = 'image/jpeg';
+
+            return {
+                'woff': WOFF,
+                'woff2': WOFF,
+                'ttf': 'application/font-truetype',
+                'eot': 'application/vnd.ms-fontobject',
+                'png': 'image/png',
+                'jpg': JPEG,
+                'jpeg': JPEG,
+                'gif': 'image/gif',
+                'tiff': 'image/tiff',
+                'svg': 'image/svg+xml'
+            };
+        }
+
+        function parseExtension(url) {
+            var match = /\.([^\.\/]*?)$/g.exec(url);
+            if (match) return match[1];
+            else return '';
+        }
+
+        function mimeType(url) {
+            var extension = parseExtension(url).toLowerCase();
+            return mimes()[extension] || '';
+        }
+
+        function isDataUrl(url) {
+            return url.search(/^(data:)/) !== -1;
+        }
+
+		function isSrcAsDataUrl(text) {
+			var DATA_URL_REGEX = /url\(['"]?(data:)([^'"]+?)['"]?\)/;
+
+			return text.search(DATA_URL_REGEX) !== -1;
+		}
+        function toBlob(canvas) {
+            return new Promise(function (resolve) {
+                var binaryString = window.atob(canvas.toDataURL().split(',')[1]);
+                var length = binaryString.length;
+                var binaryArray = new Uint8Array(length);
+
+                for (var i = 0; i < length; i++)
+                    binaryArray[i] = binaryString.charCodeAt(i);
+
+                resolve(new Blob([binaryArray], {
+                    type: 'image/png'
+                }));
+            });
+        }
+
+        function canvasToBlob(canvas) {
+            if (canvas.toBlob)
+                return new Promise(function (resolve) {
+                    canvas.toBlob(resolve);
+                });
+
+            return toBlob(canvas);
+        }
+
+        function resolveUrl(url, baseUrl) {
+            var doc = document.implementation.createHTMLDocument();
+            var base = doc.createElement('base');
+            doc.head.appendChild(base);
+            var a = doc.createElement('a');
+            doc.body.appendChild(a);
+            base.href = baseUrl;
+            a.href = url;
+            return a.href;
+        }
+
+        function uid() {
+            var index = 0;
+
+            return function () {
+                return 'u' + fourRandomChars() + index++;
+
+                function fourRandomChars() {
+                    /* see http://stackoverflow.com/a/6248722/2519373 */
+                    return ('0000' + (Math.random() * Math.pow(36, 4) << 0).toString(36)).slice(-4);
+                }
+            };
+        }
+
+        function makeImage(uri) {
+            return new Promise(function (resolve, reject) {
+                var image = new Image();
+                image.onload = function () {
+                    resolve(image);
+                };
+                image.onerror = reject;
+                image.src = uri;
+            });
+        }
+
+        function getAndEncode(url) {
+            var TIMEOUT = 30000;
+            if(domtoimage.impl.options.cacheBust) {
+                // Cache bypass so we dont have CORS issues with cached images
+                // Source: https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Bypassing_the_cache
+                url += ((/\?/).test(url) ? "&" : "?") + (new Date()).getTime();
+            }
+
+            return new Promise(function (resolve) {
+                var request = new XMLHttpRequest();
+
+                request.onreadystatechange = done;
+                request.ontimeout = timeout;
+                request.responseType = 'blob';
+                request.timeout = TIMEOUT;
+                request.open('GET', url, true);
+                request.send();
+
+                var placeholder;
+                if(domtoimage.impl.options.imagePlaceholder) {
+                    var split = domtoimage.impl.options.imagePlaceholder.split(/,/);
+                    if(split && split[1]) {
+                        placeholder = split[1];
+                    }
+                }
+
+                function done() {
+                    if (request.readyState !== 4) return;
+
+                    if (request.status !== 200) {
+                        if(placeholder) {
+                            resolve(placeholder);
+                        } else {
+                            fail('cannot fetch resource: ' + url + ', status: ' + request.status);
+                        }
+
+                        return;
+                    }
+
+                    var encoder = new FileReader();
+                    encoder.onloadend = function () {
+                        var content = encoder.result.split(/,/)[1];
+                        resolve(content);
+                    };
+                    encoder.readAsDataURL(request.response);
+                }
+
+                function timeout() {
+                    if(placeholder) {
+                        resolve(placeholder);
+                    } else {
+                        fail('timeout of ' + TIMEOUT + 'ms occured while fetching resource: ' + url);
+                    }
+                }
+
+                function fail(message) {
+                    console.error(message);
+                    resolve('');
+                }
+            });
+        }
+
+        function dataAsUrl(content, type) {
+            return 'data:' + type + ';base64,' + content;
+        }
+
+        function escape(string) {
+            return string.replace(/([.*+?^${}()|\[\]\/\\])/g, '\\$1');
+        }
+
+        function delay(ms) {
+            return function (arg) {
+                return new Promise(function (resolve) {
+                    setTimeout(function () {
+                        resolve(arg);
+                    }, ms);
+                });
+            };
+        }
+
+        function asArray(arrayLike) {
+            var array = [];
+            var length = arrayLike.length;
+            for (var i = 0; i < length; i++) array.push(arrayLike[i]);
+            return array;
+        }
+
+        function escapeXhtml(string) {
+            return string.replace(/#/g, '%23').replace(/\n/g, '%0A');
+        }
+
+        function width(node) {
+            var leftBorder = px(node, 'border-left-width');
+            var rightBorder = px(node, 'border-right-width');
+            return node.scrollWidth + leftBorder + rightBorder;
+        }
+
+        function height(node) {
+            var topBorder = px(node, 'border-top-width');
+            var bottomBorder = px(node, 'border-bottom-width');
+            return node.scrollHeight + topBorder + bottomBorder;
+        }
+
+        function px(node, styleProperty) {
+            var value = window.getComputedStyle(node).getPropertyValue(styleProperty);
+            return parseFloat(value.replace('px', ''));
+        }
+    }
+
+    function newInliner() {
+        var URL_REGEX = /url\(['"]?([^'"]+?)['"]?\)/g;
+
+        return {
+            inlineAll: inlineAll,
+            shouldProcess: shouldProcess,
+            impl: {
+                readUrls: readUrls,
+                inline: inline
+            }
+        };
+
+        function shouldProcess(string) {
+            return string.search(URL_REGEX) !== -1;
+        }
+
+        function readUrls(string) {
+            var result = [];
+            var match;
+            while ((match = URL_REGEX.exec(string)) !== null) {
+                result.push(match[1]);
+            }
+            return result.filter(function (url) {
+                return !util.isDataUrl(url);
+            });
+        }
+
+        function inline(string, url, baseUrl, get) {
+            return Promise.resolve(url)
+                .then(function (url) {
+                    return baseUrl ? util.resolveUrl(url, baseUrl) : url;
+                })
+                .then(get || util.getAndEncode)
+                .then(function (data) {
+                    return util.dataAsUrl(data, util.mimeType(url));
+                })
+                .then(function (dataUrl) {
+                    return string.replace(urlAsRegex(url), '$1' + dataUrl + '$3');
+                });
+
+            function urlAsRegex(url) {
+                return new RegExp('(url\\([\'"]?)(' + util.escape(url) + ')([\'"]?\\))', 'g');
+            }
+        }
+
+        function inlineAll(string, baseUrl, get) {
+            if (nothingToInline() || util.isSrcAsDataUrl(string)) return Promise.resolve(string);
+
+            return Promise.resolve(string)
+                .then(readUrls)
+                .then(function (urls) {
+                    var done = Promise.resolve(string);
+                    urls.forEach(function (url) {
+                        done = done.then(function (string) {
+                            return inline(string, url, baseUrl, get);
+                        });
+                    });
+                    return done;
+                });
+
+            function nothingToInline() {
+                return !shouldProcess(string);
+            }
+        }
+    }
+
+    function newFontFaces() {
+        return {
+            resolveAll: resolveAll,
+            impl: {
+                readAll: readAll
+            }
+        };
+
+        function resolveAll() {
+            return readAll(document)
+                .then(function (webFonts) {
+                    return Promise.all(
+                        webFonts.map(function (webFont) {
+                            return webFont.resolve();
+                        })
+                    );
+                })
+                .then(function (cssStrings) {
+                    return cssStrings.join('\n');
+                });
+        }
+
+        function readAll() {
+            return Promise.resolve(util.asArray(document.styleSheets))
+				.then(loadExternalStyleSheets)
+                .then(getCssRules)
+                .then(selectWebFontRules)
+                .then(function (rules) {
+                    return rules.map(newWebFont);
+                });
+
+            function selectWebFontRules(cssRules) {
+                return cssRules
+                    .filter(function (rule) {
+                        return rule.type === CSSRule.FONT_FACE_RULE;
+                    })
+                    .filter(function (rule) {
+                        return inliner.shouldProcess(rule.style.getPropertyValue('src'));
+                    });
+            }
+
+			function loadExternalStyleSheets(styleSheets) {
+				return Promise.all(
+					styleSheets.map(function (sheet) {
+						if (sheet.href) {
+							return fetch(sheet.href)
+								.then(toText)
+								.then(setBaseHref(sheet.href))
+								.then(toStyleSheet);
+						} else {
+							return Promise.resolve(sheet);
+						}
+					})
+				);
+
+				function toText(response) {
+					return response.text();
+				}
+
+				function setBaseHref(base) {
+					base = base.split('/');
+					base.pop();
+					base = base.join('/');
+
+					return function(text) {
+						return util.isSrcAsDataUrl(text) ? text : text.replace(
+							/url\(['"]?([^'"]+?)['"]?\)/g,
+							addBaseHrefToUrl
+						);
+					};
+
+					function addBaseHrefToUrl(match, p1) {
+						var url = /^http/i.test(p1) ?
+							p1 : concatAndResolveUrl(base, p1)
+						return 'url(\'' + url + '\')';
+					}
+
+					// Source: http://stackoverflow.com/a/2676231/3786856
+					function concatAndResolveUrl(url, concat) {
+						var url1 = url.split('/');
+						var url2 = concat.split('/');
+						var url3 = [ ];
+						for (var i = 0, l = url1.length; i < l; i ++) {
+							if (url1[i] == '..') {
+								url3.pop();
+							} else if (url1[i] == '.') {
+								continue;
+							} else {
+								url3.push(url1[i]);
+							}
+						}
+						for (var i = 0, l = url2.length; i < l; i ++) {
+							if (url2[i] == '..') {
+								url3.pop();
+							} else if (url2[i] == '.') {
+								continue;
+							} else {
+								url3.push(url2[i]);
+							}
+						}
+						return url3.join('/');
+					}
+				}
+
+				function toStyleSheet(text) {
+					var doc = document.implementation.createHTMLDocument('');
+					var styleElement = document.createElement('style');
+
+					styleElement.textContent = text;
+					doc.body.appendChild(styleElement);
+
+					return styleElement.sheet;
+				}
+			}
+
+            function getCssRules(styleSheets) {
+                var cssRules = [];
+                styleSheets.forEach(function (sheet) {
+					if (sheet.cssRules && typeof sheet.cssRules === 'object') {
+						try {
+							util.asArray(sheet.cssRules || []).forEach(cssRules.push.bind(cssRules));
+						} catch (e) {
+							console.log('Error while reading CSS rules from ' + sheet.href, e.toString());
+						}
+					}
+                });
+                return cssRules;
+            }
+
+            function newWebFont(webFontRule) {
+                return {
+                    resolve: function resolve() {
+                        var baseUrl = (webFontRule.parentStyleSheet || {}).href;
+                        return inliner.inlineAll(webFontRule.cssText, baseUrl);
+                    },
+                    src: function () {
+                        return webFontRule.style.getPropertyValue('src');
+                    }
+                };
+            }
+        }
+    }
+
+    function newImages() {
+        return {
+            inlineAll: inlineAll,
+            impl: {
+                newImage: newImage
+            }
+        };
+
+        function newImage(element) {
+            return {
+                inline: inline
+            };
+
+            function inline(get) {
+                if (util.isDataUrl(element.src)) return Promise.resolve();
+
+                return Promise.resolve(element.src)
+                    .then(get || util.getAndEncode)
+                    .then(function (data) {
+                        return util.dataAsUrl(data, util.mimeType(element.src));
+                    })
+                    .then(function (dataUrl) {
+                        return new Promise(function (resolve, reject) {
+                            element.onload = resolve;
+                            element.onerror = reject;
+                            element.src = dataUrl;
+                        });
+                    });
+            }
+        }
+
+        function inlineAll(node) {
+            if (!(node instanceof Element)) return Promise.resolve(node);
+
+            return inlineBackground(node)
+                .then(function () {
+                    if (node instanceof HTMLImageElement)
+                        return newImage(node).inline();
+                    else
+                        return Promise.all(
+                            util.asArray(node.childNodes).map(function (child) {
+                                return inlineAll(child);
+                            })
+                        );
+                });
+
+            function inlineBackground(node) {
+                var background = node.style.getPropertyValue('background');
+
+                if (!background) return Promise.resolve(node);
+
+                return inliner.inlineAll(background)
+                    .then(function (inlined) {
+                        node.style.setProperty(
+                            'background',
+                            inlined,
+                            node.style.getPropertyPriority('background')
+                        );
+                    })
+                    .then(function () {
+                        return node;
+                    });
+            }
+        }
+    }
+})(this);
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_RESULT__;/* FileSaver.js
+ * A saveAs() FileSaver implementation.
+ * 1.3.2
+ * 2016-06-16 18:25:19
+ *
+ * By Eli Grey, http://eligrey.com
+ * License: MIT
+ *   See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
+ */
+
+/*global self */
+/*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
+
+/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+
+var saveAs = saveAs || (function(view) {
+	"use strict";
+	// IE <10 is explicitly unsupported
+	if (typeof view === "undefined" || typeof navigator !== "undefined" && /MSIE [1-9]\./.test(navigator.userAgent)) {
+		return;
+	}
+	var
+		  doc = view.document
+		  // only get URL when necessary in case Blob.js hasn't overridden it yet
+		, get_URL = function() {
+			return view.URL || view.webkitURL || view;
+		}
+		, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
+		, can_use_save_link = "download" in save_link
+		, click = function(node) {
+			var event = new MouseEvent("click");
+			node.dispatchEvent(event);
+		}
+		, is_safari = /constructor/i.test(view.HTMLElement) || view.safari
+		, is_chrome_ios =/CriOS\/[\d]+/.test(navigator.userAgent)
+		, throw_outside = function(ex) {
+			(view.setImmediate || view.setTimeout)(function() {
+				throw ex;
+			}, 0);
+		}
+		, force_saveable_type = "application/octet-stream"
+		// the Blob API is fundamentally broken as there is no "downloadfinished" event to subscribe to
+		, arbitrary_revoke_timeout = 1000 * 40 // in ms
+		, revoke = function(file) {
+			var revoker = function() {
+				if (typeof file === "string") { // file is an object URL
+					get_URL().revokeObjectURL(file);
+				} else { // file is a File
+					file.remove();
+				}
+			};
+			setTimeout(revoker, arbitrary_revoke_timeout);
+		}
+		, dispatch = function(filesaver, event_types, event) {
+			event_types = [].concat(event_types);
+			var i = event_types.length;
+			while (i--) {
+				var listener = filesaver["on" + event_types[i]];
+				if (typeof listener === "function") {
+					try {
+						listener.call(filesaver, event || filesaver);
+					} catch (ex) {
+						throw_outside(ex);
+					}
+				}
+			}
+		}
+		, auto_bom = function(blob) {
+			// prepend BOM for UTF-8 XML and text/* types (including HTML)
+			// note: your browser will automatically convert UTF-16 U+FEFF to EF BB BF
+			if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
+				return new Blob([String.fromCharCode(0xFEFF), blob], {type: blob.type});
+			}
+			return blob;
+		}
+		, FileSaver = function(blob, name, no_auto_bom) {
+			if (!no_auto_bom) {
+				blob = auto_bom(blob);
+			}
+			// First try a.download, then web filesystem, then object URLs
+			var
+				  filesaver = this
+				, type = blob.type
+				, force = type === force_saveable_type
+				, object_url
+				, dispatch_all = function() {
+					dispatch(filesaver, "writestart progress write writeend".split(" "));
+				}
+				// on any filesys errors revert to saving with object URLs
+				, fs_error = function() {
+					if ((is_chrome_ios || (force && is_safari)) && view.FileReader) {
+						// Safari doesn't allow downloading of blob urls
+						var reader = new FileReader();
+						reader.onloadend = function() {
+							var url = is_chrome_ios ? reader.result : reader.result.replace(/^data:[^;]*;/, 'data:attachment/file;');
+							var popup = view.open(url, '_blank');
+							if(!popup) view.location.href = url;
+							url=undefined; // release reference before dispatching
+							filesaver.readyState = filesaver.DONE;
+							dispatch_all();
+						};
+						reader.readAsDataURL(blob);
+						filesaver.readyState = filesaver.INIT;
+						return;
+					}
+					// don't create more object URLs than needed
+					if (!object_url) {
+						object_url = get_URL().createObjectURL(blob);
+					}
+					if (force) {
+						view.location.href = object_url;
+					} else {
+						var opened = view.open(object_url, "_blank");
+						if (!opened) {
+							// Apple does not allow window.open, see https://developer.apple.com/library/safari/documentation/Tools/Conceptual/SafariExtensionGuide/WorkingwithWindowsandTabs/WorkingwithWindowsandTabs.html
+							view.location.href = object_url;
+						}
+					}
+					filesaver.readyState = filesaver.DONE;
+					dispatch_all();
+					revoke(object_url);
+				}
+			;
+			filesaver.readyState = filesaver.INIT;
+
+			if (can_use_save_link) {
+				object_url = get_URL().createObjectURL(blob);
+				setTimeout(function() {
+					save_link.href = object_url;
+					save_link.download = name;
+					click(save_link);
+					dispatch_all();
+					revoke(object_url);
+					filesaver.readyState = filesaver.DONE;
+				});
+				return;
+			}
+
+			fs_error();
+		}
+		, FS_proto = FileSaver.prototype
+		, saveAs = function(blob, name, no_auto_bom) {
+			return new FileSaver(blob, name || blob.name || "download", no_auto_bom);
+		}
+	;
+	// IE 10+ (native saveAs)
+	if (typeof navigator !== "undefined" && navigator.msSaveOrOpenBlob) {
+		return function(blob, name, no_auto_bom) {
+			name = name || blob.name || "download";
+
+			if (!no_auto_bom) {
+				blob = auto_bom(blob);
+			}
+			return navigator.msSaveOrOpenBlob(blob, name);
+		};
+	}
+
+	FS_proto.abort = function(){};
+	FS_proto.readyState = FS_proto.INIT = 0;
+	FS_proto.WRITING = 1;
+	FS_proto.DONE = 2;
+
+	FS_proto.error =
+	FS_proto.onwritestart =
+	FS_proto.onprogress =
+	FS_proto.onwrite =
+	FS_proto.onabort =
+	FS_proto.onerror =
+	FS_proto.onwriteend =
+		null;
+
+	return saveAs;
+}(
+	   typeof self !== "undefined" && self
+	|| typeof window !== "undefined" && window
+	|| this.content
+));
+// `self` is undefined in Firefox for Android content script context
+// while `this` is nsIContentFrameMessageManager
+// with an attribute `content` that corresponds to the window
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports.saveAs = saveAs;
+} else if (("function" !== "undefined" && __webpack_require__(15) !== null) && (__webpack_require__(16) !== null)) {
+  !(__WEBPACK_AMD_DEFINE_RESULT__ = (function() {
+    return saveAs;
+  }).call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+}
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports) {
+
+module.exports = function() {
+	throw new Error("define cannot be used indirect");
+};
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
+module.exports = __webpack_amd_options__;
+
+/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ })
 /******/ ]);

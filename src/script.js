@@ -832,7 +832,9 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 	function computeHtml() {
 		var d = deferred();
 		var code =
-			'<main id="demo">\n' + '    <seq-diagram></seq-diagram>\n' + '  </main>';
+			'<main id="demo">\n' + '<button onclick="downloadPng()">\n' +
+			'  PNG\n' +
+			'</button>' + ' <div id="diagram">   <seq-diagram></seq-diagram>\n </div>' + '  </main>';
 		// var code = scope.cm.html.getValue();
 		if (htmlMode === HtmlModes.HTML) {
 			d.resolve(code);

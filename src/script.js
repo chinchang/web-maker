@@ -230,7 +230,7 @@ loginModal, profileModal, profileAvatarImg, profileUserName, openItemsBtn, askTo
 		) {
 			codeWrapEl.classList.remove('is-minimized');
 			codeWrapEl.classList.remove('is-maximized');
-			codeSplitInstance.setSizes([33.3, 33.3, 33.3]);
+			codeSplitInstance.setSizes([0, 30, 70]);
 		} else {
 			const id = parseInt(codeWrapEl.dataset.codeWrapId, 10);
 			var arr = [

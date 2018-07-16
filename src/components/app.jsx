@@ -572,7 +572,7 @@ export default class App extends Component {
 				jsCodeEl.style[dimensionProperty]
 			];
 		} catch (e) {
-			sizes = [33.33, 33.33, 33.33];
+			sizes = [0, 30, 70];
 		} finally {
 			/* eslint-disable no-unsafe-finally */
 			return sizes;
@@ -934,9 +934,9 @@ export default class App extends Component {
 	}
 	openSupportDeveloperModal() {
 		this.closeAllOverlays();
-		this.setState({
-			isSupportDeveloperModalOpen: true
-		});
+		// this.setState({
+		// 	isSupportDeveloperModalOpen: true
+		// });
 	}
 	supportDeveloperBtnClickHandler(e) {
 		this.openSupportDeveloperModal(e);

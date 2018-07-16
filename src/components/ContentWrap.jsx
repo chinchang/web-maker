@@ -368,7 +368,7 @@ export default class ContentWrap extends Component {
 		) {
 			codeWrapEl.classList.remove('is-minimized');
 			codeWrapEl.classList.remove('is-maximized');
-			this.codeSplitInstance.setSizes([33.3, 33.3, 33.3]);
+			this.codeSplitInstance.setSizes([0, 30, 70]);
 		} else {
 			const id = parseInt(codeWrapEl.dataset.codeWrapId, 10);
 			var arr = [
@@ -433,7 +433,7 @@ export default class ContentWrap extends Component {
 		if (this.props.currentItem && this.props.currentItem.sizes) {
 			return this.props.currentItem.sizes;
 		}
-		return [33.33, 33.33, 33.33];
+		return [0, 30, 70];
 	}
 
 	mainSplitDragEndHandler() {

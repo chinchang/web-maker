@@ -54,6 +54,7 @@ export default class Footer extends Component {
 					<button
 						id="screenshotBtn"
 						class="mode-btn  hint--rounded  hint--top-left show-when-extension"
+						style="display: none"
 						onClick={this.props.screenshotBtnClickHandler}
 						aria-label="Take screenshot of preview"
 					>

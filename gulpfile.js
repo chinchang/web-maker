@@ -8,7 +8,7 @@ const cleanCSS = require('gulp-clean-css');
 const rename = require('gulp-rename');
 const concat = require('gulp-concat');
 const babelMinify = require('babel-minify');
-const child_process = require('child_process');
+const childProcess = require('child_process');
 const merge = require('merge-stream');
 const zip = require('gulp-zip');
 var packageJson = JSON.parse(fs.readFileSync('./package.json'));
@@ -22,9 +22,9 @@ function minifyJs(fileName) {
 	);
 }
 gulp.task('runWebpack', function() {
-	return child_process.execSync('yarn run build');
+	return childProcess.execSync('yarn run build');
 });
-gulp.task('copyFiles',  function() {
+gulp.task('copyFiles', function() {
 	return merge(
 	gulp
 		.src('src/lib/codemirror/theme/*')
@@ -149,13 +149,13 @@ gulp.task('generate-service-worker', function(callback) {
 });
 
 gulp.task('packageExtension', function() {
-	child_process.execSync('cp -R app/ extension/');
-	child_process.execSync('cp src/manifest.json extension');
-	child_process.execSync('cp src/options.js extension');
-	child_process.execSync('cp src/options.html extension');
-	child_process.execSync('cp src/eventPage.js extension');
-	child_process.execSync('cp src/icon-16.png extension');
-	child_process.execSync(
+	childProcess.execSync('cp -R app/ extension/');
+	childProcess.execSync('cp src/manifest.json extension');
+	childProcess.execSync('cp src/options.js extension');
+	childProcess.execSync('cp src/options.html extension');
+	childProcess.execSync('cp src/eventPage.js extension');
+	childProcess.execSync('cp src/icon-16.png extension');
+	childProcess.execSync(
 		'rm -rf extension/service-worker.js extension/partials'
 	);
 	return merge(
@@ -176,7 +176,7 @@ gulp.task('packageExtension', function() {
 });
 
 gulp.task('cleanup', function() {
-	return child_process.execSync('rm -rf build');
+	return childProcess.execSync('rm -rf build');
 });
 
 gulp.task('release', function(callback) {

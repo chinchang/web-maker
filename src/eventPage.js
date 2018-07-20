@@ -41,7 +41,7 @@ chrome.runtime.onInstalled.addListener(function callback(details) {
 	}
 	if (details.reason === 'update') {
 		if ((details.previousVersion + '').indexOf('0.') === 0) {
-			openApp();
+			// openApp();
 		}
 	}
 });

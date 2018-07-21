@@ -741,20 +741,9 @@ export default class ContentWrap extends Component {
 								/>
 							</div>
 						</div>
-						<UserCodeMirror
-							options={{
-								mode: 'htmlmixed',
-								profile: 'xhtml',
-								gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-								noAutocomplete: true,
-								matchTags: { bothTags: true },
-								emmet: true
-							}}
-							prefs={this.props.prefs}
-							onChange={this.onHtmlCodeChange.bind(this)}
-							onCreation={el => (this.cm.html = el)}
-							onFocus={this.editorFocusHandler.bind(this)}
-						/>
+						<div>
+							Welcome to ZenUML.
+						</div>
 					</div>
 					<div
 						data-code-wrap-id="1"

@@ -190,12 +190,10 @@ export default class ContentWrap extends Component {
 		if (!this.props.prefs.preserveConsoleLogs) {
 			this.clearConsole();
 		}
-		this.cleanupErrors('html');
 		this.cleanupErrors('css');
 		this.cleanupErrors('js');
 
 		var currentCode = {
-			html: this.cmCodes.html,
 			css: this.cmCodes.css,
 			js: this.cmCodes.js
 		};
@@ -209,7 +207,6 @@ export default class ContentWrap extends Component {
 		// change the styles inside the iframe.
 		if (
 			!isForced &&
-			currentCode.html === this.codeInPreview.html &&
 			currentCode.js === this.codeInPreview.js
 		) {
 			computeCss(
@@ -269,13 +266,10 @@ export default class ContentWrap extends Component {
 		return !!item.title;
 	}
 	refreshEditor() {
-		this.cmCodes.html = this.props.currentItem.html;
 		this.cmCodes.css = this.props.currentItem.css;
 		this.cmCodes.js = this.props.currentItem.js;
-		this.cm.html.setValue(this.cmCodes.html || '');
 		this.cm.css.setValue(this.cmCodes.css || '');
 		this.cm.js.setValue(this.cmCodes.js || '');
-		this.cm.html.refresh();
 		this.cm.css.refresh();
 		this.cm.js.refresh();
 
@@ -293,9 +287,7 @@ export default class ContentWrap extends Component {
 		if (!this.cm) {
 			return;
 		}
-		htmlCodeEl.querySelector(
-			'.CodeMirror'
-		).style.fontSize = cssCodeEl.querySelector(
+		cssCodeEl.querySelector(
 			'.CodeMirror'
 		).style.fontSize = jsCodeEl.querySelector(
 			'.CodeMirror'
@@ -320,7 +312,7 @@ export default class ContentWrap extends Component {
 		// ]('hide');
 		this.consoleCm.setOption('theme', prefs.editorTheme);
 
-		['html', 'js', 'css'].forEach(type => {
+		['js', 'css'].forEach(type => {
 			this.cm[type].setOption('indentWithTabs', prefs.indentWith !== 'spaces');
 			this.cm[type].setOption(
 				'blastCode',
@@ -502,7 +494,6 @@ export default class ContentWrap extends Component {
 	updateHtmlMode(value) {
 		this.props.onCodeModeChange('html', value);
 		this.props.currentItem.htmlMode = value;
-		this.cm.html.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(
 			this.cm.html,
 			modes[value].cmPath || modes[value].cmMode

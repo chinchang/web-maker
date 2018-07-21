@@ -334,6 +334,10 @@ function downloadPng() {
 window.downloadPng = downloadPng
 console.log('Using vue-sequence', __WEBPACK_IMPORTED_MODULE_2_vue_sequence__["Version"])
 
+document.addEventListener('DOMContentLoaded', function () {
+	document.getElementById('btnDownloadPng').addEventListener('click', downloadPng);
+});
+
 
 /***/ }),
 /* 3 */

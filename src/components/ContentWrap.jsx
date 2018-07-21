@@ -714,24 +714,10 @@ export default class ContentWrap extends Component {
 					>
 						<div
 							class="js-code-wrap__header  code-wrap__header"
-							title="Double click to toggle code pane"
 							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
 						>
 							<label class="btn-group" dropdow title="Click to change">
-								<span class="code-wrap__header-label">
-									{modes[this.props.currentItem.htmlMode || 'html'].label}
-								</span>
-								<span class="caret" />
-								<select
-									data-type="html"
-									class="js-mode-select  hidden-select"
-									onChange={this.codeModeChangeHandler.bind(this)}
-									value={this.props.currentItem.htmlMode}
-								>
-									<option value="html">HTML</option>
-									<option value="markdown">Markdown</option>
-									<option value="jade">Pug</option>
-								</select>
+								About
 							</label>
 							<div class="code-wrap__header-right-options">
 								<a

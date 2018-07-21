@@ -269,7 +269,7 @@ export default class App extends Component {
 				d.getMinutes(),
 			html: '',
 			css: '',
-			js: '',
+			js: '// This is a sample\nA.method() {\n  if(condition) {\n    B.method()\n  }\n}',
 			externalLibs: { js: '', css: '' },
 			layoutMode: this.state.currentLayoutMode
 		}).then(() => this.refreshEditor());

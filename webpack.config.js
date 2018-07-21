@@ -1,9 +1,9 @@
 const path = require('path')
 
 module.exports = {
-  entry: path.join(__dirname, 'main.js'),
+	entry: path.join(__dirname, 'main.js'),
 	output: {
-  	path: path.join(__dirname, 'src/lib'),
+		path: path.join(__dirname, 'src/lib'),
 		filename: 'bundle.js'
 	},
 	resolve: {
@@ -15,7 +15,7 @@ module.exports = {
 		rules: [
 			{
 				test: /\.css$/,
-				use: [ 'style-loader', 'css-loader' ]
+				use: ['style-loader', 'css-loader']
 			}
 		]
 	}

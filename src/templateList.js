@@ -10,15 +10,8 @@ export default [
 		img: 'react-logo.svg'
 	},
 	{
-		id: 'html5-canvas',
-		title: 'HTML5 Canvas',
-		lastUpdatedTime: Date.now(),
-		img: 'html5-logo.svg'
-	},
-	{
-		id: 'html5-canvas-game',
-		title: 'HTML5 Canvas Game',
-		lastUpdatedTime: Date.now(),
+		id: 'kontra-game-engine',
+		title: 'Kontra HTML5 Game Engine',
 		img: 'html5-logo.svg'
 	}
 ];

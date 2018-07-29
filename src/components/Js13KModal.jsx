@@ -13,10 +13,10 @@ export function Js13KModal({ show, closeHandler }) {
 						style="margin:0 0.5rem;"
 					/>
 					<h2>Web Maker</h2>
-					<span style="font-size:3rem;margin:0 1rem;">➕</span>
+					<span style="font-size:3rem;margin:0 1rem;">+</span>
 					<h2>JS13K Games</h2>
 					<img
-						src="http://js13kgames.com/img/logo.png"
+						src="js13kgames-square-logo.png"
 						alt="JS13K Games logo"
 						height="100"
 						style="margin:0 0.5rem;"
@@ -33,9 +33,10 @@ export function Js13KModal({ show, closeHandler }) {
 				</p>
 
 				<p>
-					Web Maker is an frontend playground that works offline! You can play
-					around quickly with HTML, JavaScript & CSS to build your awesome game
-					right here.
+					You have activated Web Maker's Js13kGames mode! This gives you some
+					extra support to build your awesome game right here. Constantly see
+					your game's zipped size in the footer. When you are done, download the
+					zip.
 				</p>
 
 				<ul>

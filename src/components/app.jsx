@@ -1117,8 +1117,8 @@ export default class App extends Component {
 		this.setState({
 			isJs13KModalOpen: true
 		});
-		document.body.appendChild(window.anchor);
-		window.anchor.click();
+		// document.body.appendChild(window.anchor);
+		// window.anchor.click();
 	}
 	blankTemplateSelectHandler() {
 		this.createNewItem();

@@ -445,6 +445,17 @@ export function handleDownloadsPermission() {
 	return d.promise;
 }
 
+/**
+ * Return the filename from a passed url.
+ * http://a.com/path/file.png  -> file.png
+ */
+export function getFilenameFromUrl(url) {
+	if (!url) {
+		return '';
+	}
+	return url.match(/\/([^/]*)$/)[1];
+}
+
 if (window.IS_EXTENSION) {
 	document.body.classList.add('is-extension');
 } else {

@@ -18,7 +18,8 @@ import {
 	saveAsHtml,
 	handleDownloadsPermission,
 	downloadFile,
-	getCompleteHtml
+	getCompleteHtml,
+	getFilenameFromUrl
 } from '../utils';
 import { itemService } from '../itemService';
 import '../db';
@@ -1054,7 +1055,7 @@ export default class App extends Component {
 				.then(data => {
 					return {
 						code: data,
-						url: 'dsfds'
+						fileName: getFilenameFromUrl(lib)
 					};
 				})
 		);
@@ -1080,17 +1081,17 @@ export default class App extends Component {
 			zip.file('index.html', fileContent);
 			for (let i = 3; i < result.length; i++) {
 				const externalLib = result[i];
-				zip.file(externalLib.name, externalLib.code);
+				zip.file(externalLib.fileName, externalLib.code);
 			}
 
-			console.log('ORIGINAL', this.calculateTextSize(fileContent));
+			// console.log('ORIGINAL', this.calculateTextSize(fileContent));
 
 			var promise = null;
 			if (0 && JSZip.support.uint8array) {
 				promise = zip.generateAsync({ type: 'uint8array' });
 			} else {
 				promise = zip.generateAsync({
-					type: 'string',
+					type: 'base64',
 					compression: 'DEFLATE',
 					compressionOptions: {
 						level: 9
@@ -1100,10 +1101,14 @@ export default class App extends Component {
 
 			promise.then(data => {
 				const zipContent = data;
-				const size = this.calculateTextSize(data);
+				const size = this.calculateTextSize(atob(data));
 				this.setState({
 					codeSize: size
 				});
+				const a = document.createElement('a');
+				a.setAttribute('download', this.state.currentItem.name);
+				a.href = 'data:application/zip;base64,' + data;
+				window.anchor = a;
 			});
 		});
 	}
@@ -1112,6 +1117,8 @@ export default class App extends Component {
 		this.setState({
 			isJs13KModalOpen: true
 		});
+		document.body.appendChild(window.anchor);
+		window.anchor.click();
 	}
 	blankTemplateSelectHandler() {
 		this.createNewItem();

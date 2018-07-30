@@ -36,7 +36,14 @@ export function Js13KModal({ show, closeHandler }) {
 					You have activated Web Maker's Js13kGames mode! This gives you some
 					extra support to build your awesome game right here. Constantly see
 					your game's zipped size in the footer. When you are done, download the
-					zip.
+					zip.{' '}
+					<a
+						href="https://medium.com/web-maker/js13kgames-jam-with-web-maker-a3389cf2cbb"
+						target="_blank"
+						rel="noopener"
+					>
+						Read more about this collaboration
+					</a>.
 				</p>
 
 				<ul>
@@ -53,7 +60,7 @@ export function Js13KModal({ show, closeHandler }) {
 						<a
 							href="http://js13kgames.github.io/resources/"
 							target="_blank"
-							rel="noopener noreferrer"
+							rel="noopener"
 						>
 							Resources and useful tools
 						</a>
@@ -62,7 +69,7 @@ export function Js13KModal({ show, closeHandler }) {
 						<a
 							href="http://2018.js13kgames.com/#rules"
 							target="_blank"
-							rel="noopener noreferrer"
+							rel="noopener"
 						>
 							Compo rules
 						</a>

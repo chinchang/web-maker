@@ -41,7 +41,11 @@ export function SupportDeveloperModal({ show, closeHandler }) {
 						rel="noopener noreferrer"
 						aria-label="Make a monthly pledge on Patreon"
 					>
-						<img src="patreon.png" height="60" alt="Become a patron image" />
+						<img
+							src="assets/patreon.png"
+							height="60"
+							alt="Become a patron image"
+						/>
 						<h3 class="onboard-selection-text">
 							Make a monthly pledge on Patreon
 						</h3>

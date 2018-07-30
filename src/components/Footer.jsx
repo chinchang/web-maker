@@ -27,7 +27,7 @@ class JS13K extends Component {
 				onClick={this.props.onClick}
 				onBlur={this.props.onBlur}
 			>
-				<img src="js13kgames.png" alt="JS13K Games logo" height="24" />{' '}
+				<img src="assets/js13kgames.png" alt="JS13K Games logo" height="24" />{' '}
 				<div class="footer__js13k-days-left">
 					{this.state.daysLeft} days to go
 				</div>

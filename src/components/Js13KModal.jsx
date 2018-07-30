@@ -16,7 +16,7 @@ export function Js13KModal({ show, closeHandler }) {
 					<span style="font-size:3rem;margin:0 1rem;">+</span>
 					<h2>JS13K Games</h2>
 					<img
-						src="js13kgames-square-logo.png"
+						src="assets/js13kgames-square-logo.png"
 						alt="JS13K Games logo"
 						height="100"
 						style="margin:0 0.5rem;"

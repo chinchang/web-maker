@@ -243,8 +243,9 @@ a > svg {
 
 .btn--primary {
 	background: var(--color-button)
-		linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0px, transparent);
-	color: white;
+		linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0px, transparent);
+	color: black;
+	font-weight: 600;
 }
 
 .btn--big {
@@ -1293,9 +1294,9 @@ body > #demo-frame {
 }
 
 .onboard-step__icon {
-	fill: #fff2ed;
+	fill: rgba(255, 255, 255, 0.3);
 	stroke-width: 0.5px;
-	stroke: #e79f80;
+	stroke: rgba(0, 0, 0, 0.4);
 	width: 80px;
 	height: 80px;
 }

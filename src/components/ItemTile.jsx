@@ -5,8 +5,8 @@ import Modal from './Modal';
 export function ItemTile({
 	item,
 	onClick,
-	itemForkBtnClick,
-	itemRemoveBtnClick,
+	onForkBtnClick,
+	onRemoveBtnClick,
 	focusable
 }) {
 	return (
@@ -18,20 +18,20 @@ export function ItemTile({
 			onClick={onClick}
 		>
 			<div class="saved-item-tile__btns">
-				{itemForkBtnClick ? (
+				{onForkBtnClick ? (
 					<a
 						class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium"
 						aria-label="Creates a duplicate of this creation (Ctrl/⌘ + F)"
-						onClick={itemForkBtnClick}
+						onClick={onForkBtnClick}
 					>
 						Fork<span class="show-when-selected">(Ctrl/⌘ + F)</span>
 					</a>
 				) : null}
-				{itemRemoveBtnClick ? (
+				{onRemoveBtnClick ? (
 					<a
 						class="js-saved-item-tile__remove-btn  saved-item-tile__btn hint--left"
 						aria-label="Remove"
-						onClick={itemRemoveBtnClick}
+						onClick={onRemoveBtnClick}
 					>
 						X
 					</a>

@@ -126,6 +126,9 @@ export function Notifications(props) {
 					Migrate remaining interface elements to dark theme. Now complete app
 					is in dark theme.
 				</NotificationItem>
+				<NotificationItem type="bug">
+					Fix "Save as HTML" and "Take Screenshot" features in Chrome extension.
+				</NotificationItem>
 			</Notification>
 
 			<Notification version="3.3.2" {...props}>

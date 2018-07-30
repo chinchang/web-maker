@@ -39,6 +39,10 @@ textarea {
 	box-sizing: border-box;
 }
 
+[role='button'] {
+	cursor: pointer;
+}
+
 a {
 	text-decoration: none;
 	color: #f7ae2d;
@@ -807,7 +811,7 @@ body > #demo-frame {
 	background: var(--color-popup);
 	color: var(--color-text);
 	position: relative;
-	border-radius: 8px;
+	border-radius: 5px;
 	opacity: 0;
 	padding: 3em;
 	font-size: 1.1em;
@@ -1537,6 +1541,19 @@ body:not(.is-app) .show-when-app {
 
 .footer__js13k-code-size {
 	margin-left: 1rem;
+}
+
+.js13k__dropdown {
+	position: fixed;
+	display: inline-block;
+	background: var(--color-popup);
+	color: var(--color-text);
+	bottom: 35px;
+	padding: 16px;
+	border-radius: 4px;
+	box-shadow: 0 -7px 13px 2px rgba(0, 0, 0, 0.2);
+	left: 50%;
+	margin-left: -115px;
 }
 
 @media screen and (max-width: 600px) {

@@ -20,7 +20,13 @@ class JS13K extends Component {
 			? (this.props.codeSize / 1024).toFixed(2)
 			: 0;
 		return (
-			<div class="flex flex-v-center">
+			<div
+				role="button"
+				class="flex flex-v-center"
+				tabIndex="0"
+				onClick={this.props.onClick}
+				onBlur={this.props.onBlur}
+			>
 				<img src="js13kgames.png" alt="JS13K Games logo" height="24" />{' '}
 				<div class="footer__js13k-days-left">
 					{this.state.daysLeft} days to go
@@ -33,6 +39,12 @@ class JS13K extends Component {
 				>
 					{codeSizeInKb} KB/ 13KB
 				</div>
+				<span
+					class="caret"
+					style={`transition:0.3s ease; transform-origin: center 2px; ${
+						this.props.isOpen ? 'transform:rotate(180deg);' : ''
+					}`}
+				/>
 			</div>
 		);
 	}
@@ -42,11 +54,19 @@ export default class Footer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isKeyboardShortcutsModalOpen: false
+			isKeyboardShortcutsModalOpen: false,
+			isJs13kDropdownOpen: false
 		};
 	}
 	layoutBtnClickhandler(layoutId) {
 		this.props.layoutBtnClickHandler(layoutId);
+	}
+
+	js13kClickHandler() {
+		// console.log(999);
+		this.setState({
+			isJs13kDropdownOpen: !this.state.isJs13kDropdownOpen
+		});
 	}
 
 	render() {
@@ -123,10 +143,39 @@ export default class Footer extends Component {
 
 				{this.props.prefs.isJs13kModeOn ? (
 					<div class="flex flex-v-center">
-						<JS13K codeSize={this.props.codeSize} />
-						<button class="btn--dark" onClick={this.props.onJs13KBtnClick}>
-							JS13KGames Help
-						</button>
+						<JS13K
+							isOpen={this.state.isJs13kDropdownOpen}
+							codeSize={this.props.codeSize}
+							onClick={this.js13kClickHandler.bind(this)}
+							onBlur={() =>
+								setTimeout(
+									() => this.setState({ isJs13kDropdownOpen: false }),
+									300
+								)
+							}
+						/>
+						{this.state.isJs13kDropdownOpen && (
+							<div className="js13k__dropdown">
+								<button
+									class="btn"
+									style={{
+										width: '200px',
+										display: 'block',
+										marginBottom: '16px'
+									}}
+									onClick={this.props.onJs13KDownloadBtnClick}
+								>
+									Download game as zip
+								</button>
+								<button
+									class="btn"
+									style={{ width: '200px', display: 'block' }}
+									onClick={this.props.onJs13KHelpBtnClick}
+								>
+									Help
+								</button>
+							</div>
+						)}
 					</div>
 				) : null}
 

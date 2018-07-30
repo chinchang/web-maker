@@ -1105,20 +1105,23 @@ export default class App extends Component {
 				this.setState({
 					codeSize: size
 				});
-				const a = document.createElement('a');
-				a.setAttribute('download', this.state.currentItem.name);
-				a.href = 'data:application/zip;base64,' + data;
-				window.anchor = a;
+				this.currentItemZipBase64Data = data;
 			});
 		});
 	}
 
-	js13KBtnClickHandler() {
+	js13KHelpBtnClickHandler() {
 		this.setState({
 			isJs13KModalOpen: true
 		});
-		// document.body.appendChild(window.anchor);
-		// window.anchor.click();
+	}
+	js13KDownloadBtnClickHandler() {
+		const a = document.createElement('a');
+		a.setAttribute('download', this.state.currentItem.title);
+		a.href = 'data:application/zip;base64,' + this.currentItemZipBase64Data;
+		document.body.appendChild(a);
+		a.click();
+		a.remove();
 	}
 	blankTemplateSelectHandler() {
 		this.createNewItem();
@@ -1190,7 +1193,10 @@ export default class App extends Component {
 						screenshotBtnClickHandler={this.screenshotBtnClickHandler.bind(
 							this
 						)}
-						onJs13KBtnClick={this.js13KBtnClickHandler.bind(this)}
+						onJs13KHelpBtnClick={this.js13KHelpBtnClickHandler.bind(this)}
+						onJs13KDownloadBtnClick={this.js13KDownloadBtnClickHandler.bind(
+							this
+						)}
 						hasUnseenChangelog={this.state.hasUnseenChangelog}
 						codeSize={this.state.codeSize}
 					/>

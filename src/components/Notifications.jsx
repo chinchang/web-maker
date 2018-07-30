@@ -7,6 +7,8 @@ function NotificationItem({ type, children }) {
 		strongTag = <strong>🔧 Bugfix</strong>;
 	} else if (type === 'a11y') {
 		strongTag = <strong>♿️ Accessibility</strong>;
+	} else if (type === 'ui') {
+		strongTag = <strong>🖥 Interface</strong>;
 	}
 	return (
 		<li>
@@ -101,7 +103,32 @@ export function Notifications(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="3.3.2" isLatest={true} {...props}>
+			<Notification version="3.4.0" isLatest={true} {...props}>
+				<li>
+					<strong>🎉 Js13kGames Mode</strong>: For all you Js13kGames compo
+					participants out there. Turn it on from Settings.{' '}
+					<a
+						href="https://medium.com/web-maker/js13kgames-jam-with-web-maker-a3389cf2cbb"
+						target="_blank"
+						rel="noopener"
+					>
+						Read more about it here.
+					</a>
+				</li>
+				<li>
+					<strong>🎉 Templates</strong>: Presenting, templates for major
+					libraries and frameworks. Hit the "New" button to explore.
+				</li>
+				<NotificationItem type="a11y">
+					Add missing focus rings around focusable element.
+				</NotificationItem>
+				<NotificationItem type="ui">
+					Migrate remaining interface elements to dark theme. Now complete app
+					is in dark theme.
+				</NotificationItem>
+			</Notification>
+
+			<Notification version="3.3.2" {...props}>
 				<NotificationItem type="a11y">
 					Improper links are now buttons with proper focus indication and
 					screen-reader support. Thanks{' '}

@@ -212,9 +212,13 @@ export function downloadFile(fileName, blob) {
 		a.click();
 		a.remove();
 	}
-	if (false && window.IS_EXTENSION) {
-		chrome.downloads.download(
-			{
+
+	// HACK: because chrome.downloads isn't working on optional permissions
+	// anymore.
+	downloadWithAnchor();
+
+	/* if (false && window.IS_EXTENSION) {
+		chrome.downloads.download({
 				url: window.URL.createObjectURL(blob),
 				filename: fileName,
 				saveAs: true
@@ -228,7 +232,7 @@ export function downloadFile(fileName, blob) {
 		);
 	} else {
 		downloadWithAnchor();
-	}
+	} */
 }
 
 export function writeFile(name, blob, cb) {

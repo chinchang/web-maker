@@ -48,7 +48,7 @@ function saveScreenshot(dataURI) {
 		// anymore.
 		return window.open(filePath);
 
-		chrome.downloads.download(
+		/* chrome.downloads.download(
 			{
 				url: filePath
 			},
@@ -59,7 +59,7 @@ function saveScreenshot(dataURI) {
 					window.open(filePath);
 				}
 			}
-		);
+		); */
 	}
 
 	function errorHandler(e) {

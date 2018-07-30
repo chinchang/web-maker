@@ -51,9 +51,9 @@ export function ItemTile({
 				<h3 class="saved-item-tile__title">{item.title}</h3>
 			</div>
 			{item.updatedOn ? (
-				<span class="saved-item-tile__meta">
+				<div class="saved-item-tile__meta">
 					Last updated: {getHumanDate(item.updatedOn)}
-				</span>
+				</div>
 			) : null}
 		</div>
 	);

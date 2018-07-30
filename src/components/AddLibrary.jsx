@@ -123,7 +123,6 @@ export default class AddLibrary extends Component {
 					id="externalJsTextarea"
 					cols="30"
 					rows="5"
-					placeholder="Put each library in new line"
 					value={this.state.js}
 				/>
 
@@ -136,7 +135,6 @@ export default class AddLibrary extends Component {
 					id="externalCssTextarea"
 					cols="30"
 					rows="5"
-					placeholder="Put each library in new line"
 					value={this.state.css}
 				/>
 			</div>

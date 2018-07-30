@@ -1,7 +1,7 @@
 :root {
 	--color-text: #d4cde9;
 	--color-bg: #252637;
-	--color-popup: #29233c;
+	--color-popup: #3a2b63;
 	--code-font-size: 16px;
 	--color-button: #d3a447;
 	--color-focus-outline: #d3a447;
@@ -1059,6 +1059,7 @@ body > #demo-frame {
 }
 
 .saved-item-tile__meta {
+	margin-top: 8px;
 	pointer-events: none;
 	opacity: 0.3;
 }
@@ -1458,7 +1459,7 @@ body > #demo-frame {
 .social-login-btn--google {
 	background: white;
 	border: 2px solid currentColor;
-	color: inherit;
+	color: black;
 }
 
 body.is-logged-in .hide-on-login,

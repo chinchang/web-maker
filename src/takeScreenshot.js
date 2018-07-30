@@ -44,7 +44,11 @@ function saveScreenshot(dataURI) {
 			'/temporary/' +
 			fileName;
 
-		chrome.downloads.download(
+		// HACK: because chrome.downloads isn't working on optional permissions
+		// anymore.
+		return window.open(filePath);
+
+		/* chrome.downloads.download(
 			{
 				url: filePath
 			},
@@ -55,7 +59,7 @@ function saveScreenshot(dataURI) {
 					window.open(filePath);
 				}
 			}
-		);
+		); */
 	}
 
 	function errorHandler(e) {

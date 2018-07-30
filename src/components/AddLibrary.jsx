@@ -62,7 +62,7 @@ export default class AddLibrary extends Component {
 				<h1>Add Library</h1>
 
 				<div class="flex">
-					<svg style="width: 30px; height: 30px;fill:#999">
+					<svg style="width: 30px; height: 30px;fill:rgb(255,255,255,0.2)">
 						<use xlinkHref="#search" />
 					</svg>
 					<LibraryAutoSuggest
@@ -123,7 +123,6 @@ export default class AddLibrary extends Component {
 					id="externalJsTextarea"
 					cols="30"
 					rows="5"
-					placeholder="Put each library in new line"
 					value={this.state.js}
 				/>
 
@@ -136,7 +135,6 @@ export default class AddLibrary extends Component {
 					id="externalCssTextarea"
 					cols="30"
 					rows="5"
-					placeholder="Put each library in new line"
 					value={this.state.css}
 				/>
 			</div>

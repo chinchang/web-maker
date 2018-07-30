@@ -2,16 +2,12 @@ language: node_js
 node_js:
   - '10'
 install:
-  - npm i -g npm@latest
-  - npm install -g eslint
-  - npm install -g babel-eslint
-  - npm install -g eslint-plugin-react
-  - npm install -g eslint-plugin-mocha
-  - npm install -g eslint-config-synacor
+  - yarn add global eslint
+  - yarn add global babel-eslint
+  - yarn add global eslint-plugin-react
+  - yarn add global eslint-plugin-mocha
+  - yarn add global eslint-config-synacor
 script:
-  - npm run lint
-  - npm ci
-  - npm run test
-cache:
-  directories:
-    - '$HOME/.npm'
+  - yarn run lint
+  - yarn run test
+cache: yarn

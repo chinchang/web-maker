@@ -36,13 +36,14 @@ gulp.task('copyFiles', function() {
 		gulp.src('src/lib/transpilers/*').pipe(gulp.dest('app/lib/transpilers')),
 		gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib')),
 		gulp.src('icons/*').pipe(gulp.dest('app/icons')),
+		gulp.src('src/assets/*').pipe(gulp.dest('app/assets')),
+		gulp.src('src/templates/*').pipe(gulp.dest('app/templates')),
 		gulp
 			.src([
 				'src/preview.html',
 				'src/detached-window.js',
 				'src/icon-48.png',
 				'src/icon-128.png',
-				'src/patreon.png',
 				'manifest.json'
 			])
 			.pipe(gulp.dest('app')),

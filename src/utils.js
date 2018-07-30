@@ -212,7 +212,7 @@ export function downloadFile(fileName, blob) {
 		a.click();
 		a.remove();
 	}
-	if (window.IS_EXTENSION) {
+	if (false && window.IS_EXTENSION) {
 		chrome.downloads.download(
 			{
 				url: window.URL.createObjectURL(blob),

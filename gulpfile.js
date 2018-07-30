@@ -37,6 +37,7 @@ gulp.task('copyFiles', function() {
 		gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib')),
 		gulp.src('icons/*').pipe(gulp.dest('app/icons')),
 		gulp.src('src/assets/*').pipe(gulp.dest('app/assets')),
+		gulp.src('src/templates/*').pipe(gulp.dest('app/templates')),
 		gulp
 			.src([
 				'src/preview.html',

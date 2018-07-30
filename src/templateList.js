@@ -11,7 +11,7 @@ export default [
 	},
 	{
 		id: 'kontra-game-engine',
-		title: 'Kontra HTML5 Game Engine',
+		title: 'Kontra Game Engine',
 		img: 'html5-logo.svg'
 	}
 ];

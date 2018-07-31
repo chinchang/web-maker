@@ -61,8 +61,8 @@ export default class AddLibrary extends Component {
 			<div>
 				<h1>Add Library</h1>
 
-				<div class="flex">
-					<svg style="width: 30px; height: 30px;fill:rgb(255,255,255,0.2)">
+				<div class="flex flex-v-center">
+					<svg style="width: 30px; height: 30px;fill:rgb(255,255,255,0.5)">
 						<use xlinkHref="#search" />
 					</svg>
 					<LibraryAutoSuggest

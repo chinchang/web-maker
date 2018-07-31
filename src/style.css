@@ -5,6 +5,7 @@
 	--code-font-size: 16px;
 	--color-button: #d3a447;
 	--color-focus-outline: #d3a447;
+	--color-form-control-bg: #2c214b;
 }
 
 body {
@@ -30,7 +31,7 @@ input,
 textarea {
 	font-size: inherit;
 	color: var(--color-text);
-	background: rgba(0, 0, 0, 0.24);
+	background: var(--color-form-control-bg);
 	border: 1px solid rgba(255, 255, 255, 0.09);
 	border-bottom-color: rgba(255, 255, 255, 0.17);
 	box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -1040,10 +1041,10 @@ body > #demo-frame {
 
 .saved-item-tile__btn {
 	padding: 7px 10px;
-	color: rgba(255, 255, 255, 0.3);
+	color: white;
 	border-radius: 20px;
 	margin-left: 2px;
-	background: rgba(255, 255, 255, 0.05);
+	background: rgba(255, 255, 255, 0.1);
 	text-transform: uppercase;
 }
 
@@ -1066,7 +1067,8 @@ body > #demo-frame {
 }
 
 .saved-items-pane__container {
-	overflow-y: scroll;
+	overflow-y: auto;
+	overflow-x: hidden;
 	max-height: calc(100vh - 90px);
 }
 

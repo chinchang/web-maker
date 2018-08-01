@@ -68,7 +68,7 @@ export function HelpModal(props) {
 					>
 						<svg>
 							<use xlinkHref="#heart-icon" />
-						</svg>Share Web Maker
+						</svg>Review Web Maker
 					</a>{' '}
 					<a
 						aria-label="Chat"

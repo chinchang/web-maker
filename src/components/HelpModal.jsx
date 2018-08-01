@@ -72,7 +72,7 @@ export function HelpModal(props) {
 					</a>{' '}
 					<a
 						aria-label="Chat"
-						href="https://web-maker.slack.com"
+						href="https://spectrum.chat/web-maker"
 						target="_blank"
 						rel="noopener noreferrer"
 						class="btn btn-icon"

@@ -239,6 +239,8 @@ a > svg {
 	letter-spacing: 0.2px;
 	line-height: 1;
 	white-space: nowrap;
+	text-align: center;
+	box-sizing: border-box;
 	transition: box-shadow 0.2s ease;
 }
 

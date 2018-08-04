@@ -167,6 +167,19 @@ export default class Footer extends Component {
 								>
 									Download game as zip
 								</button>
+								<a
+									class="btn"
+									rel="noopener"
+									style={{
+										width: '200px',
+										display: 'block',
+										marginBottom: '16px'
+									}}
+									href="https://pasteboard.co/"
+									target="_blank"
+								>
+									Upload Image
+								</a>
 								<button
 									class="btn"
 									style={{ width: '200px', display: 'block' }}

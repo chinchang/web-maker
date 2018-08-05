@@ -618,7 +618,7 @@ body > #demo-frame {
 	height: 20px;
 	letter-spacing: 0.6px;
 	white-space: nowrap;
-	color: #9297b3;
+	color: #bbbfd3;
 	border-radius: 3px;
 	margin-left: 10px;
 	padding: 0px 8px;
@@ -713,7 +713,7 @@ body > #demo-frame {
 .footer a > svg,
 .footer button > svg {
 	transition: 0.3s ease;
-	fill: rgba(255, 255, 255, 0.2);
+	fill: rgba(255, 255, 255, 0.5);
 }
 
 .footer a:hover svg,

@@ -103,7 +103,31 @@ export function Notifications(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="3.4.0" isLatest={true} {...props}>
+			<Notification version="3.4.1" isLatest={true} {...props}>
+				<li>
+					<strong>Js13kGames Mode</strong>: Add image upload option using
+					Pasteboard.co.{' '}
+					<a
+						href="https://medium.com/web-maker/js13kgames-jam-with-web-maker-a3389cf2cbb"
+						target="_blank"
+						rel="noopener"
+					>
+						Read more about it here.
+					</a>
+				</li>
+				<li>
+					<strong>Kontra.js template</strong>: Update to latest 4.0.0.
+				</li>
+				<NotificationItem type="a11y">
+					Fix color contrast for various texts.
+				</NotificationItem>
+
+				<NotificationItem type="bug">
+					Fix external script paths in downloaded zip in Js13KGame mode.
+				</NotificationItem>
+			</Notification>
+
+			<Notification version="3.4.0" {...props}>
 				<li>
 					<strong>🎉 Js13kGames Mode</strong>: For all you Js13kGames compo
 					participants out there. Turn it on from Settings.{' '}

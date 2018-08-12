@@ -701,7 +701,14 @@ export default class App extends Component {
 			}
 		}
 		if (this.state.prefs.isJs13kModeOn) {
-			this.calculateCodeSize();
+			// Throttling codesize calculation
+			if (this.codeSizeCalculationTimeout) {
+				clearTimeout(this.codeSizeCalculationTimeout);
+			}
+			this.codeSizeCalculationTimeout = setTimeout(() => {
+				this.calculateCodeSize();
+				this.codeSizeCalculationTimeout = null;
+			}, 1000);
 		}
 	}
 	onCodeSettingsChange(type, settings) {

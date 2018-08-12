@@ -2,9 +2,9 @@
 */
 
 import { h, Component } from 'preact';
-
+import '../service-worker-registration';
 import { MainHeader } from './MainHeader.jsx';
-import ContentWrap from './ContentWrap.jsx';
+import ContentWrap2 from './ContentWrap2.jsx';
 import Footer from './Footer.jsx';
 import SavedItemPane from './SavedItemPane.jsx';
 import AddLibrary from './AddLibrary.jsx';
@@ -1170,8 +1170,7 @@ export default class App extends Component {
 						user={this.state.user}
 						unsavedEditCount={this.state.unsavedEditCount}
 					/>
-					<ContentWrap
-						currentLayoutMode={this.state.currentLayoutMode}
+					<ContentWrap2
 						currentItem={this.state.currentItem}
 						onCodeChange={this.onCodeChange.bind(this)}
 						onCodeSettingsChange={this.onCodeSettingsChange.bind(this)}

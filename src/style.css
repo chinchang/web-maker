@@ -1593,6 +1593,16 @@ body:not(.is-app) .show-when-app {
 	margin-left: -115px;
 }
 
+.sidebar {
+	background-color: #1e1e2c;
+}
+
+.sidebar__file {
+	color: white;
+	background: transparent;
+	border: none;
+}
+
 @media screen and (max-width: 600px) {
 	body {
 		font-size: 70%;

@@ -1077,6 +1077,12 @@ export default class App extends Component {
 
 			var fileContent = getCompleteHtml(html, css, js, item, true);
 
+			// Replace external lib urls with local relative urls (picked from zip)
+			fileContent = fileContent.replace(
+				/<script src="(.*\/)([^/<]*?)"/g,
+				'<script src="$2"'
+			);
+
 			var zip = new JSZip();
 			zip.file('index.html', fileContent);
 			for (let i = 3; i < result.length; i++) {

@@ -227,6 +227,75 @@ a > svg {
 	bottom: 0;
 }
 
+.check-switch {
+	display: block;
+	overflow: hidden;
+	padding: 0.5em;
+	position: relative;
+}
+
+.check-switch:hover {
+	background: rgba(0, 0, 0, 0.1);
+}
+
+.check-switch .check-switch__toggle:after {
+	background: #fff;
+	border-radius: 100%;
+	height: 1.5em;
+	right: 1.5em;
+	transition: right 0.1825s ease-in-out;
+	width: 1.5em;
+}
+
+.check-switch .check-switch__toggle:before,
+.check-switch .check-switch__toggle:after {
+	border: 1px solid #565656;
+	content: '';
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.check-switch .check-switch__toggle:before {
+	background: #eee;
+	border-radius: 1.75em;
+	height: 1.75em;
+	right: 0.25em;
+	transition: background 0.2s ease-in-out;
+	width: 2.75em;
+}
+
+.check-switch input:not([role='button']) {
+	pointer-events: none;
+}
+
+.check-switch input {
+	height: 100%;
+	left: 0;
+	opacity: 0.0001;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.check-switch__status {
+	text-transform: uppercase;
+	font-size: 14px;
+}
+
+.check-switch input:focus + .check-switch__toggle:before {
+	outline: 2px solid;
+	outline-color: var(--color-focus-outline);
+}
+
+.check-switch input:checked + .check-switch__toggle:after {
+	right: 0.25em;
+}
+
+.check-switch input:checked + .check-switch__toggle:before {
+	background: #61ad1c;
+}
+
 .btn {
 	display: inline-block;
 	color: var(--color-button);

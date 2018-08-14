@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import { editorThemes } from '../editorThemes';
+import Switch from './Switch';
 
 function CheckboxSetting({
 	title,
@@ -10,18 +11,19 @@ function CheckboxSetting({
 	showWhenExtension
 }) {
 	return (
-		<label
-			class={`line ${showWhenExtension ? 'show-when-extension' : ''} `}
-			title={title}
-		>
-			<input
-				type="checkbox"
-				checked={pref}
-				onChange={onChange}
-				data-setting={name}
-			/>{' '}
-			{label}
-		</label>
+		// <label
+		// 	class={`line ${showWhenExtension ? 'show-when-extension' : ''} `}
+		// 	title={title}
+		// >
+		// 	<input
+		// 		type="checkbox"
+		// 		checked={pref}
+		// 		onChange={onChange}
+		// 		data-setting={name}
+		// 	/>{' '}
+		// 	{label}
+		// </label>
+		<Switch checked={pref}>{label}</Switch>
 	);
 }
 export default class Settings extends Component {
@@ -208,7 +210,7 @@ export default class Settings extends Component {
 							</label>
 						</div>
 					</div>
-					<div class="ml-2 ml-0--mobile">
+					<div class="flex-grow ml-2 ml-0--mobile">
 						<CheckboxSetting
 							name="lineWrap"
 							title="Toggle wrapping of long sentences onto new line"

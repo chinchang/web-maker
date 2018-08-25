@@ -30,7 +30,7 @@ window.saveAs = saveAs.saveAs
 
 function downloadPng() {
 	var node = document.getElementById('diagram')
-	domtoimage.toBlob(document.getElementById('diagram'))
+	domtoimage.toBlob(document.getElementById('diagram'), {bgcolor: 'white'})
 		.then(function (blob) {
 			window.saveAs(blob, 'zenuml.png');
 			trackEvent('ui', 'downloadPng');

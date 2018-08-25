@@ -6,9 +6,9 @@
 	"scripts": {
 	    "webpack": "webpack",
 		"start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-		"build": "preact build --template src/index.html --no-prerender --service-worker false",
-		"serve": "preact build && preact serve",
-		"dev": "preact watch --template src/index.html --https --no-prerender",
+		"build": "npm run webpack && preact build --template src/index.html --no-prerender --service-worker false",
+		"serve": "npm run webpack && preact build && preact serve",
+		"dev": "npm run webpack && preact watch --template src/index.html --https --no-prerender",
 		"lint": "eslint src",
 		"test": "jest ./tests",
 		"update-core": "yarn unlink vue-sequence sequence-parser && yarn add vue-sequence sequence-parser",

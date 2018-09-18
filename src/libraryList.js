@@ -76,7 +76,7 @@ export const jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.16/js/uikit.min.js',
+			'https://getuikit.com/assets/uikit/dist/js/uikit.js',
 		label: 'UIkit 3',
 		type: 'js'
 	},
@@ -144,7 +144,7 @@ export const cssLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.16/css/uikit.min.css',
+			'https://getuikit.com/assets/uikit/dist/css/uikit.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},

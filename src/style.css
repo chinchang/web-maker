@@ -88,7 +88,7 @@ button {
 }
 
 .flex-shrink-0 {
-	flex-shrink: 0
+	flex-shrink: 0;
 }
 
 .fr {
@@ -167,9 +167,11 @@ button {
 	.block--mobile {
 		display: block;
 	}
+
 	.ml-0--mobile {
 		margin-left: 0rem;
 	}
+
 	.hide-on-mobile {
 		display: none !important;
 	}
@@ -179,6 +181,7 @@ button {
 	.show-on-mobile {
 		display: none;
 	}
+
 	.flex--desk {
 		display: flex;
 	}
@@ -504,6 +507,7 @@ body:not(.light-version).overlay-visible .main-container {
 		transform: scale(0.9);
 		opacity: 0;
 	}
+
 	to {
 		transform: scale(1);
 		opacity: 1;
@@ -1014,6 +1018,7 @@ body > #demo-frame {
 		opacity: 0;
 		transform: translateX(50px);
 	}
+
 	to {
 		opacity: 1;
 		transform: translateX(0px);
@@ -1087,15 +1092,18 @@ body > #demo-frame {
 	22% {
 		transform: translate3d(-1px, 0, 0);
 	}
+
 	5%,
 	20% {
 		transform: translate3d(2px, 0, 0);
 	}
+
 	7%,
 	12%,
 	17% {
 		transform: translate3d(-4px, 0, 0);
 	}
+
 	10%,
 	15% {
 		transform: translate3d(4px, 0, 0);
@@ -1171,6 +1179,7 @@ body > #demo-frame {
 	0% {
 		transform: rotate(0deg);
 	}
+
 	100% {
 		transform: rotate(360deg);
 	}
@@ -1329,21 +1338,27 @@ body > #demo-frame {
 	from {
 		transform: none;
 	}
+
 	15% {
 		transform: translate3d(-25%, 0, 0) rotate3d(0, 0, 1, -5deg);
 	}
+
 	30% {
 		transform: translate3d(20%, 0, 0) rotate3d(0, 0, 1, 3deg);
 	}
+
 	45% {
 		transform: translate3d(-15%, 0, 0) rotate3d(0, 0, 1, -3deg);
 	}
+
 	60% {
 		transform: translate3d(10%, 0, 0) rotate3d(0, 0, 1, 2deg);
 	}
+
 	75% {
 		transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg);
 	}
+
 	to {
 		transform: none;
 	}
@@ -1574,15 +1589,19 @@ body:not(.is-app) .show-when-app {
 	body {
 		font-size: 70%;
 	}
+
 	.main-header {
 		overflow-x: auto;
 	}
+
 	.main-header__btn-wrap {
 		flex-shrink: 0;
 	}
+
 	.modal__content {
 		padding: 1em;
 	}
+
 	.saved-items-pane {
 		width: 77vw;
 		padding: 10px 20px;

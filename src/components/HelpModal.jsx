@@ -12,8 +12,8 @@ export function HelpModal(props) {
 
 			<div>
 				<p>
-					Made with <span style="margin-right: 8px;">💖</span> &{' '}
-					<span style="margin-right: 8px;">🙌</span> by{' '}
+					Made with <span style="margin-right: 8px;">💖</span>&{' '}
+					<span style="margin-right: 8px;"> 🙌</span> by{' '}
 					<a
 						href="https://twitter.com/chinchang457"
 						target="_blank"
@@ -37,7 +37,7 @@ export function HelpModal(props) {
 						@webmakerApp
 					</a>.
 				</p>
-				<p>
+				<p class="show-when-extension">
 					Like this extension? Please{' '}
 					<a
 						href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
@@ -95,87 +95,92 @@ export function HelpModal(props) {
 				</p>
 
 				<p>
-					<h3>Awesome libraries used</h3>
-					<ul>
-						<li>
-							<a
-								target="_blank"
-								rel="noopener noreferrer"
-								href="https://kushagragour.in/lab/hint/"
-							>
-								Hint.css
-							</a>{' '}
-							&
-							<a
-								target="_blank"
-								rel="noopener noreferrer"
-								href="https://github.com/chinchang/screenlog.js"
-							>
-								Screenlog.js
-							</a>{' '}
-							- By me :)
-						</li>
-						<li>
-							<a
-								target="_blank"
-								rel="noopener noreferrer"
-								href="https://nathancahill.github.io/Split.js/"
-							>
-								Split.js
-							</a>{' '}
-							- Nathan Cahill
-						</li>
-						<li>
-							<a
-								target="_blank"
-								rel="noopener noreferrer"
-								href="https://codemirror.net/"
-							>
-								Codemirror
-							</a>{' '}
-							- Marijn Haverbeke
-						</li>
-						<li>
-							<a
-								target="_blank"
-								rel="noopener noreferrer"
-								href="https://emmet.io/"
-							>
-								Emmet
-							</a>{' '}
-							- Sergey Chikuyonok
-						</li>
-						<li>
-							<a
-								target="_blank"
-								rel="noopener noreferrer"
-								href="http://esprima.org/"
-							>
-								Esprima
-							</a>{' '}
-							- Ariya Hidayat
-						</li>
-						<li>
-							<a
-								target="_blank"
-								rel="noopener noreferrer"
-								href="https://github.com/enjalot/Inlet"
-							>
-								Inlet
-							</a>{' '}
-							- Ian Johnson
-						</li>
-						<li>
-							<a
-								target="_blank"
-								rel="noopener noreferrer"
-								href="https://webmakerapp.com/"
-							>
-								Web Maker!
-							</a>{' '}
-							- whhat!
-						</li>
-					</ul>
+					<details>
+						<summary>
+							<h3 class="d-i">See awesome libraries used</h3>
+						</summary>
+						<ul>
+							<li>
+								<a
+									target="_blank"
+									rel="noopener noreferrer"
+									href="https://kushagragour.in/lab/hint/"
+								>
+									Hint.css
+								</a>{' '}
+								&
+								<a
+									target="_blank"
+									rel="noopener noreferrer"
+									href="https://github.com/chinchang/screenlog.js"
+								>
+									{' '}
+									Screenlog.js
+								</a>{' '}
+								- By me :)
+							</li>
+							<li>
+								<a
+									target="_blank"
+									rel="noopener noreferrer"
+									href="https://nathancahill.github.io/Split.js/"
+								>
+									Split.js
+								</a>{' '}
+								- Nathan Cahill
+							</li>
+							<li>
+								<a
+									target="_blank"
+									rel="noopener noreferrer"
+									href="https://codemirror.net/"
+								>
+									Codemirror
+								</a>{' '}
+								- Marijn Haverbeke
+							</li>
+							<li>
+								<a
+									target="_blank"
+									rel="noopener noreferrer"
+									href="https://emmet.io/"
+								>
+									Emmet
+								</a>{' '}
+								- Sergey Chikuyonok
+							</li>
+							<li>
+								<a
+									target="_blank"
+									rel="noopener noreferrer"
+									href="http://esprima.org/"
+								>
+									Esprima
+								</a>{' '}
+								- Ariya Hidayat
+							</li>
+							<li>
+								<a
+									target="_blank"
+									rel="noopener noreferrer"
+									href="https://github.com/enjalot/Inlet"
+								>
+									Inlet
+								</a>{' '}
+								- Ian Johnson
+							</li>
+							<li>
+								<a
+									target="_blank"
+									rel="noopener noreferrer"
+									href="https://webmakerapp.com/"
+								>
+									Web Maker!
+								</a>{' '}
+								- whhat!
+							</li>
+						</ul>
+					</details>
 				</p>
 
 				<p>

@@ -70,6 +70,9 @@ button {
 	display: none !important;
 }
 
+.d-i {
+	display: inline;
+}
 .flex {
 	display: flex;
 }

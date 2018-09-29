@@ -6,6 +6,9 @@
 	--color-button: #d3a447;
 	--color-focus-outline: #d3a447;
 	--color-form-control-bg: #2c214b;
+
+	--footer-height: 37px;
+	--console-height: 30px;
 }
 
 body {
@@ -403,7 +406,9 @@ body:not(.light-version).overlay-visible .main-container {
 }
 
 .is-detached-mode .demo-side {
-	display: none;
+	/* display: none; */
+	width: 0px !important;
+	height: 0px !important;
 }
 
 .is-detached-mode .code-side {
@@ -721,12 +726,12 @@ body > #demo-frame {
 .footer a > svg,
 .footer button > svg {
 	transition: 0.3s ease;
-	fill: rgba(255, 255, 255, 0.5);
+	fill: rgba(255, 255, 255, 0.35);
 }
 
 .footer a:hover svg,
 .footer button:hover svg {
-	fill: rgba(255, 255, 255, 0.45);
+	fill: rgba(255, 255, 255, 0.6);
 }
 
 .mode-btn svg {
@@ -735,7 +740,7 @@ body > #demo-frame {
 }
 
 .mode-btn.selected svg {
-	fill: rgba(255, 255, 255, 0.45);
+	fill: rgba(255, 255, 255, 0.6);
 }
 
 .gutter {
@@ -1418,12 +1423,6 @@ body > #demo-frame {
 	cursor: ns-resize;
 }
 
-.global-console-container {
-	display: none;
-	position: relative;
-	height: 35px;
-}
-
 /* Detached mode */
 
 .is-detached-mode .console,
@@ -1431,8 +1430,14 @@ body > #demo-frame {
 	z-index: 4;
 }
 
-.is-detached-mode .global-console-container {
-	display: block;
+.is-detached-mode .console {
+	position: fixed;
+	bottom: var(--footer-height);
+}
+
+.is-detached-mode .content-wrap {
+	/* So that there is space for console */
+	padding-bottom: var(--console-height);
 }
 
 .kbd-shortcut__keys {

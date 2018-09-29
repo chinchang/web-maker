@@ -928,7 +928,7 @@ export default class ContentWrap extends Component {
 						</div>
 						<div
 							id="consolePromptEl"
-							class="console__prompt flex flex-v-center"
+							class="console__prompt flex flex-v-center flex-shrink-0"
 						>
 							<svg width="18" height="18" fill="#346fd2">
 								<use xlinkHref="#chevron-icon" />

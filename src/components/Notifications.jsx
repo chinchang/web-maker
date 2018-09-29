@@ -103,7 +103,38 @@ export function Notifications(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="3.4.1" isLatest={true} {...props}>
+			<Notification version="3.4.2" isLatest={true} {...props}>
+				<li>
+					🚀 RxJS added to popular libraries list. Thanks
+					<ThanksTo url="https://github.com/jpsc" name="@jpsc" />
+				</li>
+
+				<NotificationItem type="bug">
+					Not able to select libraries twice with mouse click in Add Library
+					modal.
+				</NotificationItem>
+				<NotificationItem type="bug">
+					Console going outside the viewport on huge logs.
+				</NotificationItem>
+
+				<NotificationItem type="bug">
+					Console dissapearing in detached mode on changing layouts.
+				</NotificationItem>
+
+				<li>
+					<strong>[Dev]</strong>: Improve{' '}
+					<a
+						href="https://github.com/chinchang/web-maker/blob/master/CONTRIBUTING.md"
+						target="_blank"
+						rel="noopener"
+					>
+						contribution guide
+					</a>{' '}
+					and add issue template on Github.
+				</li>
+			</Notification>
+
+			<Notification version="3.4.1" {...props}>
 				<li>
 					<strong>Js13kGames Mode</strong>: Add image upload option using
 					Pasteboard.co.{' '}

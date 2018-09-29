@@ -1181,7 +1181,7 @@ export default class App extends Component {
 						onEditorFocus={this.editorFocusHandler.bind(this)}
 						onSplitUpdate={this.splitUpdateHandler.bind(this)}
 					/>
-					<div class="global-console-container" id="globalConsoleContainerEl" />
+
 					<Footer
 						prefs={this.state.prefs}
 						layoutBtnClickHandler={this.layoutBtnClickHandler.bind(this)}

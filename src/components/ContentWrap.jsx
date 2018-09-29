@@ -549,6 +549,7 @@ export default class ContentWrap extends Component {
 			trackEvent('ui', 'updateCodeMode', mode);
 		}
 	}
+
 	detachPreview() {
 		if (this.detachedWindow) {
 			this.detachedWindow.focus();
@@ -558,7 +559,6 @@ export default class ContentWrap extends Component {
 		const iframeWidth = iframeBounds.width;
 		const iframeHeight = iframeBounds.height;
 		document.body.classList.add('is-detached-mode');
-		window.globalConsoleContainerEl.insertBefore(window.consoleEl, null);
 
 		this.detachedWindow = window.open(
 			'./preview.html',
@@ -574,7 +574,6 @@ export default class ContentWrap extends Component {
 			if (this.detachedWindow && this.detachedWindow.closed) {
 				clearInterval(intervalID);
 				document.body.classList.remove('is-detached-mode');
-				$('#js-demo-side').insertBefore(window.consoleEl, null);
 				this.detachedWindow = null;
 				// Update main frame preview to get latest changes (which were not
 				// getting reflected while detached window was open)

@@ -19,13 +19,11 @@ export class LibraryAutoSuggest extends Component {
 		this.t.addEventListener('input', e => this.onInput(e));
 		this.t.addEventListener('keydown', e => this.onKeyDown(e));
 		this.t.addEventListener('blur', e => this.closeSuggestions(e));
-		this.list.addEventListener('mousedown', e => this.onListMouseDown(e));
 	}
 	componentWillUnmount() {
 		this.t.removeEventListener('input', e => this.onInput(e));
 		this.t.removeEventListener('keydown', e => this.onKeyDown(e));
 		this.t.removeEventListener('blur', e => this.closeSuggestions(e));
-		this.list.removeEventListener('mousedown', e => this.onListMouseDown(e));
 	}
 
 	get currentLineNumber() {
@@ -35,6 +33,7 @@ export class LibraryAutoSuggest extends Component {
 		var line = this.currentLineNumber;
 		return this.t.value.split('\n')[line - 1];
 	}
+	listMouseDownHandler() {}
 	closeSuggestions() {
 		this.list.classList.remove('is-open');
 		this.isShowingSuggestions = false;
@@ -123,7 +122,7 @@ export class LibraryAutoSuggest extends Component {
 			this.closeSuggestions();
 		}
 	}
-	onListMouseDown(event) {
+	listMouseDownHandler(event) {
 		var target = event.target;
 		if (target.parentElement.dataset.url) {
 			this.selectSuggestion(target.parentElement.dataset.url);
@@ -152,6 +151,7 @@ export class LibraryAutoSuggest extends Component {
 				<ul
 					ref={el => (this.list = el)}
 					class="dropdown__menu autocomplete-dropdown"
+					onMouseDown={this.listMouseDownHandler.bind(this)}
 				/>
 				<div
 					ref={el => (this.loader = el)}

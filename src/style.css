@@ -383,6 +383,10 @@ body:not(.light-version).overlay-visible .main-container {
 	width: auto;
 }
 
+.is-project .content-wrap {
+	flex-direction: row;
+}
+
 /* All vertical layout */
 
 .layout-5 .code-side {
@@ -446,6 +450,9 @@ body:not(.light-version).overlay-visible .main-container {
 .layout-2 .code-wrap {
 	height: auto;
 	width: 33%;
+}
+.is-project .code-wrap {
+	flex-basis: 100%;
 }
 
 .code-wrap__header {

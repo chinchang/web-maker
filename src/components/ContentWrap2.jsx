@@ -24,6 +24,10 @@ class Sidebar extends Component {
 							type="button"
 							onClick={this.props.onFileSelect.bind(null, file)}
 						>
+							<img
+								src="http://icons-for-free.com/icon/download-css_html_html5_icon-498356.png"
+								width="16"
+							/>
 							{file.name}
 						</button>
 					</div>
@@ -38,14 +42,12 @@ export default class ContentWrap2 extends Component {
 		super(props);
 		this.state = {
 			isConsoleOpen: false,
-			isCssSettingsModalOpen: false,
-			files: [
-				{ name: 'index.html' },
-				{ name: 'style.css' },
-				{ name: 'script.js' }
-			]
+			isCssSettingsModalOpen: false
 		};
-		this.state.selectedFile = this.state.files[0];
+		this.state.selectedFile =
+			this.currentItem && this.currentItem.files
+				? this.currentItem.files[0]
+				: null;
 		this.updateTimer = null;
 		this.updateDelay = 500;
 		this.htmlMode = HtmlModes.HTML;
@@ -135,10 +137,9 @@ export default class ContentWrap2 extends Component {
 				this.detachedWindow.postMessage({ contents }, '*');
 			} else {
 				var obj = {};
-				this.state.files.forEach(file => {
+				this.props.currentItem.files.forEach(file => {
 					obj[`/user/${file.name}`] = file.content || '';
 				});
-				// obj[`/user/index.html`] = this.cmCodes.html;
 
 				navigator.serviceWorker.controller.postMessage(obj);
 				this.frame.src = '/user/index.html';
@@ -474,6 +475,7 @@ export default class ContentWrap2 extends Component {
 			this.updateCssMode('html');
 		}
 		this.cm.html.setValue(file.content || '');
+		this.cm.html.focus();
 	}
 
 	render() {
@@ -490,7 +492,7 @@ export default class ContentWrap2 extends Component {
 			>
 				<div id="js-sidebar">
 					<Sidebar
-						files={this.state.files}
+						files={this.props.currentItem.files || []}
 						onFileSelect={this.fileSelectHandler.bind(this)}
 					/>
 				</div>
@@ -507,7 +509,7 @@ export default class ContentWrap2 extends Component {
 							title="Double click to toggle code pane"
 						>
 							<label class="btn-group" dropdow title="Click to change">
-								{this.state.selectedFile.name}
+								{this.state.selectedFile ? this.state.selectedFile.name : ''}
 							</label>
 							<div class="code-wrap__header-right-options">
 								<a

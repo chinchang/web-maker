@@ -264,9 +264,9 @@ export default class App extends Component {
 		alertsService.add(`"${sourceItem.title}" was forked`);
 		trackEvent('fn', 'itemForked');
 	}
-	createNewItem() {
-		var d = new Date();
-		this.setCurrentItem({
+	createNewItem(isProject = true) {
+		const d = new Date();
+		let item = {
 			title:
 				'Untitled ' +
 				d.getDate() +
@@ -275,13 +275,28 @@ export default class App extends Component {
 				'-' +
 				d.getHours() +
 				':' +
-				d.getMinutes(),
-			html: '',
-			css: '',
-			js: '',
-			externalLibs: { js: '', css: '' },
-			layoutMode: this.state.currentLayoutMode
-		}).then(() => this.refreshEditor());
+				d.getMinutes()
+		};
+		if (isProject) {
+			item = {
+				...item,
+				files: [
+					{ name: 'index.html' },
+					{ name: 'style.css' },
+					{ name: 'script.js' }
+				]
+			};
+		} else {
+			item = {
+				...item,
+				html: '',
+				css: '',
+				js: '',
+				externalLibs: { js: '', css: '' },
+				layoutMode: this.state.currentLayoutMode
+			};
+		}
+		this.setCurrentItem(item).then(() => this.refreshEditor());
 		alertsService.add('New item created');
 	}
 	openItem(item) {

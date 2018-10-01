@@ -332,10 +332,12 @@ export default class App extends Component {
 	setCurrentItem(item) {
 		const d = deferred();
 		// TODO: remove later
-		item.htmlMode =
-			item.htmlMode || this.state.prefs.htmlMode || HtmlModes.HTML;
-		item.cssMode = item.cssMode || this.state.prefs.cssMode || CssModes.CSS;
-		item.jsMode = item.jsMode || this.state.prefs.jsMode || JsModes.JS;
+		if (!item.files) {
+			item.htmlMode =
+				item.htmlMode || this.state.prefs.htmlMode || HtmlModes.HTML;
+			item.cssMode = item.cssMode || this.state.prefs.cssMode || CssModes.CSS;
+			item.jsMode = item.jsMode || this.state.prefs.jsMode || JsModes.JS;
+		}
 
 		this.setState({ currentItem: item }, d.resolve);
 
@@ -699,7 +701,15 @@ export default class App extends Component {
 		this.setState({ currentItem: item });
 	}
 	onCodeChange(type, code, isUserChange) {
-		this.state.currentItem[type] = code;
+		if (this.state.currentItem.files) {
+			this.state.currentItem.files.map(file => {
+				if (file.name === type.name) {
+					file.content = code;
+				}
+			});
+		} else {
+			this.state.currentItem[type] = code;
+		}
 		if (isUserChange) {
 			this.setState({ unsavedEditCount: this.state.unsavedEditCount + 1 });
 

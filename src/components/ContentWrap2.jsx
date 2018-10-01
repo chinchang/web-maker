@@ -44,17 +44,15 @@ export default class ContentWrap2 extends Component {
 			isConsoleOpen: false,
 			isCssSettingsModalOpen: false
 		};
-		this.state.selectedFile =
-			this.currentItem && this.currentItem.files
-				? this.currentItem.files[0]
-				: null;
+
+		this.fileBuffers = {};
 		this.updateTimer = null;
 		this.updateDelay = 500;
 		this.htmlMode = HtmlModes.HTML;
 		this.prefs = {};
 		this.codeInPreview = { html: null, css: null, js: null };
 		this.cmCodes = { html: props.currentItem.html, css: '', js: '' };
-		this.cm = {};
+		// this.cm = {};
 		this.logCount = 0;
 	}
 	shouldComponentUpdate(nextProps, nextState) {
@@ -69,6 +67,15 @@ export default class ContentWrap2 extends Component {
 		);
 	}
 	componentDidUpdate() {
+		if (
+			this.props.currentItem &&
+			this.props.currentItem.files &&
+			!this.state.selectedFile
+		) {
+			this.setState({
+				selectedFile: this.props.currentItem.files[0]
+			});
+		}
 		// HACK: becuase its a DOM manipulation
 		// window.logCountEl.textContent = this.logCount;
 		// log('🚀', 'didupdate', this.props.currentItem);
@@ -80,11 +87,24 @@ export default class ContentWrap2 extends Component {
 		this.props.onRef(this);
 	}
 
+	createEditorDoc(file) {
+		let mode;
+		if (file.name.match(/\.css$/)) {
+			mode = modes[CssModes.CSS].cmMode;
+		} else if (file.name.match(/\.js$/)) {
+			mode = modes[JsModes.JS].cmMode;
+		} else {
+			mode = modes[HtmlModes.HTML].cmMode;
+		}
+		console.log('mode', mode);
+		this.fileBuffers[file.name] = CodeMirror.Doc(file.content, mode);
+	}
+
 	onHtmlCodeChange(editor, change) {
 		this.cmCodes.html = editor.getValue();
-		this.state.selectedFile.content = editor.getValue();
+
 		this.props.onCodeChange(
-			'html',
+			this.state.selectedFile,
 			this.cmCodes.html,
 			change.origin !== 'setValue'
 		);
@@ -114,60 +134,32 @@ export default class ContentWrap2 extends Component {
 	}
 
 	createPreviewFile(html, css, js) {
-		const shouldInlineJs =
-			!window.webkitRequestFileSystem || !window.IS_EXTENSION;
-		var contents = getCompleteHtml(
-			html,
-			css,
-			shouldInlineJs ? js : null,
-			this.props.currentItem
-		);
-		var blob = new Blob([contents], { type: 'text/plain;charset=UTF-8' });
-		var blobjs = new Blob([js], { type: 'text/plain;charset=UTF-8' });
-
 		// Track if people have written code.
 		if (!trackEvent.hasTrackedCode && (html || css || js)) {
 			trackEvent('fn', 'hasCode');
 			trackEvent.hasTrackedCode = true;
 		}
 
-		if (shouldInlineJs) {
-			if (this.detachedWindow) {
-				log('✉️ Sending message to detached window');
-				this.detachedWindow.postMessage({ contents }, '*');
-			} else {
-				var obj = {};
-				this.props.currentItem.files.forEach(file => {
-					obj[`/user/${file.name}`] = file.content || '';
-				});
+		var obj = {};
+		this.props.currentItem.files.forEach(file => {
+			obj[`/user/${file.name}`] = file.content || '';
+		});
 
-				navigator.serviceWorker.controller.postMessage(obj);
-				this.frame.src = '/user/index.html';
-			}
+		navigator.serviceWorker.controller.postMessage(obj);
+
+		if (this.detachedWindow) {
+			log('✉️ Sending message to detached window');
+			this.detachedWindow.postMessage({ contents: '/user/index.html' }, '*');
 		} else {
-			// we need to store user script in external JS file to prevent inline-script
-			// CSP from affecting it.
-			writeFile('script.js', blobjs, () => {
-				writeFile('preview.html', blob, () => {
-					var origin = chrome.i18n.getMessage()
-						? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
-						: `${location.origin}`;
-					var src = `filesystem:${origin}/temporary/preview.html`;
-					if (this.detachedWindow) {
-						this.detachedWindow.postMessage(src, '*');
-					} else {
-						this.frame.src = src;
-					}
-				});
-			});
+			this.frame.src = '/user/index.html';
 		}
 	}
-	cleanupErrors(lang) {
-		this.cm[lang].clearGutter('error-gutter');
+	cleanupErrors() {
+		this.cm.clearGutter('error-gutter');
 	}
 
 	showErrors(lang, errors) {
-		var editor = this.cm[lang];
+		var editor = this.cm;
 		errors.forEach(function(e) {
 			editor.operation(function() {
 				var n = document.createElement('div');
@@ -191,9 +183,7 @@ export default class ContentWrap2 extends Component {
 		if (!this.props.prefs.preserveConsoleLogs) {
 			// this.clearConsole();
 		}
-		this.cleanupErrors('html');
-		// this.cleanupErrors('css');
-		// this.cleanupErrors('js');
+		this.cleanupErrors();
 
 		var currentCode = {
 			html: this.cmCodes.html,
@@ -222,9 +212,9 @@ export default class ContentWrap2 extends Component {
 			this.props.prefs.infiniteLoopTimeout
 		);
 		Promise.all([htmlPromise, cssPromise, jsPromise]).then(result => {
-			if (cssMode === CssModes.ACSS) {
+			/* if (cssMode === CssModes.ACSS) {
 				this.cm.css.setValue(result[1].code || '');
-			}
+			} */
 
 			this.createPreviewFile(
 				result[0].code || '',
@@ -247,8 +237,11 @@ export default class ContentWrap2 extends Component {
 	}
 	refreshEditor() {
 		this.cmCodes.html = this.props.currentItem.html;
-		this.cm.html.setValue(this.cmCodes.html || '');
-		this.cm.html.refresh();
+		if (this.state.selectedFile) {
+			this.cm.setValue(this.state.selectedFile.content);
+		}
+		this.cm.refresh();
+		window.cm = this.cm;
 
 		// this.clearConsole();
 
@@ -282,20 +275,18 @@ export default class ContentWrap2 extends Component {
 		// ]('hide');
 		// this.consoleCm.setOption('theme', prefs.editorTheme);
 
-		['html'].forEach(type => {
-			this.cm[type].setOption('indentWithTabs', prefs.indentWith !== 'spaces');
-			this.cm[type].setOption(
-				'blastCode',
-				prefs.isCodeBlastOn ? { effect: 2, shake: false } : false
-			);
-			this.cm[type].setOption('indentUnit', +prefs.indentSize);
-			this.cm[type].setOption('tabSize', +prefs.indentSize);
-			this.cm[type].setOption('theme', prefs.editorTheme);
+		this.cm.setOption('indentWithTabs', prefs.indentWith !== 'spaces');
+		this.cm.setOption(
+			'blastCode',
+			prefs.isCodeBlastOn ? { effect: 2, shake: false } : false
+		);
+		this.cm.setOption('indentUnit', +prefs.indentSize);
+		this.cm.setOption('tabSize', +prefs.indentSize);
+		this.cm.setOption('theme', prefs.editorTheme);
 
-			this.cm[type].setOption('keyMap', prefs.keymap);
-			this.cm[type].setOption('lineWrapping', prefs.lineWrap);
-			this.cm[type].refresh();
-		});
+		this.cm.setOption('keyMap', prefs.keymap);
+		this.cm.setOption('lineWrapping', prefs.lineWrap);
+		this.cm.refresh();
 	}
 
 	// Check all the code wrap if they are minimized or maximized
@@ -415,9 +406,9 @@ export default class ContentWrap2 extends Component {
 	updateHtmlMode(value) {
 		// this.props.onCodeModeChange('html', value);
 		// this.props.currentItem.htmlMode = value;
-		this.cm.html.setOption('mode', modes[value].cmMode);
+		this.cm.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(
-			this.cm.html,
+			this.cm,
 			modes[value].cmPath || modes[value].cmMode
 		);
 		return this.handleModeRequirements(value);
@@ -425,37 +416,24 @@ export default class ContentWrap2 extends Component {
 	updateCssMode(value) {
 		// this.props.onCodeModeChange('css', value);
 		// this.props.currentItem.cssMode = value;
-		this.cm.html.setOption('mode', modes[value].cmMode);
-		this.cm.html.setOption('readOnly', modes[value].cmDisable);
+		this.cm.setOption('mode', modes[value].cmMode);
+		this.cm.setOption('readOnly', modes[value].cmDisable);
 		/* window.cssSettingsBtn.classList[
 			modes[value].hasSettings ? 'remove' : 'add'
 		]('hide'); */
 		CodeMirror.autoLoadMode(
-			this.cm.html,
+			this.cm,
 			modes[value].cmPath || modes[value].cmMode
 		);
 		return this.handleModeRequirements(value);
 	}
 	updateJsMode(value) {
-		this.cm.html.setOption('mode', modes[value].cmMode);
+		this.cm.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(
-			this.cm.html,
+			this.cm,
 			modes[value].cmPath || modes[value].cmMode
 		);
 		return this.handleModeRequirements(value);
-	}
-	codeModeChangeHandler(e) {
-		var mode = e.target.value;
-		var type = e.target.dataset.type;
-		var currentMode = this.props.currentItem[
-			type === 'html' ? 'htmlMode' : type === 'css' ? 'cssMode' : 'jsMode'
-		];
-		if (currentMode !== mode) {
-			if (type === 'html') {
-				this.updateHtmlMode(mode).then(() => this.setPreviewContent(true));
-			}
-			trackEvent('ui', 'updateCodeMode', mode);
-		}
 	}
 
 	getDemoFrame(callback) {
@@ -466,16 +444,21 @@ export default class ContentWrap2 extends Component {
 	}
 	fileSelectHandler(file) {
 		this.setState({ selectedFile: file });
-		var cmMode = 'html';
-		if (file.name.match(/\.css$/)) {
-			this.updateCssMode('css');
-		} else if (file.name.match(/\.js$/)) {
-			this.updateCssMode('js');
-		} else {
-			this.updateCssMode('html');
+		if (!this.fileBuffers[file.name]) {
+			this.createEditorDoc(file);
 		}
-		this.cm.html.setValue(file.content || '');
-		this.cm.html.focus();
+		this.cm.swapDoc(this.fileBuffers[file.name]);
+
+		// var cmMode = 'html';
+		// if (file.name.match(/\.css$/)) {
+		// 	this.updateCssMode('css');
+		// } else if (file.name.match(/\.js$/)) {
+		// 	this.updateCssMode('js');
+		// } else {
+		// 	this.updateCssMode('html');
+		// }
+		// this.cm.setValue(file.content || '');
+		this.cm.focus();
 	}
 
 	render() {
@@ -529,7 +512,7 @@ export default class ContentWrap2 extends Component {
 							}}
 							prefs={this.props.prefs}
 							onChange={this.onHtmlCodeChange.bind(this)}
-							onCreation={el => (this.cm.html = el)}
+							onCreation={editor => (this.cm = editor)}
 							onFocus={this.editorFocusHandler.bind(this)}
 						/>
 					</div>

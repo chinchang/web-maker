@@ -8,35 +8,11 @@ import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
 import CodeMirrorBox from './CodeMirrorBox';
 import { deferred } from '../deferred';
+import { SidePane } from './SidePane';
 const minCodeWrapSize = 33;
 
 /* global htmlCodeEl, jsCodeEl, cssCodeEl, logCountEl
 */
-class Sidebar extends Component {
-	render() {
-		return (
-			<div class="sidebar">
-				Sidebar
-				{this.props.files.map(file => (
-					<div>
-						<button
-							class="sidebar__file"
-							type="button"
-							onClick={this.props.onFileSelect.bind(null, file)}
-						>
-							<img
-								src="http://icons-for-free.com/icon/download-css_html_html5_icon-498356.png"
-								width="16"
-							/>
-							{file.name}
-						</button>
-					</div>
-				))}
-			</div>
-		);
-	}
-}
-
 export default class ContentWrap2 extends Component {
 	constructor(props) {
 		super(props);
@@ -65,6 +41,15 @@ export default class ContentWrap2 extends Component {
 			this.props.currentItem !== nextProps.currentItem ||
 			this.props.prefs !== nextProps.prefs
 		);
+	}
+	componentWillUpdate(nextProps) {
+		if (
+			this.props.currentItem.createdOn !== nextProps.currentItem.createdOn ||
+			this.props.currentItem.id !== nextProps.currentItem.id
+		) {
+			this.fileBuffers = {};
+			this.state.selectedFile = null;
+		}
 	}
 	componentDidUpdate() {
 		if (
@@ -97,7 +82,7 @@ export default class ContentWrap2 extends Component {
 			mode = modes[HtmlModes.HTML].cmMode;
 		}
 		console.log('mode', mode);
-		this.fileBuffers[file.name] = CodeMirror.Doc(file.content, mode);
+		this.fileBuffers[file.name] = CodeMirror.Doc(file.content || '', mode);
 	}
 
 	onHtmlCodeChange(editor, change) {
@@ -195,38 +180,12 @@ export default class ContentWrap2 extends Component {
 			? this.detachedWindow.document.querySelector('iframe')
 			: this.frame;
 
-		const cssMode = this.props.currentItem.cssMode;
-		var htmlPromise = computeHtml(
-			currentCode.html,
-			this.props.currentItem.htmlMode
-		);
-		var cssPromise = computeCss(
-			cssMode === CssModes.ACSS ? currentCode.html : currentCode.css,
-			cssMode,
-			this.props.currentItem.cssSettings
-		);
-		var jsPromise = computeJs(
-			currentCode.js,
-			this.props.currentItem.jsMode,
-			true,
-			this.props.prefs.infiniteLoopTimeout
-		);
-		Promise.all([htmlPromise, cssPromise, jsPromise]).then(result => {
-			/* if (cssMode === CssModes.ACSS) {
-				this.cm.css.setValue(result[1].code || '');
-			} */
-
-			this.createPreviewFile(
-				result[0].code || '',
-				result[1].code || '',
-				result[2].code || ''
-			);
-			result.forEach(resultItem => {
-				if (resultItem.errors) {
-					this.showErrors(resultItem.errors.lang, resultItem.errors.data);
-				}
-			});
-		});
+		this.createPreviewFile();
+		// result.forEach(resultItem => {
+		// 	if (resultItem.errors) {
+		// 		this.showErrors(resultItem.errors.lang, resultItem.errors.data);
+		// 	}
+		// });
 
 		this.codeInPreview.html = currentCode.html;
 		this.codeInPreview.css = currentCode.css;
@@ -406,12 +365,12 @@ export default class ContentWrap2 extends Component {
 	updateHtmlMode(value) {
 		// this.props.onCodeModeChange('html', value);
 		// this.props.currentItem.htmlMode = value;
-		this.cm.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(
-			this.cm,
-			modes[value].cmPath || modes[value].cmMode
-		);
-		return this.handleModeRequirements(value);
+		// this.cm.setOption('mode', modes[value].cmMode);
+		// CodeMirror.autoLoadMode(
+		// 	this.cm,
+		// 	modes[value].cmPath || modes[value].cmMode
+		// );
+		// return this.handleModeRequirements(value);
 	}
 	updateCssMode(value) {
 		// this.props.onCodeModeChange('css', value);
@@ -474,9 +433,11 @@ export default class ContentWrap2 extends Component {
 				onDragEnd={this.mainSplitDragEndHandler.bind(this)}
 			>
 				<div id="js-sidebar">
-					<Sidebar
+					<SidePane
 						files={this.props.currentItem.files || []}
+						selectedFile={this.state.selectedFile}
 						onFileSelect={this.fileSelectHandler.bind(this)}
+						onAddFile={this.props.onAddFile}
 					/>
 				</div>
 				<div class="code-side" id="js-code-side">

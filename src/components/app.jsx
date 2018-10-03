@@ -264,7 +264,7 @@ export default class App extends Component {
 		alertsService.add(`"${sourceItem.title}" was forked`);
 		trackEvent('fn', 'itemForked');
 	}
-	createNewItem(isProject = true) {
+	createNewItem(isFileMode = false) {
 		const d = new Date();
 		let item = {
 			title:
@@ -275,15 +275,17 @@ export default class App extends Component {
 				'-' +
 				d.getHours() +
 				':' +
-				d.getMinutes()
+				d.getMinutes(),
+			createdOn: +d,
+			content: ''
 		};
-		if (isProject) {
+		if (isFileMode) {
 			item = {
 				...item,
 				files: [
-					{ name: 'index.html' },
-					{ name: 'style.css' },
-					{ name: 'script.js' }
+					{ name: 'index.html', content: '' },
+					{ name: 'style.css', content: '' },
+					{ name: 'script.js', content: '' }
 				]
 			};
 		} else {
@@ -1165,6 +1167,10 @@ export default class App extends Component {
 		this.createNewItem();
 		this.setState({ isCreateNewModalOpen: false });
 	}
+	blankFileTemplateSelectHandler() {
+		this.createNewItem(true);
+		this.setState({ isCreateNewModalOpen: false });
+	}
 
 	templateSelectHandler(template) {
 		fetch(`templates/template-${template.id}.json`)
@@ -1173,6 +1179,17 @@ export default class App extends Component {
 				this.forkItem(json);
 			});
 		this.setState({ isCreateNewModalOpen: false });
+	}
+	addFileHandler(fileName) {
+		this.setState({
+			currentItem: {
+				...this.state.currentItem,
+				files: [
+					...this.state.currentItem.files,
+					{ name: fileName, content: '' }
+				]
+			}
+		});
 	}
 
 	render() {
@@ -1204,6 +1221,7 @@ export default class App extends Component {
 						prefs={this.state.prefs}
 						onEditorFocus={this.editorFocusHandler.bind(this)}
 						onSplitUpdate={this.splitUpdateHandler.bind(this)}
+						onAddFile={this.addFileHandler.bind(this)}
 					/>
 
 					<Footer
@@ -1361,6 +1379,9 @@ export default class App extends Component {
 					show={this.state.isCreateNewModalOpen}
 					closeHandler={() => this.setState({ isCreateNewModalOpen: false })}
 					onBlankTemplateSelect={this.blankTemplateSelectHandler.bind(this)}
+					onBlankFileTemplateSelect={this.blankFileTemplateSelectHandler.bind(
+						this
+					)}
 					onTemplateSelect={this.templateSelectHandler.bind(this)}
 				/>
 

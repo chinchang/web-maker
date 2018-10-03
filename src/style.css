@@ -41,6 +41,7 @@ textarea {
 	border-radius: 3px;
 	padding: 10px;
 	box-sizing: border-box;
+	max-width: 100%;
 }
 
 [role='button'] {
@@ -95,6 +96,9 @@ button {
 
 .flex-shrink-0 {
 	flex-shrink: 0;
+}
+.jc-sb {
+	justify-content: space-between;
 }
 
 .fr {
@@ -1605,9 +1609,23 @@ body:not(.is-app) .show-when-app {
 }
 
 .sidebar__file {
-	color: white;
+	color: #f3f3f3;
 	background: transparent;
 	border: none;
+	width: 100%;
+	text-align: left;
+	display: flex;
+	align-items: center;
+}
+.sidebar__file.selected {
+	color: white;
+	background-color: mediumblue;
+}
+
+.sidebar__file-icon {
+	width: 16px;
+	height: 16px;
+	margin-right: 10px;
 }
 
 @media screen and (max-width: 600px) {

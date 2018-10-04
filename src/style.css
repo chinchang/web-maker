@@ -661,6 +661,8 @@ body > #demo-frame {
 
 .btn--dark > svg {
 	fill: #9297b3;
+}
+.btn--dark > svg:not(:last-child) {
 	margin-right: 4px;
 }
 
@@ -669,9 +671,13 @@ body > #demo-frame {
 }
 
 .btn--dark:hover {
-	border-color: rgba(146, 151, 179, 0.5);
+	background: #9297b3;
+	color: #111;
+	/* border-color: rgba(146, 151, 179, 0.5); */
 }
-
+.btn--dark:hover > svg {
+	fill: #111;
+}
 .main-header__btn-wrap > .is-loading {
 	pointer-events: none;
 	opacity: 0.4;

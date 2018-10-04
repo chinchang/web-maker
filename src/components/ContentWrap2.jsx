@@ -52,14 +52,16 @@ export default class ContentWrap2 extends Component {
 		}
 	}
 	componentDidUpdate() {
+		const { currentItem } = this.props;
+
+		// Select a new file if nothing is selected already or the selected file exists no more.
 		if (
-			this.props.currentItem &&
-			this.props.currentItem.files &&
-			!this.state.selectedFile
+			currentItem &&
+			currentItem.files &&
+			(!this.state.selectedFile ||
+				!currentItem.files.includes(this.state.selectedFile))
 		) {
-			this.setState({
-				selectedFile: this.props.currentItem.files[0]
-			});
+			this.fileSelectHandler(this.props.currentItem.files[0]);
 		}
 		// HACK: becuase its a DOM manipulation
 		// window.logCountEl.textContent = this.logCount;
@@ -438,6 +440,7 @@ export default class ContentWrap2 extends Component {
 						selectedFile={this.state.selectedFile}
 						onFileSelect={this.fileSelectHandler.bind(this)}
 						onAddFile={this.props.onAddFile}
+						onRemoveFile={this.props.onRemoveFile}
 					/>
 				</div>
 				<div class="code-side" id="js-code-side">

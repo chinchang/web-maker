@@ -1615,17 +1615,19 @@ body:not(.is-app) .show-when-app {
 }
 
 .sidebar__file {
-	color: #f3f3f3;
+	color: #bbb;
 	background: transparent;
 	border: none;
 	width: 100%;
 	text-align: left;
 	display: flex;
+	padding: 2px 4px;
 	align-items: center;
+	justify-content: space-between;
 }
 .sidebar__file.selected {
 	color: white;
-	background-color: mediumblue;
+	background-color: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar__file-icon {
@@ -1633,7 +1635,13 @@ body:not(.is-app) .show-when-app {
 	height: 16px;
 	margin-right: 10px;
 }
-
+.sidebar__file-options {
+	visibility: hidden;
+}
+.sidebar__file:hover .sidebar__file-options,
+.sidebar__file:focus .sidebar__file-options {
+	visibility: visible;
+}
 @media screen and (max-width: 600px) {
 	body {
 		font-size: 70%;

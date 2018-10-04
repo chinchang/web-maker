@@ -64,8 +64,15 @@ export class SidePane extends Component {
 			this.setState({ isEditing: false });
 		}
 	}
+	removeFileClickHandler(file, e) {
+		e.stopPropagation();
+		const answer = confirm(`Are you sure you want to delete ${file.name}?`);
+		if (answer) {
+			this.props.onRemoveFile(file);
+		}
+	}
 	render() {
-		const { files, onFileSelect, selectedFile } = this.props;
+		const { files, onFileSelect, selectedFile, onRemoveFile } = this.props;
 
 		return (
 			<div class="sidebar">
@@ -105,8 +112,24 @@ export class SidePane extends Component {
 							type="button"
 							onClick={onFileSelect.bind(null, file)}
 						>
-							<FileIcon fileName={file.name} />
-							{file.name}
+							<div class="flex flex-v-center">
+								<FileIcon fileName={file.name} />
+								{file.name}
+							</div>
+							<div class="sidebar__file-options">
+								<button
+									type="button"
+									class="btn btn--dark"
+									onClick={this.removeFileClickHandler.bind(this, file)}
+								>
+									<svg
+										viewBox="0 0 24 24"
+										style="vertical-align:middle;width:14px;height:14px"
+									>
+										<path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+									</svg>
+								</button>
+							</div>
 						</button>
 					</div>
 				))}

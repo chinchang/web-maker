@@ -1191,6 +1191,16 @@ export default class App extends Component {
 			}
 		});
 	}
+	removeFileHandler(fileToRemove) {
+		this.setState({
+			currentItem: {
+				...this.state.currentItem,
+				files: this.state.currentItem.files.filter(
+					file => file !== fileToRemove
+				)
+			}
+		});
+	}
 
 	render() {
 		return (
@@ -1222,6 +1232,7 @@ export default class App extends Component {
 						onEditorFocus={this.editorFocusHandler.bind(this)}
 						onSplitUpdate={this.splitUpdateHandler.bind(this)}
 						onAddFile={this.addFileHandler.bind(this)}
+						onRemoveFile={this.removeFileHandler.bind(this)}
 					/>
 
 					<Footer

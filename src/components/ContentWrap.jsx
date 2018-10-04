@@ -34,7 +34,6 @@ export default class ContentWrap extends Component {
 		this.logCount = 0;
 
 		window.onMessageFromConsole = this.onMessageFromConsole.bind(this);
-
 		window.previewException = this.previewException.bind(this);
 		// `clearConsole` is on window because it gets called from inside iframe also.
 		window.clearConsole = this.clearConsole.bind(this);

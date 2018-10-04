@@ -1,19 +1,19 @@
 import { h, Component } from 'preact';
-import UserCodeMirror from './UserCodeMirror.jsx';
-import { computeHtml, computeCss, computeJs } from '../computes';
+import UserCodeMirror from './UserCodeMirror';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
-import { log, writeFile, loadJS, getCompleteHtml } from '../utils';
-import { SplitPane } from './SplitPane.jsx';
+import { log, loadJS } from '../utils';
+import { SplitPane } from './SplitPane';
 import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
-import CodeMirrorBox from './CodeMirrorBox';
 import { deferred } from '../deferred';
 import { SidePane } from './SidePane';
+import { Console } from './Console';
+
 const minCodeWrapSize = 33;
 
 /* global htmlCodeEl, jsCodeEl, cssCodeEl, logCountEl
 */
-export default class ContentWrap2 extends Component {
+export default class ContentWrapFiles extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -28,8 +28,12 @@ export default class ContentWrap2 extends Component {
 		this.prefs = {};
 		this.codeInPreview = { html: null, css: null, js: null };
 		this.cmCodes = { html: props.currentItem.html, css: '', js: '' };
-		// this.cm = {};
 		this.logCount = 0;
+
+		window.onMessageFromConsole = this.onMessageFromConsole.bind(this);
+		window.previewException = this.previewException.bind(this);
+		// `clearConsole` is on window because it gets called from inside iframe also.
+		window.clearConsole = this.clearConsole.bind(this);
 	}
 	shouldComponentUpdate(nextProps, nextState) {
 		return (
@@ -130,6 +134,19 @@ export default class ContentWrap2 extends Component {
 		var obj = {};
 		this.props.currentItem.files.forEach(file => {
 			obj[`/user/${file.name}`] = file.content || '';
+
+			// Add screenlog to index.html
+			if (file.name === 'index.html') {
+				obj[`/user/${file.name}`] =
+					'<script src="' +
+					(chrome.extension
+						? chrome.extension.getURL('lib/screenlog.js')
+						: `${location.origin}${
+								window.DEBUG ? '' : BASE_PATH
+						  }/lib/screenlog.js`) +
+					'"></script>' +
+					obj[`/user/${file.name}`];
+			}
 		});
 
 		navigator.serviceWorker.controller.postMessage(obj);
@@ -422,6 +439,92 @@ export default class ContentWrap2 extends Component {
 		this.cm.focus();
 	}
 
+	updateLogCount() {
+		if (window.logCountEl) {
+			logCountEl.textContent = this.logCount;
+		}
+	}
+
+	onMessageFromConsole() {
+		/* eslint-disable no-param-reassign */
+		[...arguments].forEach(arg => {
+			if (
+				arg &&
+				arg.indexOf &&
+				arg.indexOf('filesystem:chrome-extension') !== -1
+			) {
+				arg = arg.replace(
+					/filesystem:chrome-extension.*\.js:(\d+):*(\d*)/g,
+					'script $1:$2'
+				);
+			}
+			try {
+				this.consoleCm.replaceRange(
+					arg +
+						' ' +
+						((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
+						'\n',
+					{
+						line: Infinity
+					}
+				);
+			} catch (e) {
+				this.consoleCm.replaceRange('🌀\n', {
+					line: Infinity
+				});
+			}
+			this.consoleCm.scrollTo(0, Infinity);
+			this.logCount++;
+		});
+		this.updateLogCount();
+
+		/* eslint-enable no-param-reassign */
+	}
+
+	previewException(error) {
+		console.error('Possible infinite loop detected.', error.stack);
+		this.onMessageFromConsole('Possible infinite loop detected.', error.stack);
+	}
+
+	toggleConsole() {
+		this.setState({ isConsoleOpen: !this.state.isConsoleOpen });
+		trackEvent('ui', 'consoleToggle');
+	}
+	consoleHeaderDblClickHandler(e) {
+		if (!e.target.classList.contains('js-console__header')) {
+			return;
+		}
+		trackEvent('ui', 'consoleToggleDblClick');
+		this.toggleConsole();
+	}
+	clearConsole() {
+		this.consoleCm.setValue('');
+		this.logCount = 0;
+		this.updateLogCount();
+	}
+	clearConsoleBtnClickHandler() {
+		this.clearConsole();
+		trackEvent('ui', 'consoleClearBtnClick');
+	}
+
+	evalConsoleExpr(e) {
+		// Clear console on CTRL + L
+		if ((e.which === 76 || e.which === 12) && e.ctrlKey) {
+			this.clearConsole();
+			trackEvent('ui', 'consoleClearKeyboardShortcut');
+		} else if (e.which === 13) {
+			this.onMessageFromConsole('> ' + e.target.value);
+
+			/* eslint-disable no-underscore-dangle */
+			this.frame.contentWindow._wmEvaluate(e.target.value);
+
+			/* eslint-enable no-underscore-dangle */
+
+			e.target.value = '';
+			trackEvent('fn', 'evalConsoleExpr');
+		}
+	}
+
 	render() {
 		return (
 			<SplitPane
@@ -488,6 +591,16 @@ export default class ContentWrap2 extends Component {
 						frameborder="0"
 						id="demo-frame"
 						allowfullscreen
+					/>
+					<Console
+						isConsoleOpen={this.state.isConsoleOpen}
+						onConsoleHeaderDblClick={this.consoleHeaderDblClickHandler.bind(
+							this
+						)}
+						onClearConsoleBtnClick={this.clearConsoleBtnClickHandler.bind(this)}
+						toggleConsole={this.toggleConsole.bind(this)}
+						onEvalInputKeyup={this.evalConsoleExpr.bind(this)}
+						onReady={el => (this.consoleCm = el)}
 					/>
 				</div>
 			</SplitPane>

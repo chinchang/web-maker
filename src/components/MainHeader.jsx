@@ -27,22 +27,24 @@ export function MainHeader(props) {
 					</svg>Run
 				</button>
 
-				<Button
-					onClick={props.addLibraryBtnHandler}
-					data-event-category="ui"
-					data-event-action="addLibraryButtonClick"
-					class="btn--dark flex-v-center hint--rounded hint--bottom-left"
-					aria-label="Add a JS/CSS library"
-				>
-					Add library{' '}
-					<span
-						id="js-external-lib-count"
-						style={`display:${props.externalLibCount ? 'inline' : 'none'}`}
-						class="count-label"
+				{!this.props.isFileMode && (
+					<Button
+						onClick={props.addLibraryBtnHandler}
+						data-event-category="ui"
+						data-event-action="addLibraryButtonClick"
+						class="btn--dark flex-v-center hint--rounded hint--bottom-left"
+						aria-label="Add a JS/CSS library"
 					>
-						{props.externalLibCount}
-					</span>
-				</Button>
+						Add library{' '}
+						<span
+							id="js-external-lib-count"
+							style={`display:${props.externalLibCount ? 'inline' : 'none'}`}
+							class="count-label"
+						>
+							{props.externalLibCount}
+						</span>
+					</Button>
+				)}
 
 				<button
 					class="btn--dark flex  flex-v-center hint--rounded hint--bottom-left"

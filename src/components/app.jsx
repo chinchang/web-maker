@@ -1222,6 +1222,7 @@ export default class App extends Component {
 						titleInputBlurHandler={this.titleInputBlurHandler.bind(this)}
 						user={this.state.user}
 						unsavedEditCount={this.state.unsavedEditCount}
+						isFileMode={this.state.currentItem && this.state.currentItem.files}
 					/>
 					{this.state.currentItem && this.state.currentItem.files ? (
 						<ContentWrapFiles

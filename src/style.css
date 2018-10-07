@@ -1642,6 +1642,10 @@ body:not(.is-app) .show-when-app {
 .sidebar__file:focus .sidebar__file-options {
 	visibility: visible;
 }
+
+.is-project .hide-in-file-mode {
+	display: none !important;
+}
 @media screen and (max-width: 600px) {
 	body {
 		font-size: 70%;

@@ -33,6 +33,7 @@ export default class Settings extends Component {
 		return true;
 	}
 	render() {
+		const { prefs } = this.props;
 		return (
 			<div>
 				<h1>Settings</h1>
@@ -47,7 +48,7 @@ export default class Settings extends Component {
 							type="radio"
 							name="indentation"
 							value="spaces"
-							checked={this.props.prefs.indentation === 'spaces'}
+							checked={prefs.indentWith === 'spaces'}
 							onChange={this.updateSetting.bind(this)}
 							data-setting="indentWith"
 						/>{' '}
@@ -58,7 +59,7 @@ export default class Settings extends Component {
 							type="radio"
 							name="indentation"
 							value="tabs"
-							checked={this.props.prefs.indentation === 'tabs'}
+							checked={prefs.indentWith === 'tabs'}
 							onChange={this.updateSetting.bind(this)}
 							data-setting="indentWith"
 						/>{' '}
@@ -70,14 +71,14 @@ export default class Settings extends Component {
 					<input
 						type="range"
 						class="va-m ml-1"
-						value={this.props.prefs.indentSize}
+						value={prefs.indentSize}
 						min="1"
 						max="7"
 						list="indentationSizeList"
 						data-setting="indentSize"
 						onChange={this.updateSetting.bind(this)}
 					/>
-					<span id="indentationSizeValueEl">{this.props.prefs.indentSize}</span>
+					<span id="indentationSizeValueEl">{prefs.indentSize}</span>
 					<datalist id="indentationSizeList">
 						<option>1</option>
 						<option>2</option>
@@ -99,7 +100,7 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin-left:20px"
 								data-setting="htmlMode"
-								value={this.props.prefs.htmlMode}
+								value={prefs.htmlMode}
 								onChange={this.updateSetting.bind(this)}
 							>
 								<option value="html">HTML</option>
@@ -109,7 +110,7 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin-left:20px"
 								data-setting="cssMode"
-								value={this.props.prefs.cssMode}
+								value={prefs.cssMode}
 								onChange={this.updateSetting.bind(this)}
 							>
 								<option value="css">CSS</option>
@@ -122,7 +123,7 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin-left:20px"
 								data-setting="jsMode"
-								value={this.props.prefs.jsMode}
+								value={prefs.jsMode}
 								onChange={this.updateSetting.bind(this)}
 							>
 								<option value="js">JS</option>
@@ -136,7 +137,7 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin:0 20px"
 								data-setting="editorTheme"
-								value={this.props.prefs.editorTheme}
+								value={prefs.editorTheme}
 								onChange={this.updateSetting.bind(this)}
 							>
 								{editorThemes.map(theme => (
@@ -149,7 +150,7 @@ export default class Settings extends Component {
 							<select
 								style="flex:1;margin:0 20px"
 								data-setting="editorFont"
-								value={this.props.prefs.editorFont}
+								value={prefs.editorFont}
 								onChange={this.updateSetting.bind(this)}
 							>
 								<option value="FiraCode">Fira Code</option>
@@ -159,11 +160,11 @@ export default class Settings extends Component {
 								<option disabled="disabled">----</option>
 								<option value="other">Other font from system</option>
 							</select>
-							{this.props.prefs.editorFont === 'other' && (
+							{prefs.editorFont === 'other' && (
 								<input
 									id="customEditorFontInput"
 									type="text"
-									value={this.props.prefs.editorCustomFont}
+									value={prefs.editorCustomFont}
 									placeholder="Custom font name here"
 									data-setting="editorCustomFont"
 									onChange={this.updateSetting.bind(this)}
@@ -175,7 +176,7 @@ export default class Settings extends Component {
 							<input
 								style="width:70px"
 								type="number"
-								value={this.props.prefs.fontSize}
+								value={prefs.fontSize}
 								data-setting="fontSize"
 								onChange={this.updateSetting.bind(this)}
 							/>{' '}
@@ -188,7 +189,7 @@ export default class Settings extends Component {
 									type="radio"
 									name="keymap"
 									value="sublime"
-									checked={this.props.prefs.keymap === 'sublime'}
+									checked={prefs.keymap === 'sublime'}
 									data-setting="keymap"
 									onChange={this.updateSetting.bind(this)}
 								/>{' '}
@@ -199,7 +200,7 @@ export default class Settings extends Component {
 									type="radio"
 									name="keymap"
 									value="vim"
-									checked={this.props.prefs.keymap === 'vim'}
+									checked={prefs.keymap === 'vim'}
 									data-setting="keymap"
 									onChange={this.updateSetting.bind(this)}
 								/>{' '}
@@ -212,49 +213,49 @@ export default class Settings extends Component {
 							name="lineWrap"
 							title="Toggle wrapping of long sentences onto new line"
 							label="Line wrap"
-							pref={this.props.prefs.lineWrap}
+							pref={prefs.lineWrap}
 							onChange={this.updateSetting.bind(this)}
 						/>
 						<CheckboxSetting
 							name="refreshOnResize"
 							title="Your Preview will refresh when you resize the preview split"
 							label="Refresh preview on resize"
-							pref={this.props.prefs.refreshOnResize}
+							pref={prefs.refreshOnResize}
 							onChange={this.updateSetting.bind(this)}
 						/>
 						<CheckboxSetting
 							name="autoComplete"
 							title="Turns on the auto-completion suggestions as you type"
 							label="Auto-complete suggestions"
-							pref={this.props.prefs.autoComplete}
+							pref={prefs.autoComplete}
 							onChange={this.updateSetting.bind(this)}
 						/>
 						<CheckboxSetting
 							name="autoPreview"
 							title="Refreshes the preview as you code. Otherwise use the Run button"
 							label="Auto-preview"
-							pref={this.props.prefs.autoPreview}
+							pref={prefs.autoPreview}
 							onChange={this.updateSetting.bind(this)}
 						/>
 						<CheckboxSetting
 							name="autoSave"
 							title="Auto-save keeps saving your code at regular intervals after you hit the first save manually"
 							label="Auto-save"
-							pref={this.props.prefs.autoSave}
+							pref={prefs.autoSave}
 							onChange={this.updateSetting.bind(this)}
 						/>
 						<CheckboxSetting
 							name="preserveLastCode"
 							title="Loads the last open creation when app starts"
 							label="Preserve last written code"
-							pref={this.props.prefs.preserveLastCode}
+							pref={prefs.preserveLastCode}
 							onChange={this.updateSetting.bind(this)}
 						/>
 						<CheckboxSetting
 							name="replaceNewTab"
 							title="Turning this on will start showing Web Maker in every new tab you open"
 							label="Replace new tab page"
-							pref={this.props.prefs.replaceNewTab}
+							pref={prefs.replaceNewTab}
 							onChange={this.updateSetting.bind(this)}
 							showWhenExtension
 						/>
@@ -262,14 +263,14 @@ export default class Settings extends Component {
 							name="preserveConsoleLogs"
 							title="Preserves the console logs across your preview refreshes"
 							label="Preserve console logs"
-							pref={this.props.prefs.preserveConsoleLogs}
+							pref={prefs.preserveConsoleLogs}
 							onChange={this.updateSetting.bind(this)}
 						/>
 						<CheckboxSetting
 							name="lightVersion"
 							title="Switch to lighter version for better performance. Removes things like blur etc."
 							label="Fast/light version"
-							pref={this.props.prefs.lightVersion}
+							pref={prefs.lightVersion}
 							onChange={this.updateSetting.bind(this)}
 						/>
 					</div>
@@ -283,7 +284,7 @@ export default class Settings extends Component {
 						title="Enjoy wonderful particle blasts while you type"
 						label="Code blast!"
 						name="isCodeBlastOn"
-						pref={this.props.prefs.isCodeBlastOn}
+						pref={prefs.isCodeBlastOn}
 						onChange={this.updateSetting.bind(this)}
 					/>
 
@@ -291,7 +292,7 @@ export default class Settings extends Component {
 						title="Get ready to build some games at JS13KGames"
 						label="Js13kGames Mode"
 						name="isJs13kModeOn"
-						pref={this.props.prefs.isJs13kModeOn}
+						pref={prefs.isJs13kModeOn}
 						onChange={this.updateSetting.bind(this)}
 					/>
 				</p>
@@ -307,7 +308,7 @@ export default class Settings extends Component {
 						Maximum time allowed in a loop iteration{' '}
 						<input
 							type="number"
-							value={this.props.prefs.infiniteLoopTimeout}
+							value={prefs.infiniteLoopTimeout}
 							data-setting="infiniteLoopTimeout"
 							onChange={this.updateSetting.bind(this)}
 						/>{' '}

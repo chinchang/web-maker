@@ -6,7 +6,6 @@ function FileIcon({ fileName }) {
 	if (!fileName) fileName = 'sd.sd';
 
 	const type = fileName.match(/.(\w+)$/)[1];
-	console.log(type);
 	switch (type) {
 		case 'html':
 			return (

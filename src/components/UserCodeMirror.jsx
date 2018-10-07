@@ -38,27 +38,59 @@ emmet(CodeMirror);
 export default class UserCodeMirror extends Component {
 	componentDidMount() {
 		this.initEditor();
+		this.textarea.parentNode.querySelector(
+			'.CodeMirror'
+		).style.fontSize = `${parseInt(this.props.prefs.fontSize, 10)}px`;
 	}
-	shouldComponentUpdate() {
+	shouldComponentUpdate(nextProps) {
+		if (nextProps.prefs !== this.props.prefs) {
+			const { prefs } = nextProps;
+			console.log('updating', nextProps.options.mode);
+
+			this.cm.setOption('indentWithTabs', prefs.indentWith !== 'spaces');
+			this.cm.setOption(
+				'blastCode',
+				prefs.isCodeBlastOn ? { effect: 2, shake: false } : false
+			);
+			this.cm.setOption('theme', prefs.editorTheme);
+
+			this.cm.setOption('indentUnit', +prefs.indentSize);
+			this.cm.setOption('tabSize', +prefs.indentSize);
+
+			this.cm.setOption('keyMap', prefs.keymap);
+			this.cm.setOption('lineWrapping', prefs.lineWrap);
+
+			if (this.textarea) {
+				this.textarea.parentNode.querySelector(
+					'.CodeMirror'
+				).style.fontSize = `${parseInt(prefs.fontSize, 10)}px`;
+			}
+
+			this.cm.refresh();
+		}
+
 		return false;
 	}
 
 	initEditor() {
-		const options = this.props.options;
+		const { options, prefs } = this.props;
+		console.log(100, prefs.lineWrap);
 		this.cm = CodeMirror.fromTextArea(this.textarea, {
 			mode: options.mode,
 			lineNumbers: true,
-			lineWrapping: true,
+			lineWrapping: !!prefs.lineWrap,
 			autofocus: options.autofocus || false,
 			autoCloseBrackets: true,
 			autoCloseTags: true,
 			matchBrackets: true,
 			matchTags: options.matchTags || false,
 			tabMode: 'indent',
-			keyMap: 'sublime',
-			theme: 'monokai',
+			keyMap: prefs.keyMap || 'sublime',
+			theme: prefs.editorTheme || 'monokai',
 			lint: !!options.lint,
-			tabSize: 2,
+			tabSize: +prefs.indentSize || 2,
+			indentWithTabs: prefs.indentWith !== 'spaces',
+			indentUnit: +prefs.indentSize,
 			foldGutter: true,
 			styleActiveLine: true,
 			gutters: options.gutters || [],
@@ -91,7 +123,7 @@ export default class UserCodeMirror extends Component {
 					const input = $('[data-setting=indentWith]:checked');
 					if (
 						!editor.somethingSelected() &&
-						(!input || input.value === 'spaces')
+						(!prefs.indentWith || prefs.indentWith === 'spaces')
 					) {
 						// softtabs adds spaces. This is required because by default tab key will put tab, but we want
 						// to indent with spaces if `spaces` is preferred mode of indentation.

@@ -195,7 +195,7 @@ export default class App extends Component {
 				this.createNewItem();
 			}
 			Object.assign(this.state.prefs, result);
-			this.setState({ prefs: this.state.prefs });
+			this.setState({ prefs: { ...this.state.prefs } });
 			this.updateSetting();
 		});
 

@@ -185,7 +185,7 @@ export default class ContentWrapFiles extends Component {
 		}
 
 		if (!this.props.prefs.preserveConsoleLogs) {
-			// this.clearConsole();
+			this.clearConsole();
 		}
 		this.cleanupErrors();
 
@@ -221,7 +221,7 @@ export default class ContentWrapFiles extends Component {
 		this.cm.refresh();
 		window.cm = this.cm;
 
-		// this.clearConsole();
+		this.clearConsole();
 
 		// Set preview only when all modes are updated so that preview doesn't generate on partially
 		// correct modes and also doesn't happen 3 times.
@@ -230,41 +230,25 @@ export default class ContentWrapFiles extends Component {
 		);
 	}
 	applyCodemirrorSettings(prefs) {
-		if (!this.cm) {
-			return;
+		if (window.consoleEl) {
+			window.consoleEl.querySelector(
+				'.CodeMirror'
+			).style.fontSize = `${parseInt(prefs.fontSize, 10)}px`;
 		}
-		htmlCodeEl.querySelector('.CodeMirror').style.fontSize = `${parseInt(
-			prefs.fontSize,
-			10
-		)}px`;
 
 		// Replace correct css file in LINK tags's href
-		window.editorThemeLinkTag.href = `lib/codemirror/theme/${
-			prefs.editorTheme
-		}.css`;
+		if (prefs.editorTheme) {
+			window.editorThemeLinkTag.href = `lib/codemirror/theme/${
+				prefs.editorTheme
+			}.css`;
+		}
+
 		window.fontStyleTag.textContent = window.fontStyleTemplate.textContent.replace(
 			/fontname/g,
 			(prefs.editorFont === 'other'
 				? prefs.editorCustomFont
 				: prefs.editorFont) || 'FiraCode'
 		);
-		// window.customEditorFontInput.classList[
-		// 	prefs.editorFont === 'other' ? 'remove' : 'add'
-		// ]('hide');
-		// this.consoleCm.setOption('theme', prefs.editorTheme);
-
-		this.cm.setOption('indentWithTabs', prefs.indentWith !== 'spaces');
-		this.cm.setOption(
-			'blastCode',
-			prefs.isCodeBlastOn ? { effect: 2, shake: false } : false
-		);
-		this.cm.setOption('indentUnit', +prefs.indentSize);
-		this.cm.setOption('tabSize', +prefs.indentSize);
-		this.cm.setOption('theme', prefs.editorTheme);
-
-		this.cm.setOption('keyMap', prefs.keymap);
-		this.cm.setOption('lineWrapping', prefs.lineWrap);
-		this.cm.refresh();
 	}
 
 	// Check all the code wrap if they are minimized or maximized

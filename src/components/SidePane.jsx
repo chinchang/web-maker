@@ -52,15 +52,37 @@ export class SidePane extends Component {
 			this.newFileNameInput.focus();
 		}, 1);
 	}
+	/**
+	 * Checks if the passed filename already exists and if so, warns the user.
+	 * Also it passes false if the validation fails.
+	 * @param {string} newFileName New file name to validate
+	 */
+	warnForExistingFileName(newFileName) {
+		// We also check for fileBeingRenamed !== file because when a file being renamed is
+		// asked to be set same name, then that should not match and warn here.
+		if (
+			this.props.files.some(
+				file =>
+					file.name === newFileName && this.state.fileBeingRenamed !== file
+			)
+		) {
+			alert(`A file with name ${newFileName} already exists.`);
+			return false;
+		}
+		return true;
+	}
 
 	addFile() {
 		// This gets called twice when enter is pressed, because blur also fires.
 		if (!this.newFileNameInput) {
 			return;
 		}
-		const fileName = this.newFileNameInput.value;
-		if (fileName) {
-			this.props.onAddFile(fileName);
+		const newFileName = this.newFileNameInput.value;
+		if (!this.warnForExistingFileName(newFileName)) {
+			return;
+		}
+		if (newFileName) {
+			this.props.onAddFile(newFileName);
 		}
 		this.setState({ isEditing: false });
 	}
@@ -77,6 +99,36 @@ export class SidePane extends Component {
 		if (answer) {
 			this.props.onRemoveFile(file);
 		}
+	}
+	renameFile() {
+		// This gets called twice when enter is pressed, because blur also fires.
+		if (!this.renameFileNameInput) {
+			return;
+		}
+		const newFileName = this.renameFileNameInput.value;
+		if (!this.warnForExistingFileName(newFileName)) {
+			return;
+		}
+		if (newFileName) {
+			this.props.onRenameFile(this.state.fileBeingRenamed.name, newFileName);
+		}
+		this.setState({ fileBeingRenamed: null });
+	}
+	renameFileNameInputKeyDownHandler(e) {
+		if (e.which === ENTER_KEY) {
+			this.renameFile();
+		} else if (e.which === ESCAPE_KEY) {
+			this.setState({ fileBeingRenamed: null });
+		}
+	}
+	renameFileClickHandler(file, e) {
+		e.stopPropagation();
+		this.setState({
+			fileBeingRenamed: file
+		});
+		setTimeout(() => {
+			this.renameFileNameInput.focus();
+		}, 1);
 	}
 	render() {
 		const { files, onFileSelect, selectedFile, onRemoveFile } = this.props;
@@ -112,32 +164,57 @@ export class SidePane extends Component {
 				) : null}
 				{files.map(file => (
 					<div>
-						<button
-							class={`sidebar__file  ${
-								selectedFile === file ? 'selected' : ''
-							}`}
-							type="button"
-							onClick={onFileSelect.bind(null, file)}
-						>
-							<div class="flex flex-v-center">
-								<FileIcon fileName={file.name} />
-								{file.name}
-							</div>
-							<div class="sidebar__file-options">
-								<button
-									type="button"
-									class="btn btn--dark"
-									onClick={this.removeFileClickHandler.bind(this, file)}
-								>
-									<svg
-										viewBox="0 0 24 24"
-										style="vertical-align:middle;width:14px;height:14px"
+						{file === this.state.fileBeingRenamed ? (
+							<input
+								type="text"
+								ref={el => (this.renameFileNameInput = el)}
+								value={file.name}
+								onBlur={this.renameFile.bind(this)}
+								onKeyUpCapture={this.renameFileNameInputKeyDownHandler.bind(
+									this
+								)}
+							/>
+						) : (
+							<button
+								class={`sidebar__file  ${
+									selectedFile === file ? 'selected' : ''
+								}`}
+								type="button"
+								onClick={onFileSelect.bind(null, file)}
+							>
+								<div class="flex flex-v-center">
+									<FileIcon fileName={file.name} />
+									{file.name}
+								</div>
+								<div class="sidebar__file-options">
+									<button
+										type="button"
+										class="btn btn--dark"
+										onClick={this.renameFileClickHandler.bind(this, file)}
 									>
-										<path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
-									</svg>
-								</button>
-							</div>
-						</button>
+										<svg
+											viewBox="0 0 24 24"
+											style="vertical-align:middle;width:14px;height:14px"
+										>
+											<path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
+										</svg>
+									</button>
+
+									<button
+										type="button"
+										class="btn btn--dark"
+										onClick={this.removeFileClickHandler.bind(this, file)}
+									>
+										<svg
+											viewBox="0 0 24 24"
+											style="vertical-align:middle;width:14px;height:14px"
+										>
+											<path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+										</svg>
+									</button>
+								</div>
+							</button>
+						)}
 					</div>
 				))}
 			</div>

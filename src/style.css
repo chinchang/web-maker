@@ -1621,9 +1621,10 @@ body:not(.is-app) .show-when-app {
 	width: 100%;
 	text-align: left;
 	display: flex;
-	padding: 2px 4px;
+	padding: 5px 4px;
 	align-items: center;
 	justify-content: space-between;
+	position: relative;
 }
 .sidebar__file.selected {
 	color: white;
@@ -1636,10 +1637,13 @@ body:not(.is-app) .show-when-app {
 	margin-right: 10px;
 }
 .sidebar__file-options {
+	position: absolute;
+	right: 0;
 	visibility: hidden;
 }
 .sidebar__file:hover .sidebar__file-options,
-.sidebar__file:focus .sidebar__file-options {
+.sidebar__file:focus .sidebar__file-options,
+.sidebar__file:focus-within .sidebar__file-options {
 	visibility: visible;
 }
 

@@ -555,6 +555,7 @@ export default class ContentWrapFiles extends Component {
 						onFileSelect={this.fileSelectHandler.bind(this)}
 						onAddFile={this.props.onAddFile}
 						onRemoveFile={this.props.onRemoveFile}
+						onRenameFile={this.props.onRenameFile}
 					/>
 				</div>
 				<div class="code-side" id="js-code-side">

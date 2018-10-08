@@ -490,7 +490,9 @@ export default class App extends Component {
 					isKeyboardShortcutsModalOpen: !this.state.isKeyboardShortcutsModalOpen
 				});
 				trackEvent('ui', 'showKeyboardShortcutsShortcut');
-			} else if (event.keyCode === 27) {
+			} else if (event.keyCode === 27 && event.target.tagName !== 'INPUT') {
+				// We might be listening on keydown for some input inside the app. In that case
+				// we don't want this to trigger which in turn focuses back the last editor.
 				this.closeSavedItemsPane();
 			}
 		});
@@ -1202,6 +1204,19 @@ export default class App extends Component {
 			}
 		});
 	}
+	renameFileHandler(oldFileName, newFileName) {
+		this.setState({
+			currentItem: {
+				...this.state.currentItem,
+				files: this.state.currentItem.files.map(file => {
+					if (file.name === oldFileName) {
+						return { ...file, name: newFileName };
+					}
+					return file;
+				})
+			}
+		});
+	}
 
 	render() {
 		return (
@@ -1236,6 +1251,7 @@ export default class App extends Component {
 							onSplitUpdate={this.splitUpdateHandler.bind(this)}
 							onAddFile={this.addFileHandler.bind(this)}
 							onRemoveFile={this.removeFileHandler.bind(this)}
+							onRenameFile={this.renameFileHandler.bind(this)}
 						/>
 					) : (
 						<ContentWrap

@@ -105,14 +105,25 @@ export default class ContentWrapFiles extends Component {
 	createEditorDoc(file) {
 		let mode;
 		if (file.name.match(/\.css$/)) {
-			mode = modes[CssModes.CSS].cmMode;
+			mode = modes[CssModes.CSS];
 		} else if (file.name.match(/\.js$/)) {
-			mode = modes[JsModes.JS].cmMode;
-		} else {
-			mode = modes[HtmlModes.HTML].cmMode;
+			mode = modes[JsModes.JS];
+		} else if (file.name.match(/\.html$/)) {
+			mode = modes[HtmlModes.HTML];
+		} else if (file.name.match(/\.md$/) || file.name.match(/\.markdown$/)) {
+			mode = modes[HtmlModes.MARKDOWN];
+		} else if (file.name.match(/\.sass$/)) {
+			mode = modes[CssModes.SASS];
+		} else if (file.name.match(/\.scss$/)) {
+			mode = modes[CssModes.SCSS];
 		}
-		console.log('mode', mode);
-		this.fileBuffers[file.name] = CodeMirror.Doc(file.content || '', mode);
+
+		CodeMirror.autoLoadMode(this.cm, mode.cmPath || mode.cmMode);
+
+		this.fileBuffers[file.name] = CodeMirror.Doc(
+			file.content || '',
+			mode.cmMode
+		);
 	}
 
 	onHtmlCodeChange(editor, change) {

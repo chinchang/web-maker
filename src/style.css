@@ -1612,6 +1612,7 @@ body:not(.is-app) .show-when-app {
 
 .sidebar {
 	background-color: #1e1e2c;
+	height: 100%;
 }
 
 .sidebar__file {

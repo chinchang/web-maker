@@ -314,7 +314,7 @@ export default class ContentWrapFiles extends Component {
 	// Returns the sizes of main code & preview panes.
 	getMainSplitSizesToApply() {
 		var mainSplitSizes;
-		const sidebarWidth = 160;
+		const sidebarWidth = 200;
 		const { currentItem, currentLayoutMode } = this.props;
 		if (false && currentItem && currentItem.mainSizes) {
 			// For layout mode 3, main panes are reversed using flex-direction.

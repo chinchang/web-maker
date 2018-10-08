@@ -42,6 +42,28 @@ function FileIcon({ fileName }) {
 					/>
 				</svg>
 			);
+		case 'md':
+		case 'markdown':
+			return (
+				<svg class="sidebar__file-icon" viewBox="0 0 24 24">
+					<path
+						fill="skyblue"
+						d="M2,16V8H4L7,11L10,8H12V16H10V10.83L7,13.83L4,10.83V16H2M16,8H19V12H21.5L17.5,16.5L13.5,12H16V8Z"
+					/>
+				</svg>
+			);
+		case 'jpg':
+		case 'jpeg':
+		case 'svg':
+		case 'png':
+			return (
+				<svg class="sidebar__file-icon" viewBox="0 0 24 24">
+					<path
+						fill="crimson"
+						d="M19,19H5V5H19M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M13.96,12.29L11.21,15.83L9.25,13.47L6.5,17H17.5L13.96,12.29Z"
+					/>
+				</svg>
+			);
 	}
 }
 
@@ -135,7 +157,7 @@ export class SidePane extends Component {
 
 		return (
 			<div class="sidebar">
-				<div class="flex jc-sb">
+				<div class="flex jc-sb" style="padding: 5px 4px">
 					Files
 					<div>
 						<button

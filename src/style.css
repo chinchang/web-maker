@@ -1625,6 +1625,11 @@ body:not(.is-app) .show-when-app {
 	align-items: center;
 	justify-content: space-between;
 	position: relative;
+	cursor: pointer;
+}
+.sidebar__file:hover,
+.sidebar__file:focus {
+	background-color: rgba(255, 255, 255, 0.05);
 }
 .sidebar__file.selected {
 	color: white;

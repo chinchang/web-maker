@@ -18,7 +18,8 @@ export default class ContentWrapFiles extends Component {
 		super(props);
 		this.state = {
 			isConsoleOpen: false,
-			isCssSettingsModalOpen: false
+			isCssSettingsModalOpen: false,
+			editorOptions: this.getEditorOptions()
 		};
 
 		this.fileBuffers = {};
@@ -76,6 +77,29 @@ export default class ContentWrapFiles extends Component {
 	}
 	componentDidMount() {
 		this.props.onRef(this);
+	}
+	getEditorOptions(fileName = '') {
+		let options = {
+			gutters: [
+				'error-gutter',
+				'CodeMirror-linenumbers',
+				'CodeMirror-foldgutter'
+			],
+			emmet: true
+		};
+		if (fileName.match(/\.css$/)) {
+		} else if (fileName.match(/\.js$/)) {
+			delete options.emmet;
+		} else if (fileName.match(/\.html$/)) {
+			// HTML
+			options = {
+				...options,
+				noAutocomplete: true,
+				matchTags: { bothTags: true }
+			};
+		}
+
+		return options;
 	}
 
 	createEditorDoc(file) {
@@ -405,7 +429,10 @@ export default class ContentWrapFiles extends Component {
 		this.props.onEditorFocus(editor);
 	}
 	fileSelectHandler(file) {
-		this.setState({ selectedFile: file });
+		this.setState({
+			editorOptions: this.getEditorOptions(file.name),
+			selectedFile: file
+		});
 		if (!this.fileBuffers[file.name]) {
 			this.createEditorDoc(file);
 		}
@@ -553,14 +580,7 @@ export default class ContentWrapFiles extends Component {
 							</div>
 						</div>
 						<UserCodeMirror
-							options={{
-								mode: 'htmlmixed',
-								profile: 'xhtml',
-								gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-								noAutocomplete: true,
-								matchTags: { bothTags: true },
-								emmet: true
-							}}
+							options={this.state.editorOptions}
 							prefs={this.props.prefs}
 							onChange={this.onHtmlCodeChange.bind(this)}
 							onCreation={editor => (this.cm = editor)}

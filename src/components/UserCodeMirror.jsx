@@ -45,7 +45,7 @@ export default class UserCodeMirror extends Component {
 	shouldComponentUpdate(nextProps) {
 		if (nextProps.prefs !== this.props.prefs) {
 			const { prefs } = nextProps;
-			console.log('updating', nextProps.options.mode);
+			console.log('updating CM prefs', prefs);
 
 			this.cm.setOption('indentWithTabs', prefs.indentWith !== 'spaces');
 			this.cm.setOption(
@@ -74,7 +74,7 @@ export default class UserCodeMirror extends Component {
 
 	initEditor() {
 		const { options, prefs } = this.props;
-		console.log(100, prefs.lineWrap);
+		console.log(100, options);
 		this.cm = CodeMirror.fromTextArea(this.textarea, {
 			mode: options.mode,
 			lineNumbers: true,
@@ -143,10 +143,11 @@ export default class UserCodeMirror extends Component {
 		this.cm.addKeyMap({
 			'Ctrl-Space': 'autocomplete'
 		});
-		if (!options.noAutocomplete) {
-			this.cm.on('inputRead', (editor, input) => {
+		this.cm.on('inputRead', (editor, input) => {
+			// Process further If this has autocompletition on and also the global
+			// autocomplete setting is on.
+			if (!this.props.options.noAutocomplete && this.props.prefs.autoComplete) {
 				if (
-					!this.props.prefs.autoComplete ||
 					input.origin !== '+input' ||
 					input.text[0] === ';' ||
 					input.text[0] === ',' ||
@@ -157,8 +158,8 @@ export default class UserCodeMirror extends Component {
 				CodeMirror.commands.autocomplete(this.cm, null, {
 					completeSingle: false
 				});
-			});
-		}
+			}
+		});
 		this.props.onCreation(this.cm);
 	}
 

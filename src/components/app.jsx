@@ -285,7 +285,11 @@ export default class App extends Component {
 				...item,
 				files: [
 					{ name: 'index.html', content: '' },
-					{ name: 'style.css', content: '' },
+					{
+						name: 'styles',
+						isFolder: true,
+						children: [{ name: 'style.css', content: '' }]
+					},
 					{ name: 'script.js', content: '' }
 				]
 			};
@@ -1193,6 +1197,7 @@ export default class App extends Component {
 				]
 			}
 		});
+		console.log(11, this.state.currentItem);
 	}
 	removeFileHandler(fileToRemove) {
 		this.setState({
@@ -1211,6 +1216,20 @@ export default class App extends Component {
 				files: this.state.currentItem.files.map(file => {
 					if (file.name === oldFileName) {
 						return { ...file, name: newFileName };
+					}
+					return file;
+				})
+			}
+		});
+	}
+
+	folderSelectHandler(folder) {
+		this.setState({
+			currentItem: {
+				...this.state.currentItem,
+				files: this.state.currentItem.files.map(file => {
+					if (file === folder) {
+						return { ...file, isCollapsed: !folder.isCollapsed };
 					}
 					return file;
 				})
@@ -1252,6 +1271,7 @@ export default class App extends Component {
 							onAddFile={this.addFileHandler.bind(this)}
 							onRemoveFile={this.removeFileHandler.bind(this)}
 							onRenameFile={this.renameFileHandler.bind(this)}
+							onFolderSelect={this.folderSelectHandler.bind(this)}
 						/>
 					) : (
 						<ContentWrap

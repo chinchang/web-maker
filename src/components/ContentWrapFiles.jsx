@@ -58,15 +58,16 @@ export default class ContentWrapFiles extends Component {
 	}
 	componentDidUpdate() {
 		const { currentItem } = this.props;
+		const linearFiles = this.linearizeFiles(currentItem.files);
 
 		// Select a new file if nothing is selected already or the selected file exists no more.
 		if (
 			currentItem &&
 			currentItem.files &&
 			(!this.state.selectedFile ||
-				!currentItem.files.includes(this.state.selectedFile))
+				!linearFiles.includes(this.state.selectedFile))
 		) {
-			this.fileSelectHandler(this.props.currentItem.files[0]);
+			this.fileSelectHandler(linearFiles[0]);
 		}
 		// HACK: becuase its a DOM manipulation
 		// window.logCountEl.textContent = this.logCount;
@@ -77,6 +78,18 @@ export default class ContentWrapFiles extends Component {
 	}
 	componentDidMount() {
 		this.props.onRef(this);
+	}
+	linearizeFiles(files) {
+		function reduceToLinearFiles(files) {
+			return files.reduce((list, currentFile) => {
+				if (currentFile.isFolder) {
+					return [...list, ...reduceToLinearFiles(currentFile.children)];
+				} else {
+					return [...list, currentFile];
+				}
+			}, []);
+		}
+		return reduceToLinearFiles(files);
 	}
 	getEditorOptions(fileName = '') {
 		let options = {
@@ -440,6 +453,10 @@ export default class ContentWrapFiles extends Component {
 		this.props.onEditorFocus(editor);
 	}
 	fileSelectHandler(file) {
+		if (file.isFolder) {
+			this.props.onFolderSelect(file);
+			return;
+		}
 		this.setState({
 			editorOptions: this.getEditorOptions(file.name),
 			selectedFile: file

@@ -39,7 +39,7 @@ textarea {
 	border-bottom-color: rgba(255, 255, 255, 0.17);
 	box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
 	border-radius: 3px;
-	padding: 10px;
+	padding: 5px 10px;
 	box-sizing: border-box;
 	max-width: 100%;
 }
@@ -1628,6 +1628,10 @@ body:not(.is-app) .show-when-app {
 	position: relative;
 	cursor: pointer;
 }
+.sidebar__folder-wrap > div > .sidebar__file {
+	padding-left: 1rem;
+}
+
 .sidebar__file:hover,
 .sidebar__file:focus {
 	background-color: rgba(255, 255, 255, 0.05);
@@ -1651,6 +1655,10 @@ body:not(.is-app) .show-when-app {
 .sidebar__file:focus .sidebar__file-options,
 .sidebar__file:focus-within .sidebar__file-options {
 	visibility: visible;
+}
+
+.sidebar__folder-wrap[data-collapsed='true'] {
+	display: none;
 }
 
 .is-project .hide-in-file-mode {

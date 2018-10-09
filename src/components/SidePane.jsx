@@ -2,10 +2,25 @@ import { h, Component } from 'preact';
 const ENTER_KEY = 13;
 const ESCAPE_KEY = 27;
 
-function FileIcon({ fileName }) {
-	if (!fileName) fileName = 'sd.sd';
-
-	const type = fileName.match(/.(\w+)$/)[1];
+function FileIcon({ file }) {
+	if (file.isFolder) {
+		return (
+			<svg class="sidebar__file-icon" viewBox="0 0 24 24">
+				{file.isCollapsed ? (
+					<path
+						fill="currentColor"
+						d="M10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6H12L10,4Z"
+					/>
+				) : (
+					<path
+						fill="currentColor"
+						d="M19,20H4C2.89,20 2,19.1 2,18V6C2,4.89 2.89,4 4,4H10L12,6H19A2,2 0 0,1 21,8H21L4,8V18L6.14,10H23.21L20.93,18.5C20.7,19.37 19.92,20 19,20Z"
+					/>
+				)}
+			</svg>
+		);
+	}
+	const type = file.name.match(/.(\w+)$/)[1];
 	switch (type) {
 		case 'html':
 			return (
@@ -64,17 +79,93 @@ function FileIcon({ fileName }) {
 					/>
 				</svg>
 			);
-		case 'jsx':
-		case 'tsx':
-			return (
-				<svg class="sidebar__file-icon" viewBox="0 0 24 24">
-					<path
-						fill="rebeccapurple"
-						d="M12,10.11C13.03,10.11 13.87,10.95 13.87,12C13.87,13 13.03,13.85 12,13.85C10.97,13.85 10.13,13 10.13,12C10.13,10.95 10.97,10.11 12,10.11M7.37,20C8,20.38 9.38,19.8 10.97,18.3C10.45,17.71 9.94,17.07 9.46,16.4C8.64,16.32 7.83,16.2 7.06,16.04C6.55,18.18 6.74,19.65 7.37,20M8.08,14.26L7.79,13.75C7.68,14.04 7.57,14.33 7.5,14.61C7.77,14.67 8.07,14.72 8.38,14.77C8.28,14.6 8.18,14.43 8.08,14.26M14.62,13.5L15.43,12L14.62,10.5C14.32,9.97 14,9.5 13.71,9.03C13.17,9 12.6,9 12,9C11.4,9 10.83,9 10.29,9.03C10,9.5 9.68,9.97 9.38,10.5L8.57,12L9.38,13.5C9.68,14.03 10,14.5 10.29,14.97C10.83,15 11.4,15 12,15C12.6,15 13.17,15 13.71,14.97C14,14.5 14.32,14.03 14.62,13.5M12,6.78C11.81,7 11.61,7.23 11.41,7.5C11.61,7.5 11.8,7.5 12,7.5C12.2,7.5 12.39,7.5 12.59,7.5C12.39,7.23 12.19,7 12,6.78M12,17.22C12.19,17 12.39,16.77 12.59,16.5C12.39,16.5 12.2,16.5 12,16.5C11.8,16.5 11.61,16.5 11.41,16.5C11.61,16.77 11.81,17 12,17.22M16.62,4C16,3.62 14.62,4.2 13.03,5.7C13.55,6.29 14.06,6.93 14.54,7.6C15.36,7.68 16.17,7.8 16.94,7.96C17.45,5.82 17.26,4.35 16.62,4M15.92,9.74L16.21,10.25C16.32,9.96 16.43,9.67 16.5,9.39C16.23,9.33 15.93,9.28 15.62,9.23C15.72,9.4 15.82,9.57 15.92,9.74M17.37,2.69C18.84,3.53 19,5.74 18.38,8.32C20.92,9.07 22.75,10.31 22.75,12C22.75,13.69 20.92,14.93 18.38,15.68C19,18.26 18.84,20.47 17.37,21.31C15.91,22.15 13.92,21.19 12,19.36C10.08,21.19 8.09,22.15 6.62,21.31C5.16,20.47 5,18.26 5.62,15.68C3.08,14.93 1.25,13.69 1.25,12C1.25,10.31 3.08,9.07 5.62,8.32C5,5.74 5.16,3.53 6.62,2.69C8.09,1.85 10.08,2.81 12,4.64C13.92,2.81 15.91,1.85 17.37,2.69M17.08,12C17.42,12.75 17.72,13.5 17.97,14.26C20.07,13.63 21.25,12.73 21.25,12C21.25,11.27 20.07,10.37 17.97,9.74C17.72,10.5 17.42,11.25 17.08,12M6.92,12C6.58,11.25 6.28,10.5 6.03,9.74C3.93,10.37 2.75,11.27 2.75,12C2.75,12.73 3.93,13.63 6.03,14.26C6.28,13.5 6.58,12.75 6.92,12M15.92,14.26C15.82,14.43 15.72,14.6 15.62,14.77C15.93,14.72 16.23,14.67 16.5,14.61C16.43,14.33 16.32,14.04 16.21,13.75L15.92,14.26M13.03,18.3C14.62,19.8 16,20.38 16.62,20C17.26,19.65 17.45,18.18 16.94,16.04C16.17,16.2 15.36,16.32 14.54,16.4C14.06,17.07 13.55,17.71 13.03,18.3M8.08,9.74C8.18,9.57 8.28,9.4 8.38,9.23C8.07,9.28 7.77,9.33 7.5,9.39C7.57,9.67 7.68,9.96 7.79,10.25L8.08,9.74M10.97,5.7C9.38,4.2 8,3.62 7.37,4C6.74,4.35 6.55,5.82 7.06,7.96C7.83,7.8 8.64,7.68 9.46,7.6C9.94,6.93 10.45,6.29 10.97,5.7Z"
-					/>
-				</svg>
-			);
 	}
+}
+
+function File({
+	file,
+	selectedFile,
+	fileBeingRenamed,
+	onFileSelect,
+	onRenameBtnClick,
+	onRemoveBtnClick,
+	onNameInputBlur,
+	onNameInputKeyUp
+}) {
+	function focusInput(el) {
+		el &&
+			setTimeout(() => {
+				el.focus();
+			}, 1);
+	}
+	return (
+		<div>
+			{file === fileBeingRenamed ? (
+				<input
+					type="text"
+					ref={focusInput}
+					value={file.name}
+					onBlur={onNameInputBlur}
+					onKeyUp={onNameInputKeyUp}
+				/>
+			) : (
+				<button
+					class={`sidebar__file  ${selectedFile === file ? 'selected' : ''}`}
+					type="button"
+					onClick={onFileSelect.bind(null, file)}
+				>
+					<div class="flex flex-v-center">
+						<FileIcon file={file} />
+						{file.name}
+					</div>
+					<div class="sidebar__file-options">
+						<button
+							type="button"
+							class="btn btn--dark"
+							onClick={onRenameBtnClick.bind(null, file)}
+						>
+							<svg
+								viewBox="0 0 24 24"
+								style="vertical-align:middle;width:14px;height:14px"
+							>
+								<path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
+							</svg>
+						</button>
+
+						<button
+							type="button"
+							class="btn btn--dark"
+							onClick={onRemoveBtnClick.bind(null, file)}
+						>
+							<svg
+								viewBox="0 0 24 24"
+								style="vertical-align:middle;width:14px;height:14px"
+							>
+								<path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+							</svg>
+						</button>
+					</div>
+				</button>
+			)}
+		</div>
+	);
+}
+function Folder(props) {
+	return (
+		<div>
+			<File {...props} file={props.file} />
+			<div class="sidebar__folder-wrap" data-collapsed={props.file.isCollapsed}>
+				{props.file.children.map(
+					childFile =>
+						childFile.isFolder ? (
+							<Folder {...props} file={childFile} />
+						) : (
+							<File {...props} file={childFile} />
+						)
+				)}
+			</div>
+		</div>
+	);
 }
 
 export class SidePane extends Component {
@@ -132,12 +223,12 @@ export class SidePane extends Component {
 			this.props.onRemoveFile(file);
 		}
 	}
-	renameFile() {
+	renameFile(e) {
 		// This gets called twice when enter is pressed, because blur also fires.
-		if (!this.renameFileNameInput) {
+		if (!e.target || !this.state.fileBeingRenamed) {
 			return;
 		}
-		const newFileName = this.renameFileNameInput.value;
+		const newFileName = e.target.value;
 		if (!this.warnForExistingFileName(newFileName)) {
 			return;
 		}
@@ -146,9 +237,9 @@ export class SidePane extends Component {
 		}
 		this.setState({ fileBeingRenamed: null });
 	}
-	renameFileNameInputKeyDownHandler(e) {
+	renameFileNameInputKeyUpHandler(e) {
 		if (e.which === ENTER_KEY) {
-			this.renameFile();
+			this.renameFile(e);
 		} else if (e.which === ESCAPE_KEY) {
 			this.setState({ fileBeingRenamed: null });
 		}
@@ -158,12 +249,16 @@ export class SidePane extends Component {
 		this.setState({
 			fileBeingRenamed: file
 		});
-		setTimeout(() => {
-			this.renameFileNameInput.focus();
-		}, 1);
 	}
 	render() {
 		const { files, onFileSelect, selectedFile, onRemoveFile } = this.props;
+		const moreProps = {
+			onRemoveBtnClick: this.removeFileClickHandler.bind(this),
+			onRenameBtnClick: this.renameFileClickHandler.bind(this),
+			onNameInputBlur: this.renameFile.bind(this),
+			onNameInputKeyUp: this.renameFileNameInputKeyUpHandler.bind(this),
+			fileBeingRenamed: this.state.fileBeingRenamed
+		};
 
 		return (
 			<div class="sidebar">
@@ -194,61 +289,14 @@ export class SidePane extends Component {
 						/>
 					</div>
 				) : null}
-				{files.map(file => (
-					<div>
-						{file === this.state.fileBeingRenamed ? (
-							<input
-								type="text"
-								ref={el => (this.renameFileNameInput = el)}
-								value={file.name}
-								onBlur={this.renameFile.bind(this)}
-								onKeyUpCapture={this.renameFileNameInputKeyDownHandler.bind(
-									this
-								)}
-							/>
+				{files.map(
+					file =>
+						file.isFolder ? (
+							<Folder {...this.props} {...moreProps} file={file} />
 						) : (
-							<button
-								class={`sidebar__file  ${
-									selectedFile === file ? 'selected' : ''
-								}`}
-								type="button"
-								onClick={onFileSelect.bind(null, file)}
-							>
-								<div class="flex flex-v-center">
-									<FileIcon fileName={file.name} />
-									{file.name}
-								</div>
-								<div class="sidebar__file-options">
-									<button
-										type="button"
-										class="btn btn--dark"
-										onClick={this.renameFileClickHandler.bind(this, file)}
-									>
-										<svg
-											viewBox="0 0 24 24"
-											style="vertical-align:middle;width:14px;height:14px"
-										>
-											<path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
-										</svg>
-									</button>
-
-									<button
-										type="button"
-										class="btn btn--dark"
-										onClick={this.removeFileClickHandler.bind(this, file)}
-									>
-										<svg
-											viewBox="0 0 24 24"
-											style="vertical-align:middle;width:14px;height:14px"
-										>
-											<path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
-										</svg>
-									</button>
-								</div>
-							</button>
-						)}
-					</div>
-				))}
+							<File {...this.props} {...moreProps} file={file} />
+						)
+				)}
 			</div>
 		);
 	}

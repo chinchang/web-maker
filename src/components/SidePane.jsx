@@ -171,9 +171,6 @@ function Folder(props) {
 export class SidePane extends Component {
 	addFileButtonClickHandler() {
 		this.setState({ isEditing: true });
-		setTimeout(() => {
-			this.newFileNameInput.focus();
-		}, 1);
 	}
 	/**
 	 * Checks if the passed filename already exists and if so, warns the user.
@@ -195,12 +192,13 @@ export class SidePane extends Component {
 		return true;
 	}
 
-	addFile() {
+	addFile(e) {
 		// This gets called twice when enter is pressed, because blur also fires.
-		if (!this.newFileNameInput) {
+		// So check `isEditing` before proceeding.
+		if (!this.state.isEditing) {
 			return;
 		}
-		const newFileName = this.newFileNameInput.value;
+		const newFileName = e.target.value;
 		if (!this.warnForExistingFileName(newFileName)) {
 			return;
 		}
@@ -211,14 +209,14 @@ export class SidePane extends Component {
 	}
 	newFileNameInputKeyDownHandler(e) {
 		if (e.which === ENTER_KEY) {
-			this.addFile();
+			this.addFile(e);
 		} else if (e.which === ESCAPE_KEY) {
 			this.setState({ isEditing: false });
 		}
 	}
 	removeFileClickHandler(file, e) {
 		e.stopPropagation();
-		const answer = confirm(`Are you sure you want to delete ${file.name}?`);
+		const answer = confirm(`Are you sure you want to delete "${file.name}"?`);
 		if (answer) {
 			this.props.onRemoveFile(file);
 		}
@@ -283,7 +281,12 @@ export class SidePane extends Component {
 					<div>
 						<input
 							type="text"
-							ref={el => (this.newFileNameInput = el)}
+							ref={el => {
+								el &&
+									setTimeout(() => {
+										el.focus();
+									}, 1);
+							}}
 							onBlur={this.addFile.bind(this)}
 							onKeyUp={this.newFileNameInputKeyDownHandler.bind(this)}
 						/>

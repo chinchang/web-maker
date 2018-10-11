@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import UserCodeMirror from './UserCodeMirror';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
-import { log, loadJS } from '../utils';
+import { log, loadJS, linearizeFiles } from '../utils';
 import { SplitPane } from './SplitPane';
 import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
@@ -58,7 +58,7 @@ export default class ContentWrapFiles extends Component {
 	}
 	componentDidUpdate() {
 		const { currentItem } = this.props;
-		const linearFiles = this.linearizeFiles(currentItem.files);
+		const linearFiles = linearizeFiles(currentItem.files);
 
 		// Select a new file if nothing is selected already or the selected file exists no more.
 		if (
@@ -79,18 +79,7 @@ export default class ContentWrapFiles extends Component {
 	componentDidMount() {
 		this.props.onRef(this);
 	}
-	linearizeFiles(files) {
-		function reduceToLinearFiles(files) {
-			return files.reduce((list, currentFile) => {
-				if (currentFile.isFolder) {
-					return [...list, ...reduceToLinearFiles(currentFile.children)];
-				} else {
-					return [...list, currentFile];
-				}
-			}, []);
-		}
-		return reduceToLinearFiles(files);
-	}
+
 	getEditorOptions(fileName = '') {
 		let options = {
 			gutters: [
@@ -172,6 +161,17 @@ export default class ContentWrapFiles extends Component {
 		}, this.updateDelay);
 	}
 
+	constructFilePaths(files, parentPath = '/user') {
+		files.forEach(file => {
+			if (file.isFolder) {
+				this.constructFilePaths(file.children, `${parentPath}/${file.name}`);
+			} else {
+				file.path = `${parentPath}/${file.name}`;
+			}
+		});
+		return files;
+	}
+
 	createPreviewFile(html, css, js) {
 		// Track if people have written code.
 		if (!trackEvent.hasTrackedCode && (html || css || js)) {
@@ -180,12 +180,17 @@ export default class ContentWrapFiles extends Component {
 		}
 
 		var obj = {};
-		this.props.currentItem.files.forEach(file => {
-			obj[`/user/${file.name}`] = file.content || '';
+		const duplicateFiles = JSON.parse(
+			JSON.stringify(this.props.currentItem.files)
+		);
+		const files = linearizeFiles(this.constructFilePaths(duplicateFiles));
+
+		files.forEach(file => {
+			obj[file.path] = file.content || '';
 
 			// Add screenlog to index.html
 			if (file.name === 'index.html') {
-				obj[`/user/${file.name}`] =
+				obj[file.path] =
 					'<script src="' +
 					(chrome.extension
 						? chrome.extension.getURL('lib/screenlog.js')
@@ -193,7 +198,7 @@ export default class ContentWrapFiles extends Component {
 								window.DEBUG ? '' : BASE_PATH
 						  }/lib/screenlog.js`) +
 					'"></script>' +
-					obj[`/user/${file.name}`];
+					obj[file.path];
 			}
 		});
 

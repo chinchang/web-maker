@@ -20,7 +20,8 @@ import {
 	handleDownloadsPermission,
 	downloadFile,
 	getCompleteHtml,
-	getFilenameFromUrl
+	getFilenameFromUrl,
+	linearizeFiles
 } from '../utils';
 import { itemService } from '../itemService';
 import '../db';
@@ -711,7 +712,7 @@ export default class App extends Component {
 	}
 	onCodeChange(type, code, isUserChange) {
 		if (this.state.currentItem.files) {
-			this.state.currentItem.files.map(file => {
+			linearizeFiles(this.state.currentItem.files).map(file => {
 				if (file.name === type.name) {
 					file.content = code;
 				}
@@ -1187,17 +1188,23 @@ export default class App extends Component {
 			});
 		this.setState({ isCreateNewModalOpen: false });
 	}
-	addFileHandler(fileName) {
+	addFileHandler(fileName, isFolder) {
+		let newEntry = { name: fileName, content: '' };
+		if (isFolder) {
+			newEntry = {
+				...newEntry,
+				isFolder: true,
+				children: [],
+				isCollapsed: true
+			};
+		}
+
 		this.setState({
 			currentItem: {
 				...this.state.currentItem,
-				files: [
-					...this.state.currentItem.files,
-					{ name: fileName, content: '' }
-				]
+				files: [...this.state.currentItem.files, newEntry]
 			}
 		});
-		console.log(11, this.state.currentItem);
 	}
 	removeFileHandler(fileToRemove) {
 		this.setState({

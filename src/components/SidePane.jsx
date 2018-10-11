@@ -170,7 +170,10 @@ function Folder(props) {
 
 export class SidePane extends Component {
 	addFileButtonClickHandler() {
-		this.setState({ isEditing: true });
+		this.setState({ isAddingFile: true });
+	}
+	addFolderButtonClickHandler() {
+		this.setState({ isAddingFolder: true });
 	}
 	/**
 	 * Checks if the passed filename already exists and if so, warns the user.
@@ -194,8 +197,8 @@ export class SidePane extends Component {
 
 	addFile(e) {
 		// This gets called twice when enter is pressed, because blur also fires.
-		// So check `isEditing` before proceeding.
-		if (!this.state.isEditing) {
+		// So check `isAddingFile` before proceeding.
+		if (!this.state.isAddingFile && !this.state.isAddingFolder) {
 			return;
 		}
 		const newFileName = e.target.value;
@@ -203,15 +206,15 @@ export class SidePane extends Component {
 			return;
 		}
 		if (newFileName) {
-			this.props.onAddFile(newFileName);
+			this.props.onAddFile(newFileName, this.state.isAddingFolder);
 		}
-		this.setState({ isEditing: false });
+		this.setState({ isAddingFile: false, isAddingFolder: false });
 	}
 	newFileNameInputKeyDownHandler(e) {
 		if (e.which === ENTER_KEY) {
 			this.addFile(e);
 		} else if (e.which === ESCAPE_KEY) {
-			this.setState({ isEditing: false });
+			this.setState({ isAddingFile: false, isAddingFolder: false });
 		}
 	}
 	removeFileClickHandler(file, e) {
@@ -262,7 +265,7 @@ export class SidePane extends Component {
 			<div class="sidebar">
 				<div class="flex jc-sb" style="padding: 5px 4px">
 					Files
-					<div>
+					<div class="flex flex-v-center">
 						<button
 							type="button"
 							class="btn--dark"
@@ -275,9 +278,21 @@ export class SidePane extends Component {
 								<path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M11,15V12H9V15H6V17H9V20H11V17H14V15H11Z" />
 							</svg>
 						</button>
+						<button
+							type="button"
+							class="btn--dark"
+							onClick={this.addFolderButtonClickHandler.bind(this)}
+						>
+							<svg
+								viewBox="0 0 24 24"
+								style="vertical-align:middle;width:14px;height:14px"
+							>
+								<path d="M10,4L12,6H20A2,2 0 0,1 22,8V18A2,2 0 0,1 20,20H4C2.89,20 2,19.1 2,18V6C2,4.89 2.89,4 4,4H10M15,9V12H12V14H15V17H17V14H20V12H17V9H15Z" />
+							</svg>
+						</button>
 					</div>
 				</div>
-				{this.state.isEditing ? (
+				{this.state.isAddingFile || this.state.isAddingFolder ? (
 					<div>
 						<input
 							type="text"

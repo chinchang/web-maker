@@ -161,7 +161,7 @@ export const cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://use.fontawesome.com/releases/v5.3.1/css/all.css',
+		url: 'https://use.fontawesome.com/releases/v5.4.1/css/all.css',
 		label: 'FontAwesome 5',
 		type: 'css'
 	}

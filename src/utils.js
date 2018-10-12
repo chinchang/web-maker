@@ -465,21 +465,3 @@ if (window.IS_EXTENSION) {
 } else {
 	document.body.classList.add('is-app');
 }
-
-/**
- * Returns a linear file list from a nested file strcuture.
- * It excludes the folders from the returned list.
- * @param {array} files Nested file structure
- */
-export function linearizeFiles(files) {
-	function reduceToLinearFiles(files) {
-		return files.reduce((list, currentFile) => {
-			if (currentFile.isFolder) {
-				return [...list, ...reduceToLinearFiles(currentFile.children)];
-			} else {
-				return [...list, currentFile];
-			}
-		}, []);
-	}
-	return reduceToLinearFiles(files);
-}

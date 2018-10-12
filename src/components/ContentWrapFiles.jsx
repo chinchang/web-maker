@@ -1,7 +1,10 @@
 import { h, Component } from 'preact';
 import UserCodeMirror from './UserCodeMirror';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
-import { log, loadJS, linearizeFiles } from '../utils';
+import { log, loadJS } from '../utils';
+
+import { linearizeFiles, assignFilePaths } from '../fileUtils';
+
 import { SplitPane } from './SplitPane';
 import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
@@ -161,17 +164,6 @@ export default class ContentWrapFiles extends Component {
 		}, this.updateDelay);
 	}
 
-	constructFilePaths(files, parentPath = '/user') {
-		files.forEach(file => {
-			if (file.isFolder) {
-				this.constructFilePaths(file.children, `${parentPath}/${file.name}`);
-			} else {
-				file.path = `${parentPath}/${file.name}`;
-			}
-		});
-		return files;
-	}
-
 	createPreviewFile(html, css, js) {
 		// Track if people have written code.
 		if (!trackEvent.hasTrackedCode && (html || css || js)) {
@@ -183,7 +175,7 @@ export default class ContentWrapFiles extends Component {
 		const duplicateFiles = JSON.parse(
 			JSON.stringify(this.props.currentItem.files)
 		);
-		const files = linearizeFiles(this.constructFilePaths(duplicateFiles));
+		const files = linearizeFiles(assignFilePaths(duplicateFiles, '/user'));
 
 		files.forEach(file => {
 			obj[file.path] = file.content || '';
@@ -589,6 +581,7 @@ export default class ContentWrapFiles extends Component {
 						onAddFile={this.props.onAddFile}
 						onRemoveFile={this.props.onRemoveFile}
 						onRenameFile={this.props.onRenameFile}
+						onFileDrop={this.props.onFileDrop}
 					/>
 				</div>
 				<div class="code-side" id="js-code-side">

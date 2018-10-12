@@ -20,9 +20,14 @@ import {
 	handleDownloadsPermission,
 	downloadFile,
 	getCompleteHtml,
-	getFilenameFromUrl,
-	linearizeFiles
+	getFilenameFromUrl
 } from '../utils';
+import {
+	linearizeFiles,
+	assignFilePaths,
+	getFileFromPath,
+	removeFileAtPath
+} from '../fileUtils';
 import { itemService } from '../itemService';
 import '../db';
 import { Notifications } from './Notifications';
@@ -284,15 +289,20 @@ export default class App extends Component {
 		if (isFileMode) {
 			item = {
 				...item,
-				files: [
+				files: assignFilePaths([
 					{ name: 'index.html', content: '' },
 					{
 						name: 'styles',
 						isFolder: true,
 						children: [{ name: 'style.css', content: '' }]
 					},
-					{ name: 'script.js', content: '' }
-				]
+					{ name: 'script.js', content: '' },
+					{
+						name: 'tempo',
+						isFolder: true,
+						children: [{ name: 'main.css', content: '' }]
+					}
+				])
 			};
 		} else {
 			item = {
@@ -1198,13 +1208,12 @@ export default class App extends Component {
 				isCollapsed: true
 			};
 		}
-
-		this.setState({
-			currentItem: {
-				...this.state.currentItem,
-				files: [...this.state.currentItem.files, newEntry]
-			}
-		});
+		let currentItem = {
+			...this.state.currentItem,
+			files: [...this.state.currentItem.files, newEntry]
+		};
+		assignFilePaths(currentItem.files);
+		this.setState({ currentItem });
 	}
 	removeFileHandler(fileToRemove) {
 		this.setState({
@@ -1217,17 +1226,34 @@ export default class App extends Component {
 		});
 	}
 	renameFileHandler(oldFileName, newFileName) {
-		this.setState({
-			currentItem: {
-				...this.state.currentItem,
-				files: this.state.currentItem.files.map(file => {
-					if (file.name === oldFileName) {
-						return { ...file, name: newFileName };
-					}
-					return file;
-				})
-			}
-		});
+		let currentItem = {
+			...this.state.currentItem,
+			files: this.state.currentItem.files.map(file => {
+				if (file.name === oldFileName) {
+					return { ...file, name: newFileName };
+				}
+				return file;
+			})
+		};
+		assignFilePaths(currentItem.files);
+
+		this.setState({ currentItem });
+	}
+	fileDropHandler(sourceFilePath, destinationFolder) {
+		let { currentItem } = this.state;
+		const { file } = getFileFromPath(currentItem.files, sourceFilePath);
+
+		if (file) {
+			destinationFolder.children.push(file);
+			removeFileAtPath(currentItem.files, sourceFilePath);
+
+			currentItem = {
+				...currentItem,
+				files: [...currentItem.files]
+			};
+			assignFilePaths(currentItem.files);
+			this.setState({ currentItem });
+		}
 	}
 
 	folderSelectHandler(folder) {
@@ -1278,6 +1304,7 @@ export default class App extends Component {
 							onAddFile={this.addFileHandler.bind(this)}
 							onRemoveFile={this.removeFileHandler.bind(this)}
 							onRenameFile={this.renameFileHandler.bind(this)}
+							onFileDrop={this.fileDropHandler.bind(this)}
 							onFolderSelect={this.folderSelectHandler.bind(this)}
 						/>
 					) : (

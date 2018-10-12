@@ -74,7 +74,6 @@ export default class UserCodeMirror extends Component {
 
 	initEditor() {
 		const { options, prefs } = this.props;
-		console.log(100, options);
 		this.cm = CodeMirror.fromTextArea(this.textarea, {
 			mode: options.mode,
 			lineNumbers: true,

@@ -1622,14 +1622,27 @@ body:not(.is-app) .show-when-app {
 	width: 100%;
 	text-align: left;
 	display: flex;
-	padding: 5px 4px;
+	padding: 5px 5px;
 	align-items: center;
 	justify-content: space-between;
 	position: relative;
 	cursor: pointer;
 }
-.sidebar__folder-wrap > div > .sidebar__file {
+/* 1st level nesting */
+.sidebar__folder-wrap > div .sidebar__file {
 	padding-left: 1rem;
+}
+/* 2nd level nesting */
+.sidebar__folder-wrap .sidebar__folder-wrap > div > .sidebar__file {
+	padding-left: 2rem;
+}
+/* 3rd level nesting */
+.sidebar__folder-wrap
+	.sidebar__folder-wrap
+	.sidebar__folder-wrap
+	> div
+	> .sidebar__file {
+	padding-left: 3rem;
 }
 
 .sidebar__file:hover,

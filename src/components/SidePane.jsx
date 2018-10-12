@@ -108,7 +108,6 @@ function File({
 	function dragOverHandler(e) {
 		if (file.isFolder) {
 			e.preventDefault();
-			console.log(e.target);
 			e.currentTarget.classList.add('is-being-dragged-over');
 			e.currentTarget.style.outline = '1px dashed';
 		}
@@ -255,7 +254,7 @@ export class SidePane extends Component {
 		e.stopPropagation();
 		const answer = confirm(`Are you sure you want to delete "${file.name}"?`);
 		if (answer) {
-			this.props.onRemoveFile(file);
+			this.props.onRemoveFile(file.path);
 		}
 	}
 	renameFile(e) {
@@ -268,7 +267,7 @@ export class SidePane extends Component {
 			return;
 		}
 		if (newFileName) {
-			this.props.onRenameFile(this.state.fileBeingRenamed.name, newFileName);
+			this.props.onRenameFile(this.state.fileBeingRenamed.path, newFileName);
 		}
 		this.setState({ fileBeingRenamed: null });
 	}

@@ -1216,26 +1216,23 @@ export default class App extends Component {
 		assignFilePaths(currentItem.files);
 		this.setState({ currentItem });
 	}
-	removeFileHandler(file) {
+	removeFileHandler(filePath) {
 		const currentItem = {
 			...this.state.currentItem,
 			files: [...this.state.currentItem.files]
 		};
-		removeFileAtPath(currentItem.files, file.path);
+		removeFileAtPath(currentItem.files, filePath);
 		this.setState({
 			currentItem
 		});
 	}
-	renameFileHandler(oldFileName, newFileName) {
-		let currentItem = {
+	renameFileHandler(oldFilePath, newFileName) {
+		const currentItem = {
 			...this.state.currentItem,
-			files: this.state.currentItem.files.map(file => {
-				if (file.name === oldFileName) {
-					return { ...file, name: newFileName };
-				}
-				return file;
-			})
+			files: [...this.state.currentItem.files]
 		};
+		const { file } = getFileFromPath(currentItem.files, oldFilePath);
+		file.name = newFileName;
 		assignFilePaths(currentItem.files);
 
 		this.setState({ currentItem });
@@ -1265,16 +1262,15 @@ export default class App extends Component {
 	}
 
 	folderSelectHandler(folder) {
+		// Following will make the change in the existing currentItem
+		folder.isCollapsed = !folder.isCollapsed;
+
+		const currentItem = {
+			...this.state.currentItem,
+			files: [...this.state.currentItem.files]
+		};
 		this.setState({
-			currentItem: {
-				...this.state.currentItem,
-				files: this.state.currentItem.files.map(file => {
-					if (file === folder) {
-						return { ...file, isCollapsed: !folder.isCollapsed };
-					}
-					return file;
-				})
-			}
+			currentItem
 		});
 	}
 

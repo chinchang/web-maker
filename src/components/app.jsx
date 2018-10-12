@@ -239,6 +239,22 @@ export default class App extends Component {
 		});
 	}
 
+	incrementUnsavedChanges() {
+		this.setState({ unsavedEditCount: this.state.unsavedEditCount + 1 });
+
+		if (
+			this.state.unsavedEditCount % UNSAVED_WARNING_COUNT === 0 &&
+			this.state.unsavedEditCount >= UNSAVED_WARNING_COUNT
+		) {
+			window.saveBtn.classList.add('animated');
+			window.saveBtn.classList.add('wobble');
+			window.saveBtn.addEventListener('animationend', () => {
+				window.saveBtn.classList.remove('animated');
+				window.saveBtn.classList.remove('wobble');
+			});
+		}
+	}
+
 	updateProfileUi() {
 		if (this.state.user) {
 			document.body.classList.add('is-logged-in');
@@ -732,19 +748,7 @@ export default class App extends Component {
 			this.state.currentItem[type] = code;
 		}
 		if (isUserChange) {
-			this.setState({ unsavedEditCount: this.state.unsavedEditCount + 1 });
-
-			if (
-				this.state.unsavedEditCount % UNSAVED_WARNING_COUNT === 0 &&
-				this.state.unsavedEditCount >= UNSAVED_WARNING_COUNT
-			) {
-				window.saveBtn.classList.add('animated');
-				window.saveBtn.classList.add('wobble');
-				window.saveBtn.addEventListener('animationend', () => {
-					window.saveBtn.classList.remove('animated');
-					window.saveBtn.classList.remove('wobble');
-				});
-			}
+			this.incrementUnsavedChanges();
 		}
 		if (this.state.prefs.isJs13kModeOn) {
 			// Throttling codesize calculation
@@ -1214,7 +1218,9 @@ export default class App extends Component {
 			files: [...this.state.currentItem.files, newEntry]
 		};
 		assignFilePaths(currentItem.files);
+
 		this.setState({ currentItem });
+		this.incrementUnsavedChanges();
 	}
 	removeFileHandler(filePath) {
 		const currentItem = {
@@ -1222,9 +1228,9 @@ export default class App extends Component {
 			files: [...this.state.currentItem.files]
 		};
 		removeFileAtPath(currentItem.files, filePath);
-		this.setState({
-			currentItem
-		});
+
+		this.setState({ currentItem });
+		this.incrementUnsavedChanges();
 	}
 	renameFileHandler(oldFilePath, newFileName) {
 		const currentItem = {
@@ -1236,6 +1242,7 @@ export default class App extends Component {
 		assignFilePaths(currentItem.files);
 
 		this.setState({ currentItem });
+		this.incrementUnsavedChanges();
 	}
 	fileDropHandler(sourceFilePath, destinationFolder) {
 		let { currentItem } = this.state;
@@ -1257,7 +1264,9 @@ export default class App extends Component {
 				files: [...currentItem.files]
 			};
 			assignFilePaths(currentItem.files);
+
 			this.setState({ currentItem });
+			this.incrementUnsavedChanges();
 		}
 	}
 

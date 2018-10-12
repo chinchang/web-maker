@@ -108,6 +108,7 @@ function File({
 	function dragOverHandler(e) {
 		if (file.isFolder) {
 			e.preventDefault();
+			// e.stopPropagation();
 			e.currentTarget.classList.add('is-being-dragged-over');
 			e.currentTarget.style.outline = '1px dashed';
 		}
@@ -119,6 +120,7 @@ function File({
 		}
 	}
 	function dropHandler(e) {
+		e.stopPropagation();
 		if (file.isFolder) {
 			e.preventDefault();
 			onFileDrop(e.dataTransfer.getData('text/plain'), file);
@@ -284,6 +286,18 @@ export class SidePane extends Component {
 			fileBeingRenamed: file
 		});
 	}
+
+	dragOverHandler(e) {
+		e.preventDefault();
+	}
+	dropHandler(e) {
+		e.preventDefault();
+		this.props.onFileDrop(e.dataTransfer.getData('text/plain'), {
+			children: this.props.files
+		});
+		// e.currentTarget.style.outline = null;
+	}
+
 	render() {
 		const { files, onFileSelect, selectedFile, onRemoveFile } = this.props;
 		const moreProps = {
@@ -295,7 +309,11 @@ export class SidePane extends Component {
 		};
 
 		return (
-			<div class="sidebar">
+			<div
+				class="sidebar"
+				onDragOver={this.dragOverHandler.bind(this)}
+				onDrop={this.dropHandler.bind(this)}
+			>
 				<div class="flex jc-sb" style="padding: 5px 4px">
 					Files
 					<div class="flex flex-v-center">

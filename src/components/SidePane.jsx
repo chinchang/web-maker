@@ -103,27 +103,27 @@ function File({
 			}, 1);
 	}
 	function dragStartHandler(e) {
-		console.log(file.path);
 		e.dataTransfer.setData('text/plain', file.path);
 	}
 	function dragOverHandler(e) {
 		if (file.isFolder) {
 			e.preventDefault();
-			e.target.classList.add('is-being-dragged-over');
-			e.target.style.outline = '1px dashed';
+			console.log(e.target);
+			e.currentTarget.classList.add('is-being-dragged-over');
+			e.currentTarget.style.outline = '1px dashed';
 		}
 	}
 	function dragLeaveHandler(e) {
 		if (file.isFolder) {
 			e.preventDefault();
-			e.target.style.outline = null;
+			e.currentTarget.style.outline = null;
 		}
 	}
 	function dropHandler(e) {
 		if (file.isFolder) {
 			e.preventDefault();
 			onFileDrop(e.dataTransfer.getData('text/plain'), file);
-			e.target.style.outline = null;
+			e.currentTarget.style.outline = null;
 		}
 	}
 	return (

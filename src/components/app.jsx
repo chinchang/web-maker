@@ -26,7 +26,8 @@ import {
 	linearizeFiles,
 	assignFilePaths,
 	getFileFromPath,
-	removeFileAtPath
+	removeFileAtPath,
+	doesFileExistInFolder
 } from '../fileUtils';
 import { itemService } from '../itemService';
 import '../db';
@@ -1215,14 +1216,14 @@ export default class App extends Component {
 		assignFilePaths(currentItem.files);
 		this.setState({ currentItem });
 	}
-	removeFileHandler(fileToRemove) {
+	removeFileHandler(file) {
+		const currentItem = {
+			...this.state.currentItem,
+			files: [...this.state.currentItem.files]
+		};
+		removeFileAtPath(currentItem.files, file.path);
 		this.setState({
-			currentItem: {
-				...this.state.currentItem,
-				files: this.state.currentItem.files.filter(
-					file => file !== fileToRemove
-				)
-			}
+			currentItem
 		});
 	}
 	renameFileHandler(oldFileName, newFileName) {
@@ -1242,11 +1243,18 @@ export default class App extends Component {
 	fileDropHandler(sourceFilePath, destinationFolder) {
 		let { currentItem } = this.state;
 		const { file } = getFileFromPath(currentItem.files, sourceFilePath);
+		if (doesFileExistInFolder(destinationFolder, file.name)) {
+			alert(
+				`File with name "${
+					file.name
+				}" already exists in the destination folder.`
+			);
+			return;
+		}
 
 		if (file) {
 			destinationFolder.children.push(file);
 			removeFileAtPath(currentItem.files, sourceFilePath);
-
 			currentItem = {
 				...currentItem,
 				files: [...currentItem.files]

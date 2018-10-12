@@ -85,3 +85,13 @@ export function removeFileAtPath(files, path) {
 	const { index } = getChildFileFromName(currentFolder, pathPieces[0]);
 	currentFolder.splice(index, 1);
 }
+
+/**
+ * Checks if a file with same name exists in the passed folder.
+ * @param {object} folder Folder to search in
+ * @param {string} fileName File name to search for
+ */
+export function doesFileExistInFolder(folder, fileName) {
+	const details = getChildFileFromName(folder.children, fileName);
+	return !!details.file;
+}

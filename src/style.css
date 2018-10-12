@@ -1629,19 +1629,18 @@ body:not(.is-app) .show-when-app {
 	cursor: pointer;
 }
 /* 1st level nesting */
-.sidebar__folder-wrap > div .sidebar__file {
+.sidebar__folder-wrap .sidebar__file {
 	padding-left: 1rem;
 }
 /* 2nd level nesting */
-.sidebar__folder-wrap .sidebar__folder-wrap > div > .sidebar__file {
+.sidebar__folder-wrap .sidebar__folder-wrap .sidebar__file {
 	padding-left: 2rem;
 }
 /* 3rd level nesting */
 .sidebar__folder-wrap
 	.sidebar__folder-wrap
 	.sidebar__folder-wrap
-	> div
-	> .sidebar__file {
+	.sidebar__file {
 	padding-left: 3rem;
 }
 
@@ -1657,7 +1656,7 @@ body:not(.is-app) .show-when-app {
 .sidebar__file-icon {
 	width: 16px;
 	height: 16px;
-	margin-right: 10px;
+	margin-right: 8px;
 }
 .sidebar__file-options {
 	position: absolute;

@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import { FileIcon } from './FileIcon';
+import { getParentPath, getFileFromPath } from '../fileUtils';
 
 const ENTER_KEY = 13;
 const ESCAPE_KEY = 27;
@@ -136,13 +137,15 @@ export class SidePane extends Component {
 	 */
 	warnForExistingFileName(newFileName) {
 		// We also check for fileBeingRenamed !== file because when a file being renamed is
-		// asked to be set same name, then that should not match and warn here.
-		if (
-			this.props.files.some(
-				file =>
-					file.name === newFileName && this.state.fileBeingRenamed !== file
-			)
-		) {
+		// asked to be set as same name, then that should not match and warn here.
+		let newPath = this.state.fileBeingRenamed
+			? `${getParentPath(this.state.fileBeingRenamed.path)}/${newFileName}`
+			: newFileName;
+		// remove first slash
+		newPath = newPath.replace(/^\//, '');
+		const match = getFileFromPath(this.props.files, newPath);
+
+		if (match.file && this.state.fileBeingRenamed !== match.file) {
 			alert(`A file with name ${newFileName} already exists.`);
 			return false;
 		}

@@ -3,7 +3,8 @@ import { shallow, deep } from 'preact-render-spy';
 import {
 	assignFilePaths,
 	getFileFromPath,
-	removeFileAtPath
+	removeFileAtPath,
+	getParentPath
 } from '../fileUtils';
 
 function getNestedFiles() {
@@ -79,5 +80,17 @@ describe('removeFileAtPath', () => {
 		expect(files[1].children.length).toBe(1);
 		expect(files[0].name).toBe('index.html');
 		expect(files[2].name).toBe('script.js');
+	});
+});
+
+describe('getParentPath', () => {
+	test('should return correct parent path for root file', () => {
+		expect(getParentPath('style.css')).toBe('');
+	});
+
+	test('should return correct parent path for nested file', () => {
+		expect(getParentPath('styles/style.css')).toBe('styles');
+		expect(getParentPath('js/plugins/main.js')).toBe('js/plugins');
+		expect(getParentPath('js/plugins/readme')).toBe('js/plugins');
 	});
 });

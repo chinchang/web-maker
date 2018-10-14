@@ -95,3 +95,15 @@ export function doesFileExistInFolder(folder, fileName) {
 	const details = getChildFileFromName(folder.children, fileName);
 	return !!details.file;
 }
+
+/**
+ * Returns parent path of passed path
+ * @param {string} path Path of file to find parent of
+ */
+export function getParentPath(path) {
+	const pathPieces = path.split('/');
+	if (pathPieces.length > 1) {
+		return pathPieces.slice(0, -1).join('/');
+	}
+	return '';
+}

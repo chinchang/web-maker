@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { getExtensionFromFileName } from '../fileUtils';
 
 export function FileIcon({ file }) {
 	let path;
@@ -24,7 +25,7 @@ export function FileIcon({ file }) {
 			);
 		}
 	} else {
-		const type = file.name.match(/.(\w+)$/)[1];
+		const type = getExtensionFromFileName(file.name);
 		switch (type) {
 			case 'html':
 				path = (

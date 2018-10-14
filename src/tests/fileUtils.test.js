@@ -4,7 +4,8 @@ import {
 	assignFilePaths,
 	getFileFromPath,
 	removeFileAtPath,
-	getParentPath
+	getParentPath,
+	getExtensionFromFileName
 } from '../fileUtils';
 
 function getNestedFiles() {
@@ -18,6 +19,17 @@ function getNestedFiles() {
 		{ name: 'script.js' }
 	];
 }
+describe('getExtensionFromFileName', () => {
+	test('should return correct extension', () => {
+		expect(getExtensionFromFileName('test.js')).toBe('js');
+		expect(getExtensionFromFileName('test.css')).toBe('css');
+		expect(getExtensionFromFileName('test.main.css')).toBe('css');
+	});
+	test('should return empty string when no extension is found', () => {
+		expect(getExtensionFromFileName('hello')).toBe('');
+	});
+});
+
 describe('assignFilePaths', () => {
 	test('should assign path on linear file system', () => {
 		const files = [{ name: 'index.html' }, { name: 'main.css' }];

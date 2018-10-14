@@ -2,6 +2,15 @@ import { deferred } from './deferred';
 const esprima = require('esprima');
 
 /**
+ * Returns the extension from the file name.
+ * @param {dtring} fileName File name
+ */
+export function getExtensionFromFileName(fileName) {
+	const type = fileName.match(/\.(\w+)$/);
+	return type ? type[1] : '';
+}
+
+/**
  * Returns a linear file list from a nested file strcuture.
  * It excludes the folders from the returned list.
  * @param {array} files Nested file structure

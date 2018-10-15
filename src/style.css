@@ -387,7 +387,7 @@ body:not(.light-version).overlay-visible .main-container {
 	width: auto;
 }
 
-.is-project .content-wrap {
+.is-file-mode .content-wrap {
 	flex-direction: row;
 }
 
@@ -455,7 +455,7 @@ body:not(.light-version).overlay-visible .main-container {
 	height: auto;
 	width: 33%;
 }
-.is-project .code-wrap {
+.is-file-mode .code-wrap {
 	flex-basis: 100%;
 }
 
@@ -1673,7 +1673,7 @@ body:not(.is-app) .show-when-app {
 	display: none;
 }
 
-.is-project .hide-in-file-mode {
+.is-file-mode .hide-in-file-mode {
 	display: none !important;
 }
 @media screen and (max-width: 600px) {

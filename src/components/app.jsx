@@ -1283,9 +1283,17 @@ export default class App extends Component {
 		});
 	}
 
+	getRootClasses() {
+		const classes = [];
+		if (this.state.currentItem && this.state.currentItem.files) {
+			classes.push('is-file-mode');
+		}
+		return classes.join(' ');
+	}
+
 	render() {
 		return (
-			<div>
+			<div class={this.getRootClasses()}>
 				<div class="main-container">
 					<MainHeader
 						externalLibCount={this.state.externalLibCount}

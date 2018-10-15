@@ -214,6 +214,7 @@ export class SidePane extends Component {
 	}
 	dropHandler(e) {
 		e.preventDefault();
+		// Object with `children` key is to simulate a folder structure for root folder
 		this.props.onFileDrop(e.dataTransfer.getData('text/plain'), {
 			children: this.props.files
 		});

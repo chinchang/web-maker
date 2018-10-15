@@ -19,7 +19,6 @@
 if (
 	'serviceWorker' in navigator &&
 	location.protocol === 'https:' &&
-	document.cookie.indexOf('wmdebug') === -1 &&
 	location.href.indexOf('chrome-extension://') === -1 &&
 	location.href.indexOf('192.168') === -1
 ) {

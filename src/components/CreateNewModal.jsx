@@ -7,6 +7,7 @@ export function CreateNewModal({
 	show,
 	closeHandler,
 	onBlankTemplateSelect,
+	onBlankFileTemplateSelect,
 	onTemplateSelect
 }) {
 	return (
@@ -14,6 +15,9 @@ export function CreateNewModal({
 			<div class="tac">
 				<button className="btn" onClick={onBlankTemplateSelect}>
 					Start a blank creation
+				</button>
+				<button className="btn" onClick={onBlankFileTemplateSelect}>
+					Start a blank files creation
 				</button>
 			</div>
 			<hr />

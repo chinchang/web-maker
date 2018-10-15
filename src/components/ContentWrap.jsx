@@ -34,7 +34,6 @@ export default class ContentWrap extends Component {
 		this.logCount = 0;
 
 		window.onMessageFromConsole = this.onMessageFromConsole.bind(this);
-
 		window.previewException = this.previewException.bind(this);
 		// `clearConsole` is on window because it gets called from inside iframe also.
 		window.clearConsole = this.clearConsole.bind(this);
@@ -289,50 +288,25 @@ export default class ContentWrap extends Component {
 		]).then(() => this.setPreviewContent(true));
 	}
 	applyCodemirrorSettings(prefs) {
-		if (!this.cm) {
-			return;
+		if (window.consoleEl) {
+			window.consoleEl.querySelector(
+				'.CodeMirror'
+			).style.fontSize = `${parseInt(prefs.fontSize, 10)}px`;
 		}
-		htmlCodeEl.querySelector(
-			'.CodeMirror'
-		).style.fontSize = cssCodeEl.querySelector(
-			'.CodeMirror'
-		).style.fontSize = jsCodeEl.querySelector(
-			'.CodeMirror'
-		).style.fontSize = `${parseInt(prefs.fontSize, 10)}px`;
-		window.consoleEl.querySelector('.CodeMirror').style.fontSize = `${parseInt(
-			prefs.fontSize,
-			10
-		)}px`;
 
 		// Replace correct css file in LINK tags's href
-		window.editorThemeLinkTag.href = `lib/codemirror/theme/${
-			prefs.editorTheme
-		}.css`;
+		if (prefs.editorTheme) {
+			window.editorThemeLinkTag.href = `lib/codemirror/theme/${
+				prefs.editorTheme
+			}.css`;
+		}
+
 		window.fontStyleTag.textContent = window.fontStyleTemplate.textContent.replace(
 			/fontname/g,
 			(prefs.editorFont === 'other'
 				? prefs.editorCustomFont
 				: prefs.editorFont) || 'FiraCode'
 		);
-		// window.customEditorFontInput.classList[
-		// 	prefs.editorFont === 'other' ? 'remove' : 'add'
-		// ]('hide');
-		this.consoleCm.setOption('theme', prefs.editorTheme);
-
-		['html', 'js', 'css'].forEach(type => {
-			this.cm[type].setOption('indentWithTabs', prefs.indentWith !== 'spaces');
-			this.cm[type].setOption(
-				'blastCode',
-				prefs.isCodeBlastOn ? { effect: 2, shake: false } : false
-			);
-			this.cm[type].setOption('indentUnit', +prefs.indentSize);
-			this.cm[type].setOption('tabSize', +prefs.indentSize);
-			this.cm[type].setOption('theme', prefs.editorTheme);
-
-			this.cm[type].setOption('keyMap', prefs.keymap);
-			this.cm[type].setOption('lineWrapping', prefs.lineWrap);
-			this.cm[type].refresh();
-		});
 	}
 
 	// Check all the code wrap if they are minimized or maximized

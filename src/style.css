@@ -39,8 +39,9 @@ textarea {
 	border-bottom-color: rgba(255, 255, 255, 0.17);
 	box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
 	border-radius: 3px;
-	padding: 10px;
+	padding: 5px 10px;
 	box-sizing: border-box;
+	max-width: 100%;
 }
 
 [role='button'] {
@@ -95,6 +96,9 @@ button {
 
 .flex-shrink-0 {
 	flex-shrink: 0;
+}
+.jc-sb {
+	justify-content: space-between;
 }
 
 .fr {
@@ -383,6 +387,10 @@ body:not(.light-version).overlay-visible .main-container {
 	width: auto;
 }
 
+.is-file-mode .content-wrap {
+	flex-direction: row;
+}
+
 /* All vertical layout */
 
 .layout-5 .code-side {
@@ -446,6 +454,9 @@ body:not(.light-version).overlay-visible .main-container {
 .layout-2 .code-wrap {
 	height: auto;
 	width: 33%;
+}
+.is-file-mode .code-wrap {
+	flex-basis: 100%;
 }
 
 .code-wrap__header {
@@ -650,6 +661,8 @@ body > #demo-frame {
 
 .btn--dark > svg {
 	fill: #9297b3;
+}
+.btn--dark > svg:not(:last-child) {
 	margin-right: 4px;
 }
 
@@ -658,9 +671,13 @@ body > #demo-frame {
 }
 
 .btn--dark:hover {
-	border-color: rgba(146, 151, 179, 0.5);
+	background: #9297b3;
+	color: #111;
+	/* border-color: rgba(146, 151, 179, 0.5); */
 }
-
+.btn--dark:hover > svg {
+	fill: #111;
+}
 .main-header__btn-wrap > .is-loading {
 	pointer-events: none;
 	opacity: 0.4;
@@ -1593,6 +1610,72 @@ body:not(.is-app) .show-when-app {
 	margin-left: -115px;
 }
 
+.sidebar {
+	background-color: #1e1e2c;
+	height: 100%;
+}
+
+.sidebar__file {
+	color: #bbb;
+	background: transparent;
+	border: none;
+	width: 100%;
+	text-align: left;
+	display: flex;
+	padding: 5px 5px;
+	align-items: center;
+	justify-content: space-between;
+	position: relative;
+	cursor: pointer;
+}
+/* 1st level nesting */
+.sidebar__folder-wrap .sidebar__file {
+	padding-left: 1rem;
+}
+/* 2nd level nesting */
+.sidebar__folder-wrap .sidebar__folder-wrap .sidebar__file {
+	padding-left: 2rem;
+}
+/* 3rd level nesting */
+.sidebar__folder-wrap
+	.sidebar__folder-wrap
+	.sidebar__folder-wrap
+	.sidebar__file {
+	padding-left: 3rem;
+}
+
+.sidebar__file:hover,
+.sidebar__file:focus {
+	background-color: rgba(255, 255, 255, 0.05);
+}
+.sidebar__file.selected {
+	color: white;
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar__file-icon {
+	width: 16px;
+	height: 16px;
+	margin-right: 8px;
+}
+.sidebar__file-options {
+	position: absolute;
+	right: 0;
+	visibility: hidden;
+}
+.sidebar__file:hover .sidebar__file-options,
+.sidebar__file:focus .sidebar__file-options,
+.sidebar__file:focus-within .sidebar__file-options {
+	visibility: visible;
+}
+
+.sidebar__folder-wrap[data-collapsed='true'] {
+	display: none;
+}
+
+.is-file-mode .hide-in-file-mode {
+	display: none !important;
+}
 @media screen and (max-width: 600px) {
 	body {
 		font-size: 70%;

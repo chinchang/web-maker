@@ -2,9 +2,10 @@
 */
 
 import { h, Component } from 'preact';
-
+import '../service-worker-registration';
 import { MainHeader } from './MainHeader.jsx';
 import ContentWrap from './ContentWrap.jsx';
+import ContentWrapFiles from './ContentWrapFiles.jsx';
 import Footer from './Footer.jsx';
 import SavedItemPane from './SavedItemPane.jsx';
 import AddLibrary from './AddLibrary.jsx';
@@ -21,6 +22,13 @@ import {
 	getCompleteHtml,
 	getFilenameFromUrl
 } from '../utils';
+import {
+	linearizeFiles,
+	assignFilePaths,
+	getFileFromPath,
+	removeFileAtPath,
+	doesFileExistInFolder
+} from '../fileUtils';
 import { itemService } from '../itemService';
 import '../db';
 import { Notifications } from './Notifications';
@@ -194,7 +202,7 @@ export default class App extends Component {
 				this.createNewItem();
 			}
 			Object.assign(this.state.prefs, result);
-			this.setState({ prefs: this.state.prefs });
+			this.setState({ prefs: { ...this.state.prefs } });
 			this.updateSetting();
 		});
 
@@ -231,6 +239,22 @@ export default class App extends Component {
 		});
 	}
 
+	incrementUnsavedChanges() {
+		this.setState({ unsavedEditCount: this.state.unsavedEditCount + 1 });
+
+		if (
+			this.state.unsavedEditCount % UNSAVED_WARNING_COUNT === 0 &&
+			this.state.unsavedEditCount >= UNSAVED_WARNING_COUNT
+		) {
+			window.saveBtn.classList.add('animated');
+			window.saveBtn.classList.add('wobble');
+			window.saveBtn.addEventListener('animationend', () => {
+				window.saveBtn.classList.remove('animated');
+				window.saveBtn.classList.remove('wobble');
+			});
+		}
+	}
+
 	updateProfileUi() {
 		if (this.state.user) {
 			document.body.classList.add('is-logged-in');
@@ -264,9 +288,9 @@ export default class App extends Component {
 		alertsService.add(`"${sourceItem.title}" was forked`);
 		trackEvent('fn', 'itemForked');
 	}
-	createNewItem() {
-		var d = new Date();
-		this.setCurrentItem({
+	createNewItem(isFileMode = false) {
+		const d = new Date();
+		let item = {
 			title:
 				'Untitled ' +
 				d.getDate() +
@@ -276,12 +300,38 @@ export default class App extends Component {
 				d.getHours() +
 				':' +
 				d.getMinutes(),
-			html: '',
-			css: '',
-			js: '',
-			externalLibs: { js: '', css: '' },
-			layoutMode: this.state.currentLayoutMode
-		}).then(() => this.refreshEditor());
+			createdOn: +d,
+			content: ''
+		};
+		if (isFileMode) {
+			item = {
+				...item,
+				files: assignFilePaths([
+					{ name: 'index.html', content: '' },
+					{
+						name: 'styles',
+						isFolder: true,
+						children: [{ name: 'style.css', content: '' }]
+					},
+					{ name: 'script.js', content: '' },
+					{
+						name: 'tempo',
+						isFolder: true,
+						children: [{ name: 'main.css', content: '' }]
+					}
+				])
+			};
+		} else {
+			item = {
+				...item,
+				html: '',
+				css: '',
+				js: '',
+				externalLibs: { js: '', css: '' },
+				layoutMode: this.state.currentLayoutMode
+			};
+		}
+		this.setCurrentItem(item).then(() => this.refreshEditor());
 		alertsService.add('New item created');
 	}
 	openItem(item) {
@@ -317,10 +367,12 @@ export default class App extends Component {
 	setCurrentItem(item) {
 		const d = deferred();
 		// TODO: remove later
-		item.htmlMode =
-			item.htmlMode || this.state.prefs.htmlMode || HtmlModes.HTML;
-		item.cssMode = item.cssMode || this.state.prefs.cssMode || CssModes.CSS;
-		item.jsMode = item.jsMode || this.state.prefs.jsMode || JsModes.JS;
+		if (!item.files) {
+			item.htmlMode =
+				item.htmlMode || this.state.prefs.htmlMode || HtmlModes.HTML;
+			item.cssMode = item.cssMode || this.state.prefs.cssMode || CssModes.CSS;
+			item.jsMode = item.jsMode || this.state.prefs.jsMode || JsModes.JS;
+		}
 
 		this.setState({ currentItem: item }, d.resolve);
 
@@ -470,7 +522,9 @@ export default class App extends Component {
 					isKeyboardShortcutsModalOpen: !this.state.isKeyboardShortcutsModalOpen
 				});
 				trackEvent('ui', 'showKeyboardShortcutsShortcut');
-			} else if (event.keyCode === 27) {
+			} else if (event.keyCode === 27 && event.target.tagName !== 'INPUT') {
+				// We might be listening on keydown for some input inside the app. In that case
+				// we don't want this to trigger which in turn focuses back the last editor.
 				this.closeSavedItemsPane();
 			}
 		});
@@ -684,21 +738,17 @@ export default class App extends Component {
 		this.setState({ currentItem: item });
 	}
 	onCodeChange(type, code, isUserChange) {
-		this.state.currentItem[type] = code;
+		if (this.state.currentItem.files) {
+			linearizeFiles(this.state.currentItem.files).map(file => {
+				if (file.name === type.name) {
+					file.content = code;
+				}
+			});
+		} else {
+			this.state.currentItem[type] = code;
+		}
 		if (isUserChange) {
-			this.setState({ unsavedEditCount: this.state.unsavedEditCount + 1 });
-
-			if (
-				this.state.unsavedEditCount % UNSAVED_WARNING_COUNT === 0 &&
-				this.state.unsavedEditCount >= UNSAVED_WARNING_COUNT
-			) {
-				window.saveBtn.classList.add('animated');
-				window.saveBtn.classList.add('wobble');
-				window.saveBtn.addEventListener('animationend', () => {
-					window.saveBtn.classList.remove('animated');
-					window.saveBtn.classList.remove('wobble');
-				});
-			}
+			this.incrementUnsavedChanges();
 		}
 		if (this.state.prefs.isJs13kModeOn) {
 			// Throttling codesize calculation
@@ -1140,6 +1190,10 @@ export default class App extends Component {
 		this.createNewItem();
 		this.setState({ isCreateNewModalOpen: false });
 	}
+	blankFileTemplateSelectHandler() {
+		this.createNewItem(true);
+		this.setState({ isCreateNewModalOpen: false });
+	}
 
 	templateSelectHandler(template) {
 		fetch(`templates/template-${template.id}.json`)
@@ -1149,10 +1203,97 @@ export default class App extends Component {
 			});
 		this.setState({ isCreateNewModalOpen: false });
 	}
+	addFileHandler(fileName, isFolder) {
+		let newEntry = { name: fileName, content: '' };
+		if (isFolder) {
+			newEntry = {
+				...newEntry,
+				isFolder: true,
+				children: [],
+				isCollapsed: true
+			};
+		}
+		let currentItem = {
+			...this.state.currentItem,
+			files: [...this.state.currentItem.files, newEntry]
+		};
+		assignFilePaths(currentItem.files);
+
+		this.setState({ currentItem });
+		this.incrementUnsavedChanges();
+	}
+	removeFileHandler(filePath) {
+		const currentItem = {
+			...this.state.currentItem,
+			files: [...this.state.currentItem.files]
+		};
+		removeFileAtPath(currentItem.files, filePath);
+
+		this.setState({ currentItem });
+		this.incrementUnsavedChanges();
+	}
+	renameFileHandler(oldFilePath, newFileName) {
+		const currentItem = {
+			...this.state.currentItem,
+			files: [...this.state.currentItem.files]
+		};
+		const { file } = getFileFromPath(currentItem.files, oldFilePath);
+		file.name = newFileName;
+		assignFilePaths(currentItem.files);
+
+		this.setState({ currentItem });
+		this.incrementUnsavedChanges();
+	}
+	fileDropHandler(sourceFilePath, destinationFolder) {
+		let { currentItem } = this.state;
+		const { file } = getFileFromPath(currentItem.files, sourceFilePath);
+		if (doesFileExistInFolder(destinationFolder, file.name)) {
+			alert(
+				`File with name "${
+					file.name
+				}" already exists in the destination folder.`
+			);
+			return;
+		}
+
+		if (file) {
+			destinationFolder.children.push(file);
+			removeFileAtPath(currentItem.files, sourceFilePath);
+			currentItem = {
+				...currentItem,
+				files: [...currentItem.files]
+			};
+			assignFilePaths(currentItem.files);
+
+			this.setState({ currentItem });
+			this.incrementUnsavedChanges();
+		}
+	}
+
+	folderSelectHandler(folder) {
+		// Following will make the change in the existing currentItem
+		folder.isCollapsed = !folder.isCollapsed;
+
+		const currentItem = {
+			...this.state.currentItem,
+			files: [...this.state.currentItem.files]
+		};
+		this.setState({
+			currentItem
+		});
+	}
+
+	getRootClasses() {
+		const classes = [];
+		if (this.state.currentItem && this.state.currentItem.files) {
+			classes.push('is-file-mode');
+		}
+		return classes.join(' ');
+	}
 
 	render() {
 		return (
-			<div>
+			<div class={this.getRootClasses()}>
 				<div class="main-container">
 					<MainHeader
 						externalLibCount={this.state.externalLibCount}
@@ -1169,18 +1310,37 @@ export default class App extends Component {
 						titleInputBlurHandler={this.titleInputBlurHandler.bind(this)}
 						user={this.state.user}
 						unsavedEditCount={this.state.unsavedEditCount}
+						isFileMode={this.state.currentItem && this.state.currentItem.files}
 					/>
-					<ContentWrap
-						currentLayoutMode={this.state.currentLayoutMode}
-						currentItem={this.state.currentItem}
-						onCodeChange={this.onCodeChange.bind(this)}
-						onCodeSettingsChange={this.onCodeSettingsChange.bind(this)}
-						onCodeModeChange={this.onCodeModeChange.bind(this)}
-						onRef={comp => (this.contentWrap = comp)}
-						prefs={this.state.prefs}
-						onEditorFocus={this.editorFocusHandler.bind(this)}
-						onSplitUpdate={this.splitUpdateHandler.bind(this)}
-					/>
+					{this.state.currentItem && this.state.currentItem.files ? (
+						<ContentWrapFiles
+							currentItem={this.state.currentItem}
+							onCodeChange={this.onCodeChange.bind(this)}
+							onCodeSettingsChange={this.onCodeSettingsChange.bind(this)}
+							onCodeModeChange={this.onCodeModeChange.bind(this)}
+							onRef={comp => (this.contentWrap = comp)}
+							prefs={this.state.prefs}
+							onEditorFocus={this.editorFocusHandler.bind(this)}
+							onSplitUpdate={this.splitUpdateHandler.bind(this)}
+							onAddFile={this.addFileHandler.bind(this)}
+							onRemoveFile={this.removeFileHandler.bind(this)}
+							onRenameFile={this.renameFileHandler.bind(this)}
+							onFileDrop={this.fileDropHandler.bind(this)}
+							onFolderSelect={this.folderSelectHandler.bind(this)}
+						/>
+					) : (
+						<ContentWrap
+							currentLayoutMode={this.state.currentLayoutMode}
+							currentItem={this.state.currentItem}
+							onCodeChange={this.onCodeChange.bind(this)}
+							onCodeSettingsChange={this.onCodeSettingsChange.bind(this)}
+							onCodeModeChange={this.onCodeModeChange.bind(this)}
+							onRef={comp => (this.contentWrap = comp)}
+							prefs={this.state.prefs}
+							onEditorFocus={this.editorFocusHandler.bind(this)}
+							onSplitUpdate={this.splitUpdateHandler.bind(this)}
+						/>
+					)}
 
 					<Footer
 						prefs={this.state.prefs}
@@ -1337,6 +1497,9 @@ export default class App extends Component {
 					show={this.state.isCreateNewModalOpen}
 					closeHandler={() => this.setState({ isCreateNewModalOpen: false })}
 					onBlankTemplateSelect={this.blankTemplateSelectHandler.bind(this)}
+					onBlankFileTemplateSelect={this.blankFileTemplateSelectHandler.bind(
+						this
+					)}
 					onTemplateSelect={this.templateSelectHandler.bind(this)}
 				/>
 

@@ -51,6 +51,7 @@ export default class ContentWrapFiles extends Component {
 		);
 	}
 	componentWillUpdate(nextProps) {
+		// If we get a new Item, clear file buffers and currently selected file.
 		if (
 			this.props.currentItem.createdOn !== nextProps.currentItem.createdOn ||
 			this.props.currentItem.id !== nextProps.currentItem.id
@@ -59,6 +60,8 @@ export default class ContentWrapFiles extends Component {
 			this.state.selectedFile = null;
 		}
 
+		// If the files have changed and we have a selected file (even after previous condition),
+		// update the buffer with new file content (may be it got prettified?)
 		if (
 			nextProps.currentItem.files !== this.props.currentItem.files &&
 			this.state.selectedFile &&

@@ -3,11 +3,17 @@ import UserCodeMirror from './UserCodeMirror';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { log, loadJS } from '../utils';
 
-import { linearizeFiles, assignFilePaths, getFileFromPath } from '../fileUtils';
+import {
+	linearizeFiles,
+	assignFilePaths,
+	getFileFromPath,
+	getExtensionFromFileName
+} from '../fileUtils';
 
 import { SplitPane } from './SplitPane';
 import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
+import 'codemirror/mode/meta';
 import { deferred } from '../deferred';
 import { SidePane } from './SidePane';
 import { Console } from './Console';
@@ -125,26 +131,19 @@ export default class ContentWrapFiles extends Component {
 	}
 
 	createEditorDoc(file) {
-		let mode;
-		if (file.name.match(/\.css$/)) {
-			mode = modes[CssModes.CSS];
-		} else if (file.name.match(/\.js$/)) {
-			mode = modes[JsModes.JS];
-		} else if (file.name.match(/\.html$/)) {
-			mode = modes[HtmlModes.HTML];
-		} else if (file.name.match(/\.md$/) || file.name.match(/\.markdown$/)) {
-			mode = modes[HtmlModes.MARKDOWN];
-		} else if (file.name.match(/\.sass$/)) {
-			mode = modes[CssModes.SASS];
-		} else if (file.name.match(/\.scss$/)) {
-			mode = modes[CssModes.SCSS];
+		const detectedMode = CodeMirror.findModeByExtension(
+			getExtensionFromFileName(file.name)
+		);
+		let mode, mime;
+		if (detectedMode) {
+			mode = detectedMode.mode;
+			mime = detectedMode.mimes ? detectedMode.mimes[0] : detectedMode.mime;
+
+			CodeMirror.autoLoadMode(this.cm, mode);
 		}
-
-		CodeMirror.autoLoadMode(this.cm, mode.cmPath || mode.cmMode);
-
 		this.fileBuffers[file.path] = CodeMirror.Doc(
 			file.content || '',
-			mode.cmMode
+			detectedMode ? mime : 'text/plain'
 		);
 	}
 

@@ -482,6 +482,9 @@ export function prettify(file) {
 			plugins = [require('prettier/parser-babylon')];
 			break;
 		case 'css':
+		case 'scss':
+		case 'sass':
+		case 'less':
 			parser = 'css';
 			plugins = [require('prettier/parser-postcss')];
 			break;

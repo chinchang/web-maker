@@ -3,6 +3,7 @@ import { trackEvent } from './analytics';
 import { computeHtml, computeCss, computeJs } from './computes';
 import { JsModes } from './codeModes';
 import { deferred } from './deferred';
+import { getExtensionFromFileName } from './fileUtils';
 const esprima = require('esprima');
 
 window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
@@ -464,4 +465,42 @@ if (window.IS_EXTENSION) {
 	document.body.classList.add('is-extension');
 } else {
 	document.body.classList.add('is-app');
+}
+
+export function prettify(file) {
+	const prettier = require('prettier/standalone');
+	const fileExtension = getExtensionFromFileName(file.name);
+
+	let plugins, parser;
+	switch (fileExtension) {
+		case 'js':
+			parser = 'babylon';
+			plugins = [require('prettier/parser-babylon')];
+			break;
+		case 'json':
+			parser = 'json';
+			plugins = [require('prettier/parser-babylon')];
+			break;
+		case 'css':
+		case 'scss':
+		case 'sass':
+		case 'less':
+			parser = 'css';
+			plugins = [require('prettier/parser-postcss')];
+			break;
+		case 'md':
+		case 'markdown':
+			parser = 'markdown';
+			plugins = [require('prettier/parser-markdown')];
+			break;
+	}
+
+	if (!parser) {
+		return file.content;
+	}
+
+	return prettier.format(file.content, {
+		parser,
+		plugins
+	});
 }

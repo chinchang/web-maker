@@ -3,11 +3,17 @@ import UserCodeMirror from './UserCodeMirror';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { log, loadJS } from '../utils';
 
-import { linearizeFiles, assignFilePaths } from '../fileUtils';
+import {
+	linearizeFiles,
+	assignFilePaths,
+	getFileFromPath,
+	getExtensionFromFileName
+} from '../fileUtils';
 
 import { SplitPane } from './SplitPane';
 import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
+import 'codemirror/mode/meta';
 import { deferred } from '../deferred';
 import { SidePane } from './SidePane';
 import { Console } from './Console';
@@ -51,12 +57,28 @@ export default class ContentWrapFiles extends Component {
 		);
 	}
 	componentWillUpdate(nextProps) {
+		// If we get a new Item, clear file buffers and currently selected file.
 		if (
 			this.props.currentItem.createdOn !== nextProps.currentItem.createdOn ||
 			this.props.currentItem.id !== nextProps.currentItem.id
 		) {
 			this.fileBuffers = {};
 			this.state.selectedFile = null;
+		}
+
+		// If the files have changed and we have a selected file (even after previous condition),
+		// update the buffer with new file content (may be it got prettified?)
+		if (
+			nextProps.currentItem.files !== this.props.currentItem.files &&
+			this.state.selectedFile &&
+			this.fileBuffers[this.state.selectedFile.path]
+		) {
+			this.fileBuffers[this.state.selectedFile.path].setValue(
+				getFileFromPath(
+					nextProps.currentItem.files,
+					this.state.selectedFile.path
+				).file.content
+			);
 		}
 	}
 	componentDidUpdate() {
@@ -72,6 +94,7 @@ export default class ContentWrapFiles extends Component {
 		) {
 			this.fileSelectHandler(linearFiles[0]);
 		}
+
 		// HACK: becuase its a DOM manipulation
 		// window.logCountEl.textContent = this.logCount;
 		// log('🚀', 'didupdate', this.props.currentItem);
@@ -108,26 +131,22 @@ export default class ContentWrapFiles extends Component {
 	}
 
 	createEditorDoc(file) {
-		let mode;
-		if (file.name.match(/\.css$/)) {
-			mode = modes[CssModes.CSS];
-		} else if (file.name.match(/\.js$/)) {
-			mode = modes[JsModes.JS];
-		} else if (file.name.match(/\.html$/)) {
-			mode = modes[HtmlModes.HTML];
-		} else if (file.name.match(/\.md$/) || file.name.match(/\.markdown$/)) {
-			mode = modes[HtmlModes.MARKDOWN];
-		} else if (file.name.match(/\.sass$/)) {
-			mode = modes[CssModes.SASS];
-		} else if (file.name.match(/\.scss$/)) {
-			mode = modes[CssModes.SCSS];
+		const detectedMode = CodeMirror.findModeByExtension(
+			getExtensionFromFileName(file.name)
+		);
+		let mode, mime;
+		if (detectedMode) {
+			mode = detectedMode.mode;
+			mime = detectedMode.mimes ? detectedMode.mimes[0] : detectedMode.mime;
+
+			CodeMirror.autoLoadMode(this.cm, mode);
 		}
-
-		CodeMirror.autoLoadMode(this.cm, mode.cmPath || mode.cmMode);
-
-		this.fileBuffers[file.name] = CodeMirror.Doc(
+		if (mime === 'application/json') {
+			mime = 'application/ld+json';
+		}
+		this.fileBuffers[file.path] = CodeMirror.Doc(
 			file.content || '',
-			mode.cmMode
+			detectedMode ? mime : 'text/plain'
 		);
 	}
 
@@ -259,7 +278,6 @@ export default class ContentWrapFiles extends Component {
 		return !!item.title;
 	}
 	refreshEditor() {
-		this.cmCodes.html = this.props.currentItem.html;
 		if (this.state.selectedFile) {
 			this.cm.setValue(this.state.selectedFile.content);
 		}
@@ -458,10 +476,10 @@ export default class ContentWrapFiles extends Component {
 			editorOptions: this.getEditorOptions(file.name),
 			selectedFile: file
 		});
-		if (!this.fileBuffers[file.name]) {
+		if (!this.fileBuffers[file.path]) {
 			this.createEditorDoc(file);
 		}
-		this.cm.swapDoc(this.fileBuffers[file.name]);
+		this.cm.swapDoc(this.fileBuffers[file.path]);
 
 		// var cmMode = 'html';
 		// if (file.name.match(/\.css$/)) {
@@ -561,6 +579,9 @@ export default class ContentWrapFiles extends Component {
 		}
 	}
 
+	prettifyBtnClickHandler() {
+		this.props.onPrettifyBtnClick(this.state.selectedFile);
+	}
 	render() {
 		return (
 			<SplitPane
@@ -600,6 +621,12 @@ export default class ContentWrapFiles extends Component {
 								{this.state.selectedFile ? this.state.selectedFile.name : ''}
 							</label>
 							<div class="code-wrap__header-right-options">
+								<button
+									class="btn btn--dark"
+									onClick={this.prettifyBtnClickHandler.bind(this)}
+								>
+									Prettify
+								</button>
 								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
 									title="Toggle code pane"
@@ -607,6 +634,9 @@ export default class ContentWrapFiles extends Component {
 							</div>
 						</div>
 						<UserCodeMirror
+							value={
+								this.state.selectedFile ? this.state.selectedFile.content : ''
+							}
 							options={this.state.editorOptions}
 							prefs={this.props.prefs}
 							onChange={this.onHtmlCodeChange.bind(this)}

@@ -20,7 +20,8 @@ import {
 	handleDownloadsPermission,
 	downloadFile,
 	getCompleteHtml,
-	getFilenameFromUrl
+	getFilenameFromUrl,
+	prettify
 } from '../utils';
 import {
 	linearizeFiles,
@@ -29,6 +30,7 @@ import {
 	removeFileAtPath,
 	doesFileExistInFolder
 } from '../fileUtils';
+
 import { itemService } from '../itemService';
 import '../db';
 import { Notifications } from './Notifications';
@@ -740,7 +742,7 @@ export default class App extends Component {
 	onCodeChange(type, code, isUserChange) {
 		if (this.state.currentItem.files) {
 			linearizeFiles(this.state.currentItem.files).map(file => {
-				if (file.name === type.name) {
+				if (file.path === type.path) {
 					file.content = code;
 				}
 			});
@@ -1291,6 +1293,19 @@ export default class App extends Component {
 		return classes.join(' ');
 	}
 
+	prettify(selectedFile) {
+		const currentItem = {
+			...this.state.currentItem,
+			files: [...this.state.currentItem.files]
+		};
+		const formattedContent = prettify(selectedFile);
+		if (formattedContent !== selectedFile.content) {
+			selectedFile.content = formattedContent;
+			this.incrementUnsavedChanges();
+			this.setState({ currentItem });
+		}
+	}
+
 	render() {
 		return (
 			<div class={this.getRootClasses()}>
@@ -1327,6 +1342,7 @@ export default class App extends Component {
 							onRenameFile={this.renameFileHandler.bind(this)}
 							onFileDrop={this.fileDropHandler.bind(this)}
 							onFolderSelect={this.folderSelectHandler.bind(this)}
+							onPrettifyBtnClick={this.prettify.bind(this)}
 						/>
 					) : (
 						<ContentWrap

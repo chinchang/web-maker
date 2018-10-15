@@ -477,6 +477,10 @@ export function prettify(file) {
 			parser = 'babylon';
 			plugins = [require('prettier/parser-babylon')];
 			break;
+		case 'json':
+			parser = 'json';
+			plugins = [require('prettier/parser-babylon')];
+			break;
 		case 'css':
 			parser = 'css';
 			plugins = [require('prettier/parser-postcss')];

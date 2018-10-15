@@ -141,6 +141,9 @@ export default class ContentWrapFiles extends Component {
 
 			CodeMirror.autoLoadMode(this.cm, mode);
 		}
+		if (mime === 'application/json') {
+			mime = 'application/ld+json';
+		}
 		this.fileBuffers[file.path] = CodeMirror.Doc(
 			file.content || '',
 			detectedMode ? mime : 'text/plain'

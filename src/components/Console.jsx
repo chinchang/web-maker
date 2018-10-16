@@ -1,19 +1,41 @@
-import { h } from 'preact';
-import CodeMirrorBox from './CodeMirrorBox';
+import { h, Component } from 'preact';
+
+import { ObjectInspector, chromeDark } from 'react-inspector';
+
+class LogRow extends Component {
+	shouldComponentUpdate() {
+		return false;
+	}
+	render() {
+		const theme = {
+			...chromeDark,
+			...{
+				OBJECT_VALUE_STRING_COLOR: 'green',
+				BASE_FONT_SIZE: '20px',
+				TREENODE_FONT_SIZE: '20px'
+			}
+		};
+
+		return (
+			<ObjectInspector
+				theme={theme}
+				theme="chromeDark"
+				data={this.props.data}
+			/>
+		);
+	}
+}
 
 export function Console({
+	logs,
 	isConsoleOpen,
 	onConsoleHeaderDblClick,
 	onClearConsoleBtnClick,
 	toggleConsole,
-	onEvalInputKeyup,
-	onReady
+	onEvalInputKeyup
 }) {
 	return (
-		<div
-			id="consoleEl"
-			class={`console ${isConsoleOpen ? '' : 'is-minimized'}`}
-		>
+		<div id="consoleEl" class={`console ${true ? '' : 'is-minimized'}`}>
 			<div id="consoleLogEl" class="console__log">
 				<div
 					class="js-console__header  code-wrap__header"
@@ -21,7 +43,7 @@ export function Console({
 					onDblClick={onConsoleHeaderDblClick}
 				>
 					<span class="code-wrap__header-label">
-						Console (<span id="logCountEl">0</span>)
+						Console (<span>{logs.length}</span>)
 					</span>
 					<div class="code-wrap__header-right-options">
 						<a
@@ -40,17 +62,7 @@ export function Console({
 						/>
 					</div>
 				</div>
-				<CodeMirrorBox
-					options={{
-						mode: 'javascript',
-						lineWrapping: true,
-						theme: 'monokai',
-						foldGutter: true,
-						readOnly: true,
-						gutters: ['CodeMirror-foldgutter']
-					}}
-					onCreation={el => onReady(el)}
-				/>
+				<ul class="console__items">{logs.map(log => <LogRow data={log} />)}</ul>
 			</div>
 			<div
 				id="consolePromptEl"

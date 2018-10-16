@@ -19,7 +19,8 @@ export default class ContentWrap extends Component {
 		super(props);
 		this.state = {
 			isConsoleOpen: false,
-			isCssSettingsModalOpen: false
+			isCssSettingsModalOpen: false,
+			logs: []
 		};
 		this.updateTimer = null;
 		this.updateDelay = 500;
@@ -31,7 +32,6 @@ export default class ContentWrap extends Component {
 		this.codeInPreview = { html: null, css: null, js: null };
 		this.cmCodes = { html: props.currentItem.html, css: '', js: '' };
 		this.cm = {};
-		this.logCount = 0;
 
 		window.onMessageFromConsole = this.onMessageFromConsole.bind(this);
 		window.previewException = this.previewException.bind(this);
@@ -42,6 +42,7 @@ export default class ContentWrap extends Component {
 		return (
 			this.state.isConsoleOpen !== nextState.isConsoleOpen ||
 			this.state.isCssSettingsModalOpen !== nextState.isCssSettingsModalOpen ||
+			this.state.logs !== nextState.logs ||
 			this.state.codeSplitSizes !== nextState.codeSplitSizes ||
 			this.state.mainSplitSizes !== nextState.mainSplitSizes ||
 			this.props.currentLayoutMode !== nextProps.currentLayoutMode ||
@@ -50,9 +51,6 @@ export default class ContentWrap extends Component {
 		);
 	}
 	componentDidUpdate() {
-		// HACK: becuase its a DOM manipulation
-		this.updateLogCount();
-
 		// log('🚀', 'didupdate', this.props.currentItem);
 		// if (this.isValidItem(this.props.currentItem)) {
 		// this.refreshEditor();
@@ -288,11 +286,11 @@ export default class ContentWrap extends Component {
 		]).then(() => this.setPreviewContent(true));
 	}
 	applyCodemirrorSettings(prefs) {
-		if (window.consoleEl) {
+		/* if (window.consoleEl) {
 			window.consoleEl.querySelector(
 				'.CodeMirror'
 			).style.fontSize = `${parseInt(prefs.fontSize, 10)}px`;
-		}
+		} */
 
 		// Replace correct css file in LINK tags's href
 		if (prefs.editorTheme) {
@@ -556,46 +554,21 @@ export default class ContentWrap extends Component {
 		}, 500);
 	}
 
-	updateLogCount() {
-		if (window.logCountEl) {
-			logCountEl.textContent = this.logCount;
-		}
-	}
-
 	onMessageFromConsole() {
-		/* eslint-disable no-param-reassign */
-		[...arguments].forEach(arg => {
+		const logs = [...arguments].map(arg => {
 			if (
 				arg &&
 				arg.indexOf &&
 				arg.indexOf('filesystem:chrome-extension') !== -1
 			) {
-				arg = arg.replace(
+				return arg.replace(
 					/filesystem:chrome-extension.*\.js:(\d+):*(\d*)/g,
 					'script $1:$2'
 				);
 			}
-			try {
-				this.consoleCm.replaceRange(
-					arg +
-						' ' +
-						((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
-						'\n',
-					{
-						line: Infinity
-					}
-				);
-			} catch (e) {
-				this.consoleCm.replaceRange('🌀\n', {
-					line: Infinity
-				});
-			}
-			this.consoleCm.scrollTo(0, Infinity);
-			this.logCount++;
+			return arg;
 		});
-		this.updateLogCount();
-
-		/* eslint-enable no-param-reassign */
+		this.setState({ logs: [...this.state.logs, ...logs] });
 	}
 
 	previewException(error) {
@@ -615,9 +588,7 @@ export default class ContentWrap extends Component {
 		this.toggleConsole();
 	}
 	clearConsole() {
-		this.consoleCm.setValue('');
-		this.logCount = 0;
-		this.updateLogCount();
+		this.setState({ logs: [] });
 	}
 	clearConsoleBtnClickHandler() {
 		this.clearConsole();
@@ -864,6 +835,7 @@ export default class ContentWrap extends Component {
 						allowfullscreen
 					/>
 					<Console
+						logs={this.state.logs}
 						isConsoleOpen={this.state.isConsoleOpen}
 						onConsoleHeaderDblClick={this.consoleHeaderDblClickHandler.bind(
 							this
@@ -871,7 +843,6 @@ export default class ContentWrap extends Component {
 						onClearConsoleBtnClick={this.clearConsoleBtnClickHandler.bind(this)}
 						toggleConsole={this.toggleConsole.bind(this)}
 						onEvalInputKeyup={this.evalConsoleExpr.bind(this)}
-						onReady={el => (this.consoleCm = el)}
 					/>
 					<CssSettingsModal
 						show={this.state.isCssSettingsModalOpen}

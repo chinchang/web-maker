@@ -309,7 +309,11 @@ export default class App extends Component {
 			item = {
 				...item,
 				files: assignFilePaths([
-					{ name: 'index.html', content: '' },
+					{
+						name: 'index.html',
+						content:
+							'hello\n<link rel="stylesheet" href="styles/style.css">\n<script src="script.js"></script>'
+					},
 					{
 						name: 'styles',
 						isFolder: true,

@@ -316,7 +316,7 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 				return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
 			}, '');
 		externalCss = item.externalLibs.css
-			.split('\n')
+			.split('\n').concat(['./lib/vue-sequence-ext.css', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'])
 			.reduce(function(links, url) {
 				return (
 					links +

@@ -43,7 +43,10 @@ export class Console extends Component {
 		} = this.props;
 
 		return (
-			<div id="consoleEl" class={`console ${true ? '' : 'is-minimized'}`}>
+			<div
+				id="consoleEl"
+				class={`console ${isConsoleOpen ? '' : 'is-minimized'}`}
+			>
 				<div id="consoleLogEl" class="console__log">
 					<div
 						class="js-console__header  code-wrap__header"

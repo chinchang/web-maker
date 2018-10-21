@@ -1418,12 +1418,6 @@ body > #demo-frame {
 	transform: translateY(calc(100% - 29px));
 }
 
-.console .CodeMirror {
-	flex-grow: 1;
-	/* flex-basis of 0 to trigger overflow https://stackoverflow.com/a/52489012/891962 */
-	flex-basis: 0;
-}
-
 .console__log {
 	flex: 1;
 	display: flex;
@@ -1441,6 +1435,20 @@ body > #demo-frame {
 
 .console:not(.is-minimized) .code-wrap__header {
 	cursor: ns-resize;
+}
+.console__items {
+	padding: 0;
+	margin: 0;
+	overflow: auto;
+	flex-grow: 1;
+	/* flex-basis of 0 to trigger overflow https://stackoverflow.com/a/52489012/891962 */
+	flex-basis: 0;
+}
+.console__items li {
+	font-size: var(--code-font-size) !important;
+	line-height: inherit !important;
+	padding: 5px 10px !important;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* Detached mode */

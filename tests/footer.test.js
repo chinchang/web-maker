@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import Footer from '../components/Footer';
+import Footer from '../src/components/Footer';
 import { Link } from 'preact-router/match';
 // See: https://github.com/mzgoddard/preact-render-spy
 import { shallow, deep } from 'preact-render-spy';

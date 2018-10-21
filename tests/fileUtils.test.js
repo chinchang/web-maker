@@ -6,7 +6,7 @@ import {
 	removeFileAtPath,
 	getParentPath,
 	getExtensionFromFileName
-} from '../fileUtils';
+} from '../src/fileUtils';
 
 function getNestedFiles() {
 	return [

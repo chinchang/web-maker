@@ -286,11 +286,10 @@ export default class ContentWrap extends Component {
 		]).then(() => this.setPreviewContent(true));
 	}
 	applyCodemirrorSettings(prefs) {
-		/* if (window.consoleEl) {
-			window.consoleEl.querySelector(
-				'.CodeMirror'
-			).style.fontSize = `${parseInt(prefs.fontSize, 10)}px`;
-		} */
+		document.documentElement.style.setProperty(
+			'--code-font-size',
+			`${parseInt(prefs.fontSize, 10)}px`
+		);
 
 		// Replace correct css file in LINK tags's href
 		if (prefs.editorTheme) {

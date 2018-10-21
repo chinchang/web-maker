@@ -294,11 +294,10 @@ export default class ContentWrapFiles extends Component {
 		);
 	}
 	applyCodemirrorSettings(prefs) {
-		if (window.consoleEl) {
-			// window.consoleEl.querySelector(
-			// '.CodeMirror'
-			// ).style.fontSize = `${parseInt(prefs.fontSize, 10)}px`;
-		}
+		document.documentElement.style.setProperty(
+			'--code-font-size',
+			`${parseInt(prefs.fontSize, 10)}px`
+		);
 
 		// Replace correct css file in LINK tags's href
 		if (prefs.editorTheme) {

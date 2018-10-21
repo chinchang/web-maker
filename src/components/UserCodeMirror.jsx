@@ -38,9 +38,6 @@ emmet(CodeMirror);
 export default class UserCodeMirror extends Component {
 	componentDidMount() {
 		this.initEditor();
-		this.textarea.parentNode.querySelector(
-			'.CodeMirror'
-		).style.fontSize = `${parseInt(this.props.prefs.fontSize, 10)}px`;
 	}
 	shouldComponentUpdate(nextProps) {
 		if (nextProps.prefs !== this.props.prefs) {
@@ -59,12 +56,6 @@ export default class UserCodeMirror extends Component {
 
 			this.cm.setOption('keyMap', prefs.keymap);
 			this.cm.setOption('lineWrapping', prefs.lineWrap);
-
-			if (this.textarea) {
-				this.textarea.parentNode.querySelector(
-					'.CodeMirror'
-				).style.fontSize = `${parseInt(prefs.fontSize, 10)}px`;
-			}
 
 			this.cm.refresh();
 		}

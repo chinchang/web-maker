@@ -1445,7 +1445,7 @@ body > #demo-frame {
 	flex-basis: 0;
 }
 .console__items li {
-	font-size: 1em !important;
+	font-size: var(--code-font-size) !important;
 	line-height: inherit !important;
 	padding: 5px 10px !important;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.05);

@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import { PureComponent } from 'preact-compat';
 
-import { ObjectInspector, chromeDark } from 'react-inspector';
+import { Inspector, chromeDark } from 'react-inspector';
 
 class LogRow extends Component {
 	shouldComponentUpdate() {
@@ -18,11 +18,7 @@ class LogRow extends Component {
 		};
 
 		return (
-			<ObjectInspector
-				theme={theme}
-				theme="chromeDark"
-				data={this.props.data}
-			/>
+			<Inspector theme={theme} theme="chromeDark" data={this.props.data} />
 		);
 	}
 }

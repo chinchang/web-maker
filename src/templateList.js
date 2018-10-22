@@ -10,6 +10,11 @@ export default [
 		img: 'assets/react-logo.svg'
 	},
 	{
+		id: 'vue',
+		title: 'Vue',
+		img: 'assets/vue-logo.svg'
+	},
+	{
 		id: 'kontra-game-engine',
 		title: 'Kontra Game Engine',
 		img: 'assets/html5-logo.svg'

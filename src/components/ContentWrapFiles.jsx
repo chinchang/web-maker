@@ -355,13 +355,8 @@ export default class ContentWrapFiles extends Component {
 		var mainSplitSizes;
 		const sidebarWidth = 200;
 		const { currentItem, currentLayoutMode } = this.props;
-		if (false && currentItem && currentItem.mainSizes) {
-			// For layout mode 3, main panes are reversed using flex-direction.
-			// So we need to apply the saved sizes in reverse order.
-			mainSplitSizes =
-				currentLayoutMode === 3
-					? [currentItem.mainSizes[1], currentItem.mainSizes[0]]
-					: currentItem.mainSizes;
+		if (currentItem && currentItem.mainSizes) {
+			mainSplitSizes = currentItem.mainSizes;
 		} else {
 			mainSplitSizes = [
 				`${sidebarWidth}px`,

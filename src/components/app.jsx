@@ -643,22 +643,48 @@ export default class App extends Component {
 
 	// Calculates the current sizes of code & preview panes.
 	getMainPaneSizes() {
-		var sizes;
+		let sizes;
+
+		function getPercentFromDimension(el, dimension = 'width') {
+			const match = el.style[dimension].match(/[\d.]+(%|px)/);
+			if (match) {
+				return match[0];
+			}
+			return null;
+		}
+
+		// File mode
+		if (this.state.currentItem && this.state.currentItem.files) {
+			const sidebarWidth = 200;
+
+			sizes = [
+				getPercentFromDimension($('#js-sidebar')),
+				getPercentFromDimension($('#js-code-side')),
+				getPercentFromDimension($('#js-demo-side'))
+			];
+
+			// Check if anything was returned falsy, reset in that case
+			if (sizes.filter(s => s).length !== 3) {
+				sizes = [
+					`${sidebarWidth}px`,
+					`calc(50% - ${sidebarWidth / 2}px)`,
+					`calc(50% - ${sidebarWidth / 2}px)`
+				];
+			}
+			return sizes;
+		}
+
 		const currentLayoutMode = this.state.currentLayoutMode;
 		var dimensionProperty = currentLayoutMode === 2 ? 'height' : 'width';
-		try {
-			sizes = [
-				+$('#js-code-side').style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+$('#js-demo-side').style[dimensionProperty].match(/([\d.]+)%/)[1]
-			];
-		} catch (e) {
-			sizes = [50, 50];
-		} finally {
-			/* eslint-disable no-unsafe-finally */
-			return sizes;
+		sizes = [
+			getPercentFromDimension($('#js-code-side'), dimensionProperty),
+			getPercentFromDimension($('#js-demo-side'), dimensionProperty)
+		];
 
-			/* eslint-enable no-unsafe-finally */
+		if (sizes.filter(s => s).length !== 2) {
+			sizes = [50, 50];
 		}
+		return sizes;
 	}
 	saveSetting(setting, value) {
 		const d = deferred();
@@ -670,13 +696,16 @@ export default class App extends Component {
 	}
 
 	saveCode(key) {
-		this.state.currentItem.updatedOn = Date.now();
-		this.state.currentItem.layoutMode = this.state.currentLayoutMode;
+		const { currentItem } = this.state;
+		currentItem.updatedOn = Date.now();
+		currentItem.layoutMode = this.state.currentLayoutMode;
 
-		this.state.currentItem.sizes = this.getCodePaneSizes();
-		this.state.currentItem.mainSizes = this.getMainPaneSizes();
+		currentItem.mainSizes = this.getMainPaneSizes();
+		if (!currentItem.files) {
+			currentItem.sizes = this.getCodePaneSizes();
+		}
 
-		log('saving key', key || this.state.currentItem.id, this.state.currentItem);
+		log('saving key', key || currentItem.id, currentItem);
 
 		function onSaveComplete() {
 			if (window.user && !navigator.onLine) {
@@ -690,7 +719,7 @@ export default class App extends Component {
 		}
 
 		return itemService
-			.setItem(key || this.state.currentItem.id, this.state.currentItem)
+			.setItem(key || currentItem.id, currentItem)
 			.then(onSaveComplete.bind(this));
 	}
 

@@ -26,3 +26,9 @@ export function A(props) {
 export function Button(props) {
 	return <Clickable Tag={'button'} {...props} />;
 }
+
+export function AutoFocusInput(props) {
+	return (
+		<input ref={el => el && setTimeout(() => el.focus(), 100)} {...props} />
+	);
+}

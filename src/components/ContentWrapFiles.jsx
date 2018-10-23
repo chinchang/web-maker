@@ -17,6 +17,10 @@ import 'codemirror/mode/meta';
 import { deferred } from '../deferred';
 import { SidePane } from './SidePane';
 import { Console } from './Console';
+import {
+	commandPaletteService,
+	SWITCH_FILE_EVENT
+} from '../commandPaletteService';
 
 const minCodeWrapSize = 33;
 
@@ -105,6 +109,21 @@ export default class ContentWrapFiles extends Component {
 	}
 	componentDidMount() {
 		this.props.onRef(this);
+		this.commandPaletteSubscriptions = [];
+		this.commandPaletteSubscriptions.push(
+			commandPaletteService.subscribe(SWITCH_FILE_EVENT, file => {
+				const targetFile = getFileFromPath(
+					this.props.currentItem.files,
+					file.path
+				);
+				if (targetFile.file) {
+					this.fileSelectHandler(targetFile.file);
+				}
+			})
+		);
+	}
+	componentWillUnmount() {
+		this.commandPaletteSubscriptions.forEach(unsubscribeFn => unsubscribeFn());
 	}
 
 	getEditorOptions(fileName = '') {

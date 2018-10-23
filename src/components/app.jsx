@@ -55,6 +55,11 @@ import { Js13KModal } from './Js13KModal';
 import { CreateNewModal } from './CreateNewModal';
 import { Icons } from './Icons';
 import JSZip from 'jszip';
+import { CommandPalette } from './CommandPalette';
+import {
+	commandPaletteService,
+	OPEN_SAVED_CREATIONS_EVENT
+} from '../commandPaletteService';
 
 if (module.hot) {
 	require('preact/debug');
@@ -84,7 +89,8 @@ export default class App extends Component {
 			isAskToImportModalOpen: false,
 			isOnboardModalOpen: false,
 			isJs13KModalOpen: false,
-			isCreateNewModalOpen: false
+			isCreateNewModalOpen: false,
+			isCommandPaletteOpen: false
 		};
 		this.state = {
 			isSavedItemPaneOpen: false,
@@ -532,6 +538,12 @@ export default class App extends Component {
 				// We might be listening on keydown for some input inside the app. In that case
 				// we don't want this to trigger which in turn focuses back the last editor.
 				this.closeSavedItemsPane();
+			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 80) {
+				this.setState({
+					isCommandPaletteOpen: true,
+					isCommandPaletteInCommandMode: !!event.shiftKey
+				});
+				event.preventDefault();
 			}
 		});
 
@@ -547,6 +559,10 @@ export default class App extends Component {
 					modal.querySelector('.js-modal__close-btn').focus();
 				}
 			}
+		});
+
+		commandPaletteService.subscribe(OPEN_SAVED_CREATIONS_EVENT, () => {
+			this.openSavedItemsPane();
 		});
 	}
 
@@ -1551,6 +1567,14 @@ export default class App extends Component {
 						this
 					)}
 					onTemplateSelect={this.templateSelectHandler.bind(this)}
+				/>
+
+				<CommandPalette
+					show={this.state.isCommandPaletteOpen}
+					closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
+					files={linearizeFiles(this.state.currentItem.files || [])}
+					isCommandMode={this.state.isCommandPaletteInCommandMode}
+					closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
 				/>
 
 				<Portal into="body">

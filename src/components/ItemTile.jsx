@@ -7,13 +7,16 @@ export function ItemTile({
 	onClick,
 	onForkBtnClick,
 	onRemoveBtnClick,
-	focusable
+	focusable,
+	inline
 }) {
 	return (
 		<div
 			role={focusable ? 'button' : null}
 			tabindex={focusable ? 0 : null}
-			class="js-saved-item-tile saved-item-tile"
+			class={`js-saved-item-tile saved-item-tile ${
+				inline ? 'saved-item-tile--inline' : ''
+			}`}
 			data-item-id={item.id}
 			onClick={onClick}
 		>

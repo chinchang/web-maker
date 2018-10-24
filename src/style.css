@@ -968,7 +968,11 @@ body > #demo-frame {
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 	animation: slide-left 0.35s ease forwards;
 }
-
+.saved-item-tile--inline {
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+}
 .saved-item-tile:nth-child(1) {
 	animation-delay: 0.2s;
 }

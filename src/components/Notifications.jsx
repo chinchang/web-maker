@@ -103,7 +103,20 @@ export function Notifications(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="3.4.2" isLatest={true} {...props}>
+			<Notification version="3.5.0" isLatest={true} {...props}>
+				<li>
+					<strong>New Template</strong>: Template for Vue.js is available when
+					you start a new creation. Thanks{' '}
+					<ThanksTo url="https://github.com/khamer" name="@khamer" />
+				</li>
+
+				<li>
+					⬆️ Popular libraries updated to latest versions. Thanks
+					<ThanksTo url="https://github.com/diomed" name="@diomed" />
+				</li>
+			</Notification>
+
+			<Notification version="3.4.2" {...props}>
 				<li>
 					🚀 RxJS added to popular libraries list. Thanks
 					<ThanksTo url="https://github.com/jpsc" name="@jpsc" />

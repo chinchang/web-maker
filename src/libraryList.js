@@ -17,7 +17,7 @@ export const jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js',
+			'https://cdn.jsdelivr.net/npm/foundation-sites@6.5.0-rc.3/dist/js/foundation.min.js',
 		label: 'Foundation',
 		type: 'js'
 	},
@@ -54,7 +54,7 @@ export const jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js',
+		url: 'https://d3js.org/d3.v5.min.js',
 		label: 'D3',
 		type: 'js'
 	},
@@ -76,7 +76,7 @@ export const jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/js/uikit.min.js',
+			'https://getuikit.com/assets/uikit/dist/js/uikit.js',
 		label: 'UIkit 3',
 		type: 'js'
 	},
@@ -118,7 +118,7 @@ export const cssLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css',
+			'https://cdn.jsdelivr.net/npm/foundation-sites@6.5.0-rc.3/dist/css/foundation.min.css',
 		label: 'Foundation',
 		type: 'css'
 	},
@@ -128,7 +128,7 @@ export const cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css',
 		label: 'Bulma',
 		type: 'css'
 	},
@@ -151,7 +151,7 @@ export const cssLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.42/css/uikit.min.css',
+			'https://getuikit.com/assets/uikit/dist/css/uikit.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},
@@ -168,7 +168,7 @@ export const cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://use.fontawesome.com/releases/v5.0.10/css/all.css',
+		url: 'https://use.fontawesome.com/releases/v5.4.1/css/all.css',
 		label: 'FontAwesome 5',
 		type: 'css'
 	}

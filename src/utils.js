@@ -460,6 +460,27 @@ export function getFilenameFromUrl(url) {
 	return url.match(/\/([^/]*)$/)[1];
 }
 
+export function prettify(content, type = 'js') {
+	const prettier = require('prettier/standalone');
+	let plugins, parser;
+	if (type === 'js') {
+		parser = 'babylon';
+		plugins = [require('prettier/parser-babylon')];
+	} else if (type === 'css') {
+		parser = 'css';
+		plugins = [require('prettier/parser-postcss')];
+	}
+
+	if (!parser) {
+		return content;
+	}
+	const formattedContent = prettier.format(content, {
+		parser,
+		plugins
+	});
+	return formattedContent || content;
+}
+
 if (window.IS_EXTENSION) {
 	document.body.classList.add('is-extension');
 } else {

@@ -165,7 +165,7 @@ gulp.task('generate-service-worker', function(callback) {
 });
 
 gulp.task('packageExtension', function() {
-	child_process.execSync('cp -R app extension/');
+	child_process.execSync('cp -R app extension');
 	child_process.execSync('cp src/manifest.json extension');
 	child_process.execSync('cp src/options.js extension');
 	child_process.execSync('cp src/options.html extension');

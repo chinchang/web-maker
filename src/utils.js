@@ -462,7 +462,11 @@ export function getFilenameFromUrl(url) {
 
 export function prettify(content, type = 'js') {
 	const d = deferred();
-	const worker = new Worker(`${BASE_PATH}/lib/prettier-worker.js`);
+	const worker = new Worker(
+		chrome.extension
+			? chrome.extension.getURL('lib/prettier-worker.js')
+			: `${BASE_PATH}/lib/prettier-worker.js`
+	);
 	worker.postMessage({ content, type });
 	worker.addEventListener('message', e => {
 		d.resolve(e.data);

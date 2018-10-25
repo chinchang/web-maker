@@ -15,10 +15,15 @@ var packageJson = JSON.parse(fs.readFileSync('./package.json'));
 
 function minifyJs(fileName) {
 	const content = fs.readFileSync(fileName, 'utf8');
-	const minifiedContent = babelMinify(content).code;
+	const minifiedContent = babelMinify(
+		content,
+		{ mangle: content.length < 500000 },
+		{ sourceMaps: false }
+	).code;
 	fs.writeFileSync(fileName, minifiedContent);
 	console.log(
-		`[${fileName}]: ${content.length}kb -> ${minifiedContent.length}kb`
+		`[${fileName}]: ${content.length / 1024}M -> ${minifiedContent.length /
+			1024}M`
 	);
 }
 gulp.task('runWebpack', function() {

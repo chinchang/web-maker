@@ -461,24 +461,14 @@ export function getFilenameFromUrl(url) {
 }
 
 export function prettify(content, type = 'js') {
-	const prettier = require('prettier/standalone');
-	let plugins, parser;
-	if (type === 'js') {
-		parser = 'babylon';
-		plugins = [require('prettier/parser-babylon')];
-	} else if (type === 'css') {
-		parser = 'css';
-		plugins = [require('prettier/parser-postcss')];
-	}
-
-	if (!parser) {
-		return content;
-	}
-	const formattedContent = prettier.format(content, {
-		parser,
-		plugins
+	const d = deferred();
+	const worker = new Worker('/lib/prettier-worker.js');
+	worker.postMessage({ content, type });
+	worker.addEventListener('message', e => {
+		d.resolve(e.data);
+		worker.terminate();
 	});
-	return formattedContent || content;
+	return d.promise;
 }
 
 if (window.IS_EXTENSION) {

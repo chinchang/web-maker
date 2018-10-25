@@ -17,7 +17,7 @@ function minifyJs(fileName) {
 	const content = fs.readFileSync(fileName, 'utf8');
 	const minifiedContent = babelMinify(
 		content,
-		{ mangle: content.length < 500000 },
+		{ mangle: content.length < 700000 },
 		{ sourceMaps: false }
 	).code;
 	fs.writeFileSync(fileName, minifiedContent);
@@ -39,6 +39,8 @@ gulp.task('copyFiles', function() {
 			.src('src/lib/codemirror/mode/**/*')
 			.pipe(gulp.dest('app/lib/codemirror/mode')),
 		gulp.src('src/lib/transpilers/*').pipe(gulp.dest('app/lib/transpilers')),
+		gulp.src('src/lib/prettier-worker.js').pipe(gulp.dest('app/lib/')),
+		gulp.src('src/lib/prettier/*').pipe(gulp.dest('app/lib/prettier')),
 		gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib')),
 		gulp.src('icons/*').pipe(gulp.dest('app/icons')),
 		gulp.src('src/assets/*').pipe(gulp.dest('app/assets')),

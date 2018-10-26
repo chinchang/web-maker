@@ -103,9 +103,10 @@ export default class UserCodeMirror extends Component {
 				},
 				'Shift-Tab': function(editor) {
 					if (options.prettier) {
-						prettify(editor.getValue(), options.prettierParser).then(
-							formattedCode => editor.setValue(formattedCode)
-						);
+						prettify({
+							content: editor.getValue(),
+							type: options.prettierParser
+						}).then(formattedCode => editor.setValue(formattedCode));
 					} else {
 						CodeMirror.commands.indentAuto(editor);
 					}

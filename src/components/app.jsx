@@ -1326,17 +1326,18 @@ export default class App extends Component {
 		return classes.join(' ');
 	}
 
-	prettify(selectedFile) {
+	prettifyHandler(selectedFile) {
 		const currentItem = {
 			...this.state.currentItem,
 			files: [...this.state.currentItem.files]
 		};
-		const formattedContent = prettify(selectedFile);
-		if (formattedContent !== selectedFile.content) {
-			selectedFile.content = formattedContent;
-			this.incrementUnsavedChanges();
-			this.setState({ currentItem });
-		}
+		prettify({ file: selectedFile }).then(formattedContent => {
+			if (formattedContent !== selectedFile.content) {
+				selectedFile.content = formattedContent;
+				this.incrementUnsavedChanges();
+				this.setState({ currentItem });
+			}
+		});
 	}
 
 	render() {
@@ -1375,7 +1376,7 @@ export default class App extends Component {
 							onRenameFile={this.renameFileHandler.bind(this)}
 							onFileDrop={this.fileDropHandler.bind(this)}
 							onFolderSelect={this.folderSelectHandler.bind(this)}
-							onPrettifyBtnClick={this.prettify.bind(this)}
+							onPrettifyBtnClick={this.prettifyHandler.bind(this)}
 						/>
 					) : (
 						<ContentWrap

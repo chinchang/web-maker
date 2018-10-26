@@ -1,13 +1,28 @@
 importScripts('./prettier/standalone.js');
 
 function prettify({ content, type }) {
-	let plugins, parser;
-	if (type === 'js') {
-		parser = 'babylon';
-		importScripts('./prettier/parser-babylon.js');
-	} else if (type === 'css') {
-		parser = 'css';
-		importScripts('./prettier/parser-postcss.js');
+	let parser;
+	switch (type) {
+		case 'js':
+			parser = 'babylon';
+			importScripts('./prettier/parser-babylon.js')
+			break;
+		case 'json':
+			parser = 'json';
+			importScripts('./prettier/parser-babylon.js')
+			break;
+		case 'css':
+		case 'scss':
+		case 'sass':
+		case 'less':
+			parser = 'css';
+			importScripts('./prettier/parser-postcss.js')
+			break;
+		case 'md':
+		case 'markdown':
+			parser = 'markdown';
+			importScripts('./prettier/parser-markdown.js')
+			break;
 	}
 
 	if (!parser) {

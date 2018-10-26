@@ -461,12 +461,16 @@ export function getFilenameFromUrl(url) {
 	return url.match(/\/([^/]*)$/)[1];
 }
 
-export function prettify(content, type = 'js') {
+export function prettify({ file, content, type }) {
 	const d = deferred();
+	if (file) {
+		type = getExtensionFromFileName(file.name);
+		content = file.content;
+	}
 	const worker = new Worker(
 		chrome.extension
 			? chrome.extension.getURL('lib/prettier-worker.js')
-			: `${BASE_PATH}/lib/prettier-worker.js`
+			: `${BASE_PATH !== '/' ? BASE_PATH : ''}/lib/prettier-worker.js`
 	);
 	worker.postMessage({ content, type });
 	worker.addEventListener('message', e => {
@@ -480,42 +484,4 @@ if (window.IS_EXTENSION) {
 	document.body.classList.add('is-extension');
 } else {
 	document.body.classList.add('is-app');
-}
-
-export function prettify(file) {
-	const prettier = require('prettier/standalone');
-	const fileExtension = getExtensionFromFileName(file.name);
-
-	let plugins, parser;
-	switch (fileExtension) {
-		case 'js':
-			parser = 'babylon';
-			plugins = [require('prettier/parser-babylon')];
-			break;
-		case 'json':
-			parser = 'json';
-			plugins = [require('prettier/parser-babylon')];
-			break;
-		case 'css':
-		case 'scss':
-		case 'sass':
-		case 'less':
-			parser = 'css';
-			plugins = [require('prettier/parser-postcss')];
-			break;
-		case 'md':
-		case 'markdown':
-			parser = 'markdown';
-			plugins = [require('prettier/parser-markdown')];
-			break;
-	}
-
-	if (!parser) {
-		return file.content;
-	}
-
-	return prettier.format(file.content, {
-		parser,
-		plugins
-	});
 }

@@ -461,6 +461,21 @@ export function getFilenameFromUrl(url) {
 	return url.match(/\/([^/]*)$/)[1];
 }
 
+export function prettify(content, type = 'js') {
+	const d = deferred();
+	const worker = new Worker(
+		chrome.extension
+			? chrome.extension.getURL('lib/prettier-worker.js')
+			: `${BASE_PATH}/lib/prettier-worker.js`
+	);
+	worker.postMessage({ content, type });
+	worker.addEventListener('message', e => {
+		d.resolve(e.data);
+		worker.terminate();
+	});
+	return d.promise;
+}
+
 if (window.IS_EXTENSION) {
 	document.body.classList.add('is-extension');
 } else {

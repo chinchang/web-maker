@@ -1,13 +1,18 @@
 export default [
 	{
-		id: 'preact',
-		title: 'Preact',
-		img: 'assets/preact-logo.svg'
-	},
-	{
 		id: 'react',
 		title: 'React',
 		img: 'assets/react-logo.svg'
+	},
+	{
+		id: 'vue',
+		title: 'Vue',
+		img: 'assets/vue-logo.svg'
+	},
+	{
+		id: 'preact',
+		title: 'Preact',
+		img: 'assets/preact-logo.svg'
 	},
 	{
 		id: 'kontra-game-engine',

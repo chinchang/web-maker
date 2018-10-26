@@ -762,7 +762,9 @@ export default class ContentWrap extends Component {
 									'CodeMirror-linenumbers',
 									'CodeMirror-foldgutter'
 								],
-								emmet: true
+								emmet: true,
+								prettier: true,
+								prettierParser: 'css'
 							}}
 							prefs={this.props.prefs}
 							onChange={this.onCssCodeChange.bind(this)}
@@ -814,7 +816,9 @@ export default class ContentWrap extends Component {
 									'error-gutter',
 									'CodeMirror-linenumbers',
 									'CodeMirror-foldgutter'
-								]
+								],
+								prettier: true,
+								prettierParser: 'js'
 							}}
 							prefs={this.props.prefs}
 							autoComplete={this.props.prefs.autoComplete}

@@ -25,6 +25,7 @@ export function CreateNewModal({
 			<div class="saved-items-pane__container">
 				{templates.map(template => (
 					<ItemTile
+						inline
 						item={template}
 						focusable
 						onClick={onTemplateSelect.bind(null, template)}

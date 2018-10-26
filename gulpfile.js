@@ -15,10 +15,15 @@ var packageJson = JSON.parse(fs.readFileSync('./package.json'));
 
 function minifyJs(fileName) {
 	const content = fs.readFileSync(fileName, 'utf8');
-	const minifiedContent = babelMinify(content).code;
+	const minifiedContent = babelMinify(
+		content,
+		{ mangle: content.length < 700000 },
+		{ sourceMaps: false }
+	).code;
 	fs.writeFileSync(fileName, minifiedContent);
 	console.log(
-		`[${fileName}]: ${content.length}kb -> ${minifiedContent.length}kb`
+		`[${fileName}]: ${content.length / 1024}M -> ${minifiedContent.length /
+			1024}M`
 	);
 }
 gulp.task('runWebpack', function() {
@@ -34,6 +39,8 @@ gulp.task('copyFiles', function() {
 			.src('src/lib/codemirror/mode/**/*')
 			.pipe(gulp.dest('app/lib/codemirror/mode')),
 		gulp.src('src/lib/transpilers/*').pipe(gulp.dest('app/lib/transpilers')),
+		gulp.src('src/lib/prettier-worker.js').pipe(gulp.dest('app/lib/')),
+		gulp.src('src/lib/prettier/*').pipe(gulp.dest('app/lib/prettier')),
 		gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib')),
 		gulp.src('icons/*').pipe(gulp.dest('app/icons')),
 		gulp.src('src/assets/*').pipe(gulp.dest('app/assets')),
@@ -158,7 +165,7 @@ gulp.task('generate-service-worker', function(callback) {
 });
 
 gulp.task('packageExtension', function() {
-	child_process.execSync('cp -R app extension/');
+	child_process.execSync('cp -R app extension');
 	child_process.execSync('cp src/manifest.json extension');
 	child_process.execSync('cp src/options.js extension');
 	child_process.execSync('cp src/options.html extension');

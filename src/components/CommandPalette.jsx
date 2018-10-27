@@ -1,11 +1,9 @@
 import { h, Component } from 'preact';
 import Modal from './Modal';
 import { AutoFocusInput } from './common';
-import { commands } from '../commands';
-import {
-	commandPaletteService,
-	SWITCH_FILE_EVENT
-} from '../commandPaletteService';
+import { commands, SWITCH_FILE_EVENT } from '../commands';
+
+import { commandPaletteService } from '../commandPaletteService';
 import { FileIcon } from './FileIcon';
 import { UP_KEY, DOWN_KEY, ENTER_KEY } from '../keyboardKeys';
 

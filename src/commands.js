@@ -1,9 +1,15 @@
-import {
-	OPEN_SAVED_CREATIONS_EVENT,
-	SAVE_EVENT
-} from './commandPaletteService';
+export const SWITCH_FILE_EVENT = 'switchFileEvent';
+export const NEW_CREATION_EVENT = 'newCreationEvent';
+export const OPEN_SAVED_CREATIONS_EVENT = 'openSavedCreationsEvent';
+export const SAVE_EVENT = 'saveEvent';
+export const OPEN_SETTINGS_EVENT = 'openSettingsEvent';
 
 export const commands = [
+	{
+		name: 'Start New Creation',
+		event: NEW_CREATION_EVENT,
+		keyboardShortcut: ''
+	},
 	{
 		name: 'Open Creation',
 		event: OPEN_SAVED_CREATIONS_EVENT,
@@ -15,8 +21,8 @@ export const commands = [
 		keyboardShortcut: 'Cmd+S'
 	},
 	{
-		name: 'Add Library',
-		run: '',
-		keyboardShortcut: 'Cmd+F'
+		name: 'Open Settings',
+		event: OPEN_SETTINGS_EVENT,
+		keyboardShortcut: ''
 	}
 ];

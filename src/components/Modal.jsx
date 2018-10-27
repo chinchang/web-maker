@@ -32,7 +32,12 @@ export default class Modal extends Component {
 			if (this.props.show) {
 				// HACK: refs will evaluate on next tick due to portals
 				setTimeout(() => {
-					this.overlayEl.querySelector('.js-modal__close-btn').focus();
+					const closeButton = this.overlayEl.querySelector(
+						'.js-modal__close-btn'
+					);
+					if (closeButton) {
+						closeButton.focus();
+					}
 				}, 0);
 
 				/* We insert a dummy hidden input which will take focus as soon as focus

@@ -17,10 +17,8 @@ import 'codemirror/mode/meta';
 import { deferred } from '../deferred';
 import { SidePane } from './SidePane';
 import { Console } from './Console';
-import {
-	commandPaletteService,
-	SWITCH_FILE_EVENT
-} from '../commandPaletteService';
+import { SWITCH_FILE_EVENT } from '../commands';
+import { commandPaletteService } from '../commandPaletteService';
 
 const minCodeWrapSize = 33;
 

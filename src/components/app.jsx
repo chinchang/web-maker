@@ -57,9 +57,12 @@ import { Icons } from './Icons';
 import JSZip from 'jszip';
 import { CommandPalette } from './CommandPalette';
 import {
-	commandPaletteService,
-	OPEN_SAVED_CREATIONS_EVENT
-} from '../commandPaletteService';
+	OPEN_SAVED_CREATIONS_EVENT,
+	SAVE_EVENT,
+	OPEN_SETTINGS_EVENT,
+	NEW_CREATION_EVENT
+} from '../commands';
+import { commandPaletteService } from '../commandPaletteService';
 
 if (module.hot) {
 	require('preact/debug');
@@ -497,6 +500,10 @@ export default class App extends Component {
 			this.editorWithFocus.focus();
 		}
 	}
+	openSettings() {
+		this.setState({ isSettingsModalOpen: true });
+	}
+
 	componentDidMount() {
 		document.body.style.height = `${window.innerHeight}px`;
 
@@ -560,10 +567,26 @@ export default class App extends Component {
 				}
 			}
 		});
-
-		commandPaletteService.subscribe(OPEN_SAVED_CREATIONS_EVENT, () => {
-			this.openSavedItemsPane();
-		});
+		const commandPalleteHooks = {
+			[NEW_CREATION_EVENT]: () => {
+				this.openNewCreationModal();
+			},
+			[OPEN_SAVED_CREATIONS_EVENT]: () => {
+				this.openSavedItemsPane();
+			},
+			[SAVE_EVENT]: () => {
+				this.saveItem();
+			},
+			[OPEN_SETTINGS_EVENT]: () => {
+				this.openSettings();
+			}
+		};
+		for (let eventName in commandPalleteHooks) {
+			commandPaletteService.subscribe(
+				eventName,
+				commandPalleteHooks[eventName]
+			);
+		}
 	}
 
 	closeAllOverlays() {
@@ -931,8 +954,7 @@ export default class App extends Component {
 			this.forkItem(item);
 		}, 350);
 	}
-	newBtnClickHandler() {
-		trackEvent('ui', 'newBtnClick');
+	openNewCreationModal() {
 		if (this.state.unsavedEditCount) {
 			var shouldDiscard = confirm(
 				'You have unsaved changes. Do you still want to create something new?'
@@ -947,6 +969,10 @@ export default class App extends Component {
 				isCreateNewModalOpen: true
 			});
 		}
+	}
+	newBtnClickHandler() {
+		trackEvent('ui', 'newBtnClick');
+		this.openNewCreationModal();
 	}
 	openBtnClickHandler() {
 		trackEvent('ui', 'openBtnClick');
@@ -1412,9 +1438,7 @@ export default class App extends Component {
 						prefs={this.state.prefs}
 						layoutBtnClickHandler={this.layoutBtnClickHandler.bind(this)}
 						helpBtnClickHandler={() => this.setState({ isHelpModalOpen: true })}
-						settingsBtnClickHandler={() =>
-							this.setState({ isSettingsModalOpen: true })
-						}
+						settingsBtnClickHandler={this.openSettings.bind(this)}
 						notificationsBtnClickHandler={this.notificationsBtnClickHandler.bind(
 							this
 						)}

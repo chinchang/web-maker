@@ -35,7 +35,7 @@ Follow [@webmakerApp](https://twitter.com/intent/follow?screen_name=webmakerApp)
 
 Hi! I am Kushagra Gour. Web Maker is a free and open-source project. To keep myself motivated for working on such open-source and free [side projects](https://kushagragour.in/lab/), I have launched a [Patreon campaign](https://patreon.com/kushagra). Your pledge, no matter how small, will act as an appreciation towards my work and keep me going forward making Web Maker more awesome🔥.
 
-[![Become a patron](/src/patreon.png)](https://patreon.com/kushagra)
+[![Become a patron](/src/assets/patreon.png)](https://patreon.com/kushagra)
 
 If not that, you can support by simply sharing about how much you love 💖 [@webmakerapp](https://twitter.com/webmakerApp).
 

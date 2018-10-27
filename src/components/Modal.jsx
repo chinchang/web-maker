@@ -24,9 +24,11 @@ export default class Modal extends Component {
 	}
 	componentDidUpdate(prevProps) {
 		if (this.props.show !== prevProps.show) {
-			document.body.classList[this.props.show ? 'add' : 'remove'](
-				'overlay-visible'
-			);
+			if (!this.props.noOverlay) {
+				document.body.classList[this.props.show ? 'add' : 'remove'](
+					'overlay-visible'
+				);
+			}
 			if (this.props.show) {
 				// HACK: refs will evaluate on next tick due to portals
 				setTimeout(() => {
@@ -63,15 +65,17 @@ export default class Modal extends Component {
 					onClick={this.onOverlayClick.bind(this)}
 				>
 					<div class="modal__content">
-						<button
-							type="button"
-							onClick={this.props.closeHandler}
-							aria-label="Close modal"
-							title="Close"
-							class="js-modal__close-btn modal__close-btn"
-						>
-							Close
-						</button>
+						{this.props.hideCloseButton ? null : (
+							<button
+								type="button"
+								onClick={this.props.closeHandler}
+								aria-label="Close modal"
+								title="Close"
+								class="js-modal__close-btn modal__close-btn"
+							>
+								Close
+							</button>
+						)}
 						{this.props.children}
 					</div>
 				</div>

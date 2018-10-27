@@ -7,6 +7,7 @@ import {
 	SWITCH_FILE_EVENT
 } from '../commandPaletteService';
 import { FileIcon } from './FileIcon';
+import { UP_KEY, DOWN_KEY, ENTER_KEY } from '../keyboardKeys';
 
 function getFolder(filePath) {
 	const split = filePath.split('/');
@@ -16,14 +17,19 @@ function getFolder(filePath) {
 	}
 	return '';
 }
-function Row({ item, onClick }) {
+function Row({ item, onClick, isSelected }) {
 	return (
 		<li>
-			<button style="background:0;border:0;" onClick={onClick}>
+			<button
+				class={`command-palette__option-row ${
+					isSelected ? 'command-palette__option-row--selected' : ''
+				}`}
+				onClick={onClick}
+			>
 				{item.path ? <FileIcon file={item} /> : null}
 				{item.name}
 				{item.path ? (
-					<span style="color:#ccc;margin-left:10px;font-size:0.8em;">
+					<span class="command-palette__option-subtitle">
 						{getFolder(item.path)}
 					</span>
 				) : null}
@@ -32,7 +38,7 @@ function Row({ item, onClick }) {
 	);
 }
 export class CommandPalette extends Component {
-	state = { list: [], search: '' };
+	state = { list: [], search: '', selectedIndex: 0 };
 	componentDidUpdate(previousProps) {
 		if (this.props.show && !previousProps.show) {
 			this.state.search = '';
@@ -58,17 +64,32 @@ export class CommandPalette extends Component {
 		);
 	}
 
+	keyDownHandler(e) {
+		const diff = { [UP_KEY]: -1, [DOWN_KEY]: 1 }[e.which];
+		if (diff) {
+			this.setState({
+				selectedIndex:
+					(this.state.selectedIndex + diff) % this.state.list.length
+			});
+			return;
+		}
+		if (e.which === ENTER_KEY) {
+			this.selectOption(this.state.list[this.state.selectedIndex]);
+		}
+	}
 	inputHandler(e) {
 		const search = e.target.value;
 		this.setState({ search });
-		if (search.indexOf('>') === 0) {
-			this.isCommandMode = true;
-		}
+		this.isCommandMode = search.indexOf('>') === 0;
 		this.setState({
-			list: this.getFilteredList(search)
+			list: this.getFilteredList(search),
+			selectedIndex: 0
 		});
 	}
 	optionClickHandler(option) {
+		this.selectOption(option);
+	}
+	selectOption(option) {
 		commandPaletteService.publish(
 			option.path ? SWITCH_FILE_EVENT : option.event,
 			option
@@ -77,14 +98,21 @@ export class CommandPalette extends Component {
 	}
 	render() {
 		return (
-			<Modal show={this.props.show} closeHandler={this.props.closeHandler}>
+			<Modal
+				show={this.props.show}
+				closeHandler={this.props.closeHandler}
+				noOverlay
+				hideCloseButton
+			>
 				<AutoFocusInput
 					value={this.state.search}
 					onInput={this.inputHandler.bind(this)}
+					onKeyUp={this.keyDownHandler.bind(this)}
 				/>
 				<ul style="padding:0;list-style:none;">
-					{this.state.list.map(item => (
+					{this.state.list.map((item, index) => (
 						<Row
+							isSelected={this.state.selectedIndex === index}
 							item={item}
 							onClick={this.optionClickHandler.bind(this, item)}
 						/>

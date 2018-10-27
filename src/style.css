@@ -1,5 +1,6 @@
 :root {
-	--color-text: #d4cde9;
+	--color-text: #e2daf9;
+	--color-text-dark-1: #b3aec4;
 	--color-bg: #252637;
 	--color-popup: #3a2b63;
 	--code-font-size: 16px;
@@ -73,6 +74,10 @@ button {
 
 .d-i {
 	display: inline;
+}
+
+.d-b {
+	display: block;
 }
 .flex {
 	display: flex;
@@ -1688,28 +1693,6 @@ body:not(.is-app) .show-when-app {
 .is-file-mode .hide-in-file-mode {
 	display: none !important;
 }
-@media screen and (max-width: 600px) {
-	body {
-		font-size: 70%;
-	}
-
-	.main-header {
-		overflow-x: auto;
-	}
-
-	.main-header__btn-wrap {
-		flex-shrink: 0;
-	}
-
-	.modal__content {
-		padding: 1em;
-	}
-
-	.saved-items-pane {
-		width: 77vw;
-		padding: 10px 20px;
-	}
-}
 
 /* Codemirror themes basic bg styles. This is here so that there is no big FOUC
 while the theme CSS file is loading */
@@ -1806,4 +1789,42 @@ while the theme CSS file is loading */
 
 .cm-s-midnight .CodeMirror-activeline-background {
 	background: #253540;
+}
+.command-palette__option-row {
+	padding: 4px 5px;
+	width: 100%;
+	text-align: left;
+	border: 0;
+	background: transparent;
+	color: var(--color-text);
+}
+.command-palette__option-row--selected {
+	background: rgba(0, 0, 0, 0.2);
+}
+.command-palette__option-subtitle {
+	color: var(--color-text-dark-1);
+	margin-left: 10px;
+	font-size: 0.8em;
+}
+@media screen and (max-width: 600px) {
+	body {
+		font-size: 70%;
+	}
+
+	.main-header {
+		overflow-x: auto;
+	}
+
+	.main-header__btn-wrap {
+		flex-shrink: 0;
+	}
+
+	.modal__content {
+		padding: 1em;
+	}
+
+	.saved-items-pane {
+		width: 77vw;
+		padding: 10px 20px;
+	}
 }

@@ -55,6 +55,15 @@ import { Js13KModal } from './Js13KModal';
 import { CreateNewModal } from './CreateNewModal';
 import { Icons } from './Icons';
 import JSZip from 'jszip';
+import { CommandPalette } from './CommandPalette';
+import {
+	OPEN_SAVED_CREATIONS_EVENT,
+	SAVE_EVENT,
+	OPEN_SETTINGS_EVENT,
+	NEW_CREATION_EVENT,
+	SHOW_KEYBOARD_SHORTCUTS_EVENT
+} from '../commands';
+import { commandPaletteService } from '../commandPaletteService';
 
 if (module.hot) {
 	require('preact/debug');
@@ -84,7 +93,8 @@ export default class App extends Component {
 			isAskToImportModalOpen: false,
 			isOnboardModalOpen: false,
 			isJs13KModalOpen: false,
-			isCreateNewModalOpen: false
+			isCreateNewModalOpen: false,
+			isCommandPaletteOpen: false
 		};
 		this.state = {
 			isSavedItemPaneOpen: false,
@@ -491,8 +501,20 @@ export default class App extends Component {
 			this.editorWithFocus.focus();
 		}
 	}
+	openSettings() {
+		this.setState({ isSettingsModalOpen: true });
+	}
+	openKeyboardShortcuts() {
+		this.setState({ isKeyboardShortcutsModalOpen: true });
+	}
+
 	componentDidMount() {
-		document.body.style.height = `${window.innerHeight}px`;
+		function setBodySize() {
+			document.body.style.height = `${window.innerHeight}px`;
+		}
+		window.addEventListener('resize', () => {
+			setBodySize();
+		});
 
 		// Editor keyboard shortucuts
 		window.addEventListener('keydown', event => {
@@ -532,6 +554,12 @@ export default class App extends Component {
 				// We might be listening on keydown for some input inside the app. In that case
 				// we don't want this to trigger which in turn focuses back the last editor.
 				this.closeSavedItemsPane();
+			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 80) {
+				this.setState({
+					isCommandPaletteOpen: true,
+					isCommandPaletteInCommandMode: !!event.shiftKey
+				});
+				event.preventDefault();
 			}
 		});
 
@@ -548,6 +576,29 @@ export default class App extends Component {
 				}
 			}
 		});
+		const commandPalleteHooks = {
+			[NEW_CREATION_EVENT]: () => {
+				this.openNewCreationModal();
+			},
+			[OPEN_SAVED_CREATIONS_EVENT]: () => {
+				this.openSavedItemsPane();
+			},
+			[SAVE_EVENT]: () => {
+				this.saveItem();
+			},
+			[OPEN_SETTINGS_EVENT]: () => {
+				this.openSettings();
+			},
+			[SHOW_KEYBOARD_SHORTCUTS_EVENT]: () => {
+				this.openKeyboardShortcuts();
+			}
+		};
+		for (let eventName in commandPalleteHooks) {
+			commandPaletteService.subscribe(
+				eventName,
+				commandPalleteHooks[eventName]
+			);
+		}
 	}
 
 	closeAllOverlays() {
@@ -915,8 +966,7 @@ export default class App extends Component {
 			this.forkItem(item);
 		}, 350);
 	}
-	newBtnClickHandler() {
-		trackEvent('ui', 'newBtnClick');
+	openNewCreationModal() {
 		if (this.state.unsavedEditCount) {
 			var shouldDiscard = confirm(
 				'You have unsaved changes. Do you still want to create something new?'
@@ -931,6 +981,10 @@ export default class App extends Component {
 				isCreateNewModalOpen: true
 			});
 		}
+	}
+	newBtnClickHandler() {
+		trackEvent('ui', 'newBtnClick');
+		this.openNewCreationModal();
 	}
 	openBtnClickHandler() {
 		trackEvent('ui', 'openBtnClick');
@@ -1396,9 +1450,7 @@ export default class App extends Component {
 						prefs={this.state.prefs}
 						layoutBtnClickHandler={this.layoutBtnClickHandler.bind(this)}
 						helpBtnClickHandler={() => this.setState({ isHelpModalOpen: true })}
-						settingsBtnClickHandler={() =>
-							this.setState({ isSettingsModalOpen: true })
-						}
+						settingsBtnClickHandler={this.openSettings.bind(this)}
 						notificationsBtnClickHandler={this.notificationsBtnClickHandler.bind(
 							this
 						)}
@@ -1410,9 +1462,9 @@ export default class App extends Component {
 						)}
 						codepenBtnClickHandler={this.codepenBtnClickHandler.bind(this)}
 						saveHtmlBtnClickHandler={this.saveHtmlBtnClickHandler.bind(this)}
-						keyboardShortcutsBtnClickHandler={() =>
-							this.setState({ isKeyboardShortcutsModalOpen: true })
-						}
+						keyboardShortcutsBtnClickHandler={this.openKeyboardShortcuts.bind(
+							this
+						)}
 						screenshotBtnClickHandler={this.screenshotBtnClickHandler.bind(
 							this
 						)}
@@ -1551,6 +1603,14 @@ export default class App extends Component {
 						this
 					)}
 					onTemplateSelect={this.templateSelectHandler.bind(this)}
+				/>
+
+				<CommandPalette
+					show={this.state.isCommandPaletteOpen}
+					closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
+					files={linearizeFiles(this.state.currentItem.files || [])}
+					isCommandMode={this.state.isCommandPaletteInCommandMode}
+					closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
 				/>
 
 				<Portal into="body">

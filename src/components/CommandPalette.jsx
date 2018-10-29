@@ -103,6 +103,8 @@ export class CommandPalette extends Component {
 				hideCloseButton
 			>
 				<AutoFocusInput
+					type="search"
+					placeholder="Search"
 					value={this.state.search}
 					onInput={this.inputHandler.bind(this)}
 					onKeyUp={this.keyDownHandler.bind(this)}

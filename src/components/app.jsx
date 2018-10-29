@@ -434,7 +434,12 @@ export default class App extends Component {
 		}
 	}
 	componentDidMount() {
-		document.body.style.height = `${window.innerHeight}px`;
+		function setBodySize() {
+			document.body.style.height = `${window.innerHeight}px`;
+		}
+		window.addEventListener('resize', () => {
+			setBodySize();
+		});
 
 		// Editor keyboard shortucuts
 		window.addEventListener('keydown', event => {

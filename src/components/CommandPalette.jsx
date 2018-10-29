@@ -109,7 +109,7 @@ export class CommandPalette extends Component {
 					onInput={this.inputHandler.bind(this)}
 					onKeyUp={this.keyDownHandler.bind(this)}
 				/>
-				<ul style="padding:0;list-style:none;">
+				<ul class="command-palette__option-list">
 					{this.state.list.map((item, index) => (
 						<Row
 							isSelected={this.state.selectedIndex === index}

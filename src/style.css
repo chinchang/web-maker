@@ -1790,6 +1790,12 @@ while the theme CSS file is loading */
 .cm-s-midnight .CodeMirror-activeline-background {
 	background: #253540;
 }
+.command-palette__option-list {
+	margin: 0;
+	margin-top: 10px;
+	padding: 0;
+	list-style: none;
+}
 .command-palette__option-row {
 	padding: 4px 5px;
 	width: 100%;

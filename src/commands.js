@@ -3,6 +3,7 @@ export const NEW_CREATION_EVENT = 'newCreationEvent';
 export const OPEN_SAVED_CREATIONS_EVENT = 'openSavedCreationsEvent';
 export const SAVE_EVENT = 'saveEvent';
 export const OPEN_SETTINGS_EVENT = 'openSettingsEvent';
+export const SHOW_KEYBOARD_SHORTCUTS_EVENT = 'showKeyboardShortcutsEvent';
 
 export const commands = [
 	{
@@ -23,6 +24,11 @@ export const commands = [
 	{
 		name: 'Open Settings',
 		event: OPEN_SETTINGS_EVENT,
+		keyboardShortcut: ''
+	},
+	{
+		name: 'Show Keyboard Shortcuts',
+		event: SHOW_KEYBOARD_SHORTCUTS_EVENT,
 		keyboardShortcut: ''
 	}
 ];

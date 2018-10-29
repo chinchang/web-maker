@@ -60,7 +60,8 @@ import {
 	OPEN_SAVED_CREATIONS_EVENT,
 	SAVE_EVENT,
 	OPEN_SETTINGS_EVENT,
-	NEW_CREATION_EVENT
+	NEW_CREATION_EVENT,
+	SHOW_KEYBOARD_SHORTCUTS_EVENT
 } from '../commands';
 import { commandPaletteService } from '../commandPaletteService';
 
@@ -503,6 +504,9 @@ export default class App extends Component {
 	openSettings() {
 		this.setState({ isSettingsModalOpen: true });
 	}
+	openKeyboardShortcuts() {
+		this.setState({ isKeyboardShortcutsModalOpen: true });
+	}
 
 	componentDidMount() {
 		function setBodySize() {
@@ -584,6 +588,9 @@ export default class App extends Component {
 			},
 			[OPEN_SETTINGS_EVENT]: () => {
 				this.openSettings();
+			},
+			[SHOW_KEYBOARD_SHORTCUTS_EVENT]: () => {
+				this.openKeyboardShortcuts();
 			}
 		};
 		for (let eventName in commandPalleteHooks) {
@@ -1455,9 +1462,9 @@ export default class App extends Component {
 						)}
 						codepenBtnClickHandler={this.codepenBtnClickHandler.bind(this)}
 						saveHtmlBtnClickHandler={this.saveHtmlBtnClickHandler.bind(this)}
-						keyboardShortcutsBtnClickHandler={() =>
-							this.setState({ isKeyboardShortcutsModalOpen: true })
-						}
+						keyboardShortcutsBtnClickHandler={this.openKeyboardShortcuts.bind(
+							this
+						)}
 						screenshotBtnClickHandler={this.screenshotBtnClickHandler.bind(
 							this
 						)}

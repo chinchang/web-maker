@@ -1,4 +1,6 @@
-Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master) [![Gitter](https://badges.gitter.im/web-maker-app/Lobby.svg)](https://gitter.im/web-maker-app/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/web-maker)
+
+
 ======
 
 **Web-Maker** is an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and offline supported because it runs completely on your system.

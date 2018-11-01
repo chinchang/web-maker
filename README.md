@@ -4,11 +4,11 @@
 
 **Web-Maker** is an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and offline supported because it runs completely on your system.
 
-### [Install Chrome extension](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
+### [Open Web App](https://webmakerapp.com/app/) (Recommended: More features. More fun!)
 
 or
 
-### [Go to Web App](https://webmakerapp.com/app/)
+### [Install Chrome extension](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
 
 ![Screenshot](/ss1.png)
 

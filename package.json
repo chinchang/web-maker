@@ -4,7 +4,7 @@
 	"description": "A blazing fast & offline sequence diagram generator",
 	"main": "index.html",
 	"scripts": {
-	    "webpack": "webpack",
+		"webpack": "webpack",
 		"start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
 		"build": "npm run webpack && preact build --template src/index.html --no-prerender --service-worker false",
 		"serve": "npm run webpack && preact build && preact serve",
@@ -74,7 +74,9 @@
 		"code-blast-codemirror": "chinchang/code-blast-codemirror#web-maker",
 		"codemirror": "^5.37.0",
 		"copy-webpack-plugin": "^4.5.1",
+		"dom-to-image": "github:MichalBryxi/dom-to-image",
 		"esprima": "^4.0.0",
+		"file-saver": "^1.3.8",
 		"firebase": "^5.0.4",
 		"preact": "^8.2.6",
 		"preact-compat": "^3.17.0",
@@ -82,10 +84,8 @@
 		"preact-router": "^2.5.7",
 		"sequence-parser": "^0.5.13",
 		"split.js": "1.3.4",
-	    "dom-to-image": "github:MichalBryxi/dom-to-image",
-	    "file-saver": "^1.3.8",
 		"vue": "^2.5.16",
-		"vue-sequence": "^0.5.34",
+		"vue-sequence": "^0.6.5",
 		"vuex": "^3.0.1"
 	},
 	"jest": {

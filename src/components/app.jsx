@@ -39,6 +39,7 @@ import Portal from 'preact-portal';
 import { HelpModal } from './HelpModal';
 import { OnboardingModal } from './OnboardingModal';
 import { Icons } from './Icons';
+import demo from './demo.js'
 
 if (module.hot) {
 	require('preact/debug');
@@ -269,7 +270,7 @@ export default class App extends Component {
 				d.getMinutes(),
 			html: '',
 			css: '',
-			js: '// This is a sample\nA.method() {\n  if(condition) {\n    B.method()\n  }\n}',
+			js: demo,
 			externalLibs: { js: '', css: '' },
 			layoutMode: this.state.currentLayoutMode
 		}).then(() => this.refreshEditor());

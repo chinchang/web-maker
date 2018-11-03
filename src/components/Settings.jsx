@@ -274,51 +274,6 @@ export default class Settings extends Component {
 						/>
 					</div>
 				</div>
-
-				<hr />
-
-				<h3>Fun</h3>
-				<p>
-					<CheckboxSetting
-						title="Enjoy wonderful particle blasts while you type"
-						label="Code blast!"
-						name="isCodeBlastOn"
-						pref={this.props.prefs.isCodeBlastOn}
-						onChange={this.updateSetting.bind(this)}
-					/>
-
-					<CheckboxSetting
-						title="Get ready to build some games at JS13KGames"
-						label="Js13kGames Mode"
-						name="isJs13kModeOn"
-						pref={this.props.prefs.isJs13kModeOn}
-						onChange={this.updateSetting.bind(this)}
-					/>
-				</p>
-
-				<hr />
-
-				<h3>Advanced</h3>
-				<p>
-					<label
-						class="line"
-						title="This timeout is used to indentify a possible infinite loop and prevent it."
-					>
-						Maximum time allowed in a loop iteration{' '}
-						<input
-							type="number"
-							value={this.props.prefs.infiniteLoopTimeout}
-							data-setting="infiniteLoopTimeout"
-							onChange={this.updateSetting.bind(this)}
-						/>{' '}
-						ms
-					</label>
-					<div class="help-text">
-						If any loop iteration takes more than the defined time, it is
-						detected as a potential infinite loop and further iterations are
-						stopped.
-					</div>
-				</p>
 			</div>
 		);
 	}

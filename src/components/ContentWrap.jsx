@@ -854,7 +854,6 @@ export default class ContentWrap extends Component {
 				<div class="demo-side" id="js-demo-side" style="">
 					<iframe
 						ref={el => (this.frame = el)}
-						src="about://blank"
 						frameborder="0"
 						id="demo-frame"
 						allowfullscreen

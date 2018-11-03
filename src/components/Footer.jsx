@@ -115,8 +115,8 @@ export default class Footer extends Component {
 					</Button>
 					<a
 						class="footer__link  hint--rounded  hint--top-right"
-						aria-label="Tweet about 'Web Maker'"
-						href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
+						aria-label="Tweet about 'ZenUML'"
+						href="http://twitter.com/share?url=https://www.zenuml.com/&text=ZenUML - A blazing fast %26 offline UML generator! via @ZenUML&related=ZenUML&hashtags=uml,zenuml,playground,offline"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
@@ -134,7 +134,7 @@ export default class Footer extends Component {
 						onClick={this.props.supportDeveloperBtnClickHandler}
 						data-event-category="ui"
 						data-event-action="supportDeveloperFooterBtnClick"
-						class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
+						class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link hide"
 						aria-label="Support the developer by pledging some amount"
 					>
 						Donate

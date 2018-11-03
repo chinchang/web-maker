@@ -674,10 +674,10 @@ body > #demo-frame {
 
 .logo {
 	display: inline-block;
-	height: 25px;
-	width: 48px;
+	height: 18px;
+	width: 18px;
 	margin-right: 5px;
-	background: url(icon-48.png) 0px -12px;
+	background: url(icon-16.png);
 	background-repeat: no-repeat;
 	vertical-align: middle;
 	-webkit-filter: grayscale(0.9);

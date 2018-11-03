@@ -1,0 +1,18 @@
+{
+	"title": "Kontra HTML5 game engine template",
+	"html": "  <canvas></canvas>",
+	"css": "",
+	"js":
+		"// Learn More here -> https://straker.github.io/kontra/getting-started\nkontra.init();\n\nvar sprite = kontra.sprite({\n  x: 100,        // starting x,y position of the sprite\n  y: 80,\n  color: '#bad455',  // fill color of the sprite rectangle\n  width: 20,     // width and height of the sprite rectangle\n  height: 40,\n  dx: 2,          // move the sprite 2px to the right every frame\n});\n\nvar loop = kontra.gameLoop({  // create the main game loop\n  update() {        // update the game state\n    sprite.update();\n\n    // wrap the sprites position when it reaches\n    // the edge of the screen\n    if (sprite.x > kontra.canvas.width) {\n      sprite.x = -sprite.width;\n    }\n  },\n  render() {        // render the game state\n    sprite.render();\n  }\n});\n\nloop.start();    // start the game",
+	"externalLibs": {
+		"js":
+			"https://unpkg.com/kontra@4.0.0/dist/core.js\nhttps://unpkg.com/kontra@4.0.0/dist/sprite.js\nhttps://unpkg.com/kontra@4.0.0/dist/gameLoop.js\nhttps://unpkg.com/kontra@4.0.0/dist/pointer.js\nhttps://unpkg.com/kontra@4.0.0/dist/keyboard.js",
+		"css": ""
+	},
+	"htmlMode": "html",
+	"cssMode": "css",
+	"jsMode": "js",
+	"sizes": ["33px", "33px", "calc(100% - 66px)"],
+	"mainSizes": [50, 50],
+	"layoutMode": 1
+}

@@ -56,7 +56,9 @@ export default class Modal extends Component {
 		return (
 			<Portal into="body">
 				<div
-					class={`${this.props.extraClasses || ''} modal is-modal-visible`}
+					class={`${this.props.extraClasses || ''} modal is-modal-visible ${
+						this.props.small ? 'modal--small' : ''
+					}`}
 					ref={el => (this.overlayEl = el)}
 					onClick={this.onOverlayClick.bind(this)}
 				>

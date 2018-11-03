@@ -212,9 +212,13 @@ export function downloadFile(fileName, blob) {
 		a.click();
 		a.remove();
 	}
-	if (window.IS_EXTENSION) {
-		chrome.downloads.download(
-			{
+
+	// HACK: because chrome.downloads isn't working on optional permissions
+	// anymore.
+	downloadWithAnchor();
+
+	/* if (false && window.IS_EXTENSION) {
+		chrome.downloads.download({
 				url: window.URL.createObjectURL(blob),
 				filename: fileName,
 				saveAs: true
@@ -228,7 +232,7 @@ export function downloadFile(fileName, blob) {
 		);
 	} else {
 		downloadWithAnchor();
-	}
+	} */
 }
 
 export function writeFile(name, blob, cb) {
@@ -345,7 +349,9 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 			'<script src="' +
 			(chrome.extension
 				? chrome.extension.getURL('lib/screenlog.js')
-				: `${location.origin}${BASE_PATH}/lib/screenlog.js`) +
+				: `${location.origin}${
+						window.DEBUG ? '' : BASE_PATH
+				  }/lib/screenlog.js`) +
 			'"></script>';
 	}
 	contents +=
@@ -384,7 +390,7 @@ export function saveAsHtml(item) {
 	var htmlPromise = computeHtml(item.html, item.htmlMode);
 	var cssPromise = computeCss(item.css, item.cssMode);
 	var jsPromise = computeJs(item.js, item.jsMode, false);
-	Promise.all([htmlPromise, cssPromise, jsPromise]).then(function(result) {
+	Promise.all([htmlPromise, cssPromise, jsPromise]).then(result => {
 		var html = result[0].code,
 			css = result[1].code,
 			js = result[2].code;
@@ -446,6 +452,32 @@ export function handleDownloadsPermission() {
 			}
 		}
 	);
+	return d.promise;
+}
+
+/**
+ * Return the filename from a passed url.
+ * http://a.com/path/file.png  -> file.png
+ */
+export function getFilenameFromUrl(url) {
+	if (!url) {
+		return '';
+	}
+	return url.match(/\/([^/]*)$/)[1];
+}
+
+export function prettify(content, type = 'js') {
+	const d = deferred();
+	const worker = new Worker(
+		chrome.extension
+			? chrome.extension.getURL('lib/prettier-worker.js')
+			: `${BASE_PATH}/lib/prettier-worker.js`
+	);
+	worker.postMessage({ content, type });
+	worker.addEventListener('message', e => {
+		d.resolve(e.data);
+		worker.terminate();
+	});
 	return d.promise;
 }
 

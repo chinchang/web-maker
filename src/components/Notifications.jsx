@@ -7,6 +7,8 @@ function NotificationItem({ type, children }) {
 		strongTag = <strong>🔧 Bugfix</strong>;
 	} else if (type === 'a11y') {
 		strongTag = <strong>♿️ Accessibility</strong>;
+	} else if (type === 'ui') {
+		strongTag = <strong>🖥 Interface</strong>;
 	}
 	return (
 		<li>
@@ -101,7 +103,111 @@ export function Notifications(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="3.3.2" isLatest={true} {...props}>
+			<Notification version="3.5.1" isLatest={true} {...props}>
+				<li>
+					<strong>Hidden Prettier</strong>: Selecting code and pressing
+					Shift+Tab now uses Prettier to auto-format. This will improve UX wise
+					in coming versions.
+				</li>
+			</Notification>
+
+			<Notification version="3.5.0" {...props}>
+				<li>
+					<strong>New Template</strong>: Template for Vue.js is available when
+					you start a new creation. Thanks{' '}
+					<ThanksTo url="https://github.com/khamer" name="@khamer" />
+				</li>
+
+				<li>
+					⬆️ Popular libraries updated to latest versions. Thanks
+					<ThanksTo url="https://github.com/diomed" name="@diomed" />
+				</li>
+			</Notification>
+
+			<Notification version="3.4.2" {...props}>
+				<li>
+					🚀 RxJS added to popular libraries list. Thanks
+					<ThanksTo url="https://github.com/jpsc" name="@jpsc" />
+				</li>
+
+				<NotificationItem type="bug">
+					Not able to select libraries twice with mouse click in Add Library
+					modal.
+				</NotificationItem>
+				<NotificationItem type="bug">
+					Console going outside the viewport on huge logs.
+				</NotificationItem>
+
+				<NotificationItem type="bug">
+					Console dissapearing in detached mode on changing layouts.
+				</NotificationItem>
+
+				<li>
+					<strong>[Dev]</strong>: Improve{' '}
+					<a
+						href="https://github.com/chinchang/web-maker/blob/master/CONTRIBUTING.md"
+						target="_blank"
+						rel="noopener"
+					>
+						contribution guide
+					</a>{' '}
+					and add issue template on Github.
+				</li>
+			</Notification>
+
+			<Notification version="3.4.1" {...props}>
+				<li>
+					<strong>Js13kGames Mode</strong>: Add image upload option using
+					Pasteboard.co.{' '}
+					<a
+						href="https://medium.com/web-maker/js13kgames-jam-with-web-maker-a3389cf2cbb"
+						target="_blank"
+						rel="noopener"
+					>
+						Read more about it here.
+					</a>
+				</li>
+				<li>
+					<strong>Kontra.js template</strong>: Update to latest 4.0.0.
+				</li>
+				<NotificationItem type="a11y">
+					Fix color contrast for various texts.
+				</NotificationItem>
+
+				<NotificationItem type="bug">
+					Fix external script paths in downloaded zip in Js13KGame mode.
+				</NotificationItem>
+			</Notification>
+
+			<Notification version="3.4.0" {...props}>
+				<li>
+					<strong>🎉 Js13kGames Mode</strong>: For all you Js13kGames compo
+					participants out there. Turn it on from Settings.{' '}
+					<a
+						href="https://medium.com/web-maker/js13kgames-jam-with-web-maker-a3389cf2cbb"
+						target="_blank"
+						rel="noopener"
+					>
+						Read more about it here.
+					</a>
+				</li>
+				<li>
+					<strong>🎉 Templates</strong>: Presenting, templates for major
+					libraries and frameworks. Hit the "New" button to explore.
+				</li>
+				<NotificationItem type="a11y">
+					Add missing focus rings around focusable element.
+				</NotificationItem>
+				<NotificationItem type="ui">
+					Migrate remaining interface elements to dark theme. Now complete app
+					is in dark theme.
+				</NotificationItem>
+				<NotificationItem type="bug">
+					Fix "Save as HTML" and "Take Screenshot" features in Chrome extension.
+				</NotificationItem>
+			</Notification>
+
+			<Notification version="3.3.2" {...props}>
 				<NotificationItem type="a11y">
 					Improper links are now buttons with proper focus indication and
 					screen-reader support. Thanks{' '}

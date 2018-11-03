@@ -10,13 +10,16 @@ import SavedItemPane from './SavedItemPane.jsx';
 import AddLibrary from './AddLibrary.jsx';
 import Modal from './Modal.jsx';
 import Login from './Login.jsx';
+import { computeHtml, computeCss, computeJs } from '../computes';
 import {
 	log,
 	generateRandomId,
 	semverCompare,
 	saveAsHtml,
 	handleDownloadsPermission,
-	downloadFile
+	downloadFile,
+	getCompleteHtml,
+	getFilenameFromUrl
 } from '../utils';
 import { itemService } from '../itemService';
 import '../db';
@@ -38,7 +41,10 @@ import { Alerts } from './Alerts';
 import Portal from 'preact-portal';
 import { HelpModal } from './HelpModal';
 import { OnboardingModal } from './OnboardingModal';
+import { Js13KModal } from './Js13KModal';
+import { CreateNewModal } from './CreateNewModal';
 import { Icons } from './Icons';
+import JSZip from 'jszip';
 import demo from './demo.js'
 
 if (module.hot) {
@@ -50,14 +56,13 @@ const LocalStorageKeys = {
 	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
 };
 const UNSAVED_WARNING_COUNT = 15;
-const version = '3.3.2';
+const version = '3.5.1';
 
 export default class App extends Component {
 	constructor() {
 		super();
 		this.AUTO_SAVE_INTERVAL = 15000; // 15 seconds
-		this.state = {
-			isSavedItemPaneOpen: false,
+		this.modalDefaultStates = {
 			isModalOpen: false,
 			isAddLibraryModalOpen: false,
 			isSettingsModalOpen: false,
@@ -69,6 +74,12 @@ export default class App extends Component {
 			isKeyboardShortcutsModalOpen: false,
 			isAskToImportModalOpen: false,
 			isOnboardModalOpen: false,
+			isJs13KModalOpen: false,
+			isCreateNewModalOpen: false
+		};
+		this.state = {
+			isSavedItemPaneOpen: false,
+			...this.modalDefaultStates,
 			prefs: {},
 			currentItem: {
 				title: '',
@@ -97,7 +108,8 @@ export default class App extends Component {
 			lightVersion: false,
 			lineWrap: true,
 			infiniteLoopTimeout: 1000,
-			layoutMode: 2
+			layoutMode: 2,
+			isJs13kModeOn: false
 		};
 		this.prefs = {};
 
@@ -426,7 +438,12 @@ export default class App extends Component {
 		}
 	}
 	componentDidMount() {
-		document.body.style.height = `${window.innerHeight}px`;
+		function setBodySize() {
+			document.body.style.height = `${window.innerHeight}px`;
+		}
+		window.addEventListener('resize', () => {
+			setBodySize();
+		});
 
 		// Editor keyboard shortucuts
 		window.addEventListener('keydown', event => {
@@ -488,16 +505,7 @@ export default class App extends Component {
 		}
 
 		this.setState({
-			isAddLibraryModalOpen: false,
-			isSettingsModalOpen: false,
-			isHelpModalOpen: false,
-			isNotificationsModalOpen: false,
-			isLoginModalOpen: false,
-			isProfileModalOpen: false,
-			isSupportDeveloperModalOpen: false,
-			isKeyboardShortcutsModalOpen: false,
-			isAskToImportModalOpen: false,
-			isOnboardModalOpen: false
+			...this.modalDefaultStates
 		});
 	}
 	onExternalLibChange(newValues) {
@@ -701,6 +709,16 @@ export default class App extends Component {
 				});
 			}
 		}
+		if (this.state.prefs.isJs13kModeOn) {
+			// Throttling codesize calculation
+			if (this.codeSizeCalculationTimeout) {
+				clearTimeout(this.codeSizeCalculationTimeout);
+			}
+			this.codeSizeCalculationTimeout = setTimeout(() => {
+				this.calculateCodeSize();
+				this.codeSizeCalculationTimeout = null;
+			}, 1000);
+		}
 	}
 	onCodeSettingsChange(type, settings) {
 		this.state.currentItem[`${type}Settings`] = {
@@ -828,10 +846,14 @@ export default class App extends Component {
 				'You have unsaved changes. Do you still want to create something new?'
 			);
 			if (shouldDiscard) {
-				this.createNewItem();
+				this.setState({
+					isCreateNewModalOpen: true
+				});
 			}
 		} else {
-			this.createNewItem();
+			this.setState({
+				isCreateNewModalOpen: true
+			});
 		}
 	}
 	openBtnClickHandler() {
@@ -977,6 +999,166 @@ export default class App extends Component {
 		this.state.currentItem.mainSizes = this.getMainPaneSizes();
 	}
 
+	/**
+	 * Calculate byte size of a text snippet
+	 * @author Lea Verou
+	 * MIT License
+	 */
+	calculateTextSize(text) {
+		if (!text) {
+			return 0;
+		}
+		var crlf = /(\r?\n|\r)/g,
+			whitespace = /(\r?\n|\r|\s+)/g;
+
+		const ByteSize = {
+			count: function(text, options) {
+				// Set option defaults
+				options = options || {};
+				options.lineBreaks = options.lineBreaks || 1;
+				options.ignoreWhitespace = options.ignoreWhitespace || false;
+
+				var length = text.length,
+					nonAscii = length - text.replace(/[\u0100-\uFFFF]/g, '').length,
+					lineBreaks = length - text.replace(crlf, '').length;
+
+				if (options.ignoreWhitespace) {
+					// Strip whitespace
+					text = text.replace(whitespace, '');
+
+					return text.length + nonAscii;
+				} else {
+					return (
+						length +
+						nonAscii +
+						Math.max(0, options.lineBreaks * (lineBreaks - 1))
+					);
+				}
+			},
+
+			format: function(count, plainText) {
+				var level = 0;
+
+				while (count > 1024) {
+					count /= 1024;
+					level++;
+				}
+
+				// Round to 2 decimals
+				count = Math.round(count * 100) / 100;
+
+				level = ['', 'K', 'M', 'G', 'T'][level];
+
+				return (
+					(plainText ? count : '<strong>' + count + '</strong>') +
+					' ' +
+					level +
+					'B'
+				);
+			}
+		};
+
+		return ByteSize.count(text);
+	}
+	getExternalLibCode() {
+		const item = this.state.currentItem;
+		var libs = (item.externalLibs && item.externalLibs.js) || '';
+		libs += ('\n' + item.externalLibs && item.externalLibs.css) || '';
+		libs = libs.split('\n').filter(lib => lib);
+		return libs.map(lib =>
+			fetch(lib)
+				.then(res => res.text())
+				.then(data => {
+					return {
+						code: data,
+						fileName: getFilenameFromUrl(lib)
+					};
+				})
+		);
+	}
+	calculateCodeSize() {
+		const item = this.state.currentItem;
+		var htmlPromise = computeHtml(item.html, item.htmlMode);
+		var cssPromise = computeCss(item.css, item.cssMode);
+		var jsPromise = computeJs(item.js, item.jsMode, false);
+		Promise.all([
+			htmlPromise,
+			cssPromise,
+			jsPromise,
+			...this.getExternalLibCode()
+		]).then(result => {
+			var html = result[0].code || '',
+				css = result[1].code || '',
+				js = result[2].code || '';
+
+			var fileContent = getCompleteHtml(html, css, js, item, true);
+
+			// Replace external lib urls with local relative urls (picked from zip)
+			fileContent = fileContent.replace(
+				/<script src="(.*\/)([^/<]*?)"/g,
+				'<script src="$2"'
+			);
+
+			var zip = new JSZip();
+			zip.file('index.html', fileContent);
+			for (let i = 3; i < result.length; i++) {
+				const externalLib = result[i];
+				zip.file(externalLib.fileName, externalLib.code);
+			}
+
+			// console.log('ORIGINAL', this.calculateTextSize(fileContent));
+
+			var promise = null;
+			if (0 && JSZip.support.uint8array) {
+				promise = zip.generateAsync({ type: 'uint8array' });
+			} else {
+				promise = zip.generateAsync({
+					type: 'base64',
+					compression: 'DEFLATE',
+					compressionOptions: {
+						level: 9
+					}
+				});
+			}
+
+			promise.then(data => {
+				const zipContent = data;
+				const size = this.calculateTextSize(atob(data));
+				this.setState({
+					codeSize: size
+				});
+				this.currentItemZipBase64Data = data;
+			});
+		});
+	}
+
+	js13KHelpBtnClickHandler() {
+		this.setState({
+			isJs13KModalOpen: true
+		});
+	}
+	js13KDownloadBtnClickHandler() {
+		const a = document.createElement('a');
+		a.setAttribute('download', this.state.currentItem.title);
+		a.href = 'data:application/zip;base64,' + this.currentItemZipBase64Data;
+		document.body.appendChild(a);
+		a.click();
+		a.remove();
+	}
+	blankTemplateSelectHandler() {
+		this.createNewItem();
+		this.setState({ isCreateNewModalOpen: false });
+	}
+
+	templateSelectHandler(template) {
+		fetch(`templates/template-${template.id}.json`)
+			.then(res => res.json())
+			.then(json => {
+				this.forkItem(json);
+			});
+		this.setState({ isCreateNewModalOpen: false });
+	}
+
 	render() {
 		return (
 			<div>
@@ -1008,8 +1190,9 @@ export default class App extends Component {
 						onEditorFocus={this.editorFocusHandler.bind(this)}
 						onSplitUpdate={this.splitUpdateHandler.bind(this)}
 					/>
-					<div class="global-console-container" id="globalConsoleContainerEl" />
+
 					<Footer
+						prefs={this.state.prefs}
 						layoutBtnClickHandler={this.layoutBtnClickHandler.bind(this)}
 						helpBtnClickHandler={() => this.setState({ isHelpModalOpen: true })}
 						settingsBtnClickHandler={() =>
@@ -1032,7 +1215,12 @@ export default class App extends Component {
 						screenshotBtnClickHandler={this.screenshotBtnClickHandler.bind(
 							this
 						)}
+						onJs13KHelpBtnClick={this.js13KHelpBtnClickHandler.bind(this)}
+						onJs13KDownloadBtnClick={this.js13KDownloadBtnClickHandler.bind(
+							this
+						)}
 						hasUnseenChangelog={this.state.hasUnseenChangelog}
+						codeSize={this.state.codeSize}
 					/>
 				</div>
 
@@ -1120,7 +1308,7 @@ export default class App extends Component {
 					show={this.state.isHelpModalOpen}
 					closeHandler={() => this.setState({ isHelpModalOpen: false })}
 					onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
-					version="3.3.1"
+					version={version}
 				/>
 				<SupportDeveloperModal
 					show={this.state.isSupportDeveloperModalOpen}
@@ -1147,6 +1335,18 @@ export default class App extends Component {
 				<OnboardingModal
 					show={this.state.isOnboardModalOpen}
 					closeHandler={() => this.setState({ isOnboardModalOpen: false })}
+				/>
+
+				<Js13KModal
+					show={this.state.isJs13KModalOpen}
+					closeHandler={() => this.setState({ isJs13KModalOpen: false })}
+				/>
+
+				<CreateNewModal
+					show={this.state.isCreateNewModalOpen}
+					closeHandler={() => this.setState({ isCreateNewModalOpen: false })}
+					onBlankTemplateSelect={this.blankTemplateSelectHandler.bind(this)}
+					onTemplateSelect={this.templateSelectHandler.bind(this)}
 				/>
 
 				<Portal into="body">

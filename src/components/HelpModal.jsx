@@ -1,6 +1,4 @@
-import { h } from 'preact';
 import Modal from './Modal';
-import { Button } from './common';
 
 export function HelpModal(props) {
 	return (

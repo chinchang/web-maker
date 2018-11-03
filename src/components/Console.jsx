@@ -1,7 +1,6 @@
 import { h, Component } from 'preact';
-import { PureComponent } from 'preact-compat';
-
 import { Inspector, chromeDark } from 'react-inspector';
+import { Trans } from '@lingui/macro';
 
 class LogRow extends Component {
 	shouldComponentUpdate() {
@@ -54,7 +53,7 @@ export class Console extends Component {
 						onDblClick={onConsoleHeaderDblClick}
 					>
 						<span class="code-wrap__header-label">
-							Console (<span>{logs.length}</span>)
+							<Trans>Console</Trans> (<span>{logs.length}</span>)
 						</span>
 						<div class="code-wrap__header-right-options">
 							<a

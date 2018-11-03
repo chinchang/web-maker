@@ -9,7 +9,10 @@
 		"dev": "preact watch --template src/index.html --https --no-prerender",
 		"lint": "eslint src",
 		"test": "jest",
-		"precommit": "lint-staged"
+		"precommit": "lint-staged",
+		"add-locale": "lingui add-locale",
+		"extract": "lingui extract",
+		"compile": "lingui compile"
 	},
 	"eslintConfig": {
 		"extends": "eslint-config-synacor"
@@ -28,6 +31,9 @@
 		]
 	},
 	"devDependencies": {
+		"@lingui/cli": "^2.7.0",
+		"@lingui/macro": "^2.7.0",
+		"babel-core": "^6.26.3",
 		"babel-eslint": "^7.2.3",
 		"babel-minify": "^0.2.0",
 		"eslint": "^4.9.0",
@@ -53,6 +59,7 @@
 	},
 	"dependencies": {
 		"@emmetio/codemirror-plugin": "^0.5.4",
+		"@lingui/react": "^2.7.0",
 		"code-blast-codemirror": "chinchang/code-blast-codemirror#web-maker",
 		"codemirror": "^5.37.0",
 		"copy-webpack-plugin": "^4.5.1",

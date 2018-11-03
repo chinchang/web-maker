@@ -21,6 +21,11 @@ export default function(config, env, helpers) {
 	htmlWebpackPlugin.plugin.options.preload = false;
 	htmlWebpackPlugin.plugin.options.favicon = false;
 
+	// Required for lingui-macros
+	let { rule } = helpers.getLoadersByName(config, 'babel-loader')[0];
+	let babelConfig = rule.options;
+	babelConfig.plugins.push('macros');
+
 	if (env.isProd) {
 		config.devtool = false; // disable sourcemaps
 

@@ -65,6 +65,8 @@ import {
 } from '../commands';
 import { commandPaletteService } from '../commandPaletteService';
 
+import { I18nProvider } from '@lingui/react';
+
 if (module.hot) {
 	require('preact/debug');
 }
@@ -128,7 +130,8 @@ export default class App extends Component {
 			lineWrap: true,
 			infiniteLoopTimeout: 1000,
 			layoutMode: 2,
-			isJs13kModeOn: false
+			isJs13kModeOn: false,
+			lang: 'en'
 		};
 		this.prefs = {};
 
@@ -249,6 +252,22 @@ export default class App extends Component {
 				this.hasSeenNotifications = false;
 			}
 		});
+	}
+
+	getLanguageDefinition() {
+		console.log('🇯🇲 fetching defninition');
+		const { lang } = this.state.prefs;
+		if (!lang || lang === 'en') {
+			return {};
+		} else if (lang === 'hi') {
+			const def = require('../locales/hi/messages');
+
+			return { hi: def.default };
+		} else if (lang === 'ja') {
+			const def = require('../locales/ja/messages');
+
+			return { ja: def.default };
+		}
 	}
 
 	incrementUnsavedChanges() {
@@ -1396,245 +1415,258 @@ export default class App extends Component {
 
 	render() {
 		return (
-			<div class={this.getRootClasses()}>
-				<div class="main-container">
-					<MainHeader
-						externalLibCount={this.state.externalLibCount}
-						openBtnHandler={this.openBtnClickHandler.bind(this)}
-						newBtnHandler={this.newBtnClickHandler.bind(this)}
-						saveBtnHandler={this.saveBtnClickHandler.bind(this)}
-						loginBtnHandler={this.loginBtnClickHandler.bind(this)}
-						profileBtnHandler={this.profileBtnClickHandler.bind(this)}
-						addLibraryBtnHandler={this.openAddLibrary.bind(this)}
-						runBtnClickHandler={this.runBtnClickHandler.bind(this)}
-						isFetchingItems={this.state.isFetchingItems}
-						isSaving={this.state.isSaving}
-						title={this.state.currentItem.title}
-						titleInputBlurHandler={this.titleInputBlurHandler.bind(this)}
-						user={this.state.user}
-						unsavedEditCount={this.state.unsavedEditCount}
-						isFileMode={this.state.currentItem && this.state.currentItem.files}
-					/>
-					{this.state.currentItem && this.state.currentItem.files ? (
-						<ContentWrapFiles
-							currentItem={this.state.currentItem}
-							onCodeChange={this.onCodeChange.bind(this)}
-							onCodeSettingsChange={this.onCodeSettingsChange.bind(this)}
-							onCodeModeChange={this.onCodeModeChange.bind(this)}
-							onRef={comp => (this.contentWrap = comp)}
-							prefs={this.state.prefs}
-							onEditorFocus={this.editorFocusHandler.bind(this)}
-							onSplitUpdate={this.splitUpdateHandler.bind(this)}
-							onAddFile={this.addFileHandler.bind(this)}
-							onRemoveFile={this.removeFileHandler.bind(this)}
-							onRenameFile={this.renameFileHandler.bind(this)}
-							onFileDrop={this.fileDropHandler.bind(this)}
-							onFolderSelect={this.folderSelectHandler.bind(this)}
-							onPrettifyBtnClick={this.prettifyHandler.bind(this)}
+			<I18nProvider
+				language={this.state.prefs.lang}
+				catalogs={this.getLanguageDefinition()}
+			>
+				<div class={this.getRootClasses()}>
+					<div class="main-container">
+						<MainHeader
+							externalLibCount={this.state.externalLibCount}
+							openBtnHandler={this.openBtnClickHandler.bind(this)}
+							newBtnHandler={this.newBtnClickHandler.bind(this)}
+							saveBtnHandler={this.saveBtnClickHandler.bind(this)}
+							loginBtnHandler={this.loginBtnClickHandler.bind(this)}
+							profileBtnHandler={this.profileBtnClickHandler.bind(this)}
+							addLibraryBtnHandler={this.openAddLibrary.bind(this)}
+							runBtnClickHandler={this.runBtnClickHandler.bind(this)}
+							isFetchingItems={this.state.isFetchingItems}
+							isSaving={this.state.isSaving}
+							title={this.state.currentItem.title}
+							titleInputBlurHandler={this.titleInputBlurHandler.bind(this)}
+							user={this.state.user}
+							unsavedEditCount={this.state.unsavedEditCount}
+							isFileMode={
+								this.state.currentItem && this.state.currentItem.files
+							}
 						/>
-					) : (
-						<ContentWrap
-							currentLayoutMode={this.state.currentLayoutMode}
-							currentItem={this.state.currentItem}
-							onCodeChange={this.onCodeChange.bind(this)}
-							onCodeSettingsChange={this.onCodeSettingsChange.bind(this)}
-							onCodeModeChange={this.onCodeModeChange.bind(this)}
-							onRef={comp => (this.contentWrap = comp)}
+						{this.state.currentItem && this.state.currentItem.files ? (
+							<ContentWrapFiles
+								currentItem={this.state.currentItem}
+								onCodeChange={this.onCodeChange.bind(this)}
+								onCodeSettingsChange={this.onCodeSettingsChange.bind(this)}
+								onCodeModeChange={this.onCodeModeChange.bind(this)}
+								onRef={comp => (this.contentWrap = comp)}
+								prefs={this.state.prefs}
+								onEditorFocus={this.editorFocusHandler.bind(this)}
+								onSplitUpdate={this.splitUpdateHandler.bind(this)}
+								onAddFile={this.addFileHandler.bind(this)}
+								onRemoveFile={this.removeFileHandler.bind(this)}
+								onRenameFile={this.renameFileHandler.bind(this)}
+								onFileDrop={this.fileDropHandler.bind(this)}
+								onFolderSelect={this.folderSelectHandler.bind(this)}
+								onPrettifyBtnClick={this.prettifyHandler.bind(this)}
+							/>
+						) : (
+							<ContentWrap
+								currentLayoutMode={this.state.currentLayoutMode}
+								currentItem={this.state.currentItem}
+								onCodeChange={this.onCodeChange.bind(this)}
+								onCodeSettingsChange={this.onCodeSettingsChange.bind(this)}
+								onCodeModeChange={this.onCodeModeChange.bind(this)}
+								onRef={comp => (this.contentWrap = comp)}
+								prefs={this.state.prefs}
+								onEditorFocus={this.editorFocusHandler.bind(this)}
+								onSplitUpdate={this.splitUpdateHandler.bind(this)}
+							/>
+						)}
+
+						<Footer
 							prefs={this.state.prefs}
-							onEditorFocus={this.editorFocusHandler.bind(this)}
-							onSplitUpdate={this.splitUpdateHandler.bind(this)}
+							layoutBtnClickHandler={this.layoutBtnClickHandler.bind(this)}
+							helpBtnClickHandler={() =>
+								this.setState({ isHelpModalOpen: true })
+							}
+							settingsBtnClickHandler={this.openSettings.bind(this)}
+							notificationsBtnClickHandler={this.notificationsBtnClickHandler.bind(
+								this
+							)}
+							supportDeveloperBtnClickHandler={this.supportDeveloperBtnClickHandler.bind(
+								this
+							)}
+							detachedPreviewBtnHandler={this.detachedPreviewBtnHandler.bind(
+								this
+							)}
+							codepenBtnClickHandler={this.codepenBtnClickHandler.bind(this)}
+							saveHtmlBtnClickHandler={this.saveHtmlBtnClickHandler.bind(this)}
+							keyboardShortcutsBtnClickHandler={this.openKeyboardShortcuts.bind(
+								this
+							)}
+							screenshotBtnClickHandler={this.screenshotBtnClickHandler.bind(
+								this
+							)}
+							onJs13KHelpBtnClick={this.js13KHelpBtnClickHandler.bind(this)}
+							onJs13KDownloadBtnClick={this.js13KDownloadBtnClickHandler.bind(
+								this
+							)}
+							hasUnseenChangelog={this.state.hasUnseenChangelog}
+							codeSize={this.state.codeSize}
 						/>
-					)}
+					</div>
 
-					<Footer
-						prefs={this.state.prefs}
-						layoutBtnClickHandler={this.layoutBtnClickHandler.bind(this)}
-						helpBtnClickHandler={() => this.setState({ isHelpModalOpen: true })}
-						settingsBtnClickHandler={this.openSettings.bind(this)}
-						notificationsBtnClickHandler={this.notificationsBtnClickHandler.bind(
+					<SavedItemPane
+						items={this.state.savedItems}
+						isOpen={this.state.isSavedItemPaneOpen}
+						closeHandler={this.closeSavedItemsPane.bind(this)}
+						itemClickHandler={this.itemClickHandler.bind(this)}
+						itemRemoveBtnClickHandler={this.itemRemoveBtnClickHandler.bind(
 							this
 						)}
-						supportDeveloperBtnClickHandler={this.supportDeveloperBtnClickHandler.bind(
-							this
-						)}
-						detachedPreviewBtnHandler={this.detachedPreviewBtnHandler.bind(
-							this
-						)}
-						codepenBtnClickHandler={this.codepenBtnClickHandler.bind(this)}
-						saveHtmlBtnClickHandler={this.saveHtmlBtnClickHandler.bind(this)}
-						keyboardShortcutsBtnClickHandler={this.openKeyboardShortcuts.bind(
-							this
-						)}
-						screenshotBtnClickHandler={this.screenshotBtnClickHandler.bind(
-							this
-						)}
-						onJs13KHelpBtnClick={this.js13KHelpBtnClickHandler.bind(this)}
-						onJs13KDownloadBtnClick={this.js13KDownloadBtnClickHandler.bind(
-							this
-						)}
-						hasUnseenChangelog={this.state.hasUnseenChangelog}
-						codeSize={this.state.codeSize}
+						itemForkBtnClickHandler={this.itemForkBtnClickHandler.bind(this)}
+						exportBtnClickHandler={this.exportBtnClickHandler.bind(this)}
 					/>
-				</div>
 
-				<SavedItemPane
-					items={this.state.savedItems}
-					isOpen={this.state.isSavedItemPaneOpen}
-					closeHandler={this.closeSavedItemsPane.bind(this)}
-					itemClickHandler={this.itemClickHandler.bind(this)}
-					itemRemoveBtnClickHandler={this.itemRemoveBtnClickHandler.bind(this)}
-					itemForkBtnClickHandler={this.itemForkBtnClickHandler.bind(this)}
-					exportBtnClickHandler={this.exportBtnClickHandler.bind(this)}
-				/>
+					<Alerts />
 
-				<Alerts />
+					<form
+						style="display:none;"
+						action="https://codepen.io/pen/define"
+						method="POST"
+						target="_blank"
+						id="js-codepen-form"
+					>
+						<input
+							type="hidden"
+							name="data"
+							value="{&quot;title&quot;: &quot;New Pen!&quot;, &quot;html&quot;: &quot;<div>Hello, World!</div>&quot;}"
+						/>
+					</form>
 
-				<form
-					style="display:none;"
-					action="https://codepen.io/pen/define"
-					method="POST"
-					target="_blank"
-					id="js-codepen-form"
-				>
-					<input
-						type="hidden"
-						name="data"
-						value="{&quot;title&quot;: &quot;New Pen!&quot;, &quot;html&quot;: &quot;<div>Hello, World!</div>&quot;}"
-					/>
-				</form>
-
-				<Modal
-					show={this.state.isAddLibraryModalOpen}
-					closeHandler={() => this.setState({ isAddLibraryModalOpen: false })}
-				>
-					<AddLibrary
-						js={
-							this.state.currentItem.externalLibs
-								? this.state.currentItem.externalLibs.js
-								: ''
+					<Modal
+						show={this.state.isAddLibraryModalOpen}
+						closeHandler={() => this.setState({ isAddLibraryModalOpen: false })}
+					>
+						<AddLibrary
+							js={
+								this.state.currentItem.externalLibs
+									? this.state.currentItem.externalLibs.js
+									: ''
+							}
+							css={
+								this.state.currentItem.externalLibs
+									? this.state.currentItem.externalLibs.css
+									: ''
+							}
+							onChange={this.onExternalLibChange.bind(this)}
+						/>
+					</Modal>
+					<Modal
+						show={this.state.isNotificationsModalOpen}
+						closeHandler={() =>
+							this.setState({ isNotificationsModalOpen: false })
 						}
-						css={
-							this.state.currentItem.externalLibs
-								? this.state.currentItem.externalLibs.css
-								: ''
-						}
-						onChange={this.onExternalLibChange.bind(this)}
-					/>
-				</Modal>
-				<Modal
-					show={this.state.isNotificationsModalOpen}
-					closeHandler={() =>
-						this.setState({ isNotificationsModalOpen: false })
-					}
-				>
-					<Notifications
+					>
+						<Notifications
+							onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
+						/>
+					</Modal>
+					<Modal
+						extraClasses="modal--settings"
+						show={this.state.isSettingsModalOpen}
+						closeHandler={() => this.setState({ isSettingsModalOpen: false })}
+					>
+						<Settings
+							prefs={this.state.prefs}
+							onChange={this.updateSetting.bind(this)}
+						/>
+					</Modal>
+					<Modal
+						extraClasses="login-modal"
+						show={this.state.isLoginModalOpen}
+						closeHandler={() => this.setState({ isLoginModalOpen: false })}
+					>
+						<Login />
+					</Modal>
+					<Modal
+						show={this.state.isProfileModalOpen}
+						closeHandler={() => this.setState({ isProfileModalOpen: false })}
+					>
+						<Profile
+							user={this.state.user}
+							logoutBtnHandler={this.logout.bind(this)}
+						/>
+					</Modal>
+					<HelpModal
+						show={this.state.isHelpModalOpen}
+						closeHandler={() => this.setState({ isHelpModalOpen: false })}
 						onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
+						version={version}
 					/>
-				</Modal>
-				<Modal
-					extraClasses="modal--settings"
-					show={this.state.isSettingsModalOpen}
-					closeHandler={() => this.setState({ isSettingsModalOpen: false })}
-				>
-					<Settings
-						prefs={this.state.prefs}
-						onChange={this.updateSetting.bind(this)}
+					<SupportDeveloperModal
+						show={this.state.isSupportDeveloperModalOpen}
+						closeHandler={() =>
+							this.setState({ isSupportDeveloperModalOpen: false })
+						}
 					/>
-				</Modal>
-				<Modal
-					extraClasses="login-modal"
-					show={this.state.isLoginModalOpen}
-					closeHandler={() => this.setState({ isLoginModalOpen: false })}
-				>
-					<Login />
-				</Modal>
-				<Modal
-					show={this.state.isProfileModalOpen}
-					closeHandler={() => this.setState({ isProfileModalOpen: false })}
-				>
-					<Profile
-						user={this.state.user}
-						logoutBtnHandler={this.logout.bind(this)}
+					<KeyboardShortcutsModal
+						show={this.state.isKeyboardShortcutsModalOpen}
+						closeHandler={() =>
+							this.setState({ isKeyboardShortcutsModalOpen: false })
+						}
 					/>
-				</Modal>
-				<HelpModal
-					show={this.state.isHelpModalOpen}
-					closeHandler={() => this.setState({ isHelpModalOpen: false })}
-					onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
-					version={version}
-				/>
-				<SupportDeveloperModal
-					show={this.state.isSupportDeveloperModalOpen}
-					closeHandler={() =>
-						this.setState({ isSupportDeveloperModalOpen: false })
-					}
-				/>
-				<KeyboardShortcutsModal
-					show={this.state.isKeyboardShortcutsModalOpen}
-					closeHandler={() =>
-						this.setState({ isKeyboardShortcutsModalOpen: false })
-					}
-				/>
-				<AskToImportModal
-					show={this.state.isAskToImportModalOpen}
-					closeHandler={() => this.setState({ isAskToImportModalOpen: false })}
-					oldSavedCreationsCount={this.oldSavedCreationsCount}
-					importBtnClickHandler={this.importCreationsAndSettingsIntoApp.bind(
-						this
-					)}
-					dontAskBtnClickHandler={this.dontAskToImportAnymore.bind(this)}
-				/>
-
-				<OnboardingModal
-					show={this.state.isOnboardModalOpen}
-					closeHandler={() => this.setState({ isOnboardModalOpen: false })}
-				/>
-
-				<Js13KModal
-					show={this.state.isJs13KModalOpen}
-					closeHandler={() => this.setState({ isJs13KModalOpen: false })}
-				/>
-
-				<CreateNewModal
-					show={this.state.isCreateNewModalOpen}
-					closeHandler={() => this.setState({ isCreateNewModalOpen: false })}
-					onBlankTemplateSelect={this.blankTemplateSelectHandler.bind(this)}
-					onBlankFileTemplateSelect={this.blankFileTemplateSelectHandler.bind(
-						this
-					)}
-					onTemplateSelect={this.templateSelectHandler.bind(this)}
-				/>
-
-				<CommandPalette
-					show={this.state.isCommandPaletteOpen}
-					closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
-					files={linearizeFiles(this.state.currentItem.files || [])}
-					isCommandMode={this.state.isCommandPaletteInCommandMode}
-					closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
-				/>
-
-				<Portal into="body">
-					<div
-						class="modal-overlay"
-						onClick={this.modalOverlayClickHandler.bind(this)}
+					<AskToImportModal
+						show={this.state.isAskToImportModalOpen}
+						closeHandler={() =>
+							this.setState({ isAskToImportModalOpen: false })
+						}
+						oldSavedCreationsCount={this.oldSavedCreationsCount}
+						importBtnClickHandler={this.importCreationsAndSettingsIntoApp.bind(
+							this
+						)}
+						dontAskBtnClickHandler={this.dontAskToImportAnymore.bind(this)}
 					/>
-				</Portal>
 
-				<Icons />
-				<form
-					style="display:none;"
-					action="https://codepen.io/pen/define"
-					method="POST"
-					target="_blank"
-					id="codepenForm"
-				>
-					<input
-						type="hidden"
-						name="data"
-						value="{&quot;title&quot;: &quot;New Pen!&quot;, &quot;html&quot;: &quot;<div>Hello, World!</div>&quot;}"
+					<OnboardingModal
+						show={this.state.isOnboardModalOpen}
+						closeHandler={() => this.setState({ isOnboardModalOpen: false })}
 					/>
-				</form>
-			</div>
+
+					<Js13KModal
+						show={this.state.isJs13KModalOpen}
+						closeHandler={() => this.setState({ isJs13KModalOpen: false })}
+					/>
+
+					<CreateNewModal
+						show={this.state.isCreateNewModalOpen}
+						closeHandler={() => this.setState({ isCreateNewModalOpen: false })}
+						onBlankTemplateSelect={this.blankTemplateSelectHandler.bind(this)}
+						onBlankFileTemplateSelect={this.blankFileTemplateSelectHandler.bind(
+							this
+						)}
+						onTemplateSelect={this.templateSelectHandler.bind(this)}
+					/>
+
+					<CommandPalette
+						show={this.state.isCommandPaletteOpen}
+						closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
+						files={linearizeFiles(this.state.currentItem.files || [])}
+						isCommandMode={this.state.isCommandPaletteInCommandMode}
+						closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
+					/>
+
+					<Portal into="body">
+						<div
+							class="modal-overlay"
+							onClick={this.modalOverlayClickHandler.bind(this)}
+						/>
+					</Portal>
+
+					<Icons />
+					<form
+						style="display:none;"
+						action="https://codepen.io/pen/define"
+						method="POST"
+						target="_blank"
+						id="codepenForm"
+					>
+						<input
+							type="hidden"
+							name="data"
+							value="{&quot;title&quot;: &quot;New Pen!&quot;, &quot;html&quot;: &quot;<div>Hello, World!</div>&quot;}"
+						/>
+					</form>
+				</div>
+			</I18nProvider>
 		);
 	}
 }

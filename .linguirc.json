@@ -1,5 +1,5 @@
 {
-	"compileNamespace": "es6",
+	"compileNamespace": "es",
 	"localeDir": "src/locales/",
 	"srcPathDirs": ["src/components"],
 	"format": "po",

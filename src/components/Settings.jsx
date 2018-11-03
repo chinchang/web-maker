@@ -320,6 +320,22 @@ export default class Settings extends Component {
 						stopped.
 					</div>
 				</p>
+
+				<p>
+					<label class="line">
+						Language
+						<select
+							data-setting="lang"
+							value={prefs.lang}
+							onChange={this.updateSetting.bind(this)}
+						>
+							<option value="en">English</option>
+							<option value="hi">Hindi</option>
+							<option value="ja">Japanese</option>
+							<option value="sa">Sanskrit</option>
+						</select>
+					</label>
+				</p>
 			</div>
 		);
 	}

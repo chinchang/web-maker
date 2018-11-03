@@ -64,13 +64,13 @@ import {
 	SHOW_KEYBOARD_SHORTCUTS_EVENT
 } from '../commands';
 import { commandPaletteService } from '../commandPaletteService';
-// import hiTranslations from '../locales/hi/messages';
+
 import { I18nProvider } from '@lingui/react';
-const hiTranslations = {};
+
 if (module.hot) {
 	require('preact/debug');
 }
-const catalogs = { hi: hiTranslations };
+
 const LocalStorageKeys = {
 	LOGIN_AND_SAVE_MESSAGE_SEEN: 'loginAndsaveMessageSeen',
 	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
@@ -130,7 +130,8 @@ export default class App extends Component {
 			lineWrap: true,
 			infiniteLoopTimeout: 1000,
 			layoutMode: 2,
-			isJs13kModeOn: false
+			isJs13kModeOn: false,
+			lang: 'en'
 		};
 		this.prefs = {};
 
@@ -251,6 +252,22 @@ export default class App extends Component {
 				this.hasSeenNotifications = false;
 			}
 		});
+	}
+
+	getLanguageDefinition() {
+		console.log('🇯🇲 fetching defninition');
+		const { lang } = this.state.prefs;
+		if (!lang || lang === 'en') {
+			return {};
+		} else if (lang === 'hi') {
+			const def = require('../locales/hi/messages');
+
+			return { hi: def.default };
+		} else if (lang === 'ja') {
+			const def = require('../locales/ja/messages');
+
+			return { ja: def.default };
+		}
 	}
 
 	incrementUnsavedChanges() {
@@ -1398,7 +1415,10 @@ export default class App extends Component {
 
 	render() {
 		return (
-			<I18nProvider language="hi" catalogs={catalogs}>
+			<I18nProvider
+				language={this.state.prefs.lang}
+				catalogs={this.getLanguageDefinition()}
+			>
 				<div class={this.getRootClasses()}>
 					<div class="main-container">
 						<MainHeader

@@ -3,6 +3,8 @@ import { PureComponent } from 'preact-compat';
 
 import { Inspector, chromeDark } from 'react-inspector';
 
+import { Trans } from '@lingui/macro';
+
 class LogRow extends Component {
 	shouldComponentUpdate() {
 		return false;

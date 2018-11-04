@@ -714,9 +714,7 @@ export default class ContentWrap extends Component {
 							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
 						>
 							<label class="btn-group" title="Click to change">
-								<span class="code-wrap__header-label">
-									{modes[this.props.currentItem.jsMode || 'js'].label}
-								</span>
+								<span class="code-wrap__header-label">ZenUML</span>
 								<span class="caret" style="display:none" />
 								<select
 									data-type="js"

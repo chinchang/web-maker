@@ -354,6 +354,8 @@ if (navigator.onLine && !window.DEBUG) {
 /* unused harmony export getCompleteHtml */
 /* unused harmony export saveAsHtml */
 /* unused harmony export handleDownloadsPermission */
+/* unused harmony export getFilenameFromUrl */
+/* unused harmony export prettify */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__analytics__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__computes__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__codeModes__ = __webpack_require__(5);
@@ -574,9 +576,13 @@ function downloadFile(fileName, blob) {
 		a.click();
 		a.remove();
 	}
-	if (window.IS_EXTENSION) {
-		chrome.downloads.download(
-			{
+
+	// HACK: because chrome.downloads isn't working on optional permissions
+	// anymore.
+	downloadWithAnchor();
+
+	/* if (false && window.IS_EXTENSION) {
+		chrome.downloads.download({
 				url: window.URL.createObjectURL(blob),
 				filename: fileName,
 				saveAs: true
@@ -590,7 +596,7 @@ function downloadFile(fileName, blob) {
 		);
 	} else {
 		downloadWithAnchor();
-	}
+	} */
 }
 
 function writeFile(name, blob, cb) {
@@ -707,7 +713,9 @@ function getCompleteHtml(html, css, js, item, isForExport) {
 			'<script src="' +
 			(chrome.extension
 				? chrome.extension.getURL('lib/screenlog.js')
-				: `${location.origin}${BASE_PATH}/lib/screenlog.js`) +
+				: `${location.origin}${
+						window.DEBUG ? '' : BASE_PATH
+				  }/lib/screenlog.js`) +
 			'"></script>';
 	}
 	contents +=
@@ -746,7 +754,7 @@ function saveAsHtml(item) {
 	var htmlPromise = Object(__WEBPACK_IMPORTED_MODULE_1__computes__["b" /* computeHtml */])(item.html, item.htmlMode);
 	var cssPromise = Object(__WEBPACK_IMPORTED_MODULE_1__computes__["a" /* computeCss */])(item.css, item.cssMode);
 	var jsPromise = Object(__WEBPACK_IMPORTED_MODULE_1__computes__["c" /* computeJs */])(item.js, item.jsMode, false);
-	Promise.all([htmlPromise, cssPromise, jsPromise]).then(function(result) {
+	Promise.all([htmlPromise, cssPromise, jsPromise]).then(result => {
 		var html = result[0].code,
 			css = result[1].code,
 			js = result[2].code;
@@ -808,6 +816,32 @@ function handleDownloadsPermission() {
 			}
 		}
 	);
+	return d.promise;
+}
+
+/**
+ * Return the filename from a passed url.
+ * http://a.com/path/file.png  -> file.png
+ */
+function getFilenameFromUrl(url) {
+	if (!url) {
+		return '';
+	}
+	return url.match(/\/([^/]*)$/)[1];
+}
+
+function prettify(content, type = 'js') {
+	const d = Object(__WEBPACK_IMPORTED_MODULE_3__deferred__["a" /* deferred */])();
+	const worker = new Worker(
+		chrome.extension
+			? chrome.extension.getURL('lib/prettier-worker.js')
+			: `${BASE_PATH}/lib/prettier-worker.js`
+	);
+	worker.postMessage({ content, type });
+	worker.addEventListener('message', e => {
+		d.resolve(e.data);
+		worker.terminate();
+	});
 	return d.promise;
 }
 
@@ -20264,8 +20298,8 @@ var update = __webpack_require__(17)(content, options);
 if(content.locals) module.exports = content.locals;
 
 if(false) {
-	module.hot.accept("!!../../../all-coloruml/web-sequence/node_modules/css-loader/index.js!./vue-sequence.css", function() {
-		var newContent = require("!!../../../all-coloruml/web-sequence/node_modules/css-loader/index.js!./vue-sequence.css");
+	module.hot.accept("!!../../css-loader/index.js!./vue-sequence.css", function() {
+		var newContent = require("!!../../css-loader/index.js!./vue-sequence.css");
 
 		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 

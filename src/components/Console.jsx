@@ -12,7 +12,7 @@ export function Console({
 	return (
 		<div
 			id="consoleEl"
-			class={`console ${isConsoleOpen ? '' : 'is-minimized'}`}
+			class={`console hide ${isConsoleOpen ? '' : 'is-minimized'}`}
 		>
 			<div id="consoleLogEl" class="console__log">
 				<div

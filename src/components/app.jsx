@@ -45,7 +45,6 @@ import { Js13KModal } from './Js13KModal';
 import { CreateNewModal } from './CreateNewModal';
 import { Icons } from './Icons';
 import JSZip from 'jszip';
-import demo from './demo.js'
 
 if (module.hot) {
 	require('preact/debug');
@@ -281,8 +280,8 @@ export default class App extends Component {
 				':' +
 				d.getMinutes(),
 			html: '',
-			css: '',
-			js: demo,
+			css: '/* Prefix your CSS rules with `#diagram` */',
+			js: '// Your ZenUML code here',
 			externalLibs: { js: '', css: '' },
 			layoutMode: this.state.currentLayoutMode
 		}).then(() => this.refreshEditor());

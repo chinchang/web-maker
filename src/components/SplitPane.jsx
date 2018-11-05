@@ -12,6 +12,10 @@ export class SplitPane extends Component {
 		}
 		this.updateSplit();
 	}
+	componentWillUnmount() {
+		this.splitInstance.destroy();
+		delete this.splitInstance;
+	}
 	hasGutter() {
 		return (
 			[...this.parent.children].indexOf(
@@ -35,6 +39,7 @@ export class SplitPane extends Component {
 
 		/* eslint-disable new-cap */
 		this.splitInstance = Split([...this.parent.children], options);
+		console.log('recreating split');
 
 		/* eslint-enable new-cap */
 

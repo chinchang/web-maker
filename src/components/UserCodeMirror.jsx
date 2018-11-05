@@ -43,7 +43,6 @@ export default class UserCodeMirror extends Component {
 	shouldComponentUpdate(nextProps) {
 		if (nextProps.prefs !== this.props.prefs) {
 			const { prefs } = nextProps;
-			console.log('updating CM prefs', prefs);
 
 			this.cm.setOption('indentWithTabs', prefs.indentWith !== 'spaces');
 			this.cm.setOption(

@@ -19,6 +19,7 @@ import { SidePane } from './SidePane';
 import { Console } from './Console';
 import { SWITCH_FILE_EVENT } from '../commands';
 import { commandPaletteService } from '../commandPaletteService';
+import { PreviewDimension } from './PreviewDimension';
 
 const minCodeWrapSize = 33;
 
@@ -107,8 +108,6 @@ export default class ContentWrapFiles extends Component {
 			this.fileSelectHandler(linearFiles[0]);
 		}
 
-		// HACK: becuase its a DOM manipulation
-		// window.logCountEl.textContent = this.logCount;
 		// log('🚀', 'didupdate', this.props.currentItem);
 		// if (this.isValidItem(this.props.currentItem)) {
 		// this.refreshEditor();
@@ -403,6 +402,12 @@ export default class ContentWrapFiles extends Component {
 		}
 		this.updateSplits();
 	}
+	mainSplitDragHandler() {
+		this.previewDimension.update({
+			w: this.frame.clientWidth,
+			h: this.frame.clientHeight
+		});
+	}
 
 	/**
 	 * Loaded the code comiler based on the mode selected
@@ -528,7 +533,9 @@ export default class ContentWrapFiles extends Component {
 			}
 			return arg;
 		});
-		this.setState({ logs: [...this.state.logs, ...logs] });
+		this.setState({
+			logs: [...this.state.logs, ...logs]
+		});
 	}
 
 	previewException(error) {
@@ -537,7 +544,9 @@ export default class ContentWrapFiles extends Component {
 	}
 
 	toggleConsole() {
-		this.setState({ isConsoleOpen: !this.state.isConsoleOpen });
+		this.setState({
+			isConsoleOpen: !this.state.isConsoleOpen
+		});
 		trackEvent('ui', 'consoleToggle');
 	}
 	consoleHeaderDblClickHandler(e) {
@@ -586,6 +595,7 @@ export default class ContentWrapFiles extends Component {
 				direction={
 					this.props.currentLayoutMode === 2 ? 'vertical' : 'horizontal'
 				}
+				onDrag={this.mainSplitDragHandler.bind(this)}
 				onDragEnd={this.mainSplitDragEndHandler.bind(this)}
 			>
 				<div id="js-sidebar">
@@ -647,6 +657,7 @@ export default class ContentWrapFiles extends Component {
 						id="demo-frame"
 						allowfullscreen
 					/>
+					<PreviewDimension ref={comp => (this.previewDimension = comp)} />
 					<Console
 						logs={this.state.logs}
 						isConsoleOpen={this.state.isConsoleOpen}

@@ -24,7 +24,7 @@ export class PreviewDimension extends PureComponent {
 		 * when its updated (code above).
 		 */
 		this.hideTimer = setTimeout(() => {
-			// this.setState({ isVisible: false });
+			this.setState({ isVisible: false });
 		}, HIDE_AFTER_MILLISECONDS);
 	}
 	render() {

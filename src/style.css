@@ -984,11 +984,11 @@ body > #demo-frame {
 	display: block;
 	border-radius: 4px;
 	cursor: pointer;
-	opacity: 0;
-	transform: translateX(50px);
-	will-change: opacity, transform;
+	/* opacity: 0; */
+	/* transform: translateX(50px); */
+	/* will-change: opacity, transform; */
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-	animation: slide-left 0.35s ease forwards;
+	/* animation: slide-left 0.35s ease forwards; */
 }
 .saved-item-tile--inline {
 	display: inline-block;

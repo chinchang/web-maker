@@ -22,7 +22,7 @@ import { commandPaletteService } from '../commandPaletteService';
 
 const minCodeWrapSize = 33;
 
-/* global htmlCodeEl, jsCodeEl, cssCodeEl, logCountEl
+/* global htmlCodeEl
 */
 export default class ContentWrapFiles extends Component {
 	constructor(props) {
@@ -46,6 +46,15 @@ export default class ContentWrapFiles extends Component {
 		window.previewException = this.previewException.bind(this);
 		// `clearConsole` is on window because it gets called from inside iframe also.
 		window.clearConsole = this.clearConsole.bind(this);
+
+		this.consoleHeaderDblClickHandler = this.consoleHeaderDblClickHandler.bind(
+			this
+		);
+		this.clearConsoleBtnClickHandler = this.clearConsoleBtnClickHandler.bind(
+			this
+		);
+		this.toggleConsole = this.toggleConsole.bind(this);
+		this.evalConsoleExpr = this.evalConsoleExpr.bind(this);
 	}
 	shouldComponentUpdate(nextProps, nextState) {
 		return (
@@ -641,12 +650,10 @@ export default class ContentWrapFiles extends Component {
 					<Console
 						logs={this.state.logs}
 						isConsoleOpen={this.state.isConsoleOpen}
-						onConsoleHeaderDblClick={this.consoleHeaderDblClickHandler.bind(
-							this
-						)}
-						onClearConsoleBtnClick={this.clearConsoleBtnClickHandler.bind(this)}
-						toggleConsole={this.toggleConsole.bind(this)}
-						onEvalInputKeyup={this.evalConsoleExpr.bind(this)}
+						onConsoleHeaderDblClick={this.consoleHeaderDblClickHandler}
+						onClearConsoleBtnClick={this.clearConsoleBtnClickHandler}
+						toggleConsole={this.toggleConsole}
+						onEvalInputKeyup={this.evalConsoleExpr}
 					/>
 				</div>
 			</SplitPane>

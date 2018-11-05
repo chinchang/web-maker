@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { Inspector, chromeDark } from 'react-inspector';
 import { Trans } from '@lingui/macro';
+import { PureComponent } from 'preact-compat';
 
 class LogRow extends Component {
 	shouldComponentUpdate() {
@@ -22,7 +23,7 @@ class LogRow extends Component {
 	}
 }
 
-export class Console extends Component {
+export class Console extends PureComponent {
 	componentWillUpdate(nextProps) {
 		if (nextProps.logs != this.props.logs) {
 			// Scroll down after new log dom is inserted

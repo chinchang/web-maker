@@ -9,9 +9,10 @@ import CodeMirror from '../CodeMirror';
 import { Console } from './Console';
 import { deferred } from '../deferred';
 import CssSettingsModal from './CssSettingsModal';
+import { PreviewDimension } from './PreviewDimension.jsx';
 const minCodeWrapSize = 33;
 
-/* global htmlCodeEl, jsCodeEl, cssCodeEl, logCountEl
+/* global htmlCodeEl
 */
 
 export default class ContentWrap extends Component {
@@ -22,6 +23,7 @@ export default class ContentWrap extends Component {
 			isCssSettingsModalOpen: false,
 			logs: []
 		};
+
 		this.updateTimer = null;
 		this.updateDelay = 500;
 		this.htmlMode = HtmlModes.HTML;
@@ -37,6 +39,15 @@ export default class ContentWrap extends Component {
 		window.previewException = this.previewException.bind(this);
 		// `clearConsole` is on window because it gets called from inside iframe also.
 		window.clearConsole = this.clearConsole.bind(this);
+
+		this.consoleHeaderDblClickHandler = this.consoleHeaderDblClickHandler.bind(
+			this
+		);
+		this.clearConsoleBtnClickHandler = this.clearConsoleBtnClickHandler.bind(
+			this
+		);
+		this.toggleConsole = this.toggleConsole.bind(this);
+		this.evalConsoleExpr = this.evalConsoleExpr.bind(this);
 	}
 	shouldComponentUpdate(nextProps, nextState) {
 		return (
@@ -416,6 +427,12 @@ export default class ContentWrap extends Component {
 		}
 		this.updateSplits();
 	}
+	mainSplitDragHandler() {
+		this.previewDimension.update({
+			w: this.frame.clientWidth,
+			h: this.frame.clientHeight
+		});
+	}
 	codeSplitDragStart() {
 		document.body.classList.add('is-dragging');
 	}
@@ -627,6 +644,8 @@ export default class ContentWrap extends Component {
 	}
 
 	render() {
+		log('contentwrap update');
+
 		return (
 			<SplitPane
 				class="content-wrap  flex  flex-grow"
@@ -636,6 +655,7 @@ export default class ContentWrap extends Component {
 				direction={
 					this.props.currentLayoutMode === 2 ? 'vertical' : 'horizontal'
 				}
+				onDrag={this.mainSplitDragHandler.bind(this)}
 				onDragEnd={this.mainSplitDragEndHandler.bind(this)}
 			>
 				<SplitPane
@@ -837,15 +857,16 @@ export default class ContentWrap extends Component {
 						id="demo-frame"
 						allowfullscreen
 					/>
+
+					<PreviewDimension ref={comp => (this.previewDimension = comp)} />
+
 					<Console
 						logs={this.state.logs}
 						isConsoleOpen={this.state.isConsoleOpen}
-						onConsoleHeaderDblClick={this.consoleHeaderDblClickHandler.bind(
-							this
-						)}
-						onClearConsoleBtnClick={this.clearConsoleBtnClickHandler.bind(this)}
-						toggleConsole={this.toggleConsole.bind(this)}
-						onEvalInputKeyup={this.evalConsoleExpr.bind(this)}
+						onConsoleHeaderDblClick={this.consoleHeaderDblClickHandler}
+						onClearConsoleBtnClick={this.clearConsoleBtnClickHandler}
+						toggleConsole={this.toggleConsole}
+						onEvalInputKeyup={this.evalConsoleExpr}
 					/>
 					<CssSettingsModal
 						show={this.state.isCssSettingsModalOpen}

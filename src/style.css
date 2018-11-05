@@ -1812,6 +1812,16 @@ while the theme CSS file is loading */
 	margin-left: 10px;
 	font-size: 0.8em;
 }
+
+.preview-dimension {
+	position: absolute;
+	right: 0;
+	top: 0;
+	background: #ccc;
+	color: black;
+	padding: 5px;
+	z-index: 1;
+}
 @media screen and (max-width: 600px) {
 	body {
 		font-size: 70%;

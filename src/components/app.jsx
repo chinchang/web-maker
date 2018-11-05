@@ -255,7 +255,7 @@ export default class App extends Component {
 	}
 
 	getLanguageDefinition() {
-		console.log('🇯🇲 fetching defninition');
+		// console.log('🇯🇲 fetching defninition');
 		const { lang } = this.state.prefs;
 		if (!lang || lang === 'en') {
 			return {};

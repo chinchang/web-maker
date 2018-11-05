@@ -116,3 +116,57 @@ export function getParentPath(path) {
 	}
 	return '';
 }
+
+/**
+ * Fetches the files from a github repo and returns a suitable file structure.
+ * @param {Promise} Promise of completition. Resolves to the files structure.
+ */
+export function importGithubRepo(repoUrl) {
+	let repoSlug, match;
+	if ((match = repoUrl.match(/github\.com\/([^\/]*\/[^\/]*)/))) {
+		repoSlug = match[1];
+	} else {
+		repoSlug = 'chinchang/github';
+	}
+	const queryString = '';
+	function fetchFile(filepath) {
+		return fetch(
+			`https://api.github.com/repos/${repoSlug}/contents/${filepath}${queryString}`
+		).then(response => response.json());
+	}
+	function fetchDir(path, currentDir) {
+		return fetch(
+			`https://api.github.com/repos/${repoSlug}/contents/${path}${queryString}`
+		)
+			.then(response => response.json())
+			.then(response => {
+				if (!response) {
+					return;
+				}
+				return Promise.all(
+					response.map(file => {
+						if (file.type === 'file') {
+							return fetchFile(`${file.path}`).then(actualFile => {
+								currentDir.push({
+									name: file.name,
+									content: atob(actualFile.content)
+								});
+							});
+						} else if (file.type === 'dir') {
+							const newEntry = {
+								name: file.name,
+								children: [],
+								isFolder: true
+							};
+							currentDir.push(newEntry);
+							return fetchDir(`${file.path}`, newEntry.children);
+						}
+					})
+				);
+			});
+	}
+	const files = [];
+	return fetchDir('', files).then(() => {
+		return files;
+	});
+}

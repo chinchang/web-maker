@@ -28,7 +28,8 @@ import {
 	assignFilePaths,
 	getFileFromPath,
 	removeFileAtPath,
-	doesFileExistInFolder
+	doesFileExistInFolder,
+	importGithubRepo
 } from '../fileUtils';
 
 import { itemService } from '../itemService';
@@ -319,7 +320,7 @@ export default class App extends Component {
 		alertsService.add(`"${sourceItem.title}" was forked`);
 		trackEvent('fn', 'itemForked');
 	}
-	createNewItem(isFileMode = false) {
+	createNewItem(isFileMode = false, files) {
 		const d = new Date();
 		let item = {
 			title:
@@ -337,24 +338,26 @@ export default class App extends Component {
 		if (isFileMode) {
 			item = {
 				...item,
-				files: assignFilePaths([
-					{
-						name: 'index.html',
-						content:
-							'hello\n<link rel="stylesheet" href="styles/style.css">\n<script src="script.js"></script>'
-					},
-					{
-						name: 'styles',
-						isFolder: true,
-						children: [{ name: 'style.css', content: '' }]
-					},
-					{ name: 'script.js', content: '' },
-					{
-						name: 'tempo',
-						isFolder: true,
-						children: [{ name: 'main.css', content: '' }]
-					}
-				])
+				files: assignFilePaths(
+					files || [
+						{
+							name: 'index.html',
+							content:
+								'hello\n<link rel="stylesheet" href="styles/style.css">\n<script src="script.js"></script>'
+						},
+						{
+							name: 'styles',
+							isFolder: true,
+							children: [{ name: 'style.css', content: '' }]
+						},
+						{ name: 'script.js', content: '' },
+						{
+							name: 'tempo',
+							isFolder: true,
+							children: [{ name: 'main.css', content: '' }]
+						}
+					]
+				)
 			};
 		} else {
 			item = {
@@ -1311,6 +1314,12 @@ export default class App extends Component {
 			});
 		this.setState({ isCreateNewModalOpen: false });
 	}
+	importGithubRepoSelectHandler(repoUrl) {
+		importGithubRepo(repoUrl).then(files => {
+			this.createNewItem(true, files);
+			this.setState({ isCreateNewModalOpen: false });
+		});
+	}
 	addFileHandler(fileName, isFolder) {
 		let newEntry = { name: fileName, content: '' };
 		if (isFolder) {
@@ -1634,6 +1643,9 @@ export default class App extends Component {
 							this
 						)}
 						onTemplateSelect={this.templateSelectHandler.bind(this)}
+						onImportGithubRepoSelect={this.importGithubRepoSelectHandler.bind(
+							this
+						)}
 					/>
 
 					<CommandPalette

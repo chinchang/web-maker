@@ -28,6 +28,9 @@ export function CreateNewModal({
 					/>
 				))}
 			</div>
+			<hr />
+			The development team needs your help. If you are actively using ZenUML,
+			please tweet about ZenUML at least once a month!
 		</Modal>
 	);
 }

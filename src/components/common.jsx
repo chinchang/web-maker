@@ -32,3 +32,7 @@ export function AutoFocusInput(props) {
 		<input ref={el => el && setTimeout(() => el.focus(), 100)} {...props} />
 	);
 }
+
+export function Divider(props) {
+	return <div class="divider" />;
+}

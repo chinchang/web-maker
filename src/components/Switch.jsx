@@ -4,12 +4,26 @@ export default class Switch extends Component {
 	render() {
 		return (
 			<label class="check-switch">
-				{this.props.children}
 				<input role="switch" type="checkbox" checked={this.props.checked} />
-				<span aria-hidden="true" class="check-switch__toggle" />
-				<span aria-hidden="true" class="check-switch__status">
-					{this.props.checked ? 'on' : 'off'}
-				</span>
+				<div class="check-switch__toggle-wrap">
+					<span
+						aria-hidden="true"
+						class="check-switch__status"
+						style={`visibility:${this.props.checked ? 'hidden' : 'visible'}`}
+					>
+						Off
+					</span>
+					<span aria-hidden="true" class="check-switch__toggle" />
+					<span
+						aria-hidden="true"
+						class="check-switch__status"
+						style={`visibility:${this.props.checked ? 'visible' : 'hidden'}`}
+					>
+						On
+					</span>
+				</div>
+
+				{this.props.children}
 			</label>
 		);
 	}

@@ -44,7 +44,8 @@ export default class Tabs extends Component {
 		let { selectedTab } = this.state;
 		if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
 			selectedTab--;
-			selectedTab = selectedTab < 0 ? this.props.length - 1 : selectedTab;
+			selectedTab =
+				selectedTab < 0 ? this.props.children.length - 1 : selectedTab;
 			this.setState({ selectedTab: selectedTab });
 			e.preventDefault();
 		} else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {

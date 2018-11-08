@@ -2,6 +2,7 @@ import { h, Component } from 'preact';
 import { editorThemes } from '../editorThemes';
 import Switch from './Switch';
 import Tabs, { TabPanel } from './Tabs';
+import { Divider } from './common';
 
 function CheckboxSetting({
 	title,
@@ -42,6 +43,56 @@ export default class Settings extends Component {
 				<h1>Settings</h1>
 
 				<Tabs>
+					<TabPanel label="General">
+						<CheckboxSetting
+							name="preserveLastCode"
+							title="Loads the last open creation when app starts"
+							label="Preserve last written code"
+							pref={prefs.preserveLastCode}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<Divider />
+						<CheckboxSetting
+							name="lightVersion"
+							title="Switch to lighter version for better performance. Removes things like blur etc."
+							label="Fast/light version"
+							pref={prefs.lightVersion}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<Divider />
+						<CheckboxSetting
+							name="autoPreview"
+							title="Refreshes the preview as you code. Otherwise use the Run button"
+							label="Auto-preview"
+							pref={prefs.autoPreview}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<Divider />
+						<CheckboxSetting
+							name="autoSave"
+							title="Auto-save keeps saving your code at regular intervals after you hit the first save manually"
+							label="Auto-save"
+							pref={prefs.autoSave}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<Divider />
+						<CheckboxSetting
+							name="replaceNewTab"
+							title="Turning this on will start showing Web Maker in every new tab you open"
+							label="Replace new tab page"
+							pref={prefs.replaceNewTab}
+							onChange={this.updateSetting.bind(this)}
+							showWhenExtension
+						/>
+						<Divider />
+						<CheckboxSetting
+							name="preserveConsoleLogs"
+							title="Preserves the console logs across your preview refreshes"
+							label="Preserve console logs"
+							pref={prefs.preserveConsoleLogs}
+							onChange={this.updateSetting.bind(this)}
+						/>
+					</TabPanel>
 					<TabPanel label="Indentation">
 						<div
 							class="line"
@@ -218,6 +269,7 @@ export default class Settings extends Component {
 									pref={prefs.lineWrap}
 									onChange={this.updateSetting.bind(this)}
 								/>
+								<Divider />
 								<CheckboxSetting
 									name="refreshOnResize"
 									title="Your Preview will refresh when you resize the preview split"
@@ -225,6 +277,7 @@ export default class Settings extends Component {
 									pref={prefs.refreshOnResize}
 									onChange={this.updateSetting.bind(this)}
 								/>
+								<Divider />
 								<CheckboxSetting
 									name="autoComplete"
 									title="Turns on the auto-completion suggestions as you type"
@@ -232,70 +285,25 @@ export default class Settings extends Component {
 									pref={prefs.autoComplete}
 									onChange={this.updateSetting.bind(this)}
 								/>
-								<CheckboxSetting
-									name="autoPreview"
-									title="Refreshes the preview as you code. Otherwise use the Run button"
-									label="Auto-preview"
-									pref={prefs.autoPreview}
-									onChange={this.updateSetting.bind(this)}
-								/>
-								<CheckboxSetting
-									name="autoSave"
-									title="Auto-save keeps saving your code at regular intervals after you hit the first save manually"
-									label="Auto-save"
-									pref={prefs.autoSave}
-									onChange={this.updateSetting.bind(this)}
-								/>
-								<CheckboxSetting
-									name="preserveLastCode"
-									title="Loads the last open creation when app starts"
-									label="Preserve last written code"
-									pref={prefs.preserveLastCode}
-									onChange={this.updateSetting.bind(this)}
-								/>
-								<CheckboxSetting
-									name="replaceNewTab"
-									title="Turning this on will start showing Web Maker in every new tab you open"
-									label="Replace new tab page"
-									pref={prefs.replaceNewTab}
-									onChange={this.updateSetting.bind(this)}
-									showWhenExtension
-								/>
-								<CheckboxSetting
-									name="preserveConsoleLogs"
-									title="Preserves the console logs across your preview refreshes"
-									label="Preserve console logs"
-									pref={prefs.preserveConsoleLogs}
-									onChange={this.updateSetting.bind(this)}
-								/>
-								<CheckboxSetting
-									name="lightVersion"
-									title="Switch to lighter version for better performance. Removes things like blur etc."
-									label="Fast/light version"
-									pref={prefs.lightVersion}
-									onChange={this.updateSetting.bind(this)}
-								/>
 							</div>
 						</div>
 					</TabPanel>
 					<TabPanel label="Fun">
-						<p>
-							<CheckboxSetting
-								title="Enjoy wonderful particle blasts while you type"
-								label="Code blast!"
-								name="isCodeBlastOn"
-								pref={prefs.isCodeBlastOn}
-								onChange={this.updateSetting.bind(this)}
-							/>
-
-							<CheckboxSetting
-								title="Get ready to build some games at JS13KGames"
-								label="Js13kGames Mode"
-								name="isJs13kModeOn"
-								pref={prefs.isJs13kModeOn}
-								onChange={this.updateSetting.bind(this)}
-							/>
-						</p>
+						<CheckboxSetting
+							title="Enjoy wonderful particle blasts while you type"
+							label="Code blast!"
+							name="isCodeBlastOn"
+							pref={prefs.isCodeBlastOn}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<Divider />
+						<CheckboxSetting
+							title="Get ready to build some games at JS13KGames"
+							label="Js13kGames Mode"
+							name="isJs13kModeOn"
+							pref={prefs.isJs13kModeOn}
+							onChange={this.updateSetting.bind(this)}
+						/>
 					</TabPanel>
 					<TabPanel label="Advanced">
 						<p>

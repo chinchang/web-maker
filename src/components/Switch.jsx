@@ -4,7 +4,12 @@ export default class Switch extends Component {
 	render() {
 		return (
 			<label class="check-switch">
-				<input role="switch" type="checkbox" checked={this.props.checked} />
+				<input
+					role="switch"
+					type="checkbox"
+					checked={this.props.checked}
+					onChange={this.props.onChange}
+				/>
 				<div class="check-switch__toggle-wrap">
 					<span
 						aria-hidden="true"

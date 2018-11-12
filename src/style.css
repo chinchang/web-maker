@@ -226,8 +226,10 @@ label {
 }
 
 .line {
-	display: block;
+	/* display: block; */
 	margin-bottom: 1em;
+	display: flex;
+	justify-content: space-between;
 }
 
 .caret {
@@ -257,7 +259,6 @@ a > svg {
 .check-switch {
 	display: block;
 	overflow: hidden;
-	padding: 0.5em;
 	position: relative;
 }
 
@@ -1661,6 +1662,7 @@ body:not(.is-app) .show-when-app {
 .help-text {
 	font-size: 0.9em;
 	color: rgba(255, 255, 255, 0.5);
+	margin: 5px 0;
 }
 
 .social-login-btn:after,

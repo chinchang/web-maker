@@ -4,33 +4,22 @@ import Switch from './Switch';
 import Tabs, { TabPanel } from './Tabs';
 import { Divider } from './common';
 
-function CheckboxSetting({
-	title,
-	label,
-	onChange,
-	pref,
-	name,
-	showWhenExtension
-}) {
+function CheckboxSetting({ label, onChange, pref }) {
 	return (
-		// <label
-		// 	class={`line ${showWhenExtension ? 'show-when-extension' : ''} `}
-		// 	title={title}
-		// >
-		// 	<input
-		// 		type="checkbox"
-		// 		checked={pref}
-		// 		onChange={onChange}
-		// 		data-setting={name}
-		// 	/>{' '}
-		// 	{label}
-		// </label>
-		<Switch checked={pref}>{label}</Switch>
+		<Switch
+			checked={pref}
+			onChange={onChange}
+			class={`line ${showWhenExtension ? 'show-when-extension' : ''} `}
+		>
+			{label}
+		</Switch>
 	);
 }
 export default class Settings extends Component {
-	updateSetting(e) {
-		this.props.onChange(e);
+	updateSetting(e, settingName) {
+		const value =
+			e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+		this.props.onChange(settingName, value);
 	}
 	shouldComponentUpdate() {
 		// TODO: add check on prefs
@@ -45,295 +34,322 @@ export default class Settings extends Component {
 				<Tabs>
 					<TabPanel label="General">
 						<CheckboxSetting
-							name="preserveLastCode"
-							title="Loads the last open creation when app starts"
 							label="Preserve last written code"
 							pref={prefs.preserveLastCode}
-							onChange={this.updateSetting.bind(this)}
+							onChange={e => this.updateSetting(e, 'preserveLastCode')}
 						/>
+						<p class="help-text">
+							Loads the last open creation when app starts
+						</p>
 						<Divider />
 						<CheckboxSetting
-							name="lightVersion"
-							title="Switch to lighter version for better performance. Removes things like blur etc."
 							label="Fast/light version"
 							pref={prefs.lightVersion}
-							onChange={this.updateSetting.bind(this)}
+							onChange={e => this.updateSetting(e, 'lightVersion')}
 						/>
+						<p class="help-text">
+							Switch to lighter version for better performance. Removes things
+							like blur etc.
+						</p>
 						<Divider />
 						<CheckboxSetting
-							name="autoPreview"
-							title="Refreshes the preview as you code. Otherwise use the Run button"
 							label="Auto-preview"
 							pref={prefs.autoPreview}
-							onChange={this.updateSetting.bind(this)}
+							onChange={e => this.updateSetting(e, 'autoPreview')}
 						/>
+						<p class="help-text">
+							Refreshes the preview as you code. Otherwise use the Run button
+						</p>
 						<Divider />
 						<CheckboxSetting
-							name="autoSave"
-							title="Auto-save keeps saving your code at regular intervals after you hit the first save manually"
 							label="Auto-save"
 							pref={prefs.autoSave}
-							onChange={this.updateSetting.bind(this)}
+							onChange={e => this.updateSetting(e, 'autoSave')}
 						/>
+						<p class="help-text">
+							Auto-save keeps saving your code at regular intervals after you
+							hit the first save manually
+						</p>
 						<Divider />
 						<CheckboxSetting
-							name="replaceNewTab"
-							title="Turning this on will start showing Web Maker in every new tab you open"
-							label="Replace new tab page"
-							pref={prefs.replaceNewTab}
-							onChange={this.updateSetting.bind(this)}
-							showWhenExtension
+							label="Refresh preview on resize"
+							pref={prefs.refreshOnResize}
+							onChange={e => this.updateSetting(e, 'refreshOnResize')}
 						/>
+						<p class="help-text">
+							Preview will refresh when you resize the preview pane
+						</p>
+						<Divider />
+						<div class="show-when-extension">
+							<CheckboxSetting
+								label="Replace new tab page"
+								pref={prefs.replaceNewTab}
+								onChange={e => this.updateSetting(e, 'replaceNewTab')}
+								showWhenExtension
+							/>
+							<p class="help-text">
+								Turning this on will start showing Web Maker in every new tab
+								you open
+							</p>
+						</div>
 						<Divider />
 						<CheckboxSetting
-							name="preserveConsoleLogs"
-							title="Preserves the console logs across your preview refreshes"
 							label="Preserve console logs"
 							pref={prefs.preserveConsoleLogs}
-							onChange={this.updateSetting.bind(this)}
+							onChange={e => this.updateSetting(e, 'preserveConsoleLogs')}
 						/>
+						<p class="help-text">
+							Preserves the console logs across your preview refreshes
+						</p>
 					</TabPanel>
 					<TabPanel label="Indentation">
-						<div
-							class="line"
-							title="I know this is tough, but you have to decide one!"
-						>
-							<label>
-								<input
-									type="radio"
-									name="indentation"
-									value="spaces"
-									checked={prefs.indentWith === 'spaces'}
-									onChange={this.updateSetting.bind(this)}
-									data-setting="indentWith"
-								/>{' '}
-								Spaces
-							</label>
-							<label class="ml-1">
-								<input
-									type="radio"
-									name="indentation"
-									value="tabs"
-									checked={prefs.indentWith === 'tabs'}
-									onChange={this.updateSetting.bind(this)}
-									data-setting="indentWith"
-								/>{' '}
-								Tabs
-							</label>
+						<div class="line">
+							<div>
+								<label>
+									<input
+										type="radio"
+										name="indentation"
+										value="spaces"
+										checked={prefs.indentWith === 'spaces'}
+										onChange={e => this.updateSetting(e, 'indentWith')}
+									/>{' '}
+									Spaces
+								</label>
+								<label class="ml-1">
+									<input
+										type="radio"
+										name="indentation"
+										value="tabs"
+										checked={prefs.indentWith === 'tabs'}
+										onChange={e => this.updateSetting(e, 'indentWith')}
+									/>{' '}
+									Tabs
+								</label>
+							</div>
 						</div>
 						<label class="line" title="">
-							Indentation Size{' '}
-							<input
-								type="range"
-								class="va-m ml-1"
-								value={prefs.indentSize}
-								min="1"
-								max="7"
-								list="indentationSizeList"
-								data-setting="indentSize"
-								onChange={this.updateSetting.bind(this)}
-							/>
-							<span id="indentationSizeValueEl">{prefs.indentSize}</span>
-							<datalist id="indentationSizeList">
-								<option>1</option>
-								<option>2</option>
-								<option>3</option>
-								<option>4</option>
-								<option>5</option>
-								<option>6</option>
-								<option>7</option>
-							</datalist>
+							Indentation Size
+							<div>
+								<input
+									type="range"
+									class="va-m ml-1"
+									value={prefs.indentSize}
+									min="1"
+									max="7"
+									list="indentationSizeList"
+									onChange={e => this.updateSetting(e, 'indentSize')}
+								/>
+								<span id="indentationSizeValueEl">{prefs.indentSize}</span>
+								<datalist id="indentationSizeList">
+									<option>1</option>
+									<option>2</option>
+									<option>3</option>
+									<option>4</option>
+									<option>5</option>
+									<option>6</option>
+									<option>7</option>
+								</datalist>
+							</div>
 						</label>
 					</TabPanel>
 					<TabPanel label="Editor">
 						<div class="fle block--mobile">
 							<div>
-								<label class="line">Default Preprocessors</label>
-								<div class="flex line">
-									<select
-										style="flex:1;margin-left:20px"
-										data-setting="htmlMode"
-										value={prefs.htmlMode}
-										onChange={this.updateSetting.bind(this)}
-									>
-										<option value="html">HTML</option>
-										<option value="markdown">Markdown</option>
-										<option value="jade">Pug</option>
-									</select>
-									<select
-										style="flex:1;margin-left:20px"
-										data-setting="cssMode"
-										value={prefs.cssMode}
-										onChange={this.updateSetting.bind(this)}
-									>
-										<option value="css">CSS</option>
-										<option value="scss">SCSS</option>
-										<option value="sass">SASS</option>
-										<option value="less">LESS</option>
-										<option value="stylus">Stylus</option>
-										<option value="acss">Atomic CSS</option>
-									</select>
-									<select
-										style="flex:1;margin-left:20px"
-										data-setting="jsMode"
-										value={prefs.jsMode}
-										onChange={this.updateSetting.bind(this)}
-									>
-										<option value="js">JS</option>
-										<option value="coffee">CoffeeScript</option>
-										<option value="es6">ES6 (Babel)</option>
-										<option value="typescript">TypeScript</option>
-									</select>
+								<div class="line">
+									<span>Default Preprocessors</span>
+									<div class="flex">
+										<select
+											aria-label="Default HTML preprocessor"
+											style="flex:1;margin-left:20px"
+											value={prefs.htmlMode}
+											onChange={e => this.updateSetting(e, 'htmlMode')}
+										>
+											<option value="html">HTML</option>
+											<option value="markdown">Markdown</option>
+											<option value="jade">Pug</option>
+										</select>
+										<select
+											aria-label="Default CSS preprocessor"
+											style="flex:1;margin-left:20px"
+											value={prefs.cssMode}
+											onChange={e => this.updateSetting(e, 'cssMode')}
+										>
+											<option value="css">CSS</option>
+											<option value="scss">SCSS</option>
+											<option value="sass">SASS</option>
+											<option value="less">LESS</option>
+											<option value="stylus">Stylus</option>
+											<option value="acss">Atomic CSS</option>
+										</select>
+										<select
+											aria-label="Default JavaScript preprocessor"
+											style="flex:1;margin-left:20px"
+											value={prefs.jsMode}
+											onChange={e => this.updateSetting(e, 'jsMode')}
+										>
+											<option value="js">JS</option>
+											<option value="coffee">CoffeeScript</option>
+											<option value="es6">ES6 (Babel)</option>
+											<option value="typescript">TypeScript</option>
+										</select>
+									</div>
 								</div>
+								<Divider />
 								<label class="line">
 									Theme
-									<select
-										style="flex:1;margin:0 20px"
-										data-setting="editorTheme"
-										value={prefs.editorTheme}
-										onChange={this.updateSetting.bind(this)}
-									>
-										{editorThemes.map(theme => (
-											<option value={theme}>{theme}</option>
-										))}
-									</select>
+									<div>
+										<select
+											value={prefs.editorTheme}
+											onChange={e => this.updateSetting(e, 'editorTheme')}
+										>
+											{editorThemes.map(theme => (
+												<option value={theme}>{theme}</option>
+											))}
+										</select>
+									</div>
 								</label>
+								<Divider />
+
 								<label class="line">
 									Font
-									<select
-										style="flex:1;margin:0 20px"
-										data-setting="editorFont"
-										value={prefs.editorFont}
-										onChange={this.updateSetting.bind(this)}
-									>
-										<option value="FiraCode">Fira Code</option>
-										<option value="Inconsolata">Inconsolata</option>
-										<option value="Monoid">Monoid</option>
-										<option value="FixedSys">FixedSys</option>
-										<option disabled="disabled">----</option>
-										<option value="other">Other font from system</option>
-									</select>
-									{prefs.editorFont === 'other' && (
-										<input
-											id="customEditorFontInput"
-											type="text"
-											value={prefs.editorCustomFont}
-											placeholder="Custom font name here"
-											data-setting="editorCustomFont"
-											onChange={this.updateSetting.bind(this)}
-										/>
-									)}
+									<div>
+										<select
+											value={prefs.editorFont}
+											onChange={e => this.updateSetting(e, 'editorFont')}
+										>
+											<option value="FiraCode">Fira Code</option>
+											<option value="Inconsolata">Inconsolata</option>
+											<option value="Monoid">Monoid</option>
+											<option value="FixedSys">FixedSys</option>
+											<option disabled="disabled">----</option>
+											<option value="other">Other font from system</option>
+										</select>
+										{prefs.editorFont === 'other' && (
+											<input
+												style="margin-left:20px"
+												id="customEditorFontInput"
+												type="text"
+												value={prefs.editorCustomFont}
+												placeholder="Custom font name here"
+												onChange={e =>
+													this.updateSetting(e, 'editorCustomFont')
+												}
+											/>
+										)}
+									</div>
 								</label>
+								<Divider />
+
 								<label class="line">
-									Font Size{' '}
-									<input
-										style="width:70px"
-										type="number"
-										value={prefs.fontSize}
-										data-setting="fontSize"
-										onChange={this.updateSetting.bind(this)}
-									/>{' '}
-									px
+									Font Size
+									<div>
+										<input
+											style="width:70px"
+											type="number"
+											value={prefs.fontSize}
+											onChange={e => this.updateSetting(e, 'fontSize')}
+										/>{' '}
+										px
+									</div>
 								</label>
+								<Divider />
+
 								<div class="line">
 									Key bindings
-									<label class="ml-1">
-										<input
-											type="radio"
-											name="keymap"
-											value="sublime"
-											checked={prefs.keymap === 'sublime'}
-											data-setting="keymap"
-											onChange={this.updateSetting.bind(this)}
-										/>{' '}
-										Sublime
-									</label>
-									<label class="ml-1">
-										<input
-											type="radio"
-											name="keymap"
-											value="vim"
-											checked={prefs.keymap === 'vim'}
-											data-setting="keymap"
-											onChange={this.updateSetting.bind(this)}
-										/>{' '}
-										Vim
-									</label>
+									<div>
+										<label class="ml-1">
+											<input
+												type="radio"
+												name="keymap"
+												value="sublime"
+												checked={prefs.keymap === 'sublime'}
+												onChange={e => this.updateSetting(e, 'keymap')}
+											/>{' '}
+											Sublime
+										</label>
+										<label class="ml-1">
+											<input
+												type="radio"
+												name="keymap"
+												value="vim"
+												checked={prefs.keymap === 'vim'}
+												onChange={e => this.updateSetting(e, 'keymap')}
+											/>{' '}
+											Vim
+										</label>
+									</div>
 								</div>
 							</div>
+							<Divider />
+
 							<div class="flex-grow">
 								<CheckboxSetting
-									name="lineWrap"
 									title="Toggle wrapping of long sentences onto new line"
 									label="Line wrap"
 									pref={prefs.lineWrap}
-									onChange={this.updateSetting.bind(this)}
+									onChange={e => this.updateSetting(e, 'lineWrap')}
 								/>
 								<Divider />
+
 								<CheckboxSetting
-									name="refreshOnResize"
-									title="Your Preview will refresh when you resize the preview split"
-									label="Refresh preview on resize"
-									pref={prefs.refreshOnResize}
-									onChange={this.updateSetting.bind(this)}
-								/>
-								<Divider />
-								<CheckboxSetting
-									name="autoComplete"
 									title="Turns on the auto-completion suggestions as you type"
 									label="Auto-complete suggestions"
 									pref={prefs.autoComplete}
-									onChange={this.updateSetting.bind(this)}
+									onChange={e => this.updateSetting(e, 'autoComplete')}
 								/>
 							</div>
 						</div>
 					</TabPanel>
 					<TabPanel label="Fun">
 						<CheckboxSetting
-							title="Enjoy wonderful particle blasts while you type"
 							label="Code blast!"
-							name="isCodeBlastOn"
 							pref={prefs.isCodeBlastOn}
-							onChange={this.updateSetting.bind(this)}
+							onChange={e => this.updateSetting(e, 'isCodeBlastOn')}
 						/>
+						<p class="help-text">
+							Enjoy wonderful particle blasts while you type
+						</p>
 						<Divider />
 						<CheckboxSetting
-							title="Get ready to build some games at JS13KGames"
 							label="Js13kGames Mode"
-							name="isJs13kModeOn"
 							pref={prefs.isJs13kModeOn}
-							onChange={this.updateSetting.bind(this)}
+							onChange={e => this.updateSetting(e, 'isJs13kModeOn')}
 						/>
+						<p class="help-text">
+							Make the app ready to build some games for{' '}
+							<a href="https://js13kgames.com/" target="_blank" rel="noopener">
+								Js13kGames
+							</a>.
+						</p>
 					</TabPanel>
 					<TabPanel label="Advanced">
-						<p>
-							<label
-								class="line"
-								title="This timeout is used to indentify a possible infinite loop and prevent it."
-							>
-								Maximum time allowed in a loop iteration{' '}
-								<input
-									type="number"
-									value={prefs.infiniteLoopTimeout}
-									data-setting="infiniteLoopTimeout"
-									onChange={this.updateSetting.bind(this)}
-								/>{' '}
-								ms
+						<div>
+							<label class="line">
+								Maximum time allowed in a loop iteration
+								<div>
+									<input
+										type="number"
+										style="width:120px"
+										value={prefs.infiniteLoopTimeout}
+										onChange={e => this.updateSetting(e, 'infiniteLoopTimeout')}
+									/>{' '}
+									ms
+								</div>
 							</label>
-							<div class="help-text">
+							<p class="help-text">
 								If any loop iteration takes more than the defined time, it is
 								detected as a potential infinite loop and further iterations are
 								stopped.
-							</div>
-						</p>
+							</p>
+						</div>
+						<Divider />
 
-						<p>
+						<div>
 							<label class="line">
 								Language
 								<select
-									data-setting="lang"
 									value={prefs.lang}
-									onChange={this.updateSetting.bind(this)}
+									onChange={e => this.updateSetting(e, 'lang')}
 								>
 									<option value="en">English</option>
 									<option value="hi">Hindi</option>
@@ -341,7 +357,7 @@ export default class Settings extends Component {
 									<option value="sa">Sanskrit</option>
 								</select>
 							</label>
-						</p>
+						</div>
 					</TabPanel>
 				</Tabs>
 			</div>

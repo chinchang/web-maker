@@ -4,6 +4,7 @@ function hyphenate(text) {
 	return text.replace(/\s/g, '-');
 }
 const ID_PREFIX = 'tab-panel-';
+
 export function TabPanel({ label }) {
 	return (
 		<div

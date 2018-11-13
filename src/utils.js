@@ -320,7 +320,11 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 				return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
 			}, '');
 		externalCss = item.externalLibs.css
-			.split('\n').concat(['//app.zenuml.com/lib/vue-sequence-ext.css', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'])
+			.split('\n').concat([			(chrome.extension
+				? chrome.extension.getURL('lib/vue-sequence-ext.css')
+				: `${location.origin}${
+					window.DEBUG ? '' : BASE_PATH
+					}lib/vue-sequence-ext.css`), 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'])
 			.reduce(function(links, url) {
 				return (
 					links +

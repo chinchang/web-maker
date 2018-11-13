@@ -11582,9 +11582,9 @@ vue-cli-plugin-apollo@^0.17.3:
     subscriptions-transport-ws "^0.9.15"
     ts-node "^7.0.1"
 
-vue-sequence@^0.6.5:
-  version "0.6.5"
-  resolved "https://registry.yarnpkg.com/vue-sequence/-/vue-sequence-0.6.5.tgz#055804b56cc3d481717dcd6017d0006cb38692cb"
+vue-sequence@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/vue-sequence/-/vue-sequence-0.7.0.tgz#e5e1ea76a1bf6391cd0a6cffd0af79cb7569b489"
   dependencies:
     "@vue/cli" "^3.0.0-rc.5"
     sequence-parser "^0.5.14"

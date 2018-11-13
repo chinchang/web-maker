@@ -6,11 +6,7 @@ import { Divider } from './common';
 
 function CheckboxSetting({ label, onChange, pref }) {
 	return (
-		<Switch
-			checked={pref}
-			onChange={onChange}
-			class={`line ${showWhenExtension ? 'show-when-extension' : ''} `}
-		>
+		<Switch checked={pref} onChange={onChange}>
 			{label}
 		</Switch>
 	);
@@ -79,8 +75,8 @@ export default class Settings extends Component {
 						<p class="help-text">
 							Preview will refresh when you resize the preview pane
 						</p>
-						<Divider />
 						<div class="show-when-extension">
+							<Divider />
 							<CheckboxSetting
 								label="Replace new tab page"
 								pref={prefs.replaceNewTab}

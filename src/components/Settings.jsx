@@ -54,7 +54,7 @@ export default class Settings extends Component {
 							onChange={e => this.updateSetting(e, 'autoPreview')}
 						/>
 						<p class="help-text">
-							Refreshes the preview as you code. Otherwise use the Run button
+							Refreshes the preview as you code. Otherwise use the 'Run' button
 						</p>
 						<Divider />
 						<CheckboxSetting
@@ -64,7 +64,7 @@ export default class Settings extends Component {
 						/>
 						<p class="help-text">
 							Auto-save keeps saving your code at regular intervals after you
-							hit the first save manually
+							hit save manually the first time
 						</p>
 						<Divider />
 						<CheckboxSetting
@@ -149,7 +149,7 @@ export default class Settings extends Component {
 						</label>
 					</TabPanel>
 					<TabPanel label="Editor">
-						<div class="fle block--mobile">
+						<div>
 							<div>
 								<div class="line">
 									<span>Default Preprocessors</span>

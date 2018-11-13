@@ -887,15 +887,14 @@ export default class App extends Component {
 	/**
 	 * Handles all user triggered preference changes in the UI.
 	 */
-	updateSetting(e) {
+	updateSetting(settingName, value) {
 		// If this was triggered from user interaction, save the setting
-		if (e) {
-			var settingName = e.target.dataset.setting;
+		if (settingName) {
+			// var settingName = e.target.dataset.setting;
 			var obj = {};
-			var el = e.target;
-			log(settingName, el.type === 'checkbox' ? el.checked : el.value);
+			log(settingName, value);
 			const prefs = { ...this.state.prefs };
-			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
+			prefs[settingName] = value;
 			obj[settingName] = prefs[settingName];
 			this.setState({ prefs });
 

@@ -22,7 +22,7 @@ function Tab({ label, isSelected, onKeyUp, onClick }) {
 			class={`tabs__tab ${isSelected ? 'tabs__tab--selected' : ''}`}
 			role="tab"
 			tabindex={isSelected ? null : -1}
-			aria-selected={isSelected}
+			aria-selected={`${isSelected}`}
 			aria-controls={`${ID_PREFIX}${hyphenate(label)}`}
 			onKeyUp={onKeyUp}
 			onClick={onClick}
@@ -41,18 +41,22 @@ export default class Tabs extends Component {
 	isSelected(index) {
 		return this.state.selectedTab === index;
 	}
+	switchTab(selectedTab) {
+		this.setState({ selectedTab: selectedTab });
+		this.tabListEl.querySelectorAll('[role=tab]')[selectedTab].focus();
+	}
 	keyUpHandler(e) {
 		let { selectedTab } = this.state;
 		if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
 			selectedTab--;
 			selectedTab =
 				selectedTab < 0 ? this.props.children.length - 1 : selectedTab;
-			this.setState({ selectedTab: selectedTab });
+			this.switchTab(selectedTab);
 			e.preventDefault();
 		} else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
 			selectedTab++;
 			selectedTab %= this.props.children.length;
-			this.setState({ selectedTab: selectedTab });
+			this.switchTab(selectedTab);
 			e.preventDefault();
 		}
 	}
@@ -60,7 +64,11 @@ export default class Tabs extends Component {
 		const tabs = this.props.children;
 		return (
 			<div class="tabs">
-				<div class="tabs__tablist" role="tablist">
+				<div
+					class="tabs__tablist"
+					role="tablist"
+					ref={el => (this.tabListEl = el)}
+				>
 					{tabs.map((child, index) => (
 						<Tab
 							isSelected={this.isSelected(index)}

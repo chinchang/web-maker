@@ -13,7 +13,7 @@ export const commandPaletteService = {
 	publish(eventName, ...args) {
 		const callbacks = this.subscriptions[eventName] || [];
 		callbacks.forEach(callback => {
-			callback.apply(null, args);
+			callback(...args);
 		});
 	}
 };

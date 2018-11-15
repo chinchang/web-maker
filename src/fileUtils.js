@@ -1,6 +1,3 @@
-import { deferred } from './deferred';
-const esprima = require('esprima');
-
 /**
  * Returns the extension from the file name.
  * @param {dtring} fileName File name
@@ -16,13 +13,12 @@ export function getExtensionFromFileName(fileName) {
  * @param {array} files Nested file structure
  */
 export function linearizeFiles(files) {
-	function reduceToLinearFiles(files) {
-		return files.reduce((list, currentFile) => {
+	function reduceToLinearFiles(_files) {
+		return _files.reduce((list, currentFile) => {
 			if (currentFile.isFolder) {
 				return [...list, ...reduceToLinearFiles(currentFile.children)];
-			} else {
-				return [...list, currentFile];
 			}
+			return [...list, currentFile];
 		}, []);
 	}
 	return reduceToLinearFiles(files);
@@ -68,7 +64,7 @@ export function getFileFromPath(files, path) {
 	let currentFolder = files;
 	const pathPieces = path.split('/');
 	while (pathPieces.length > 1) {
-		let folderName = pathPieces.shift();
+		const folderName = pathPieces.shift();
 		currentFolder = getChildFileFromName(currentFolder, folderName).file
 			.children;
 	}
@@ -86,7 +82,7 @@ export function removeFileAtPath(files, path) {
 	let currentFolder = files;
 	const pathPieces = path.split('/');
 	while (pathPieces.length > 1) {
-		let folderName = pathPieces.shift();
+		const folderName = pathPieces.shift();
 		currentFolder = getChildFileFromName(currentFolder, folderName).file
 			.children;
 	}
@@ -123,7 +119,7 @@ export function getParentPath(path) {
  */
 export function importGithubRepo(repoUrl) {
 	let repoSlug, match;
-	if ((match = repoUrl.match(/github\.com\/([^\/]*\/[^\/]*)/))) {
+	if ((match = repoUrl.match(/github\.com\/([^/]*\/[^/]*)/))) {
 		repoSlug = match[1];
 	} else {
 		repoSlug = 'chinchang/github';
@@ -141,7 +137,7 @@ export function importGithubRepo(repoUrl) {
 			.then(response => response.json())
 			.then(response => {
 				if (!response) {
-					return;
+					return Promise.resolve([]);
 				}
 				return Promise.all(
 					response.map(file => {
@@ -161,6 +157,7 @@ export function importGithubRepo(repoUrl) {
 							currentDir.push(newEntry);
 							return fetchDir(`${file.path}`, newEntry.children);
 						}
+						return Promise.resolve();
 					})
 				);
 			});

@@ -330,6 +330,7 @@ export default class ContentWrap extends Component {
 
 			this.cm[type].setOption('keyMap', prefs.keymap);
 			this.cm[type].setOption('lineWrapping', prefs.lineWrap);
+			this.cm[type].setOption('autoCloseTags', prefs.autoCloseTags);
 			this.cm[type].refresh();
 		});
 	}

@@ -216,6 +216,13 @@ export default class Settings extends Component {
 							onChange={this.updateSetting.bind(this)}
 						/>
 						<CheckboxSetting
+							name="autoCloseTags"
+							title="Add the closing tag automatically on seeing an opening tag in HTML"
+							label="Auto-close tags"
+							pref={this.props.prefs.autoCloseTags}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<CheckboxSetting
 							name="refreshOnResize"
 							title="Your Preview will refresh when you resize the preview split"
 							label="Refresh preview on resize"

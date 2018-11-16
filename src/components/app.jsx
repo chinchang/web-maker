@@ -108,7 +108,8 @@ export default class App extends Component {
 			lineWrap: true,
 			infiniteLoopTimeout: 1000,
 			layoutMode: 2,
-			isJs13kModeOn: false
+			isJs13kModeOn: false,
+			autoCloseTags: true
 		};
 		this.prefs = {};
 

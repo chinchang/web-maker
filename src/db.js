@@ -74,7 +74,7 @@ import { log } from './utils';
 						// Multiple tabs open, persistence can only be enabled
 						// in one tab at a a time.
 						alert(
-							"Opening Web Maker web app in multiple tabs isn't supported at present and it seems like you already have it opened in another tab. Please use in one tab."
+							"Opening ZenUML web app in multiple tabs isn't supported at present and it seems like you already have it opened in another tab. Please use in one tab."
 						);
 						trackEvent('fn', 'multiTabError');
 					} else if (err.code === 'unimplemented') {

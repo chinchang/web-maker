@@ -56,6 +56,7 @@ export default class UserCodeMirror extends Component {
 
 			this.cm.setOption('keyMap', prefs.keymap);
 			this.cm.setOption('lineWrapping', prefs.lineWrap);
+			this.cm.setOption('lineWrapping', prefs.autoCloseTags);
 
 			this.cm.refresh();
 		}
@@ -71,7 +72,7 @@ export default class UserCodeMirror extends Component {
 			lineWrapping: !!prefs.lineWrap,
 			autofocus: options.autofocus || false,
 			autoCloseBrackets: true,
-			autoCloseTags: true,
+			autoCloseTags: !!prefs.autoCloseTags,
 			matchBrackets: true,
 			matchTags: options.matchTags || false,
 			tabMode: 'indent',

@@ -87,6 +87,10 @@ export function KeyboardShortcutsModal({ show, closeHandler }) {
 						<span class="kbd-shortcut__keys">Ctrl/⌘ + /</span>
 						<span class="kbd-shortcut__details">Single line comment</span>
 					</p>
+					<p>
+						<span class="kbd-shortcut__keys">Ctrl + Shift + F</span>
+						<span class="kbd-shortcut__details">Run Prettier</span>
+					</p>
 				</div>
 			</div>
 		</Modal>

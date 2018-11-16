@@ -143,7 +143,7 @@ import { log } from './utils';
 
 	// Fetch user settings.
 	// This isn't hitting the remote db because remote settings
-	// get fetch asynchronously (in user/) and update the envioronment.
+	// get fetch asynchronously (in user/) and update the environment.
 	function getSettings(defaultSettings) {
 		const d = deferred();
 		// Will be chrome.storage.sync in extension environment,

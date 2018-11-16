@@ -2,10 +2,14 @@ importScripts('./prettier/standalone.js');
 
 function prettify({ content, type }) {
 	let plugins, parser;
-	if (type === 'js') {
+	if (type === 'html') {
+		importScripts('./prettier/parser-html.js');
+		parser = 'html';
+	}else if (type === 'js') {
 		parser = 'babylon';
 		importScripts('./prettier/parser-babylon.js');
-	} else if (type === 'css') {
+	}  
+	else if (type === 'css') {
 		parser = 'css';
 		importScripts('./prettier/parser-postcss.js');
 	}

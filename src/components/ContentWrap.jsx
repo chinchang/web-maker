@@ -12,7 +12,7 @@ import CssSettingsModal from './CssSettingsModal';
 const minCodeWrapSize = 33;
 
 /* global htmlCodeEl, jsCodeEl, cssCodeEl, logCountEl
-*/
+ */
 
 export default class ContentWrap extends Component {
 	constructor(props) {
@@ -222,8 +222,7 @@ export default class ContentWrap extends Component {
 				if (targetFrame.contentDocument.querySelector('#webmakerstyle')) {
 					targetFrame.contentDocument.querySelector(
 						'#webmakerstyle'
-					).textContent =
-						result.code || '';
+					).textContent = result.code || '';
 				}
 			});
 		} else {
@@ -752,6 +751,8 @@ export default class ContentWrap extends Component {
 								gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
 								noAutocomplete: true,
 								matchTags: { bothTags: true },
+								prettier: true,
+								prettierParser: 'html',
 								emmet: true
 							}}
 							prefs={this.props.prefs}

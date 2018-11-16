@@ -465,7 +465,7 @@ export function prettify(content, type = 'js') {
 	const worker = new Worker(
 		chrome.extension
 			? chrome.extension.getURL('lib/prettier-worker.js')
-			: `${BASE_PATH === '/' ? '' : BASEPATH}/lib/prettier-worker.js`
+			: `${BASE_PATH === '/' ? '' : BASE_PATH}/lib/prettier-worker.js`
 	);
 	worker.postMessage({ content, type });
 	worker.addEventListener('message', e => {

@@ -10,3 +10,4 @@ node_modules/
 *.map
 .sass-cache
 extension/
+yarn-error.log

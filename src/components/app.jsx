@@ -1,5 +1,5 @@
 /* global htmlCodeEl, cssCodeEl, jsCodeEl, runBtn
-*/
+ */
 
 import { h, Component } from 'preact';
 
@@ -55,7 +55,7 @@ const LocalStorageKeys = {
 	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
 };
 const UNSAVED_WARNING_COUNT = 15;
-const version = '3.5.1';
+const version = '3.6.0';
 
 export default class App extends Component {
 	constructor() {
@@ -1243,7 +1243,7 @@ export default class App extends Component {
 					<input
 						type="hidden"
 						name="data"
-						value="{&quot;title&quot;: &quot;New Pen!&quot;, &quot;html&quot;: &quot;<div>Hello, World!</div>&quot;}"
+						value='{"title": "New Pen!", "html": "<div>Hello, World!</div>"}'
 					/>
 				</form>
 
@@ -1364,7 +1364,7 @@ export default class App extends Component {
 					<input
 						type="hidden"
 						name="data"
-						value="{&quot;title&quot;: &quot;New Pen!&quot;, &quot;html&quot;: &quot;<div>Hello, World!</div>&quot;}"
+						value='{"title": "New Pen!", "html": "<div>Hello, World!</div>"}'
 					/>
 				</form>
 			</div>

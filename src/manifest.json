@@ -1,13 +1,12 @@
 {
 	"name": "Web Maker",
-	"version": "3.5.1",
+	"version": "3.6.0",
 	"manifest_version": 2,
 	"description": "Blazing fast & offline playground for your web experiments",
 	"homepage_url": "https://webmakerapp.com",
 	"permissions": ["storage", "tabs", "<all_urls>"],
 	"optional_permissions": ["downloads"],
-	"content_security_policy":
-		"script-src 'self' filesystem: http://localhost:* https://localhost:* https://apis.google.com https://ajax.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://unpkg.com https://maxcdn.com https://cdn77.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net/ https://*.stripe.com/ https://builds.framerjs.com/ https://rawgit.com https://wzrd.in https://www.gstatic.com https://semantic-ui.com https://www.google-analytics.com 'unsafe-eval'; object-src 'self'",
+	"content_security_policy": "script-src 'self' filesystem: http://localhost:* https://localhost:* https://apis.google.com https://ajax.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://unpkg.com https://maxcdn.com https://cdn77.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net/ https://*.stripe.com/ https://builds.framerjs.com/ https://rawgit.com https://wzrd.in https://www.gstatic.com https://semantic-ui.com https://www.google-analytics.com 'unsafe-eval'; object-src 'self'",
 	"options_ui": {
 		"page": "options.html",
 		"chrome_style": true

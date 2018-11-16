@@ -101,13 +101,14 @@ export default class UserCodeMirror extends Component {
 					CodeMirror.commands.goLineDown(editor);
 				},
 				'Shift-Tab': function(editor) {
+					CodeMirror.commands.indentAuto(editor);
+				},
+				'Shift-Ctrl-F': function(editor) {
 					if (options.prettier) {
 						prettify({
 							content: editor.getValue(),
 							type: options.prettierParser
 						}).then(formattedCode => editor.setValue(formattedCode));
-					} else {
-						CodeMirror.commands.indentAuto(editor);
 					}
 				},
 				Tab: function(editor) {

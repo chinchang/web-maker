@@ -1,13 +1,14 @@
-Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master) [![Gitter](https://badges.gitter.im/web-maker-app/Lobby.svg)](https://gitter.im/web-maker-app/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-======
+# Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/web-maker)
+
+---
 
 **Web-Maker** is an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and offline supported because it runs completely on your system.
 
-### [Install Chrome extension](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
+### [Open Web App](https://webmakerapp.com/app/) (Recommended: More features. More fun!)
 
 or
 
-### [Go to Web App](https://webmakerapp.com/app/)
+### [Install Chrome extension](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
 
 ![Screenshot](/ss1.png)
 
@@ -35,7 +36,7 @@ Follow [@webmakerApp](https://twitter.com/intent/follow?screen_name=webmakerApp)
 
 Hi! I am Kushagra Gour. Web Maker is a free and open-source project. To keep myself motivated for working on such open-source and free [side projects](https://kushagragour.in/lab/), I have launched a [Patreon campaign](https://patreon.com/kushagra). Your pledge, no matter how small, will act as an appreciation towards my work and keep me going forward making Web Maker more awesome🔥.
 
-[![Become a patron](/src/patreon.png)](https://patreon.com/kushagra)
+[![Become a patron](/src/assets/patreon.png)](https://patreon.com/kushagra)
 
 If not that, you can support by simply sharing about how much you love 💖 [@webmakerapp](https://twitter.com/webmakerApp).
 

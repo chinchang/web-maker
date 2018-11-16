@@ -23,6 +23,10 @@ function prettify({ content, type }) {
 			parser = 'markdown';
 			importScripts('./prettier/parser-markdown.js')
 			break;
+		case 'html':
+			parser = 'html';
+			importScripts('./prettier/parser-html.js');
+			break;
 	}
 
 	if (!parser) {

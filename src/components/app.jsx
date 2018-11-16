@@ -1,5 +1,5 @@
 /* global htmlCodeEl, cssCodeEl, jsCodeEl, runBtn
-*/
+ */
 
 import { h, Component } from 'preact';
 import '../service-worker-registration';
@@ -77,7 +77,7 @@ const LocalStorageKeys = {
 	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
 };
 const UNSAVED_WARNING_COUNT = 15;
-const version = '3.5.1';
+const version = '3.6.0';
 
 export default class App extends Component {
 	constructor() {
@@ -132,6 +132,7 @@ export default class App extends Component {
 			infiniteLoopTimeout: 1000,
 			layoutMode: 2,
 			isJs13kModeOn: false,
+			autoCloseTags: true,
 			lang: 'en'
 		};
 		this.prefs = {};

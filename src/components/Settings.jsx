@@ -286,7 +286,13 @@ export default class Settings extends Component {
 									onChange={e => this.updateSetting(e, 'lineWrap')}
 								/>
 								<Divider />
-
+								<CheckboxSetting
+									title="Add the closing tag automatically on seeing an opening tag in HTML"
+									label="Auto-close tags"
+									pref={prefs.autoCloseTags}
+									onChange={e => this.updateSetting(e, 'autoCloseTags')}
+								/>
+								<Divider />
 								<CheckboxSetting
 									title="Turns on the auto-completion suggestions as you type"
 									label="Auto-complete suggestions"

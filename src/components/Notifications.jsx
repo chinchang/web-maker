@@ -43,7 +43,8 @@ function Notification({ version, isLatest, ...props }) {
 						>
 							{' '}
 							Patreon campaign
-						</a>. If you love Web Maker, consider pledging to
+						</a>
+						. If you love Web Maker, consider pledging to
 						<a
 							href="https://patreon.com/kushagra"
 							target="_blank"
@@ -74,7 +75,8 @@ function Notification({ version, isLatest, ...props }) {
 							class="btn"
 						>
 							Please rate Web Maker <span class="star" />
-						</a>&nbsp;
+						</a>
+						&nbsp;
 						<a
 							href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
 							target="_blank"
@@ -82,7 +84,8 @@ function Notification({ version, isLatest, ...props }) {
 							class="btn"
 						>
 							Share it
-						</a>&nbsp;
+						</a>
+						&nbsp;
 						<Button
 							aria-label="Support the developer"
 							onClick={props.onSupportBtnClick}
@@ -102,6 +105,35 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+
+			<Notification version="3.6.0" {...props}>
+				<li>
+					<strong>New Setting</strong>: Configure if you want to auto-close the
+					tags in HTML. (#347)
+				</li>
+				<li>
+					<strong>Prettier</strong>: Prettier now works on HTML also! Also the
+					keyboard shortcut has been changed to <kbd>Ctrl</kbd> +{' '}
+					<kbd>Shift</kbd> + <kbd>F</kbd>.
+				</li>
+
+				<li>
+					No more anonying alert on opening Web Maker in multiple tabs. Thanks
+					team Firebase :) (#340)
+				</li>
+
+				<li>
+					<strong>🔥 Web Maker 4.0 is coming!</strong> Follow{' '}
+					<a
+						href="https://twitter.com/webmakerApp"
+						target="_blank"
+						rel="noopener"
+					>
+						Web Maker on Twitter
+					</a>{' '}
+					to keep up with all the exciting updates.
+				</li>
+			</Notification>
 
 			<Notification version="3.5.1" isLatest={true} {...props}>
 				<li>
@@ -236,18 +268,21 @@ export function Notifications(props) {
 						rel="noopener noreferrer"
 					>
 						Preact
-					</a>. What does this mean for you as a end-user? This means that now
-					that the code is much smaller, more modular and maintainable. Hence,
-					future features can be developed more rapidly. So fasten your seat
-					belts, and get ready to use loads of new features coming your way in
-					next releases!<br />
+					</a>
+					. What does this mean for you as a end-user? This means that now that
+					the code is much smaller, more modular and maintainable. Hence, future
+					features can be developed more rapidly. So fasten your seat belts, and
+					get ready to use loads of new features coming your way in next
+					releases!
+					<br />
 					<a
 						href="https://medium.com/web-maker/web-maker-is-now-in-preact-85af98be8683"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
 						Read more about this big code refactor
-					</a>.
+					</a>
+					.
 				</li>
 				<li>
 					<a href="https://p5js.org/" target="_blank" rel="noopener noreferrer">
@@ -333,7 +368,8 @@ export function Notifications(props) {
 						>
 							{' '}
 							Read the blog post about it
-						</a>.
+						</a>
+						.
 					</li>
 					<li>
 						Web Maker is no more just a Chrome extension, it is also available
@@ -345,7 +381,8 @@ export function Notifications(props) {
 							rel="noopener noreferrer"
 						>
 							https://webmakerapp.com/app/
-						</a>.
+						</a>
+						.
 					</li>
 					<li>
 						Now use Web Maker web app on any modern browser (tested with Chrome
@@ -418,7 +455,8 @@ export function Notifications(props) {
 							rel="noopener noreferrer"
 						>
 							ClassicOldSong
-						</a>.
+						</a>
+						.
 					</li>
 				</ul>
 			</div>
@@ -458,7 +496,8 @@ export function Notifications(props) {
 							rel="noopener noreferrer"
 						>
 							ClassicOldSong
-						</a>.
+						</a>
+						.
 					</li>
 					<li>
 						<strong>Bugfix</strong> - Stop screenlog.js from showing up in the
@@ -472,7 +511,8 @@ export function Notifications(props) {
 							rel="noopener noreferrer"
 						>
 							jlapitan
-						</a>.
+						</a>
+						.
 					</li>
 				</ul>
 			</div>
@@ -513,7 +553,8 @@ export function Notifications(props) {
 							rel="noopener noreferrer"
 						>
 							Gaurav Nanda
-						</a>.
+						</a>
+						.
 					</li>
 					<li>
 						<strong>Bugfix</strong> - Screenshots on retina device are now
@@ -524,7 +565,8 @@ export function Notifications(props) {
 							rel="noopener noreferrer"
 						>
 							Ashish Bardhan
-						</a>.
+						</a>
+						.
 					</li>
 					<li>
 						<strong>Bugfix</strong> - Double console log in detached mode fixed.
@@ -544,7 +586,8 @@ export function Notifications(props) {
 							rel="noopener noreferrer"
 						>
 							Adil Mahmood
-						</a>.
+						</a>
+						.
 					</li>
 					<li>gstatic.com is available to load external JavaScripts from.</li>
 					<li>
@@ -555,7 +598,8 @@ export function Notifications(props) {
 							rel="noopener noreferrer"
 						>
 							diomed
-						</a>.
+						</a>
+						.
 					</li>
 					<li>
 						Added
@@ -626,7 +670,8 @@ export function Notifications(props) {
 							rel="noopener noreferrer"
 						>
 							Read more
-						</a>.
+						</a>
+						.
 					</li>
 					<li>
 						<strong>Light mode</strong> - This new setting makes Web Maker drop
@@ -637,7 +682,8 @@ export function Notifications(props) {
 							rel="noopener noreferrer"
 						>
 							Andrew
-						</a>.
+						</a>
+						.
 					</li>
 					<li>
 						<strong>Preserve logs setting</strong> - Choose whether or not to
@@ -648,7 +694,8 @@ export function Notifications(props) {
 							rel="noopener noreferrer"
 						>
 							Basit
-						</a>.
+						</a>
+						.
 					</li>
 					<li>
 						<strong>Line wrap setting</strong> - As the name says.
@@ -735,9 +782,8 @@ export function Notifications(props) {
 						UIKit 3 to latest beta.
 					</li>
 					<li>
-						<strong>rawgit.com</strong> &
-						<strong>wzrd.in</strong> domains are now allowed for loading
-						external libraries from.
+						<strong>rawgit.com</strong> &<strong>wzrd.in</strong> domains are
+						now allowed for loading external libraries from.
 					</li>
 					<li>Minor booting speed improvements</li>
 				</ul>
@@ -787,7 +833,8 @@ export function Notifications(props) {
 							href="https://kushagragour.in/blog/2017/05/web-maker-fork-templates/?utm_source=webmakerapp&utm_medium=referral"
 						>
 							Read more about it
-						</a>.
+						</a>
+						.
 					</li>
 					<li>
 						<strong>Fonts 😍 </strong>: Super-awesome 4 fonts (mostly with
@@ -819,9 +866,8 @@ export function Notifications(props) {
 						has been fixed.
 					</li>
 					<li>
-						<strong>Bugfix</strong>:
-						<code>console.clear()</code> now doesn't error and clears the
-						inbuilt console.
+						<strong>Bugfix</strong>:<code>console.clear()</code> now doesn't
+						error and clears the inbuilt console.
 					</li>
 					<li>
 						<strong>Bugfix</strong>: External libraries added to the creation
@@ -844,7 +890,8 @@ export function Notifications(props) {
 							rel="noopener noreferrer"
 						>
 							blog post about it
-						</a>.
+						</a>
+						.
 					</li>
 					<li>
 						Number slider which popped on clicking any number in the code has
@@ -866,7 +913,8 @@ export function Notifications(props) {
 							rel="noopener noreferrer"
 						>
 							Read more about it here
-						</a>.
+						</a>
+						.
 					</li>
 					<li>
 						<strong>Search your saved creations</strong>: Easily search through

@@ -66,100 +66,123 @@ export default class UserCodeMirror extends Component {
 
 	initEditor() {
 		const { options, prefs } = this.props;
-		this.cm = CodeMirror.fromTextArea(this.textarea, {
-			mode: options.mode,
-			lineNumbers: true,
-			lineWrapping: !!prefs.lineWrap,
-			autofocus: options.autofocus || false,
-			autoCloseBrackets: true,
-			autoCloseTags: !!prefs.autoCloseTags,
-			matchBrackets: true,
-			matchTags: options.matchTags || false,
-			tabMode: 'indent',
-			keyMap: prefs.keyMap || 'sublime',
-			theme: prefs.editorTheme || 'monokai',
-			lint: !!options.lint,
-			tabSize: +prefs.indentSize || 2,
-			indentWithTabs: prefs.indentWith !== 'spaces',
-			indentUnit: +prefs.indentSize,
-			foldGutter: true,
-			styleActiveLine: true,
-			gutters: options.gutters || [],
-			// cursorScrollMargin: '20', has issue with scrolling
-			profile: options.profile || '',
-			extraKeys: {
-				Up: function(editor) {
-					// Stop up/down keys default behavior when saveditempane is open
-					// if (isSavedItemsPaneOpen) {
-					// return;
-					// }
-					CodeMirror.commands.goLineUp(editor);
+		if (this.props.mode === 'monaco') {
+			this.instance = monaco.editor.create(el, {
+				language: options.language,
+				roundedSelection: false,
+				scrollBeyondLastLine: false,
+				theme: 'vs-dark',
+				fontSize: 16,
+				minimap: {
+					enabled: false
 				},
-				Down: function(editor) {
-					// if (isSavedItemsPaneOpen) {
-					// return;
-					// }
-					CodeMirror.commands.goLineDown(editor);
-				},
-				'Shift-Tab': function(editor) {
-					CodeMirror.commands.indentAuto(editor);
-				},
-				'Shift-Ctrl-F': function(editor) {
-					if (options.prettier) {
-						prettify({
-							content: editor.getValue(),
-							type: options.prettierParser
-						}).then(formattedCode => editor.setValue(formattedCode));
-					}
-				},
-				Tab: function(editor) {
-					if (options.emmet) {
-						const didEmmetWork = editor.execCommand('emmetExpandAbbreviation');
-						if (didEmmetWork === true) {
-							return;
+				wordWrap: 'on',
+				fontLigatures: true
+			});
+			this.instance.onDidChangeModelContent(onChange);
+		} else {
+			this.instance = CodeMirror.fromTextArea(this.textarea, {
+				mode: options.mode,
+				lineNumbers: true,
+				lineWrapping: !!prefs.lineWrap,
+				autofocus: options.autofocus || false,
+				autoCloseBrackets: true,
+				autoCloseTags: !!prefs.autoCloseTags,
+				matchBrackets: true,
+				matchTags: options.matchTags || false,
+				tabMode: 'indent',
+				keyMap: prefs.keyMap || 'sublime',
+				theme: prefs.editorTheme || 'monokai',
+				lint: !!options.lint,
+				tabSize: +prefs.indentSize || 2,
+				indentWithTabs: prefs.indentWith !== 'spaces',
+				indentUnit: +prefs.indentSize,
+				foldGutter: true,
+				styleActiveLine: true,
+				gutters: options.gutters || [],
+				// cursorScrollMargin: '20', has issue with scrolling
+				profile: options.profile || '',
+				extraKeys: {
+					Up: function(editor) {
+						// Stop up/down keys default behavior when saveditempane is open
+						// if (isSavedItemsPaneOpen) {
+						// return;
+						// }
+						CodeMirror.commands.goLineUp(editor);
+					},
+					Down: function(editor) {
+						// if (isSavedItemsPaneOpen) {
+						// return;
+						// }
+						CodeMirror.commands.goLineDown(editor);
+					},
+					'Shift-Tab': function(editor) {
+						CodeMirror.commands.indentAuto(editor);
+					},
+					'Shift-Ctrl-F': function(editor) {
+						if (options.prettier) {
+							prettify({
+								content: editor.getValue(),
+								type: options.prettierParser
+							}).then(formattedCode => editor.setValue(formattedCode));
 						}
-					}
-					const input = $('[data-setting=indentWith]:checked');
-					if (
-						!editor.somethingSelected() &&
-						(!prefs.indentWith || prefs.indentWith === 'spaces')
-					) {
-						// softtabs adds spaces. This is required because by default tab key will put tab, but we want
-						// to indent with spaces if `spaces` is preferred mode of indentation.
-						// `somethingSelected` needs to be checked otherwise, all selected code is replaced with softtab.
-						CodeMirror.commands.insertSoftTab(editor);
-					} else {
-						CodeMirror.commands.defaultTab(editor);
-					}
-				},
-				Enter: 'emmetInsertLineBreak'
-			}
-		});
-		this.cm.on('focus', editor => {
-			if (typeof this.props.onFocus === 'function') this.props.onFocus(editor);
-		});
-		this.cm.on('change', this.props.onChange);
-		this.cm.addKeyMap({
-			'Ctrl-Space': 'autocomplete'
-		});
-		this.cm.on('inputRead', (editor, input) => {
-			// Process further If this has autocompletition on and also the global
-			// autocomplete setting is on.
-			if (!this.props.options.noAutocomplete && this.props.prefs.autoComplete) {
-				if (
-					input.origin !== '+input' ||
-					input.text[0] === ';' ||
-					input.text[0] === ',' ||
-					input.text[0] === ' '
-				) {
-					return;
+					},
+					Tab: function(editor) {
+						if (options.emmet) {
+							const didEmmetWork = editor.execCommand(
+								'emmetExpandAbbreviation'
+							);
+							if (didEmmetWork === true) {
+								return;
+							}
+							const input = $('[data-setting=indentWith]:checked');
+							if (
+								!editor.somethingSelected() &&
+								(!prefs.indentWith || prefs.indentWith === 'spaces')
+							) {
+								// softtabs adds spaces. This is required because by default tab key will put tab, but we want
+								// to indent with spaces if `spaces` is preferred mode of indentation.
+								// `somethingSelected` needs to be checked otherwise, all selected code is replaced with softtab.
+								CodeMirror.commands.insertSoftTab(editor);
+							} else {
+								CodeMirror.commands.defaultTab(editor);
+							}
+						}
+					},
+					Enter: 'emmetInsertLineBreak'
 				}
-				CodeMirror.commands.autocomplete(this.cm, null, {
-					completeSingle: false
-				});
-			}
-		});
-		this.props.onCreation(this.cm);
+			});
+			this.instance.on('focus', editor => {
+				if (typeof this.props.onFocus === 'function')
+					this.props.onFocus(editor);
+			});
+			this.instance.on('change', this.props.onChange);
+			this.instance.addKeyMap({
+				'Ctrl-Space': 'autocomplete'
+			});
+			this.instance.on('inputRead', (editor, input) => {
+				// Process further If this has autocompletition on and also the global
+				// autocomplete setting is on.
+				if (
+					!this.props.options.noAutocomplete &&
+					this.props.prefs.autoComplete
+				) {
+					if (
+						input.origin !== '+input' ||
+						input.text[0] === ';' ||
+						input.text[0] === ',' ||
+						input.text[0] === ' '
+					) {
+						return;
+					}
+					CodeMirror.commands.autocomplete(editor, null, {
+						completeSingle: false
+					});
+				}
+			});
+		}
+
+		this.props.onCreation(this.instance);
 	}
 
 	render() {

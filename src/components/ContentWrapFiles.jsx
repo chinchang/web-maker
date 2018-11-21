@@ -638,6 +638,7 @@ export default class ContentWrapFiles extends Component {
 							</div>
 						</div>
 						<UserCodeMirror
+							mode={'monaco'}
 							value={
 								this.state.selectedFile ? this.state.selectedFile.content : ''
 							}

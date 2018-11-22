@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import UserCodeMirror from './UserCodeMirror.jsx';
+import CodeEditor from './CodeEditor.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { log, writeFile, loadJS, getCompleteHtml } from '../utils';
@@ -13,7 +13,7 @@ import { PreviewDimension } from './PreviewDimension.jsx';
 const minCodeWrapSize = 33;
 
 /* global htmlCodeEl
-*/
+ */
 
 export default class ContentWrap extends Component {
 	constructor(props) {
@@ -708,7 +708,7 @@ export default class ContentWrap extends Component {
 								/>
 							</div>
 						</div>
-						<UserCodeMirror
+						<CodeEditor
 							options={{
 								mode: 'htmlmixed',
 								profile: 'xhtml',
@@ -775,7 +775,7 @@ export default class ContentWrap extends Component {
 								/>
 							</div>
 						</div>
-						<UserCodeMirror
+						<CodeEditor
 							options={{
 								mode: 'css',
 								gutters: [
@@ -830,7 +830,7 @@ export default class ContentWrap extends Component {
 								/>
 							</div>
 						</div>
-						<UserCodeMirror
+						<CodeEditor
 							options={{
 								mode: 'javascript',
 								gutters: [

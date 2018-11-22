@@ -1931,10 +1931,6 @@ while the theme CSS file is loading */
 .tabs__tabpanel-wrap {
 	flex: 1;
 }
-.monaco-editor {
-	width: 100%;
-	height: 300px !important; /* 25px for header */
-}
 
 @media screen and (max-width: 600px) {
 	body {

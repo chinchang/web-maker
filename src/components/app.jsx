@@ -133,7 +133,8 @@ export default class App extends Component {
 			layoutMode: 2,
 			isJs13kModeOn: false,
 			autoCloseTags: true,
-			lang: 'en'
+			lang: 'en',
+			isMonacoEditorOn: false
 		};
 		this.prefs = {};
 
@@ -1537,7 +1538,7 @@ export default class App extends Component {
 						<input
 							type="hidden"
 							name="data"
-							value="{&quot;title&quot;: &quot;New Pen!&quot;, &quot;html&quot;: &quot;<div>Hello, World!</div>&quot;}"
+							value='{"title": "New Pen!", "html": "<div>Hello, World!</div>"}'
 						/>
 					</form>
 
@@ -1674,7 +1675,7 @@ export default class App extends Component {
 						<input
 							type="hidden"
 							name="data"
-							value="{&quot;title&quot;: &quot;New Pen!&quot;, &quot;html&quot;: &quot;<div>Hello, World!</div>&quot;}"
+							value='{"title": "New Pen!", "html": "<div>Hello, World!</div>"}'
 						/>
 					</form>
 				</div>

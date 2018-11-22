@@ -151,6 +151,13 @@ export default class Settings extends Component {
 					<TabPanel label="Editor">
 						<div>
 							<div>
+								<CheckboxSetting
+									title="Use experimental Monaco editor"
+									label="Use Monaco Editor"
+									pref={prefs.isMonacoEditorOn}
+									onChange={e => this.updateSetting(e, 'isMonacoEditorOn')}
+								/>
+								<Divider />
 								<div class="line">
 									<span>Default Preprocessors</span>
 									<div class="flex">
@@ -321,7 +328,8 @@ export default class Settings extends Component {
 							Make the app ready to build some games for{' '}
 							<a href="https://js13kgames.com/" target="_blank" rel="noopener">
 								Js13kGames
-							</a>.
+							</a>
+							.
 						</p>
 					</TabPanel>
 					<TabPanel label="Advanced">

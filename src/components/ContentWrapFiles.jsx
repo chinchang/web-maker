@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import UserCodeMirror from './UserCodeMirror';
+import CodeEditor from './CodeEditor';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { log, loadJS } from '../utils';
 
@@ -24,7 +24,7 @@ import { PreviewDimension } from './PreviewDimension';
 const minCodeWrapSize = 33;
 
 /* global htmlCodeEl
-*/
+ */
 export default class ContentWrapFiles extends Component {
 	constructor(props) {
 		super(props);
@@ -86,7 +86,7 @@ export default class ContentWrapFiles extends Component {
 			this.state.selectedFile &&
 			this.fileBuffers[this.state.selectedFile.path]
 		) {
-			this.fileBuffers[this.state.selectedFile.path].setValue(
+			this.fileBuffers[this.state.selectedFile.path].model.setValue(
 				getFileFromPath(
 					nextProps.currentItem.files,
 					this.state.selectedFile.path
@@ -168,32 +168,43 @@ export default class ContentWrapFiles extends Component {
 			CodeMirror.autoLoadMode(this.cm, mode);
 		}
 		if (mime === 'application/json') {
-			mime = 'application/ld+json';
+			mime = this.props.prefs.isMonacoEditorOn ? 'json' : 'application/ld+json';
 		}
-		this.fileBuffers[file.path] = CodeMirror.Doc(
-			file.content || '',
-			detectedMode ? mime : 'text/plain'
-		);
+		if (!this.props.prefs.isMonacoEditorOn) {
+			this.fileBuffers[file.path] = {
+				model: CodeMirror.Doc(
+					file.content || '',
+					detectedMode ? mime : 'text/plain'
+				)
+			};
+		} else {
+			this.fileBuffers[file.path] = {
+				model: monaco.editor.createModel(
+					file.content || '',
+					mime || 'javascript'
+				)
+			};
+		}
 	}
 
 	onHtmlCodeChange(editor, change) {
-		this.cmCodes.html = editor.getValue();
+		this.cmCodes.html = this.editor.getValue();
 
 		this.props.onCodeChange(
 			this.state.selectedFile,
 			this.cmCodes.html,
-			change.origin !== 'setValue'
+			change ? change.origin !== 'setValue' : true
 		);
-		this.onCodeChange(editor, change);
+		this.onCodeChange(change);
 	}
 
-	onCodeChange(editor, change) {
+	onCodeChange(change) {
 		clearTimeout(this.updateTimer);
 
 		this.updateTimer = setTimeout(() => {
 			// This is done so that multiple simultaneous setValue don't trigger too many preview refreshes
 			// and in turn too many file writes on a single file (eg. preview.html).
-			if (change.origin !== 'setValue') {
+			if (change ? change.origin !== 'setValue' : true) {
 				// Specifically checking for false so that the condition doesn't get true even
 				// on absent key - possible when the setting key hasn't been fetched yet.
 				if (this.prefs.autoPreview !== false) {
@@ -249,7 +260,9 @@ export default class ContentWrapFiles extends Component {
 		}
 	}
 	cleanupErrors() {
-		this.cm.clearGutter('error-gutter');
+		if (!this.props.prefs.isMonacoEditorOn) {
+			// this.editor.clearGutter('error-gutter');
+		}
 	}
 
 	showErrors(lang, errors) {
@@ -305,9 +318,11 @@ export default class ContentWrapFiles extends Component {
 	}
 	refreshEditor() {
 		if (this.state.selectedFile) {
-			this.cm.setValue(this.state.selectedFile.content);
+			this.editor.setValue(this.state.selectedFile.content);
 		}
-		this.cm.refresh();
+		if (this.editor) {
+			this.editor.refresh();
+		}
 		window.cm = this.cm;
 
 		this.clearConsole();
@@ -401,6 +416,7 @@ export default class ContentWrapFiles extends Component {
 			}, 1);
 		}
 		this.updateSplits();
+		// this.editor.refresh();
 	}
 	mainSplitDragHandler() {
 		this.previewDimension.update({
@@ -498,15 +514,24 @@ export default class ContentWrapFiles extends Component {
 			this.props.onFolderSelect(file);
 			return;
 		}
+
+		if (!this.fileBuffers[file.path]) {
+			this.createEditorDoc(file);
+		}
+
+		const currentState = this.editor.saveViewState();
+		if (currentState && this.state.selectedFile) {
+			this.fileBuffers[this.state.selectedFile.path].state = currentState;
+		}
 		this.setState({
 			editorOptions: this.getEditorOptions(file.name),
 			selectedFile: file
 		});
-		if (!this.fileBuffers[file.path]) {
-			this.createEditorDoc(file);
-		}
-		this.cm.swapDoc(this.fileBuffers[file.path]);
 
+		this.editor.setModel(this.fileBuffers[file.path].model);
+		if (this.fileBuffers[file.path].state) {
+			this.editor.restoreViewState(this.fileBuffers[file.path].state);
+		}
 		// var cmMode = 'html';
 		// if (file.name.match(/\.css$/)) {
 		// 	this.updateCssMode('css');
@@ -516,7 +541,7 @@ export default class ContentWrapFiles extends Component {
 		// 	this.updateCssMode('html');
 		// }
 		// this.cm.setValue(file.content || '');
-		this.cm.focus();
+		this.editor.focus();
 	}
 
 	onMessageFromConsole() {
@@ -637,15 +662,15 @@ export default class ContentWrapFiles extends Component {
 								/>
 							</div>
 						</div>
-						<UserCodeMirror
-							mode={'monaco'}
+						<CodeEditor
+							mode={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
 							value={
 								this.state.selectedFile ? this.state.selectedFile.content : ''
 							}
 							options={this.state.editorOptions}
 							prefs={this.props.prefs}
 							onChange={this.onHtmlCodeChange.bind(this)}
-							onCreation={editor => (this.cm = editor)}
+							ref={editor => (this.editor = editor)}
 							onFocus={this.editorFocusHandler.bind(this)}
 						/>
 					</div>

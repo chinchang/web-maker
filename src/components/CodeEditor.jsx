@@ -66,21 +66,28 @@ export default class CodeEditor extends Component {
 		if (nextProps.prefs !== this.props.prefs) {
 			const { prefs } = nextProps;
 
-			this.instance.setOption('indentWithTabs', prefs.indentWith !== 'spaces');
-			this.instance.setOption(
-				'blastCode',
-				prefs.isCodeBlastOn ? { effect: 2, shake: false } : false
-			);
-			this.instance.setOption('theme', prefs.editorTheme);
+			if (this.props.mode === 'monaco') {
+				this.instance.updateOptions({ fontSize: prefs.fontSize });
+			} else {
+				this.instance.setOption(
+					'indentWithTabs',
+					prefs.indentWith !== 'spaces'
+				);
+				this.instance.setOption(
+					'blastCode',
+					prefs.isCodeBlastOn ? { effect: 2, shake: false } : false
+				);
+				this.instance.setOption('theme', prefs.editorTheme);
 
-			this.instance.setOption('indentUnit', +prefs.indentSize);
-			this.instance.setOption('tabSize', +prefs.indentSize);
+				this.instance.setOption('indentUnit', +prefs.indentSize);
+				this.instance.setOption('tabSize', +prefs.indentSize);
 
-			this.instance.setOption('keyMap', prefs.keymap);
-			this.instance.setOption('lineWrapping', prefs.lineWrap);
-			this.instance.setOption('lineWrapping', prefs.autoCloseTags);
+				this.instance.setOption('keyMap', prefs.keymap);
+				this.instance.setOption('lineWrapping', prefs.lineWrap);
+				this.instance.setOption('lineWrapping', prefs.autoCloseTags);
 
-			this.instance.refresh();
+				this.instance.refresh();
+			}
 		}
 
 		return false;
@@ -129,6 +136,7 @@ export default class CodeEditor extends Component {
 					enabled: false
 				},
 				wordWrap: 'on',
+				renderWhitespace: 'all',
 				fontLigatures: true,
 				automaticLayout: true
 			});

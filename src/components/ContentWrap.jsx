@@ -190,12 +190,10 @@ export default class ContentWrap extends Component {
 		if (!this.props.prefs.preserveConsoleLogs) {
 			this.clearConsole();
 		}
-		this.cleanupErrors('html');
 		this.cleanupErrors('css');
 		this.cleanupErrors('js');
 
 		var currentCode = {
-			html: this.cmCodes.html,
 			css: this.cmCodes.css,
 			js: this.cmCodes.js
 		};
@@ -209,7 +207,6 @@ export default class ContentWrap extends Component {
 		// change the styles inside the iframe.
 		if (
 			!isForced &&
-			currentCode.html === this.codeInPreview.html &&
 			currentCode.js === this.codeInPreview.js
 		) {
 			computeCss(
@@ -268,13 +265,10 @@ export default class ContentWrap extends Component {
 		return !!item.title;
 	}
 	refreshEditor() {
-		this.cmCodes.html = this.props.currentItem.html;
 		this.cmCodes.css = this.props.currentItem.css;
 		this.cmCodes.js = this.props.currentItem.js;
-		this.cm.html.setValue(this.cmCodes.html || '');
 		this.cm.css.setValue(this.cmCodes.css || '');
 		this.cm.js.setValue(this.cmCodes.js || '');
-		this.cm.html.refresh();
 		this.cm.css.refresh();
 		this.cm.js.refresh();
 
@@ -292,9 +286,7 @@ export default class ContentWrap extends Component {
 		if (!this.cm) {
 			return;
 		}
-		htmlCodeEl.querySelector(
-			'.CodeMirror'
-		).style.fontSize = cssCodeEl.querySelector(
+		cssCodeEl.querySelector(
 			'.CodeMirror'
 		).style.fontSize = jsCodeEl.querySelector(
 			'.CodeMirror'
@@ -319,7 +311,7 @@ export default class ContentWrap extends Component {
 		// ]('hide');
 		this.consoleCm.setOption('theme', prefs.editorTheme);
 
-		['html', 'js', 'css'].forEach(type => {
+		['js', 'css'].forEach(type => {
 			this.cm[type].setOption('indentWithTabs', prefs.indentWith !== 'spaces');
 			this.cm[type].setOption(
 				'blastCode',
@@ -368,7 +360,7 @@ export default class ContentWrap extends Component {
 		) {
 			codeWrapEl.classList.remove('is-minimized');
 			codeWrapEl.classList.remove('is-maximized');
-			this.codeSplitInstance.setSizes([0, 30, 70]);
+			this.codeSplitInstance.setSizes([85, 4, 11]);
 		} else {
 			const id = parseInt(codeWrapEl.dataset.codeWrapId, 10);
 			var arr = [
@@ -433,7 +425,7 @@ export default class ContentWrap extends Component {
 		if (this.props.currentItem && this.props.currentItem.sizes) {
 			return this.props.currentItem.sizes;
 		}
-		return [0, 30, 70];
+		return [85, 4, 11];
 	}
 
 	mainSplitDragEndHandler() {
@@ -502,7 +494,6 @@ export default class ContentWrap extends Component {
 	updateHtmlMode(value) {
 		this.props.onCodeModeChange('html', value);
 		this.props.currentItem.htmlMode = value;
-		this.cm.html.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(
 			this.cm.html,
 			modes[value].cmPath || modes[value].cmMode
@@ -711,11 +702,10 @@ export default class ContentWrap extends Component {
 					onSplit={splitInstance => (this.codeSplitInstance = splitInstance)}
 				>
 					<div
-						data-code-wrap-id="0"
-						id="htmlCodeEl"
-						data-type="html"
+						data-code-wrap-id="2"
+						id="jsCodeEl"
+						data-type="js"
 						class="code-wrap"
-						style="display: none"
 						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 					>
 						<div
@@ -723,20 +713,20 @@ export default class ContentWrap extends Component {
 							title="Double click to toggle code pane"
 							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
 						>
-							<label class="btn-group" dropdow title="Click to change">
-								<span class="code-wrap__header-label">
-									{modes[this.props.currentItem.htmlMode || 'html'].label}
-								</span>
-								<span class="caret" />
+							<label class="btn-group" title="Click to change">
+								<span class="code-wrap__header-label">ZenUML</span>
+								<span class="caret" style="display:none" />
 								<select
-									data-type="html"
+									data-type="js"
 									class="js-mode-select  hidden-select"
+									style="display: none"
 									onChange={this.codeModeChangeHandler.bind(this)}
-									value={this.props.currentItem.htmlMode}
+									value={this.props.currentItem.jsMode}
 								>
-									<option value="html">HTML</option>
-									<option value="markdown">Markdown</option>
-									<option value="jade">Pug</option>
+									<option value="js">JS</option>
+									<option value="coffee">CoffeeScript</option>
+									<option value="es6">ES6 (Babel)</option>
+									<option value="typescript">TypeScript</option>
 								</select>
 							</label>
 							<div class="code-wrap__header-right-options">
@@ -759,10 +749,12 @@ export default class ContentWrap extends Component {
 								emmet: true
 							}}
 							prefs={this.props.prefs}
-							onChange={this.onHtmlCodeChange.bind(this)}
-							onCreation={el => (this.cm.html = el)}
+							autoComplete={this.props.prefs.autoComplete}
+							onChange={this.onJsCodeChange.bind(this)}
+							onCreation={el => (this.cm.js = el)}
 							onFocus={this.editorFocusHandler.bind(this)}
 						/>
+						{/* Inlet(scope.cm.js); */}
 					</div>
 					<div
 						data-code-wrap-id="1"
@@ -833,34 +825,18 @@ export default class ContentWrap extends Component {
 						/>
 					</div>
 					<div
-						data-code-wrap-id="2"
-						id="jsCodeEl"
-						data-type="js"
+						data-code-wrap-id="0"
+						id="htmlCodeEl"
+						data-type="html"
 						class="code-wrap"
 						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 					>
 						<div
 							class="js-code-wrap__header  code-wrap__header"
-							title="Double click to toggle code pane"
 							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
 						>
-							<label class="btn-group" title="Click to change">
-								<span class="code-wrap__header-label">
-									{modes[this.props.currentItem.jsMode || 'js'].label}
-								</span>
-								<span class="caret" style="display:none" />
-								<select
-									data-type="js"
-									class="js-mode-select  hidden-select"
-									style="display: none"
-									onChange={this.codeModeChangeHandler.bind(this)}
-									value={this.props.currentItem.jsMode}
-								>
-									<option value="js">JS</option>
-									<option value="coffee">CoffeeScript</option>
-									<option value="es6">ES6 (Babel)</option>
-									<option value="typescript">TypeScript</option>
-								</select>
+							<label class="btn-group" dropdow title="Click to change">
+								About
 							</label>
 							<div class="code-wrap__header-right-options">
 								<a
@@ -870,30 +846,14 @@ export default class ContentWrap extends Component {
 								/>
 							</div>
 						</div>
-						<UserCodeMirror
-							options={{
-								mode: 'javascript',
-								gutters: [
-									'error-gutter',
-									'CodeMirror-linenumbers',
-									'CodeMirror-foldgutter'
-								],
-								prettier: true,
-								prettierParser: 'js'
-							}}
-							prefs={this.props.prefs}
-							autoComplete={this.props.prefs.autoComplete}
-							onChange={this.onJsCodeChange.bind(this)}
-							onCreation={el => (this.cm.js = el)}
-							onFocus={this.editorFocusHandler.bind(this)}
-						/>
-						{/* Inlet(scope.cm.js); */}
+						<div>
+							Welcome to ZenUML.
+						</div>
 					</div>
 				</SplitPane>
 				<div class="demo-side" id="js-demo-side" style="">
 					<iframe
 						ref={el => (this.frame = el)}
-						src="about://blank"
 						frameborder="0"
 						id="demo-frame"
 						allowfullscreen

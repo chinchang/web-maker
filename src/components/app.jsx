@@ -281,8 +281,8 @@ export default class App extends Component {
 				':' +
 				d.getMinutes(),
 			html: '',
-			css: '',
-			js: '',
+			css: '/* Prefix your CSS rules with `#diagram` */',
+			js: '// Your ZenUML code here',
 			externalLibs: { js: '', css: '' },
 			layoutMode: this.state.currentLayoutMode
 		}).then(() => this.refreshEditor());

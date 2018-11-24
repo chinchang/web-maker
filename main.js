@@ -1,6 +1,8 @@
 /* eslint-disable sort-imports */
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { trackEvent } from './src/analytics';
+
 
 import { Version, SeqDiagram, Store } from 'vue-sequence'
 import 'vue-sequence/dist/vue-sequence.css'
@@ -28,9 +30,10 @@ window.saveAs = saveAs.saveAs
 
 function downloadPng() {
 	var node = document.getElementById('diagram')
-	domtoimage.toBlob(document.getElementById('diagram'))
+	domtoimage.toBlob(document.getElementById('diagram'), {bgcolor: 'white'})
 		.then(function (blob) {
 			window.saveAs(blob, 'zenuml.png');
+			trackEvent('ui', 'downloadPng');
 		});
 }
 window.downloadPng = downloadPng

@@ -15,10 +15,15 @@ var packageJson = JSON.parse(fs.readFileSync('./package.json'));
 
 function minifyJs(fileName) {
 	const content = fs.readFileSync(fileName, 'utf8');
-	const minifiedContent = babelMinify(content).code;
+	const minifiedContent = babelMinify(
+		content,
+		{ mangle: content.length < 700000 },
+		{ sourceMaps: false }
+	).code;
 	fs.writeFileSync(fileName, minifiedContent);
 	console.log(
-		`[${fileName}]: ${content.length}kb -> ${minifiedContent.length}kb`
+		`[${fileName}]: ${content.length / 1024}M -> ${minifiedContent.length /
+			1024}M`
 	);
 }
 gulp.task('runWebpack', function() {
@@ -26,20 +31,23 @@ gulp.task('runWebpack', function() {
 });
 gulp.task('copyFiles', function() {
 	return merge(
-	gulp
-		.src('src/lib/codemirror/theme/*')
-		.pipe(gulp.dest('app/lib/codemirror/theme')),
-	gulp
-		.src('src/lib/codemirror/mode/**/*')
-		.pipe(gulp.dest('app/lib/codemirror/mode')),
-	gulp.src('src/lib/transpilers/*').pipe(gulp.dest('app/lib/transpilers')),
-	gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib')),
-	gulp.src('icons/*').pipe(gulp.dest('app/icons')),
-	gulp.src(['src/preview.html',
+		gulp
+			.src('src/lib/codemirror/theme/*')
+			.pipe(gulp.dest('app/lib/codemirror/theme')),
+		gulp
+			.src('src/lib/codemirror/mode/**/*')
+			.pipe(gulp.dest('app/lib/codemirror/mode')),
+		gulp.src('src/lib/transpilers/*').pipe(gulp.dest('app/lib/transpilers')),
+		gulp.src('src/lib/prettier-worker.js').pipe(gulp.dest('app/lib/')),
+		gulp.src('src/lib/prettier/*').pipe(gulp.dest('app/lib/prettier')),gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib')),
+		gulp.src('icons/*').pipe(gulp.dest('app/icons')),gulp.src('src/assets/*').pipe(gulp.dest('app/assets')),
+		gulp.src('src/templates/*').pipe(gulp.dest('app/templates')),
+		gulp
+			.src([
+				'src/preview.html',
 				'src/detached-window.js',
 				'src/icon-48.png',
 				'src/icon-128.png',
-				'src/patreon.png',
 				'manifest.json'
 			]).pipe(gulp.dest('app')),
 	  gulp.src('build/bundle.*.js')
@@ -149,7 +157,7 @@ gulp.task('generate-service-worker', function(callback) {
 });
 
 gulp.task('packageExtension', function() {
-	childProcess.execSync('cp -R app/ extension/');
+	childProcess.execSync('cp -R app/ extension');
 	childProcess.execSync('cp src/manifest.json extension');
 	childProcess.execSync('cp src/options.js extension');
 	childProcess.execSync('cp src/options.html extension');

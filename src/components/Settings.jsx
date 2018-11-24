@@ -216,6 +216,13 @@ export default class Settings extends Component {
 							onChange={this.updateSetting.bind(this)}
 						/>
 						<CheckboxSetting
+							name="autoCloseTags"
+							title="Add the closing tag automatically on seeing an opening tag in HTML"
+							label="Auto-close tags"
+							pref={this.props.prefs.autoCloseTags}
+							onChange={this.updateSetting.bind(this)}
+						/>
+						<CheckboxSetting
 							name="refreshOnResize"
 							title="Your Preview will refresh when you resize the preview split"
 							label="Refresh preview on resize"
@@ -286,6 +293,14 @@ export default class Settings extends Component {
 						pref={this.props.prefs.isCodeBlastOn}
 						onChange={this.updateSetting.bind(this)}
 					/>
+
+					<CheckboxSetting
+						title="Get ready to build some games at JS13KGames"
+						label="Js13kGames Mode"
+						name="isJs13kModeOn"
+						pref={this.props.prefs.isJs13kModeOn}
+						onChange={this.updateSetting.bind(this)}
+					/>
 				</p>
 
 				<hr />
@@ -296,7 +311,7 @@ export default class Settings extends Component {
 						class="line"
 						title="This timeout is used to indentify a possible infinite loop and prevent it."
 					>
-						Maximum time allowed in a loop iteration
+						Maximum time allowed in a loop iteration{' '}
 						<input
 							type="number"
 							value={this.props.prefs.infiniteLoopTimeout}

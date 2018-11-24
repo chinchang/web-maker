@@ -58,7 +58,7 @@
 		"path": "^0.12.7",
 		"preact-cli": "^2.1.0",
 		"preact-render-spy": "^1.2.1",
-		"prettier": "^1.10.2",
+		"prettier": "^1.15.2",
 		"require": "^2.4.20",
 		"run-sequence": "^2.2.1",
 		"style-loader": "^0.20.3",
@@ -75,7 +75,8 @@
 		"codemirror": "^5.37.0",
 		"copy-webpack-plugin": "^4.5.1",
 		"esprima": "^4.0.0",
-		"firebase": "^5.0.4",
+		"firebase": "^5.5.8",
+		"jszip": "^3.1.5",
 		"preact": "^8.2.6",
 		"preact-compat": "^3.17.0",
 		"preact-portal": "^1.1.3",
@@ -124,7 +125,8 @@
 		"uml",
 		"sequence diagram",
 		"web",
-		"editor"
+		"editor",
+		"offline"
 	],
 	"author": "Peng Xiao",
 	"license": "MIT",

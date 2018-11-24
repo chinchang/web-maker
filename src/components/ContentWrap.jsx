@@ -6,13 +6,13 @@ import { log, writeFile, loadJS, getCompleteHtml } from '../utils';
 import { SplitPane } from './SplitPane.jsx';
 import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
-import CodeMirrorBox from './CodeMirrorBox';
+import { Console } from './Console';
 import { deferred } from '../deferred';
 import CssSettingsModal from './CssSettingsModal';
 const minCodeWrapSize = 33;
 
 /* global htmlCodeEl, jsCodeEl, cssCodeEl, logCountEl
-*/
+ */
 
 export default class ContentWrap extends Component {
 	constructor(props) {
@@ -52,7 +52,7 @@ export default class ContentWrap extends Component {
 	}
 	componentDidUpdate() {
 		// HACK: becuase its a DOM manipulation
-		window.logCountEl.textContent = this.logCount;
+		this.updateLogCount();
 
 		// log('🚀', 'didupdate', this.props.currentItem);
 		// if (this.isValidItem(this.props.currentItem)) {
@@ -223,8 +223,7 @@ export default class ContentWrap extends Component {
 				if (targetFrame.contentDocument.querySelector('#webmakerstyle')) {
 					targetFrame.contentDocument.querySelector(
 						'#webmakerstyle'
-					).textContent =
-						result.code || '';
+					).textContent = result.code || '';
 				}
 			});
 		} else {
@@ -332,6 +331,7 @@ export default class ContentWrap extends Component {
 
 			this.cm[type].setOption('keyMap', prefs.keymap);
 			this.cm[type].setOption('lineWrapping', prefs.lineWrap);
+			this.cm[type].setOption('autoCloseTags', prefs.autoCloseTags);
 			this.cm[type].refresh();
 		});
 	}
@@ -550,6 +550,7 @@ export default class ContentWrap extends Component {
 			trackEvent('ui', 'updateCodeMode', mode);
 		}
 	}
+
 	detachPreview() {
 		if (this.detachedWindow) {
 			this.detachedWindow.focus();
@@ -559,7 +560,6 @@ export default class ContentWrap extends Component {
 		const iframeWidth = iframeBounds.width;
 		const iframeHeight = iframeBounds.height;
 		document.body.classList.add('is-detached-mode');
-		window.globalConsoleContainerEl.insertBefore(window.consoleEl, null);
 
 		this.detachedWindow = window.open(
 			'./preview.html',
@@ -575,13 +575,18 @@ export default class ContentWrap extends Component {
 			if (this.detachedWindow && this.detachedWindow.closed) {
 				clearInterval(intervalID);
 				document.body.classList.remove('is-detached-mode');
-				$('#js-demo-side').insertBefore(window.consoleEl, null);
 				this.detachedWindow = null;
 				// Update main frame preview to get latest changes (which were not
 				// getting reflected while detached window was open)
 				this.setPreviewContent(true);
 			}
 		}, 500);
+	}
+
+	updateLogCount() {
+		if (window.logCountEl) {
+			logCountEl.textContent = this.logCount;
+		}
 	}
 
 	onMessageFromConsole() {
@@ -615,7 +620,7 @@ export default class ContentWrap extends Component {
 			this.consoleCm.scrollTo(0, Infinity);
 			this.logCount++;
 		});
-		logCountEl.textContent = this.logCount;
+		this.updateLogCount();
 
 		/* eslint-enable no-param-reassign */
 	}
@@ -639,7 +644,7 @@ export default class ContentWrap extends Component {
 	clearConsole() {
 		this.consoleCm.setValue('');
 		this.logCount = 0;
-		window.logCountEl.textContent = this.logCount;
+		this.updateLogCount();
 	}
 	clearConsoleBtnClickHandler() {
 		this.clearConsole();
@@ -749,6 +754,8 @@ export default class ContentWrap extends Component {
 								gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
 								noAutocomplete: true,
 								matchTags: { bothTags: true },
+								prettier: true,
+								prettierParser: 'html',
 								emmet: true
 							}}
 							prefs={this.props.prefs}
@@ -815,7 +822,9 @@ export default class ContentWrap extends Component {
 									'CodeMirror-linenumbers',
 									'CodeMirror-foldgutter'
 								],
-								emmet: true
+								emmet: true,
+								prettier: true,
+								prettierParser: 'css'
 							}}
 							prefs={this.props.prefs}
 							onChange={this.onCssCodeChange.bind(this)}
@@ -868,7 +877,9 @@ export default class ContentWrap extends Component {
 									'error-gutter',
 									'CodeMirror-linenumbers',
 									'CodeMirror-foldgutter'
-								]
+								],
+								prettier: true,
+								prettierParser: 'js'
 							}}
 							prefs={this.props.prefs}
 							autoComplete={this.props.prefs.autoComplete}
@@ -887,62 +898,16 @@ export default class ContentWrap extends Component {
 						id="demo-frame"
 						allowfullscreen
 					/>
-					<div
-						id="consoleEl"
-						class={`console ${this.state.isConsoleOpen ? '' : 'is-minimized'}`}
-						style="display: none"
-					>
-						<div id="consoleLogEl" class="console__log">
-							<div
-								class="js-console__header  code-wrap__header"
-								title="Double click to toggle console"
-								onDblClick={this.consoleHeaderDblClickHandler.bind(this)}
-							>
-								<span class="code-wrap__header-label">
-									Console (<span id="logCountEl">0</span>)
-								</span>
-								<div class="code-wrap__header-right-options">
-									<a
-										class="code-wrap__header-btn"
-										title="Clear console (CTRL + L)"
-										onClick={this.clearConsoleBtnClickHandler.bind(this)}
-									>
-										<svg>
-											<use xlinkHref="#cancel-icon" />
-										</svg>
-									</a>
-									<a
-										class="code-wrap__header-btn  code-wrap__collapse-btn"
-										title="Toggle console"
-										onClick={this.toggleConsole.bind(this)}
-									/>
-								</div>
-							</div>
-							<CodeMirrorBox
-								options={{
-									mode: 'javascript',
-									lineWrapping: true,
-									theme: 'monokai',
-									foldGutter: true,
-									readOnly: true,
-									gutters: ['CodeMirror-foldgutter']
-								}}
-								onCreation={el => (this.consoleCm = el)}
-							/>
-						</div>
-						<div
-							id="consolePromptEl"
-							class="console__prompt flex flex-v-center"
-						>
-							<svg width="18" height="18" fill="#346fd2">
-								<use xlinkHref="#chevron-icon" />
-							</svg>
-							<input
-								onKeyUp={this.evalConsoleExpr.bind(this)}
-								class="console-exec-input"
-							/>
-						</div>
-					</div>
+					<Console
+						isConsoleOpen={this.state.isConsoleOpen}
+						onConsoleHeaderDblClick={this.consoleHeaderDblClickHandler.bind(
+							this
+						)}
+						onClearConsoleBtnClick={this.clearConsoleBtnClickHandler.bind(this)}
+						toggleConsole={this.toggleConsole.bind(this)}
+						onEvalInputKeyup={this.evalConsoleExpr.bind(this)}
+						onReady={el => (this.consoleCm = el)}
+					/>
 					<CssSettingsModal
 						show={this.state.isCssSettingsModalOpen}
 						closeHandler={() =>

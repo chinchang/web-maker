@@ -32,6 +32,7 @@ import 'codemirror/keymap/vim.js';
 import 'code-blast-codemirror/code-blast.js';
 
 import emmet from '@emmetio/codemirror-plugin';
+import { prettify } from '../utils';
 
 emmet(CodeMirror);
 
@@ -80,6 +81,13 @@ export default class UserCodeMirror extends Component {
 				},
 				'Shift-Tab': function(editor) {
 					CodeMirror.commands.indentAuto(editor);
+				},
+				'Shift-Ctrl-F': function(editor) {
+					if (options.prettier) {
+						prettify(editor.getValue(), options.prettierParser).then(
+							formattedCode => editor.setValue(formattedCode)
+						);
+					}
 				},
 				Tab: function(editor) {
 					if (options.emmet) {

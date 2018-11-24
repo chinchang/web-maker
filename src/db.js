@@ -55,9 +55,10 @@ import { log } from './utils';
 			if (db) {
 				return resolve(db);
 			}
-			return firebase
-				.firestore()
-				.enablePersistence()
+			const _firestore = firebase.firestore();
+			_firestore.settings({ timestampsInSnapshots: true });
+			return _firestore
+				.enablePersistence({ experimentalTabSynchronization: true })
 				.then(function() {
 					// Initialize Cloud Firestore through firebase
 					db = firebase.firestore();

@@ -1,9 +1,10 @@
 import { h, Component } from 'preact';
-import { log, getHumanDate } from '../utils';
+import { log } from '../utils';
 import { trackEvent } from '../analytics';
 import { itemService } from '../itemService';
 import { alertsService } from '../notifications';
 import { deferred } from '../deferred';
+import { ItemTile } from './ItemTile';
 
 export default class SavedItemPane extends Component {
 	constructor(props) {
@@ -230,32 +231,12 @@ export default class SavedItemPane extends Component {
 						<div class="mt-1">No match found.</div>
 					) : null}
 					{this.state.filteredItems.map(item => (
-						<div
-							class="js-saved-item-tile saved-item-tile"
-							data-item-id={item.id}
+						<ItemTile
+							item={item}
 							onClick={this.itemClickHandler.bind(this, item)}
-						>
-							<div class="saved-item-tile__btns">
-								<a
-									class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium"
-									aria-label="Creates a duplicate of this creation (Ctrl/⌘ + F)"
-									onClick={this.itemForkBtnClickHandler.bind(this, item)}
-								>
-									Fork<span class="show-when-selected">(Ctrl/⌘ + F)</span>
-								</a>
-								<a
-									class="js-saved-item-tile__remove-btn  saved-item-tile__btn hint--left"
-									aria-label="Remove"
-									onClick={this.itemRemoveBtnClickHandler.bind(this, item)}
-								>
-									X
-								</a>
-							</div>
-							<h3 class="saved-item-tile__title">{item.title}</h3>
-							<span class="saved-item-tile__meta">
-								Last updated: {getHumanDate(item.updatedOn)}
-							</span>
-						</div>
+							onForkBtnClick={this.itemForkBtnClickHandler.bind(this, item)}
+							onRemoveBtnClick={this.itemRemoveBtnClickHandler.bind(this, item)}
+						/>
 					))}
 					{!this.items.length ? (
 						<h2 class="opacity--30">Nothing saved here.</h2>

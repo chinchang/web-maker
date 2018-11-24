@@ -6,7 +6,7 @@ import { shallow, deep } from 'preact-render-spy';
 
 describe('Initial Test of the Footer', () => {
 	test('Footer renders 1 link with an ID of notificationsBtn', () => {
-		const context = shallow(<Footer />);
+		const context = shallow(<Footer prefs={{}} />);
 		expect(context.find('#notificationsBtn').exists()).toBeTruthy();
 	});
 });

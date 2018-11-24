@@ -10073,9 +10073,9 @@ sequence-parser@^0.5.13:
   dependencies:
     antlr4 "^4.7.0"
 
-sequence-parser@^0.5.14:
-  version "0.5.14"
-  resolved "https://registry.yarnpkg.com/sequence-parser/-/sequence-parser-0.5.14.tgz#0c8e63808c0448b832aa8e15583599fd1c13de9d"
+sequence-parser@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/sequence-parser/-/sequence-parser-0.6.1.tgz#1c8813e874ef667e1bf31fbb2af01f7c9012fcd3"
   dependencies:
     antlr4 "^4.7.0"
 
@@ -11582,12 +11582,12 @@ vue-cli-plugin-apollo@^0.17.3:
     subscriptions-transport-ws "^0.9.15"
     ts-node "^7.0.1"
 
-vue-sequence@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/vue-sequence/-/vue-sequence-0.7.0.tgz#e5e1ea76a1bf6391cd0a6cffd0af79cb7569b489"
+vue-sequence@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/vue-sequence/-/vue-sequence-0.7.2.tgz#00f4094526550cccdf94075babfb9ca2a93ac0c8"
   dependencies:
     "@vue/cli" "^3.0.0-rc.5"
-    sequence-parser "^0.5.14"
+    sequence-parser "^0.6.1"
     vue "^2.5.16"
     vuex "^3.0.1"
 

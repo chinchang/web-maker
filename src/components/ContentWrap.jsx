@@ -488,35 +488,23 @@ export default class ContentWrap extends Component {
 	updateHtmlMode(value) {
 		this.props.onCodeModeChange('html', value);
 		this.props.currentItem.htmlMode = value;
-		this.cm.html.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(
-			this.cm.html,
-			modes[value].cmPath || modes[value].cmMode
-		);
+		this.cm.html.setLanguage(value);
 		return this.handleModeRequirements(value);
 	}
 	updateCssMode(value) {
 		this.props.onCodeModeChange('css', value);
 		this.props.currentItem.cssMode = value;
-		this.cm.css.setOption('mode', modes[value].cmMode);
 		this.cm.css.setOption('readOnly', modes[value].cmDisable);
 		window.cssSettingsBtn.classList[
 			modes[value].hasSettings ? 'remove' : 'add'
 		]('hide');
-		CodeMirror.autoLoadMode(
-			this.cm.css,
-			modes[value].cmPath || modes[value].cmMode
-		);
+		this.cm.css.setLanguage(value);
 		return this.handleModeRequirements(value);
 	}
 	updateJsMode(value) {
 		this.props.onCodeModeChange('js', value);
 		this.props.currentItem.jsMode = value;
-		this.cm.js.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(
-			this.cm.js,
-			modes[value].cmPath || modes[value].cmMode
-		);
+		this.cm.js.setLanguage(value);
 		return this.handleModeRequirements(value);
 	}
 	codeModeChangeHandler(e) {
@@ -709,6 +697,7 @@ export default class ContentWrap extends Component {
 							</div>
 						</div>
 						<CodeEditor
+							type={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
 							options={{
 								mode: 'htmlmixed',
 								profile: 'xhtml',
@@ -721,7 +710,7 @@ export default class ContentWrap extends Component {
 							}}
 							prefs={this.props.prefs}
 							onChange={this.onHtmlCodeChange.bind(this)}
-							onCreation={el => (this.cm.html = el)}
+							ref={editor => (this.cm.html = editor)}
 							onFocus={this.editorFocusHandler.bind(this)}
 						/>
 					</div>
@@ -776,6 +765,7 @@ export default class ContentWrap extends Component {
 							</div>
 						</div>
 						<CodeEditor
+							type={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
 							options={{
 								mode: 'css',
 								gutters: [
@@ -789,7 +779,7 @@ export default class ContentWrap extends Component {
 							}}
 							prefs={this.props.prefs}
 							onChange={this.onCssCodeChange.bind(this)}
-							onCreation={el => (this.cm.css = el)}
+							ref={editor => (this.cm.css = editor)}
 							onFocus={this.editorFocusHandler.bind(this)}
 						/>
 					</div>
@@ -831,6 +821,7 @@ export default class ContentWrap extends Component {
 							</div>
 						</div>
 						<CodeEditor
+							type={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
 							options={{
 								mode: 'javascript',
 								gutters: [
@@ -844,7 +835,7 @@ export default class ContentWrap extends Component {
 							prefs={this.props.prefs}
 							autoComplete={this.props.prefs.autoComplete}
 							onChange={this.onJsCodeChange.bind(this)}
-							onCreation={el => (this.cm.js = el)}
+							ref={editor => (this.cm.js = editor)}
 							onFocus={this.editorFocusHandler.bind(this)}
 						/>
 						{/* Inlet(scope.cm.js); */}

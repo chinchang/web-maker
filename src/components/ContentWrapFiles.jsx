@@ -188,7 +188,7 @@ export default class ContentWrapFiles extends Component {
 	}
 
 	onHtmlCodeChange(editor, change) {
-		this.cmCodes.html = this.editor.getValue();
+		this.cmCodes.html = editor.getValue();
 
 		this.props.onCodeChange(
 			this.state.selectedFile,
@@ -663,7 +663,7 @@ export default class ContentWrapFiles extends Component {
 							</div>
 						</div>
 						<CodeEditor
-							mode={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
+							type={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
 							value={
 								this.state.selectedFile ? this.state.selectedFile.content : ''
 							}

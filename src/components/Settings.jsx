@@ -11,6 +11,10 @@ function CheckboxSetting({ label, onChange, pref }) {
 		</Switch>
 	);
 }
+function HelpText({ children }) {
+	return <p class="help-text">{children}</p>;
+}
+
 export default class Settings extends Component {
 	updateSetting(e, settingName) {
 		const value =
@@ -34,47 +38,45 @@ export default class Settings extends Component {
 							pref={prefs.preserveLastCode}
 							onChange={e => this.updateSetting(e, 'preserveLastCode')}
 						/>
-						<p class="help-text">
-							Loads the last open creation when app starts
-						</p>
+						<HelpText>Loads the last open creation when app starts</HelpText>
 						<Divider />
 						<CheckboxSetting
 							label="Fast/light version"
 							pref={prefs.lightVersion}
 							onChange={e => this.updateSetting(e, 'lightVersion')}
 						/>
-						<p class="help-text">
+						<HelpText>
 							Switch to lighter version for better performance. Removes things
 							like blur etc.
-						</p>
+						</HelpText>
 						<Divider />
 						<CheckboxSetting
 							label="Auto-preview"
 							pref={prefs.autoPreview}
 							onChange={e => this.updateSetting(e, 'autoPreview')}
 						/>
-						<p class="help-text">
+						<HelpText>
 							Refreshes the preview as you code. Otherwise use the 'Run' button
-						</p>
+						</HelpText>
 						<Divider />
 						<CheckboxSetting
 							label="Auto-save"
 							pref={prefs.autoSave}
 							onChange={e => this.updateSetting(e, 'autoSave')}
 						/>
-						<p class="help-text">
+						<HelpText>
 							Auto-save keeps saving your code at regular intervals after you
 							hit save manually the first time
-						</p>
+						</HelpText>
 						<Divider />
 						<CheckboxSetting
 							label="Refresh preview on resize"
 							pref={prefs.refreshOnResize}
 							onChange={e => this.updateSetting(e, 'refreshOnResize')}
 						/>
-						<p class="help-text">
+						<HelpText>
 							Preview will refresh when you resize the preview pane
-						</p>
+						</HelpText>
 						<div class="show-when-extension">
 							<Divider />
 							<CheckboxSetting
@@ -83,10 +85,10 @@ export default class Settings extends Component {
 								onChange={e => this.updateSetting(e, 'replaceNewTab')}
 								showWhenExtension
 							/>
-							<p class="help-text">
+							<HelpText>
 								Turning this on will start showing Web Maker in every new tab
 								you open
-							</p>
+							</HelpText>
 						</div>
 						<Divider />
 						<CheckboxSetting
@@ -94,9 +96,9 @@ export default class Settings extends Component {
 							pref={prefs.preserveConsoleLogs}
 							onChange={e => this.updateSetting(e, 'preserveConsoleLogs')}
 						/>
-						<p class="help-text">
+						<HelpText>
 							Preserves the console logs across your preview refreshes
-						</p>
+						</HelpText>
 					</TabPanel>
 					<TabPanel label="Indentation">
 						<div class="line">
@@ -157,6 +159,10 @@ export default class Settings extends Component {
 									pref={prefs.isMonacoEditorOn}
 									onChange={e => this.updateSetting(e, 'isMonacoEditorOn')}
 								/>
+								<HelpText>
+									(Experimental) Switches from CodeMirror to Monaco. Many other
+									settings might not be available in Monaco.
+								</HelpText>
 								<Divider />
 								<div class="line">
 									<span>Default Preprocessors</span>
@@ -315,22 +321,20 @@ export default class Settings extends Component {
 							pref={prefs.isCodeBlastOn}
 							onChange={e => this.updateSetting(e, 'isCodeBlastOn')}
 						/>
-						<p class="help-text">
-							Enjoy wonderful particle blasts while you type
-						</p>
+						<HelpText>Enjoy wonderful particle blasts while you type</HelpText>
 						<Divider />
 						<CheckboxSetting
 							label="Js13kGames Mode"
 							pref={prefs.isJs13kModeOn}
 							onChange={e => this.updateSetting(e, 'isJs13kModeOn')}
 						/>
-						<p class="help-text">
+						<HelpText>
 							Make the app ready to build some games for{' '}
 							<a href="https://js13kgames.com/" target="_blank" rel="noopener">
 								Js13kGames
 							</a>
 							.
-						</p>
+						</HelpText>
 					</TabPanel>
 					<TabPanel label="Advanced">
 						<div>
@@ -346,11 +350,11 @@ export default class Settings extends Component {
 									ms
 								</div>
 							</label>
-							<p class="help-text">
+							<HelpText>
 								If any loop iteration takes more than the defined time, it is
 								detected as a potential infinite loop and further iterations are
 								stopped.
-							</p>
+							</HelpText>
 						</div>
 						<Divider />
 

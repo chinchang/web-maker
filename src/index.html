@@ -67,6 +67,7 @@
 					}
 
 				</style>
+
 	</head>
 
 	<body>
@@ -74,11 +75,20 @@
 		<%= htmlWebpackPlugin.options.ssr({
 			url: '/'
 		}) %>
-			<script defer src="<%= htmlWebpackPlugin.files.chunks['bundle'].entry %>"></script>
-			<script>
-				window.fetch || document.write('<script src="<%= htmlWebpackPlugin.files.chunks["polyfills"].entry %>"><\/script>')
+		<script defer src="<%= htmlWebpackPlugin.files.chunks['bundle'].entry %>"></script>
+		<script>
+			window.fetch || document.write('<script src="<%= htmlWebpackPlugin.files.chunks["polyfills"].entry %>"><\/script>')
 
-			</script>
+		</script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.js"></script>
+		<script>
+			const BadgeUp = require(['@badgeup/badgeup-browser-client'], function () {
+				const badgeup = new BadgeUp({
+					apiKey: 'eyJhY2NvdW50SWQiOiJ6OTZ4bnl0Z2JpIiwiYXBwbGljYXRpb25JZCI6InYzNnh6OHRnc20iLCJrZXkiOiJjanAyaXVjZTE2eTU4c2NhODluMmpid2EwIn0='
+				});
+			});
+		</script>
 			<!-- END-SCRIPT-TAGS -->
 	</body>
 

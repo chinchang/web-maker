@@ -324,7 +324,7 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 				? chrome.extension.getURL('lib/vue-sequence-ext.css')
 				: `${location.origin}${
 					window.DEBUG ? '' : BASE_PATH
-					}lib/vue-sequence-ext.css`), 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'])
+					}/lib/vue-sequence-ext.css`), 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'])
 			.reduce(function(links, url) {
 				return (
 					links +

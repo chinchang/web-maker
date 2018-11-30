@@ -688,7 +688,7 @@ function getCompleteHtml(html, css, js, item, isForExport) {
 				? chrome.extension.getURL('lib/vue-sequence-ext.css')
 				: `${location.origin}${
 					window.DEBUG ? '' : BASE_PATH
-					}lib/vue-sequence-ext.css`), 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'])
+					}/lib/vue-sequence-ext.css`), 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'])
 			.reduce(function(links, url) {
 				return (
 					links +
@@ -839,7 +839,7 @@ function prettify(content, type = 'js') {
 	const worker = new Worker(
 		chrome.extension
 			? chrome.extension.getURL('lib/prettier-worker.js')
-			: `${BASE_PATH}/lib/prettier-worker.js`
+			: `${BASE_PATH === '/' ? '' : BASE_PATH}/lib/prettier-worker.js`
 	);
 	worker.postMessage({ content, type });
 	worker.addEventListener('message', e => {
@@ -20302,8 +20302,8 @@ var update = __webpack_require__(17)(content, options);
 if(content.locals) module.exports = content.locals;
 
 if(false) {
-	module.hot.accept("!!../../../all-coloruml/web-sequence/node_modules/css-loader/index.js!./vue-sequence.css", function() {
-		var newContent = require("!!../../../all-coloruml/web-sequence/node_modules/css-loader/index.js!./vue-sequence.css");
+	module.hot.accept("!!../../css-loader/index.js!./vue-sequence.css", function() {
+		var newContent = require("!!../../css-loader/index.js!./vue-sequence.css");
 
 		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 

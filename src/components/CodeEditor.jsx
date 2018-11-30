@@ -117,9 +117,13 @@ export default class CodeEditor extends Component {
 			: this.instance.setModel(model);
 	}
 	setValue(value) {
-		this.instance.setValue
-			? this.instance.setValue(value)
-			: this.instance.setModel(model);
+		if (this.props.type === 'monaco') {
+			window.monacoSetValTriggered = true;
+			setTimeout(() => {
+				window.monacoSetValTriggered = false;
+			}, 1);
+		}
+		this.instance.setValue(value);
 	}
 	getValue() {
 		return this.instance.getValue();
@@ -193,7 +197,10 @@ export default class CodeEditor extends Component {
 			});
 			window.monacoInstance = this.instance;
 			this.instance.onDidChangeModelContent(change => {
-				this.props.onChange(this.instance, { ...change, origin: '+input' });
+				this.props.onChange(this.instance, {
+					...change,
+					origin: window.monacoSetValTriggered ? 'setValue' : '+input'
+				});
 			});
 			this.instance.addCommand(
 				monaco.KeyMod.WinCtrl | monaco.KeyMod.Shift | monaco.KeyCode.KEY_F,

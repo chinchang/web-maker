@@ -5,7 +5,11 @@ export class SplitPane extends Component {
 	componentDidMount() {
 		this.updateSplit();
 	}
-
+	componentWillUpdate() {
+		if (this.splitInstance) {
+			this.splitInstance.destroy();
+		}
+	}
 	componentDidUpdate(prevProps) {
 		if (this.hasGutter() && !this.hasPropsChanged(prevProps, this.props)) {
 			return;
@@ -33,13 +37,8 @@ export class SplitPane extends Component {
 		const { children, ...options } = this.props;
 		options.gutterSize = 6;
 
-		if (this.splitInstance && this.hasGutter()) {
-			this.splitInstance.destroy();
-		}
-
 		/* eslint-disable new-cap */
 		this.splitInstance = Split([...this.parent.children], options);
-		console.log('recreating split');
 
 		/* eslint-enable new-cap */
 

@@ -142,11 +142,19 @@ export default class App extends Component {
 						this.setState({ prefs: prefs });
 						this.updateSetting();
 					}
+
+					if(this.onUserItemsResolved) {
+						this.onUserItemsResolved(user.items);
+					}
 				});
 			} else {
 				// User is signed out.
 				this.setState({ user: undefined });
 				delete window.user;
+
+				if(this.onUserItemsResolved) {
+					this.onUserItemsResolved(null);
+				}
 			}
 			this.updateProfileUi();
 		});
@@ -175,7 +183,32 @@ export default class App extends Component {
 		);
 		// Get synced `preserveLastCode` setting to get back last code (or not).
 		db.getSettings(this.defaultSettings).then(result => {
-			if (result.preserveLastCode && lastCode) {
+			//If query parameter 'itemId' presents
+			if(this.props.itemId) {
+				itemService.getItem(this.props.itemId).then(item => {
+					if(item) {
+						const resolveCurrentItem = (items) => {
+							if(items && items[item.id]) {
+								this.setCurrentItem(item).then(() => this.refreshEditor());
+							} else {
+								this.forkItem(item);
+							}
+						};
+						if(this.state.user && this.state.user.items) {
+							resolveCurrentItem(user.items);
+						} else {
+							this.onUserItemsResolved = resolveCurrentItem;
+						}
+					} else {
+						//Invalid itemId
+						window.location.href = '/';
+					}
+				}, error => {
+					//Insufficient permission
+					window.location.href = '/';
+				});
+			}
+			else if (result.preserveLastCode && lastCode && lastCode.js) {
 				this.setState({ unsavedEditCount: 0 });
 
 				// For web app environment we don't fetch item from localStorage,

@@ -13,8 +13,8 @@
 		"test": "jest ./tests",
 		"update-core": "yarn unlink vue-sequence sequence-parser && yarn add vue-sequence sequence-parser",
 		"deploy": "aws s3 sync ./app s3://app.zenuml.com",
-		"upload": "webstore upload --source extension.zip --extension-id kcpganeflmhffnlofpdmcjklmdpbbmef --client-id 457917008826-p6qkd4tkbbutbae4j7uc2p39a76lfjlr.apps.googleusercontent.com --client-secret $WEBSTORE_CLIENT_SECRET --refresh-token 1/akghPiY7_ZQd6TZq79rRZNnkxqXIWHjpW9T9YZMG8Dw",
-		"pub": "webstore publish --extension-id kcpganeflmhffnlofpdmcjklmdpbbmef --client-id 457917008826-p6qkd4tkbbutbae4j7uc2p39a76lfjlr.apps.googleusercontent.com --client-secret $WEBSTORE_CLIENT_SECRET --refresh-token 1/akghPiY7_ZQd6TZq79rRZNnkxqXIWHjpW9T9YZMG8Dw",
+		"upload": "webstore upload --source extension.zip --extension-id kcpganeflmhffnlofpdmcjklmdpbbmef --client-id 457917008826-p6qkd4tkbbutbae4j7uc2p39a76lfjlr.apps.googleusercontent.com --client-secret $WEBSTORE_CLIENT_SECRET --refresh-token 1/4YHJ8yliNMNLBgKkh2QhQ_PnZUc8trKNx_j-pLOGrh8",
+		"pub": "webstore publish --extension-id kcpganeflmhffnlofpdmcjklmdpbbmef --client-id 457917008826-p6qkd4tkbbutbae4j7uc2p39a76lfjlr.apps.googleusercontent.com --client-secret $WEBSTORE_CLIENT_SECRET --refresh-token 1/4YHJ8yliNMNLBgKkh2QhQ_PnZUc8trKNx_j-pLOGrh8",
 		"install": "ln -sf ../../git-hooks/pre-commit .git/hooks/pre-commit",
 		"precommit": "lint-staged"
 	},

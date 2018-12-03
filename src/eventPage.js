@@ -46,4 +46,4 @@ chrome.runtime.onInstalled.addListener(function callback(details) {
 	}
 });
 
-chrome.runtime.setUninstallURL('http://zenuml.com');
+chrome.runtime.setUninstallURL('https://goo.gl/forms/eKJSpdvMjehCBy332');

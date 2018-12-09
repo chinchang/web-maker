@@ -32,13 +32,12 @@ import 'codemirror/keymap/vim.js';
 import 'code-blast-codemirror/code-blast.js';
 
 import emmet from '@emmetio/codemirror-plugin';
-import { prettify } from '../utils';
+import { prettify, loadCss } from '../utils';
 import { modes } from '../codeModes';
 
-import '../lib/monaco/monaco.bundle';
-import '../lib/monaco/monaco.css';
-
 emmet(CodeMirror);
+let isMonacoDepsLoaded = false;
+
 window.MonacoEnvironment = {
 	getWorkerUrl(moduleId, label) {
 		switch (label) {
@@ -100,7 +99,6 @@ export default class CodeEditor extends Component {
 					.querySelector('.monaco-editor, .CodeMirror')
 					.remove();
 			}
-			console.log('CODEEDITOR SHOULD UPDATE');
 
 			return true;
 		}
@@ -108,7 +106,6 @@ export default class CodeEditor extends Component {
 		return false;
 	}
 	componentDidUpdate(prevProps) {
-		console.log('CODEEDITOR UPDATED');
 		this.initEditor();
 	}
 	setModel(model) {
@@ -140,7 +137,8 @@ export default class CodeEditor extends Component {
 	}
 	setOption(option, value) {}
 	setLanguage(value) {
-		console.log('setting', this.props.type, modes[value].cmMode);
+		if (!window.monaco) return;
+
 		if (this.props.type === 'monaco') {
 			monaco.editor.setModelLanguage(
 				this.instance.getModel(),
@@ -177,9 +175,22 @@ export default class CodeEditor extends Component {
 		return mode;
 	}
 
-	initEditor() {
+	async loadDeps() {
+		if (this.props.type === 'monaco' && !isMonacoDepsLoaded) {
+			loadCss('lib/monaco/monaco.css');
+			return import(/* webpackChunkName: "monaco" */ '../lib/monaco/monaco.bundle.js').then(
+				() => {
+					isMonacoDepsLoaded = true;
+				}
+			);
+		}
+		return Promise.resolve();
+	}
+
+	async initEditor() {
+		await this.loadDeps();
+
 		const { options, prefs } = this.props;
-		console.log(this.props.type);
 		if (this.props.type === 'monaco') {
 			this.instance = monaco.editor.create(this.node, {
 				language: this.getMonacoLanguageFromMode(options.mode),

@@ -1,4 +1,3 @@
-import CopyWebpackPlugin from 'copy-webpack-plugin';
 var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 
 /**
@@ -28,7 +27,8 @@ export default function(config, env, helpers) {
 
 	if (env.isProd) {
 		config.devtool = false; // disable sourcemaps
-
+		config.output.publicPath = './';
+		config.output.chunkFilename = '[name].chunk.js';
 		config.plugins.push(
 			new CommonsChunkPlugin({
 				name: 'vendor',

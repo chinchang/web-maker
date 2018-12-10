@@ -159,6 +159,19 @@ export default class CodeEditor extends Component {
 		}
 	}
 
+	showErrors(errors) {
+		if (this.props.type === 'codemirror') {
+			errors.forEach(function(error) {
+				this.instance.operation(function() {
+					var n = document.createElement('div');
+					n.setAttribute('data-title', error.message);
+					n.classList.add('gutter-error-marker');
+					editor.setGutterMarker(error.lineNumber, 'error-gutter', n);
+				});
+			});
+		}
+	}
+
 	refresh() {
 		this.instance.refresh ? this.instance.refresh() : this.instance.layout();
 	}

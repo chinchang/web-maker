@@ -173,15 +173,7 @@ export default class ContentWrap extends Component {
 	}
 
 	showErrors(lang, errors) {
-		var editor = this.cm[lang];
-		errors.forEach(function(e) {
-			editor.operation(function() {
-				var n = document.createElement('div');
-				n.setAttribute('data-title', e.message);
-				n.classList.add('gutter-error-marker');
-				editor.setGutterMarker(e.lineNumber, 'error-gutter', n);
-			});
-		});
+		this.cm[lang].showErrors(errors);
 	}
 
 	/**

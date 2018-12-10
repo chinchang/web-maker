@@ -263,16 +263,8 @@ export default class ContentWrapFiles extends Component {
 		this.editor.clearGutter('error-gutter');
 	}
 
-	showErrors(lang, errors) {
-		var editor = this.cm;
-		errors.forEach(function(e) {
-			editor.operation(function() {
-				var n = document.createElement('div');
-				n.setAttribute('data-title', e.message);
-				n.classList.add('gutter-error-marker');
-				editor.setGutterMarker(e.lineNumber, 'error-gutter', n);
-			});
-		});
+	showErrors(errors) {
+		this.editor.showErrors(errors);
 	}
 
 	/**

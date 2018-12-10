@@ -27,8 +27,13 @@ export default function(config, env, helpers) {
 
 	if (env.isProd) {
 		config.devtool = false; // disable sourcemaps
+
+		// To support chunk loading in root and also /app path
 		config.output.publicPath = './';
+
+		// Remove the default hash append in chunk name
 		config.output.chunkFilename = '[name].chunk.js';
+
 		config.plugins.push(
 			new CommonsChunkPlugin({
 				name: 'vendor',

@@ -34,9 +34,10 @@ import 'code-blast-codemirror/code-blast.js';
 import emmet from '@emmetio/codemirror-plugin';
 import { prettify, loadCss } from '../utils';
 import { modes } from '../codeModes';
+import { deferred } from '../deferred';
 
 emmet(CodeMirror);
-let isMonacoDepsLoaded = false;
+let monacoDepsDeferred;
 
 window.MonacoEnvironment = {
 	getWorkerUrl(moduleId, label) {
@@ -90,8 +91,8 @@ export default class CodeEditor extends Component {
 			}
 		}
 
+		// Only condition when this component updates is when prop.type changes
 		if (nextProps.type !== this.props.type) {
-			// debugger;
 			if (
 				this.node.parentElement.querySelector('.monaco-editor, .CodeMirror')
 			) {
@@ -106,6 +107,7 @@ export default class CodeEditor extends Component {
 		return false;
 	}
 	componentDidUpdate(prevProps) {
+		// prop.type changed, reinit the editor
 		this.initEditor();
 	}
 	setModel(model) {
@@ -114,6 +116,9 @@ export default class CodeEditor extends Component {
 			: this.instance.setModel(model);
 	}
 	setValue(value) {
+		// HACK: We set a flag on window for an ultra-short duration, which 'change'
+		// listener uses to set the change.origin to 'setValue', otherwise it's
+		// '+input'
 		if (this.props.type === 'monaco') {
 			window.monacoSetValTriggered = true;
 			setTimeout(() => {
@@ -121,6 +126,9 @@ export default class CodeEditor extends Component {
 			}, 1);
 		}
 		this.instance.setValue(value);
+		// We save last set value so that when editor type changes, we can
+		// populate that last value
+		this.lastSetValue = value;
 	}
 	getValue() {
 		return this.instance.getValue();
@@ -135,7 +143,15 @@ export default class CodeEditor extends Component {
 			this.instance.restoreViewState(state);
 		}
 	}
-	setOption(option, value) {}
+	setOption(option, value) {
+		if (this.props.type === 'monaco') {
+			this.monacoEditorReadyDeferred.promise.then(() => {
+				this.instance.updateOptions({ [option]: value });
+			});
+		} else {
+			this.instance.setOption(option, value);
+		}
+	}
 	setLanguage(value) {
 		if (!window.monaco) return;
 
@@ -179,6 +195,11 @@ export default class CodeEditor extends Component {
 		this.instance.focus();
 	}
 
+	/**
+	 * Converts codemirror mode value to monaco language values.
+	 * TODO: Refactor to not be codemirror related.
+	 * @param {string} mode Codemirror mode value
+	 */
 	getMonacoLanguageFromMode(mode) {
 		if (['htmlmixed'].includes(mode)) {
 			return 'html';
@@ -192,27 +213,34 @@ export default class CodeEditor extends Component {
 		return mode;
 	}
 
+	/**
+	 * Loads the asynchronous deps according to the editor type.
+	 */
 	async loadDeps() {
-		if (this.props.type === 'monaco' && !isMonacoDepsLoaded) {
-			if (!$('#monaco-css')) {
+		if (this.props.type === 'monaco') {
+			if (!monacoDepsDeferred) {
+				monacoDepsDeferred = deferred();
 				loadCss({ url: 'lib/monaco/monaco.css', id: 'monaco-css' });
+				import(/* webpackChunkName: "monaco" */ '../lib/monaco/monaco.bundle.js').then(
+					() => {
+						monacoDepsDeferred.resolve();
+					}
+				);
 			}
-			return import(/* webpackChunkName: "monaco" */ '../lib/monaco/monaco.bundle.js').then(
-				() => {
-					isMonacoDepsLoaded = true;
-				}
-			);
+			return monacoDepsDeferred.promise;
 		}
 		return Promise.resolve();
 	}
 
 	async initEditor() {
+		this.monacoEditorReadyDeferred = deferred();
 		await this.loadDeps();
 
 		const { options, prefs } = this.props;
 		if (this.props.type === 'monaco') {
 			this.instance = monaco.editor.create(this.node, {
 				language: this.getMonacoLanguageFromMode(options.mode),
+				value: this.lastSetValue || '',
 				roundedSelection: false,
 				scrollBeyondLastLine: false,
 				theme: 'vs-dark',
@@ -243,9 +271,11 @@ export default class CodeEditor extends Component {
 					}
 				}
 			);
+			this.monacoEditorReadyDeferred.resolve();
 		} else {
 			this.instance = CodeMirror.fromTextArea(this.node, {
 				mode: options.mode,
+				value: this.lastSetValue || '',
 				lineNumbers: true,
 				lineWrapping: !!prefs.lineWrap,
 				autofocus: options.autofocus || false,

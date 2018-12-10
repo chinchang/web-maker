@@ -305,11 +305,14 @@ export function loadJS(src) {
 	return d.promise;
 }
 
-export function loadCss(src) {
+export function loadCss({ url, id }) {
 	var d = deferred();
 	var style = window.document.createElement('link');
-	style.setAttribute('href', src);
+	style.setAttribute('href', url);
 	style.setAttribute('rel', 'stylesheet');
+	if (id) {
+		style.setAttribute('id', id);
+	}
 	document.head.appendChild(style);
 	style.onload = function() {
 		d.resolve();

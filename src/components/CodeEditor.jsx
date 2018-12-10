@@ -181,7 +181,9 @@ export default class CodeEditor extends Component {
 
 	async loadDeps() {
 		if (this.props.type === 'monaco' && !isMonacoDepsLoaded) {
-			loadCss('lib/monaco/monaco.css');
+			if (!$('#monaco-css')) {
+				loadCss({ url: 'lib/monaco/monaco.css', id: 'monaco-css' });
+			}
 			return import(/* webpackChunkName: "monaco" */ '../lib/monaco/monaco.bundle.js').then(
 				() => {
 					isMonacoDepsLoaded = true;

@@ -153,7 +153,11 @@ export default class CodeEditor extends Component {
 		}
 	}
 
-	clearGutter(gutterName) {}
+	clearGutter(gutterName) {
+		if (this.instance.clearGutter) {
+			this.instance.clearGutter(gutterName);
+		}
+	}
 
 	refresh() {
 		this.instance.refresh ? this.instance.refresh() : this.instance.layout();

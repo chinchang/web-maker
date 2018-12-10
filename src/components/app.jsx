@@ -133,7 +133,8 @@ export default class App extends Component {
 			layoutMode: 2,
 			isJs13kModeOn: false,
 			autoCloseTags: true,
-			lang: 'en'
+			lang: 'en',
+			isMonacoEditorOn: false
 		};
 		this.prefs = {};
 
@@ -1527,20 +1528,6 @@ export default class App extends Component {
 
 					<Alerts />
 
-					<form
-						style="display:none;"
-						action="https://codepen.io/pen/define"
-						method="POST"
-						target="_blank"
-						id="js-codepen-form"
-					>
-						<input
-							type="hidden"
-							name="data"
-							value="{&quot;title&quot;: &quot;New Pen!&quot;, &quot;html&quot;: &quot;<div>Hello, World!</div>&quot;}"
-						/>
-					</form>
-
 					<Modal
 						show={this.state.isAddLibraryModalOpen}
 						closeHandler={() => this.setState({ isAddLibraryModalOpen: false })}
@@ -1674,7 +1661,7 @@ export default class App extends Component {
 						<input
 							type="hidden"
 							name="data"
-							value="{&quot;title&quot;: &quot;New Pen!&quot;, &quot;html&quot;: &quot;<div>Hello, World!</div>&quot;}"
+							value='{"title": "New Pen!", "html": "<div>Hello, World!</div>"}'
 						/>
 					</form>
 				</div>

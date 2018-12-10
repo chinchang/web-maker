@@ -22,8 +22,8 @@ function minifyJs(fileName) {
 	).code;
 	fs.writeFileSync(fileName, minifiedContent);
 	console.log(
-		`[${fileName}]: ${content.length / 1024}M -> ${minifiedContent.length /
-			1024}M`
+		`[${fileName}]: ${content.length / 1024}K -> ${minifiedContent.length /
+			1024}K`
 	);
 }
 gulp.task('runWebpack', function() {
@@ -41,6 +41,9 @@ gulp.task('copyFiles', function() {
 		gulp.src('src/lib/transpilers/*').pipe(gulp.dest('app/lib/transpilers')),
 		gulp.src('src/lib/prettier-worker.js').pipe(gulp.dest('app/lib/')),
 		gulp.src('src/lib/prettier/*').pipe(gulp.dest('app/lib/prettier')),
+		gulp
+			.src(['!src/lib/monaco/monaco.bundle.js', 'src/lib/monaco/**/*'])
+			.pipe(gulp.dest('app/lib/monaco')),
 		gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib')),
 		gulp.src('icons/*').pipe(gulp.dest('app/icons')),
 		gulp.src('src/assets/*').pipe(gulp.dest('app/assets')),
@@ -63,6 +66,7 @@ gulp.task('copyFiles', function() {
 			.src('build/vendor.*.js')
 			.pipe(rename('vendor.js'))
 			.pipe(gulp.dest('app')),
+		gulp.src('build/monaco.*.js').pipe(gulp.dest('app')),
 
 		// Following CSS are copied to build/ folder where they'll be referenced by
 		// useRef plugin to concat into one.
@@ -120,8 +124,11 @@ gulp.task('minify', function() {
 					debug: true
 				},
 				details => {
-					console.log(`${details.name}: ${details.stats.originalSize}`);
-					console.log(`${details.name}: ${details.stats.minifiedSize}`);
+					console.log(
+						`${details.name}: ${details.stats.originalSize} 👉🏼  ${
+							details.stats.minifiedSize
+						}`
+					);
 				}
 			)
 		)
@@ -138,7 +145,7 @@ gulp.task('fixIndex', function() {
 
 	// vendor.hash.js gets created outside our markers, so remove it
 	contents = contents.replace(
-		/\<script src="\/vendor\.[\S\s]*?\<\/script\>/,
+		/\<script src="[\S\s]*?vendor\.[\S\s]*?\<\/script\>/,
 		''
 	);
 
@@ -171,17 +178,11 @@ gulp.task('packageExtension', function() {
 	child_process.execSync('cp src/options.html extension');
 	child_process.execSync('cp src/eventPage.js extension');
 	child_process.execSync('cp src/icon-16.png extension');
-	child_process.execSync(
-		'rm -rf extension/service-worker.js extension/partials'
-	);
+	child_process.execSync('rm -rf extension/service-worker.js');
 	return merge(
 		gulp
 			.src('build/bundle.*.js')
 			.pipe(rename('script.js'))
-			.pipe(gulp.dest('extension')),
-		gulp
-			.src('build/vendor.*.js')
-			.pipe(rename('vendor.js'))
 			.pipe(gulp.dest('extension')),
 
 		gulp

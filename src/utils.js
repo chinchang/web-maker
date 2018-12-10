@@ -305,6 +305,21 @@ export function loadJS(src) {
 	return d.promise;
 }
 
+export function loadCss({ url, id }) {
+	var d = deferred();
+	var style = window.document.createElement('link');
+	style.setAttribute('href', url);
+	style.setAttribute('rel', 'stylesheet');
+	if (id) {
+		style.setAttribute('id', id);
+	}
+	document.head.appendChild(style);
+	style.onload = function() {
+		d.resolve();
+	};
+	return d.promise;
+}
+
 /* eslint-disable max-params */
 export function getCompleteHtml(html, css, js, item, isForExport) {
 	/* eslint-enable max-params */

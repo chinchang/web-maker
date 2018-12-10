@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import UserCodeMirror from './UserCodeMirror';
+import CodeEditor from './CodeEditor';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { log, loadJS } from '../utils';
 
@@ -24,7 +24,7 @@ import { PreviewDimension } from './PreviewDimension';
 const minCodeWrapSize = 33;
 
 /* global htmlCodeEl
-*/
+ */
 export default class ContentWrapFiles extends Component {
 	constructor(props) {
 		super(props);
@@ -86,7 +86,7 @@ export default class ContentWrapFiles extends Component {
 			this.state.selectedFile &&
 			this.fileBuffers[this.state.selectedFile.path]
 		) {
-			this.fileBuffers[this.state.selectedFile.path].setValue(
+			this.fileBuffers[this.state.selectedFile.path].model.setValue(
 				getFileFromPath(
 					nextProps.currentItem.files,
 					this.state.selectedFile.path
@@ -168,12 +168,23 @@ export default class ContentWrapFiles extends Component {
 			CodeMirror.autoLoadMode(this.cm, mode);
 		}
 		if (mime === 'application/json') {
-			mime = 'application/ld+json';
+			mime = this.props.prefs.isMonacoEditorOn ? 'json' : 'application/ld+json';
 		}
-		this.fileBuffers[file.path] = CodeMirror.Doc(
-			file.content || '',
-			detectedMode ? mime : 'text/plain'
-		);
+		if (!this.props.prefs.isMonacoEditorOn) {
+			this.fileBuffers[file.path] = {
+				model: CodeMirror.Doc(
+					file.content || '',
+					detectedMode ? mime : 'text/plain'
+				)
+			};
+		} else {
+			this.fileBuffers[file.path] = {
+				model: monaco.editor.createModel(
+					file.content || '',
+					mime || 'javascript'
+				)
+			};
+		}
 	}
 
 	onHtmlCodeChange(editor, change) {
@@ -184,10 +195,10 @@ export default class ContentWrapFiles extends Component {
 			this.cmCodes.html,
 			change.origin !== 'setValue'
 		);
-		this.onCodeChange(editor, change);
+		this.onCodeChange(change);
 	}
 
-	onCodeChange(editor, change) {
+	onCodeChange(change) {
 		clearTimeout(this.updateTimer);
 
 		this.updateTimer = setTimeout(() => {
@@ -249,19 +260,11 @@ export default class ContentWrapFiles extends Component {
 		}
 	}
 	cleanupErrors() {
-		this.cm.clearGutter('error-gutter');
+		this.editor.clearGutter('error-gutter');
 	}
 
-	showErrors(lang, errors) {
-		var editor = this.cm;
-		errors.forEach(function(e) {
-			editor.operation(function() {
-				var n = document.createElement('div');
-				n.setAttribute('data-title', e.message);
-				n.classList.add('gutter-error-marker');
-				editor.setGutterMarker(e.lineNumber, 'error-gutter', n);
-			});
-		});
+	showErrors(errors) {
+		this.editor.showErrors(errors);
 	}
 
 	/**
@@ -305,9 +308,11 @@ export default class ContentWrapFiles extends Component {
 	}
 	refreshEditor() {
 		if (this.state.selectedFile) {
-			this.cm.setValue(this.state.selectedFile.content);
+			this.editor.setValue(this.state.selectedFile.content);
 		}
-		this.cm.refresh();
+		if (this.editor) {
+			this.editor.refresh();
+		}
 		window.cm = this.cm;
 
 		this.clearConsole();
@@ -498,25 +503,26 @@ export default class ContentWrapFiles extends Component {
 			this.props.onFolderSelect(file);
 			return;
 		}
+
+		if (!this.fileBuffers[file.path]) {
+			this.createEditorDoc(file);
+		}
+
+		const currentState = this.editor.saveViewState();
+		if (currentState && this.state.selectedFile) {
+			this.fileBuffers[this.state.selectedFile.path].state = currentState;
+		}
 		this.setState({
 			editorOptions: this.getEditorOptions(file.name),
 			selectedFile: file
 		});
-		if (!this.fileBuffers[file.path]) {
-			this.createEditorDoc(file);
-		}
-		this.cm.swapDoc(this.fileBuffers[file.path]);
 
-		// var cmMode = 'html';
-		// if (file.name.match(/\.css$/)) {
-		// 	this.updateCssMode('css');
-		// } else if (file.name.match(/\.js$/)) {
-		// 	this.updateCssMode('js');
-		// } else {
-		// 	this.updateCssMode('html');
-		// }
-		// this.cm.setValue(file.content || '');
-		this.cm.focus();
+		this.editor.setModel(this.fileBuffers[file.path].model);
+		if (this.fileBuffers[file.path].state) {
+			this.editor.restoreViewState(this.fileBuffers[file.path].state);
+		}
+
+		this.editor.focus();
 	}
 
 	onMessageFromConsole() {
@@ -637,14 +643,15 @@ export default class ContentWrapFiles extends Component {
 								/>
 							</div>
 						</div>
-						<UserCodeMirror
+						<CodeEditor
+							type={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
 							value={
 								this.state.selectedFile ? this.state.selectedFile.content : ''
 							}
 							options={this.state.editorOptions}
 							prefs={this.props.prefs}
 							onChange={this.onHtmlCodeChange.bind(this)}
-							onCreation={editor => (this.cm = editor)}
+							ref={editor => (this.editor = editor)}
 							onFocus={this.editorFocusHandler.bind(this)}
 						/>
 					</div>

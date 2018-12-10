@@ -1528,20 +1528,6 @@ export default class App extends Component {
 
 					<Alerts />
 
-					<form
-						style="display:none;"
-						action="https://codepen.io/pen/define"
-						method="POST"
-						target="_blank"
-						id="js-codepen-form"
-					>
-						<input
-							type="hidden"
-							name="data"
-							value='{"title": "New Pen!", "html": "<div>Hello, World!</div>"}'
-						/>
-					</form>
-
 					<Modal
 						show={this.state.isAddLibraryModalOpen}
 						closeHandler={() => this.setState({ isAddLibraryModalOpen: false })}

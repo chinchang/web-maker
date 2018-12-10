@@ -193,7 +193,7 @@ export default class ContentWrapFiles extends Component {
 		this.props.onCodeChange(
 			this.state.selectedFile,
 			this.cmCodes.html,
-			change ? change.origin !== 'setValue' : true
+			change.origin !== 'setValue'
 		);
 		this.onCodeChange(change);
 	}
@@ -204,7 +204,7 @@ export default class ContentWrapFiles extends Component {
 		this.updateTimer = setTimeout(() => {
 			// This is done so that multiple simultaneous setValue don't trigger too many preview refreshes
 			// and in turn too many file writes on a single file (eg. preview.html).
-			if (change ? change.origin !== 'setValue' : true) {
+			if (change.origin !== 'setValue') {
 				// Specifically checking for false so that the condition doesn't get true even
 				// on absent key - possible when the setting key hasn't been fetched yet.
 				if (this.prefs.autoPreview !== false) {
@@ -260,9 +260,7 @@ export default class ContentWrapFiles extends Component {
 		}
 	}
 	cleanupErrors() {
-		if (!this.props.prefs.isMonacoEditorOn) {
-			// this.editor.clearGutter('error-gutter');
-		}
+		this.editor.clearGutter('error-gutter');
 	}
 
 	showErrors(lang, errors) {
@@ -416,7 +414,6 @@ export default class ContentWrapFiles extends Component {
 			}, 1);
 		}
 		this.updateSplits();
-		// this.editor.refresh();
 	}
 	mainSplitDragHandler() {
 		this.previewDimension.update({
@@ -532,15 +529,7 @@ export default class ContentWrapFiles extends Component {
 		if (this.fileBuffers[file.path].state) {
 			this.editor.restoreViewState(this.fileBuffers[file.path].state);
 		}
-		// var cmMode = 'html';
-		// if (file.name.match(/\.css$/)) {
-		// 	this.updateCssMode('css');
-		// } else if (file.name.match(/\.js$/)) {
-		// 	this.updateCssMode('js');
-		// } else {
-		// 	this.updateCssMode('html');
-		// }
-		// this.cm.setValue(file.content || '');
+
 		this.editor.focus();
 	}
 

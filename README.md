@@ -11,11 +11,13 @@ Web Sequence  [![Gitter](https://badges.gitter.im/zenuml/Lobby.svg)](https://git
 
 #### First time setup
 
+````
 $ yarn install  // instal modules
 $ yarn start    // start a local server
 
 $ yarn build    // build a production release
 $ gulp release  // copy resources to app / extension
+````
 
 #### Enable/Disable DEBUG
 

@@ -18,7 +18,7 @@ window.IS_EXTENSION = !!window.chrome.extension;
 export const BASE_PATH =
 	window.chrome.extension ||
 	window.DEBUG ||
-	process.env.NODE_ENV == 'development'
+	process.env.NODE_ENV === 'development'
 		? '/'
 		: '/app';
 

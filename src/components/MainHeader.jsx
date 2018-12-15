@@ -6,19 +6,19 @@ const DEFAULT_PROFILE_IMG =
 
 export function MainHeader(props) {
 	return (
-		<div class="main-header">
+		<div className="main-header">
 			<input
 				type="text"
 				id="titleInput"
 				title="Click to edit"
-				class="item-title-input"
+				className="item-title-input"
 				value={props.title}
 				onBlur={props.titleInputBlurHandler}
 			/>
-			<div class="main-header__btn-wrap  flex  flex-v-center">
+			<div className="main-header__btn-wrap  flex  flex-v-center">
 				<button
 					id="runBtn"
-					class="hide btn--dark flex flex-v-center hint--rounded hint--bottom-left"
+					className="hide btn--dark flex flex-v-center hint--rounded hint--bottom-left"
 					aria-label="Run preview (Ctrl/⌘ + Shift + 5)"
 					onClick={props.runBtnClickHandler}
 				>
@@ -31,7 +31,7 @@ export function MainHeader(props) {
 					onClick={props.addLibraryBtnHandler}
 					data-event-category="ui"
 					data-event-action="addLibraryButtonClick"
-					class="btn--dark flex-v-center hint--rounded hint--bottom-left"
+					className="btn--dark flex-v-center hint--rounded hint--bottom-left"
 					style="display: none"
 					aria-label="Add a JS/CSS library"
 				>
@@ -44,9 +44,16 @@ export function MainHeader(props) {
 						{props.externalLibCount}
 					</span>
 				</Button>
-
+				<a
+					className="btn--primary hint--rounded  hint--bottom-left"
+					rel="noopener noreferer"
+					href="https://payment-test.zenuml.com/?from=app-or-extension"
+					target="_blank"
+				>
+					Upgrade
+				</a>
 				<button
-					class="btn--dark flex  flex-v-center hint--rounded hint--bottom-left"
+					className="btn--dark flex  flex-v-center hint--rounded hint--bottom-left"
 					aria-label="Start a new creation"
 					onClick={props.newBtnHandler}
 				>
@@ -59,7 +66,7 @@ export function MainHeader(props) {
 				</button>
 				<button
 					id="saveBtn"
-					class={`btn--dark flex  flex-v-center hint--rounded hint--bottom-left ${
+					className={`btn--dark flex  flex-v-center hint--rounded hint--bottom-left ${
 						props.isSaving ? 'is-loading' : ''
 					} ${props.unsavedEditCount ? 'is-marked' : 0}`}
 					aria-label="Save current creation (Ctrl/⌘ + S)"
@@ -71,14 +78,14 @@ export function MainHeader(props) {
 					>
 						<path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" />
 					</svg>
-					<svg class="btn-loader" width="15" height="15" stroke="#fff">
+					<svg className="btn-loader" width="15" height="15" stroke="#fff">
 						<use xlinkHref="#loader-icon" />
 					</svg>
 					Save
 				</button>
 				<button
 					id="openItemsBtn"
-					class={`btn--dark flex flex-v-center hint--rounded hint--bottom-left ${
+					className={`btn--dark flex flex-v-center hint--rounded hint--bottom-left ${
 						props.isFetchingItems ? 'is-loading' : ''
 					}`}
 					aria-label="Open a saved creation (Ctrl/⌘ + O)"
@@ -90,7 +97,7 @@ export function MainHeader(props) {
 					>
 						<path d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
 					</svg>
-					<svg class="btn-loader" width="15" height="15" stroke="#fff">
+					<svg className="btn-loader" width="15" height="15" stroke="#fff">
 						<use xlinkHref="#loader-icon" />
 					</svg>
 					Open
@@ -99,7 +106,7 @@ export function MainHeader(props) {
 					onClick={props.loginBtnHandler}
 					data-event-category="ui"
 					data-event-action="loginButtonClick"
-					class="hide-on-login btn--dark flex  flex-v-center  hint--rounded  hint--bottom-left"
+					className="hide-on-login btn--dark flex  flex-v-center  hint--rounded  hint--bottom-left"
 					aria-label="Login/Signup"
 				>
 					Login/Signup
@@ -109,13 +116,13 @@ export function MainHeader(props) {
 					data-event-category="ui"
 					data-event-action="headerAvatarClick"
 					aria-label="See profile or Logout"
-					class="hide-on-logout btn--dark hint--rounded  hint--bottom-left"
+					className="hide-on-logout btn--dark hint--rounded  hint--bottom-left"
 				>
 					<img
 						id="headerAvatarImg"
 						width="20"
 						src={props.user ? props.user.photoURL || DEFAULT_PROFILE_IMG : ''}
-						class="main-header__avatar-img"
+						className="main-header__avatar-img"
 					/>
 				</Button>
 			</div>

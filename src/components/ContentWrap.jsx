@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import UserCodeMirror from './UserCodeMirror.jsx';
+import Tabs from './Tabs.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { log, writeFile, loadJS, getCompleteHtml } from '../utils';
@@ -686,171 +687,184 @@ export default class ContentWrap extends Component {
 				}
 				onDragEnd={this.mainSplitDragEndHandler.bind(this)}
 			>
-				<SplitPane
-					class="code-side"
-					id="js-code-side"
-					sizes={this.state.codeSplitSizes}
-					minSize={minCodeWrapSize}
-					direction={
-						this.props.currentLayoutMode === 2 ||
-						this.props.currentLayoutMode === 5
-							? 'horizontal'
-							: 'vertical'
-					}
-					onDragStart={this.codeSplitDragStart.bind(this)}
-					onDragEnd={this.codeSplitDragEnd.bind(this)}
-					onSplit={splitInstance => (this.codeSplitInstance = splitInstance)}
-				>
-					<div
-						data-code-wrap-id="2"
-						id="jsCodeEl"
-						data-type="js"
-						class="code-wrap"
-						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
-					>
+				<div id="js-code-side">
+				<Tabs>
+					<div label="Gator">
 						<div
-							class="js-code-wrap__header  code-wrap__header"
-							title="Double click to toggle code pane"
-							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
+							data-code-wrap-id="2"
+							id="jsCodeEl"
+							data-type="js"
+							className="code-wrap"
+							onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 						>
-							<label class="btn-group" title="Click to change">
-								<span class="code-wrap__header-label">ZenUML</span>
-								<span class="caret" style="display:none" />
-								<select
-									data-type="js"
-									class="js-mode-select  hidden-select"
-									style="display: none"
-									onChange={this.codeModeChangeHandler.bind(this)}
-									value={this.props.currentItem.jsMode}
-								>
-									<option value="js">JS</option>
-									<option value="coffee">CoffeeScript</option>
-									<option value="es6">ES6 (Babel)</option>
-									<option value="typescript">TypeScript</option>
-								</select>
-							</label>
-							<div class="code-wrap__header-right-options">
-								<a
-									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
-									title="Toggle code pane"
-									onClick={this.collapseBtnHandler.bind(this)}
-								/>
+							<div
+								className="js-code-wrap__header  code-wrap__header"
+								title="Double click to toggle code pane"
+								ondblclick={this.codeWrapHeaderDblClickHandler.bind(this)}
+							>
+								<label className="btn-group" title="Click to change">
+									<span className="code-wrap__header-label">ZenUML</span>
+									<span className="caret" style="display:none" />
+									<select
+										data-type="js"
+										className="js-mode-select  hidden-select"
+										style="display: none"
+										onChange={this.codeModeChangeHandler.bind(this)}
+										value={this.props.currentItem.jsMode}
+									>
+										<option value="js">JS</option>
+										<option value="coffee">CoffeeScript</option>
+										<option value="es6">ES6 (Babel)</option>
+										<option value="typescript">TypeScript</option>
+									</select>
+								</label>
+								<div className="code-wrap__header-right-options">
+									<a
+										className="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
+										title="Toggle code pane"
+										onClick={this.collapseBtnHandler.bind(this)}
+									/>
+								</div>
 							</div>
+							<UserCodeMirror
+								options={{
+									mode: 'htmlmixed',
+									profile: 'xhtml',
+									gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+									noAutocomplete: true,
+									matchTags: {bothTags: true},
+									prettier: true,
+									prettierParser: 'html',
+									emmet: true
+								}}
+								prefs={this.props.prefs}
+								autoComplete={this.props.prefs.autoComplete}
+								onChange={this.onJsCodeChange.bind(this)}
+								onCreation={el => (this.cm.js = el)}
+								onFocus={this.editorFocusHandler.bind(this)}
+							/>
+							{/* Inlet(scope.cm.js); */}
 						</div>
-						<UserCodeMirror
-							options={{
-								mode: 'htmlmixed',
-								profile: 'xhtml',
-								gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-								noAutocomplete: true,
-								matchTags: { bothTags: true },
-								prettier: true,
-								prettierParser: 'html',
-								emmet: true
-							}}
-							prefs={this.props.prefs}
-							autoComplete={this.props.prefs.autoComplete}
-							onChange={this.onJsCodeChange.bind(this)}
-							onCreation={el => (this.cm.js = el)}
-							onFocus={this.editorFocusHandler.bind(this)}
-						/>
-						{/* Inlet(scope.cm.js); */}
 					</div>
-					<div
-						data-code-wrap-id="1"
-						id="cssCodeEl"
-						data-type="css"
-						class="code-wrap"
-						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
-					>
+					<div label="Croc">
 						<div
-							class="js-code-wrap__header  code-wrap__header"
-							title="Double click to toggle code pane"
-							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
+							data-code-wrap-id="1"
+							id="cssCodeEl"
+							data-type="css"
+							className="code-wrap"
+							onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 						>
-							<label class="btn-group" title="Click to change">
-								<span class="code-wrap__header-label">
+							<div
+								className="js-code-wrap__header  code-wrap__header"
+								title="Double click to toggle code pane"
+								ondblclick={this.codeWrapHeaderDblClickHandler.bind(this)}
+							>
+								<label className="btn-group" title="Click to change">
+								<span className="code-wrap__header-label">
 									{modes[this.props.currentItem.cssMode || 'css'].label}
 								</span>
-								<span class="caret" />
-								<select
-									data-type="css"
-									class="js-mode-select  hidden-select"
-									onChange={this.codeModeChangeHandler.bind(this)}
-									value={this.props.currentItem.cssMode}
-								>
-									<option value="css">CSS</option>
-									<option value="scss">SCSS</option>
-									<option value="sass">SASS</option>
-									<option value="less">LESS</option>
-									<option value="stylus">Stylus</option>
-									<option value="acss">Atomic CSS</option>
-								</select>
-							</label>
-							<div class="code-wrap__header-right-options">
-								<a
-									href="#"
-									id="cssSettingsBtn"
-									title="Atomic CSS configuration"
-									onClick={this.cssSettingsBtnClickHandler.bind(this)}
-									class="code-wrap__header-btn hide"
-								>
-									<svg>
-										<use xlinkHref="#settings-icon" />
-									</svg>
-								</a>
-								<a
-									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
-									title="Toggle code pane"
-									onClick={this.collapseBtnHandler.bind(this)}
-								/>
+									<span className="caret"/>
+									<select
+										data-type="css"
+										className="js-mode-select  hidden-select"
+										onChange={this.codeModeChangeHandler.bind(this)}
+										value={this.props.currentItem.cssMode}
+									>
+										<option value="css">CSS</option>
+										<option value="scss">SCSS</option>
+										<option value="sass">SASS</option>
+										<option value="less">LESS</option>
+										<option value="stylus">Stylus</option>
+										<option value="acss">Atomic CSS</option>
+									</select>
+								</label>
+								<div className="code-wrap__header-right-options">
+									<a
+										href="#"
+										id="cssSettingsBtn"
+										title="Atomic CSS configuration"
+										onClick={this.cssSettingsBtnClickHandler.bind(this)}
+										className="code-wrap__header-btn hide"
+									>
+										<svg>
+											<use xlinkHref="#settings-icon" />
+										</svg>
+									</a>
+									<a
+										className="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
+										title="Toggle code pane"
+										onClick={this.collapseBtnHandler.bind(this)}
+									/>
+								</div>
 							</div>
+							<UserCodeMirror
+								options={{
+									mode: 'css',
+									gutters: [
+										'error-gutter',
+										'CodeMirror-linenumbers',
+										'CodeMirror-foldgutter'
+									],
+									emmet: true,
+									prettier: true,
+									prettierParser: 'css'
+								}}
+								prefs={this.props.prefs}
+								onChange={this.onCssCodeChange.bind(this)}
+								onCreation={el => (this.cm.css = el)}
+								onFocus={this.editorFocusHandler.bind(this)}
+							/>
 						</div>
-						<UserCodeMirror
-							options={{
-								mode: 'css',
-								gutters: [
-									'error-gutter',
-									'CodeMirror-linenumbers',
-									'CodeMirror-foldgutter'
-								],
-								emmet: true,
-								prettier: true,
-								prettierParser: 'css'
-							}}
-							prefs={this.props.prefs}
-							onChange={this.onCssCodeChange.bind(this)}
-							onCreation={el => (this.cm.css = el)}
-							onFocus={this.editorFocusHandler.bind(this)}
-						/>
 					</div>
-					<div
-						data-code-wrap-id="0"
-						id="htmlCodeEl"
-						data-type="html"
-						class="code-wrap"
-						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
-					>
+					<div label="Sarcosuchus">
+
 						<div
-							class="js-code-wrap__header  code-wrap__header"
-							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
+							data-code-wrap-id="0"
+							id="htmlCodeEl"
+							data-type="html"
+							class="code-wrap"
+							onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 						>
-							<label class="btn-group" dropdow title="Click to change">
-								About
-							</label>
-							<div class="code-wrap__header-right-options">
-								<a
-									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
-									title="Toggle code pane"
-									onClick={this.collapseBtnHandler.bind(this)}
-								/>
+							<div
+								class="js-code-wrap__header  code-wrap__header"
+								onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
+							>
+								<label class="btn-group" dropdow title="Click to change">
+									About
+								</label>
+								<div class="code-wrap__header-right-options">
+									<a
+										class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
+										title="Toggle code pane"
+										onClick={this.collapseBtnHandler.bind(this)}
+									/>
+								</div>
+							</div>
+							<div>
+								Welcome to ZenUML.
 							</div>
 						</div>
-						<div>
-							Welcome to ZenUML.
-						</div>
 					</div>
-				</SplitPane>
+				</Tabs>
+				</div>
+				{/*<SplitPane*/}
+					{/*class="code-side"*/}
+					{/*id="js-code-side"*/}
+					{/*sizes={this.state.codeSplitSizes}*/}
+					{/*minSize={minCodeWrapSize}*/}
+					{/*direction={*/}
+						{/*this.props.currentLayoutMode === 2 ||*/}
+						{/*this.props.currentLayoutMode === 5*/}
+							{/*? 'horizontal'*/}
+							{/*: 'vertical'*/}
+					{/*}*/}
+					{/*onDragStart={this.codeSplitDragStart.bind(this)}*/}
+					{/*onDragEnd={this.codeSplitDragEnd.bind(this)}*/}
+					{/*onSplit={splitInstance => (this.codeSplitInstance = splitInstance)}*/}
+				{/*>*/}
+					{/**/}
+					{/**/}
+				{/*</Tabs>*/}
 				<div class="demo-side" id="js-demo-side" style="">
 					<iframe
 						ref={el => (this.frame = el)}

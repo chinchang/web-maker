@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import Tab from './Tab';
 
 class Tabs extends Component {
@@ -19,6 +18,7 @@ class Tabs extends Component {
 	onClickTabItem = (tab) => {
 		this.setState({ activeTab: tab });
 	}
+
 	static modifyChildren(child, visible) {
 		const className = [child.props.className, visible ? '' : 'hide'].join(' ');
 

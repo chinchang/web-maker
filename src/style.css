@@ -448,7 +448,7 @@ body:not(.light-version).overlay-visible .main-container {
 	width: 33%;
 }
 
-.code-wrap__header {
+/* .code-wrap__header {
 	display: flex;
 	flex-shrink: 0;
 	justify-content: space-between;
@@ -459,7 +459,7 @@ body:not(.light-version).overlay-visible .main-container {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 	font-weight: bold;
 	user-select: none;
-}
+} */
 
 .code-wrap__header-label {
 	/*transform: translate(0px) scale(1.2);*/
@@ -699,7 +699,6 @@ body > #demo-frame {
 .logo.small.gray {
 	-webkit-filter: grayscale(0.9);
 }
-
 
 .footer:hover .logo {
 	-webkit-filter: grayscale(0);
@@ -1729,8 +1728,48 @@ while the theme CSS file is loading */
 	border-right: 1px solid;
 }
 
-.cm-s-midnight .CodeMirror-activeline- background{
- background: #253540; }
+.cm-s-midnight .CodeMirror-activeline- background {
+	background: #253540;
+}
+
+
+.tab-list {
+	display:grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	padding:0;
+	margin:0;
+}
+
+.tab-list-item {
+	display:grid;
+	align-items: center;
+	justify-content: center;
+	padding:1em;
+	font-size:16px;
+	font-weight: bold;
+	letter-spacing: 0.6px;
+	white-space: nowrap;
+	color: #bbbfd3;
+	border-radius: 3px;
+	background: linear-gradient(
+		180deg,
+		rgba(0, 0, 0, 0.5) 0,
+		rgba(255, 255, 255, 0.1) 100%
+	);
+	border: 1px solid rgba(0, 0, 0, 0.9);
+}
+
+.tab-list-item:hover {
+	border: 1px solid rgba(63, 63, 63, 0.9);
+}
+
+.tab-list-active {
+	background: linear-gradient(
+		180deg,
+		rgba(41, 41, 41, 0.01) 0,
+		rgba(255, 255, 255, 0.201) 100%
+	);
+}
 
 #screenshotBtn svg path {
 	stroke: rgba(255, 255, 255, 0.2);

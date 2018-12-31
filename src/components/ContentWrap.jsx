@@ -689,7 +689,7 @@ export default class ContentWrap extends Component {
 			>
 				<div id="js-code-side">
 				<Tabs>
-					<div label="Gator">
+					<div label="ZenUML">
 						<div
 							data-code-wrap-id="2"
 							id="jsCodeEl"
@@ -697,7 +697,7 @@ export default class ContentWrap extends Component {
 							className="code-wrap"
 							onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 						>
-							<div
+							{/* <div
 								className="js-code-wrap__header  code-wrap__header"
 								title="Double click to toggle code pane"
 								ondblclick={this.codeWrapHeaderDblClickHandler.bind(this)}
@@ -725,7 +725,7 @@ export default class ContentWrap extends Component {
 										onClick={this.collapseBtnHandler.bind(this)}
 									/>
 								</div>
-							</div>
+							</div> */}
 							<UserCodeMirror
 								options={{
 									mode: 'htmlmixed',
@@ -746,7 +746,7 @@ export default class ContentWrap extends Component {
 							{/* Inlet(scope.cm.js); */}
 						</div>
 					</div>
-					<div label="Croc">
+					<div label={modes[this.props.currentItem.cssMode || 'css'].label}>
 						<div
 							data-code-wrap-id="1"
 							id="cssCodeEl"
@@ -754,17 +754,19 @@ export default class ContentWrap extends Component {
 							className="code-wrap"
 							onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 						>
-							<div
+						
+							 <div
 								className="js-code-wrap__header  code-wrap__header"
 								title="Double click to toggle code pane"
 								ondblclick={this.codeWrapHeaderDblClickHandler.bind(this)}
 							>
-								<label className="btn-group" title="Click to change">
-								<span className="code-wrap__header-label">
+							 <span className="caret"/> 
+								 <label className="btn-group" title="Click to change"> 
+								 <span className="code-wrap__header-label">
 									{modes[this.props.currentItem.cssMode || 'css'].label}
-								</span>
-									<span className="caret"/>
-									<select
+								</span> 
+									
+									 <select
 										data-type="css"
 										className="js-mode-select  hidden-select"
 										onChange={this.codeModeChangeHandler.bind(this)}
@@ -776,8 +778,8 @@ export default class ContentWrap extends Component {
 										<option value="less">LESS</option>
 										<option value="stylus">Stylus</option>
 										<option value="acss">Atomic CSS</option>
-									</select>
-								</label>
+									</select> 
+								 </label>
 								<div className="code-wrap__header-right-options">
 									<a
 										href="#"
@@ -790,13 +792,13 @@ export default class ContentWrap extends Component {
 											<use xlinkHref="#settings-icon" />
 										</svg>
 									</a>
-									<a
+									{/* <a
 										className="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
 										title="Toggle code pane"
 										onClick={this.collapseBtnHandler.bind(this)}
-									/>
+									/> */}
 								</div>
-							</div>
+							</div> 
 							<UserCodeMirror
 								options={{
 									mode: 'css',
@@ -816,7 +818,7 @@ export default class ContentWrap extends Component {
 							/>
 						</div>
 					</div>
-					<div label="Sarcosuchus">
+					<div label="About">
 
 						<div
 							data-code-wrap-id="0"
@@ -825,7 +827,7 @@ export default class ContentWrap extends Component {
 							class="code-wrap"
 							onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 						>
-							<div
+							{/* <div
 								class="js-code-wrap__header  code-wrap__header"
 								onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
 							>
@@ -839,7 +841,7 @@ export default class ContentWrap extends Component {
 										onClick={this.collapseBtnHandler.bind(this)}
 									/>
 								</div>
-							</div>
+							</div> */}
 							<div>
 								Welcome to ZenUML.
 							</div>

@@ -31,11 +31,9 @@ gulp.task('runWebpack', function() {
 });
 gulp.task('copyFiles', function() {
 	return merge(
-		gulp
-			.src('src/lib/codemirror/theme/*')
+		gulp.src('src/lib/codemirror/theme/*')
 			.pipe(gulp.dest('app/lib/codemirror/theme')),
-		gulp
-			.src('src/lib/codemirror/mode/**/*')
+		gulp.src('src/lib/codemirror/mode/**/*')
 			.pipe(gulp.dest('app/lib/codemirror/mode')),
 		gulp.src('src/lib/transpilers/*').pipe(gulp.dest('app/lib/transpilers')),
 		gulp.src('src/lib/prettier-worker.js').pipe(gulp.dest('app/lib/')),
@@ -43,6 +41,7 @@ gulp.task('copyFiles', function() {
 		gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib')),
 		gulp.src('src/lib/vue-sequence-ext.css').pipe(gulp.dest('app/lib')),
 		gulp.src('src/assets/*').pipe(gulp.dest('app/assets')),
+		gulp.src('src/animation/*').pipe(gulp.dest('app/animation')),
 		gulp.src('src/templates/*').pipe(gulp.dest('app/templates')),
 		gulp.src('src/lib/bundle.js').pipe(gulp.dest('app/lib')),
 		gulp.src('icons/*').pipe(gulp.dest('app/icons')),

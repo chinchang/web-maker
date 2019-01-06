@@ -184,9 +184,24 @@ export default class App extends Component {
 		);
 		// Get synced `preserveLastCode` setting to get back last code (or not).
 		db.getSettings(this.defaultSettings).then(result => {
+			const getQueryParameter = (key) => {
+				let search = window.location.search;
+				if(search.length < 1) return;
+
+				let query = search.substr(1);
+				let array = query.split('&');
+				for(let i = 0; i < array.length; i++) {
+					let pair = array[i].split('=');
+					if(pair[0] === key) {
+						return decodeURIComponent(pair[1]);
+					}
+				}
+			}
+
 			//If query parameter 'itemId' presents
-			if(this.props.itemId) {
-				itemService.getItem(this.props.itemId).then(item => {
+			let itemId = getQueryParameter('itemId');
+			if(itemId) {
+				itemService.getItem(itemId).then(item => {
 					if(item) {
 						const resolveCurrentItem = (items) => {
 							if(items && items[item.id]) {

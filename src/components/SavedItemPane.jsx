@@ -220,6 +220,7 @@ export default class SavedItemPane extends Component {
 					</div>
 				</div>
 				<input
+					type="search"
 					id="searchInput"
 					class="search-input"
 					onInput={this.searchInputHandler.bind(this)}

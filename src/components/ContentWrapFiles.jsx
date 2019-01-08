@@ -40,7 +40,6 @@ export default class ContentWrapFiles extends Component {
 		this.updateDelay = 500;
 		this.htmlMode = HtmlModes.HTML;
 		this.prefs = {};
-		this.codeInPreview = { html: null, css: null, js: null };
 		this.cmCodes = { html: props.currentItem.html, css: '', js: '' };
 
 		window.onMessageFromConsole = this.onMessageFromConsole.bind(this);
@@ -220,17 +219,13 @@ export default class ContentWrapFiles extends Component {
 		}, this.updateDelay);
 	}
 
-	createPreviewFile(html, css, js) {
-		// Track if people have written code.
-		if (!trackEvent.hasTrackedCode && (html || css || js)) {
-			trackEvent('fn', 'hasCode');
-			trackEvent.hasTrackedCode = true;
-		}
-
+	createPreviewFile() {
 		var obj = {};
 		const duplicateFiles = JSON.parse(
 			JSON.stringify(this.props.currentItem.files)
 		);
+		// Namespace all file paths to '/user' because thats what the service worker
+		// recognizes.
 		const files = linearizeFiles(assignFilePaths(duplicateFiles, '/user'));
 
 		files.forEach(file => {
@@ -298,10 +293,6 @@ export default class ContentWrapFiles extends Component {
 		// 		this.showErrors(resultItem.errors.lang, resultItem.errors.data);
 		// 	}
 		// });
-
-		this.codeInPreview.html = currentCode.html;
-		this.codeInPreview.css = currentCode.css;
-		this.codeInPreview.js = currentCode.js;
 	}
 	isValidItem(item) {
 		return !!item.title;

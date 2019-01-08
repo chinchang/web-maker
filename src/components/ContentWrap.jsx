@@ -692,7 +692,7 @@ export default class ContentWrap extends Component {
 				onDragEnd={this.mainSplitDragEndHandler.bind(this)}
 			>
 				<div id="js-code-side">
-				<Tabs onRef={tabs => (this.tabsRef = tabs)}>
+				<Tabs ref={tabs => (this.tabsRef = tabs)}>
 					<div label="ZenUML">
 						<div
 							data-code-wrap-id="2"

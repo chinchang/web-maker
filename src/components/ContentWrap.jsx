@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import React, { h, Component } from 'preact';
 import UserCodeMirror from './UserCodeMirror.jsx';
 import Tabs from './Tabs.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
@@ -675,6 +675,10 @@ export default class ContentWrap extends Component {
 		this.props.onEditorFocus(editor);
 	}
 
+	resetTabs() {
+		this.tabsRef.onInit()
+	}
+
 	render() {
 		return (
 			<SplitPane
@@ -688,7 +692,7 @@ export default class ContentWrap extends Component {
 				onDragEnd={this.mainSplitDragEndHandler.bind(this)}
 			>
 				<div id="js-code-side">
-				<Tabs>
+				<Tabs onRef={tabs => (this.tabsRef = tabs)}>
 					<div label="ZenUML">
 						<div
 							data-code-wrap-id="2"
@@ -754,18 +758,18 @@ export default class ContentWrap extends Component {
 							className="code-wrap"
 							onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 						>
-						
+
 							 <div
 								className="js-code-wrap__header  code-wrap__header"
 								title="Double click to toggle code pane"
 								ondblclick={this.codeWrapHeaderDblClickHandler.bind(this)}
 							>
-							 <span className="caret"/> 
-								 <label className="btn-group" title="Click to change"> 
+							 <span className="caret"/>
+								 <label className="btn-group" title="Click to change">
 								 <span className="code-wrap__header-label">
 									{modes[this.props.currentItem.cssMode || 'css'].label}
-								</span> 
-									
+								</span>
+
 									 <select
 										data-type="css"
 										className="js-mode-select  hidden-select"
@@ -778,7 +782,7 @@ export default class ContentWrap extends Component {
 										<option value="less">LESS</option>
 										<option value="stylus">Stylus</option>
 										<option value="acss">Atomic CSS</option>
-									</select> 
+									</select>
 								 </label>
 								<div className="code-wrap__header-right-options">
 									<a
@@ -798,7 +802,7 @@ export default class ContentWrap extends Component {
 										onClick={this.collapseBtnHandler.bind(this)}
 									/> */}
 								</div>
-							</div> 
+							</div>
 							<UserCodeMirror
 								options={{
 									mode: 'css',

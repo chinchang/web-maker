@@ -1205,7 +1205,8 @@ export default class App extends Component {
 			.then(json => {
 				this.forkItem(json);
 			});
-		this.setState({ isCreateNewModalOpen: false });
+		this.setState({ isCreateNewModalOpen: false, activeTab: 'ZenUML' });
+		this.contentWrap.resetTabs();
 	}
 
 	render() {

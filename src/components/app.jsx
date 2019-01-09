@@ -1195,7 +1195,8 @@ export default class App extends Component {
 	}
 	blankTemplateSelectHandler() {
 		this.createNewItem();
-		this.setState({ isCreateNewModalOpen: false });
+		this.setState({ isCreateNewModalOpen: false, activeTab: 'ZenUML' });
+		this.contentWrap.resetTabs();
 	}
 
 	templateSelectHandler(template) {

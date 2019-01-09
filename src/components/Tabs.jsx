@@ -9,12 +9,14 @@ class Tabs extends Component {
 
 	constructor(props) {
 		super(props);
+		this.onInit();
+	}
 
+	onInit = () => {
 		this.state = {
 			activeTab: this.props.children[0].props.label,
 		};
 	}
-
 	onClickTabItem = (tab) => {
 		this.setState({ activeTab: tab });
 	}
@@ -38,7 +40,6 @@ class Tabs extends Component {
 				activeTab,
 			}
 		} = this;
-
 		return (
 			<div className="tabs">
 				<ol className="tab-list">

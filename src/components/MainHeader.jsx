@@ -44,14 +44,6 @@ export function MainHeader(props) {
 						{props.externalLibCount}
 					</span>
 				</Button>
-				<a
-					className="btn--primary hint--rounded  hint--bottom-left"
-					rel="noopener noreferer"
-					href="https://payment-test.zenuml.com/?from=app-or-extension"
-					target="_blank"
-				>
-					Upgrade
-				</a>
 				<button
 					className="btn--dark flex  flex-v-center hint--rounded hint--bottom-left"
 					aria-label="Start a new creation"

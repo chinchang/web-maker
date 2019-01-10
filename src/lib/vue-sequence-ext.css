@@ -1,8 +1,15 @@
+body {
+	margin: 0;
+}
+
+.sequence-diagram {
+	margin-top: 20px;
+}
 
 .button {
 	backface-visibility: hidden;
 	position: relative;
-	margin: 20px;
+	margin: 1px;
 	cursor: pointer;
 	display: inline-block;
 	white-space: nowrap;

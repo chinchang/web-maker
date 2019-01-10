@@ -10,7 +10,7 @@ export default [
 		img: 'assets/advanced-icon.png'
 	},
 	{
-		id: 'startUMLTheme',
+		id: 'starUMLTheme',
 		title: 'StarUML',
 		img: 'assets/star-icon.png'
 	}

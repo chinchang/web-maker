@@ -11,8 +11,8 @@ export default [
 	},
 	{
 		id: 'startUMLTheme',
-		title: 'StarUML',
-		img: 'assets/star-icon.png'
+		title: 'startUML Theme',
+		img: 'assets/start-icon.png'
 	}
 
 ];

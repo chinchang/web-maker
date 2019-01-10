@@ -1,0 +1,13 @@
+{
+	"title": "startUML Theme",
+	"updatedOn": 1540223760000,
+	"sizes": ["", "calc(17.4842% - 6px)", "calc(49.1221% - 3px)"],
+	"mainSizes": [68.1051, 31.6949],
+	"htmlMode": "html",
+	"cssMode": "less",
+	"jsMode": "js",
+	"layoutMode": 1,
+    "js": "// This is a sample\nA.do() {\n  if (condition1) {\n    X.doSomething()\n  } else if (condition2) {\n    Y.doSomethingElse\n  } else {\n  doNothing()\n  }\n}",
+    "css":"// This is a sample\n@borderColor: #b94065;\n    #diagram {\n      .sequence-diagram {\n        .lifeline {\n          .participant {\n            font-weight: 400;\n            border: 2px solid @borderColor;\n            background: #fffec8;\n                        \nlabel {\n              text-decoration: underline;\n            }\n          }\n          .line {\n            border-left-color: @borderColor;\n          }\n           }\n        .message {\n          border-bottom-color: @borderColor;\n          svg {\n            polyline {\n              fill: @borderColor;\n              stroke: @borderColor;\n            }\n          }\n        }\n        .message.self {\n          svg>polyline:not(.head) {\n            fill: none;\n          }\n        }\n        .occurrence {\n          background-color: white;\n          border: 2px solid @borderColor;\n        }\n      }\n    }",
+	"html": ""
+}

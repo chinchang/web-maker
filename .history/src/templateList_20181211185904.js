@@ -8,11 +8,5 @@ export default [
 		id: 'advanced',
 		title: 'Advanced',
 		img: 'assets/advanced-icon.png'
-	},
-	{
-		id: 'startUMLTheme',
-		title: 'StarUML',
-		img: 'assets/star-icon.png'
 	}
-
 ];

@@ -1,0 +1,12 @@
+{
+	"title": "Basic",
+
+	"sizes": ["", "calc(17.4842% - 6px)", "calc(49.1221% - 3px)"],
+	"mainSizes": [68.1051, 31.6949],
+	"htmlMode": "html",
+	"cssMode": "css",
+	"jsMode": "js",
+	"layoutMode": 2,
+	"js": "// This is a sample\nA.method() {\n  if(condition) {\n    B.method()\n  }\n}",
+	"html": ""
+}

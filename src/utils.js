@@ -311,27 +311,20 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 	if (!item) {
 		return '';
 	}
-	var externalJs = '',
-		externalCss = '';
-	if (item.externalLibs) {
-		externalJs = item.externalLibs.js
-			.split('\n')
-			.reduce(function(scripts, url) {
-				return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
-			}, '');
-		externalCss = item.externalLibs.css
-			.split('\n').concat([			(chrome.extension
+
+	var	externalCss = [			(chrome.extension
 				? chrome.extension.getURL('lib/vue-sequence-ext.css')
 				: `${location.origin}${
 					window.DEBUG ? '' : BASE_PATH
-					}/lib/vue-sequence-ext.css`), 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'])
+					}/lib/vue-sequence-ext.css`),
+		'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css']
 			.reduce(function(links, url) {
 				return (
 					links +
 					(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
 				);
 			}, '');
-	}
+
 	var contents =
 		'<!DOCTYPE html>\n' +
 		'<html>\n<head>\n' +
@@ -344,8 +337,6 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 		'</head>\n' +
 		'<body>\n' +
 		html +
-		'\n' +
-		externalJs +
 		'\n';
 
 	if (!isForExport) {

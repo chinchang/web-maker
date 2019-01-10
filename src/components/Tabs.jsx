@@ -19,6 +19,7 @@ class Tabs extends Component {
 	}
 	onClickTabItem = (tab) => {
 		this.setState({ activeTab: tab });
+		this.props.onChange(tab);
 	}
 
 	static modifyChildren(child, visible) {

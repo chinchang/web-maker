@@ -679,6 +679,14 @@ export default class ContentWrap extends Component {
 		this.tabsRef.onInit()
 	}
 
+	onTabChanges(tab) {
+		if (tab === 'ZenUML') {
+			this.dslEditor.refreshEditor();
+		} else {
+			this.cssEditor.refreshEditor();
+		}
+	}
+
 	render() {
 		return (
 			<SplitPane
@@ -692,7 +700,8 @@ export default class ContentWrap extends Component {
 				onDragEnd={this.mainSplitDragEndHandler.bind(this)}
 			>
 				<div id="js-code-side">
-				<Tabs ref={tabs => (this.tabsRef = tabs)}>
+				<Tabs ref={tabs => (this.tabsRef = tabs)}
+					  onChange={this.onTabChanges.bind(this)}>
 					<div label="ZenUML">
 						<div
 							data-code-wrap-id="2"
@@ -731,6 +740,7 @@ export default class ContentWrap extends Component {
 								</div>
 							</div> */}
 							<UserCodeMirror
+								ref={dslEditor => (this.dslEditor = dslEditor)}
 								options={{
 									mode: 'htmlmixed',
 									profile: 'xhtml',
@@ -750,7 +760,7 @@ export default class ContentWrap extends Component {
 							{/* Inlet(scope.cm.js); */}
 						</div>
 					</div>
-					<div label={modes[this.props.currentItem.cssMode || 'css'].label}>
+					<div label="CSS">
 						<div
 							data-code-wrap-id="1"
 							id="cssCodeEl"
@@ -804,6 +814,7 @@ export default class ContentWrap extends Component {
 								</div>
 							</div>
 							<UserCodeMirror
+								ref={cssEditor => (this.cssEditor = cssEditor)}
 								options={{
 									mode: 'css',
 									gutters: [

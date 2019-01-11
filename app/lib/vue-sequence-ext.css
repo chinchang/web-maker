@@ -6,6 +6,20 @@ body {
 	margin-top: 20px;
 }
 
+@media screen and (max-width: 600px) {
+	.block--mobile {
+		display: block;
+	}
+
+	.ml-0--mobile {
+		margin-left: 0rem;
+	}
+
+	.hide-on-mobile {
+		display: none !important;
+	}
+}
+
 .button {
 	backface-visibility: hidden;
 	position: relative;

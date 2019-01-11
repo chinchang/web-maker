@@ -426,8 +426,8 @@ body:not(.light-version).overlay-visible .main-container {
 	display: flex;
 	flex-direction: column;
 	flex-basis: inherit;
-	height: 33%;
-	overflow: hidden;
+	/*height: 33%;*/
+	/*overflow: hidden;*/
 	position: relative;
 	background: var(--color-bg);
 	transition: height 0.3s ease, width 0.3s ease;
@@ -525,7 +525,8 @@ body:not(.light-version).overlay-visible .main-container {
 
 .CodeMirror {
 	width: 100%;
-	height: calc(100% - 25px);
+	/*height: calc(100% - 25px);*/
+	height: auto;
 	/* 25px for header */
 	font-size: var(--code-font-size);
 }

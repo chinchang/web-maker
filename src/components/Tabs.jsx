@@ -42,7 +42,7 @@ class Tabs extends Component {
 			}
 		} = this;
 		return (
-			<div className="tabs" style="overflow:hidden; height: 100%;">
+			<div className="tabs" style="height:100%">
 				<ol className="tab-list">
 					{children.map((child) => {
 						const { label } = child.props;
@@ -56,7 +56,7 @@ class Tabs extends Component {
 						);
 					})}
 				</ol>
-				<div className="tab-content">
+				<div className="tab-content" style="height: calc(100% - 45px); overflow-y:auto;-webkit-overflow-scrolling: touch;">
 					{children.map((child) => {
 						if (child.props.label !== activeTab) {
 							return child.props.children.map(c => Tabs.modifyChildren(c, false))

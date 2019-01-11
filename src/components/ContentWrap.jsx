@@ -701,7 +701,8 @@ export default class ContentWrap extends Component {
 			>
 				<div id="js-code-side">
 				<Tabs ref={tabs => (this.tabsRef = tabs)}
-					  onChange={this.onTabChanges.bind(this)}>
+					  onChange={this.onTabChanges.bind(this)}
+					  style="height: 100%;display:flex;flex-direction: column;">
 					<div label="ZenUML">
 						<div
 							data-code-wrap-id="2"
@@ -882,7 +883,7 @@ export default class ContentWrap extends Component {
 					{/**/}
 					{/**/}
 				{/*</Tabs>*/}
-				<div class="demo-side" id="js-demo-side" style="">
+				<div class="demo-side" id="js-demo-side" style="overflow-y: auto; -webkit-overflow-scrolling: touch;">
 					<iframe
 						ref={el => (this.frame = el)}
 						frameborder="0"

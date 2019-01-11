@@ -445,7 +445,6 @@ body:not(.light-version).overlay-visible .main-container {
 
 .layout-2 .code-wrap {
 	height: auto;
-	width: 33%;
 }
 
 /* .code-wrap__header {

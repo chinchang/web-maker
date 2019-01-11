@@ -42,11 +42,10 @@ class Tabs extends Component {
 			}
 		} = this;
 		return (
-			<div className="tabs">
+			<div className="tabs" style="overflow:hidden; height: 100%;">
 				<ol className="tab-list">
 					{children.map((child) => {
 						const { label } = child.props;
-
 						return (
 							<Tab
 								activeTab={activeTab}

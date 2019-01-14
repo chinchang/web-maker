@@ -330,7 +330,7 @@ export default class App extends Component {
 				d.getMinutes(),
 			html: '',
 			css: '/* Prefix your CSS rules with `#diagram` */',
-			js: '// Your ZenUML code here',
+			js: '// Sample code (click "NEW" to find more) \r\n A->B: message \r\n A.method1() {\r\n  B.method2()\r\n}',
 			externalLibs: { js: '', css: '' },
 			layoutMode: this.state.currentLayoutMode
 		}).then(() => this.refreshEditor());
@@ -1382,10 +1382,10 @@ export default class App extends Component {
 					dontAskBtnClickHandler={this.dontAskToImportAnymore.bind(this)}
 				/>
 
-				<OnboardingModal
-					show={this.state.isOnboardModalOpen}
-					closeHandler={() => this.setState({ isOnboardModalOpen: false })}
-				/>
+				{/*<OnboardingModal*/}
+					{/*show={this.state.isOnboardModalOpen}*/}
+					{/*closeHandler={() => this.setState({ isOnboardModalOpen: false })}*/}
+				{/*/>*/}
 
 				<Js13KModal
 					show={this.state.isJs13KModalOpen}

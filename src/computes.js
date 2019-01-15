@@ -8,7 +8,7 @@ const esprima = require('esprima');
 // to whatever mode is selected and resolve the returned promise with the code.
 export function computeHtml(userCode, mode) {
 	var code =
-		'<main id="demo">\n' + '<button id="btnDownloadPng" class="button"><div></div><i class="fa fa-file-image-o"></i> \n' +
+		'<main id="demo">\n' + '<button id="btnDownloadPng" class="button hide-on-mobile"><div></div><i class="fa fa-file-image-o"></i> \n' +
 		'  Export as PNG\n' +
 		'</button>' + ' <div id="diagram">   <seq-diagram></seq-diagram>\n </div>' + '  </main>';
 

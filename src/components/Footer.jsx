@@ -246,7 +246,6 @@ export default class Footer extends Component {
 						onClick={this.layoutBtnClickhandler.bind(this, 1)}
 						id="layoutBtn1"
 						class="mode-btn hide-on-mobile"
-						style="display: none"
 						aria-label="Switch to layout with preview on right"
 					>
 						<svg viewBox="0 0 100 100" style="transform:rotate(-90deg)">
@@ -257,7 +256,6 @@ export default class Footer extends Component {
 						onClick={this.layoutBtnClickhandler.bind(this, 2)}
 						id="layoutBtn2"
 						class="mode-btn hide-on-mobile"
-						style="display: none"
 						aria-label="Switch to layout with preview on bottom"
 					>
 						<svg viewBox="0 0 100 100">
@@ -268,7 +266,6 @@ export default class Footer extends Component {
 						onClick={this.layoutBtnClickhandler.bind(this, 3)}
 						id="layoutBtn3"
 						class="mode-btn hide-on-mobile"
-						style="display: none"
 						aria-label="Switch to layout with preview on left"
 					>
 						<svg viewBox="0 0 100 100" style="transform:rotate(90deg)">

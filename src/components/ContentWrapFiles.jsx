@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import CodeEditor from './CodeEditor';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
-import { log, loadJS } from '../utils';
+import { log, loadJS, BASE_PATH } from '../utils';
 
 import {
 	linearizeFiles,

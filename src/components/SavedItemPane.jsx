@@ -88,54 +88,6 @@ export default class SavedItemPane extends Component {
 		}
 	}
 
-	mergeImportedItems(items) {
-		var existingItemIds = [];
-		var toMergeItems = {};
-		const d = deferred();
-		const savedItems = {};
-		this.items.forEach(item => (savedItems[item.id] = item));
-		items.forEach(item => {
-			// We can access `savedItems` here because this gets set when user
-			// opens the saved creations panel. And import option is available
-			// inside the saved items panel.
-			if (savedItems[item.id]) {
-				// Item already exists
-				existingItemIds.push(item.id);
-			} else {
-				log('merging', item.id);
-				toMergeItems[item.id] = item;
-			}
-		});
-		var mergedItemCount = items.length - existingItemIds.length;
-		if (existingItemIds.length) {
-			var shouldReplace = confirm(
-				existingItemIds.length +
-					' creations already exist. Do you want to replace them?'
-			);
-			if (shouldReplace) {
-				log('shouldreplace', shouldReplace);
-				items.forEach(item => {
-					toMergeItems[item.id] = item;
-				});
-				mergedItemCount = items.length;
-			}
-		}
-		if (mergedItemCount) {
-			itemService.saveItems(toMergeItems).then(() => {
-				d.resolve();
-				alertsService.add(
-					mergedItemCount + ' creations imported successfully.'
-				);
-				trackEvent('fn', 'itemsImported', mergedItemCount);
-			});
-		} else {
-			d.resolve();
-		}
-		this.props.closeHandler();
-
-		return d.promise;
-	}
-
 	importFileChangeHandler(e) {
 		var file = e.target.files[0];
 
@@ -145,7 +97,7 @@ export default class SavedItemPane extends Component {
 			try {
 				items = JSON.parse(progressEvent.target.result);
 				log(items);
-				this.mergeImportedItems(items);
+				this.props.mergeImportedItems(items);
 			} catch (exception) {
 				log(exception);
 				alert(

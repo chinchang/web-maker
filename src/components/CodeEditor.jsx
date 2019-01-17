@@ -156,10 +156,12 @@ export default class CodeEditor extends Component {
 		if (!window.monaco) return;
 
 		if (this.props.type === 'monaco') {
-			monaco.editor.setModelLanguage(
-				this.instance.getModel(),
-				this.getMonacoLanguageFromMode(modes[value].cmMode)
-			);
+			this.monacoEditorReadyDeferred.promise.then(() => {
+				monaco.editor.setModelLanguage(
+					this.instance.getModel(),
+					this.getMonacoLanguageFromMode(modes[value].cmMode)
+				);
+			});
 		} else {
 			this.instance.setOption('mode', modes[value].cmMode);
 			CodeMirror.autoLoadMode(

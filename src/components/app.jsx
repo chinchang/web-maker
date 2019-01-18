@@ -1,7 +1,7 @@
 /* global htmlCodeEl, cssCodeEl, jsCodeEl, runBtn
  */
 
-import { h, Component } from 'preact';
+import { Component } from 'preact';
 
 import { MainHeader } from './MainHeader.jsx';
 import ContentWrap from './ContentWrap.jsx';
@@ -29,8 +29,6 @@ import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { trackEvent } from '../analytics';
 import { deferred } from '../deferred';
 import { alertsService } from '../notifications';
-import firebase from 'firebase/app';
-import 'firebase/auth';
 import { Profile } from './Profile';
 import { auth } from '../auth';
 import { SupportDeveloperModal } from './SupportDeveloperModal';
@@ -45,15 +43,13 @@ import { Js13KModal } from './Js13KModal';
 import { CreateNewModal } from './CreateNewModal';
 import { Icons } from './Icons';
 import JSZip from 'jszip';
+import { firebaseAuthIntegration } from '../javascript/firebase/auth';
+import { LocalStorageKeys } from '../javascript/app/config';
 
 if (module.hot) {
 	require('preact/debug');
 }
 
-const LocalStorageKeys = {
-	LOGIN_AND_SAVE_MESSAGE_SEEN: 'loginAndsaveMessageSeen',
-	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
-};
 const UNSAVED_WARNING_COUNT = 15;
 const version = '3.6.0';
 
@@ -113,52 +109,7 @@ export default class App extends Component {
 		};
 		this.prefs = {};
 
-		const firestore = firebase.firestore();
-		const settings = {timestampsInSnapshots: true};
-		firestore.settings(settings);
-		firebase.auth().onAuthStateChanged(user => {
-			this.setState({ isLoginModalOpen: false });
-			if (user) {
-				log('You are -> ', user);
-				alertsService.add('You are now logged in!');
-				this.setState({ user });
-				window.user = user;
-				if (!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS]) {
-					this.fetchItems(false, true).then(items => {
-						if (!items.length) {
-							return;
-						}
-						this.oldSavedItems = items;
-						this.oldSavedCreationsCount = items.length;
-						this.setState({
-							isAskToImportModalOpen: true
-						});
-						trackEvent('ui', 'askToImportModalSeen');
-					});
-				}
-				window.db.getUser(user.uid).then(customUser => {
-					if (customUser) {
-						const prefs = { ...this.state.prefs };
-						Object.assign(prefs, user.settings);
-						this.setState({ prefs: prefs });
-						this.updateSetting();
-					}
-
-					if(this.onUserItemsResolved) {
-						this.onUserItemsResolved(user.items);
-					}
-				});
-			} else {
-				// User is signed out.
-				this.setState({ user: undefined });
-				delete window.user;
-
-				if(this.onUserItemsResolved) {
-					this.onUserItemsResolved(null);
-				}
-			}
-			this.updateProfileUi();
-		});
+		firebaseAuthIntegration(this);
 	}
 	componentWillMount() {
 		var lastCode;

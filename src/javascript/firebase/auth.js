@@ -6,9 +6,6 @@ import { trackEvent } from '../../analytics';
 import { LocalStorageKeys } from '../app/config';
 
 function firebaseAuthIntegration(app) {
-	const firestore = firebase.firestore();
-	const settings = { timestampsInSnapshots: true };
-	firestore.settings(settings);
 	firebase.auth().onAuthStateChanged(user => {
 		app.setState({ isLoginModalOpen: false });
 		if (user) {

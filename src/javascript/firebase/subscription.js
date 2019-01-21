@@ -17,11 +17,24 @@ async function retrieveSubscription(firestore, userId) {
 	});
 }
 
+function updateUiWithSubcriptionStatus(subscription) {
+
+	const isSubscriptionOnGoing = subscription && subscription['ends_at'] === null;
+	const isSubscriptionValid = subscription && subscription['ends_at'] !== null && ((new Date(subscription['ends_at']) - new Date()) >= 0);
+
+
+	if (isSubscriptionOnGoing || isSubscriptionValid) {
+		document.body.classList.add('is-in-subscription');
+	} else {
+		document.body.classList.remove('is-in-subscription');
+	}
+}
 
 function loadSubscriptionToApp(userId) {
 	window.db.getDb().then(async firestore => {
-			window.user.subscrition = await retrieveSubscription(firestore, userId);
-			console.log(window.user.subscrition);
+			const subscription = await retrieveSubscription(firestore, userId);
+			window.user.subscrition = subscription;
+			updateUiWithSubcriptionStatus(subscription);
 		}
 	);
 }

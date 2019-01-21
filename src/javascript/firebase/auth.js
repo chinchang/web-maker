@@ -4,6 +4,7 @@ import { log } from '../../utils';
 import { alertsService } from '../../notifications';
 import { trackEvent } from '../../analytics';
 import { LocalStorageKeys } from '../app/config';
+import { loadSubscriptionToApp } from './subscription';
 
 function firebaseAuthIntegration(app) {
 	firebase.auth().onAuthStateChanged(user => {
@@ -38,6 +39,8 @@ function firebaseAuthIntegration(app) {
 					app.onUserItemsResolved(user.items);
 				}
 			});
+
+			loadSubscriptionToApp(user.uid);
 		} else {
 			// User is signed out.
 			app.setState({ user: undefined });

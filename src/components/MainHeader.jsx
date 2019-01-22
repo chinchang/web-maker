@@ -116,7 +116,6 @@ export function MainHeader(props) {
 						src={props.user ? props.user.photoURL || DEFAULT_PROFILE_IMG : ''}
 						className="main-header__avatar-img"
 					/>
-					<text id="headerSubscriptionBadge" className="hide-without-subscription" style="font-size:24px">🎖</text>
 				</Button>
 			</div>
 		</div>

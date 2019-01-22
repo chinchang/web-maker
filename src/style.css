@@ -1519,7 +1519,6 @@ body > #demo-frame {
 
 body.is-logged-in .hide-on-login,
 body:not(.is-logged-in) .hide-on-logout,
-body:not(.is-in-subscription) .hide-without-subscription,
 body:not(.is-extension) .show-when-extension,
 body:not(.is-app) .show-when-app {
 	display: none;

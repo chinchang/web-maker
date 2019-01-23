@@ -45,6 +45,7 @@ import { Js13KModal } from './Js13KModal';
 import { CreateNewModal } from './CreateNewModal';
 import { Icons } from './Icons';
 import JSZip from 'jszip';
+import { loadSubscriptionToApp } from '../javascript/firebase/subscription';
 
 if (module.hot) {
 	require('preact/debug');
@@ -148,6 +149,9 @@ export default class App extends Component {
 						this.onUserItemsResolved(user.items);
 					}
 				});
+
+				//load subscription from firestore
+				loadSubscriptionToApp(user.uid);
 			} else {
 				// User is signed out.
 				this.setState({ user: undefined });

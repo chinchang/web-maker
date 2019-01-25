@@ -151,7 +151,13 @@ export default class App extends Component {
 				});
 
 				//load subscription from firestore
-				loadSubscriptionToApp(user.uid);
+				loadSubscriptionToApp(user.uid).then(value => {
+					this.setState(state => {
+						const newUser = state.user;
+						newUser.subscription = value;
+						return { user: newUser };
+					});
+				});
 			} else {
 				// User is signed out.
 				this.setState({ user: undefined });

@@ -31,10 +31,11 @@ function updateUiWithSubcriptionStatus(subscription) {
 }
 
 function loadSubscriptionToApp(userId) {
-	window.db.getDb().then(async firestore => {
+	return window.db.getDb().then(async firestore => {
 			const subscription = await retrieveSubscription(firestore, userId);
 			window.user.subscrition = subscription;
-			updateUiWithSubcriptionStatus(subscription);
+			return subscription;
+			// updateUiWithSubcriptionStatus(subscription);
 		}
 	);
 }

@@ -22,10 +22,10 @@ function loadSubscriptionToApp(app) {
 		.then(async firestore => {
 				return await retrieveSubscription(firestore, app.state.user.uid);
 			}
-		).then(value => {
+		).then(subscription => {
 		app.setState(state => {
 			const newUser = state.user;
-			newUser.subscription = value;
+			newUser.subscription = subscription;
 			return { user: newUser };
 		});
 	});

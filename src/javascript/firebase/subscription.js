@@ -16,26 +16,9 @@ async function retrieveSubscription(firestore, userId) {
 		return null;
 	});
 }
-
-function updateUiWithSubcriptionStatus(subscription) {
-
-	const isSubscriptionOnGoing = subscription && subscription['ends_at'] === null;
-	const isSubscriptionValid = subscription && subscription['ends_at'] !== null && ((new Date(subscription['ends_at']) - new Date()) >= 0);
-
-
-	if (isSubscriptionOnGoing || isSubscriptionValid) {
-		document.body.classList.add('is-in-subscription');
-	} else {
-		document.body.classList.remove('is-in-subscription');
-	}
-}
-
 function loadSubscriptionToApp(userId) {
 	return window.db.getDb().then(async firestore => {
-			const subscription = await retrieveSubscription(firestore, userId);
-			window.user.subscrition = subscription;
-			return subscription;
-			// updateUiWithSubcriptionStatus(subscription);
+		return await retrieveSubscription(firestore, userId);
 		}
 	);
 }

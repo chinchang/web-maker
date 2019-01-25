@@ -16,11 +16,19 @@ async function retrieveSubscription(firestore, userId) {
 		return null;
 	});
 }
-function loadSubscriptionToApp(userId) {
-	return window.db.getDb().then(async firestore => {
-		return await retrieveSubscription(firestore, userId);
-		}
-	);
+
+function loadSubscriptionToApp(app) {
+	window.db.getDb()
+		.then(async firestore => {
+				return await retrieveSubscription(firestore, app.state.user.uid);
+			}
+		).then(value => {
+		app.setState(state => {
+			const newUser = state.user;
+			newUser.subscription = value;
+			return { user: newUser };
+		});
+	});
 }
 
 export { loadSubscriptionToApp };

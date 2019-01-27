@@ -111,9 +111,11 @@ export default class CodeEditor extends Component {
 		this.initEditor();
 	}
 	setModel(model) {
-		this.instance.swapDoc
-			? this.instance.swapDoc(model)
-			: this.instance.setModel(model);
+		this.editorReadyDeferred.promise.then(() => {
+			this.instance.swapDoc
+				? this.instance.swapDoc(model)
+				: this.instance.setModel(model);
+		});
 	}
 	setValue(value) {
 		// HACK: We set a flag on window for an ultra-short duration, which 'change'
@@ -129,6 +131,7 @@ export default class CodeEditor extends Component {
 		// We save last set value so that when editor type changes, we can
 		// populate that last value
 		this.lastSetValue = value;
+		this.refresh();
 	}
 	getValue() {
 		return this.instance.getValue();
@@ -145,7 +148,7 @@ export default class CodeEditor extends Component {
 	}
 	setOption(option, value) {
 		if (this.props.type === 'monaco') {
-			this.monacoEditorReadyDeferred.promise.then(() => {
+			this.editorReadyDeferred.promise.then(() => {
 				this.instance.updateOptions({ [option]: value });
 			});
 		} else {
@@ -155,26 +158,28 @@ export default class CodeEditor extends Component {
 	setLanguage(value) {
 		if (!window.monaco) return;
 
-		if (this.props.type === 'monaco') {
-			this.monacoEditorReadyDeferred.promise.then(() => {
+		this.editorReadyDeferred.promise.then(() => {
+			if (this.props.type === 'monaco') {
 				monaco.editor.setModelLanguage(
 					this.instance.getModel(),
 					this.getMonacoLanguageFromMode(modes[value].cmMode)
 				);
-			});
-		} else {
-			this.instance.setOption('mode', modes[value].cmMode);
-			CodeMirror.autoLoadMode(
-				this.instance,
-				modes[value].cmPath || modes[value].cmMode
-			);
-		}
+			} else {
+				this.instance.setOption('mode', modes[value].cmMode);
+				CodeMirror.autoLoadMode(
+					this.instance,
+					modes[value].cmPath || modes[value].cmMode
+				);
+			}
+		});
 	}
 
 	clearGutter(gutterName) {
-		if (this.instance.clearGutter) {
-			this.instance.clearGutter(gutterName);
-		}
+		this.editorReadyDeferred.promise.then(() => {
+			if (this.instance.clearGutter) {
+				this.instance.clearGutter(gutterName);
+			}
+		});
 	}
 
 	showErrors(errors) {
@@ -191,10 +196,14 @@ export default class CodeEditor extends Component {
 	}
 
 	refresh() {
-		this.instance.refresh ? this.instance.refresh() : this.instance.layout();
+		this.editorReadyDeferred.promise.then(() => {
+			this.instance.refresh ? this.instance.refresh() : this.instance.layout();
+		});
 	}
 	focus() {
-		this.instance.focus();
+		this.editorReadyDeferred.promise.then(() => {
+			this.instance.focus();
+		});
 	}
 
 	/**
@@ -235,7 +244,9 @@ export default class CodeEditor extends Component {
 	}
 
 	async initEditor() {
-		this.monacoEditorReadyDeferred = deferred();
+		console.log('init editor');
+
+		this.editorReadyDeferred = deferred();
 		await this.loadDeps();
 
 		const { options, prefs } = this.props;
@@ -273,7 +284,7 @@ export default class CodeEditor extends Component {
 					}
 				}
 			);
-			this.monacoEditorReadyDeferred.resolve();
+			this.editorReadyDeferred.resolve();
 		} else {
 			this.instance = CodeMirror.fromTextArea(this.node, {
 				mode: options.mode,
@@ -347,6 +358,8 @@ export default class CodeEditor extends Component {
 					Enter: 'emmetInsertLineBreak'
 				}
 			});
+			this.editorReadyDeferred.resolve();
+
 			this.instance.on('focus', editor => {
 				if (typeof this.props.onFocus === 'function')
 					this.props.onFocus(editor);

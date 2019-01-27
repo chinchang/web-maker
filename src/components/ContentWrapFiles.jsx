@@ -302,7 +302,7 @@ export default class ContentWrapFiles extends Component {
 			this.editor.setValue(this.state.selectedFile.content);
 		}
 		if (this.editor) {
-			this.editor.refresh();
+			// this.editor.refresh();
 		}
 		window.cm = this.cm;
 

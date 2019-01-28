@@ -2,7 +2,7 @@
  */
 
 import { h, Component } from 'preact';
-import '../service-worker-registration';
+// import '../service-worker-registration';
 import { MainHeader } from './MainHeader.jsx';
 import ContentWrap from './ContentWrap.jsx';
 import ContentWrapFiles from './ContentWrapFiles.jsx';

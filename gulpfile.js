@@ -218,4 +218,24 @@ gulp.task('release', function(callback) {
 	);
 });
 
+gulp.task('dev-release', function(callback) {
+	runSequence(
+		'runWebpack',
+		'copyFiles',
+		'fixIndex',
+		'useRef',
+		'concatSwRegistration',
+		'generate-service-worker',
+		'cleanup',
+		function(error) {
+			if (error) {
+				console.log(error.message);
+			} else {
+				console.log('DEV RELEASE FINISHED SUCCESSFULLY');
+			}
+			callback(error);
+		}
+	);
+});
+
 // gulp.task('default', ['generate-service-worker']);

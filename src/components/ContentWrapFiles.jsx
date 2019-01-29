@@ -226,7 +226,7 @@ export default class ContentWrapFiles extends Component {
 		);
 		// Namespace all file paths to '/user' because thats what the service worker
 		// recognizes.
-		const files = linearizeFiles(assignFilePaths(duplicateFiles, '/user'));
+		const files = linearizeFiles(assignFilePaths(duplicateFiles, ''));
 
 		files.forEach(file => {
 			obj[file.path] = file.content || '';
@@ -245,13 +245,16 @@ export default class ContentWrapFiles extends Component {
 			}
 		});
 
-		navigator.serviceWorker.controller.postMessage(obj);
+		// navigator.serviceWorker.controller.postMessage(obj);
+		window.talkFrame.contentWindow.postMessage(obj, '*');
 
 		if (this.detachedWindow) {
 			log('✉️ Sending message to detached window');
 			this.detachedWindow.postMessage({ contents: '/user/index.html' }, '*');
 		} else {
-			this.frame.src = '/user/index.html';
+			setTimeout(() => {
+				this.frame.src = 'https://preview.webmaker.com:8083/index.html';
+			}, 10);
 		}
 	}
 	cleanupErrors() {
@@ -650,10 +653,14 @@ export default class ContentWrapFiles extends Component {
 				<div class="demo-side" id="js-demo-side" style="">
 					<iframe
 						ref={el => (this.frame = el)}
-						src="/user/index.html"
+						src="https://preview.webmaker.com:8083/index.html"
 						frameborder="0"
 						id="demo-frame"
 						allowfullscreen
+					/>
+					<iframe
+						src="https://preview.webmaker.com:8083/talk.html"
+						id="talkFrame"
 					/>
 					<PreviewDimension ref={comp => (this.previewDimension = comp)} />
 					<Console

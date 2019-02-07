@@ -1732,7 +1732,9 @@ while the theme CSS file is loading */
 	background: #253540;
 }
 
-
+.toolbox {
+	background-color: white;
+}
 .tab-list {
 	display:grid;
 	grid-template-columns: 1fr 1fr 1fr;

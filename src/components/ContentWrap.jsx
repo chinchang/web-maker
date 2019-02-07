@@ -1,5 +1,6 @@
 import React, { h, Component } from 'preact';
 import UserCodeMirror from './UserCodeMirror.jsx';
+import Toolbox from './Toolbox.jsx'
 import Tabs from './Tabs.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';

@@ -113,7 +113,6 @@ export default class App extends Component {
 			autoCloseTags: true
 		};
 		this.prefs = {};
-		this.sumCode = '';
 
 		const firestore = firebase.firestore();
 		const settings = { timestampsInSnapshots: true };
@@ -1205,7 +1204,6 @@ export default class App extends Component {
 		this.createNewItem();
 		this.setState({ isCreateNewModalOpen: false, activeTab: 'ZenUML' });
 		this.contentWrap.resetTabs();
-		this.sumCode = "";
 	}
 
 	templateSelectHandler(template) {
@@ -1216,22 +1214,21 @@ export default class App extends Component {
 			});
 		this.setState({ isCreateNewModalOpen: false, activeTab: 'ZenUML' });
 		this.contentWrap.resetTabs();
-		this.sumCode = "";
 	}
     
 	toolboxUpdateJsCode(param) {
-		this.setState({ isCreateNewModalOpen: false});
 		if(param === "NewParticipant"){
 			this.addNewParticipant();
 		}
-		this.sumCode = this.sumCode + '\n' + param;
+		let sumCode = '\n' + param;
 		this.setCurrentItem({
-			js: this.sumCode === '' ? param : this.sumCode
+			js: this.state.currentItem.js + sumCode
 		}).then(() => this.refreshEditor());
+		console.log(this.state.currentItem.js)
 	}
 
 	addNewParticipant() {
-		let code = this.sumCode;
+		let code = this.state.currentItem.js;
 		let lines = code.split('\n');
 		let buffer = '', added = false;
 		lines.forEach(line => {

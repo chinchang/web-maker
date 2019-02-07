@@ -1220,6 +1220,7 @@ export default class App extends Component {
 	}
     
 	toolboxUpdateJsCode(param) {
+		this.setState({ isCreateNewModalOpen: false});
 		if(param === "NewParticipant"){
 			this.addNewParticipant();
 		}
@@ -1265,9 +1266,6 @@ export default class App extends Component {
 						user={this.state.user}
 						unsavedEditCount={this.state.unsavedEditCount}
 					/>
-					<div className="toolbox">
-						<Toolbox clickSvg={this.toolboxUpdateJsCode.bind(this)} />
-					</div>
 					<ContentWrap
 						currentLayoutMode={this.state.currentLayoutMode}
 						currentItem={this.state.currentItem}
@@ -1278,6 +1276,7 @@ export default class App extends Component {
 						prefs={this.state.prefs}
 						onEditorFocus={this.editorFocusHandler.bind(this)}
 						onSplitUpdate={this.splitUpdateHandler.bind(this)}
+						toApp ={this.toolboxUpdateJsCode.bind(this)}
 					/>
 					<Footer
 						prefs={this.state.prefs}

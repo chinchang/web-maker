@@ -688,6 +688,10 @@ export default class ContentWrap extends Component {
 		}
 	}
 
+	toolboxUpdateToApp(param) {
+		this.props.toApp(param);
+	}
+
 	render() {
 		return (
 			<SplitPane
@@ -741,6 +745,7 @@ export default class ContentWrap extends Component {
 									/>
 								</div>
 							</div> */}
+							<Toolbox clickSvg = {this.toolboxUpdateToApp.bind(this)} toApp = {() => this.toolboxUpdateToApp()}/>
 							<UserCodeMirror
 								ref={dslEditor => (this.dslEditor = dslEditor)}
 								options={{

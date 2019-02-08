@@ -697,7 +697,7 @@ export default class ContentWrap extends Component {
 	}
 
 	addNewParticipant() {
-		let code = this.cm.js;
+		let code = this.cm.js.getValue();
 		let lines = code.split('\n');
 		let buffer = '', added = false;
 		lines.forEach(line => {

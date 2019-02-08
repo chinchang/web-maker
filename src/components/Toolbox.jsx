@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 class Toolbox extends Component {
 
-  fromApp(param) {
+  appendCode(param) {
     this.props.clickSvg(param)
   }
 
@@ -16,7 +16,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => {this.fromApp("NewParticipant")}}
+          onClick = {() => {this.appendCode("NewParticipant")}}
         >
           <title>New participant</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -46,7 +46,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => {this.fromApp("A->B:message")}}
+          onClick = {() => {this.appendCode("A->B:message")}}
         >
           <title>Async message</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -105,7 +105,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => {this.fromApp("A.message {\n}")}}
+          onClick = {() => {this.appendCode("A.message {\n}")}}
         >
           <title>Sync message</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -153,7 +153,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = { () => {this.fromApp("result = A.message {\n}")}}
+          onClick = { () => {this.appendCode("result = A.message {\n}")}}
         >
           <title>Return value</title>
           <g
@@ -261,7 +261,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = { () => {this.fromApp("A.message() {\n  selfMessage()\n}")}}
+          onClick = { () => {this.appendCode("A.message() {\n  selfMessage()\n}")}}
         >
           <title>Self message</title>
           <g
@@ -319,7 +319,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => {this.fromApp("a = new A()")}}
+          onClick = {() => {this.appendCode("a = new A()")}}
         >
           <title>New instance</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -385,7 +385,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => {this.fromApp("if(condition) {\n  A.method()\n}")}}
+          onClick = {() => {this.appendCode("if(condition) {\n  A.method()\n}")}}
         >
           <title>Conditional</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -438,7 +438,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => this.fromApp("while(condition) {\n  A.method()\n}\n")}
+          onClick = {() => this.appendCode("while(condition) {\n  A.method()\n}\n")}
         >
           <title>Loop</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -491,7 +491,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => {this.fromApp("//Note\nA.message()")}}
+          onClick = {() => {this.appendCode("//Note\nA.message()")}}
         >
           <title>Note</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

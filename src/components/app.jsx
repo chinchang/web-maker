@@ -2,7 +2,6 @@
  */
 
 import { h, Component } from 'preact';
-import Toolbox from './Toolbox.jsx';
 import { MainHeader } from './MainHeader.jsx';
 import ContentWrap from './ContentWrap.jsx';
 import Footer from './Footer.jsx';

@@ -1215,33 +1215,6 @@ export default class App extends Component {
 		this.setState({ isCreateNewModalOpen: false, activeTab: 'ZenUML' });
 		this.contentWrap.resetTabs();
 	}
-    
-	toolboxUpdateJsCode(param) {
-		if(param === "NewParticipant"){
-			this.addNewParticipant();
-		}
-		let sumCode = '\n' + param;
-		this.setCurrentItem({
-			js: this.state.currentItem.js + sumCode
-		}).then(() => this.refreshEditor());
-		console.log(this.state.currentItem.js)
-	}
-
-	addNewParticipant() {
-		let code = this.state.currentItem.js;
-		let lines = code.split('\n');
-		let buffer = '', added = false;
-		lines.forEach(line => {
-		  if(!added && (line.trim().length > 0 && !line.trim().startsWith('//'))) {
-			buffer = `${buffer}\nNewParticipant`;
-			added = true;
-		  }
-		  buffer = `${buffer}\n${line}`;
-		});
-		if(!added) {
-		  buffer = `${code}\nNewParticipant`;
-		}
-	  }
 
 	render() {
 		return (
@@ -1273,7 +1246,6 @@ export default class App extends Component {
 						prefs={this.state.prefs}
 						onEditorFocus={this.editorFocusHandler.bind(this)}
 						onSplitUpdate={this.splitUpdateHandler.bind(this)}
-						toApp ={this.toolboxUpdateJsCode.bind(this)}
 					/>
 					<Footer
 						prefs={this.state.prefs}

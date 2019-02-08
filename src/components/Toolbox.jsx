@@ -10,8 +10,8 @@ class Toolbox extends Component {
     return (
       <div>
         <svg
-          width="20px"
-          height="20px"
+          width="40px"
+          height="40px"
           viewBox="0 0 50 50"
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
@@ -40,8 +40,8 @@ class Toolbox extends Component {
         </svg>
 
         <svg
-          width="20px"
-          height="20px"
+          width="40px"
+          height="40px"
           viewBox="0 0 50 50"
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
@@ -99,8 +99,8 @@ class Toolbox extends Component {
           </g>
         </svg>
         <svg
-          width="20px"
-          height="20px"
+          width="40px"
+          height="40px"
           viewBox="0 0 50 50"
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
@@ -147,8 +147,8 @@ class Toolbox extends Component {
           </g>
         </svg>
         <svg
-          width="20px"
-          height="20px"
+          width="40px"
+          height="40px"
           viewBox="0 0 50 50"
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
@@ -255,8 +255,8 @@ class Toolbox extends Component {
           </g>
         </svg>
         <svg
-          width="20px"
-          height="20px"
+          width="40px"
+          height="40px"
           viewBox="0 0 50 50"
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
@@ -313,8 +313,8 @@ class Toolbox extends Component {
         </svg>
 
         <svg
-          width="20px"
-          height="20px"
+          width="40px"
+          height="40px"
           viewBox="0 0 50 50"
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
@@ -379,8 +379,8 @@ class Toolbox extends Component {
         </svg>
 
         <svg
-          width="20px"
-          height="20px"
+          width="40px"
+          height="40px"
           viewBox="0 0 50 50"
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
@@ -432,8 +432,8 @@ class Toolbox extends Component {
         </svg>
 
         <svg
-          width="20px"
-          height="20px"
+          width="40px"
+          height="40px"
           viewBox="0 0 50 50"
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
@@ -485,8 +485,8 @@ class Toolbox extends Component {
         </svg>
 
         <svg
-          width="20px"
-          height="20px"
+          width="40px"
+          height="40px"
           viewBox="0 0 50 50"
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"

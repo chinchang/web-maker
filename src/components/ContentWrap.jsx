@@ -689,8 +689,28 @@ export default class ContentWrap extends Component {
 	}
 
 	toolboxUpdateToApp(param) {
-		this.props.toApp(param);
+		if(param === "NewParticipant"){
+			this.addNewParticipant();
+		}
+		  this.cm.js.setValue(`${this.cmCodes.js || ''}\n${param}`);
+		  this.refreshEditor();
 	}
+
+	addNewParticipant() {
+		let code = this.cm.js;
+		let lines = code.split('\n');
+		let buffer = '', added = false;
+		lines.forEach(line => {
+		  if(!added && (line.trim().length > 0 && !line.trim().startsWith('//'))) {
+			buffer = `${buffer}\nNewParticipant`;
+			added = true;
+		  }
+		  buffer = `${buffer}\n${line}`;
+		});
+		if(!added) {
+		  buffer = `${code}\nNewParticipant`;
+		}
+	  }
 
 	render() {
 		return (
@@ -745,7 +765,7 @@ export default class ContentWrap extends Component {
 									/>
 								</div>
 							</div> */}
-							<Toolbox clickSvg = {this.toolboxUpdateToApp.bind(this)} toApp = {() => this.toolboxUpdateToApp()}/>
+							<Toolbox clickSvg = {this.toolboxUpdateToApp.bind(this)} />
 							<UserCodeMirror
 								ref={dslEditor => (this.dslEditor = dslEditor)}
 								options={{

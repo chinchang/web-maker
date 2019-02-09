@@ -8,6 +8,7 @@ import { log, writeFile, loadJS, getCompleteHtml } from '../utils';
 import { SplitPane } from './SplitPane.jsx';
 import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
+import 'codemirror/mode/javascript/javascript.js'
 import { Console } from './Console';
 import { deferred } from '../deferred';
 import CssSettingsModal from './CssSettingsModal';
@@ -696,7 +697,15 @@ export default class ContentWrap extends Component {
 		  this.refreshEditor();
 	}
 
+	goDocStart() {
+		 return this.cm.extendSelection(this.cm.Pos(this.firstLine(), 0)); 
+	}
+
 	addNewParticipant() {
+		//this.cm.execCommand('goDocStart');
+	this.goDocStart();
+	//	this.cm.js.goDocEnd();
+		//console.log(CodeMirror.commands.execCommand('goDocStart'));
 		let code = this.cm.js.getValue();
 		let lines = code.split('\n');
 		let buffer = '', added = false;
@@ -705,7 +714,7 @@ export default class ContentWrap extends Component {
 			buffer = `${buffer}\nNewParticipant`;
 			added = true;
 		  }
-		  buffer = `${buffer}\n${line}`;
+		  buffer = buffer ? `${buffer}\n${line}`:line;
 		});
 		if(!added) {
 		  buffer = `${code}\nNewParticipant`;

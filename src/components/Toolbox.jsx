@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 class Toolbox extends Component {
 
-  appendCode(param) {
+  insertCode(param) {
     this.props.clickSvg(param)
   }
 
@@ -16,7 +16,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => {this.appendCode("NewParticipant")}}
+          onClick = {() => {this.insertCode("NewParticipant")}}
         >
           <title>New participant</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -46,7 +46,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => {this.appendCode("A->B:message")}}
+          onClick = {() => {this.insertCode("A->B:message")}}
         >
           <title>Async message</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -105,7 +105,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => {this.appendCode("A.message {\n}")}}
+          onClick = {() => {this.insertCode("A.message {\n}")}}
         >
           <title>Sync message</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -153,7 +153,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = { () => {this.appendCode("result = A.message {\n}")}}
+          onClick = { () => {this.insertCode("result = A.message {\n}")}}
         >
           <title>Return value</title>
           <g
@@ -261,7 +261,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = { () => {this.appendCode("A.message() {\n  selfMessage()\n}")}}
+          onClick = { () => {this.insertCode("A.message() {\n  selfMessage()\n}")}}
         >
           <title>Self message</title>
           <g
@@ -319,7 +319,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => {this.appendCode("a = new A()")}}
+          onClick = {() => {this.insertCode("a = new A()")}}
         >
           <title>New instance</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -385,7 +385,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => {this.appendCode("if(condition) {\n  A.method()\n}")}}
+          onClick = {() => {this.insertCode("if(condition) {\n  A.method()\n}")}}
         >
           <title>Conditional</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -438,7 +438,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => this.appendCode("while(condition) {\n  A.method()\n}\n")}
+          onClick = {() => this.insertCode("while(condition) {\n  A.method()\n}\n")}
         >
           <title>Loop</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -491,7 +491,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => {this.appendCode("//Note\nA.message()")}}
+          onClick = {() => {this.insertCode("//Note\nA.message()")}}
         >
           <title>Note</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

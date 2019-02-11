@@ -149,8 +149,8 @@ export default class ContentWrap extends Component {
 			// CSP from affecting it.
 			writeFile('script.js', blobjs, () => {
 				writeFile('preview.html', blob, () => {
-					var origin = chrome.i18n.getMessage
-						? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
+					var origin = chrome.runtime.id
+						? `chrome-extension://${chrome.runtime.id}`
 						: `${location.origin}`;
 					var src = `filesystem:${origin}/temporary/preview.html`;
 					if (this.detachedWindow) {

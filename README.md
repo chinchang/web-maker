@@ -1,11 +1,43 @@
 Web Sequence  [![Gitter](https://badges.gitter.im/zenuml/Lobby.svg)](https://gitter.im/zenuml/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 ======
 
-**Web Sequence** is a chrome extension that converts your Chrome tab into a sequence diagram generator. Something like CodePen or JSFiddle, but for sequence diagram generation.
+**Web Sequence** is a Chrome Extension and a Web App that convert your Chrome tab into a sequence diagram generator. Something like CodePen or JSFiddle, but for sequence diagram generation.
 
 ### [Go to Web App](https://app.zenuml.com)
 
 ![Screenshot](/screenshots/ss1.png)
+
+### Deployment
+
+Shared steps:
+1. Make sure you are on the right branch (`master`).
+1. `yarn build` to build the product release
+1. `yarn release` to copy build files to app / extension
+
+#### Chrome extension
+1. Update `version` in `extension/manifest.json`
+1. Zip the `extension` folder
+1. `yarn upload` to upload the extension to Google Web Store
+1. `yarn pub` to publish the extension
+
+> Optimisation: The #3 step in the shared steps would generate a zip file. The #2 step can be omitted if 
+we pass the generated zip file name to the script of `yarn upload` and `yarn pub`.
+
+#### Post deployment
+
+1. Uninstall and reinstall [the latest version of extension](https://chrome.google.com/webstore/detail/web-sequence/kcpganeflmhffnlofpdmcjklmdpbbmef)
+1. Do smoke test by creating a new diagram
+
+#### Web App
+1. `yarn deploy`
+1. Go to Cloudflare to invalid all cache
+
+> Optimisation: Add postfix to the JS files and CSS files, so that we do not have to invalid cache every time.
+
+#### Post development
+
+1. Go to [the page of app](https://app.zenuml.com)
+2. Do smoke test by create a new diagram
 
 ### Development
 

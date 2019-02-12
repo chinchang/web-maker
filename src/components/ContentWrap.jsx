@@ -35,6 +35,7 @@ export default class ContentWrap extends Component {
 		this.cmCodes = { html: props.currentItem.html, css: '', js: '' };
 		this.cm = {};
 		this.logCount = 0;
+		this.clickNewParticipantTimes = 0;
 
 		window.onMessageFromConsole = this.onMessageFromConsole.bind(this);
 
@@ -691,7 +692,9 @@ export default class ContentWrap extends Component {
 
 	toolboxUpdateToApp(param) {
 		if(param === "NewParticipant"){
+			this.clickNewParticipantTimes = this.clickNewParticipantTimes + 1;
 			this.addNewParticipant();
+
 		} else {
 			this.cm.js.setValue(`${this.cmCodes.js || ''}\n${param}`);
 		}
@@ -704,7 +707,7 @@ export default class ContentWrap extends Component {
 		let buffer = '', added = false;
 		lines.forEach(line => {
 		  if(!added && (line.trim().length > 0 && !line.trim().startsWith('//'))) {
-			buffer = `${buffer}\nNewParticipant`;
+			buffer = `${buffer}\nNewParticipant${this.clickNewParticipantTimes}`;
 			added = true;
 		  }
 		 buffer = buffer ? `${buffer}\n${line}`: line;

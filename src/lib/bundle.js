@@ -378,13 +378,6 @@ window.chrome.i18n = {
 window.$all = selector => [...document.querySelectorAll(selector)];
 window.IS_EXTENSION = !!window.chrome.extension;
 
-// ToDo: review this @Mrcoder
-// export const BASE_PATH =
-// 	window.chrome.extension ||
-// 	window.DEBUG ||
-// 	process.env.NODE_ENV === 'development'
-// 		? '/'
-// 		: '/app';
 const BASE_PATH = '';
 /* unused harmony export BASE_PATH */
 

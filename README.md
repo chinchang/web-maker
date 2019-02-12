@@ -18,6 +18,7 @@ or
 - Works offline
 - Quick creation & good-old files mode
 - Inbuilt Console
+- Save and load your creations
 - Auto-save feature
 - Code auto-completion
 - Easy addition of popular JS & CSS libraries
@@ -47,4 +48,4 @@ Web Maker stays stable as rock with every release, thanks to the sponsored testi
 
 MIT Licensed
 
-Copyright (c) 2018 Kushagra Gour, [webmakerapp.com](https://webmakerapp.com)
+Copyright (c) 2016-2019 Kushagra Gour, [webmakerapp.com](https://webmakerapp.com)

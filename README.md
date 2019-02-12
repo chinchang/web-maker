@@ -13,6 +13,7 @@ Shared steps:
 1. Make sure you are on the right branch (`master`).
 1. `yarn build` to build the product release
 1. `yarn release` to copy build files to app / extension
+1. `http-server ./app` to verify build in ./app
 
 #### Chrome extension
 1. Update `version` in `extension/manifest.json`

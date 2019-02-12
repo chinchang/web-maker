@@ -692,20 +692,13 @@ export default class ContentWrap extends Component {
 	toolboxUpdateToApp(param) {
 		if(param === "NewParticipant"){
 			this.addNewParticipant();
+		} else {
+			this.cm.js.setValue(`${this.cmCodes.js || ''}\n${param}`);
 		}
-		  this.cm.js.setValue(`${this.cmCodes.js || ''}\n${param}`);
-		  this.refreshEditor();
-	}
-
-	goDocStart() {
-		 return this.cm.extendSelection(this.cm.Pos(this.firstLine(), 0)); 
+		   this.refreshEditor();
 	}
 
 	addNewParticipant() {
-		//this.cm.execCommand('goDocStart');
-	this.goDocStart();
-	//	this.cm.js.goDocEnd();
-		//console.log(CodeMirror.commands.execCommand('goDocStart'));
 		let code = this.cm.js.getValue();
 		let lines = code.split('\n');
 		let buffer = '', added = false;
@@ -714,11 +707,10 @@ export default class ContentWrap extends Component {
 			buffer = `${buffer}\nNewParticipant`;
 			added = true;
 		  }
-		  buffer = buffer ? `${buffer}\n${line}`:line;
+		 buffer = buffer ? `${buffer}\n${line}`: line;
 		});
-		if(!added) {
-		  buffer = `${code}\nNewParticipant`;
-		}
+		this.cm.js.setValue(buffer);
+		this.refreshEditor();
 	  }
 
 	render() {

@@ -106,7 +106,14 @@ export function Notifications(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="3.6.1" {...props} isLatest={true}>
+			<Notification version="3.6.2" {...props} isLatest={true}>
+				<NotificationItem type="bug">
+					"404 Page not found" showing up in preview window when in detached
+					mode.
+				</NotificationItem>
+			</Notification>
+
+			<Notification version="3.6.1" {...props}>
 				<NotificationItem type="bug">
 					Failing to import local creations when logging in.
 				</NotificationItem>

@@ -15,12 +15,15 @@ window.chrome.i18n = {
 
 window.$all = selector => [...document.querySelectorAll(selector)];
 window.IS_EXTENSION = !!window.chrome.extension;
-export const BASE_PATH =
-	window.chrome.extension ||
-	window.DEBUG ||
-	process.env.NODE_ENV === 'development'
-		? '/'
-		: '/app';
+
+// ToDo: review this @Mrcoder
+// export const BASE_PATH =
+// 	window.chrome.extension ||
+// 	window.DEBUG ||
+// 	process.env.NODE_ENV === 'development'
+// 		? '/'
+// 		: '/app';
+export const BASE_PATH = '';
 
 var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
@@ -316,23 +319,20 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 	if (!item) {
 		return '';
 	}
-	var externalJs = '',
-		externalCss = '';
-	if (item.externalLibs) {
-		externalJs = item.externalLibs.js
-			.split('\n')
-			.reduce(function(scripts, url) {
-				return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
-			}, '');
-		externalCss = item.externalLibs.css
-			.split('\n')
+
+	var	externalCss = [			(chrome.extension
+				? chrome.extension.getURL('lib/vue-sequence-ext.css')
+				: `${location.origin}${
+					window.DEBUG ? '' : BASE_PATH
+					}/lib/vue-sequence-ext.css`),
+		'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css']
 			.reduce(function(links, url) {
 				return (
 					links +
 					(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
 				);
 			}, '');
-	}
+
 	var contents =
 		'<!DOCTYPE html>\n' +
 		'<html>\n<head>\n' +
@@ -345,8 +345,6 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 		'</head>\n' +
 		'<body>\n' +
 		html +
-		'\n' +
-		externalJs +
 		'\n';
 
 	if (!isForExport) {
@@ -359,6 +357,12 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 				  }/lib/screenlog.js`) +
 			'"></script>';
 	}
+	contents +=
+		'<script src="' +
+		(chrome.extension
+			? chrome.extension.getURL('lib/bundle.js')
+			: `${location.origin}${BASE_PATH}/lib/bundle.js`)+
+		'"></script>';
 
 	if (item.jsMode === JsModes.ES6) {
 		contents +=
@@ -374,8 +378,8 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 	if (typeof js === 'string') {
 		contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';
 	} else {
-		var origin = chrome.i18n.getMessage()
-			? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
+		var origin = chrome.runtime.id
+			? `chrome-extension://${chrome.runtime.id}`
 			: `${location.origin}`;
 		contents +=
 			'<script src="' + `filesystem:${origin}/temporary/script.js` + '">';

@@ -44,6 +44,12 @@ export default class UserCodeMirror extends Component {
 		return false;
 	}
 
+	refreshEditor() {
+		setTimeout(() => {
+			this.cm.refresh();
+		})
+	}
+
 	initEditor() {
 		const options = this.props.options;
 		this.cm = CodeMirror.fromTextArea(this.textarea, {

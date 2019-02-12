@@ -45,6 +45,7 @@ import { Js13KModal } from './Js13KModal';
 import { CreateNewModal } from './CreateNewModal';
 import { Icons } from './Icons';
 import JSZip from 'jszip';
+import { loadSubscriptionToApp } from '../javascript/firebase/subscription';
 
 if (module.hot) {
 	require('preact/debug');
@@ -113,6 +114,9 @@ export default class App extends Component {
 		};
 		this.prefs = {};
 
+		const firestore = firebase.firestore();
+		const settings = {timestampsInSnapshots: true};
+		firestore.settings(settings);
 		firebase.auth().onAuthStateChanged(user => {
 			this.setState({ isLoginModalOpen: false });
 			if (user) {
@@ -140,11 +144,22 @@ export default class App extends Component {
 						this.setState({ prefs: prefs });
 						this.updateSetting();
 					}
+
+					if(this.onUserItemsResolved) {
+						this.onUserItemsResolved(user.items);
+					}
 				});
+
+				//load subscription from firestore
+				loadSubscriptionToApp(this);
 			} else {
 				// User is signed out.
 				this.setState({ user: undefined });
 				delete window.user;
+
+				if(this.onUserItemsResolved) {
+					this.onUserItemsResolved(null);
+				}
 			}
 			this.updateProfileUi();
 		});
@@ -173,7 +188,47 @@ export default class App extends Component {
 		);
 		// Get synced `preserveLastCode` setting to get back last code (or not).
 		db.getSettings(this.defaultSettings).then(result => {
-			if (result.preserveLastCode && lastCode) {
+			const getQueryParameter = (key) => {
+				let search = window.location.search;
+				if(search.length < 1) return;
+
+				let query = search.substr(1);
+				let array = query.split('&');
+				for(let i = 0; i < array.length; i++) {
+					let pair = array[i].split('=');
+					if(pair[0] === key) {
+						return decodeURIComponent(pair[1]);
+					}
+				}
+			}
+
+			//If query parameter 'itemId' presents
+			let itemId = getQueryParameter('itemId');
+			if(itemId) {
+				itemService.getItem(itemId).then(item => {
+					if(item) {
+						const resolveCurrentItem = (items) => {
+							if(items && items[item.id]) {
+								this.setCurrentItem(item).then(() => this.refreshEditor());
+							} else {
+								this.forkItem(item);
+							}
+						};
+						if(this.state.user && this.state.user.items) {
+							resolveCurrentItem(user.items);
+						} else {
+							this.onUserItemsResolved = resolveCurrentItem;
+						}
+					} else {
+						//Invalid itemId
+						window.location.href = '/';
+					}
+				}, error => {
+					//Insufficient permission
+					window.location.href = '/';
+				});
+			}
+			else if (result.preserveLastCode && lastCode && lastCode.js) {
 				this.setState({ unsavedEditCount: 0 });
 
 				// For web app environment we don't fetch item from localStorage,
@@ -278,8 +333,8 @@ export default class App extends Component {
 				':' +
 				d.getMinutes(),
 			html: '',
-			css: '',
-			js: '',
+			css: '/* Prefix your CSS rules with `#diagram` */',
+			js: '// Sample code (click "NEW" to find more) \r\n A->B: message \r\n A.method1() {\r\n  B.method2()\r\n}',
 			externalLibs: { js: '', css: '' },
 			layoutMode: this.state.currentLayoutMode
 		}).then(() => this.refreshEditor());
@@ -584,7 +639,7 @@ export default class App extends Component {
 				jsCodeEl.style[dimensionProperty]
 			];
 		} catch (e) {
-			sizes = [33.33, 33.33, 33.33];
+			sizes = [0, 30, 70];
 		} finally {
 			/* eslint-disable no-unsafe-finally */
 			return sizes;
@@ -960,9 +1015,9 @@ export default class App extends Component {
 	}
 	openSupportDeveloperModal() {
 		this.closeAllOverlays();
-		this.setState({
-			isSupportDeveloperModalOpen: true
-		});
+		// this.setState({
+		// 	isSupportDeveloperModalOpen: true
+		// });
 	}
 	supportDeveloperBtnClickHandler(e) {
 		this.openSupportDeveloperModal(e);
@@ -1199,7 +1254,8 @@ export default class App extends Component {
 	}
 	blankTemplateSelectHandler() {
 		this.createNewItem();
-		this.setState({ isCreateNewModalOpen: false });
+		this.setState({ isCreateNewModalOpen: false, activeTab: 'ZenUML' });
+		this.contentWrap.resetTabs();
 	}
 
 	templateSelectHandler(template) {
@@ -1208,7 +1264,8 @@ export default class App extends Component {
 			.then(json => {
 				this.forkItem(json);
 			});
-		this.setState({ isCreateNewModalOpen: false });
+		this.setState({ isCreateNewModalOpen: false, activeTab: 'ZenUML' });
+		this.contentWrap.resetTabs();
 	}
 
 	render() {
@@ -1385,10 +1442,10 @@ export default class App extends Component {
 					dontAskBtnClickHandler={this.dontAskToImportAnymore.bind(this)}
 				/>
 
-				<OnboardingModal
-					show={this.state.isOnboardModalOpen}
-					closeHandler={() => this.setState({ isOnboardModalOpen: false })}
-				/>
+				{/*<OnboardingModal*/}
+					{/*show={this.state.isOnboardModalOpen}*/}
+					{/*closeHandler={() => this.setState({ isOnboardModalOpen: false })}*/}
+				{/*/>*/}
 
 				<Js13KModal
 					show={this.state.isJs13KModalOpen}

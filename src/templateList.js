@@ -1,22 +1,18 @@
 export default [
 	{
-		id: 'react',
-		title: 'React',
-		img: 'assets/react-logo.svg'
+		id: 'basic',
+		title: 'Basic',
+		img: 'assets/basic-icon.png'
 	},
 	{
-		id: 'vue',
-		title: 'Vue',
-		img: 'assets/vue-logo.svg'
+		id: 'advanced',
+		title: 'Advanced',
+		img: 'assets/advanced-icon.png'
 	},
 	{
-		id: 'preact',
-		title: 'Preact',
-		img: 'assets/preact-logo.svg'
-	},
-	{
-		id: 'kontra-game-engine',
-		title: 'Kontra Game Engine',
-		img: 'assets/html5-logo.svg'
+		id: 'starUMLTheme',
+		title: 'StarUML',
+		img: 'assets/star-icon.png'
 	}
+
 ];

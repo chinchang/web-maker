@@ -40,7 +40,7 @@ function saveScreenshot(dataURI) {
 	function onWriteEnd() {
 		var filePath =
 			'filesystem:chrome-extension://' +
-			chrome.i18n.getMessage('@@extension_id') +
+			chrome.runtime.id +
 			'/temporary/' +
 			fileName;
 

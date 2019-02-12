@@ -1,0 +1,17 @@
+{
+	"title": "Advanced",
+	"externalLibs": {
+		"js": "\nhttps://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js",
+		"css": ""
+	},
+	"updatedOn": 1540223760000,
+	"sizes": ["", "calc(17.4842% - 6px)", "calc(49.1221% - 3px)"],
+	"mainSizes": [68.1051, 31.6949],
+	"htmlMode": "html",
+	"cssMode": "css",
+	"jsMode": "js",
+	"layoutMode": 1,
+	"js": "// This is a sample to document ZenUML\n// This sample is not intendet to be realistic, but instead show the features of ZenUML\n\n// Comments at the beginning are not shown in the diagram\n\n\n// Change order of participant (by appearance) - list them here (ONLY without @Starter!)\nLibraryApp\nUnknownBookException\nLibraryDB\n// Define a Starter or leave it without - does not work with participants listed above\n//@Starter(User)\n\n// Ask for a book\nbook = LibraryApp.getBook(Treasure_Island, Stevenson) {\n  // create a new instance using \"new\"\n  bm = new BookManager()\n  // call on an other object with return value:\n  bookID = bm:BookManager.getBook(Treasure_Island, Stevenson) {\n    // LOOP: use for, foreach or while\n    foreach(author) {\n      // self-call (explicit object)\n      bm:BookManager.search(Stevenson)\n    }\n  }\n  // ALTERNATIVE: If-Else block\n  if(bookID) {\n    // self-call (implicit object) - return value is not shown (!)\n    bookShelf = getShelf(bookID)\n    // async message\n    // Syntax is\n    // A ->B: some message\n    LibraryApp -> LibraryDB: bookID is borrowed\n  } else {\n    UnknownBookException.throw_exception()\n  }\n}\n\n\n// Comments at the end are not shown neither\n// TODO: @Starter in combination with participant ordering\n// TODO: return value of self-calls. Possibility (css):\n//\n// #diagram .self>.message>.name::after {\n//   background-color: lightcyan;\n//   content: \" = result\";\n//   display: block;\n// }\n",
+	"css": "#diagram #LibraryDB {\n\r  background: lightblue;\n\r}\n\r#diagram [signature=\"getBook(Treasure_Island, Stevenson)\"] .fragment.loop {\n\r  background: yellowgreen\n\r}\n\r ",
+    "html": ""
+}

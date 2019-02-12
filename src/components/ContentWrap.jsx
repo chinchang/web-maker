@@ -1,5 +1,6 @@
-import { h, Component } from 'preact';
+import React, { h, Component } from 'preact';
 import UserCodeMirror from './UserCodeMirror.jsx';
+import Tabs from './Tabs.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { log, writeFile, loadJS, getCompleteHtml } from '../utils';
@@ -113,6 +114,7 @@ export default class ContentWrap extends Component {
 	}
 
 	createPreviewFile(html, css, js) {
+		// isNotChrome
 		const shouldInlineJs =
 			!window.webkitRequestFileSystem || !window.IS_EXTENSION;
 		var contents = getCompleteHtml(
@@ -147,8 +149,8 @@ export default class ContentWrap extends Component {
 			// CSP from affecting it.
 			writeFile('script.js', blobjs, () => {
 				writeFile('preview.html', blob, () => {
-					var origin = chrome.i18n.getMessage()
-						? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
+					var origin = chrome.runtime.id
+						? `chrome-extension://${chrome.runtime.id}`
 						: `${location.origin}`;
 					var src = `filesystem:${origin}/temporary/preview.html`;
 					if (this.detachedWindow) {
@@ -189,12 +191,10 @@ export default class ContentWrap extends Component {
 		if (!this.props.prefs.preserveConsoleLogs) {
 			this.clearConsole();
 		}
-		this.cleanupErrors('html');
 		this.cleanupErrors('css');
 		this.cleanupErrors('js');
 
 		var currentCode = {
-			html: this.cmCodes.html,
 			css: this.cmCodes.css,
 			js: this.cmCodes.js
 		};
@@ -208,7 +208,6 @@ export default class ContentWrap extends Component {
 		// change the styles inside the iframe.
 		if (
 			!isForced &&
-			currentCode.html === this.codeInPreview.html &&
 			currentCode.js === this.codeInPreview.js
 		) {
 			computeCss(
@@ -267,13 +266,10 @@ export default class ContentWrap extends Component {
 		return !!item.title;
 	}
 	refreshEditor() {
-		this.cmCodes.html = this.props.currentItem.html;
 		this.cmCodes.css = this.props.currentItem.css;
 		this.cmCodes.js = this.props.currentItem.js;
-		this.cm.html.setValue(this.cmCodes.html || '');
 		this.cm.css.setValue(this.cmCodes.css || '');
 		this.cm.js.setValue(this.cmCodes.js || '');
-		this.cm.html.refresh();
 		this.cm.css.refresh();
 		this.cm.js.refresh();
 
@@ -291,9 +287,7 @@ export default class ContentWrap extends Component {
 		if (!this.cm) {
 			return;
 		}
-		htmlCodeEl.querySelector(
-			'.CodeMirror'
-		).style.fontSize = cssCodeEl.querySelector(
+		cssCodeEl.querySelector(
 			'.CodeMirror'
 		).style.fontSize = jsCodeEl.querySelector(
 			'.CodeMirror'
@@ -318,7 +312,7 @@ export default class ContentWrap extends Component {
 		// ]('hide');
 		this.consoleCm.setOption('theme', prefs.editorTheme);
 
-		['html', 'js', 'css'].forEach(type => {
+		['js', 'css'].forEach(type => {
 			this.cm[type].setOption('indentWithTabs', prefs.indentWith !== 'spaces');
 			this.cm[type].setOption(
 				'blastCode',
@@ -367,7 +361,7 @@ export default class ContentWrap extends Component {
 		) {
 			codeWrapEl.classList.remove('is-minimized');
 			codeWrapEl.classList.remove('is-maximized');
-			this.codeSplitInstance.setSizes([33.3, 33.3, 33.3]);
+			this.codeSplitInstance.setSizes([85, 4, 11]);
 		} else {
 			const id = parseInt(codeWrapEl.dataset.codeWrapId, 10);
 			var arr = [
@@ -432,7 +426,7 @@ export default class ContentWrap extends Component {
 		if (this.props.currentItem && this.props.currentItem.sizes) {
 			return this.props.currentItem.sizes;
 		}
-		return [33.33, 33.33, 33.33];
+		return [85, 4, 11];
 	}
 
 	mainSplitDragEndHandler() {
@@ -501,7 +495,6 @@ export default class ContentWrap extends Component {
 	updateHtmlMode(value) {
 		this.props.onCodeModeChange('html', value);
 		this.props.currentItem.htmlMode = value;
-		this.cm.html.setOption('mode', modes[value].cmMode);
 		CodeMirror.autoLoadMode(
 			this.cm.html,
 			modes[value].cmPath || modes[value].cmMode
@@ -682,6 +675,18 @@ export default class ContentWrap extends Component {
 		this.props.onEditorFocus(editor);
 	}
 
+	resetTabs() {
+		this.tabsRef.onInit()
+	}
+
+	onTabChanges(tab) {
+		if (tab === 'ZenUML') {
+			this.dslEditor.refreshEditor();
+		} else {
+			this.cssEditor.refreshEditor();
+		}
+	}
+
 	render() {
 		return (
 			<SplitPane
@@ -694,203 +699,193 @@ export default class ContentWrap extends Component {
 				}
 				onDragEnd={this.mainSplitDragEndHandler.bind(this)}
 			>
-				<SplitPane
-					class="code-side"
-					id="js-code-side"
-					sizes={this.state.codeSplitSizes}
-					minSize={minCodeWrapSize}
-					direction={
-						this.props.currentLayoutMode === 2 ||
-						this.props.currentLayoutMode === 5
-							? 'horizontal'
-							: 'vertical'
-					}
-					onDragStart={this.codeSplitDragStart.bind(this)}
-					onDragEnd={this.codeSplitDragEnd.bind(this)}
-					onSplit={splitInstance => (this.codeSplitInstance = splitInstance)}
-				>
-					<div
-						data-code-wrap-id="0"
-						id="htmlCodeEl"
-						data-type="html"
-						class="code-wrap"
-						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
-					>
+				<div id="js-code-side">
+				<Tabs ref={tabs => (this.tabsRef = tabs)}
+					  onChange={this.onTabChanges.bind(this)}
+					  style="height: 100%;display:flex;flex-direction: column;">
+					<div label="ZenUML">
 						<div
-							class="js-code-wrap__header  code-wrap__header"
-							title="Double click to toggle code pane"
-							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
+							data-code-wrap-id="2"
+							id="jsCodeEl"
+							data-type="js"
+							className="code-wrap"
+							onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 						>
-							<label class="btn-group" dropdow title="Click to change">
-								<span class="code-wrap__header-label">
-									{modes[this.props.currentItem.htmlMode || 'html'].label}
-								</span>
-								<span class="caret" />
-								<select
-									data-type="html"
-									class="js-mode-select  hidden-select"
-									onChange={this.codeModeChangeHandler.bind(this)}
-									value={this.props.currentItem.htmlMode}
-								>
-									<option value="html">HTML</option>
-									<option value="markdown">Markdown</option>
-									<option value="jade">Pug</option>
-								</select>
-							</label>
-							<div class="code-wrap__header-right-options">
-								<a
-									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
-									title="Toggle code pane"
-									onClick={this.collapseBtnHandler.bind(this)}
-								/>
-							</div>
+							{/* <div
+								className="js-code-wrap__header  code-wrap__header"
+								title="Double click to toggle code pane"
+								ondblclick={this.codeWrapHeaderDblClickHandler.bind(this)}
+							>
+								<label className="btn-group" title="Click to change">
+									<span className="code-wrap__header-label">ZenUML</span>
+									<span className="caret" style="display:none" />
+									<select
+										data-type="js"
+										className="js-mode-select  hidden-select"
+										style="display: none"
+										onChange={this.codeModeChangeHandler.bind(this)}
+										value={this.props.currentItem.jsMode}
+									>
+										<option value="js">JS</option>
+										<option value="coffee">CoffeeScript</option>
+										<option value="es6">ES6 (Babel)</option>
+										<option value="typescript">TypeScript</option>
+									</select>
+								</label>
+								<div className="code-wrap__header-right-options">
+									<a
+										className="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
+										title="Toggle code pane"
+										onClick={this.collapseBtnHandler.bind(this)}
+									/>
+								</div>
+							</div> */}
+							<UserCodeMirror
+								ref={dslEditor => (this.dslEditor = dslEditor)}
+								options={{
+									mode: 'htmlmixed',
+									profile: 'xhtml',
+									gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+									noAutocomplete: true,
+									matchTags: {bothTags: true},
+									prettier: true,
+									prettierParser: 'html',
+									emmet: true
+								}}
+								prefs={this.props.prefs}
+								autoComplete={this.props.prefs.autoComplete}
+								onChange={this.onJsCodeChange.bind(this)}
+								onCreation={el => (this.cm.js = el)}
+								onFocus={this.editorFocusHandler.bind(this)}
+							/>
+							{/* Inlet(scope.cm.js); */}
 						</div>
-						<UserCodeMirror
-							options={{
-								mode: 'htmlmixed',
-								profile: 'xhtml',
-								gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-								noAutocomplete: true,
-								matchTags: { bothTags: true },
-								prettier: true,
-								prettierParser: 'html',
-								emmet: true
-							}}
-							prefs={this.props.prefs}
-							onChange={this.onHtmlCodeChange.bind(this)}
-							onCreation={el => (this.cm.html = el)}
-							onFocus={this.editorFocusHandler.bind(this)}
-						/>
 					</div>
-					<div
-						data-code-wrap-id="1"
-						id="cssCodeEl"
-						data-type="css"
-						class="code-wrap"
-						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
-					>
+					<div label="CSS">
 						<div
-							class="js-code-wrap__header  code-wrap__header"
-							title="Double click to toggle code pane"
-							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
+							data-code-wrap-id="1"
+							id="cssCodeEl"
+							data-type="css"
+							className="code-wrap"
+							onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 						>
-							<label class="btn-group" title="Click to change">
-								<span class="code-wrap__header-label">
+
+							 <div
+								className="js-code-wrap__header  code-wrap__header"
+								title="Double click to toggle code pane"
+								ondblclick={this.codeWrapHeaderDblClickHandler.bind(this)}
+							>
+							 <span className="caret"/>
+								 <label className="btn-group" title="Click to change">
+								 <span className="code-wrap__header-label">
 									{modes[this.props.currentItem.cssMode || 'css'].label}
 								</span>
-								<span class="caret" />
-								<select
-									data-type="css"
-									class="js-mode-select  hidden-select"
-									onChange={this.codeModeChangeHandler.bind(this)}
-									value={this.props.currentItem.cssMode}
-								>
-									<option value="css">CSS</option>
-									<option value="scss">SCSS</option>
-									<option value="sass">SASS</option>
-									<option value="less">LESS</option>
-									<option value="stylus">Stylus</option>
-									<option value="acss">Atomic CSS</option>
-								</select>
-							</label>
-							<div class="code-wrap__header-right-options">
-								<a
-									href="#"
-									id="cssSettingsBtn"
-									title="Atomic CSS configuration"
-									onClick={this.cssSettingsBtnClickHandler.bind(this)}
-									class="code-wrap__header-btn hide"
-								>
-									<svg>
-										<use xlinkHref="#settings-icon" />
-									</svg>
-								</a>
-								<a
-									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
-									title="Toggle code pane"
-									onClick={this.collapseBtnHandler.bind(this)}
-								/>
+
+									 <select
+										data-type="css"
+										className="js-mode-select  hidden-select"
+										onChange={this.codeModeChangeHandler.bind(this)}
+										value={this.props.currentItem.cssMode}
+									>
+										<option value="css">CSS</option>
+										<option value="scss">SCSS</option>
+										<option value="sass">SASS</option>
+										<option value="less">LESS</option>
+										<option value="stylus">Stylus</option>
+										<option value="acss">Atomic CSS</option>
+									</select>
+								 </label>
+								<div className="code-wrap__header-right-options">
+									<a
+										href="#"
+										id="cssSettingsBtn"
+										title="Atomic CSS configuration"
+										onClick={this.cssSettingsBtnClickHandler.bind(this)}
+										className="code-wrap__header-btn hide"
+									>
+										<svg>
+											<use xlinkHref="#settings-icon" />
+										</svg>
+									</a>
+									{/* <a
+										className="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
+										title="Toggle code pane"
+										onClick={this.collapseBtnHandler.bind(this)}
+									/> */}
+								</div>
 							</div>
+							<UserCodeMirror
+								ref={cssEditor => (this.cssEditor = cssEditor)}
+								options={{
+									mode: 'css',
+									gutters: [
+										'error-gutter',
+										'CodeMirror-linenumbers',
+										'CodeMirror-foldgutter'
+									],
+									emmet: true,
+									prettier: true,
+									prettierParser: 'css'
+								}}
+								prefs={this.props.prefs}
+								onChange={this.onCssCodeChange.bind(this)}
+								onCreation={el => (this.cm.css = el)}
+								onFocus={this.editorFocusHandler.bind(this)}
+							/>
 						</div>
-						<UserCodeMirror
-							options={{
-								mode: 'css',
-								gutters: [
-									'error-gutter',
-									'CodeMirror-linenumbers',
-									'CodeMirror-foldgutter'
-								],
-								emmet: true,
-								prettier: true,
-								prettierParser: 'css'
-							}}
-							prefs={this.props.prefs}
-							onChange={this.onCssCodeChange.bind(this)}
-							onCreation={el => (this.cm.css = el)}
-							onFocus={this.editorFocusHandler.bind(this)}
-						/>
 					</div>
-					<div
-						data-code-wrap-id="2"
-						id="jsCodeEl"
-						data-type="js"
-						class="code-wrap"
-						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
-					>
+					<div label="About">
+
 						<div
-							class="js-code-wrap__header  code-wrap__header"
-							title="Double click to toggle code pane"
-							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
+							data-code-wrap-id="0"
+							id="htmlCodeEl"
+							data-type="html"
+							class="code-wrap"
+							onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 						>
-							<label class="btn-group" title="Click to change">
-								<span class="code-wrap__header-label">
-									{modes[this.props.currentItem.jsMode || 'js'].label}
-								</span>
-								<span class="caret" />
-								<select
-									data-type="js"
-									class="js-mode-select  hidden-select"
-									onChange={this.codeModeChangeHandler.bind(this)}
-									value={this.props.currentItem.jsMode}
-								>
-									<option value="js">JS</option>
-									<option value="coffee">CoffeeScript</option>
-									<option value="es6">ES6 (Babel)</option>
-									<option value="typescript">TypeScript</option>
-								</select>
-							</label>
-							<div class="code-wrap__header-right-options">
-								<a
-									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
-									title="Toggle code pane"
-									onClick={this.collapseBtnHandler.bind(this)}
-								/>
+							{/* <div
+								class="js-code-wrap__header  code-wrap__header"
+								onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
+							>
+								<label class="btn-group" dropdow title="Click to change">
+									About
+								</label>
+								<div class="code-wrap__header-right-options">
+									<a
+										class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
+										title="Toggle code pane"
+										onClick={this.collapseBtnHandler.bind(this)}
+									/>
+								</div>
+							</div> */}
+							<div>
+								Welcome to ZenUML.
 							</div>
 						</div>
-						<UserCodeMirror
-							options={{
-								mode: 'javascript',
-								gutters: [
-									'error-gutter',
-									'CodeMirror-linenumbers',
-									'CodeMirror-foldgutter'
-								],
-								prettier: true,
-								prettierParser: 'js'
-							}}
-							prefs={this.props.prefs}
-							autoComplete={this.props.prefs.autoComplete}
-							onChange={this.onJsCodeChange.bind(this)}
-							onCreation={el => (this.cm.js = el)}
-							onFocus={this.editorFocusHandler.bind(this)}
-						/>
-						{/* Inlet(scope.cm.js); */}
 					</div>
-				</SplitPane>
-				<div class="demo-side" id="js-demo-side" style="">
+				</Tabs>
+				</div>
+				{/*<SplitPane*/}
+					{/*class="code-side"*/}
+					{/*id="js-code-side"*/}
+					{/*sizes={this.state.codeSplitSizes}*/}
+					{/*minSize={minCodeWrapSize}*/}
+					{/*direction={*/}
+						{/*this.props.currentLayoutMode === 2 ||*/}
+						{/*this.props.currentLayoutMode === 5*/}
+							{/*? 'horizontal'*/}
+							{/*: 'vertical'*/}
+					{/*}*/}
+					{/*onDragStart={this.codeSplitDragStart.bind(this)}*/}
+					{/*onDragEnd={this.codeSplitDragEnd.bind(this)}*/}
+					{/*onSplit={splitInstance => (this.codeSplitInstance = splitInstance)}*/}
+				{/*>*/}
+					{/**/}
+					{/**/}
+				{/*</Tabs>*/}
+				<div class="demo-side" id="js-demo-side" style="overflow-y: auto; -webkit-overflow-scrolling: touch;">
 					<iframe
 						ref={el => (this.frame = el)}
-						src="about://blank"
 						frameborder="0"
 						id="demo-frame"
 						allowfullscreen

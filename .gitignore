@@ -5,8 +5,12 @@
 .idea/
 *.iml
 
+### VSCode
+.history
+
 ### Misc ###
 node_modules/
 *.map
+
 .sass-cache
 extension/

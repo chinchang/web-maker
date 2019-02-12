@@ -75,7 +75,7 @@ import { log } from './utils';
 						// Multiple tabs open, persistence can only be enabled
 						// in one tab at a a time.
 						alert(
-							"Opening Web Maker web app in multiple tabs isn't supported at present and it seems like you already have it opened in another tab. Please use in one tab."
+							"Opening ZenUML web app in multiple tabs isn't supported at present and it seems like you already have it opened in another tab. Please use in one tab."
 						);
 						trackEvent('fn', 'multiTabError');
 					} else if (err.code === 'unimplemented') {
@@ -144,7 +144,7 @@ import { log } from './utils';
 
 	// Fetch user settings.
 	// This isn't hitting the remote db because remote settings
-	// get fetch asynchronously (in user/) and update the envioronment.
+	// get fetch asynchronously (in user/) and update the environment.
 	function getSettings(defaultSettings) {
 		const d = deferred();
 		// Will be chrome.storage.sync in extension environment,

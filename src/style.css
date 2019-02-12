@@ -169,7 +169,7 @@ button {
 	color: #f7ae2d;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 768px) {
 	.block--mobile {
 		display: block;
 	}
@@ -426,8 +426,8 @@ body:not(.light-version).overlay-visible .main-container {
 	display: flex;
 	flex-direction: column;
 	flex-basis: inherit;
-	height: 33%;
-	overflow: hidden;
+	/*height: 33%;*/
+	/*overflow: hidden;*/
 	position: relative;
 	background: var(--color-bg);
 	transition: height 0.3s ease, width 0.3s ease;
@@ -445,10 +445,9 @@ body:not(.light-version).overlay-visible .main-container {
 
 .layout-2 .code-wrap {
 	height: auto;
-	width: 33%;
 }
 
-.code-wrap__header {
+/* .code-wrap__header {
 	display: flex;
 	flex-shrink: 0;
 	justify-content: space-between;
@@ -459,7 +458,7 @@ body:not(.light-version).overlay-visible .main-container {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 	font-weight: bold;
 	user-select: none;
-}
+} */
 
 .code-wrap__header-label {
 	/*transform: translate(0px) scale(1.2);*/
@@ -526,7 +525,8 @@ body:not(.light-version).overlay-visible .main-container {
 
 .CodeMirror {
 	width: 100%;
-	height: calc(100% - 25px);
+	/*height: calc(100% - 25px);*/
+	height: auto;
 	/* 25px for header */
 	font-size: var(--code-font-size);
 }
@@ -587,7 +587,8 @@ li.CodeMirror-hint-active {
 #demo-frame {
 	border: 0;
 	width: 100%;
-	height: calc(100% - 29px);
+	height: calc(100%);
+	/*height: calc(100% - 29px); height reserved for console*/
 	/*  minus minimized console height */
 	position: absolute;
 	z-index: 1;
@@ -673,10 +674,10 @@ body > #demo-frame {
 
 .logo {
 	display: inline-block;
-	height: 25px;
-	width: 48px;
+	height: 18px;
+	width: 18px;
 	margin-right: 5px;
-	background: url(icon-48.png) 0px -12px;
+	background: url(icon-16.png);
 	background-repeat: no-repeat;
 	vertical-align: middle;
 	-webkit-filter: grayscale(0.9);
@@ -684,6 +685,19 @@ body > #demo-frame {
 	transition: 0.4s ease;
 	opacity: 0.3;
 	will-change: opacity, filter;
+}
+
+.logo.small {
+	height: 20px;
+	width: 20px;
+	margin-right: 0px;
+	background: url(icon-16.png) 0px 0px no-repeat;
+	-webkit-filter: grayscale(0);
+	opacity: 1;
+}
+
+.logo.small.gray {
+	-webkit-filter: grayscale(0.9);
 }
 
 .footer:hover .logo {
@@ -832,7 +846,7 @@ body > #demo-frame {
 	color: var(--color-text);
 	position: relative;
 	border-radius: 5px;
-	opacity: 0;
+	/*opacity: 0;*/ /* TODO: Add this back. This has impact when we click the signin/up button */
 	padding: 3em;
 	font-size: 1.1em;
 	line-height: 1.4;
@@ -915,6 +929,7 @@ body > #demo-frame {
 	transition-property: transform;
 	will-change: transform;
 	transform: translateX(100%);
+	color: navajowhite;
 }
 
 .saved-items-pane.is-open {
@@ -1713,6 +1728,56 @@ while the theme CSS file is loading */
 	border-right: 1px solid;
 }
 
-.cm-s-midnight .CodeMirror-activeline-background {
+.cm-s-midnight .CodeMirror-activeline- background {
 	background: #253540;
+}
+
+
+.tab-list {
+	display:grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	padding:0;
+	margin:0;
+}
+
+.tab-list-item {
+	display:grid;
+	align-items: center;
+	justify-content: center;
+	padding:0.8em;
+		box-sizing: content-box;
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 20px;
+	height: 20px;
+	letter-spacing: 0.6px;
+	white-space: nowrap;
+	color: #bbbfd3;
+	border-radius: 3px;
+	border: 1px solid rgba(0, 0, 0, 0.9);
+	background: linear-gradient(
+		180deg,
+		rgba(0, 0, 0, 0.5) 0,
+		rgba(255, 255, 255, 0.1) 100%
+	);
+	/*text-shadow: 0px 1px 1px rgba(0,0,0,1);*/
+	box-shadow: 0 -1px 0px 0 rgba(255, 255, 255, 0.15);
+}
+
+.tab-list-item:hover {
+	border: 1px solid rgba(63, 63, 63, 0.9);
+}
+
+.tab-list-active {
+	background: linear-gradient(
+		180deg,
+		rgba(41, 41, 41, 0.01) 0,
+		rgba(255, 255, 255, 0.201) 100%
+	);
+}
+
+#screenshotBtn svg path {
+	stroke: rgba(255, 255, 255, 0.2);
+	stroke-width: 5px;
 }

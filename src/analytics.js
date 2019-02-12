@@ -32,15 +32,15 @@ if (navigator.onLine && !window.DEBUG) {
 		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
 		if (location.href.indexOf('chrome-extension://') === -1) {
-			ga('create', 'UA-87786708-1');
+			ga('create', 'UA-1211588-20');
 		} else {
-			ga('create', 'UA-87786708-1', {
+			ga('create', 'UA-1211588-20', {
 				'cookieDomain': 'none'
 			});
 			// required for chrome extension protocol
 			ga('set', 'checkProtocolTask', function () { /* nothing */ });
 		}
-		ga('send', 'pageview');
+		ga('send', 'pageview', 'extension');
 	}, 100);
 
 	/* eslint-enable */

@@ -40,10 +40,10 @@ chrome.runtime.onInstalled.addListener(function callback(details) {
 		openApp();
 	}
 	if (details.reason === 'update') {
-		if ((details.previousVersion + '').indexOf('1.') === 0) {
-			openApp();
+		if ((details.previousVersion + '').indexOf('0.') === 0) {
+			// openApp();
 		}
 	}
 });
 
-chrome.runtime.setUninstallURL('https://webmakerapp.com/uninstall/');
+chrome.runtime.setUninstallURL('https://goo.gl/forms/eKJSpdvMjehCBy332');

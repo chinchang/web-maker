@@ -74,14 +74,14 @@ export default class Footer extends Component {
 			<div id="footer" class="footer">
 				<div>
 					<a
-						href="https://webmakerapp.com/"
+						href="https://www.ZenUML.com/"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
 						<div class="logo" />
 					</a>
 					&copy;
-					<span class="web-maker-with-tag">Web Maker</span> &nbsp;&nbsp;
+					<span class="web-maker-with-tag">ZenUML</span> &nbsp;&nbsp;
 					<Button
 						onClick={this.props.helpBtnClickHandler}
 						data-event-category="ui"
@@ -115,8 +115,8 @@ export default class Footer extends Component {
 					</Button>
 					<a
 						class="footer__link  hint--rounded  hint--top-right"
-						aria-label="Tweet about 'Web Maker'"
-						href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
+						aria-label="Tweet about 'ZenUML'"
+						href="http://twitter.com/share?url=https://www.zenuml.com/&text=ZenUML - A blazing fast %26 offline UML generator! via @ZenUML&related=ZenUML&hashtags=uml,zenuml,playground,offline"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
@@ -134,7 +134,7 @@ export default class Footer extends Component {
 						onClick={this.props.supportDeveloperBtnClickHandler}
 						data-event-category="ui"
 						data-event-action="supportDeveloperFooterBtnClick"
-						class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
+						class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link hide"
 						aria-label="Support the developer by pledging some amount"
 					>
 						Donate
@@ -220,6 +220,7 @@ export default class Footer extends Component {
 						onClick={this.props.codepenBtnClickHandler}
 						id="codepenBtn"
 						class="mode-btn  hint--rounded  hint--top-left  hide-on-mobile"
+						style="display: none"
 						aria-label="Edit on CodePen"
 					>
 						<svg>
@@ -230,6 +231,7 @@ export default class Footer extends Component {
 					<button
 						id="screenshotBtn"
 						class="mode-btn  hint--rounded  hint--top-left show-when-extension"
+						style="display: none"
 						onClick={this.props.screenshotBtnClickHandler}
 						aria-label="Take screenshot of preview"
 					>
@@ -274,6 +276,7 @@ export default class Footer extends Component {
 						onClick={this.layoutBtnClickhandler.bind(this, 5)}
 						id="layoutBtn5"
 						class="mode-btn hide-on-mobile"
+						style="display: none"
 						aria-label="Switch to layout with all vertical panes"
 					>
 						<svg viewBox="0 0 100 100">
@@ -284,6 +287,7 @@ export default class Footer extends Component {
 						onClick={this.layoutBtnClickhandler.bind(this, 4)}
 						id="layoutBtn4"
 						class="mode-btn hint--top-left hint--rounded  hide-on-mobile"
+						style="display: none"
 						aria-label="Switch to full screen preview"
 					>
 						<svg viewBox="0 0 100 100">
@@ -308,6 +312,7 @@ export default class Footer extends Component {
 						class={`notifications-btn  mode-btn  hint--top-left  hint--rounded ${
 							this.props.hasUnseenChangelog ? 'has-new' : ''
 						}`}
+						style="display: none"
 						aria-label="See Changelog"
 					>
 						<svg viewBox="0 0 24 24">

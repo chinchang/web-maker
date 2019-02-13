@@ -106,6 +106,12 @@ export function Notifications(props) {
 		<div>
 			<h1>Whats new?</h1>
 
+			<Notification version="3.6.1" {...props} isLatest={true}>
+				<NotificationItem type="bug">
+					Failing to import local creations when logging in.
+				</NotificationItem>
+			</Notification>
+
 			<Notification version="3.6.0" {...props}>
 				<li>
 					<strong>New Setting</strong>: Configure if you want to auto-close the
@@ -135,7 +141,7 @@ export function Notifications(props) {
 				</li>
 			</Notification>
 
-			<Notification version="3.5.1" isLatest={true} {...props}>
+			<Notification version="3.5.1" {...props}>
 				<li>
 					<strong>Hidden Prettier</strong>: Selecting code and pressing
 					Shift+Tab now uses Prettier to auto-format. This will improve UX wise

@@ -15,6 +15,7 @@ window.chrome.i18n = {
 
 window.$all = selector => [...document.querySelectorAll(selector)];
 window.IS_EXTENSION = !!window.chrome.extension;
+
 export const BASE_PATH = '';
 
 var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

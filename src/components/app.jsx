@@ -56,7 +56,7 @@ const LocalStorageKeys = {
 	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
 };
 const UNSAVED_WARNING_COUNT = 15;
-const version = '3.6.0';
+const version = '3.6.1';
 
 export default class App extends Component {
 	constructor() {
@@ -407,7 +407,10 @@ export default class App extends Component {
 		// setTimeout(() => $('#js-saved-items-wrap').style.overflowY = 'auto', 1000);
 	}
 	toggleSavedItemsPane(shouldOpen) {
-		this.setState({ isSavedItemPaneOpen: !this.state.isSavedItemPaneOpen });
+		this.setState({
+			isSavedItemPaneOpen:
+				shouldOpen === undefined ? !this.state.isSavedItemPaneOpen : shouldOpen
+		});
 
 		if (this.state.isSavedItemPaneOpen) {
 			window.searchInput.focus();
@@ -426,6 +429,9 @@ export default class App extends Component {
 	 */
 	async fetchItems(shouldSaveGlobally, shouldFetchLocally) {
 		var d = deferred();
+		// HACK: This empty assignment is being used when importing locally saved items
+		// to cloud, `fetchItems` runs once on account login which clears the
+		// savedItems object and hence, while merging no saved item matches with itself.
 		this.state.savedItems = {};
 		var items = [];
 		if (window.user && !shouldFetchLocally) {
@@ -1028,6 +1034,55 @@ export default class App extends Component {
 		}
 	}
 
+	mergeImportedItems(items) {
+		var existingItemIds = [];
+		var toMergeItems = {};
+		const d = deferred();
+		const { savedItems } = this.state;
+		items.forEach(item => {
+			// We can access `savedItems` here because this gets set when user
+			// opens the saved creations panel. And import option is available
+			// inside the saved items panel.
+			// HACK: Also when this fn is called for importing locally saved items
+			// to cloud, `fetchItems` runs once on account login which clears the
+			// savedItems object and hence, no match happens for `existingItemIds`.
+			if (savedItems[item.id]) {
+				// Item already exists
+				existingItemIds.push(item.id);
+			} else {
+				log('merging', item.id);
+				toMergeItems[item.id] = item;
+			}
+		});
+		var mergedItemCount = items.length - existingItemIds.length;
+		if (existingItemIds.length) {
+			var shouldReplace = confirm(
+				existingItemIds.length +
+					' creations already exist. Do you want to replace them?'
+			);
+			if (shouldReplace) {
+				log('shouldreplace', shouldReplace);
+				items.forEach(item => {
+					toMergeItems[item.id] = item;
+				});
+				mergedItemCount = items.length;
+			}
+		}
+		if (mergedItemCount) {
+			itemService.saveItems(toMergeItems).then(() => {
+				d.resolve();
+				alertsService.add(
+					mergedItemCount + ' creations imported successfully.'
+				);
+				trackEvent('fn', 'itemsImported', mergedItemCount);
+			});
+		} else {
+			d.resolve();
+		}
+		this.closeSavedItemsPane();
+		return d.promise;
+	}
+
 	/**
 	 * Called from inside ask-to-import-modal
 	 */
@@ -1286,6 +1341,7 @@ export default class App extends Component {
 					itemRemoveBtnClickHandler={this.itemRemoveBtnClickHandler.bind(this)}
 					itemForkBtnClickHandler={this.itemForkBtnClickHandler.bind(this)}
 					exportBtnClickHandler={this.exportBtnClickHandler.bind(this)}
+					mergeImportedItems={this.mergeImportedItems.bind(this)}
 				/>
 
 				<Alerts />

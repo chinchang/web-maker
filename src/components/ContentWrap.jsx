@@ -693,23 +693,35 @@ export default class ContentWrap extends Component {
 		if(param === "NewParticipant"){
 			this.addNewParticipant();
 		} else {
-			this.cm.js.setValue(`${this.cmCodes.js || ''}\n${param}`);
+			this.cmCodes.js === '' ? this.cm.js.setValue(param): this.cm.js.setValue(`${this.cmCodes.js}\n${param}`); 
 		}
-		   this.refreshEditor();
+		    this.refreshEditor();
 	}
 
 	addNewParticipant() {
 		let code = this.cm.js.getValue();
 		let lines = code.split('\n');
 		let buffer = '', added = false;
-		lines.forEach(line => {
-		  if(!added && (line.trim().length > 0 && !line.trim().startsWith('//'))) {
-			buffer = `${buffer}\nNewParticipant`;
-			added = true;
-		  }
-		 buffer = buffer ? `${buffer}\n${line}`: line;
-		});
-		this.cm.js.setValue(buffer);
+		if(lines[0]){
+			lines.forEach(line => {
+				buffer = buffer ? `${buffer}\n${line}`: line;
+			if(!added && (line.trim().length > 0 && !line.trim().startsWith('//'))) {
+				
+				buffer = `NewParticipant\n${buffer}`;
+				added = true;
+				
+			}
+			
+			});
+			this.cm.js.setValue(buffer);
+		} else {
+		this.cm.js.setValue('NewParticipant');
+		console.log(lines[0]);
+		console.log(lines[0]);
+		console.log(lines[0]);
+		console.log(lines[0]);
+	   }
+		
 		this.refreshEditor();
 	  }
 

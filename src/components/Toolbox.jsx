@@ -438,7 +438,7 @@ class Toolbox extends Component {
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
           xmlnsXlink="http://www.w3.org/1999/xlink"
-          onClick = {() => this.insertCode("while(condition) {\n  A.method()\n}\n")}
+          onClick = {() => this.insertCode("while(condition) {\n  A.method()\n}")}
         >
           <title>Loop</title>
           <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

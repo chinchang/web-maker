@@ -695,7 +695,7 @@ export default class ContentWrap extends Component {
 		} else {
 			this.cmCodes.js === '' ? this.cm.js.setValue(param): this.cm.js.setValue(`${this.cmCodes.js}\n${param}`); 
 		}
-		    this.refreshEditor();
+		this.refreshEditor();
 	}
 
 	addNewParticipant() {
@@ -705,25 +705,17 @@ export default class ContentWrap extends Component {
 		if(lines[0]){
 			lines.forEach(line => {
 				buffer = buffer ? `${buffer}\n${line}`: line;
-			if(!added && (line.trim().length > 0 && !line.trim().startsWith('//'))) {
-				
-				buffer = `NewParticipant\n${buffer}`;
-				added = true;
-				
-			}
-			
+				if(!added && (line.trim().length > 0 && !line.trim().startsWith('//'))) {
+					buffer = `NewParticipant\n${buffer}`;
+					added = true;
+				}
 			});
 			this.cm.js.setValue(buffer);
 		} else {
-		this.cm.js.setValue('NewParticipant');
-		console.log(lines[0]);
-		console.log(lines[0]);
-		console.log(lines[0]);
-		console.log(lines[0]);
+			this.cm.js.setValue('NewParticipant');
 	   }
-		
-		this.refreshEditor();
-	  }
+	   this.refreshEditor();
+	}
 
 	render() {
 		return (

@@ -10,4 +10,11 @@ install:
 script:
   - yarn run lint
   - yarn run test
+  - yarn run build
+  - gulp release
 cache: yarn
+deploy:
+  provider: firebase
+  token:
+    secure: ''
+  project: 'staging-zenuml'

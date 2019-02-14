@@ -7,6 +7,7 @@ install:
   - yarn add global eslint-plugin-react
   - yarn add global eslint-plugin-mocha
   - yarn add global eslint-config-synacor
+  - yarn add global firebase-tools
 script:
   - yarn run lint
   - yarn run test

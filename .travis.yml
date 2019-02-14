@@ -1,21 +1,21 @@
 language: node_js
 node_js:
-  - '10'
+- '10'
 install:
-  - yarn add global eslint
-  - yarn add global babel-eslint
-  - yarn add global eslint-plugin-react
-  - yarn add global eslint-plugin-mocha
-  - yarn add global eslint-config-synacor
-  - yarn add global firebase-tools
+- yarn add global eslint
+- yarn add global babel-eslint
+- yarn add global eslint-plugin-react
+- yarn add global eslint-plugin-mocha
+- yarn add global eslint-config-synacor
+- yarn add global firebase-tools
 script:
-  - yarn run lint
-  - yarn run test
-  - yarn run build
-  - gulp release
+- yarn run lint
+- yarn run test
+- yarn run build
+- gulp release
 cache: yarn
 deploy:
   provider: firebase
   token:
-    secure: ''
-  project: 'staging-zenuml'
+    secure: JGnt8GCLnB4nR7rhnKUB4UaP0FX3ikAxenWGWGDJxoUG4J07TbfHCJiWQKMZ1kR5YLm+50Z5gqzqJihvZhMy0ez57SLG8uTozH6tmnwVuVypcaQ1t6LMJFNLUnpzG3J0LLJHuLuQz+PTFqArNqxI8RU4qOB+Zas3NEVF7qLafPAqOBEp08Qp8nD1NsUME8vgj4GkC7XamEwZwp8IuOHlSwavcWbP4tWWJYkatlKP6KQc663jROIRM1GrWBiiOiIeGqe6LNgILaQsdSJhD2TtjumdkfTa/4y1G04sR9pGDyr7L5Ta79dSm7boYJNUMW9/zH27HGej3HAma1Z1ndM+WXyX9UtogkN4Fu40aNX5VdU5UzCd6sPVWLOqaUgOPSxpdn0r+qsuRuS44aEKwcgtw427HzaD4ai3YqYZcbgjQGE9cVRan5bPBYovd1w8X5vUm9yay8rAhndNo22Tw/96/mK7Rq0+sU+lcEDRFRXryI34iLCMIRqkYCZ/wwlzjtiSFummloSdgZ7kVHyzagx8vni0Uw/9FNdujb3TLbKsmumyS3UvOTDOKCJUf3CDMRaCqox7FXdQVPf0lqCaYcPVezKOar1HbeErixzzJqCsFVC+tGK0HWmoP7lkX0jZ1QoN2GRyeXSiWmAEkmYrCV5LzZiul3lEoKJEWgEHxJer2I0=
+  project: staging-zenuml

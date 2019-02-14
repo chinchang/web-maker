@@ -9,8 +9,6 @@ install:
 - yarn add global eslint-config-synacor
 - yarn add global firebase-tools
 script:
-- yarn run lint
-- yarn run test
 - yarn run build
 - gulp release
 cache: yarn

@@ -1,8 +1,8 @@
 {
 	"name": "Web Sequence",
-	"version": "1.0.7",
+	"version": "1.0.12",
 	"manifest_version": 2,
-	"description": "Blazing fast & offline playground for sequence diagram generating",
+	"description": "Real-time & offline tool for generating sequence diagrams",
 	"homepage_url": "http://zenuml.com",
 	"permissions": ["storage", "tabs", "<all_urls>"],
 	"optional_permissions": ["downloads"],

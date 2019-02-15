@@ -1,7 +1,7 @@
 {
 	"name": "web-sequence",
 	"version": "0.9.1",
-	"description": "A blazing fast & offline sequence diagram generator",
+	"description": "Realtime & offline tool for generating sequence diagrams",
 	"main": "index.html",
 	"scripts": {
 		"webpack": "webpack",

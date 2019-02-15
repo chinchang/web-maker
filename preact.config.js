@@ -1,5 +1,6 @@
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
+const webpack = require('webpack');
 
 /**
  * Function that mutates original webpack config.
@@ -40,4 +41,7 @@ export default function(config, env, helpers) {
 		const uglifyPlugin = helpers.getPluginsByName(config, 'UglifyJsPlugin')[0];
 		config.plugins.splice(uglifyPlugin.index, 1);
 	}
+
+	//env.production might be boolean or string
+	config.plugins.push(new webpack.DefinePlugin({PRODUCTION: env.production}));
 }

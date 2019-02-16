@@ -49,7 +49,8 @@ we pass the generated zip file name to the script of `yarn upload` and `yarn pub
 $ yarn install  // instal modules
 $ yarn start    // start a local server
 
-$ yarn build    // build a production release
+$ yarn build    // build a staging release
+$ yarn build-prod    // build a production release
 $ gulp release  // copy resources to app / extension
 ````
 

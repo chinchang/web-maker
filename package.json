@@ -6,9 +6,10 @@
 	"scripts": {
 		"webpack": "webpack",
 		"start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-		"build": "npm run webpack && preact build --template src/index.html --no-prerender --service-worker false",
+		"build": "npm run webpack && preact build --production false --template src/index.html --no-prerender --service-worker false",
+		"build-prod": "preact build --template src/index.html --no-prerender --service-worker false",
 		"release": "gulp release",
-		"serve": "npm run webpack && preact build && preact serve",
+		"serve": "npm run webpack && preact build --production false && preact serve",
 		"dev": "npm run webpack && preact watch --template src/index.html --no-prerender",
 		"lint": "eslint src",
 		"test": "jest ./tests",

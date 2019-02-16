@@ -19,5 +19,5 @@ const stagingConfig = {
 };
 
 //PRODUCTION is a placeholder which will be replaced by Webpack
-const config = PRODUCTION ? productionConfig : stagingConfig;
+const config = PRODUCTION ? productionConfig : stagingConfig; //eslint-disable-line
 firebase.initializeApp(config);

@@ -17,7 +17,8 @@
 		"upload": "webstore upload --source extension.zip --extension-id kcpganeflmhffnlofpdmcjklmdpbbmef --client-id 457917008826-p6qkd4tkbbutbae4j7uc2p39a76lfjlr.apps.googleusercontent.com --client-secret $WEBSTORE_CLIENT_SECRET --refresh-token 1/4YHJ8yliNMNLBgKkh2QhQ_PnZUc8trKNx_j-pLOGrh8",
 		"pub": "webstore publish --extension-id kcpganeflmhffnlofpdmcjklmdpbbmef --client-id 457917008826-p6qkd4tkbbutbae4j7uc2p39a76lfjlr.apps.googleusercontent.com --client-secret $WEBSTORE_CLIENT_SECRET --refresh-token 1/4YHJ8yliNMNLBgKkh2QhQ_PnZUc8trKNx_j-pLOGrh8",
 		"install": "ln -sf ../../git-hooks/pre-commit .git/hooks/pre-commit",
-		"precommit": "lint-staged"
+		"precommit": "lint-staged",
+		"http-server-app": "http-server ./app"
 	},
 	"eslintConfig": {
 		"extends": "eslint-config-synacor"

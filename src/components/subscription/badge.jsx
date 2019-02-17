@@ -3,7 +3,7 @@ const SubscriptionBadge = ({ user }) => {
 
 	let badge = null;
 	const subscription = user.subscription;
-	const isSubscriptionOnGoing = subscription && subscription['ends_at'] === null;
+	const isSubscriptionOnGoing = subscription && subscription['ends_at'] == null;
 	const isSubscriptionValid = subscription && subscription['ends_at'] !== null && ((new Date(subscription['ends_at']) - new Date()) >= 0);
 
 	if (isSubscriptionOnGoing || isSubscriptionValid) {

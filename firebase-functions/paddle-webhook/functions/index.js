@@ -31,11 +31,12 @@ exports.webhook = functions.https.onRequest((req, res) => {
                     unit_price: req.body.unit_price,
                     update_url: req.body.update_url
                 };
+                const userId = subscription.passthrough;
                 console.log(subscription);
 
                 const db = admin.firestore();
-                db.collection('test_user_subscriptions')
-                    .doc(subscription.subscription_id)
+                db.collection('user_subscriptions')
+                    .doc('user-' + userId)
                     .set(subscription)
                     .then(function() {
                         console.log('created');

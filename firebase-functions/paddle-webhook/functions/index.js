@@ -2,6 +2,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
 admin.initializeApp(functions.config().firebase);
+const db = admin.firestore();
 
 const webhook = require('./webhook');
 const pubKey = functions.config().paddle.pub_key;
@@ -12,8 +13,8 @@ exports.info = functions.https.onRequest((req, res) => {
 
 exports.webhook = functions.https.onRequest((req, res) => {
     if(req.body && req.body.p_signature) {
-        const result = webhook.validate(req.body, pubKey);
-        if(result) {
+        const valid = webhook.validate(req.body, pubKey);
+        if(valid) {
             if(req.body.alert_name === 'subscription_created') {
                 const subscription = {
                     cancel_url: req.body.cancel_url,
@@ -32,23 +33,23 @@ exports.webhook = functions.https.onRequest((req, res) => {
                     update_url: req.body.update_url
                 };
                 const userId = subscription.passthrough;
-                console.log(subscription);
 
-                const db = admin.firestore();
-                db.collection('user_subscriptions')
-                    .doc('user-' + userId)
-                    .set(subscription)
-                    .then(function() {
-                        console.log('created');
-                        res.send('Accepted');
-                    });
-                
+                db.collection('users').doc(userId).get().then(user => {
+                    if(user.exists) {
+                        return db.collection('user_subscriptions')
+                        .doc('user-' + userId)
+                        .set(subscription)
+                        .then(function() {
+                            res.send('Accepted');
+                        });
+                    } else {
+                        res.send('Invalid userId: ' + userId);
+                    }
+                });
             } else {
                 console.warn(`unsupported alert ${req.body.alert_name}`);
                 res.send(`unsupported alert ${req.body.alert_name}`);
             }
-
-            
         } else {
             res.send('Invalid signature');
         }

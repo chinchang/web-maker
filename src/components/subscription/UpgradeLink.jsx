@@ -1,3 +1,6 @@
+//__PADDLE_CHECKOUT_URL__ is a placeholder which will be replaced by Webpack
+const baseCheckoutUrl = __PADDLE_CHECKOUT_URL__;  //eslint-disable-line
+
 const UpgradeLink = ({ user }) => {
 	if (!user) return null;
 

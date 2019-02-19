@@ -18,6 +18,6 @@ const stagingConfig = {
     messagingSenderId: "337278161370"
 };
 
-//PRODUCTION is a placeholder which will be replaced by Webpack
-const config = PRODUCTION ? productionConfig : stagingConfig; //eslint-disable-line
+//__PRODUCTION__ is a placeholder which will be replaced by Webpack
+const config = __PRODUCTION__ ? productionConfig : stagingConfig; //eslint-disable-line
 firebase.initializeApp(config);

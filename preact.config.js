@@ -43,5 +43,10 @@ export default function(config, env, helpers) {
 	}
 
 	//env.production might be boolean or string
-	config.plugins.push(new webpack.DefinePlugin({PRODUCTION: env.production}));
+	config.plugins.push(new webpack.DefinePlugin({__PRODUCTION__: env.production}));
+
+	const paddleCheckoutUrl = env.production !== 'false'
+		? 'https://pay.paddle.com/checkout/551167' //ZenUML Pro
+		: 'https://pay.paddle.com/checkout/552378'; //Test Plan1
+	config.plugins.push(new webpack.DefinePlugin({__PADDLE_CHECKOUT_URL__: JSON.stringify(paddleCheckoutUrl)}));
 }

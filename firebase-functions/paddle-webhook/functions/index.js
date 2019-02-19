@@ -11,7 +11,7 @@ exports.info = functions.https.onRequest((req, res) => {
     res.send(`Hello from ${process.env.GCLOUD_PROJECT}!`);
 });
 
-exports.webhook = functions.https.onRequest((req, res) => {
+exports.webhook = functions.https.onRequest(async (req, res) => {
     if(req.body && req.body.p_signature) {
         const valid = webhook.validate(req.body, pubKey);
         if(valid) {
@@ -34,18 +34,13 @@ exports.webhook = functions.https.onRequest((req, res) => {
                 };
                 const userId = subscription.passthrough;
 
-                db.collection('users').doc(userId).get().then(user => {
-                    if(user.exists) {
-                        return db.collection('user_subscriptions')
-                        .doc('user-' + userId)
-                        .set(subscription)
-                        .then(function() {
-                            res.send('Accepted');
-                        });
-                    } else {
-                        res.send('Invalid userId: ' + userId);
-                    }
-                });
+                const user = await db.collection('users').doc(userId).get();
+                if(user.exists) {
+                    await db.collection('user_subscriptions').doc('user-' + userId).set(subscription);
+                    res.send('Accepted');
+                } else {
+                    res.send('Invalid userId: ' + userId);
+                }
             } else {
                 console.warn(`unsupported alert ${req.body.alert_name}`);
                 res.send(`unsupported alert ${req.body.alert_name}`);

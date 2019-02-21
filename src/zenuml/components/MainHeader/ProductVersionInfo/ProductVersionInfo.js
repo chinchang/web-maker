@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import { Component } from 'preact';
 import { ProductVersionAnonymous } from './ProductVersionAnonymous';
 
 export class ProductVersionInfo extends Component {
@@ -9,17 +9,12 @@ export class ProductVersionInfo extends Component {
 	render() {
 		let view = null;
 		if (this.isAnonymous()) {
-			view = this.anonymousProductInfo();
+			view = <ProductVersionAnonymous />;
 		} else {
 			view = this.productInfo();
 		}
 		return view;
 	}
-
-	anonymousProductInfo() {
-		return <ProductVersionAnonymous />;
-	}
-
 	productInfo() {
 		return (<p>pro2</p>);
 	}

@@ -1,4 +1,4 @@
-const ProductVersionAnonymous = () => {
+const ProductVersionLabelAnonymous = () => {
 	return (
 		<i style="background-color:grey; border-radius: 4px;"
 			 className="flex  flex-v-center  hint--rounded  hint--bottom-left"
@@ -9,4 +9,4 @@ const ProductVersionAnonymous = () => {
 	);
 };
 
-export { ProductVersionAnonymous };
+export { ProductVersionLabelAnonymous };

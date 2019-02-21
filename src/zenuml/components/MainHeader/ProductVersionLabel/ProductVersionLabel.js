@@ -1,7 +1,7 @@
 import { Component } from 'preact';
-import { ProductVersionAnonymous } from './ProductVersionAnonymous';
+import { ProductVersionLabelAnonymous } from './ProductVersionLabelAnonymous';
 
-export class ProductVersionInfo extends Component {
+export class ProductVersionLabel extends Component {
 	isAnonymous() {
 		return !this.props.user;
 	}
@@ -9,7 +9,7 @@ export class ProductVersionInfo extends Component {
 	render() {
 		let view = null;
 		if (this.isAnonymous()) {
-			view = <ProductVersionAnonymous />;
+			view = <ProductVersionLabelAnonymous />;
 		} else {
 			view = this.productInfo();
 		}

@@ -16,6 +16,6 @@ export class ProductVersionInfo extends Component {
 		return view;
 	}
 	productInfo() {
-		return (<ProductVersionAnonymous />);
+		return null;
 	}
 }

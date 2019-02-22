@@ -40,6 +40,7 @@ import { AskToImportModal } from './AskToImportModal';
 import { Alerts } from './Alerts';
 import Portal from 'preact-portal';
 import { HelpModal } from './HelpModal';
+import { ProFeatureListModal } from './subscription/ProFeatureListModal';
 import { OnboardingModal } from './OnboardingModal';
 import { Js13KModal } from './Js13KModal';
 import { CreateNewModal } from './CreateNewModal';
@@ -67,6 +68,7 @@ export default class App extends Component {
 			isAddLibraryModalOpen: false,
 			isSettingsModalOpen: false,
 			isHelpModalOpen: false,
+			isProFeatureListModalOpen: true,
 			isNotificationsModalOpen: false,
 			isLoginModalOpen: false,
 			isProfileModalOpen: false,
@@ -863,6 +865,10 @@ export default class App extends Component {
 	loginBtnClickHandler() {
 		this.setState({ isLoginModalOpen: true });
 	}
+
+	proBtnClickHandler() {
+		this.setState({ isProFeatureListModalOpen: true });
+	}
 	profileBtnClickHandler() {
 		this.setState({ isProfileModalOpen: true });
 	}
@@ -1278,6 +1284,7 @@ export default class App extends Component {
 						newBtnHandler={this.newBtnClickHandler.bind(this)}
 						saveBtnHandler={this.saveBtnClickHandler.bind(this)}
 						loginBtnHandler={this.loginBtnClickHandler.bind(this)}
+						proBtnHandler={this.proBtnClickHandler.bind(this)}
 						profileBtnHandler={this.profileBtnClickHandler.bind(this)}
 						addLibraryBtnHandler={this.openAddLibrary.bind(this)}
 						runBtnClickHandler={this.runBtnClickHandler.bind(this)}
@@ -1417,6 +1424,12 @@ export default class App extends Component {
 				<HelpModal
 					show={this.state.isHelpModalOpen}
 					closeHandler={() => this.setState({ isHelpModalOpen: false })}
+					onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
+					version={version}
+				/>
+				<ProFeatureListModal
+					show={this.state.isProFeatureListModalOpen}
+					closeHandler={() => this.setState({ isProFeatureListModalOpen: false })}
 					onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
 					version={version}
 				/>

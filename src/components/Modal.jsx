@@ -44,7 +44,7 @@ export default class Modal extends Component {
 				setTimeout(() => {
 					document.body.appendChild(this.focusGrabber);
 				}, 10);
-			} else {
+			} else if (this.focusGrabber) {
 				this.focusGrabber.remove();
 				this.focusGrabber = null;
 			}

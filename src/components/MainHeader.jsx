@@ -122,7 +122,7 @@ export function MainHeader(props) {
 					<SubscriptionBadge user={props.user} />
 				</Button>
 				<UpgradeLink user={props.user} />
-				<ProductVersionLabel user={props.user} />
+				<ProductVersionLabel user={props.user} clickHandler={props.proBtnHandler}/>
 			</div>
 		</div>
 	);

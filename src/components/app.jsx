@@ -77,7 +77,7 @@ const LocalStorageKeys = {
 	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
 };
 const UNSAVED_WARNING_COUNT = 15;
-const version = '3.6.1';
+const version = '3.6.2';
 
 export default class App extends Component {
 	constructor() {

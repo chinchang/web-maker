@@ -1,6 +1,6 @@
 window.addEventListener('message', e => {
 	// Recieving from app window
-	if (e.data && e.data.contents) {
+	if (e.data && e.data.contents && e.data.contents.match(/<html/)) {
 		const frame = document.querySelector('iframe');
 		frame.src = frame.src;
 		setTimeout(() => {
@@ -9,7 +9,7 @@ window.addEventListener('message', e => {
 			frame.contentDocument.close();
 		}, 10);
 	}
-	if (e.data && e.data.url) {
+	if (e.data && e.data.url && e.data.match(/preview\.html/)) {
 		document.querySelector('iframe').src = e.data.url;
 	}
 

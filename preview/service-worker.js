@@ -32,9 +32,10 @@ function getContentType(url) {
 		return 'text/html; charset=UTF-8';
 	} else if (url.match(/\.css$/)) {
 		return 'text/css; charset=UTF-8';
-	}
-	if (url.match(/\.js$/)) {
+	} else if (url.match(/\.js$/)) {
 		return 'application/javascript; charset=UTF-8';
+	} else if (url.match(/\.json$/)) {
+		return 'application/json; charset=UTF-8';
 	}
 	return 'text/html; charset=UTF-8';
 }

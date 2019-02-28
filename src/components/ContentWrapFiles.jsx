@@ -22,6 +22,7 @@ import { commandPaletteService } from '../commandPaletteService';
 import { PreviewDimension } from './PreviewDimension';
 
 const minCodeWrapSize = 33;
+const PREVIEW_FRAME_HOST = window.DEBUG ? 'http://localhost:7888' : ' ';
 
 /* global htmlCodeEl
  */
@@ -114,6 +115,11 @@ export default class ContentWrapFiles extends Component {
 	}
 	componentDidMount() {
 		this.props.onRef(this);
+		window.addEventListener('message', e => {
+			if (e.data && e.data.logs) {
+				this.onMessageFromConsole(...e.data.logs);
+			}
+		});
 		this.commandPaletteSubscriptions = [];
 		this.commandPaletteSubscriptions.push(
 			commandPaletteService.subscribe(SWITCH_FILE_EVENT, file => {
@@ -250,10 +256,13 @@ export default class ContentWrapFiles extends Component {
 
 		if (this.detachedWindow) {
 			log('✉️ Sending message to detached window');
-			this.detachedWindow.postMessage({ contents: '/user/index.html' }, '*');
+			this.detachedWindow.postMessage(
+				{ url: `${PREVIEW_FRAME_HOST}/index.html` },
+				'*'
+			);
 		} else {
 			setTimeout(() => {
-				this.frame.src = 'https://preview.webmaker.com:8083/index.html';
+				this.frame.src = `${PREVIEW_FRAME_HOST}/index.html`;
 			}, 10);
 		}
 	}
@@ -519,6 +528,38 @@ export default class ContentWrapFiles extends Component {
 		this.editor.focus();
 	}
 
+	detachPreview() {
+		if (this.detachedWindow) {
+			this.detachedWindow.focus();
+			return;
+		}
+		const iframeBounds = this.frame.getBoundingClientRect();
+		const iframeWidth = iframeBounds.width;
+		const iframeHeight = iframeBounds.height;
+		document.body.classList.add('is-detached-mode');
+
+		this.detachedWindow = window.open(
+			'./preview.html',
+			'Web Maker',
+			`width=${iframeWidth},height=${iframeHeight},resizable,scrollbars=yes,status=1`
+		);
+		// Trigger initial render in detached window
+		setTimeout(() => {
+			this.setPreviewContent(true);
+		}, 1500);
+
+		var intervalID = window.setInterval(checkWindow => {
+			if (this.detachedWindow && this.detachedWindow.closed) {
+				clearInterval(intervalID);
+				document.body.classList.remove('is-detached-mode');
+				this.detachedWindow = null;
+				// Update main frame preview to get latest changes (which were not
+				// getting reflected while detached window was open)
+				this.setPreviewContent(true);
+			}
+		}, 500);
+	}
+
 	onMessageFromConsole() {
 		const logs = [...arguments].map(arg => {
 			if (
@@ -653,15 +694,12 @@ export default class ContentWrapFiles extends Component {
 				<div class="demo-side" id="js-demo-side" style="">
 					<iframe
 						ref={el => (this.frame = el)}
-						src="https://preview.webmaker.com:8083/index.html"
+						src={`${PREVIEW_FRAME_HOST}/index.html`}
 						frameborder="0"
 						id="demo-frame"
 						allowfullscreen
 					/>
-					<iframe
-						src="https://preview.webmaker.com:8083/talk.html"
-						id="talkFrame"
-					/>
+					<iframe src={`${PREVIEW_FRAME_HOST}/talk.html`} id="talkFrame" />
 					<PreviewDimension ref={comp => (this.previewDimension = comp)} />
 					<Console
 						logs={this.state.logs}
@@ -676,3 +714,4 @@ export default class ContentWrapFiles extends Component {
 		);
 	}
 }
+2;

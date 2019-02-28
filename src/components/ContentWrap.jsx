@@ -69,6 +69,11 @@ export default class ContentWrap extends Component {
 	}
 	componentDidMount() {
 		this.props.onRef(this);
+		window.addEventListener('message', e => {
+			if (e.data && e.data.logs) {
+				this.onMessageFromConsole(...e.data.logs);
+			}
+		});
 	}
 
 	onHtmlCodeChange(editor, change) {
@@ -160,7 +165,7 @@ export default class ContentWrap extends Component {
 						: `${location.origin}`;
 					var src = `filesystem:${origin}/temporary/preview.html`;
 					if (this.detachedWindow) {
-						this.detachedWindow.postMessage(src, '*');
+						this.detachedWindow.postMessage({ url: src }, '*');
 					} else {
 						this.frame.src = src;
 					}

@@ -69,6 +69,8 @@ export default class ContentWrap extends Component {
 	}
 	componentDidMount() {
 		this.props.onRef(this);
+
+		// Listen for logs from preview frame
 		window.addEventListener('message', e => {
 			if (e.data && e.data.logs) {
 				this.onMessageFromConsole(...e.data.logs);

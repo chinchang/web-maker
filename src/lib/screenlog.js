@@ -221,8 +221,13 @@ window._wmEvaluate = function _wmEvaluate(expr) {
 	try {
 		var result = eval(expr);
 	} catch (e) {
-		sendLog(e);
+		sendLog(e.stack || e.message);
 		return;
 	}
 	sendLog(result)
 };
+window.addEventListener('message', e => {
+	if(e.data && e.data.exprToEval) {
+		_wmEvaluate(e.data.exprToEval);
+	}
+})

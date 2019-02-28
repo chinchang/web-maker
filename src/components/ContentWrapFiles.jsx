@@ -117,6 +117,8 @@ export default class ContentWrapFiles extends Component {
 	}
 	componentDidMount() {
 		this.props.onRef(this);
+
+		// Listen for logs from preview frame
 		window.addEventListener('message', e => {
 			if (e.data && e.data.logs) {
 				this.onMessageFromConsole(...e.data.logs);
@@ -616,7 +618,7 @@ export default class ContentWrapFiles extends Component {
 			this.onMessageFromConsole('> ' + e.target.value);
 
 			/* eslint-disable no-underscore-dangle */
-			this.frame.contentWindow._wmEvaluate(e.target.value);
+			this.frame.contentWindow.postMessage({ exprToEval: e.target.value }, '*');
 
 			/* eslint-enable no-underscore-dangle */
 

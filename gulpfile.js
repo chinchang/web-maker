@@ -56,7 +56,6 @@ gulp.task('copyFiles', function() {
 				'src/detached-window.js',
 				'src/icon-48.png',
 				'src/icon-128.png',
-				'src/virtual-file-service-worker.js',
 				'manifest.json'
 			])
 			.pipe(gulp.dest('app')),
@@ -168,9 +167,7 @@ gulp.task('generate-service-worker', function(callback) {
 			stripPrefix: `${rootDir}/`,
 
 			// has to be increased to around 2.8mb for sass.worker.js
-			maximumFileSizeToCacheInBytes: 2900000,
-
-			importScripts: ['virtual-file-service-worker.js']
+			maximumFileSizeToCacheInBytes: 2900000
 		},
 		callback
 	);

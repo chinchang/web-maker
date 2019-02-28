@@ -20,11 +20,11 @@ export class CreateNewModal extends Component {
 						Start a blank creation
 					</button>
 					<button className="btn" onClick={onBlankFileTemplateSelect}>
-						Start a blank files creation
+						Start a blank files creation (beta)
 					</button>
 
 					<p>
-						<button
+						{/*<button
 							className="btn"
 							onClick={() =>
 								this.setState({
@@ -33,7 +33,7 @@ export class CreateNewModal extends Component {
 							}
 						>
 							Import Github Repository
-						</button>
+						</button>*/}
 
 						{this.state.isGhRepoInputVisible ? (
 							<div>

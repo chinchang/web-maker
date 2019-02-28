@@ -194,6 +194,20 @@ gulp.task('packageExtension', function() {
 	);
 });
 
+gulp.task('buildDistFolder', function() {
+	child_process.execSync('mkdir dist');
+	child_process.execSync('cp index.html dist/');
+	child_process.execSync('cp -R uninstall dist/');
+	child_process.execSync('cp -R privacy-policy dist/');
+	child_process.execSync('cp -R icons dist/');
+	child_process.execSync('cp -R docs dist/');
+	child_process.execSync('cp -R chrome-logo.png dist/');
+	child_process.execSync('mv app dist/');
+	child_process.execSync('cp ss1.png dist/');
+	child_process.execSync('cp icon-128.png dist/');
+	child_process.execSync('cp manifest.json dist/');
+});
+
 gulp.task('cleanup', function() {
 	return child_process.execSync('rm -rf build');
 });
@@ -236,6 +250,7 @@ gulp.task('dev-release', function(callback) {
 		'useRef',
 		'concatSwRegistration',
 		'generate-service-worker',
+		'buildDistFolder',
 		'cleanup',
 		function(error) {
 			if (error) {

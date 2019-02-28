@@ -22,7 +22,9 @@ import { commandPaletteService } from '../commandPaletteService';
 import { PreviewDimension } from './PreviewDimension';
 
 const minCodeWrapSize = 33;
-const PREVIEW_FRAME_HOST = window.DEBUG ? 'http://localhost:7888' : ' ';
+const PREVIEW_FRAME_HOST = window.DEBUG
+	? 'http://localhost:7888'
+	: `https://preview.${location.host}`;
 
 /* global htmlCodeEl
  */

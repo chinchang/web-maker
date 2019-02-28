@@ -49,6 +49,7 @@ gulp.task('copyFiles', function() {
 		gulp.src('icons/*').pipe(gulp.dest('app/icons')),
 		gulp.src('src/assets/*').pipe(gulp.dest('app/assets')),
 		gulp.src('src/templates/*').pipe(gulp.dest('app/templates')),
+		gulp.src('preview/*').pipe(gulp.dest('app/preview')),
 		gulp
 			.src([
 				'src/preview.html',

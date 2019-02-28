@@ -12,6 +12,7 @@ const child_process = require('child_process');
 const merge = require('merge-stream');
 const zip = require('gulp-zip');
 var packageJson = JSON.parse(fs.readFileSync('./package.json'));
+const connect = require('gulp-connect');
 
 function minifyJs(fileName) {
 	const content = fs.readFileSync(fileName, 'utf8');
@@ -197,6 +198,14 @@ gulp.task('packageExtension', function() {
 
 gulp.task('cleanup', function() {
 	return child_process.execSync('rm -rf build');
+});
+
+gulp.task('start-preview-server', function() {
+	connect.server({
+		root: 'preview',
+		port: 7888,
+		https: false
+	});
 });
 
 gulp.task('release', function(callback) {

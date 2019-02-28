@@ -1,6 +1,28 @@
-var mainWindow = window.parent.onMessageFromConsole
-	? window.parent
-	: window.parent.opener;
+let mainWindow = window.parent;
+
+function sanitizeDomNode(node) {
+	const fakeNode = {
+		nodeName: node.nodeName,
+		nodeType: node.nodeType,
+		tagName: node.tagName,
+		childNodes: [...node.childNodes].map(child => sanitizeDomNode(child)),
+		textContent: node.textContent
+	}
+	if(node.attributes) {
+		fakeNode.attributes = [...node.attributes].map(attribute => ({name:attribute.name, value:attribute.value}))
+	}
+	return fakeNode;
+}
+function sendLog(...args) {
+	const sanitizedArgs = [...args].map(arg => {
+		if(arg && arg instanceof HTMLElement) {
+			return sanitizeDomNode(arg)
+		}
+		return arg;
+	})
+	mainWindow.postMessage({ logs: sanitizedArgs },"*");
+}
+	
 (function() {
 	var logEl,
 		isInitialized = false,
@@ -191,16 +213,21 @@ var mainWindow = window.parent.onMessageFromConsole
 })();
 screenLog.init({
 	noUi: true,
-	proxyCallback: function() {
-		mainWindow.onMessageFromConsole.apply(null, arguments);
+	proxyCallback: function(...args) {
+		sendLog(...args);
 	}
 });
 window._wmEvaluate = function _wmEvaluate(expr) {
 	try {
 		var result = eval(expr);
 	} catch (e) {
-		mainWindow.onMessageFromConsole.call(null, e);
+		sendLog(e.stack || e.message);
 		return;
 	}
-	mainWindow.onMessageFromConsole.call(null, result);
+	sendLog(result)
 };
+window.addEventListener('message', e => {
+	if(e.data && e.data.exprToEval) {
+		_wmEvaluate(e.data.exprToEval);
+	}
+})

@@ -22,6 +22,9 @@ import { commandPaletteService } from '../commandPaletteService';
 import { PreviewDimension } from './PreviewDimension';
 
 const minCodeWrapSize = 33;
+const PREVIEW_FRAME_HOST = window.DEBUG
+	? 'http://localhost:7888'
+	: `https://preview.${location.host}`;
 
 /* global htmlCodeEl
  */
@@ -114,6 +117,13 @@ export default class ContentWrapFiles extends Component {
 	}
 	componentDidMount() {
 		this.props.onRef(this);
+
+		// Listen for logs from preview frame
+		window.addEventListener('message', e => {
+			if (e.data && e.data.logs) {
+				this.onMessageFromConsole(...e.data.logs);
+			}
+		});
 		this.commandPaletteSubscriptions = [];
 		this.commandPaletteSubscriptions.push(
 			commandPaletteService.subscribe(SWITCH_FILE_EVENT, file => {
@@ -226,7 +236,7 @@ export default class ContentWrapFiles extends Component {
 		);
 		// Namespace all file paths to '/user' because thats what the service worker
 		// recognizes.
-		const files = linearizeFiles(assignFilePaths(duplicateFiles, '/user'));
+		const files = linearizeFiles(assignFilePaths(duplicateFiles, ''));
 
 		files.forEach(file => {
 			obj[file.path] = file.content || '';
@@ -245,13 +255,19 @@ export default class ContentWrapFiles extends Component {
 			}
 		});
 
-		navigator.serviceWorker.controller.postMessage(obj);
+		// navigator.serviceWorker.controller.postMessage(obj);
+		window.talkFrame.contentWindow.postMessage(obj, '*');
 
 		if (this.detachedWindow) {
 			log('✉️ Sending message to detached window');
-			this.detachedWindow.postMessage({ contents: '/user/index.html' }, '*');
+			this.detachedWindow.postMessage(
+				{ url: `${PREVIEW_FRAME_HOST}/index.html` },
+				'*'
+			);
 		} else {
-			this.frame.src = '/user/index.html';
+			setTimeout(() => {
+				this.frame.src = `${PREVIEW_FRAME_HOST}/index.html`;
+			}, 10);
 		}
 	}
 	cleanupErrors() {
@@ -516,6 +532,38 @@ export default class ContentWrapFiles extends Component {
 		this.editor.focus();
 	}
 
+	detachPreview() {
+		if (this.detachedWindow) {
+			this.detachedWindow.focus();
+			return;
+		}
+		const iframeBounds = this.frame.getBoundingClientRect();
+		const iframeWidth = iframeBounds.width;
+		const iframeHeight = iframeBounds.height;
+		document.body.classList.add('is-detached-mode');
+
+		this.detachedWindow = window.open(
+			'./preview.html',
+			'Web Maker',
+			`width=${iframeWidth},height=${iframeHeight},resizable,scrollbars=yes,status=1`
+		);
+		// Trigger initial render in detached window
+		setTimeout(() => {
+			this.setPreviewContent(true);
+		}, 1500);
+
+		var intervalID = window.setInterval(checkWindow => {
+			if (this.detachedWindow && this.detachedWindow.closed) {
+				clearInterval(intervalID);
+				document.body.classList.remove('is-detached-mode');
+				this.detachedWindow = null;
+				// Update main frame preview to get latest changes (which were not
+				// getting reflected while detached window was open)
+				this.setPreviewContent(true);
+			}
+		}, 500);
+	}
+
 	onMessageFromConsole() {
 		const logs = [...arguments].map(arg => {
 			if (
@@ -570,7 +618,7 @@ export default class ContentWrapFiles extends Component {
 			this.onMessageFromConsole('> ' + e.target.value);
 
 			/* eslint-disable no-underscore-dangle */
-			this.frame.contentWindow._wmEvaluate(e.target.value);
+			this.frame.contentWindow.postMessage({ exprToEval: e.target.value }, '*');
 
 			/* eslint-enable no-underscore-dangle */
 
@@ -650,11 +698,12 @@ export default class ContentWrapFiles extends Component {
 				<div class="demo-side" id="js-demo-side" style="">
 					<iframe
 						ref={el => (this.frame = el)}
-						src="/user/index.html"
+						src={`${PREVIEW_FRAME_HOST}/index.html`}
 						frameborder="0"
 						id="demo-frame"
 						allowfullscreen
 					/>
+					<iframe src={`${PREVIEW_FRAME_HOST}/talk.html`} id="talkFrame" />
 					<PreviewDimension ref={comp => (this.previewDimension = comp)} />
 					<Console
 						logs={this.state.logs}
@@ -669,3 +718,4 @@ export default class ContentWrapFiles extends Component {
 		);
 	}
 }
+2;

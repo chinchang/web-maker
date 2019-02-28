@@ -244,8 +244,6 @@ export default class CodeEditor extends Component {
 	}
 
 	async initEditor() {
-		console.log('init editor');
-
 		this.editorReadyDeferred = deferred();
 		await this.loadDeps();
 

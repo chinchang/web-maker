@@ -21,7 +21,7 @@ Hello
 							/* eslint-disable default-case */
 							switch (installingWorker.state) {
 								case 'installed':
-									console.log('New or updated content is available.');
+									console.log('New or updated content is available.', navigator.serviceWorker.controller);
 									break;
 
 								case 'redundant':
@@ -46,7 +46,12 @@ Hello
 	console.log('controller', navigator.serviceWorker.controller)
 	window.addEventListener('message', (e) => {
 		console.log(88, e.data);
-		navigator.serviceWorker.controller.postMessage(e.data);
+		if (navigator.serviceWorker.controller) {
+			navigator.serviceWorker.controller.postMessage(e.data);
+		} else {
+			alert('Ooops, seems like your preview is denying updation. How about we slap a quick refresh on him?');
+			location.reload();
+		}
 	});
 
 </script>

@@ -1,4 +1,10 @@
 const CACHE_NAME = 'webmaker-vfiles';
+
+self.addEventListener('activate', event => {
+	clients.claim();
+	console.log('Now ready to handle fetches!');
+});
+
 self.addEventListener('fetch', function(event) {
 	// console.log('fetch event', event.request.url, event.request);
 	event.respondWith(

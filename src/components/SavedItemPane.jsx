@@ -10,21 +10,25 @@ export default class SavedItemPane extends Component {
 	constructor(props) {
 		super(props);
 		this.items = [];
-		this.state = {
-			filteredItems: []
+	}
+
+	static getDerivedStateFromProps({ items = {} }, state) {
+		const newItems = Object.values(items);
+		newItems.sort(function(a, b) {
+			return b.updatedOn - a.updatedOn;
+		});
+		return {
+			items: newItems,
+			filteredItems: newItems
 		};
 	}
-	componentWillUpdate(nextProps) {
-		if (this.props.items !== nextProps.items) {
-			this.items = Object.values(nextProps.items);
-			this.items.sort(function(a, b) {
-				return b.updatedOn - a.updatedOn;
-			});
-			this.setState({
-				filteredItems: this.items
-			});
-		}
+	shouldComponentUpdate(nextProps) {
+		return (
+			nextProps.items !== this.props.items ||
+			nextProps.isOpen !== this.props.isOpen
+		);
 	}
+
 	componentDidUpdate(prevProps) {
 		if (this.props.isOpen && !prevProps.isOpen) {
 			window.searchInput.value = '';
@@ -137,11 +141,14 @@ export default class SavedItemPane extends Component {
 		trackEvent('ui', 'searchInputType');
 	}
 
-	render() {
+	render(
+		{ isOpen, exportBtnClickHandler },
+		{ filteredItems = [], items = [] }
+	) {
 		return (
 			<div
 				id="js-saved-items-pane"
-				class={`saved-items-pane ${this.props.isOpen ? 'is-open' : ''}`}
+				class={`saved-items-pane ${isOpen ? 'is-open' : ''}`}
 				onKeyDown={this.keyDownHandler.bind(this)}
 			>
 				<button
@@ -152,11 +159,11 @@ export default class SavedItemPane extends Component {
 					X
 				</button>
 				<div class="flex flex-v-center" style="justify-content: space-between;">
-					<h3>My Library ({this.items.length})</h3>
+					<h3>My Library ({filteredItems.length})</h3>
 
 					<div>
 						<button
-							onClick={this.props.exportBtnClickHandler}
+							onClick={exportBtnClickHandler}
 							class="btn--dark hint--bottom-left hint--rounded hint--medium"
 							aria-label="Export all your creations into a single importable file."
 						>
@@ -180,10 +187,10 @@ export default class SavedItemPane extends Component {
 				/>
 
 				<div id="js-saved-items-wrap" class="saved-items-pane__container">
-					{!this.state.filteredItems.length && this.items.length ? (
+					{!filteredItems.length && items.length ? (
 						<div class="mt-1">No match found.</div>
 					) : null}
-					{this.state.filteredItems.map(item => (
+					{filteredItems.map(item => (
 						<ItemTile
 							item={item}
 							onClick={this.itemClickHandler.bind(this, item)}
@@ -191,7 +198,7 @@ export default class SavedItemPane extends Component {
 							onRemoveBtnClick={this.itemRemoveBtnClickHandler.bind(this, item)}
 						/>
 					))}
-					{!this.items.length ? (
+					{!items.length ? (
 						<h2 class="opacity--30">Nothing saved here.</h2>
 					) : null}
 				</div>

@@ -24,14 +24,15 @@ class LogRow extends Component {
 }
 
 export class Console extends PureComponent {
-	componentWillUpdate(nextProps) {
-		if (nextProps.logs != this.props.logs) {
+	componentDidUpdate(previousProps) {
+		if (this.props.logs !== previousProps.logs) {
 			// Scroll down after new log dom is inserted
 			setTimeout(() => {
 				this.logContainerEl.scrollTop = this.logContainerEl.scrollHeight;
 			}, 1);
 		}
 	}
+
 	render() {
 		const {
 			logs,
@@ -79,7 +80,9 @@ export class Console extends PureComponent {
 							this.logContainerEl = el;
 						}}
 					>
-						{logs.map(log => <LogRow data={log} />)}
+						{logs.map(log => (
+							<LogRow data={log} />
+						))}
 					</ul>
 				</div>
 				<div

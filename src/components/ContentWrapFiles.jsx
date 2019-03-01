@@ -72,6 +72,8 @@ export default class ContentWrapFiles extends Component {
 		);
 	}
 	componentWillUpdate(nextProps) {
+		// TODO: REMOVE AS THIS LIFECYCLE HOOK IS DEPRECATED
+
 		// If we get a new Item, clear file buffers and currently selected file.
 		if (
 			this.props.currentItem.createdOn !== nextProps.currentItem.createdOn ||

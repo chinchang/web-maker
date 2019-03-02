@@ -218,11 +218,15 @@ label {
 	cursor: pointer;
 }
 .divider {
-	margin: 10px 0;
+	margin: 1rem 2rem;
 	height: 1px;
-	background: rgba(255, 255, 255, 0.1);
+	background: rgba(255, 255, 255, 0.15);
 }
-
+.divider--vertical {
+	width: 1px;
+	height: 100%;
+	margin: 2rem 1rem;
+}
 [class*='hint--']:after {
 	text-transform: none;
 	font-weight: normal;

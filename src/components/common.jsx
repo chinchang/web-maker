@@ -34,5 +34,5 @@ export function AutoFocusInput(props) {
 }
 
 export function Divider(props) {
-	return <div class="divider" />;
+	return <div class={`divider ${props.vertical ? 'divider--vertical' : ''}`} />;
 }

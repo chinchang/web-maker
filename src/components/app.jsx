@@ -352,12 +352,7 @@ export default class App extends Component {
 							isFolder: true,
 							children: [{ name: 'style.css', content: '' }]
 						},
-						{ name: 'script.js', content: '' },
-						{
-							name: 'tempo',
-							isFolder: true,
-							children: [{ name: 'main.css', content: '' }]
-						}
+						{ name: 'script.js', content: '' }
 					]
 				)
 			};

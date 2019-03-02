@@ -241,7 +241,7 @@ export class SidePane extends Component {
 					<div class="flex flex-v-center">
 						<button
 							type="button"
-							class="btn--dark"
+							class="btn btn--dark"
 							onClick={this.addFileButtonClickHandler.bind(this)}
 						>
 							<svg
@@ -253,7 +253,7 @@ export class SidePane extends Component {
 						</button>
 						<button
 							type="button"
-							class="btn--dark"
+							class="btn btn--dark"
 							onClick={this.addFolderButtonClickHandler.bind(this)}
 						>
 							<svg

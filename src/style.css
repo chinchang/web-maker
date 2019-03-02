@@ -342,7 +342,8 @@ a > svg {
 }
 
 .btn {
-	display: inline-block;
+	display: inline-flex;
+	align-items: center;
 	color: var(--color-button);
 	font-size: inherit;
 	background: transparent;
@@ -452,7 +453,7 @@ body:not(.light-version).overlay-visible .main-container {
 	height: 1px;
 	/* HACK: 70px is approx header+footer. This is required to because
 	on FF the content-wrap goes beyond the flex parent otherwise. */
-	max-height: calc(100% - 70px);
+	max-height: calc(100% - 75px);
 }
 
 .code-side,
@@ -745,15 +746,10 @@ body > #demo-frame {
 	color: #bbbfd3;
 	border-radius: 3px;
 	margin-left: 10px;
-	padding: 0px 8px;
+	padding: 3px 8px;
 	border: 1px solid rgba(0, 0, 0, 0.9);
-	background: linear-gradient(
-		180deg,
-		rgba(0, 0, 0, 0.5) 0,
-		rgba(255, 255, 255, 0.1) 100%
-	);
-	/*text-shadow: 0px 1px 1px rgba(0,0,0,1);*/
-	box-shadow: 0 -1px 0px 0 rgba(255, 255, 255, 0.15);
+	background: linear-gradient(180deg, hsl(0, 0%, 25%) 0, hsl(0, 0%, 13%) 100%);
+	box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.15);
 }
 
 .btn--dark > svg {

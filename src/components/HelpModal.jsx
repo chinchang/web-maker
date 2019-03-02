@@ -7,7 +7,7 @@ export function HelpModal(props) {
 		<Modal show={props.show} closeHandler={props.closeHandler}>
 			<h1>
 				<div class="web-maker-with-tag">Web Maker</div>
-				<small style="font-size:14px;">{props.version}</small>
+				<small style="font-size:14px;">{props.version} (beta)</small>
 			</h1>
 
 			<div>
@@ -25,7 +25,8 @@ export function HelpModal(props) {
 				<p>
 					<a href="/docs" target="_blank" rel="noopener noreferrer">
 						Read the documentation
-					</a>.
+					</a>
+					.
 				</p>
 				<p>
 					Tweet out your feature requests, comments & suggestions to{' '}
@@ -35,7 +36,8 @@ export function HelpModal(props) {
 						href="https://twitter.com/webmakerApp"
 					>
 						@webmakerApp
-					</a>.
+					</a>
+					.
 				</p>
 				<p class="show-when-extension">
 					Like this extension? Please{' '}
@@ -45,7 +47,8 @@ export function HelpModal(props) {
 						rel="noopener noreferrer"
 					>
 						rate it here
-					</a>.
+					</a>
+					.
 				</p>
 				<p>
 					<Button
@@ -57,7 +60,8 @@ export function HelpModal(props) {
 					>
 						<svg>
 							<use xlinkHref="#gift-icon" />
-						</svg>Support the developer
+						</svg>
+						Support the developer
 					</Button>{' '}
 					<a
 						aria-label="Rate Web Maker"
@@ -68,7 +72,8 @@ export function HelpModal(props) {
 					>
 						<svg>
 							<use xlinkHref="#heart-icon" />
-						</svg>Review Web Maker
+						</svg>
+						Review Web Maker
 					</a>{' '}
 					<a
 						aria-label="Chat"
@@ -79,7 +84,8 @@ export function HelpModal(props) {
 					>
 						<svg>
 							<use xlinkHref="#chat-icon" />
-						</svg>Chat
+						</svg>
+						Chat
 					</a>{' '}
 					<a
 						aria-label="Report a Bug"
@@ -90,7 +96,8 @@ export function HelpModal(props) {
 					>
 						<svg>
 							<use xlinkHref="#bug-icon" />
-						</svg>Report a bug
+						</svg>
+						Report a bug
 					</a>
 				</p>
 
@@ -200,7 +207,8 @@ export function HelpModal(props) {
 						rel="noopener noreferrer"
 					>
 						MIT License
-					</a>.
+					</a>
+					.
 				</p>
 			</div>
 		</Modal>

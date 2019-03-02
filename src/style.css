@@ -9,9 +9,15 @@
 	--color-form-control-bg: #2c214b;
 
 	--footer-height: 37px;
-	--console-height: 30px;
+	--console-height: 32px;
+
+	--duration-modal-show: 0.3s;
+	--duration-modal-overlay-show: 0.2s;
 }
 
+html {
+	font-size: 1em;
+}
 body {
 	margin: 0;
 	padding: 0;
@@ -19,7 +25,6 @@ body {
 	background: var(--color-bg);
 	color: rgba(255, 255, 255, 0.9);
 	min-height: 100vh;
-	font-size: 87.5%;
 	/* speocifically for mobile when keyboard is open */
 	position: relative;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
@@ -244,7 +249,7 @@ label {
 }
 
 a > svg {
-	fill: rgba(255, 255, 255, 0.2);
+	fill: rgba(255, 255, 255, 0.35);
 }
 
 .hidden-select {
@@ -560,7 +565,7 @@ body:not(.light-version).overlay-visible .main-container {
 	background: rgba(0, 0, 0, 0.2);
 	color: #888;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-	font-weight: bold;
+	font-weight: 600;
 	user-select: none;
 }
 
@@ -605,12 +610,12 @@ body:not(.light-version).overlay-visible .main-container {
 
 .code-wrap__collapse-btn:before {
 	/* maximize icon */
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.2)" d="M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z" /></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.35)" d="M10,21V19H6.41L10.91,14.5L9.5,13.09L5,17.59V14H3V21H10M14.5,10.91L19,6.41V10H21V3H14V5H17.59L13.09,9.5L14.5,10.91Z" /></svg>');
 }
 
 .is-maximized .code-wrap__collapse-btn:before {
 	/* minimize icon */
-	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.2)" d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" /></svg>');
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.35)" d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" /></svg>');
 }
 
 @keyframes pop-in {
@@ -690,7 +695,7 @@ li.CodeMirror-hint-active {
 #demo-frame {
 	border: 0;
 	width: 100%;
-	height: calc(100% - 29px);
+	height: calc(100% - var(--console-height));
 	/*  minus minimized console height */
 	position: absolute;
 	z-index: 1;
@@ -730,9 +735,9 @@ body > #demo-frame {
 .btn--dark,
 .main-header__btn-wrap > button {
 	box-sizing: content-box;
-	text-transform: uppercase;
-	font-size: 12px;
-	font-weight: bold;
+	/* text-transform: uppercase; */
+	/* font-size: 0.875rem; */
+	font-weight: 500;
 	line-height: 20px;
 	height: 20px;
 	letter-spacing: 0.6px;
@@ -950,15 +955,16 @@ body > #demo-frame {
 	box-sizing: border-box;
 	overflow-y: auto;
 	pointer-events: auto;
-	transform: translateY(50px) scale(0.95);
-	animation: anim-modal 300ms ease forwards;
-	animation-delay: 150ms;
+	transform: scale(0.98);
+	animation: anim-modal var(--duration-modal-show) cubic-bezier(0.4, 0, 0.2, 1)
+		forwards;
+	/* animation-delay: 150ms; */
 }
 
 @keyframes anim-modal {
 	to {
 		opacity: 1;
-		transform: translateY(0) scale(1);
+		transform: scale(1);
 	}
 }
 
@@ -989,7 +995,7 @@ body > #demo-frame {
 	opacity: 0;
 	will-change: opacity;
 	background: rgba(0, 0, 0, 0.6);
-	transition: opacity 0.3s;
+	transition: opacity var(--duration-modal-overlay-show);
 }
 
 /* Make settings modal smaller */
@@ -1194,7 +1200,7 @@ body > #demo-frame {
 .saved-item-tile__meta {
 	margin-top: 8px;
 	pointer-events: none;
-	opacity: 0.3;
+	opacity: 0.6;
 }
 
 .saved-items-pane__container {
@@ -1418,7 +1424,7 @@ body > #demo-frame {
 	background: rgba(255, 255, 255, 0.53);
 	border-radius: 5px;
 	padding: 1px 6px;
-	font-weight: bold;
+	font-weight: 600;
 }
 
 .onboard-step {
@@ -1510,7 +1516,7 @@ body > #demo-frame {
 }
 
 .console.is-minimized {
-	transform: translateY(calc(100% - 29px));
+	transform: translateY(calc(100% - var(--console-height)));
 }
 
 .console__log {

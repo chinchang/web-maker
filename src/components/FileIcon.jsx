@@ -2,6 +2,9 @@ import { h } from 'preact';
 import { getExtensionFromFileName } from '../fileUtils';
 
 export function FileIcon({ file }) {
+	if (!file) {
+		return null;
+	}
 	let path;
 	if (file.isFolder) {
 		if (!file.children.length) {

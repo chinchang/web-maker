@@ -20,6 +20,7 @@ import { Console } from './Console';
 import { SWITCH_FILE_EVENT } from '../commands';
 import { commandPaletteService } from '../commandPaletteService';
 import { PreviewDimension } from './PreviewDimension';
+import { FileIcon } from './FileIcon';
 
 const minCodeWrapSize = 33;
 const PREVIEW_FRAME_HOST = window.DEBUG
@@ -668,9 +669,10 @@ export default class ContentWrapFiles extends Component {
 							class="js-code-wrap__header  code-wrap__header"
 							title="Double click to toggle code pane"
 						>
-							<label class="btn-group" dropdow title="Click to change">
+							<div class="flex flex-v-center">
+								<FileIcon file={this.state.selectedFile} />
 								{this.state.selectedFile ? this.state.selectedFile.name : ''}
-							</label>
+							</div>
 							<div class="code-wrap__header-right-options">
 								<button
 									class="btn btn--dark"

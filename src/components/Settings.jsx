@@ -125,6 +125,9 @@ export default class Settings extends Component {
 								</label>
 							</div>
 						</div>
+
+						<Divider />
+
 						<label class="line" title="">
 							Indentation Size
 							<div>

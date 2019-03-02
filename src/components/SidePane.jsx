@@ -110,13 +110,12 @@ function Folder(props) {
 		<div>
 			<File {...props} file={props.file} />
 			<div class="sidebar__folder-wrap" data-collapsed={props.file.isCollapsed}>
-				{props.file.children.map(
-					childFile =>
-						childFile.isFolder ? (
-							<Folder {...props} file={childFile} />
-						) : (
-							<File {...props} file={childFile} />
-						)
+				{props.file.children.map(childFile =>
+					childFile.isFolder ? (
+						<Folder {...props} file={childFile} />
+					) : (
+						<File {...props} file={childFile} />
+					)
 				)}
 			</div>
 		</div>
@@ -237,7 +236,7 @@ export class SidePane extends Component {
 				onDragOver={this.dragOverHandler.bind(this)}
 				onDrop={this.dropHandler.bind(this)}
 			>
-				<div class="flex jc-sb" style="padding: 5px 4px">
+				<div class="flex jc-sb" style="padding: 5px 10px">
 					Files
 					<div class="flex flex-v-center">
 						<button
@@ -281,13 +280,12 @@ export class SidePane extends Component {
 						/>
 					</div>
 				) : null}
-				{files.map(
-					file =>
-						file.isFolder ? (
-							<Folder {...this.props} {...moreProps} file={file} />
-						) : (
-							<File {...this.props} {...moreProps} file={file} />
-						)
+				{files.map(file =>
+					file.isFolder ? (
+						<Folder {...this.props} {...moreProps} file={file} />
+					) : (
+						<File {...this.props} {...moreProps} file={file} />
+					)
 				)}
 			</div>
 		);

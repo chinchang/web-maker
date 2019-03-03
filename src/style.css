@@ -395,7 +395,7 @@ a > svg {
 }
 
 *:focus {
-	outline-width: 4px;
+	outline-width: 3px;
 	outline-color: var(--color-button);
 	outline-style: solid;
 	outline-offset: 1px;
@@ -1014,6 +1014,9 @@ body > #demo-frame {
 @media screen and (min-width: 850px) {
 	.modal--settings > .modal__content {
 		width: 850px;
+	}
+	.modal--command-palette > .modal__content {
+		width: 600px;
 	}
 }
 
@@ -1679,7 +1682,7 @@ body:not(.is-app) .show-when-app {
 
 .help-text {
 	font-size: 0.9em;
-	color: rgba(255, 255, 255, 0.65);
+	color: var(--color-text-dark-1);
 	margin: 5px 0;
 }
 
@@ -1906,6 +1909,8 @@ while the theme CSS file is loading */
 	list-style: none;
 }
 .command-palette__option-row {
+	display: flex;
+	justify-content: space-between;
 	padding: 4px 5px;
 	width: 100%;
 	text-align: left;
@@ -1919,7 +1924,7 @@ while the theme CSS file is loading */
 .command-palette__option-subtitle {
 	color: var(--color-text-dark-1);
 	margin-left: 10px;
-	font-size: 0.8em;
+	font-size: 0.875em;
 }
 
 .preview-dimension {

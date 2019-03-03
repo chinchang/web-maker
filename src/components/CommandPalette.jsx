@@ -24,13 +24,20 @@ function Row({ item, onClick, isSelected }) {
 				}`}
 				onClick={onClick}
 			>
-				{item.path ? <FileIcon file={item} /> : null}
-				{item.name}
-				{item.path ? (
+				<div>
+					{item.path ? <FileIcon file={item} /> : null}
+					{item.name}
+					{item.path ? (
+						<span class="command-palette__option-subtitle">
+							{getFolder(item.path)}
+						</span>
+					) : null}
+				</div>
+				<div>
 					<span class="command-palette__option-subtitle">
-						{getFolder(item.path)}
+						{item.keyboardShortcut ? item.keyboardShortcut : ''}
 					</span>
-				) : null}
+				</div>
 			</button>
 		</li>
 	);
@@ -101,6 +108,7 @@ export class CommandPalette extends Component {
 				closeHandler={this.props.closeHandler}
 				noOverlay
 				hideCloseButton
+				extraClasses="modal--command-palette"
 			>
 				<AutoFocusInput
 					type="search"
@@ -108,6 +116,7 @@ export class CommandPalette extends Component {
 					value={this.state.search}
 					onInput={this.inputHandler.bind(this)}
 					onKeyUp={this.keyDownHandler.bind(this)}
+					style="width:100%"
 				/>
 				<ul class="command-palette__option-list">
 					{this.state.list.map((item, index) => (

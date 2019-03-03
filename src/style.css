@@ -451,14 +451,15 @@ a > svg {
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
-	transition: 0.1s ease 0.2s;
-	will-change: filter;
+	transition: 0.1s ease;
+	will-change: filter, transform;
 }
 
 body:not(.light-version).overlay-visible .main-container {
 	transition-duration: 0.5s;
-	transition-delay: 0.4s;
-	filter: blur(3px);
+	transform: scale(0.98);
+	/* transition-delay: 0.4s; */
+	filter: blur(2px);
 }
 
 .content-wrap {
@@ -1005,7 +1006,7 @@ body > #demo-frame {
 	z-index: 5;
 	opacity: 0;
 	will-change: opacity;
-	background: rgba(0, 0, 0, 0.6);
+	background: rgba(0, 0, 0, 0.5);
 	transition: opacity var(--duration-modal-overlay-show);
 }
 

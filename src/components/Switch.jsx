@@ -3,7 +3,7 @@ import { h } from 'preact';
 export default function Switch({
 	checked,
 	onChange,
-	labels,
+	labels = [],
 	children,
 	showBothLabels
 }) {

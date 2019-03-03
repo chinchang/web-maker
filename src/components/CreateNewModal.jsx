@@ -31,7 +31,7 @@ export class CreateNewModal extends Component {
 					<div style="flex:1;" class="tac">
 						<svg
 							width="287px"
-							height="150px"
+							height="80px"
 							viewBox="0 0 287 197"
 							version="1.1"
 							xmlns="http://www.w3.org/2000/svg"
@@ -117,7 +117,7 @@ export class CreateNewModal extends Component {
 					<div style="flex:1" class="tac ml-2">
 						<svg
 							width="286px"
-							height="150px"
+							height="80px"
 							viewBox="0 0 286 196"
 							version="1.1"
 							style={`opacity:${this.state.isFileModeSelected ? '1' : '0.4'}`}

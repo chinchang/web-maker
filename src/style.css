@@ -87,6 +87,9 @@ button {
 .flex {
 	display: flex;
 }
+.d-f {
+	display: flex;
+}
 
 .flex-grow {
 	flex-grow: 1;
@@ -95,7 +98,9 @@ button {
 .flex-v-center {
 	align-items: center;
 }
-
+.ai-c {
+	align-items: center;
+}
 .flex-h-center {
 	justify-content: center;
 }
@@ -759,6 +764,8 @@ body > #demo-frame {
 
 .btn--dark > svg {
 	fill: #9297b3;
+	width: 20px;
+	height: 20px;
 }
 .btn--dark > svg:not(:last-child) {
 	margin-right: 4px;

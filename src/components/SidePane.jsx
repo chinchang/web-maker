@@ -79,10 +79,7 @@ function File({
 							class="btn btn--dark"
 							onClick={onRenameBtnClick.bind(null, file)}
 						>
-							<svg
-								viewBox="0 0 24 24"
-								style="vertical-align:middle;width:14px;height:14px"
-							>
+							<svg viewBox="0 0 24 24">
 								<path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
 							</svg>
 						</button>
@@ -92,10 +89,7 @@ function File({
 							class="btn btn--dark"
 							onClick={onRemoveBtnClick.bind(null, file)}
 						>
-							<svg
-								viewBox="0 0 24 24"
-								style="vertical-align:middle;width:14px;height:14px"
-							>
+							<svg viewBox="0 0 24 24">
 								<path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
 							</svg>
 						</button>
@@ -236,18 +230,15 @@ export class SidePane extends Component {
 				onDragOver={this.dragOverHandler.bind(this)}
 				onDrop={this.dropHandler.bind(this)}
 			>
-				<div class="flex jc-sb" style="padding: 5px 10px">
+				<div class="d-f jc-sb ai-c" style="padding: 5px 10px">
 					Files
-					<div class="flex flex-v-center">
+					<div class="flex ai-c">
 						<button
 							type="button"
 							class="btn btn--dark"
 							onClick={this.addFileButtonClickHandler.bind(this)}
 						>
-							<svg
-								viewBox="0 0 24 24"
-								style="vertical-align:middle;width:14px;height:14px"
-							>
+							<svg viewBox="0 0 24 24">
 								<path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M11,15V12H9V15H6V17H9V20H11V17H14V15H11Z" />
 							</svg>
 						</button>
@@ -256,10 +247,7 @@ export class SidePane extends Component {
 							class="btn btn--dark"
 							onClick={this.addFolderButtonClickHandler.bind(this)}
 						>
-							<svg
-								viewBox="0 0 24 24"
-								style="vertical-align:middle;width:14px;height:14px"
-							>
+							<svg viewBox="0 0 24 24">
 								<path d="M10,4L12,6H20A2,2 0 0,1 22,8V18A2,2 0 0,1 20,20H4C2.89,20 2,19.1 2,18V6C2,4.89 2.89,4 4,4H10M15,9V12H12V14H15V17H17V14H20V12H17V9H15Z" />
 							</svg>
 						</button>

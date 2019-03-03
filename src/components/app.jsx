@@ -344,8 +344,19 @@ export default class App extends Component {
 					files || [
 						{
 							name: 'index.html',
-							content:
-								'hello\n<link rel="stylesheet" href="styles/style.css">\n<script src="script.js"></script>'
+							content: `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Webmaker untitled 1</title>
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+  <body>
+    Hello World
+    <script src="script.js"></script>
+  </body>
+</html>`
 						},
 						{
 							name: 'styles',

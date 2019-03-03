@@ -69,9 +69,9 @@ function File({
 					onDragStart={dragStartHandler}
 					onClick={onFileSelect.bind(null, file)}
 				>
-					<div class="flex flex-v-center">
+					<div class="flex flex-v-center ov-h">
 						<FileIcon file={file} />
-						{file.name}
+						<div class="sidebar__file-name">{file.name}</div>
 					</div>
 					<div class="sidebar__file-options">
 						<button

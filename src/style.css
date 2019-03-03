@@ -29,6 +29,7 @@ body {
 	position: relative;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
 		sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
+	-webkit-font-smoothing: antialiased;
 }
 
 h1 {
@@ -90,7 +91,9 @@ button {
 .d-f {
 	display: flex;
 }
-
+.ov-h {
+	overflow: hidden;
+}
 .flex-grow {
 	flex-grow: 1;
 }
@@ -1676,7 +1679,7 @@ body:not(.is-app) .show-when-app {
 
 .help-text {
 	font-size: 0.9em;
-	color: rgba(255, 255, 255, 0.5);
+	color: rgba(255, 255, 255, 0.65);
 	margin: 5px 0;
 }
 
@@ -1740,7 +1743,7 @@ body:not(.is-app) .show-when-app {
 	width: 100%;
 	text-align: left;
 	display: flex;
-	padding: 5px 5px;
+	padding: 7px 10px;
 	align-items: center;
 	justify-content: space-between;
 	position: relative;
@@ -1748,7 +1751,7 @@ body:not(.is-app) .show-when-app {
 }
 /* 1st level nesting */
 .sidebar__folder-wrap .sidebar__file {
-	padding-left: 1rem;
+	padding-left: 2rem;
 }
 /* 2nd level nesting */
 .sidebar__folder-wrap .sidebar__folder-wrap .sidebar__file {
@@ -1772,9 +1775,14 @@ body:not(.is-app) .show-when-app {
 }
 
 .sidebar__file-icon {
-	width: 16px;
-	height: 16px;
+	width: 20px;
+	height: 20px;
 	margin-right: 8px;
+	flex-shrink: 0;
+}
+.sidebar__file-name {
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .sidebar__file-options {
 	position: absolute;
@@ -1932,7 +1940,7 @@ while the theme CSS file is loading */
 }
 .tabs__tab {
 	display: block;
-	margin-bottom: 10px;
+	padding: 10px;
 	background: transparent;
 	border: 0;
 	text-align: left;

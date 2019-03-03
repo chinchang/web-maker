@@ -322,6 +322,7 @@ a > svg {
 
 .check-switch__status {
 	text-transform: uppercase;
+	white-space: nowrap;
 	font-size: 14px;
 	font-weight: 600;
 }

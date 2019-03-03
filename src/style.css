@@ -226,14 +226,13 @@ label {
 	cursor: pointer;
 }
 .divider {
-	margin: 1rem 2rem;
+	margin: 1rem;
 	height: 1px;
 	background: rgba(255, 255, 255, 0.15);
 }
 .divider--vertical {
 	width: 1px;
 	height: 100%;
-	margin: 2rem 1rem;
 }
 [class*='hint--']:after {
 	text-transform: none;

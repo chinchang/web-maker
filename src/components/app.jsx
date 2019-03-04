@@ -106,7 +106,8 @@ export default class App extends Component {
 			currentItem: {
 				title: '',
 				externalLibs: { js: '', css: '' }
-			}
+			},
+			catalogs: {}
 		};
 		this.defaultSettings = {
 			preserveLastCode: true,
@@ -257,20 +258,17 @@ export default class App extends Component {
 		});
 	}
 
-	getLanguageDefinition() {
-		// console.log('🇯🇲 fetching defninition');
-		const { lang } = this.state.prefs;
-		if (!lang || lang === 'en') {
-			return {};
-		} else if (lang === 'hi') {
-			const def = require('../locales/hi/messages');
+	async loadLanguage(lang) {
+		console.log('🇯🇲 fetching defninition');
 
-			return { hi: def.default };
-		} else if (lang === 'ja') {
-			const def = require('../locales/ja/messages');
+		const catalog = await import(/* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */ `../locales/${lang}/messages.js`);
 
-			return { ja: def.default };
-		}
+		this.setState(state => ({
+			catalogs: {
+				...state.catalogs,
+				[lang]: catalog.default
+			}
+		}));
 	}
 
 	incrementUnsavedChanges() {
@@ -635,6 +633,17 @@ export default class App extends Component {
 				commandPalleteHooks[eventName]
 			);
 		}
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		const { catalogs } = nextState;
+		const { lang } = nextState.prefs;
+
+		if (lang && lang !== 'en' && !catalogs[lang]) {
+			this.loadLanguage(lang);
+		}
+
+		return true;
 	}
 
 	closeAllOverlays() {
@@ -1484,12 +1493,9 @@ export default class App extends Component {
 		});
 	}
 
-	render() {
+	render(props, { catalogs = {}, prefs = {} }) {
 		return (
-			<I18nProvider
-				language={this.state.prefs.lang}
-				catalogs={this.getLanguageDefinition()}
-			>
+			<I18nProvider language={this.state.prefs.lang} catalogs={catalogs}>
 				<div class={this.getRootClasses()}>
 					<div class="main-container">
 						<MainHeader

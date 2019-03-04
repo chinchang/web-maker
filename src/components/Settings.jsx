@@ -370,8 +370,8 @@ export default class Settings extends Component {
 								>
 									<option value="en">English</option>
 									<option value="hi">Hindi</option>
-									<option value="ja">Japanese</option>
 									<option value="sa">Sanskrit</option>
+									<option value="es">Spanish</option>
 								</select>
 							</label>
 						</div>

@@ -369,9 +369,10 @@ export default class Settings extends Component {
 									onChange={e => this.updateSetting(e, 'lang')}
 								>
 									<option value="en">English</option>
-									<option value="hi">Hindi</option>
+									<option value="hi">हिंदी</option>
 									<option value="sa">Sanskrit</option>
-									<option value="es">Spanish</option>
+									<option value="es">Español (España)</option>
+									<option value="zh-Hans">中文(简体)</option>
 								</select>
 							</label>
 						</div>

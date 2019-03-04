@@ -11,3 +11,4 @@ node_modules/
 .sass-cache
 extension/
 yarn-error.log
+src/locales/_build

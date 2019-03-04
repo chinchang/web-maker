@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { Button } from './common';
-import { Trans, t } from '@lingui/macro';
+import { Trans, NumberFormat, t } from '@lingui/macro';
 import { I18n } from '@lingui/react';
 
 const DEFAULT_PROFILE_IMG =
@@ -23,7 +23,7 @@ export function MainHeader(props) {
 						<button
 							id="runBtn"
 							class="hide btn btn btn--dark flex flex-v-center hint--rounded hint--bottom-left"
-							aria-label="Run preview (Ctrl/⌘ + Shift + 5)"
+							aria-label={i18n._(t`Run preview (Ctrl/⌘ + Shift + 5)`)}
 							onClick={props.runBtnClickHandler}
 						>
 							<svg>
@@ -48,14 +48,14 @@ export function MainHeader(props) {
 									}`}
 									class="count-label"
 								>
-									{props.externalLibCount}
+									<NumberFormat value={props.externalLibCount} />
 								</span>
 							</Button>
 						)}
 
 						<button
 							class="btn btn--dark hint--rounded hint--bottom-left"
-							aria-label="Start a new creation"
+							aria-label={i18n._(t`Start a new creation`)}
 							onClick={props.newBtnHandler}
 						>
 							<svg viewBox="0 0 24 24">
@@ -68,7 +68,7 @@ export function MainHeader(props) {
 							class={`btn btn--dark hint--rounded hint--bottom-left ${
 								props.isSaving ? 'is-loading' : ''
 							} ${props.unsavedEditCount ? 'is-marked' : 0}`}
-							aria-label="Save current creation (Ctrl/⌘ + S)"
+							aria-label={i18n._(t`Save current creation (Ctrl/⌘ + S)`)}
 							onClick={props.saveBtnHandler}
 						>
 							<svg viewBox="0 0 24 24">
@@ -84,7 +84,7 @@ export function MainHeader(props) {
 							class={`btn btn--dark hint--rounded hint--bottom-left ${
 								props.isFetchingItems ? 'is-loading' : ''
 							}`}
-							aria-label="Open a saved creation (Ctrl/⌘ + O)"
+							aria-label={i18n._(t`Open a saved creation (Ctrl/⌘ + O)`)}
 							onClick={props.openBtnHandler}
 						>
 							<svg viewBox="0 0 24 24">
@@ -100,15 +100,14 @@ export function MainHeader(props) {
 							data-event-category="ui"
 							data-event-action="loginButtonClick"
 							class="hide-on-login btn btn--dark hint--rounded  hint--bottom-left"
-							aria-label="Login/Signup"
 						>
-							<Trans>Login</Trans>/<Trans>Signup</Trans>
+							<Trans>Login/Signup</Trans>
 						</Button>
 						<Button
 							onClick={props.profileBtnHandler}
 							data-event-category="ui"
 							data-event-action="headerAvatarClick"
-							aria-label="See profile or Logout"
+							aria-label={i18n._(t`See profile or Logout`)}
 							class="hide-on-logout btn--dark hint--rounded  hint--bottom-left"
 						>
 							<img

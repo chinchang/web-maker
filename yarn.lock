@@ -363,7 +363,7 @@
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/@lingui/babel-plugin-transform-react/-/babel-plugin-transform-react-2.7.4.tgz#7ed5414ee685f1b12c63228581f1404d9b767ea5"
 
-"@lingui/cli@^2.7.0":
+"@lingui/cli@^2.7.4":
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/@lingui/cli/-/cli-2.7.4.tgz#a3b352fcbf6382d08f898a983fb2eb661c06a99f"
   dependencies:
@@ -412,14 +412,14 @@
     make-plural "^4.1.1"
     messageformat-parser "^2.0.0"
 
-"@lingui/macro@^2.7.0":
+"@lingui/macro@^2.7.4":
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/@lingui/macro/-/macro-2.7.4.tgz#5e21c46f5782816f42e24316a1cff55098848e7d"
   dependencies:
     "@lingui/babel-plugin-transform-react" "2.7.4"
     babel-plugin-macros "^2.2.0"
 
-"@lingui/react@^2.7.0":
+"@lingui/react@^2.7.4":
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/@lingui/react/-/react-2.7.4.tgz#b336b2aac3a1848b7532a657bff3cb6d04e19464"
   dependencies:

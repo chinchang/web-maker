@@ -10,10 +10,10 @@
 				return n10 == 1 && n100 != 11
 					? 'one'
 					: n10 == 2 && n100 != 12
-						? 'two'
-						: n10 == 3 && n100 != 13
-							? 'few'
-							: 'other';
+					? 'two'
+					: n10 == 3 && n100 != 13
+					? 'few'
+					: 'other';
 			return n == 1 && v0 ? 'one' : 'other';
 		}
 	},

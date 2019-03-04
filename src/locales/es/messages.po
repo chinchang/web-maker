@@ -5,7 +5,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: hi\n"
+"Language: es\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
@@ -30,22 +30,22 @@ msgstr ""
 #: src/components/MainHeader.jsx:105
 #: src/components/MainHeader.jsx:105
 msgid "Login"
-msgstr "लॉगिन"
+msgstr ""
 
 #: src/components/MainHeader.jsx:64
 #: src/components/MainHeader.jsx:64
 msgid "New"
-msgstr "नया बनाएँ"
+msgstr ""
 
 #: src/components/MainHeader.jsx:96
 #: src/components/MainHeader.jsx:96
 msgid "Open"
-msgstr "खोलें"
+msgstr ""
 
 #: src/components/MainHeader.jsx:32
 #: src/components/MainHeader.jsx:32
 msgid "Run"
-msgstr "चलाएँ"
+msgstr ""
 
 #: src/components/MainHeader.jsx:80
 #: src/components/MainHeader.jsx:80

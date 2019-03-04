@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-11-03 12:56+0530\n"
+"POT-Creation-Date: 2019-03-04 12:06+0530\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,23 +22,23 @@ msgstr "Add a JS/CSS library"
 msgid "Add library"
 msgstr "Add library"
 
-#: src/components/Console.jsx:56
-#: src/components/Console.jsx:56
+#: src/components/Console.jsx:58
+#: src/components/Console.jsx:58
 msgid "Console"
 msgstr "Console"
 
-#: src/components/MainHeader.jsx:114
-#: src/components/MainHeader.jsx:114
+#: src/components/MainHeader.jsx:105
+#: src/components/MainHeader.jsx:105
 msgid "Login"
 msgstr "Login"
 
-#: src/components/MainHeader.jsx:67
-#: src/components/MainHeader.jsx:67
+#: src/components/MainHeader.jsx:64
+#: src/components/MainHeader.jsx:64
 msgid "New"
 msgstr "New"
 
-#: src/components/MainHeader.jsx:105
-#: src/components/MainHeader.jsx:105
+#: src/components/MainHeader.jsx:96
+#: src/components/MainHeader.jsx:96
 msgid "Open"
 msgstr "Open"
 
@@ -47,12 +47,12 @@ msgstr "Open"
 msgid "Run"
 msgstr "Run"
 
-#: src/components/MainHeader.jsx:86
-#: src/components/MainHeader.jsx:86
+#: src/components/MainHeader.jsx:80
+#: src/components/MainHeader.jsx:80
 msgid "Save"
 msgstr "Save"
 
-#: src/components/MainHeader.jsx:114
-#: src/components/MainHeader.jsx:114
+#: src/components/MainHeader.jsx:105
+#: src/components/MainHeader.jsx:105
 msgid "Signup"
 msgstr "Signup"

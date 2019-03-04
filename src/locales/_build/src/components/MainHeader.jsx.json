@@ -16,32 +16,32 @@
 	},
 	"New": {
 		"origin": [
-			["src/components/MainHeader.jsx", 67],
-			["src/components/MainHeader.jsx", 67]
+			["src/components/MainHeader.jsx", 64],
+			["src/components/MainHeader.jsx", 64]
 		]
 	},
 	"Save": {
 		"origin": [
-			["src/components/MainHeader.jsx", 86],
-			["src/components/MainHeader.jsx", 86]
+			["src/components/MainHeader.jsx", 80],
+			["src/components/MainHeader.jsx", 80]
 		]
 	},
 	"Open": {
+		"origin": [
+			["src/components/MainHeader.jsx", 96],
+			["src/components/MainHeader.jsx", 96]
+		]
+	},
+	"Login": {
 		"origin": [
 			["src/components/MainHeader.jsx", 105],
 			["src/components/MainHeader.jsx", 105]
 		]
 	},
-	"Login": {
-		"origin": [
-			["src/components/MainHeader.jsx", 114],
-			["src/components/MainHeader.jsx", 114]
-		]
-	},
 	"Signup": {
 		"origin": [
-			["src/components/MainHeader.jsx", 114],
-			["src/components/MainHeader.jsx", 114]
+			["src/components/MainHeader.jsx", 105],
+			["src/components/MainHeader.jsx", 105]
 		]
 	}
 }

@@ -100,7 +100,17 @@ export function onButtonClick(btn, listener) {
 
 export function log() {
 	if (window.DEBUG) {
-		console.log(Date.now(), ...arguments);
+		const err = new Error();
+		console.log(
+			parseInt(
+				Date.now()
+					.toString()
+					.substr(4),
+				10
+			),
+			...arguments,
+			err.stack.split('\n')[2].replace(/\(.*\)/, '')
+		);
 	}
 }
 

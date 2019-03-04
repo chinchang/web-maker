@@ -25,7 +25,6 @@ export default class ContentWrap extends Component {
 		};
 
 		this.updateTimer = null;
-		this.updateDelay = 500;
 		this.htmlMode = HtmlModes.HTML;
 		this.jsMode = HtmlModes.HTML;
 		this.cssMode = CssModes.CSS;
@@ -124,7 +123,7 @@ export default class ContentWrap extends Component {
 					trackEvent('fn', 'usingPreview');
 				}
 			}
-		}, this.updateDelay);
+		}, this.props.prefs.previewDelay);
 	}
 
 	createPreviewFile(html, css, js) {

@@ -342,6 +342,25 @@ export default class Settings extends Component {
 					<TabPanel label="Advanced">
 						<div>
 							<label class="line">
+								Preview refresh wait time
+								<div>
+									<input
+										type="number"
+										style="width:120px"
+										value={prefs.previewDelay}
+										onChange={e => this.updateSetting(e, 'previewDelay')}
+									/>{' '}
+									ms
+								</div>
+							</label>
+							<HelpText>
+								Once you stop typing, the preview waits for this much time
+								before getting updated. Too low value might choke your browser!
+							</HelpText>
+						</div>
+						<Divider />
+						<div>
+							<label class="line">
 								Maximum time allowed in a loop iteration
 								<div>
 									<input
@@ -359,22 +378,24 @@ export default class Settings extends Component {
 								stopped.
 							</HelpText>
 						</div>
-						<Divider />
-
-						<div>
+						{/*
+							<Divider />
+							
+							<div>
 							<label class="line">
-								Language
-								<select
-									value={prefs.lang}
-									onChange={e => this.updateSetting(e, 'lang')}
-								>
-									<option value="en">English</option>
-									<option value="hi">Hindi</option>
-									<option value="sa">Sanskrit</option>
-									<option value="es">Spanish</option>
-								</select>
+							Language
+							<select
+							value={prefs.lang}
+							onChange={e => this.updateSetting(e, 'lang')}
+							>
+							<option value="en">English</option>
+							<option value="hi">Hindi</option>
+							<option value="sa">Sanskrit</option>
+							<option value="es">Spanish</option>
+							</select>
 							</label>
-						</div>
+							</div>
+						*/}
 					</TabPanel>
 				</Tabs>
 			</div>

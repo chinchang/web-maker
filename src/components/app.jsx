@@ -135,7 +135,8 @@ export default class App extends Component {
 			isJs13kModeOn: false,
 			autoCloseTags: true,
 			lang: 'en',
-			isMonacoEditorOn: false
+			isMonacoEditorOn: false,
+			previewDelay: 500
 		};
 		this.prefs = {};
 

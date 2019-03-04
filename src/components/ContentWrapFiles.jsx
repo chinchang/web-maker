@@ -41,7 +41,6 @@ export default class ContentWrapFiles extends Component {
 
 		this.fileBuffers = {};
 		this.updateTimer = null;
-		this.updateDelay = 500;
 		this.htmlMode = HtmlModes.HTML;
 		this.prefs = {};
 		this.cmCodes = { html: props.currentItem.html, css: '', js: '' };
@@ -229,7 +228,7 @@ export default class ContentWrapFiles extends Component {
 					trackEvent('fn', 'usingPreview');
 				}
 			}
-		}, this.updateDelay);
+		}, this.props.prefs.previewDelay);
 	}
 
 	createPreviewFile() {

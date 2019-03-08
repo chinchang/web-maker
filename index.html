@@ -424,16 +424,26 @@
 
 	</style>
 	<style type="text/css">
+		html {
+			font-size: 1.3em;
+		}
+
 		body {
 			text-align: center;
 			font-family: Arial;
 			background: white;
 			min-height: 100vh;
-			font-size: 18px;
 			line-height: 1.4;
 			padding: 0;
 			margin: 0;
-			color: #555;
+			color: #4a4a4a;
+			-webkit-font-smoothing: antialiased;
+		}
+
+		@media screen and (min-width: 2000px) {
+			html {
+				font-size: 2em;
+			}
 		}
 
 		.ml-1 {
@@ -459,6 +469,9 @@
 			margin-right: 10px;
 		}
 
+			button {
+				font-size: inherit;
+			}
 		h1 {
 			font-size: 4em;
 			margin: 0;
@@ -468,8 +481,8 @@
 		}
 
 		@media screen and (max-width: 400px) {
-			body {
-				font-size: 14px;
+			html {
+				font-size: 0.9em;
 			}
 		}
 
@@ -490,16 +503,21 @@
 
 		a {
 			color: #1A5A7A;
-			outline: none;
-			text-decoration: none;
+		}
+
+		.hero a {
+			color: white;
 		}
 
 		.flex {
 			display: flex;
 		}
 
-		.header {
-			margin-top: 2em;
+		.hero {
+			background: #2b273c;
+			color: #a7a1bd;
+			padding: 2em 1em;
+			margin-bottom: 2em;
 		}
 
 		.btn {
@@ -523,7 +541,9 @@
 			line-height: 2.5rem;
 			margin: 1rem 0 0;
 			width: 80%;
+		text-decoration: none;
 		}
+		
 
 		.download-btn.disabled {
 			filter: grayscale(50);
@@ -532,31 +552,6 @@
 		.web-app-btn {
 			position: relative;
 		}
-
-		/* .web-app-btn:after {
-			content: 'New';
-			font-size: 1rem;
-			position: absolute;
-			background-color: #96b835;
-			padding: 0px 9px;
-			letter-spacing: 2px;
-			color: white;
-			border-radius: 4px;
-			transform: rotate(-9deg);
-			right: 5px;
-			top: -10px;
-			transition: 0.25s ease;
-			box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-		}
-
-		.web-app-btn:before {
-			content: '🎊';
-			font-size: 5.2rem;
-			position: absolute;
-			right: 10px;
-			top: -5px;
-			transition: 0.25s ease 0.1s;
-		} */
 
 		.web-app-btn:hover:after {
 			transform: rotate(0deg);
@@ -609,8 +604,15 @@
 		.feature {
 			flex-basis: 100%;
 			max-width: 100%;
+			margin: 0.5em;
 			padding: 0.5em 1em;
 			box-sizing: border-box;
+		}
+
+		.feature__title {
+			border-bottom: 7px solid;
+			padding-bottom: 0.4em;
+			white-space: nowrap;
 		}
 
 		.feature svg {
@@ -685,20 +687,31 @@
 		}
 
 		@media (min-width: 751px) {
-			.header {
-				position: fixed;
-				width: 460px;
-				left: 0;
+			.hero {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin-bottom: 2em;
+				padding: 3em;
 			}
 
-			body {
-				padding-left: 460px;
+			.logo {
+				width: 10em;
+				height: auto;
+			}
+
+			.screenshot {
+				height: 35vh;
+			}
+
+			.header {
+				width: 25vw;
 			}
 
 			.download-btn {
 				/* margin: 1rem 0; */
 				/* margin: 0 1rem; */
-				width: 300px;
+				/* width: 300px; */
 			}
 
 			.web-app-btn:after {
@@ -729,9 +742,11 @@
 			}
 
 			.feature {
-				flex-basis: 50%;
-				max-width: 50%;
 				padding: 0.5em 2em;
+				flex: 1;
+				flex-basis: 16vw;
+				padding: 0.5em 2em;
+				margin: 1em;
 			}
 
 			.info {
@@ -775,7 +790,7 @@
 	</style>
 	<script>
 		function changeLabel(label) {
-			document.querySelector('.download-btn span').innerHTML = label;
+			document.querySelector('.js-chrome-btn span').innerHTML = label;
 		}
 
 		function closeInfo(label) {
@@ -797,198 +812,218 @@
 </head>
 
 <body>
-	<header class="header">
-		<svg class="logo" width="160" height="84">
-			<use xlink:href="#logo"></use>
-		</svg>
-		<h1>
-			Web Maker
-		</h1>
-		<h2 style="margin-bottom:0.4em;">A blazing fast & offline web playground in your browser</h2>
-		<div style="margin-top: 30px;" id="cta" class="mb-2">
-			<a aria-label="Open web app" class="btn  download-btn web-app-btn" href="/app/">
-				<span>Open Web App</span>
-			</a>
-			<p style="margin-top:3px;">Recommended: More features. More fun!</p>
-			<a aria-label="Install chrome extension" class="btn  download-btn js-chrome-btn hint--top-right" href="javascript:void(0)"
-			 onclick="addToChrome()">
-				<img src="chrome-logo.png" height="40" alt="">
-				<span>Add Chrome extension</span>
-			</a>
+	<div class="hero">
+
+		<header class="header">
+			<svg class="logo" width="160" height="84">
+				<use xlink:href="#logo"></use>
+			</svg>
+			<h1>
+				Web Maker
+			</h1>
+			<h2 style="margin-bottom:0.4em;">A blazing fast & offline web playground in your browser</h2>
+			<div style="margin-top: 30px;" id="cta" class="mb-2">
+				<button type="button" class="btn  download-btn web-app-btn" href="/app/">
+					<span>Open Web App</span>
+				</button>
+				<p style="margin-top:3px;">Recommended: More features. More fun!</p>
+				<a class="btn  download-btn js-chrome-btn " href="javascript:void(0)"
+				 onclick="addToChrome()">
+					<img src="chrome-logo.png" height="40" alt="">
+					<span>Add Chrome extension</span>
+				</a>
+			</div>
+			<script>
+				if (navigator.userAgent.indexOf('Chrome') === -1) {
+					document.querySelector('.js-chrome-btn').classList.add('disabled');
+					document.querySelector('.js-chrome-btn').setAttribute('data-hint', 'Check back on Google Chrome browser')
+				}
+
+			</script>
+			<div>
+				<a href="/docs" class="">Docs</a>
+				<a href="https://medium.com/web-maker/" class="ml-1">Blog</a>
+				<a href="https://github.com/chinchang/web-maker/" class="ml-1">Github</a>
+				<a class="hint--top-right ml-1" data-hint="Share on Twitter" href="https://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground!&via=webmakerApp&related=webmakerApp"
+				 target="_blank" class="tweet-link">Share</a>
+			</div>
+		</header>
+		<div style="margin-top:30px;">
+			<img class="screenshot" src="ss1.png?v3.0.0beta" height="" alt="Web Maker working screen">
 		</div>
 		<script>
-			if (navigator.userAgent.indexOf('Chrome') === -1) {
-				document.querySelector('.js-chrome-btn').classList.add('disabled');
-				document.querySelector('.js-chrome-btn').setAttribute('data-hint', 'Check back on Google Chrome browser')
+			if (top !== self) {
+				var btn = document.querySelector('.js-chrome-btn');
+				btn.href = 'https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh';
+				btn.target = '_blank';
 			}
 
 		</script>
-		<div>
-			<a href="/docs" class="">Docs</a>
-			<a href="https://medium.com/web-maker/" class="ml-1">Blog</a>
-			<a href="https://github.com/chinchang/web-maker/" class="ml-1">Github</a>
-			<a class="hint--top-right ml-1" data-hint="Share on Twitter" href="https://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground!&via=webmakerApp&related=webmakerApp"
-			 target="_blank" class="tweet-link">Share</a>
-		</div>
-	</header>
 
-	<div style="margin-top:30px;">
-		<img class="screenshot" src="ss1.png?v3.0.0beta" height="" alt="Web Maker working screen">
 	</div>
-	<script>
-		if (top !== self) {
-			var btn = document.querySelector('.download-btn');
-			btn.href = 'https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh';
-			btn.target = '_blank';
-		}
 
-	</script>
 
-	<div class="flex feature-box">
-		<div class="feature">
-			<!-- <svg viewBox="0 0 24 24">
+	<main>
+		<h2 style="font-size: 2em;">What you get</h2>
+
+		<div class="flex feature-box">
+			<div class="feature">
+				<!-- <svg viewBox="0 0 24 24">
 				    <path d="M2.28,3L1,4.27L2.47,5.74C2.04,6 1.61,6.29 1.2,6.6L3,9C3.53,8.6 4.08,8.25 4.66,7.93L6.89,10.16C6.15,10.5 5.44,10.91 4.8,11.4L6.6,13.8C7.38,13.22 8.26,12.77 9.2,12.47L11.75,15C10.5,15.07 9.34,15.5 8.4,16.2L12,21L14.46,17.73L17.74,21L19,19.72M12,3C9.85,3 7.8,3.38 5.9,4.07L8.29,6.47C9.5,6.16 10.72,6 12,6C15.38,6 18.5,7.11 21,9L22.8,6.6C19.79,4.34 16.06,3 12,3M12,9C11.62,9 11.25,9 10.88,9.05L14.07,12.25C15.29,12.53 16.43,13.07 17.4,13.8L19.2,11.4C17.2,9.89 14.7,9 12,9Z" />
 				</svg> -->
-			<h2>Works Offline</h2>
-			<p>Lives completely in your browser. There is no network involved, so it opens and shows previews instantly.</p>
-		</div>
-		<div class="feature">
-			<h2>Preprocessor Support</h2>
-			<p>Be it Markdown, Jade, SCSS, LESS, Atomic CSS, JSX, CoffeeScript or TypeScript - you get it all.</p>
-		</div>
-		<div class="feature">
-			<h2>Quick Add Libraries</h2>
-			<p>Drop in any library from the available list or put a URL of any other library you wish to add.
-			</p>
-		</div>
-		<div class="feature">
-			<h2>Multiple Layouts</h2>
-			<p>Get exact same layout in front of you, that you last saved the creation in. Plus, a full screen layout to see
-				your work
-				in actual browser window.
-			</p>
-		</div>
-		<div class="feature">
-			<h2>Preview screenshot capture</h2>
-			<p>Feel like taking a screenshot of your awesome creation, just hit the Capture button to get a beautiful screenshot
-				of
-				your result.
-			</p>
-		</div>
-		<div class="feature">
-			<h2>Open in Codepen</h2>
-			<p>Done with your creation and want to share it with the world? One click and have your work open in CodePen.
-			</p>
-		</div>
-	</div>
-
-	<div class="people-say">
-		<h3 style="color:red;font-size: 2em;margin:0;">♥</h3>
-		<div class="people-say-top">
-			<a target="_blank" href="https://blog.codepen.io/2017/01/19/web-maker/" class="say">
-				<div class="say__name">
-					<img src="https://pbs.twimg.com/profile_images/883049860332609537/IsUISvAq_400x400.jpg" alt="">
-					<div>Chris Coyier</div>
-				</div>
-				<p>If you're looking for a CodePen-like offline editor, and use Chrome, check out Web-Maker by Kushagra Gour.</p>
-			</a>
-			<a target="_blank" href="https://twitter.com/Ryan_Random/status/832242636970930177" class="say say--twitter">
-				<div class="say__name">
-					<img src="https://pbs.twimg.com/profile_images/777487197532401665/hsnFGGH2_bigger.jpg" alt="">
-					<div>Ryan Davidson
-						<div class="say__handle">@Ryan_Random</div>
-					</div>
-				</div>
-				<p>Really enjoying using Web Maker - super fast offline web playground.</p>
-			</a>
-			<a target="_blank" href="https://twitter.com/NashVail/status/831126444486975489" class="say say--twitter">
-				<div class="say__name">
-					<img src="https://pbs.twimg.com/profile_images/798582099691212800/15i7-mX-_400x400.jpg" alt="">
-					<div>Nishant Verma
-						<div class="say__handle">@NashVail</div>
-					</div>
-				</div>
-				<p>Finding awesome pens on @CodePen and recreating them in @webmakerApp is my new hobby</p>
-			</a>
-			<a target="_blank" href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
-			 class="say">
-				<div class="say__name">
-					<img src="https://plus.google.com/_/focus/photos/public/AIbEiAIAAABECLSb76_ywaCj7gEiC3ZjYXJkX3Bob3RvKigyMTBmZjI0YjYxM2VkZWZiNmYyNTkwZjEwN2RlNjBlYjRkOTE2YmJlMAHafGv-p112HZJ-KreQxPF8-yn0EQ"
-					 alt="">
-					<div>Joacim Nilsson</div>
-				</div>
-				<p>This is something I will be using alot. Thank you! :D</p>
-			</a>
-			<a target="_blank" href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
-			 class="say">
-				<div class="say__name">
-					<img src="https://plus.google.com/_/focus/photos/public/AIbEiAIAAABDCK_Jvffnu_2AXSILdmNhcmRfcGhvdG8qKDk3Njg3NDE2NjI1YThmNDgyMDk4OWM3MTBiMTMxNmUzOWQwZGNhMWEwAbe0xm_6UPdrZFAaScMLUOpKFfHP"
-					 alt="">
-					<div>Oksana Borukh</div>
-				</div>
-				<p>It's fantastic! I'm glad I've discovered it! Thanks!
+				<h3 class="feature__title">Works Offline</h3>
+				<p>Lives completely in your browser. There is no network involved, so it opens and shows previews instantly.</p>
+			</div>
+			<div class="feature">
+				<h3 class="feature__title">Preprocessor Support</h3>
+				<p>Be it Markdown, Jade, SCSS, LESS, Atomic CSS, JSX, CoffeeScript or TypeScript - you get it all.</p>
+			</div>
+			<div class="feature">
+				<h3 class="feature__title">Quick Add Libraries</h3>
+				<p>Drop in any library from the available list or put a URL of any other library you wish to add.
 				</p>
-			</a>
-		</div>
-		<div class="people-say-bottom">
-			<a target="_blank" href="https://twitter.com/labnol/status/816576061622235136" class="say say--twitter">
-				<div class="say__name">
-					<img src="https://pbs.twimg.com/profile_images/905692103883104256/J0feWkQe_normal.jpg" alt="">
-					<div>Amit Agarwal
-						<div class="say__handle">@labnol</div>
-					</div>
-				</div>
-				<p>This is like having your own copy of Codepen that also works offline.</p>
-			</a>
-			<a target="_blank" href="https://twitter.com/Armstrong/status/832191260026888197" class="say say--twitter">
-				<div class="say__name">
-					<img src="https://pbs.twimg.com/profile_images/974909553/Screen_shot_2010-06-09_at_19.14.22_bigger.png" alt="">
-					<div>Chris Armstrong
-						<div class="say__handle">@Armstrong</div>
-					</div>
-				</div>
-				<p>@webmakerApp looks like a good offline alternative to @CodePen.</p>
-			</a>
-			<a target="_blank" href="https://twitter.com/sitepointdotcom/status/832987050597085184" class="say say--twitter">
-				<div class="say__name">
-					<img src="https://pbs.twimg.com/profile_images/851318206807420928/etT-R3rp_bigger.jpg" alt="">
-					<div>SitePoint
-						<div class="say__handle">@sitepointdotcom</div>
-					</div>
-				</div>
-				<p>Meet Web Maker, an Offline, Browser-based CodePen Alternative.</p>
-			</a>
-			<a target="_blank" href="https://twitter.com/fedorloenko/status/835186942354534400" class="say">
-				<div class="say__name">
-					<img src="https://pbs.twimg.com/profile_images/947822663061393408/zhC3vxBL_bigger.jpg" alt="">
-					<div>Fedor Loenko
-						<div class="say__handle">@fedorloenko</div>
-					</div>
-				</div>
-				<p>Great Chrome extension via @chinchang457. I need offline CodePen from time to time.</p>
-			</a>
-			<a target="_blank" href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
-			 class="say">
-				<div class="say__name">
-					<img src="https://plus.google.com/_/focus/photos/public/AIbEiAIAAABDCNn44MXB2a_DZSILdmNhcmRfcGhvdG8qKDM2YTNiMDhkYzEyMmVkY2IyZjM2YzY0NTAzNTdjMWU5YWVhM2JmM2MwAc4a1i_Vddj6AIdGg9rpk_xdMePf"
-					 alt="">
-					<div>Steve Lack</div>
-				</div>
-				<p>Thanks for creating this. What a great tool for productivity!</p>
-			</a>
-
-			<a target="_blank" href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
-			 class="say">
-				<div class="say__name">
-					<img src="https://plus.google.com/_/focus/photos/public/AIbEiAIAAABECOrDgpLHt4jwzwEiC3ZjYXJkX3Bob3RvKig2ZWNkNGM4MmM0MDY2ZmFkMDUzZmE3MGY4MWE3NWM5OTIzZjA4MGRlMAEmU4uVE7yiEAzp6wGGR7B3MMjErg"
-					 alt="">
-					<div>Margaret H</div>
-				</div>
-				<p>Decided to use it to work on my latest project, it's pretty awesome! Thank you for making this!</p>
-			</a>
+			</div>
+			<div class="feature">
+				<h3 class="feature__title">Multiple Layouts</h3>
+				<p>Get exact same layout in front of you, that you last saved the creation in. Plus, a full screen layout to see
+					your work
+					in actual browser window.
+				</p>
+			</div>
+			<div class="feature">
+				<h3 class="feature__title">Files Mode</h3>
+				<p>Get a complete local-like environment where you can code in files instead of 3 separate panes.
+				</p>
+			</div>
+			<div class="feature">
+				<h3 class="feature__title">Preview screenshot capture</h3>
+				<p>Feel like taking a screenshot of your awesome creation, just hit the Capture button to get a beautiful
+					screenshot
+					of
+					your result.
+				</p>
+			</div>
+			<div class="feature">
+				<h3 class="feature__title">Open in Codepen</h3>
+				<p>Done with your creation and want to share it with the world? One click and have your work open in CodePen.
+				</p>
+			</div>
+			<div class="feature">
+				<h3 class="feature__title">And much more awesomeness!</h3>
+				<p>It doesn't stop there. There is JavaScript console, integrated Prettier support, command palette and more!
+				</p>
+			</div>
 		</div>
 
-	</div>
+		<div class="people-say">
+			<h2 style="font-size: 2em; " aria-label="Love from all around"><span style="color:red;">♥</span> from all
+				around</h2>
+			<div class="people-say-top">
+				<a target="_blank" href="https://blog.codepen.io/2017/01/19/web-maker/" class="say">
+					<div class="say__name">
+						<img src="https://pbs.twimg.com/profile_images/883049860332609537/IsUISvAq_400x400.jpg" alt="">
+						<div>Chris Coyier</div>
+					</div>
+					<p>If you're looking for a CodePen-like offline editor, and use Chrome, check out Web-Maker by Kushagra Gour.</p>
+				</a>
+				<a target="_blank" href="https://twitter.com/Ryan_Random/status/832242636970930177" class="say say--twitter">
+					<div class="say__name">
+						<img src="https://pbs.twimg.com/profile_images/777487197532401665/hsnFGGH2_bigger.jpg" alt="">
+						<div>Ryan Davidson
+							<div class="say__handle">@Ryan_Random</div>
+						</div>
+					</div>
+					<p>Really enjoying using Web Maker - super fast offline web playground.</p>
+				</a>
+				<a target="_blank" href="https://twitter.com/NashVail/status/831126444486975489" class="say say--twitter">
+					<div class="say__name">
+						<img src="https://pbs.twimg.com/profile_images/798582099691212800/15i7-mX-_400x400.jpg" alt="">
+						<div>Nishant Verma
+							<div class="say__handle">@NashVail</div>
+						</div>
+					</div>
+					<p>Finding awesome pens on @CodePen and recreating them in @webmakerApp is my new hobby</p>
+				</a>
+				<a target="_blank" href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
+				 class="say">
+					<div class="say__name">
+						<img src="https://plus.google.com/_/focus/photos/public/AIbEiAIAAABECLSb76_ywaCj7gEiC3ZjYXJkX3Bob3RvKigyMTBmZjI0YjYxM2VkZWZiNmYyNTkwZjEwN2RlNjBlYjRkOTE2YmJlMAHafGv-p112HZJ-KreQxPF8-yn0EQ"
+						 alt="">
+						<div>Joacim Nilsson</div>
+					</div>
+					<p>This is something I will be using alot. Thank you! :D</p>
+				</a>
+				<a target="_blank" href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
+				 class="say">
+					<div class="say__name">
+						<img src="https://plus.google.com/_/focus/photos/public/AIbEiAIAAABDCK_Jvffnu_2AXSILdmNhcmRfcGhvdG8qKDk3Njg3NDE2NjI1YThmNDgyMDk4OWM3MTBiMTMxNmUzOWQwZGNhMWEwAbe0xm_6UPdrZFAaScMLUOpKFfHP"
+						 alt="">
+						<div>Oksana Borukh</div>
+					</div>
+					<p>It's fantastic! I'm glad I've discovered it! Thanks!
+					</p>
+				</a>
+			</div>
+			<div class="people-say-bottom">
+				<a target="_blank" href="https://twitter.com/labnol/status/816576061622235136" class="say say--twitter">
+					<div class="say__name">
+						<img src="https://pbs.twimg.com/profile_images/905692103883104256/J0feWkQe_normal.jpg" alt="">
+						<div>Amit Agarwal
+							<div class="say__handle">@labnol</div>
+						</div>
+					</div>
+					<p>This is like having your own copy of Codepen that also works offline.</p>
+				</a>
+				<a target="_blank" href="https://twitter.com/Armstrong/status/832191260026888197" class="say say--twitter">
+					<div class="say__name">
+						<img src="https://pbs.twimg.com/profile_images/974909553/Screen_shot_2010-06-09_at_19.14.22_bigger.png" alt="">
+						<div>Chris Armstrong
+							<div class="say__handle">@Armstrong</div>
+						</div>
+					</div>
+					<p>@webmakerApp looks like a good offline alternative to @CodePen.</p>
+				</a>
+				<a target="_blank" href="https://twitter.com/sitepointdotcom/status/832987050597085184" class="say say--twitter">
+					<div class="say__name">
+						<img src="https://pbs.twimg.com/profile_images/851318206807420928/etT-R3rp_bigger.jpg" alt="">
+						<div>SitePoint
+							<div class="say__handle">@sitepointdotcom</div>
+						</div>
+					</div>
+					<p>Meet Web Maker, an Offline, Browser-based CodePen Alternative.</p>
+				</a>
+				<a target="_blank" href="https://twitter.com/fedorloenko/status/835186942354534400" class="say">
+					<div class="say__name">
+						<img src="https://pbs.twimg.com/profile_images/947822663061393408/zhC3vxBL_bigger.jpg" alt="">
+						<div>Fedor Loenko
+							<div class="say__handle">@fedorloenko</div>
+						</div>
+					</div>
+					<p>Great Chrome extension via @chinchang457. I need offline CodePen from time to time.</p>
+				</a>
+				<a target="_blank" href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
+				 class="say">
+					<div class="say__name">
+						<img src="https://plus.google.com/_/focus/photos/public/AIbEiAIAAABDCNn44MXB2a_DZSILdmNhcmRfcGhvdG8qKDM2YTNiMDhkYzEyMmVkY2IyZjM2YzY0NTAzNTdjMWU5YWVhM2JmM2MwAc4a1i_Vddj6AIdGg9rpk_xdMePf"
+						 alt="">
+						<div>Steve Lack</div>
+					</div>
+					<p>Thanks for creating this. What a great tool for productivity!</p>
+				</a>
+
+				<a target="_blank" href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
+				 class="say">
+					<div class="say__name">
+						<img src="https://plus.google.com/_/focus/photos/public/AIbEiAIAAABECOrDgpLHt4jwzwEiC3ZjYXJkX3Bob3RvKig2ZWNkNGM4MmM0MDY2ZmFkMDUzZmE3MGY4MWE3NWM5OTIzZjA4MGRlMAEmU4uVE7yiEAzp6wGGR7B3MMjErg"
+						 alt="">
+						<div>Margaret H</div>
+					</div>
+					<p>Decided to use it to work on my latest project, it's pretty awesome! Thank you for making this!</p>
+				</a>
+			</div>
+
+		</div>
+	</main>
 
 	<div id="info" class="info">
 		<p>Web Maker needs the following permissions to work with full capabilities. In words of Chrome extensions:</p>
@@ -1033,10 +1068,10 @@
 			</a>-->
 	</div>
 
-	<div style="margin:2em 0 1em">
+	<footer style="margin:2em 0 1em">
 		Follow
 		<a style="color:#1da1f2" href="https://twitter.com/intent/follow?screen_name=webmakerApp" target="_blank">@webmakerApp</a>
-		for updates. <a href="/privacy-policy/">Privacy Policy</a>.</div>
+		for updates. <a href="/privacy-policy/">Privacy Policy</a>.</footer>
 
 	<svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="display:none">
 		<symbol id="logo" viewBox="-145 -2 372 175">

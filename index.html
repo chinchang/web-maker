@@ -818,18 +818,17 @@
 			</h1>
 			<h2 style="margin-bottom:0.4em;">A blazing fast & offline web playground in your browser</h2>
 			<div style="margin-top: 30px;" id="cta" class="mb-2">
-				<button type="button" class="btn  download-btn web-app-btn" href="/app/">
+				<a type="button" class="btn  download-btn web-app-btn" href="/app/">
 					<span>Open Web App</span>
-				</button>
+				</a>
 				<p style="margin-top:3px;">Recommended: More features. More fun!</p>
-				<a class="btn  download-btn js-chrome-btn " href="javascript:void(0)"
-				 onclick="addToChrome()">
+				<button type="button" class="btn  download-btn js-chrome-btn" onclick="addToChrome()">
 					<img src="chrome-logo.png" height="40" alt="">
 					<span>Add Chrome extension</span>
-				</a>
+				</button>
 			</div>
 			<script>
-				if (navigator.userAgent.indexOf('Chrome') === -1) {
+				if (navigator.userAgent.indexOf('Chrome') === -1 || navigator.userAgent.match(/android/i)) {
 					document.querySelector('.js-chrome-btn').classList.add('disabled');
 					document.querySelector('.js-chrome-btn').setAttribute('data-hint', 'Check back on Google Chrome browser')
 				}

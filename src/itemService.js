@@ -258,7 +258,7 @@ export const itemService = {
 	async getCountOfFileModeItems() {
 		const items = await this.getAllItems();
 		return items.reduce((count, item) => {
-			if (item.files) return ++count;
+			if (item.files) return count + 1;
 			return count;
 		}, 0);
 	}

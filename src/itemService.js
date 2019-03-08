@@ -253,5 +253,13 @@ export const itemService = {
 				log(`Item ${itemId} unset for user`, arg);
 			})
 			.catch(error => log(error));
+	},
+
+	async getCountOfFileModeItems() {
+		const items = await this.getAllItems();
+		return items.reduce((count, item) => {
+			if (item.files) return ++count;
+			return count;
+		}, 0);
 	}
 };

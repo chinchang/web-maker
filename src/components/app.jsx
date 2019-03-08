@@ -1351,8 +1351,16 @@ export default class App extends Component {
 		this.setState({ isCreateNewModalOpen: false });
 	}
 	blankFileTemplateSelectHandler() {
-		this.createNewItem(true);
-		this.setState({ isCreateNewModalOpen: false });
+		itemService.getCountOfFileModeItems().then(count => {
+			if (count < 2) {
+				this.createNewItem(true);
+				this.setState({ isCreateNewModalOpen: false });
+			} else {
+				return alert(
+					'"Files mode" is currently in beta and is limited to only 2 creations per user. You have already made 2 creations in Files mode.\n\nNote: You can choose to delete old ones to create new.'
+				);
+			}
+		});
 	}
 
 	templateSelectHandler(template) {

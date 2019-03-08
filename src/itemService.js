@@ -11,6 +11,11 @@ export const itemService = {
 				return doc.data();
 			});
 	},
+
+	/**
+	 * Fetches user's item id list. CURRENTLY RUNS ONLY
+	 * FOR LOGGED IN USER!!
+	 */
 	async getUserItemIds() {
 		if (window.user) {
 			return new Promise(resolve => {
@@ -29,6 +34,10 @@ export const itemService = {
 			});
 	},
 
+	/**
+	 * Fetches all items FROM REMOTE ONLY CURRENTLY!!
+	 * TODO: make it work for local too.
+	 */
 	async getAllItems() {
 		var t = Date.now();
 		var d = deferred();

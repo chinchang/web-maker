@@ -206,6 +206,9 @@ export default class App extends Component {
 				// For web app environment we don't fetch item from localStorage,
 				// because the item isn't stored in the localStorage.
 				if (lastCode.id && window.IS_EXTENSION) {
+					// In case of already saved item (with id), we fetch it from
+					// its real key instead of using `code` for better reliability.
+					// because `code` sets only on shady unloadbefore.
 					db.local.get(lastCode.id, itemResult => {
 						if (itemResult[lastCode.id]) {
 							log('Load item ', lastCode.id);
@@ -466,6 +469,7 @@ export default class App extends Component {
 	/**
 	 * Fetches all items from storage
 	 * @param  {boolean} shouldSaveGlobally Whether to store the fetched items in global arr for later use.
+	 * @param  {boolean} shouldFetchLocally Intentionally get local items. Used when importing local items to account.
 	 * @return {promise}                    Promise.
 	 */
 	async fetchItems(shouldSaveGlobally, shouldFetchLocally) {

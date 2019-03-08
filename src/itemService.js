@@ -13,59 +13,70 @@ export const itemService = {
 	},
 
 	/**
-	 * Fetches user's item id list. CURRENTLY RUNS ONLY
-	 * FOR LOGGED IN USER!!
+	 * Fetches all item ids of current user
+	 * @param {boolean} shouldFetchLocally Should forcefully fetch locally?
 	 */
-	async getUserItemIds() {
-		if (window.user) {
+	async getUserItemIds(shouldFetchLocally) {
+		if (window.user && !shouldFetchLocally) {
 			return new Promise(resolve => {
 				resolve(window.user.items || {});
 			});
 		}
-		var remoteDb = await window.db.getDb();
-		return remoteDb
-			.doc(`users/${window.user.uid}`)
-			.get()
-			.then(doc => {
-				if (!doc.exists) {
-					return {};
-				}
-				return doc.data().items;
+		return new Promise(resolve => {
+			db.local.get('items', result => {
+				resolve(result.items || {});
 			});
+		});
 	},
 
 	/**
-	 * Fetches all items FROM REMOTE ONLY CURRENTLY!!
-	 * TODO: make it work for local too.
+	 * Fetches all items.
+	 * @param {boolean} shouldFetchLocally Should forcefully fetch locally?
 	 */
-	async getAllItems() {
+	async getAllItems(shouldFetchLocally) {
 		var t = Date.now();
 		var d = deferred();
-		let itemIds = await this.getUserItemIds();
+		let itemIds = await this.getUserItemIds(shouldFetchLocally);
 		itemIds = Object.getOwnPropertyNames(itemIds || {});
 		log('itemids', itemIds);
 
 		if (!itemIds.length) {
 			d.resolve([]);
 		}
-		var remoteDb = await window.db.getDb();
 		const items = [];
-		remoteDb
-			.collection('items')
-			.where('createdBy', '==', window.user.uid)
-			.onSnapshot(
-				function(querySnapshot) {
-					querySnapshot.forEach(function(doc) {
-						items.push(doc.data());
-					});
-					log('Items fetched in ', Date.now() - t, 'ms');
 
-					d.resolve(items);
-				},
-				function() {
-					d.resolve([]);
-				}
-			);
+		if (window.user && !shouldFetchLocally) {
+			var remoteDb = await window.db.getDb();
+			remoteDb
+				.collection('items')
+				.where('createdBy', '==', window.user.uid)
+				.onSnapshot(
+					function(querySnapshot) {
+						querySnapshot.forEach(function(doc) {
+							items.push(doc.data());
+						});
+						log('Items fetched in ', Date.now() - t, 'ms');
+
+						d.resolve(items);
+					},
+					function() {
+						d.resolve([]);
+					}
+				);
+		} else {
+			for (let i = 0; i < itemIds.length; i++) {
+				/* eslint-disable no-loop-func */
+				window.db.local.get(itemIds[i], itemResult => {
+					items.push(itemResult[itemIds[i]]);
+					// Check if we have all items now.
+					if (itemIds.length === items.length) {
+						d.resolve(items);
+					}
+				});
+
+				/* eslint-enable no-loop-func */
+			}
+		}
 		return d.promise;
 	},
 

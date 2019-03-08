@@ -473,47 +473,20 @@ export default class App extends Component {
 	 * @return {promise}                    Promise.
 	 */
 	async fetchItems(shouldSaveGlobally, shouldFetchLocally) {
-		var d = deferred();
 		// HACK: This empty assignment is being used when importing locally saved items
 		// to cloud, `fetchItems` runs once on account login which clears the
 		// savedItems object and hence, while merging no saved item matches with itself.
 		this.state.savedItems = {};
 		var items = [];
-		if (window.user && !shouldFetchLocally) {
-			items = await itemService.getAllItems();
-			log('got items');
-			if (shouldSaveGlobally) {
-				items.forEach(item => {
-					this.state.savedItems[item.id] = item;
-				});
-			}
-			d.resolve(items);
-			return d.promise;
+
+		items = await itemService.getAllItems(shouldFetchLocally);
+		trackEvent('fn', 'fetchItems', items.length);
+		if (shouldSaveGlobally) {
+			items.forEach(item => {
+				this.state.savedItems[item.id] = item;
+			});
 		}
-		db.local.get('items', result => {
-			var itemIds = Object.getOwnPropertyNames(result.items || {});
-			if (!itemIds.length) {
-				d.resolve([]);
-			}
-
-			trackEvent('fn', 'fetchItems', itemIds.length);
-			for (let i = 0; i < itemIds.length; i++) {
-				/* eslint-disable no-loop-func */
-				db.local.get(itemIds[i], itemResult => {
-					if (shouldSaveGlobally) {
-						this.state.savedItems[itemIds[i]] = itemResult[itemIds[i]];
-					}
-					items.push(itemResult[itemIds[i]]);
-					// Check if we have all items now.
-					if (itemIds.length === items.length) {
-						d.resolve(items);
-					}
-				});
-
-				/* eslint-enable no-loop-func */
-			}
-		});
-		return d.promise;
+		return items;
 	}
 
 	openSavedItemsPane() {

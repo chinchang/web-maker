@@ -783,27 +783,7 @@
 		}
 
 	</style>
-	<script>
-		function changeLabel(label) {
-			document.querySelector('.js-chrome-btn span').innerHTML = label;
-		}
-
-		function closeInfo(label) {
-			info.classList.remove('show');
-		}
-
-		function addToChrome() {
-			_gaq && _gaq.push(['_trackEvent', 'webmaker', 'install-start']);
-			info.classList.add('show');
-			changeLabel('Installing...');
-			chrome.webstore.install(undefined, function () {
-				cta.innerHTML = 'Successfully installed!';
-				closeInfo();
-				_gaq && _gaq.push(['_trackEvent', 'webmaker', 'install-done']);
-			});
-		}
-
-	</script>
+	
 </head>
 
 <body>
@@ -818,14 +798,14 @@
 			</h1>
 			<h2 style="margin-bottom:0.4em;">A blazing fast & offline web playground in your browser</h2>
 			<div style="margin-top: 30px;" id="cta" class="mb-2">
-				<a type="button" class="btn  download-btn web-app-btn" href="/app/">
+				<a class="btn  download-btn web-app-btn" href="/app/">
 					<span>Open Web App</span>
 				</a>
 				<p style="margin-top:3px;">Recommended: More features. More fun!</p>
-				<button type="button" class="btn  download-btn js-chrome-btn" onclick="addToChrome()">
+				<a class="btn  download-btn js-chrome-btn" href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh">
 					<img src="chrome-logo.png" height="40" alt="">
 					<span>Add Chrome extension</span>
-				</button>
+				</a>
 			</div>
 			<script>
 				if (navigator.userAgent.indexOf('Chrome') === -1 || navigator.userAgent.match(/android/i)) {
@@ -845,15 +825,6 @@
 		<div style="margin-top:30px;">
 			<img class="screenshot" src="ss1.png?v3.0.0beta" height="" alt="Web Maker working screen">
 		</div>
-		<script>
-			if (top !== self) {
-				var btn = document.querySelector('.js-chrome-btn');
-				btn.href = 'https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh';
-				btn.target = '_blank';
-			}
-
-		</script>
-
 	</div>
 
 

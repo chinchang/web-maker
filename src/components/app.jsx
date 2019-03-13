@@ -179,9 +179,16 @@ export default class App extends Component {
 	componentWillMount() {
 		var lastCode;
 		window.onunload = () => {
-			this.saveCode('code');
 			if (this.detachedWindow) {
 				this.detachedWindow.close();
+			}
+		};
+		window.onbeforeunload = event => {
+			if (this.state.unsavedEditCount) {
+				console.log(9999999999);
+				event.preventDefault();
+				// Chrome requires returnValue to be set.
+				event.returnValue = '';
 			}
 		};
 
@@ -203,24 +210,8 @@ export default class App extends Component {
 			if (result.preserveLastCode && lastCode) {
 				this.setState({ unsavedEditCount: 0 });
 
-				// For web app environment we don't fetch item from localStorage,
-				// because the item isn't stored in the localStorage.
-				if (lastCode.id && window.IS_EXTENSION) {
-					// In case of already saved item (with id), we fetch it from
-					// its real key instead of using `code` for better reliability.
-					// because `code` sets only on shady unloadbefore.
-					db.local.get(lastCode.id, itemResult => {
-						if (itemResult[lastCode.id]) {
-							log('Load item ', lastCode.id);
-							this.setCurrentItem(itemResult[lastCode.id]).then(() =>
-								this.refreshEditor()
-							);
-						}
-					});
-				} else {
-					log('Load last unsaved item', lastCode);
-					this.setCurrentItem(lastCode).then(() => this.refreshEditor());
-				}
+				log('Load last unsaved item', lastCode);
+				this.setCurrentItem(lastCode).then(() => this.refreshEditor());
 			} else {
 				this.createNewItem();
 			}
@@ -306,12 +297,15 @@ export default class App extends Component {
 		this.updateExternalLibCount();
 		this.contentWrap.refreshEditor();
 	}
+	askForUnsavedChanges() {
+		return confirm(
+			'You have unsaved changes in your current work. Do you want to discard unsaved changes and continue?'
+		);
+	}
 	// Creates a new item with passed item's contents
 	forkItem(sourceItem) {
 		if (this.state.unsavedEditCount) {
-			var shouldDiscard = confirm(
-				'You have unsaved changes in your current work. Do you want to discard unsaved changes and continue?'
-			);
+			var shouldDiscard = this.askForUnsavedChanges();
 			if (!shouldDiscard) {
 				return;
 			}
@@ -782,6 +776,11 @@ export default class App extends Component {
 		log('saving key', key || currentItem.id, currentItem);
 
 		function onSaveComplete() {
+			// No feedback on saving `code` key. Its just to silently preserve
+			// last written code.
+			if (key === 'code') {
+				return;
+			}
 			if (window.user && !navigator.onLine) {
 				alertsService.add(
 					'Item saved locally. Will save to account when you are online.'

@@ -90,26 +90,24 @@ export const itemService = {
 	async setItem(id, item) {
 		const d = deferred();
 		var remotePromise;
-		// TODO: check why we need to save locally always?
-		const obj = {
-			[id]: item
-		};
-		db.local.set(obj, () => {
-			// Is extension OR is app but logged out OR is logged in but offline
-			// If logged in but offline, resolve immediately so
-			// that you see the feedback msg immediately and not wait for
-			// later sync.
-			if (window.IS_EXTENSION || !window.user || !navigator.onLine) {
-				d.resolve();
-			}
-		});
 
-		// If `id` is `code`, this is a call on unloadbefore to save the last open thing.
-		// Do not presist that on remote.
-		if (id === 'code') {
-			// No deferred required here as this gets called on unloadbefore
-			return false;
+		// Always persist in `code` key for `preserveLastOpenItem` setting.
+		// This key is used to retrieve content of last open item.
+		db.local.set({ code: item }, () => {});
+
+		// NOT LOGGED IN
+		// If `id` is `code`, this is a call on unloadbefore to save the last open thing,
+		// which needs to be persisted locally only.
+		if (!window.user || id === 'code') {
+			const obj = {
+				[id]: item
+			};
+			db.local.set(obj, () => {
+				d.resolve();
+			});
+			return d.promise;
 		}
+
 		if (window.user) {
 			var remoteDb = await window.db.getDb();
 			log(`Starting to save item ${id}`);
@@ -125,9 +123,13 @@ export const itemService = {
 					d.resolve();
 				})
 				.catch(d.reject);
-		}
 
-		return window.user && navigator.onLine ? remotePromise : d.promise;
+			// logged in but offline, we resolve immediately so
+			// that you see the feedback msg immediately and not wait for
+			// later sync.
+			if (!navigator.onLine) return Promise.resolve();
+			return remotePromise;
+		}
 	},
 
 	/**

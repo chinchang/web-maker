@@ -107,7 +107,7 @@ export default class CodeEditor extends Component {
 		return false;
 	}
 	componentDidUpdate(prevProps) {
-		// prop.type changed, reinit the editor
+		// prop.type changed, reinit the editor. On any other prop, component never updates.
 		this.initEditor();
 	}
 	setModel(model) {
@@ -127,7 +127,9 @@ export default class CodeEditor extends Component {
 				window.monacoSetValTriggered = false;
 			}, 1);
 		}
-		this.instance.setValue(value);
+		this.editorReadyDeferred.promise.then(() => {
+			this.instance.setValue(value);
+		});
 		// We save last set value so that when editor type changes, we can
 		// populate that last value
 		this.lastSetValue = value;
@@ -147,13 +149,13 @@ export default class CodeEditor extends Component {
 		}
 	}
 	setOption(option, value) {
-		if (this.props.type === 'monaco') {
-			this.editorReadyDeferred.promise.then(() => {
+		this.editorReadyDeferred.promise.then(() => {
+			if (this.props.type === 'monaco') {
 				this.instance.updateOptions({ [option]: value });
-			});
-		} else {
-			this.instance.setOption(option, value);
-		}
+			} else {
+				this.instance.setOption(option, value);
+			}
+		});
 	}
 	setLanguage(value) {
 		if (!window.monaco) return;

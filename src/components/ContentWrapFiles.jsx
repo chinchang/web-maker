@@ -83,6 +83,17 @@ export default class ContentWrapFiles extends Component {
 			this.state.selectedFile = null;
 		}
 
+		// If selectedFile got deleted
+		if (
+			this.state.selectedFile &&
+			!getFileFromPath(
+				nextProps.currentItem.files,
+				this.state.selectedFile.path
+			).file
+		) {
+			this.state.selectedFile = null;
+		}
+
 		// If the files have changed and we have a selected file (even after previous condition),
 		// update the buffer with new file content (may be it got prettified?)
 		if (

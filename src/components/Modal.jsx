@@ -63,6 +63,7 @@ export default class Modal extends Component {
 		return (
 			<Portal into="body">
 				<div
+					role="dialog"
 					class={`${this.props.extraClasses || ''} modal is-modal-visible ${
 						this.props.small ? 'modal--small' : ''
 					}`}

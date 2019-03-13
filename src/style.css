@@ -1043,6 +1043,7 @@ body > #demo-frame {
 	width: 450px;
 	padding: 20px 30px;
 	z-index: 6;
+	visibility: hidden; /* prevents tabbing */
 	background-color: var(--color-popup);
 	transition: 0.3s cubic-bezier(1, 0.13, 0.21, 0.87);
 	transition-property: transform;
@@ -1051,6 +1052,7 @@ body > #demo-frame {
 }
 
 .saved-items-pane.is-open {
+	visibility: visible;
 	transition-duration: 0.4s;
 	transform: translateX(0);
 }

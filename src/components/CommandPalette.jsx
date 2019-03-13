@@ -24,7 +24,7 @@ function Row({ item, onClick, isSelected }) {
 				}`}
 				onClick={onClick}
 			>
-				<div>
+				<div class="d-f ai-c">
 					{item.path ? <FileIcon file={item} /> : null}
 					{item.name}
 					{item.path ? (

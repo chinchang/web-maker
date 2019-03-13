@@ -55,7 +55,8 @@ export class Console extends PureComponent {
 						onDblClick={onConsoleHeaderDblClick}
 					>
 						<span class="code-wrap__header-label">
-							<Trans>Console</Trans> (<span>{logs.length}</span>)
+							<Trans>Console</Trans>
+							<span class="count-label">{logs.length}</span>
 						</span>
 						<div class="code-wrap__header-right-options">
 							<a

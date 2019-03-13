@@ -78,7 +78,7 @@ export class CommandPalette extends Component {
 			});
 			return;
 		}
-		if (e.which === ENTER_KEY) {
+		if (e.which === ENTER_KEY && this.state.list.length) {
 			this.selectOption(this.state.list[this.state.selectedIndex]);
 		}
 	}
@@ -118,6 +118,9 @@ export class CommandPalette extends Component {
 					onKeyUp={this.keyDownHandler.bind(this)}
 					style="width:100%"
 				/>
+				{!this.props.files.length && !this.state.list.length ? (
+					<p>Nothing to search here.</p>
+				) : null}
 				<ul class="command-palette__option-list">
 					{this.state.list.map((item, index) => (
 						<Row

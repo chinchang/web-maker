@@ -89,16 +89,14 @@ export const itemService = {
 
 	async setItem(id, item) {
 		const d = deferred();
-		var remotePromise;
+		log(`Starting to save item ${id}`);
 
 		// Always persist in `code` key for `preserveLastOpenItem` setting.
 		// This key is used to retrieve content of last open item.
 		db.local.set({ code: item }, () => {});
 
 		// NOT LOGGED IN
-		// If `id` is `code`, this is a call on unloadbefore to save the last open thing,
-		// which needs to be persisted locally only.
-		if (!window.user || id === 'code') {
+		if (!window.user) {
 			const obj = {
 				[id]: item
 			};
@@ -108,28 +106,25 @@ export const itemService = {
 			return d.promise;
 		}
 
-		if (window.user) {
-			var remoteDb = await window.db.getDb();
-			log(`Starting to save item ${id}`);
-			item.createdBy = window.user.uid;
-			remotePromise = remoteDb
-				.collection('items')
-				.doc(id)
-				.set(item, {
-					merge: true
-				})
-				.then(arg => {
-					log('Document written', arg);
-					d.resolve();
-				})
-				.catch(d.reject);
+		var remoteDb = await window.db.getDb();
+		item.createdBy = window.user.uid;
+		remoteDb
+			.collection('items')
+			.doc(id)
+			.set(item, {
+				merge: true
+			})
+			.then(arg => {
+				log('Document written', arg);
+				d.resolve();
+			})
+			.catch(d.reject);
 
-			// logged in but offline, we resolve immediately so
-			// that you see the feedback msg immediately and not wait for
-			// later sync.
-			if (!navigator.onLine) return Promise.resolve();
-			return remotePromise;
-		}
+		// logged in but offline, we resolve immediately so
+		// that you see the feedback msg immediately and not wait for
+		// later sync.
+		if (!navigator.onLine) return Promise.resolve();
+		return d.promise;
 	},
 
 	/**

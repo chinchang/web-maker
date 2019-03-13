@@ -26,7 +26,7 @@ export class CreateNewModal extends Component {
 		} = this.props;
 		return (
 			<Modal show={show} closeHandler={closeHandler}>
-				<h2>Create New</h2>
+				<h1 class="mt-0">Create New</h1>
 				<div class="flex">
 					<div style="flex:1;" class="tac">
 						<svg
@@ -188,8 +188,7 @@ export class CreateNewModal extends Component {
 					>
 						Start Blank
 					</button>
-					<br />
-					Or choose from a template:
+					<p>Or choose from a template:</p>
 					<div class="saved-items-pane__container">
 						{templates.map(template => (
 							<ItemTile

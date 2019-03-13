@@ -202,7 +202,10 @@ export default class SavedItemPane extends Component {
 						/>
 					))}
 					{!items.length ? (
-						<h2 class="opacity--30">Nothing saved here.</h2>
+						<div class="tac">
+							<h2 class="opacity--30">Nothing saved here.</h2>
+							<img style="max-width: 80%; opacity:0.4" src="assets/empty.svg" />
+						</div>
 					) : null}
 				</div>
 			</div>

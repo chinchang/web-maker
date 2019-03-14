@@ -1,0 +1,18 @@
+{
+	"name": "web-maker-docs",
+	"version": "1.0.0",
+	"description": "## What is Web Maker",
+	"main": "index.html",
+	"scripts": {
+		"start": "eleventy --quiet --serve",
+		"build": "eleventy"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"@11ty/eleventy": "^0.7.1",
+		"markdown-it": "^8.4.2",
+		"markdown-it-anchor": "^5.0.2"
+	}
+}

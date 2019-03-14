@@ -10,7 +10,7 @@ or
 
 ### [Install Chrome extension](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
 
-![Screenshot](/ss1.png)
+![Screenshot](/packages/website/images/ss1.png)
 
 ### Features
 

@@ -7,6 +7,8 @@
 		"build": "preact build --template src/index.html --no-prerender --service-worker false",
 		"serve": "preact build && preact serve",
 		"dev": "preact watch --template src/index.html --no-prerender",
+		"serve-website": "cd packages/website; npm start",
+		"build-website": "cd packages/website; npm run build",
 		"lint": "eslint src",
 		"test": "jest",
 		"precommit": "lint-staged",
@@ -25,7 +27,7 @@
 		"src/detached-window.js"
 	],
 	"lint-staged": {
-		"*.{js,jsx,json,css,md}": [
+		"*.{js,jsx,json,css,md,html}": [
 			"prettier --write",
 			"git add"
 		]

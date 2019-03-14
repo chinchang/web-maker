@@ -1,6 +1,11 @@
 ### OSX ###
 .DS_Store
 
+### builds
+build
+dist
+_site
+
 ### PhPStorm / IntellJ IDEA ###
 .idea/
 *.iml

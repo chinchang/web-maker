@@ -7,6 +7,8 @@
 		"build": "preact build --template src/index.html --no-prerender --service-worker false",
 		"serve": "preact build && preact serve",
 		"dev": "preact watch --template src/index.html --no-prerender",
+		"serve-website": "cd packages/website; npm start",
+		"build-website": "cd packages/website; npm run build",
 		"lint": "eslint src",
 		"test": "jest",
 		"precommit": "lint-staged",
@@ -25,7 +27,7 @@
 		"src/detached-window.js"
 	],
 	"lint-staged": {
-		"*.{js,jsx,json,css,md}": [
+		"*.{js,jsx,json,css,md,html}": [
 			"prettier --write",
 			"git add"
 		]
@@ -71,7 +73,7 @@
 		"preact-compat": "^3.17.0",
 		"preact-portal": "^1.1.3",
 		"preact-router": "^2.5.7",
-		"prettier": "^1.15.2",
+		"prettier": "^1.16.4",
 		"react-inspector": "^2.3.0",
 		"split.js": "1.3.4"
 	},

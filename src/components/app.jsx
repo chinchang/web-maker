@@ -1368,8 +1368,8 @@ export default class App extends Component {
 		});
 	}
 
-	templateSelectHandler(template) {
-		fetch(`templates/template-${template.id}.json`)
+	templateSelectHandler(template, isFileMode) {
+		fetch(`templates/template-${isFileMode ? 'files-' : ''}${template.id}.json`)
 			.then(res => res.json())
 			.then(json => {
 				this.forkItem(json);

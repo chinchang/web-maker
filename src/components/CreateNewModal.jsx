@@ -197,14 +197,25 @@ export class CreateNewModal extends Component {
 					</button>
 					<p>Or choose from a template:</p>
 					<div class="saved-items-pane__container">
-						{templates.map(template => (
-							<ItemTile
-								inline
-								item={template}
-								focusable
-								onClick={onTemplateSelect.bind(null, template)}
-							/>
-						))}
+						{templates.map(template => {
+							if (
+								!this.state.isFileModeSelected ||
+								template.isFileModeSupported
+							) {
+								return (
+									<ItemTile
+										inline
+										item={template}
+										focusable
+										onClick={onTemplateSelect.bind(
+											null,
+											template,
+											this.state.isFileModeSelected
+										)}
+									/>
+								);
+							}
+						})}
 					</div>
 				</div>
 				<div class="tac">

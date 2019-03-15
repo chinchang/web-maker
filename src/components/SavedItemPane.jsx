@@ -151,7 +151,6 @@ export default class SavedItemPane extends Component {
 				class={`saved-items-pane ${isOpen ? 'is-open' : ''}`}
 				onKeyDown={this.keyDownHandler.bind(this)}
 				aria-hidden={isOpen}
-				tabIndex={`${isOpen ? 0 : -1}`}
 			>
 				<button
 					onClick={this.onCloseIntent.bind(this)}

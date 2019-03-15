@@ -7,7 +7,8 @@ export default [
 	{
 		id: 'vue',
 		title: 'Vue',
-		img: 'assets/vue-logo.svg'
+		img: 'assets/vue-logo.svg',
+		isFileModeSupported: true
 	},
 	{
 		id: 'preact',
@@ -17,6 +18,7 @@ export default [
 	{
 		id: 'kontra-game-engine',
 		title: 'Kontra Game Engine',
-		img: 'assets/html5-logo.svg'
+		img: 'assets/html5-logo.svg',
+		isFileModeSupported: true
 	}
 ];

@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { FileIcon } from './FileIcon';
 import { getParentPath, getFileFromPath } from '../fileUtils';
+import { trackEvent } from '../analytics';
 
 const ENTER_KEY = 13;
 const ESCAPE_KEY = 27;
@@ -119,9 +120,11 @@ function Folder(props) {
 export class SidePane extends Component {
 	addFileButtonClickHandler() {
 		this.setState({ isAddingFile: true });
+		trackEvent('ui', 'fileAddBtnClick');
 	}
 	addFolderButtonClickHandler() {
 		this.setState({ isAddingFolder: true });
+		trackEvent('ui', 'folderAddBtnClick');
 	}
 	/**
 	 * Checks if the passed filename already exists and if so, warns the user.
@@ -173,6 +176,7 @@ export class SidePane extends Component {
 		if (answer) {
 			this.props.onRemoveFile(file.path);
 		}
+		trackEvent('ui', 'fileRemoveBtnClick');
 	}
 	renameFile(e) {
 		// This gets called twice when enter is pressed, because blur also fires.
@@ -200,6 +204,7 @@ export class SidePane extends Component {
 		this.setState({
 			fileBeingRenamed: file
 		});
+		trackEvent('ui', 'fileRenameBtnClick');
 	}
 
 	dragOverHandler(e) {

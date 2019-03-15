@@ -638,6 +638,7 @@ export default class ContentWrapFiles extends Component {
 
 	prettifyBtnClickHandler() {
 		this.props.onPrettifyBtnClick(this.state.selectedFile);
+		trackEvent('ui', 'prettifyBtnClick');
 	}
 	render() {
 		return (

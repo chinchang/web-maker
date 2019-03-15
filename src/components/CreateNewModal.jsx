@@ -4,6 +4,7 @@ import { ItemTile } from './ItemTile';
 import templates from '../templateList';
 import { Divider } from './common';
 import Switch from './Switch';
+import { trackEvent } from '../analytics';
 
 export class CreateNewModal extends Component {
 	constructor(props) {
@@ -14,6 +15,11 @@ export class CreateNewModal extends Component {
 		this.setState({
 			isFileModeSelected: e.target.checked
 		});
+		trackEvent(
+			'ui',
+			'newCreationModeChange',
+			e.target.checked ? 'files' : '3panes'
+		);
 	}
 	render() {
 		const {
@@ -181,6 +187,7 @@ export class CreateNewModal extends Component {
 						type="button"
 						class="btn btn--primary"
 						onClick={() => {
+							trackEvent('ui', 'startBlankBtnClick');
 							this.state.isFileModeSelected
 								? onBlankFileTemplateSelect()
 								: onBlankTemplateSelect();

@@ -625,7 +625,7 @@ export default class ContentWrap extends Component {
 	}
 
 	render() {
-		log('contentwrap update');
+		// log('contentwrap update');
 
 		return (
 			<SplitPane

@@ -35,6 +35,7 @@ import emmet from '@emmetio/codemirror-plugin';
 import { prettify, loadCss } from '../utils';
 import { modes } from '../codeModes';
 import { deferred } from '../deferred';
+import { trackEvent } from '../analytics';
 
 emmet(CodeMirror);
 let monacoDepsDeferred;
@@ -281,6 +282,7 @@ export default class CodeEditor extends Component {
 							content: this.instance.getValue(),
 							type: options.prettierParser
 						}).then(formattedCode => this.instance.setValue(formattedCode));
+						trackEvent('ui', 'prettifyKeyboardShortcut');
 					}
 				}
 			);
@@ -332,6 +334,7 @@ export default class CodeEditor extends Component {
 								type: options.prettierParser
 							}).then(formattedCode => editor.setValue(formattedCode));
 						}
+						trackEvent('ui', 'prettifyKeyboardShortcut');
 					},
 					Tab: function(editor) {
 						if (options.emmet) {

@@ -565,6 +565,11 @@ export default class App extends Component {
 					isCommandPaletteOpen: true,
 					isCommandPaletteInCommandMode: !!event.shiftKey
 				});
+				trackEvent(
+					'ui',
+					'openCommandPaletteKeyboardShortcut',
+					!!event.shiftKey ? 'command' : 'files'
+				);
 				event.preventDefault();
 			}
 		});
@@ -1355,6 +1360,7 @@ export default class App extends Component {
 				this.createNewItem(true);
 				this.setState({ isCreateNewModalOpen: false });
 			} else {
+				trackEvent('ui', 'FileModeCreationLimitMessageSeen');
 				return alert(
 					'"Files mode" is currently in beta and is limited to only 2 creations per user. You have already made 2 creations in Files mode.\n\nNote: You can choose to delete old ones to create new.'
 				);

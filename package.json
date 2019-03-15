@@ -57,7 +57,10 @@
 		"preact-cli": "^2.1.0",
 		"preact-render-spy": "^1.2.1",
 		"run-sequence": "^2.2.1",
-		"sw-precache": "^5.2.0"
+		"sw-precache": "^5.2.0",
+		"@11ty/eleventy": "^0.7.1",
+		"markdown-it": "^8.4.2",
+		"markdown-it-anchor": "^5.0.2"
 	},
 	"dependencies": {
 		"@emmetio/codemirror-plugin": "^0.5.4",

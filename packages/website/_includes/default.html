@@ -601,25 +601,22 @@
 				</g>
 			</symbol>
 		</svg>
-		<script type="text/javascript">
-			if (location.host.indexOf('localhost') === -1) {
-				var _gaq = _gaq || [];
-				_gaq.push(['_setAccount', 'UA-87786708-1']);
-				_gaq.push(['_trackPageview']);
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script
+			async
+			src="https://www.googletagmanager.com/gtag/js?id=UA-87786708-2"
+		></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
 
-				(function() {
-					var ga = document.createElement('script');
-					ga.type = 'text/javascript';
-					ga.async = true;
-					ga.src =
-						('https:' == document.location.protocol
-							? 'https://ssl'
-							: 'http://www') + '.google-analytics.com/ga.js';
-					var s = document.getElementsByTagName('script')[0];
-					s.parentNode.insertBefore(ga, s);
-				})();
+			function gtag() {
+				dataLayer.push(arguments);
 			}
+			gtag('js', new Date());
+
+			gtag('config', 'UA-87786708-2');
 		</script>
+
 		<script type="text/javascript">
 			window.$crisp = [];
 			window.CRISP_WEBSITE_ID = 'c00b07b9-42da-45dd-87b0-e614bf7fb240';

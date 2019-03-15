@@ -174,6 +174,7 @@ gulp.task('generate-service-worker', function(callback) {
 });
 
 gulp.task('packageExtension', function() {
+	child_process.execSync('rm -rf extension');
 	child_process.execSync('cp -R app extension');
 	child_process.execSync('cp src/manifest.json extension');
 	child_process.execSync('cp src/options.js extension');
@@ -218,7 +219,7 @@ gulp.task('start-preview-server', function() {
 
 gulp.task('release', function(callback) {
 	runSequence(
-		'runWebpack',
+		['runWebpack', 'buildWebsite'],
 		'copyFiles',
 		'fixIndex',
 		'useRef',
@@ -226,6 +227,7 @@ gulp.task('release', function(callback) {
 		'minify',
 		'generate-service-worker',
 		'packageExtension',
+		'buildDistFolder',
 		'cleanup',
 		function(error) {
 			if (error) {

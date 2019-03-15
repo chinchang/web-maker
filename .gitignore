@@ -2,6 +2,7 @@
 .DS_Store
 
 ### builds
+app
 build
 dist
 _site

@@ -7,7 +7,7 @@ ID = "webmaker"
 # unless otherwise overridden by more specific contexts.  
 [build]
   # Default build command.
-  command = "gulp dev-release && ls dist/"
+  command = "gulp dev-release"
 
   # Directory to change to before starting a build. 
   # This is where we will look for package.json/.nvmrc/etc.

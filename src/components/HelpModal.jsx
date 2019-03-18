@@ -7,7 +7,7 @@ export function HelpModal(props) {
 		<Modal show={props.show} closeHandler={props.closeHandler}>
 			<h1>
 				<div class="web-maker-with-tag">Web Maker</div>
-				<small style="font-size:14px;">{props.version} (beta)</small>
+				<small style="font-size:14px;">{props.version}</small>
 			</h1>
 
 			<div>

@@ -112,7 +112,7 @@ export function Notifications(props) {
 					Sit tight, because this is going to be some amazing set on updates for
 					you! Read{' '}
 					<a
-						href="https://medium.com/web-maker/web-maker-3-0-is-here-f158a40eeaee"
+						href="https://medium.com/web-maker/web-maker-4-0-e8e442b5a2db"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
@@ -125,8 +125,9 @@ export function Notifications(props) {
 						<strong>🏠</strong>: First of all, Web Maker has a new home -{' '}
 						<a href="https://webmaker.app">https://webmaker.app</a> 😀 The old
 						website will continue to run for a month or so, but will eventually
-						shutdown. If you have an online account in Web Maker, you need not
-						worry. But if you have some locally saved creations, you should{' '}
+						start redirecting to the new website. If you have an online account
+						in Web Maker, you need not worry. But if you have some locally saved
+						creations, you should{' '}
 						<a
 							href="https://medium.com/web-maker/importing-exporting-your-creations-d92e7de5c3dc"
 							target="_blank"

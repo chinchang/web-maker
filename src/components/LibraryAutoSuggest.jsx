@@ -75,12 +75,12 @@ export class LibraryAutoSuggest extends Component {
 						}</a></li>`;
 					}
 					this.isShowingSuggestions = true;
-					if (!this.textareaBounds) {
-						this.textareaBounds = this.t.getBoundingClientRect();
-						this.list.style.top = this.textareaBounds.bottom + 'px';
-						this.list.style.left = this.textareaBounds.left + 'px';
-						this.list.style.width = this.textareaBounds.width + 'px';
-					}
+					// if (!this.textareaBounds) {
+					this.textareaBounds = this.t.getBoundingClientRect();
+					this.list.style.top = this.textareaBounds.bottom + 'px';
+					this.list.style.left = this.textareaBounds.left + 'px';
+					this.list.style.width = this.textareaBounds.width + 'px';
+					// }
 					this.list.classList.add('is-open');
 				});
 			}, 500);

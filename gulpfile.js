@@ -107,7 +107,7 @@ gulp.task('useRef', function() {
 });
 
 gulp.task('concatSwRegistration', function() {
-	gulp
+	return gulp
 		.src(['src/service-worker-registration.js', 'app/script.js'])
 		.pipe(concat('script.js'))
 		.pipe(gulp.dest('app'));
@@ -118,7 +118,7 @@ gulp.task('minify', function() {
 	minifyJs('app/vendor.js');
 	minifyJs('app/lib/screenlog.js');
 
-	gulp
+	return gulp
 		.src('app/*.css')
 		.pipe(
 			cleanCSS(

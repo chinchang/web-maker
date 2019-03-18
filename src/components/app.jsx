@@ -554,8 +554,14 @@ export default class App extends Component {
 					isKeyboardShortcutsModalOpen: !this.state.isKeyboardShortcutsModalOpen
 				});
 				trackEvent('ui', 'showKeyboardShortcutsShortcut');
-			} else if (event.keyCode === 27 && event.target.tagName !== 'INPUT') {
-				// We might be listening on keydown for some input inside the app. In that case
+			} else if (
+				event.keyCode === 27 &&
+				(event.target.tagName !== 'INPUT' || event.target.id === 'searchInput')
+			) {
+				// ESCAPE
+				// TODO: whats written next doesn't make sense. Review it.
+				// We might be listening on keydown for some input inside the app, UNLESS its
+				// the search input in saved items pane. In that case
 				// we don't want this to trigger which in turn focuses back the last editor.
 				this.closeSavedItemsPane();
 			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 80) {

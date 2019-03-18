@@ -19,11 +19,11 @@ export function OnboardingModal(props) {
 						</svg>
 					</div>
 					<p>
-						Open Web Maker anytime by visiting{' '}
-						<a>https://webmakerapp.com/app/</a> - Even when you are offline! It
-						just works! 😱 <strong>Drag the following bookmarklet</strong> on
-						your bookmark bar to create a quick access shortcut:
-						<a class="ml-1 bookmarklet" href="https://webmakerapp.com/app/">
+						Open Web Maker anytime by visiting <a>https://webmaker.app/app/</a>{' '}
+						- Even when you are offline! It just works! 😱{' '}
+						<strong>Drag the following bookmarklet</strong> on your bookmark bar
+						to create a quick access shortcut:
+						<a class="ml-1 bookmarklet" href="https://webmaker.app/app/">
 							<svg width="20" height="20" aria-hidden="true">
 								<use xlinkHref="#logo" />
 							</svg>
@@ -58,7 +58,8 @@ export function OnboardingModal(props) {
 							viewBox="0 0 24 24"
 						>
 							<use xlinkHref="#settings-icon" />
-						</svg>) in bottom right of the app.
+						</svg>
+						) in bottom right of the app.
 					</p>
 				</div>
 				<div class="onboard-step">
@@ -90,7 +91,8 @@ export function OnboardingModal(props) {
 					rel="noopener noreferrer"
 				>
 					Learn how to export/import
-				</a>.
+				</a>
+				.
 			</p>
 
 			<p class="tac">

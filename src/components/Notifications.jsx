@@ -78,7 +78,7 @@ function Notification({ version, isLatest, ...props }) {
 						</a>
 						&nbsp;
 						<a
-							href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
+							href="http://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="btn"
@@ -467,11 +467,11 @@ export function Notifications(props) {
 						as web app that runs offline just like the extension! Checkout it
 						out ->
 						<a
-							href="https://webmakerapp.com/app/"
+							href="https://webmaker.app/app/"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
-							https://webmakerapp.com/app/
+							https://webmaker.app/app/
 						</a>
 						.
 					</li>

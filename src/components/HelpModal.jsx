@@ -177,11 +177,7 @@ export function HelpModal(props) {
 								- Ian Johnson
 							</li>
 							<li>
-								<a
-									target="_blank"
-									rel="noopener noreferrer"
-									href="https://webmakerapp.com/"
-								>
+								<a target="_blank" rel="noopener noreferrer" href="/">
 									Web Maker!
 								</a>{' '}
 								- whhat!

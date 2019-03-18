@@ -190,7 +190,11 @@ export default class Footer extends Component {
 							</div>
 						)}
 					</div>
-				) : null}
+				) : (
+					<a href="https://webmaker.app" target="_blank">
+						🚀 Web Maker 4.0 released. Check it out!
+					</a>
+				)}
 
 				<div class="footer__right">
 					<button

@@ -1092,6 +1092,7 @@ body > #demo-frame {
 	transform: scale(0);
 	will-change: transform, opacity;
 	transition: 0.3s ease;
+	transition-property: transform, opacity;
 	transition-delay: 0;
 }
 

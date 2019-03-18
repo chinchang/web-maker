@@ -89,11 +89,14 @@ export const itemService = {
 
 	async setItem(id, item) {
 		const d = deferred();
-		log(`Starting to save item ${id}`);
+		log(`Starting to save item "${id}"`);
 
 		// Always persist in `code` key for `preserveLastOpenItem` setting.
 		// This key is used to retrieve content of last open item.
 		db.local.set({ code: item }, () => {});
+		if (id === 'code') {
+			return Promise.resolve();
+		}
 
 		// NOT LOGGED IN
 		if (!window.user) {
@@ -106,6 +109,7 @@ export const itemService = {
 			return d.promise;
 		}
 
+		// LOGGED IN
 		var remoteDb = await window.db.getDb();
 		item.createdBy = window.user.uid;
 		remoteDb

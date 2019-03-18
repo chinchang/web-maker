@@ -416,7 +416,10 @@ export default class App extends Component {
 			item.jsMode = item.jsMode || this.state.prefs.jsMode || JsModes.JS;
 		}
 
-		this.setState({ currentItem: item }, d.resolve);
+		this.setState({ currentItem: item }, () => {
+			d.resolve();
+			this.saveCode('code');
+		});
 
 		// Reset auto-saving flag
 		this.isAutoSavingEnabled = false;

@@ -106,6 +106,21 @@ export function Notifications(props) {
 		<div>
 			<h1>Whats new?</h1>
 
+			<Notification version="3.6.3" {...props}>
+				<NotificationItem type="bug">
+					Error on deleting a creation just after login. Thanks{' '}
+					<ThanksTo url="https://github.com/mwpeng" name="@mwpeng" />
+				</NotificationItem>
+
+				<li>
+					<strong>🚀 Announcement</strong>: Web Maker 4.0 is released. And it
+					has a new home 👉🏼{' '}
+					<a href="https://webmaker.app" target="_blank">
+						https://webmaker.app
+					</a>
+				</li>
+			</Notification>
+
 			<Notification version="3.6.2" {...props} isLatest={true}>
 				<NotificationItem type="bug">
 					"404 Page not found" showing up in preview window when in detached

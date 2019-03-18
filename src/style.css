@@ -1806,8 +1806,7 @@ body:not(.is-app) .show-when-app {
 	text-overflow: ellipsis;
 }
 .sidebar__file-options {
-	/* position: absolute; */
-	/* right: 0; */
+	white-space: nowrap;
 	visibility: hidden;
 }
 .sidebar__file:hover .sidebar__file-options,

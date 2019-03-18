@@ -631,6 +631,8 @@ body:not(.light-version).overlay-visible .main-container {
 	position: relative;
 	/* bring over mode select boxes */
 	z-index: 1;
+	display: flex;
+	align-items: center;
 }
 
 .code-wrap__collapse-btn:before {

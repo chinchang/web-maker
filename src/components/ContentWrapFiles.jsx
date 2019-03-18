@@ -672,10 +672,7 @@ export default class ContentWrapFiles extends Component {
 						class="code-wrap"
 						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
 					>
-						<div
-							class="js-code-wrap__header  code-wrap__header"
-							title="Double click to toggle code pane"
-						>
+						<div class="js-code-wrap__header  code-wrap__header">
 							<div class="flex flex-v-center">
 								<FileIcon file={this.state.selectedFile} />
 								{this.state.selectedFile ? this.state.selectedFile.name : ''}
@@ -683,9 +680,13 @@ export default class ContentWrapFiles extends Component {
 							<div class="code-wrap__header-right-options">
 								<button
 									class="btn btn--dark"
+									aria-label="Format code"
+									title="Format Code"
 									onClick={this.prettifyBtnClickHandler.bind(this)}
 								>
-									Prettify
+									<svg>
+										<use xlinkHref="#code-brace-icon" />
+									</svg>
 								</button>
 								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"

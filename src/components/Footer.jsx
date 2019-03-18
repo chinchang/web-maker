@@ -116,7 +116,7 @@ export default class Footer extends Component {
 					<a
 						class="footer__link  hint--rounded  hint--top-right"
 						aria-label="Tweet about 'Web Maker'"
-						href="http://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
+						href="http://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
 						target="_blank"
 						rel="noopener noreferrer"
 					>

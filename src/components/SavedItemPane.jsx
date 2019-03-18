@@ -134,7 +134,7 @@ export default class SavedItemPane extends Component {
 	}
 
 	searchInputHandler(e) {
-		const text = e.target.value;
+		const text = e.target.value.toLowerCase();
 		if (!text) {
 			this.setState({
 				filteredItems: this.state.items

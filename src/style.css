@@ -799,6 +799,12 @@ body > #demo-frame {
 .btn--dark:hover > svg {
 	fill: #111;
 }
+.btn--chromeless {
+	box-shadow: none;
+	background: transparent;
+	border: 0;
+	padding: 1px;
+}
 .main-header__btn-wrap > .is-loading {
 	pointer-events: none;
 	opacity: 0.4;
@@ -1800,8 +1806,8 @@ body:not(.is-app) .show-when-app {
 	text-overflow: ellipsis;
 }
 .sidebar__file-options {
-	position: absolute;
-	right: 0;
+	/* position: absolute; */
+	/* right: 0; */
 	visibility: hidden;
 }
 .sidebar__file:hover .sidebar__file-options,

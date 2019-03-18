@@ -77,7 +77,7 @@ function File({
 					<div class="sidebar__file-options">
 						<button
 							type="button"
-							class="btn btn--dark"
+							class="btn btn--dark btn--chromeless"
 							onClick={onRenameBtnClick.bind(null, file)}
 						>
 							<svg viewBox="0 0 24 24">
@@ -87,7 +87,7 @@ function File({
 
 						<button
 							type="button"
-							class="btn btn--dark"
+							class="btn btn--dark btn--chromeless"
 							onClick={onRemoveBtnClick.bind(null, file)}
 						>
 							<svg viewBox="0 0 24 24">

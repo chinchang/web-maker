@@ -170,7 +170,7 @@ export class CreateNewModal extends Component {
 										inline
 										item={template}
 										focusable
-										onClick={onTemplateSelect.bind(null, template)}
+										onClick={onTemplateSelect.bind(null, template, false)}
 									/>
 								);
 							})}

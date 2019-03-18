@@ -11,14 +11,14 @@ export class CreateNewModal extends Component {
 		super(props);
 		this.modeChangeHandler = this.modeChangeHandler.bind(this);
 	}
-	modeChangeHandler(e) {
+	modeChangeHandler(selectedtabIndex) {
 		this.setState({
-			isFileModeSelected: e.target.checked
+			isFileModeSelected: !!selectedtabIndex
 		});
 		trackEvent(
 			'ui',
 			'newCreationModeChange',
-			e.target.checked ? 'files' : '3panes'
+			!!selectedtabIndex ? 'files' : '3panes'
 		);
 	}
 	render() {
@@ -39,9 +39,6 @@ export class CreateNewModal extends Component {
 					version="1.1"
 					xmlns="http://www.w3.org/2000/svg"
 					style={`opacity:${!this.state.isFileModeSelected ? '1' : '0.4'}`}
-					onClick={() => {
-						this.setState({ isFileModeSelected: false });
-					}}
 					aria-hidden="true"
 				>
 					<g
@@ -99,9 +96,6 @@ export class CreateNewModal extends Component {
 					version="1.1"
 					style={`opacity:${this.state.isFileModeSelected ? '1' : '0.4'}`}
 					xmlns="http://www.w3.org/2000/svg"
-					onClick={() => {
-						this.setState({ isFileModeSelected: true });
-					}}
 					aria-hidden="true"
 				>
 					<g
@@ -156,7 +150,7 @@ export class CreateNewModal extends Component {
 		return (
 			<Modal show={show} closeHandler={closeHandler}>
 				<h1 class="mt-0">Create New</h1>
-				<Tabs horizontal>
+				<Tabs horizontal onChange={this.modeChangeHandler}>
 					<TabPanel label={option1}>
 						<div class="d-f fxw-w">
 							<button

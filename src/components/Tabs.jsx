@@ -40,6 +40,7 @@ export default class Tabs extends Component {
 		this.state = {
 			selectedTab: 0
 		};
+		this.switchTab = this.switchTab.bind(this);
 	}
 	isSelected(index) {
 		return this.state.selectedTab === index;
@@ -47,6 +48,9 @@ export default class Tabs extends Component {
 	switchTab(selectedTab) {
 		this.setState({ selectedTab: selectedTab });
 		this.tabListEl.querySelectorAll('[role=tab]')[selectedTab].focus();
+		if (this.props.onChange) {
+			this.props.onChange(this.state.selectedTab);
+		}
 	}
 	keyUpHandler(e) {
 		let { selectedTab } = this.state;
@@ -77,7 +81,7 @@ export default class Tabs extends Component {
 							isSelected={this.isSelected(index)}
 							label={child.props.label}
 							onKeyUp={this.keyUpHandler.bind(this)}
-							onClick={() => this.setState({ selectedTab: index })}
+							onClick={() => this.switchTab(index)}
 						/>
 					))}
 				</div>

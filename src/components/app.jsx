@@ -450,11 +450,6 @@ export default class App extends Component {
 				shouldOpen === undefined ? !this.state.isSavedItemPaneOpen : shouldOpen
 		});
 
-		if (this.state.isSavedItemPaneOpen) {
-			window.searchInput.focus();
-		} else {
-			window.searchInput.value = '';
-		}
 		document.body.classList[this.state.isSavedItemPaneOpen ? 'add' : 'remove'](
 			'overlay-visible'
 		);

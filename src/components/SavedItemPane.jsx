@@ -9,7 +9,7 @@ import { ItemTile } from './ItemTile';
 export default class SavedItemPane extends Component {
 	constructor(props) {
 		super(props);
-		this.items = [];
+		// this.items = [];
 	}
 
 	static getDerivedStateFromProps({ items = {} }, state) {
@@ -18,20 +18,28 @@ export default class SavedItemPane extends Component {
 			return b.updatedOn - a.updatedOn;
 		});
 		return {
-			items: newItems,
-			filteredItems: newItems
+			items: newItems
 		};
 	}
-	shouldComponentUpdate(nextProps) {
+	shouldComponentUpdate(nextProps, nextState) {
 		return (
 			nextProps.items !== this.props.items ||
-			nextProps.isOpen !== this.props.isOpen
+			nextProps.isOpen !== this.props.isOpen ||
+			nextState.filteredItems !== this.state.filteredItems
 		);
 	}
 
 	componentDidUpdate(prevProps) {
+		// Opening
 		if (this.props.isOpen && !prevProps.isOpen) {
 			window.searchInput.value = '';
+			window.searchInput.focus();
+		}
+		// Closing
+		if (!this.props.isOpen && prevProps.isOpen) {
+			this.setState({
+				filteredItems: undefined
+			});
 		}
 	}
 	onCloseIntent() {
@@ -129,11 +137,11 @@ export default class SavedItemPane extends Component {
 		const text = e.target.value;
 		if (!text) {
 			this.setState({
-				filteredItems: this.items
+				filteredItems: this.state.items
 			});
 		} else {
 			this.setState({
-				filteredItems: this.items.filter(
+				filteredItems: this.state.items.filter(
 					item => item.title.toLowerCase().indexOf(text) !== -1
 				)
 			});
@@ -143,7 +151,7 @@ export default class SavedItemPane extends Component {
 
 	render(
 		{ isOpen, exportBtnClickHandler },
-		{ filteredItems = [], items = [] }
+		{ filteredItems = this.state.items, items = [] }
 	) {
 		return (
 			<div
@@ -181,6 +189,7 @@ export default class SavedItemPane extends Component {
 					</div>
 				</div>
 				<input
+					autocomplete="off"
 					type="search"
 					id="searchInput"
 					class="search-input"

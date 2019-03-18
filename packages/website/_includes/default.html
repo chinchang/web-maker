@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>
+			{% if page.url == '/' %}Web Maker{% else %}{{ title}} - Web Maker{% endif
+			%}
+		</title>
+		<meta property="og:title" content="Web Maker" />
+		<meta name="viewport" content="width=device-width" />
+		<meta
+			name="description"
+			content="A blazing fast & offline web playground"
+		/>
+		<meta
+			property="og:description"
+			content="A blazing fast & offline web playground"
+		/>
+		<meta property="og:image" content="https://webmaker.app/images/ss1.png" />
+		<link rel="image_src" href="/images/ss1.png?v4" />
+		<meta name="twitter:image" content="https://webmaker.app/images/ss1.png" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<link rel="icon" href="/images/icon-128.png" />
+
+		<link
+			rel="chrome-webstore-item"
+			href="https://chrome.google.com/webstore/detail/lkfkkhfhhdkiemehlpkgjeojomhpccnh"
+		/>
+		<style type="text/css">
+			:root {
+				--layout-max-width: 1200px;
+				--base-font-size: 1em;
+			}
+
+			html {
+				font-size: var(--base-font-size);
+			}
+
+			body {
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+					Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+				background: white;
+				min-height: 100vh;
+				line-height: 1.4;
+				padding: 0;
+				margin: 0;
+				color: #3a3a3a;
+				-webkit-font-smoothing: antialiased;
+			}
+
+			.ml-1 {
+				margin-left: 1rem;
+			}
+
+			.ml-2 {
+				margin-left: 2rem;
+			}
+
+			.mb-1 {
+				margin-bottom: 1rem;
+			}
+
+			.mb-2 {
+				margin-bottom: 2rem;
+			}
+
+			.ta-c {
+				text-align: center;
+			}
+
+			.d-f {
+				display: flex;
+			}
+
+			.logo {
+				vertical-align: middle;
+				position: relative;
+				top: -10px;
+				margin-right: 10px;
+			}
+
+			button {
+				font-size: inherit;
+			}
+
+			figcaption {
+				color: #6a6a6a;
+			}
+
+			.homepage-title {
+				font-size: 3.1em;
+				margin: 0;
+				padding: 0.25em 0 0;
+				text-shadow: 0 6px 1px rgba(0, 0, 0, 0.1);
+				font-family: 'Arial', cursive;
+			}
+
+			.main-content {
+				padding: 0.7em;
+				max-width: var(--layout-max-width);
+				margin: 0 auto;
+				min-height: 55vh;
+			}
+
+			@media screen and (max-width: 700px) {
+				.logo {
+					display: block;
+					margin: 0 auto;
+				}
+
+				h2 {
+					padding: 0 10px;
+				}
+			}
+
+			img {
+				max-width: 90%;
+			}
+
+			a {
+				color: #1a5a7a;
+			}
+
+			.hero a {
+				color: white;
+			}
+
+			.flex {
+				display: flex;
+			}
+
+			.hero {
+				text-align: center;
+				background: #2b273c;
+				color: #a7a1bd;
+				padding: 2em 1em;
+				margin-bottom: 2em;
+			}
+
+			.btn {
+				background: rgba(0, 0, 0, 0.2);
+				padding: 10px 2em;
+				display: inline-block;
+				border-radius: 8px;
+				text-transform: uppercase;
+				transition: 0.25s ease;
+				color: rgba(0, 0, 0, 0.7);
+			}
+
+			.btn:not(.disabled):hover {
+				transform: scale(1.1);
+			}
+
+			.download-btn {
+				color: white;
+				background: linear-gradient(to bottom, #4d7bd6, #3c5d9e);
+				border: 2px solid #32508b;
+				border-bottom-color: #4870b3;
+				line-height: 2.5rem;
+				margin: 1rem 0 0;
+				/* width: 80%; */
+				text-decoration: none;
+			}
+
+			.download-btn.disabled {
+				filter: grayscale(50);
+				cursor: not-allowed;
+			}
+
+			.web-app-btn {
+				position: relative;
+			}
+
+			.web-app-btn:hover:after {
+				transform: rotate(0deg);
+			}
+
+			.web-app-btn:hover:before {
+				transform: rotate(-10deg);
+			}
+
+			.btn > img {
+				vertical-align: middle;
+				margin-right: 10px;
+			}
+
+			.screenshot {
+				box-shadow: 0 51px 33px -40px rgba(0, 0, 0, 0.6);
+			}
+
+			.site-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0.5em;
+			}
+
+			.site-header__logo {
+				width: 50px;
+				height: 20px;
+			}
+
+			.site-footer {
+				max-width: var(--layout-max-width);
+				margin: 2em auto 0;
+			}
+
+			.site-footer__col {
+				flex: 1;
+				/* flex-shrink: 0; */
+			}
+
+			.site-footer ul {
+				list-style: none;
+				padding: 0 0.5em;
+			}
+
+			a svg {
+				fill: rgba(255, 255, 255, 0.6);
+			}
+
+			a:hover svg {
+				fill: white;
+			}
+
+			.social-bar {
+				display: none;
+			}
+
+			.feature-box {
+				flex-wrap: wrap;
+				margin-top: 2em;
+				justify-content: center;
+			}
+
+			.feature {
+				flex-basis: 100%;
+				max-width: 100%;
+				margin: 0.5em;
+				/* padding: 0.5em 1em; */
+				box-sizing: border-box;
+			}
+
+			.feature__title {
+				border-bottom: 7px solid;
+				padding-bottom: 0.4em;
+				white-space: nowrap;
+			}
+
+			.feature svg {
+				width: 32px;
+				height: 32px;
+				fill: #444;
+			}
+
+			.info {
+				display: none;
+				visibility: hidden;
+			}
+
+			.people-say {
+				margin: 4em 0 4em;
+				/* width: 100vw; */
+				overflow-x: hidden;
+			}
+
+			.people-say-top {
+				align-items: flex-end;
+			}
+
+			.people-say-bottom {
+				align-items: flex-start;
+			}
+
+			.say {
+				color: inherit;
+				padding: 10px 20px;
+				margin: 10px 10px;
+				display: block;
+				flex-shrink: 0;
+				border-radius: 5px;
+				font-size: 0.95rem;
+				background: #f8f8f8;
+				text-align: left;
+				border: 1px solid rgba(0, 0, 0, 0.05);
+				text-decoration: none;
+			}
+
+			.say:hover {
+				border-color: rgba(0, 0, 0, 0.2);
+			}
+
+			.say p {
+				margin: 10px 0 0 0;
+			}
+
+			.say__name {
+				font-weight: bold;
+				color: #555;
+				display: flex;
+				align-items: center;
+			}
+
+			.say__name img {
+				height: 40px;
+				border-radius: 50%;
+				margin-right: 10px;
+			}
+
+			.say__handle {
+				color: #515151;
+				font-weight: 400;
+			}
+
+			@media (min-width: 751px) {
+				:root {
+					--base-font-size: 1.2em;
+				}
+
+				.homepage-title {
+					font-size: 4em;
+				}
+
+				.hero {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					margin-bottom: 2em;
+					padding: 3em;
+				}
+
+				.site-header {
+					padding: 1.5em;
+				}
+
+				.logo {
+					width: 6em;
+					height: auto;
+				}
+
+				.screenshot {
+					height: 55vh;
+					max-width: initial;
+				}
+
+				.web-app-btn:after {
+					right: -50px;
+				}
+
+				.web-app-btn:before {
+					right: -22px;
+				}
+
+				.feature-box {
+					min-width: 400px;
+					/* width: 80vw; */
+					margin: 0 auto;
+				}
+
+				.feature {
+					padding: 0.5em 2em;
+					flex: 1;
+					flex-basis: 16vw;
+					padding: 0.5em 2em;
+					margin: 1em;
+				}
+
+				.info {
+					background: white;
+					box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.15);
+					padding: 2rem;
+					position: fixed;
+					will-change: transform;
+					bottom: 0;
+					transform: translateY(101%);
+					width: 70vw;
+					margin-left: -35vw;
+					left: 50%;
+					text-align: left;
+					font-size: 0.9em;
+					transition: 0.4s cubic-bezier(0.77, -0.1, 0.13, 0.9);
+				}
+
+				.info.show {
+					display: block;
+					visibility: visible;
+					transform: translateY(0);
+				}
+
+				.people-say-top,
+				.people-say-bottom {
+					display: flex;
+					overflow: scroll;
+				}
+
+				.say {
+					width: 18vw;
+					flex-shrink: 0;
+					padding: 20px;
+				}
+
+				.say p {
+					margin: 20px 0 0 0;
+				}
+			}
+
+			@media screen and (min-width: 2000px) {
+				:root {
+					--layout-max-width: 1800px;
+					--base-font-size: 1.7em;
+				}
+			}
+
+			@media screen and (min-width: 3000px) {
+				:root {
+					--layout-max-width: 2500px;
+					--base-font-size: 2.1em;
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		{% if page.fileSlug == '' %}
+		<div class="hero">
+			<header class="header">
+				<svg class="logo" width="160" height="84">
+					<use xlink:href="#logo"></use>
+				</svg>
+				<h1 class="homepage-title">
+					Web Maker
+				</h1>
+				<h2 style="margin-bottom:0.4em;">
+					A blazing fast & offline web playground in your browser
+				</h2>
+				<div style="margin-top: 30px;" id="cta" class="mb-2">
+					<a class="btn  download-btn web-app-btn" href="/app/">
+						<span>Open Web App</span>
+					</a>
+					<p style="margin-top:3px;">Recommended: More features. More fun!</p>
+					<a
+						class="btn  download-btn js-chrome-btn"
+						href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh"
+					>
+						<img src="images/chrome-logo.png" height="40" alt="" />
+						<span>Add Chrome extension</span>
+					</a>
+				</div>
+				<script>
+					if (
+						navigator.userAgent.indexOf('Chrome') === -1 ||
+						navigator.userAgent.match(/android/i)
+					) {
+						document.querySelector('.js-chrome-btn').classList.add('disabled');
+						document
+							.querySelector('.js-chrome-btn')
+							.setAttribute('data-hint', 'Check back on Google Chrome browser');
+					}
+				</script>
+				<div>
+					<a href="/docs" class="">Docs</a>
+					<a href="https://medium.com/web-maker/" class="ml-1">Blog</a>
+					<a href="https://github.com/chinchang/web-maker/" class="ml-1"
+						>Github</a
+					>
+					<a
+						class="hint--top-right ml-1"
+						data-hint="Share on Twitter"
+						href="https://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline web playground!&via=webmakerApp&related=webmakerApp"
+						target="_blank"
+						class="tweet-link"
+						>Share</a
+					>
+				</div>
+			</header>
+			<div style="margin-top:30px;">
+				<img
+					class="screenshot"
+					src="images/ss1.png?v4"
+					height=""
+					alt="Web Maker working screen"
+				/>
+			</div>
+		</div>
+		{% else %}
+		<header class="site-header">
+			<div>
+				<h2 style="display: inline;">
+					<a href="/">
+						<svg class="site-header__logo">
+							<use xlink:href="#logo"></use>
+						</svg>
+						Web Maker
+					</a>
+				</h2>
+			</div>
+			<div>
+				<nav>
+					<a href="/docs" class="">Docs</a>
+					<a href="https://medium.com/web-maker/" class="ml-1">Blog</a>
+					<a href="https://github.com/chinchang/web-maker/" class="ml-1"
+						>Github</a
+					>
+					<a
+						class="hint--top-right ml-1"
+						data-hint="Share on Twitter"
+						href="https://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground!&via=webmakerApp&related=webmakerApp"
+						target="_blank"
+						class="tweet-link"
+						>Share</a
+					>
+				</nav>
+			</div>
+		</header>
+		{% endif %}
+
+		<main class="main-content">
+			{{content}}
+		</main>
+
+		<div id="info" class="info">
+			<p>
+				Web Maker needs the following permissions to work with full
+				capabilities. In words of Chrome extensions:
+			</p>
+
+			<p>
+				<strong
+					>Read & change all your data on the websites that you visit</strong
+				>
+				- Worry not. This is just required for the new tab replacement feature
+				where Web Maker shows up only if the new tab url is chrome://newtab/.
+				Nothing is read, stored or changed.
+			</p>
+
+			<h3>Disclaimer</h3>
+			<p>
+				Web Maker <strong>does not track</strong> any user specific data. It
+				uses Google Analytics to track aggregated events to improve user
+				experience based on what features are used more. If still you want to
+				opt-out of Google Analytics tracking, please visit
+				<a href="https://tools.google.com/dlpage/gaoptout" target="_blank"
+					>https://tools.google.com/dlpage/gaoptout</a
+				>
+				or you can set up a filter in Adblock Plus or similar ad blocker tools
+				like AdBlock, uBlock or Adblock Pro.
+			</p>
+			<div style="text-align: center;">
+				<a class="btn" href="javascript:void(0)" onclick="closeInfo()">Close</a>
+			</div>
+		</div>
+
+		<div class="social-bar">
+			<a
+				class="hint--bottom-left"
+				data-hint="Share on Twitter"
+				href="https://twitter.com/share?url=https://webmakerapp.com/&text=Web Maker - A blazing fast %26 offline web playground!&via=webmakerApp&related=webmakerApp"
+				target="_blank"
+				class="tweet-link"
+			>
+				Share
+			</a>
+			<!--<a class="hint--bottom-left" data-hint="Featured on ProductHunt" href="https://www.producthunt.com/tech/web-maker-2-0" target="_blank">
+				<svg width="32" height="32" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M40 20c0 11.046-8.954 20-20 20S0 31.046 0 20 8.954 0 20 0s20 8.954 20 20" fill="#DA552F"></path><path d="M22.667 20H17v-6h5.667c1.656 0 3 1.343 3 3s-1.344 3-3 3m0-10H13v20h4v-6h5.667c3.866 0 7-3.134 7-7s-3.134-7-7-7" fill="#FFF"></path></g></svg>
+			</a>-->
+		</div>
+
+		{% include footer.html %}
+
+		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="display:none">
+			<symbol id="logo" viewBox="-145 -2 372 175">
+				<g
+					stroke="none"
+					stroke-width="1"
+					fill="none"
+					fill-rule="evenodd"
+					transform="translate(-145.000000, -1.000000)"
+				>
+					<polygon
+						id="Path-1"
+						fill="#FF4600"
+						points="31 0 232 0 132 173.310547"
+					></polygon>
+					<polygon
+						id="Path-1"
+						fill="#FF6C00"
+						points="0 0 201 0 101 173.310547"
+					></polygon>
+					<polygon
+						id="Path-1"
+						fill="#FF6C00"
+						transform="translate(271.500000, 86.500000) scale(1, -1) translate(-271.500000, -86.500000) "
+						points="171 0 372 0 272 173.310547"
+					></polygon>
+					<polygon
+						id="Path-1"
+						fill="#FF4600"
+						transform="translate(241.500000, 86.500000) scale(1, -1) translate(-241.500000, -86.500000) "
+						points="141 0 342 0 242 173.310547"
+					></polygon>
+				</g>
+			</symbol>
+		</svg>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script
+			async
+			src="https://www.googletagmanager.com/gtag/js?id=UA-87786708-2"
+		></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag('js', new Date());
+
+			gtag('config', 'UA-87786708-2');
+		</script>
+
+		<script type="text/javascript">
+			window.$crisp = [];
+			window.CRISP_WEBSITE_ID = 'c00b07b9-42da-45dd-87b0-e614bf7fb240';
+			(function() {
+				d = document;
+				s = d.createElement('script');
+				s.src = 'https://client.crisp.chat/l.js';
+				s.async = 1;
+				d.getElementsByTagName('head')[0].appendChild(s);
+			})();
+		</script>
+
+		<link rel="stylesheet" href="{{ '/css/hint.css' | url }}" />
+	</body>
+</html>

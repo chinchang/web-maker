@@ -1,0 +1,31 @@
+{
+	"title": "Kontra game engine template",
+	"files": [
+		{
+			"content": "<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta name=\"viewport\" content=\"width=device-width\" />\n    <title>Vue template</title>\n    <link rel=\"stylesheet\" href=\"styles/style.css\" />\n  </head>\n  <body>\n    <canvas></canvas>\n\n    <script src=\"https://unpkg.com/kontra@4.0.0/dist/core.js\"></script>\n    <script src=\"https://unpkg.com/kontra@4.0.0/dist/sprite.js\"></script>\n    <script src=\"https://unpkg.com/kontra@4.0.0/dist/gameLoop.js\"></script>\n    <script src=\"https://unpkg.com/kontra@4.0.0/dist/pointer.js\"></script>\n    <script src=\"https://unpkg.com/kontra@4.0.0/dist/keyboard.js\"></script>\n\n    <script src=\"script.js\"></script>\n  </body>\n</html>\n",
+			"name": "index.html",
+			"path": "index.html"
+		},
+		{
+			"children": [
+				{
+					"content": "",
+					"name": "style.css",
+					"path": "styles/style.css"
+				}
+			],
+			"isFolder": true,
+			"name": "styles",
+			"path": "styles"
+		},
+		{
+			"content": "// Learn More here -> https://straker.github.io/kontra/getting-started\nkontra.init();\n\nvar sprite = kontra.sprite({\n  x: 100, // starting x,y position of the sprite\n  y: 80,\n  color: \"#bad455\", // fill color of the sprite rectangle\n  width: 20, // width and height of the sprite rectangle\n  height: 40,\n  dx: 2 // move the sprite 2px to the right every frame\n});\n\nvar loop = kontra.gameLoop({\n  // create the main game loop\n  update() {\n    // update the game state\n    sprite.update();\n\n    // wrap the sprites position when it reaches\n    // the edge of the screen\n    if (sprite.x > kontra.canvas.width) {\n      sprite.x = -sprite.width;\n    }\n  },\n  render() {\n    // render the game state\n    sprite.render();\n  }\n});\n\nloop.start(); // start the game\n",
+			"name": "script.js",
+			"path": "script.js"
+		}
+	],
+	"id": "item-sr0eNHK58q",
+	"layoutMode": 2,
+	"mainSizes": ["200px", "53.0771%", "37.1917%"],
+	"sizes": [33.33, 33.33, 33.33]
+}

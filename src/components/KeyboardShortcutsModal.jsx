@@ -9,10 +9,10 @@ export function KeyboardShortcutsModal({ show, closeHandler }) {
 			<div class="flex">
 				<div>
 					<h2>Global</h2>
-					<p>
+					{/*<p>
 						<span class="kbd-shortcut__keys">Ctrl/⌘ + Shift + ?</span>
 						<span class="kbd-shortcut__details">See keyboard shortcuts</span>
-					</p>
+					</p>*/}
 					<p>
 						<span class="kbd-shortcut__keys">Ctrl/⌘ + Shift + 5</span>
 						<span class="kbd-shortcut__details">Refresh preview</span>

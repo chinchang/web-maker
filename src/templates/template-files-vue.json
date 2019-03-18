@@ -1,0 +1,31 @@
+{
+	"title": "Vue template",
+	"content": "",
+	"files": [
+		{
+			"content": "<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta name=\"viewport\" content=\"width=device-width\" />\n    <title>Vue template</title>\n    <link rel=\"stylesheet\" href=\"styles/style.css\" />\n  </head>\n  <body>\n    <div id=\"root\"><h1>Hello {{ message }}</h1></div>\n    <script src=\"https://unpkg.com/vue@2.6.9/dist/vue.min.js\"></script>\n    <script src=\"script.js\"></script>\n  </body>\n</html>\n",
+			"name": "index.html",
+			"path": "index.html"
+		},
+		{
+			"children": [
+				{
+					"content": "",
+					"name": "style.css",
+					"path": "styles/style.css"
+				}
+			],
+			"isFolder": true,
+			"name": "styles",
+			"path": "styles"
+		},
+		{
+			"content": "const app = new Vue({\n  el: '#root',\n  data: {\n    message: 'World'\n  }\n});",
+			"name": "script.js",
+			"path": "script.js"
+		}
+	],
+	"id": "item-sr0eNHK58q",
+	"layoutMode": 2,
+	"mainSizes": ["200px", "50%", "50%"]
+}

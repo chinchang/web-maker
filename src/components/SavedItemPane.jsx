@@ -9,25 +9,37 @@ import { ItemTile } from './ItemTile';
 export default class SavedItemPane extends Component {
 	constructor(props) {
 		super(props);
-		this.items = [];
-		this.state = {
-			filteredItems: []
+		// this.items = [];
+	}
+
+	static getDerivedStateFromProps({ items = {} }, state) {
+		const newItems = Object.values(items);
+		newItems.sort(function(a, b) {
+			return b.updatedOn - a.updatedOn;
+		});
+		return {
+			items: newItems
 		};
 	}
-	componentWillUpdate(nextProps) {
-		if (this.props.items !== nextProps.items) {
-			this.items = Object.values(nextProps.items);
-			this.items.sort(function(a, b) {
-				return b.updatedOn - a.updatedOn;
-			});
-			this.setState({
-				filteredItems: this.items
-			});
-		}
+	shouldComponentUpdate(nextProps, nextState) {
+		return (
+			nextProps.items !== this.props.items ||
+			nextProps.isOpen !== this.props.isOpen ||
+			nextState.filteredItems !== this.state.filteredItems
+		);
 	}
+
 	componentDidUpdate(prevProps) {
+		// Opening
 		if (this.props.isOpen && !prevProps.isOpen) {
 			window.searchInput.value = '';
+			window.searchInput.focus();
+		}
+		// Closing
+		if (!this.props.isOpen && prevProps.isOpen) {
+			this.setState({
+				filteredItems: undefined
+			});
 		}
 	}
 	onCloseIntent() {
@@ -122,14 +134,14 @@ export default class SavedItemPane extends Component {
 	}
 
 	searchInputHandler(e) {
-		const text = e.target.value;
+		const text = e.target.value.toLowerCase();
 		if (!text) {
 			this.setState({
-				filteredItems: this.items
+				filteredItems: this.state.items
 			});
 		} else {
 			this.setState({
-				filteredItems: this.items.filter(
+				filteredItems: this.state.items.filter(
 					item => item.title.toLowerCase().indexOf(text) !== -1
 				)
 			});
@@ -137,26 +149,31 @@ export default class SavedItemPane extends Component {
 		trackEvent('ui', 'searchInputType');
 	}
 
-	render() {
+	render(
+		{ isOpen, exportBtnClickHandler },
+		{ filteredItems = this.state.items, items = [] }
+	) {
 		return (
 			<div
 				id="js-saved-items-pane"
-				class={`saved-items-pane ${this.props.isOpen ? 'is-open' : ''}`}
+				class={`saved-items-pane ${isOpen ? 'is-open' : ''}`}
 				onKeyDown={this.keyDownHandler.bind(this)}
+				aria-hidden={isOpen}
 			>
 				<button
 					onClick={this.onCloseIntent.bind(this)}
 					class="btn  saved-items-pane__close-btn"
 					id="js-saved-items-pane-close-btn"
+					aria-label="Close saved creations pane"
 				>
 					X
 				</button>
 				<div class="flex flex-v-center" style="justify-content: space-between;">
-					<h3>My Library ({this.items.length})</h3>
+					<h3>My Library ({filteredItems.length})</h3>
 
 					<div>
 						<button
-							onClick={this.props.exportBtnClickHandler}
+							onClick={exportBtnClickHandler}
 							class="btn--dark hint--bottom-left hint--rounded hint--medium"
 							aria-label="Export all your creations into a single importable file."
 						>
@@ -172,6 +189,8 @@ export default class SavedItemPane extends Component {
 					</div>
 				</div>
 				<input
+					autocomplete="off"
+					type="search"
 					id="searchInput"
 					class="search-input"
 					onInput={this.searchInputHandler.bind(this)}
@@ -179,10 +198,10 @@ export default class SavedItemPane extends Component {
 				/>
 
 				<div id="js-saved-items-wrap" class="saved-items-pane__container">
-					{!this.state.filteredItems.length && this.items.length ? (
+					{!filteredItems.length && items.length ? (
 						<div class="mt-1">No match found.</div>
 					) : null}
-					{this.state.filteredItems.map(item => (
+					{filteredItems.map(item => (
 						<ItemTile
 							item={item}
 							onClick={this.itemClickHandler.bind(this, item)}
@@ -190,8 +209,11 @@ export default class SavedItemPane extends Component {
 							onRemoveBtnClick={this.itemRemoveBtnClickHandler.bind(this, item)}
 						/>
 					))}
-					{!this.items.length ? (
-						<h2 class="opacity--30">Nothing saved here.</h2>
+					{!items.length ? (
+						<div class="tac">
+							<h2 class="opacity--30">Nothing saved here.</h2>
+							<img style="max-width: 80%; opacity:0.4" src="assets/empty.svg" />
+						</div>
 					) : null}
 				</div>
 			</div>

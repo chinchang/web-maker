@@ -3,13 +3,18 @@
 	"version": "3.6.2",
 	"description": "A blazing fast & offline web playground",
 	"scripts": {
-		"start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
+		"start": "npm run -s dev && gulp start-preview-server",
 		"build": "preact build --template src/index.html --no-prerender --service-worker false",
 		"serve": "preact build && preact serve",
-		"dev": "preact watch --template src/index.html --https --no-prerender",
+		"dev": "preact watch --template src/index.html --no-prerender",
+		"serve-website": "cd packages/website; npm start",
+		"build-website": "cd packages/website; npm run build",
 		"lint": "eslint src",
-		"test": "jest ./tests",
-		"precommit": "lint-staged"
+		"test": "jest",
+		"precommit": "lint-staged",
+		"add-locale": "lingui add-locale",
+		"extract": "lingui extract",
+		"compile": "lingui compile"
 	},
 	"eslintConfig": {
 		"extends": "eslint-config-synacor"
@@ -22,12 +27,15 @@
 		"src/detached-window.js"
 	],
 	"lint-staged": {
-		"*.{js,jsx,json,css,md}": [
+		"*.{js,jsx,json,css,md,html}": [
 			"prettier --write",
 			"git add"
 		]
 	},
 	"devDependencies": {
+		"@lingui/cli": "^2.7.0",
+		"@lingui/macro": "^2.7.0",
+		"babel-core": "^6.26.3",
 		"babel-eslint": "^7.2.3",
 		"babel-minify": "^0.2.0",
 		"eslint": "^4.9.0",
@@ -48,30 +56,39 @@
 		"merge-stream": "^1.0.1",
 		"preact-cli": "^2.1.0",
 		"preact-render-spy": "^1.2.1",
-		"prettier": "^1.15.2",
 		"run-sequence": "^2.2.1",
-		"sw-precache": "^5.2.0"
+		"sw-precache": "^5.2.0",
+		"@11ty/eleventy": "^0.7.1",
+		"markdown-it": "^8.4.2",
+		"markdown-it-anchor": "^5.0.2"
 	},
 	"dependencies": {
 		"@emmetio/codemirror-plugin": "^0.5.4",
-		"babel-preset-env": "^1.7.0",
-		"babel-preset-react": "^6.24.1",
+		"@lingui/react": "^2.7.0",
 		"code-blast-codemirror": "chinchang/code-blast-codemirror#web-maker",
 		"codemirror": "^5.37.0",
 		"copy-webpack-plugin": "^4.5.1",
 		"esprima": "^4.0.0",
 		"firebase": "^5.5.8",
+		"gulp-connect": "^5.7.0",
 		"jszip": "^3.1.5",
 		"preact": "^8.2.6",
 		"preact-compat": "^3.17.0",
 		"preact-portal": "^1.1.3",
 		"preact-router": "^2.5.7",
+		"prettier": "^1.16.4",
+		"react-inspector": "^2.3.0",
 		"split.js": "1.3.4"
 	},
 	"jest": {
 		"verbose": true,
 		"setupFiles": [
-			"<rootDir>/src/tests/__mocks__/browserMocks.js"
+			"<rootDir>/tests/__mocks__/browserMocks.js"
+		],
+		"testRegex": "(/(__tests__|tests)/.*|(\\.|/)(test|spec))\\.jsx?$",
+		"testPathIgnorePatterns": [
+			"/node_modules/",
+			"<rootDir>/tests/__mocks__/*"
 		],
 		"testURL": "http://localhost:8080",
 		"moduleFileExtensions": [
@@ -82,7 +99,7 @@
 			"node_modules"
 		],
 		"moduleNameMapper": {
-			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/tests/__mocks__/fileMock.js",
+			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/__mocks__/fileMock.js",
 			"\\.(css|less|scss)$": "identity-obj-proxy",
 			"^./style$": "identity-obj-proxy",
 			"^preact$": "<rootDir>/node_modules/preact/dist/preact.min.js",

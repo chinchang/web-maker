@@ -10,12 +10,13 @@ or
 
 ### [Install Chrome extension](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
 
-![Screenshot](/ss1.png)
+![Screenshot](/packages/website/images/ss1.png)
 
 ### Features
 
 - Supports Preprocessors: HTML (Pug & Markdown), CSS (SCSS, LESS & Stylus, Atomic CSS) & JavaScript (ES6, TypeScript & CoffeeScript)
 - Works offline
+- Quick creation & good-old files mode
 - Inbuilt Console
 - Save and load your creations
 - Auto-save feature

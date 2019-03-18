@@ -19,7 +19,6 @@
 if (
 	'serviceWorker' in navigator &&
 	location.protocol === 'https:' &&
-	document.cookie.indexOf('wmdebug') === -1 &&
 	location.href.indexOf('chrome-extension://') === -1 &&
 	location.href.indexOf('192.168') === -1
 ) {
@@ -50,6 +49,11 @@ if (
 									// It's the perfect time to display a "New content is available; please refresh."
 									// message in the page's interface.
 									console.log('New or updated content is available.');
+									if (window.alertsService) {
+										window.alertsService.add(
+											'New version available. Please refresh the page.'
+										);
+									}
 								} else {
 									// At this point, everything has been precached.
 									// It's the perfect time to display a "Content is cached for offline use." message.

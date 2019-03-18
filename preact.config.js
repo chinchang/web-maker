@@ -1,4 +1,3 @@
-import CopyWebpackPlugin from 'copy-webpack-plugin';
 var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 
 /**
@@ -21,8 +20,19 @@ export default function(config, env, helpers) {
 	htmlWebpackPlugin.plugin.options.preload = false;
 	htmlWebpackPlugin.plugin.options.favicon = false;
 
+	// Required for lingui-macros
+	let { rule } = helpers.getLoadersByName(config, 'babel-loader')[0];
+	let babelConfig = rule.options;
+	babelConfig.plugins.push('macros');
+
 	if (env.isProd) {
 		config.devtool = false; // disable sourcemaps
+
+		// To support chunk loading in root and also /app path
+		config.output.publicPath = './';
+
+		// Remove the default hash append in chunk name
+		config.output.chunkFilename = '[name].chunk.js';
 
 		config.plugins.push(
 			new CommonsChunkPlugin({

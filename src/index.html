@@ -67,9 +67,9 @@
 				</style>
 	</head>
 
-	<body>
-		<!-- SCRIPT-TAGS -->
-		<%= htmlWebpackPlugin.options.ssr({
+<body>
+	<!-- SCRIPT-TAGS -->
+	<%= htmlWebpackPlugin.options.ssr({
 			url: '/'
 		}) %>
 			<script defer src="<%= htmlWebpackPlugin.files.chunks['bundle'].entry %>"></script>

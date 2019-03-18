@@ -12,52 +12,72 @@ export const itemService = {
 				return doc.data();
 			});
 	},
-	async getUserItemIds() {
-		if (window.user) {
+
+	/**
+	 * Fetches all item ids of current user
+	 * @param {boolean} shouldFetchLocally Should forcefully fetch locally?
+	 */
+	async getUserItemIds(shouldFetchLocally) {
+		if (window.user && !shouldFetchLocally) {
 			return new Promise(resolve => {
 				resolve(window.user.items || {});
 			});
 		}
-		var remoteDb = await window.db.getDb();
-		return remoteDb
-			.doc(`users/${window.user.uid}`)
-			.get()
-			.then(doc => {
-				if (!doc.exists) {
-					return {};
-				}
-				return doc.data().items;
+		return new Promise(resolve => {
+			db.local.get('items', result => {
+				resolve(result.items || {});
 			});
+		});
 	},
 
-	async getAllItems() {
+	/**
+	 * Fetches all items.
+	 * @param {boolean} shouldFetchLocally Should forcefully fetch locally?
+	 */
+	async getAllItems(shouldFetchLocally) {
 		var t = Date.now();
 		var d = deferred();
-		let itemIds = await this.getUserItemIds();
+		let itemIds = await this.getUserItemIds(shouldFetchLocally);
 		itemIds = Object.getOwnPropertyNames(itemIds || {});
 		log('itemids', itemIds);
 
 		if (!itemIds.length) {
 			d.resolve([]);
 		}
-		var remoteDb = await window.db.getDb();
 		const items = [];
-		remoteDb
-			.collection('items')
-			.where('createdBy', '==', window.user.uid)
-			.onSnapshot(
-				function(querySnapshot) {
-					querySnapshot.forEach(function(doc) {
-						items.push(doc.data());
-					});
-					log('Items fetched in ', Date.now() - t, 'ms');
 
-					d.resolve(items);
-				},
-				function() {
-					d.resolve([]);
-				}
-			);
+		if (window.user && !shouldFetchLocally) {
+			var remoteDb = await window.db.getDb();
+			remoteDb
+				.collection('items')
+				.where('createdBy', '==', window.user.uid)
+				.onSnapshot(
+					function(querySnapshot) {
+						querySnapshot.forEach(function(doc) {
+							items.push(doc.data());
+						});
+						log('Items fetched in ', Date.now() - t, 'ms');
+
+						d.resolve(items);
+					},
+					function() {
+						d.resolve([]);
+					}
+				);
+		} else {
+			for (let i = 0; i < itemIds.length; i++) {
+				/* eslint-disable no-loop-func */
+				window.db.local.get(itemIds[i], itemResult => {
+					items.push(itemResult[itemIds[i]]);
+					// Check if we have all items now.
+					if (itemIds.length === items.length) {
+						d.resolve(items);
+					}
+				});
+
+				/* eslint-enable no-loop-func */
+			}
+		}
 		return d.promise;
 	},
 
@@ -70,45 +90,46 @@ export const itemService = {
 
 	async setItem(id, item) {
 		const d = deferred();
-		var remotePromise;
-		// TODO: check why we need to save locally always?
-		const obj = {
-			[id]: item
-		};
-		db.local.set(obj, () => {
-			// Is extension OR is app but logged out OR is logged in but offline
-			// If logged in but offline, resolve immediately so
-			// that you see the feedback msg immediately and not wait for
-			// later sync.
-			if (window.IS_EXTENSION || !window.user || !navigator.onLine) {
-				d.resolve();
-			}
-		});
+		log(`Starting to save item "${id}"`);
 
-		// If `id` is `code`, this is a call on unloadbefore to save the last open thing.
-		// Do not presist that on remote.
+		// Always persist in `code` key for `preserveLastOpenItem` setting.
+		// This key is used to retrieve content of last open item.
+		db.local.set({ code: item }, () => {});
 		if (id === 'code') {
-			// No deferred required here as this gets called on unloadbefore
-			return false;
-		}
-		if (window.user) {
-			var remoteDb = await window.db.getDb();
-			log(`Starting to save item ${id}`);
-			item.createdBy = window.user.uid;
-			remotePromise = remoteDb
-				.collection('items')
-				.doc(id)
-				.set(item, {
-					merge: true
-				})
-				.then(arg => {
-					log('Document written', arg);
-					d.resolve();
-				})
-				.catch(d.reject);
+			return Promise.resolve();
 		}
 
-		return window.user && navigator.onLine ? remotePromise : d.promise;
+		// NOT LOGGED IN
+		if (!window.user) {
+			const obj = {
+				[id]: item
+			};
+			db.local.set(obj, () => {
+				d.resolve();
+			});
+			return d.promise;
+		}
+
+		// LOGGED IN
+		var remoteDb = await window.db.getDb();
+		item.createdBy = window.user.uid;
+		remoteDb
+			.collection('items')
+			.doc(id)
+			.set(item, {
+				merge: true
+			})
+			.then(arg => {
+				log('Document written', arg);
+				d.resolve();
+			})
+			.catch(d.reject);
+
+		// logged in but offline, we resolve immediately so
+		// that you see the feedback msg immediately and not wait for
+		// later sync.
+		if (!navigator.onLine) return Promise.resolve();
+		return d.promise;
 	},
 
 	/**
@@ -234,5 +255,13 @@ export const itemService = {
 				log(`Item ${itemId} unset for user`, arg);
 			})
 			.catch(error => log(error));
+	},
+
+	async getCountOfFileModeItems() {
+		const items = await this.getAllItems();
+		return items.reduce((count, item) => {
+			if (item.files) return count + 1;
+			return count;
+		}, 0);
 	}
 };

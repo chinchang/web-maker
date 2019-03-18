@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import UserCodeMirror from './UserCodeMirror.jsx';
+import CodeEditor from './CodeEditor.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { log, writeFile, loadJS, getCompleteHtml } from '../utils';
@@ -9,9 +9,10 @@ import CodeMirror from '../CodeMirror';
 import { Console } from './Console';
 import { deferred } from '../deferred';
 import CssSettingsModal from './CssSettingsModal';
+import { PreviewDimension } from './PreviewDimension.jsx';
 const minCodeWrapSize = 33;
 
-/* global htmlCodeEl, jsCodeEl, cssCodeEl, logCountEl
+/* global htmlCodeEl
  */
 
 export default class ContentWrap extends Component {
@@ -19,10 +20,11 @@ export default class ContentWrap extends Component {
 		super(props);
 		this.state = {
 			isConsoleOpen: false,
-			isCssSettingsModalOpen: false
+			isCssSettingsModalOpen: false,
+			logs: []
 		};
+
 		this.updateTimer = null;
-		this.updateDelay = 500;
 		this.htmlMode = HtmlModes.HTML;
 		this.jsMode = HtmlModes.HTML;
 		this.cssMode = CssModes.CSS;
@@ -31,18 +33,26 @@ export default class ContentWrap extends Component {
 		this.codeInPreview = { html: null, css: null, js: null };
 		this.cmCodes = { html: props.currentItem.html, css: '', js: '' };
 		this.cm = {};
-		this.logCount = 0;
 
 		window.onMessageFromConsole = this.onMessageFromConsole.bind(this);
-
 		window.previewException = this.previewException.bind(this);
 		// `clearConsole` is on window because it gets called from inside iframe also.
 		window.clearConsole = this.clearConsole.bind(this);
+
+		this.consoleHeaderDblClickHandler = this.consoleHeaderDblClickHandler.bind(
+			this
+		);
+		this.clearConsoleBtnClickHandler = this.clearConsoleBtnClickHandler.bind(
+			this
+		);
+		this.toggleConsole = this.toggleConsole.bind(this);
+		this.evalConsoleExpr = this.evalConsoleExpr.bind(this);
 	}
 	shouldComponentUpdate(nextProps, nextState) {
 		return (
 			this.state.isConsoleOpen !== nextState.isConsoleOpen ||
 			this.state.isCssSettingsModalOpen !== nextState.isCssSettingsModalOpen ||
+			this.state.logs !== nextState.logs ||
 			this.state.codeSplitSizes !== nextState.codeSplitSizes ||
 			this.state.mainSplitSizes !== nextState.mainSplitSizes ||
 			this.props.currentLayoutMode !== nextProps.currentLayoutMode ||
@@ -51,9 +61,6 @@ export default class ContentWrap extends Component {
 		);
 	}
 	componentDidUpdate() {
-		// HACK: becuase its a DOM manipulation
-		this.updateLogCount();
-
 		// log('🚀', 'didupdate', this.props.currentItem);
 		// if (this.isValidItem(this.props.currentItem)) {
 		// this.refreshEditor();
@@ -61,6 +68,13 @@ export default class ContentWrap extends Component {
 	}
 	componentDidMount() {
 		this.props.onRef(this);
+
+		// Listen for logs from preview frame
+		window.addEventListener('message', e => {
+			if (e.data && e.data.logs) {
+				this.onMessageFromConsole(...e.data.logs);
+			}
+		});
 	}
 
 	onHtmlCodeChange(editor, change) {
@@ -97,11 +111,7 @@ export default class ContentWrap extends Component {
 			// This is done so that multiple simultaneous setValue don't trigger too many preview refreshes
 			// and in turn too many file writes on a single file (eg. preview.html).
 			if (change.origin !== 'setValue') {
-				// Specifically checking for false so that the condition doesn't get true even
-				// on absent key - possible when the setting key hasn't been fetched yet.
-				if (this.prefs.autoPreview !== false) {
-					this.setPreviewContent();
-				}
+				this.setPreviewContent();
 
 				// Track when people actually are working.
 				trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
@@ -109,7 +119,7 @@ export default class ContentWrap extends Component {
 					trackEvent('fn', 'usingPreview');
 				}
 			}
-		}, this.updateDelay);
+		}, this.props.prefs.previewDelay);
 	}
 
 	createPreviewFile(html, css, js) {
@@ -152,7 +162,7 @@ export default class ContentWrap extends Component {
 						: `${location.origin}`;
 					var src = `filesystem:${origin}/temporary/preview.html`;
 					if (this.detachedWindow) {
-						this.detachedWindow.postMessage(src, '*');
+						this.detachedWindow.postMessage({ url: src }, '*');
 					} else {
 						this.frame.src = src;
 					}
@@ -165,15 +175,7 @@ export default class ContentWrap extends Component {
 	}
 
 	showErrors(lang, errors) {
-		var editor = this.cm[lang];
-		errors.forEach(function(e) {
-			editor.operation(function() {
-				var n = document.createElement('div');
-				n.setAttribute('data-title', e.message);
-				n.classList.add('gutter-error-marker');
-				editor.setGutterMarker(e.lineNumber, 'error-gutter', n);
-			});
-		});
+		this.cm[lang].showErrors(errors);
 	}
 
 	/**
@@ -288,51 +290,24 @@ export default class ContentWrap extends Component {
 		]).then(() => this.setPreviewContent(true));
 	}
 	applyCodemirrorSettings(prefs) {
-		if (!this.cm) {
-			return;
-		}
-		htmlCodeEl.querySelector(
-			'.CodeMirror'
-		).style.fontSize = cssCodeEl.querySelector(
-			'.CodeMirror'
-		).style.fontSize = jsCodeEl.querySelector(
-			'.CodeMirror'
-		).style.fontSize = `${parseInt(prefs.fontSize, 10)}px`;
-		window.consoleEl.querySelector('.CodeMirror').style.fontSize = `${parseInt(
-			prefs.fontSize,
-			10
-		)}px`;
+		document.documentElement.style.setProperty(
+			'--code-font-size',
+			`${parseInt(prefs.fontSize, 10)}px`
+		);
 
 		// Replace correct css file in LINK tags's href
-		window.editorThemeLinkTag.href = `lib/codemirror/theme/${
-			prefs.editorTheme
-		}.css`;
+		if (prefs.editorTheme) {
+			window.editorThemeLinkTag.href = `lib/codemirror/theme/${
+				prefs.editorTheme
+			}.css`;
+		}
+
 		window.fontStyleTag.textContent = window.fontStyleTemplate.textContent.replace(
 			/fontname/g,
 			(prefs.editorFont === 'other'
 				? prefs.editorCustomFont
 				: prefs.editorFont) || 'FiraCode'
 		);
-		// window.customEditorFontInput.classList[
-		// 	prefs.editorFont === 'other' ? 'remove' : 'add'
-		// ]('hide');
-		this.consoleCm.setOption('theme', prefs.editorTheme);
-
-		['html', 'js', 'css'].forEach(type => {
-			this.cm[type].setOption('indentWithTabs', prefs.indentWith !== 'spaces');
-			this.cm[type].setOption(
-				'blastCode',
-				prefs.isCodeBlastOn ? { effect: 2, shake: false } : false
-			);
-			this.cm[type].setOption('indentUnit', +prefs.indentSize);
-			this.cm[type].setOption('tabSize', +prefs.indentSize);
-			this.cm[type].setOption('theme', prefs.editorTheme);
-
-			this.cm[type].setOption('keyMap', prefs.keymap);
-			this.cm[type].setOption('lineWrapping', prefs.lineWrap);
-			this.cm[type].setOption('autoCloseTags', prefs.autoCloseTags);
-			this.cm[type].refresh();
-		});
 	}
 
 	// Check all the code wrap if they are minimized or maximized
@@ -445,6 +420,12 @@ export default class ContentWrap extends Component {
 		}
 		this.updateSplits();
 	}
+	mainSplitDragHandler() {
+		this.previewDimension.update({
+			w: this.frame.clientWidth,
+			h: this.frame.clientHeight
+		});
+	}
 	codeSplitDragStart() {
 		document.body.classList.add('is-dragging');
 	}
@@ -501,35 +482,23 @@ export default class ContentWrap extends Component {
 	updateHtmlMode(value) {
 		this.props.onCodeModeChange('html', value);
 		this.props.currentItem.htmlMode = value;
-		this.cm.html.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(
-			this.cm.html,
-			modes[value].cmPath || modes[value].cmMode
-		);
+		this.cm.html.setLanguage(value);
 		return this.handleModeRequirements(value);
 	}
 	updateCssMode(value) {
 		this.props.onCodeModeChange('css', value);
 		this.props.currentItem.cssMode = value;
-		this.cm.css.setOption('mode', modes[value].cmMode);
 		this.cm.css.setOption('readOnly', modes[value].cmDisable);
 		window.cssSettingsBtn.classList[
 			modes[value].hasSettings ? 'remove' : 'add'
 		]('hide');
-		CodeMirror.autoLoadMode(
-			this.cm.css,
-			modes[value].cmPath || modes[value].cmMode
-		);
+		this.cm.css.setLanguage(value);
 		return this.handleModeRequirements(value);
 	}
 	updateJsMode(value) {
 		this.props.onCodeModeChange('js', value);
 		this.props.currentItem.jsMode = value;
-		this.cm.js.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(
-			this.cm.js,
-			modes[value].cmPath || modes[value].cmMode
-		);
+		this.cm.js.setLanguage(value);
 		return this.handleModeRequirements(value);
 	}
 	codeModeChangeHandler(e) {
@@ -582,46 +551,21 @@ export default class ContentWrap extends Component {
 		}, 500);
 	}
 
-	updateLogCount() {
-		if (window.logCountEl) {
-			logCountEl.textContent = this.logCount;
-		}
-	}
-
 	onMessageFromConsole() {
-		/* eslint-disable no-param-reassign */
-		[...arguments].forEach(arg => {
+		const logs = [...arguments].map(arg => {
 			if (
 				arg &&
 				arg.indexOf &&
 				arg.indexOf('filesystem:chrome-extension') !== -1
 			) {
-				arg = arg.replace(
+				return arg.replace(
 					/filesystem:chrome-extension.*\.js:(\d+):*(\d*)/g,
 					'script $1:$2'
 				);
 			}
-			try {
-				this.consoleCm.replaceRange(
-					arg +
-						' ' +
-						((arg + '').match(/\[object \w+]/) ? JSON.stringify(arg) : '') +
-						'\n',
-					{
-						line: Infinity
-					}
-				);
-			} catch (e) {
-				this.consoleCm.replaceRange('🌀\n', {
-					line: Infinity
-				});
-			}
-			this.consoleCm.scrollTo(0, Infinity);
-			this.logCount++;
+			return arg;
 		});
-		this.updateLogCount();
-
-		/* eslint-enable no-param-reassign */
+		this.setState({ logs: [...this.state.logs, ...logs] });
 	}
 
 	previewException(error) {
@@ -641,9 +585,7 @@ export default class ContentWrap extends Component {
 		this.toggleConsole();
 	}
 	clearConsole() {
-		this.consoleCm.setValue('');
-		this.logCount = 0;
-		this.updateLogCount();
+		this.setState({ logs: [] });
 	}
 	clearConsoleBtnClickHandler() {
 		this.clearConsole();
@@ -681,8 +623,13 @@ export default class ContentWrap extends Component {
 	editorFocusHandler(editor) {
 		this.props.onEditorFocus(editor);
 	}
+	prettifyBtnClickHandler(codeType) {
+		this.props.onPrettifyBtnClick(codeType);
+	}
 
 	render() {
+		// log('contentwrap update');
+
 		return (
 			<SplitPane
 				class="content-wrap  flex  flex-grow"
@@ -692,6 +639,7 @@ export default class ContentWrap extends Component {
 				direction={
 					this.props.currentLayoutMode === 2 ? 'vertical' : 'horizontal'
 				}
+				onDrag={this.mainSplitDragHandler.bind(this)}
 				onDragEnd={this.mainSplitDragEndHandler.bind(this)}
 			>
 				<SplitPane
@@ -738,6 +686,17 @@ export default class ContentWrap extends Component {
 								</select>
 							</label>
 							<div class="code-wrap__header-right-options">
+								{this.props.currentItem.htmlMode === HtmlModes.HTML ? (
+									<a
+										class="code-wrap__header-btn"
+										title="Format code"
+										onClick={this.prettifyBtnClickHandler.bind(this, 'html')}
+									>
+										<svg>
+											<use xlinkHref="#code-brace-icon" />
+										</svg>
+									</a>
+								) : null}
 								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
 									title="Toggle code pane"
@@ -745,7 +704,8 @@ export default class ContentWrap extends Component {
 								/>
 							</div>
 						</div>
-						<UserCodeMirror
+						<CodeEditor
+							type={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
 							options={{
 								mode: 'htmlmixed',
 								profile: 'xhtml',
@@ -758,7 +718,7 @@ export default class ContentWrap extends Component {
 							}}
 							prefs={this.props.prefs}
 							onChange={this.onHtmlCodeChange.bind(this)}
-							onCreation={el => (this.cm.html = el)}
+							ref={editor => (this.cm.html = editor)}
 							onFocus={this.editorFocusHandler.bind(this)}
 						/>
 					</div>
@@ -806,13 +766,23 @@ export default class ContentWrap extends Component {
 									</svg>
 								</a>
 								<a
+									class="code-wrap__header-btn "
+									title="Format code"
+									onClick={this.prettifyBtnClickHandler.bind(this, 'css')}
+								>
+									<svg>
+										<use xlinkHref="#code-brace-icon" />
+									</svg>
+								</a>
+								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
 									title="Toggle code pane"
 									onClick={this.collapseBtnHandler.bind(this)}
 								/>
 							</div>
 						</div>
-						<UserCodeMirror
+						<CodeEditor
+							type={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
 							options={{
 								mode: 'css',
 								gutters: [
@@ -826,7 +796,7 @@ export default class ContentWrap extends Component {
 							}}
 							prefs={this.props.prefs}
 							onChange={this.onCssCodeChange.bind(this)}
-							onCreation={el => (this.cm.css = el)}
+							ref={editor => (this.cm.css = editor)}
 							onFocus={this.editorFocusHandler.bind(this)}
 						/>
 					</div>
@@ -861,13 +831,23 @@ export default class ContentWrap extends Component {
 							</label>
 							<div class="code-wrap__header-right-options">
 								<a
+									class="code-wrap__header-btn "
+									title="Format code"
+									onClick={this.prettifyBtnClickHandler.bind(this, 'css')}
+								>
+									<svg>
+										<use xlinkHref="#code-brace-icon" />
+									</svg>
+								</a>
+								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
 									title="Toggle code pane"
 									onClick={this.collapseBtnHandler.bind(this)}
 								/>
 							</div>
 						</div>
-						<UserCodeMirror
+						<CodeEditor
+							type={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
 							options={{
 								mode: 'javascript',
 								gutters: [
@@ -881,7 +861,7 @@ export default class ContentWrap extends Component {
 							prefs={this.props.prefs}
 							autoComplete={this.props.prefs.autoComplete}
 							onChange={this.onJsCodeChange.bind(this)}
-							onCreation={el => (this.cm.js = el)}
+							ref={editor => (this.cm.js = editor)}
 							onFocus={this.editorFocusHandler.bind(this)}
 						/>
 						{/* Inlet(scope.cm.js); */}
@@ -895,15 +875,16 @@ export default class ContentWrap extends Component {
 						id="demo-frame"
 						allowfullscreen
 					/>
+
+					<PreviewDimension ref={comp => (this.previewDimension = comp)} />
+
 					<Console
+						logs={this.state.logs}
 						isConsoleOpen={this.state.isConsoleOpen}
-						onConsoleHeaderDblClick={this.consoleHeaderDblClickHandler.bind(
-							this
-						)}
-						onClearConsoleBtnClick={this.clearConsoleBtnClickHandler.bind(this)}
-						toggleConsole={this.toggleConsole.bind(this)}
-						onEvalInputKeyup={this.evalConsoleExpr.bind(this)}
-						onReady={el => (this.consoleCm = el)}
+						onConsoleHeaderDblClick={this.consoleHeaderDblClickHandler}
+						onClearConsoleBtnClick={this.clearConsoleBtnClickHandler}
+						toggleConsole={this.toggleConsole}
+						onEvalInputKeyup={this.evalConsoleExpr}
 					/>
 					<CssSettingsModal
 						show={this.state.isCssSettingsModalOpen}

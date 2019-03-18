@@ -1,6 +1,12 @@
 ### OSX ###
 .DS_Store
 
+### builds
+app
+build
+dist
+_site
+
 ### PhPStorm / IntellJ IDEA ###
 .idea/
 *.iml
@@ -10,3 +16,4 @@ node_modules/
 *.map
 .sass-cache
 extension/
+yarn-error.log

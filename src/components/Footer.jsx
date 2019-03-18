@@ -196,7 +196,7 @@ export default class Footer extends Component {
 					<button
 						onClick={this.props.saveHtmlBtnClickHandler}
 						id="saveHtmlBtn"
-						class="mode-btn  hint--rounded  hint--top-left hide-on-mobile"
+						class="mode-btn  hint--rounded  hint--top-left hide-on-mobile hide-in-file-mode"
 						aria-label="Save as HTML file"
 					>
 						<svg viewBox="0 0 24 24">
@@ -219,7 +219,7 @@ export default class Footer extends Component {
 					<button
 						onClick={this.props.codepenBtnClickHandler}
 						id="codepenBtn"
-						class="mode-btn  hint--rounded  hint--top-left  hide-on-mobile"
+						class="mode-btn  hint--rounded  hint--top-left  hide-on-mobile hide-in-file-mode"
 						aria-label="Edit on CodePen"
 					>
 						<svg>
@@ -243,7 +243,7 @@ export default class Footer extends Component {
 					<button
 						onClick={this.layoutBtnClickhandler.bind(this, 1)}
 						id="layoutBtn1"
-						class="mode-btn hide-on-mobile"
+						class="mode-btn hide-on-mobile hide-in-file-mode"
 						aria-label="Switch to layout with preview on right"
 					>
 						<svg viewBox="0 0 100 100" style="transform:rotate(-90deg)">
@@ -253,7 +253,7 @@ export default class Footer extends Component {
 					<button
 						onClick={this.layoutBtnClickhandler.bind(this, 2)}
 						id="layoutBtn2"
-						class="mode-btn hide-on-mobile"
+						class="mode-btn hide-on-mobile hide-in-file-mode"
 						aria-label="Switch to layout with preview on bottom"
 					>
 						<svg viewBox="0 0 100 100">
@@ -263,7 +263,7 @@ export default class Footer extends Component {
 					<button
 						onClick={this.layoutBtnClickhandler.bind(this, 3)}
 						id="layoutBtn3"
-						class="mode-btn hide-on-mobile"
+						class="mode-btn hide-on-mobile hide-in-file-mode"
 						aria-label="Switch to layout with preview on left"
 					>
 						<svg viewBox="0 0 100 100" style="transform:rotate(90deg)">
@@ -273,7 +273,7 @@ export default class Footer extends Component {
 					<button
 						onClick={this.layoutBtnClickhandler.bind(this, 5)}
 						id="layoutBtn5"
-						class="mode-btn hide-on-mobile"
+						class="mode-btn hide-on-mobile hide-in-file-mode"
 						aria-label="Switch to layout with all vertical panes"
 					>
 						<svg viewBox="0 0 100 100">

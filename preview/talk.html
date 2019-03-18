@@ -1,0 +1,57 @@
+Hello
+
+<script>
+	if (
+		'serviceWorker' in navigator
+	) {
+		// Delay registration until after the page has loaded, to ensure that our
+		// precaching requests don't degrade the first visit experience.
+		// See https://developers.google.com/web/fundamentals/instant-and-offline/service-worker/registration
+		window.addEventListener('load', function () {
+			navigator.serviceWorker
+				.register('service-worker.js')
+				.then(function (reg) {
+					// updatefound is fired if service-worker.js changes.
+					reg.onupdatefound = function () {
+						// The updatefound event implies that reg.installing is set; see
+						// https://w3c.github.io/ServiceWorker/#service-worker-registration-updatefound-event
+						var installingWorker = reg.installing;
+
+						installingWorker.onstatechange = function () {
+							/* eslint-disable default-case */
+							switch (installingWorker.state) {
+								case 'installed':
+									console.log('New or updated content is available.', navigator.serviceWorker.controller);
+									break;
+
+								case 'redundant':
+									console.error(
+										'The installing service worker became redundant.'
+									);
+									break;
+							}
+						};
+					};
+				})
+				.catch(function (e) {
+					console.error('Error during service worker registration:', e);
+				});
+		});
+	}
+
+</script>
+
+
+<script>
+	console.log('controller', navigator.serviceWorker.controller)
+	window.addEventListener('message', (e) => {
+		console.log(88, e.data);
+		if (navigator.serviceWorker.controller) {
+			navigator.serviceWorker.controller.postMessage(e.data);
+		} else {
+			alert('Ooops, seems like your preview is denying updation. How about we slap a quick refresh on him?');
+			location.reload();
+		}
+	});
+
+</script>

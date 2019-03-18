@@ -3,6 +3,7 @@ import { trackEvent } from './analytics';
 import { computeHtml, computeCss, computeJs } from './computes';
 import { JsModes } from './codeModes';
 import { deferred } from './deferred';
+import { getExtensionFromFileName } from './fileUtils';
 const esprima = require('esprima');
 
 window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
@@ -15,12 +16,15 @@ window.chrome.i18n = {
 
 window.$all = selector => [...document.querySelectorAll(selector)];
 window.IS_EXTENSION = !!window.chrome.extension;
+
+/* eslint-disable no-process-env */
 export const BASE_PATH =
 	window.chrome.extension ||
 	window.DEBUG ||
 	process.env.NODE_ENV === 'development'
 		? '/'
 		: '/app';
+/* eslint-enable no-process-env */
 
 var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
@@ -96,7 +100,17 @@ export function onButtonClick(btn, listener) {
 
 export function log() {
 	if (window.DEBUG) {
-		console.log(Date.now(), ...arguments);
+		const err = new Error();
+		console.log(
+			parseInt(
+				Date.now()
+					.toString()
+					.substr(4),
+				10
+			),
+			...arguments,
+			err.stack.split('\n')[2].replace(/\(.*\)/, '')
+		);
 	}
 }
 
@@ -309,6 +323,21 @@ export function loadJS(src) {
 	return d.promise;
 }
 
+export function loadCss({ url, id }) {
+	var d = deferred();
+	var style = window.document.createElement('link');
+	style.setAttribute('href', url);
+	style.setAttribute('rel', 'stylesheet');
+	if (id) {
+		style.setAttribute('id', id);
+	}
+	document.head.appendChild(style);
+	style.onload = function() {
+		d.resolve();
+	};
+	return d.promise;
+}
+
 /* eslint-disable max-params */
 export function getCompleteHtml(html, css, js, item, isForExport) {
 	/* eslint-enable max-params */
@@ -465,12 +494,16 @@ export function getFilenameFromUrl(url) {
 	return url.match(/\/([^/]*)$/)[1];
 }
 
-export function prettify(content, type = 'js') {
+export function prettify({ file, content, type }) {
 	const d = deferred();
+	if (file) {
+		type = getExtensionFromFileName(file.name);
+		content = file.content;
+	}
 	const worker = new Worker(
 		chrome.extension
 			? chrome.extension.getURL('lib/prettier-worker.js')
-			: `${BASE_PATH === '/' ? '' : BASE_PATH}/lib/prettier-worker.js`
+			: `${BASE_PATH !== '/' ? BASE_PATH : ''}/lib/prettier-worker.js`
 	);
 	worker.postMessage({ content, type });
 	worker.addEventListener('message', e => {

@@ -32,9 +32,9 @@ if (navigator.onLine && !window.DEBUG) {
 		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
 		if (location.href.indexOf('chrome-extension://') === -1) {
-			ga('create', 'UA-87786708-1');
+			ga('create', 'UA-87786708-2');
 		} else {
-			ga('create', 'UA-87786708-1', {
+			ga('create', 'UA-87786708-2', {
 				'cookieDomain': 'none'
 			});
 			// required for chrome extension protocol

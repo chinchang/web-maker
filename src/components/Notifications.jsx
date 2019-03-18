@@ -1,14 +1,14 @@
 import { h } from 'preact';
 import { Button } from './common';
 
-function NotificationItem({ type, children }) {
+function NotificationItem({ type, label, children }) {
 	var strongTag;
 	if (type === 'bug') {
-		strongTag = <strong>🔧 Bugfix</strong>;
+		strongTag = <strong>🔧 {label || 'Bugfix'}</strong>;
 	} else if (type === 'a11y') {
-		strongTag = <strong>♿️ Accessibility</strong>;
+		strongTag = <strong>♿️ {label || 'Accessibility'}</strong>;
 	} else if (type === 'ui') {
-		strongTag = <strong>🖥 Interface</strong>;
+		strongTag = <strong>🖥 {label || 'Interface'}</strong>;
 	}
 	return (
 		<li>
@@ -105,6 +105,84 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+
+			<div class="notification">
+				<span class="notification__version">4.0.0</span>
+				<p>
+					Sit tight, because this is going to be some amazing set on updates for
+					you! Read{' '}
+					<a
+						href="https://medium.com/web-maker/web-maker-4-0-e8e442b5a2db"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						blog post about Web Maker 4.0
+					</a>
+					.
+				</p>
+				<ul>
+					<li>
+						<strong>🏠</strong>: First of all, Web Maker has a new home -{' '}
+						<a href="https://webmaker.app">https://webmaker.app</a> 😀 The old
+						website will continue to run for a month or so, but will eventually
+						start redirecting to the new website. If you have an online account
+						in Web Maker, you need not worry. But if you have some locally saved
+						creations, you should{' '}
+						<a
+							href="https://medium.com/web-maker/importing-exporting-your-creations-d92e7de5c3dc"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							export them and import
+						</a>{' '}
+						here.
+					</li>
+					<li>
+						<strong>📁 Files Mode</strong>: Hear this - you can now work with
+						files just like you do in your local environment! No more working in
+						just 3 panes. Try creating a new creation. "Files Mode" is in beta
+						and you can currently only save 2 creations in this mode.
+					</li>
+					<li>
+						<strong>🎨 Command Palette</strong>: We all love this, don't we?
+						Taking frequent actions is now much quicker with the all new Command
+						Palette. Hit Ctrl/Command+Shift+P, and give it a spin.
+					</li>
+					<li>
+						<strong>🔥 Improved Console</strong>: Console inspection becomes
+						more powerful. You can view nested objects, arrays and even DOM
+						Elements!
+					</li>
+					<li>
+						<strong>✏️ Monaco Editor</strong>: You can choose to use Monaco
+						instead of CodeMirror editor from the settings. Though this is still
+						an experimental feature and might contain bugs.
+					</li>
+					<li>
+						<strong>💄 Prettier</strong>: Format your code with everybody's
+						favourite{' '}
+						<a
+							href="https://prettier.io/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Prettier
+						</a>
+						.
+					</li>
+					<NotificationItem type="ui" label="Preview dimensions">
+						You can see the preview frame dimensions when resizing.
+					</NotificationItem>
+					<NotificationItem type="ui" label="Settings">
+						Settings screen got a complete makeover and now it's much easier to
+						find what you are looking for.
+					</NotificationItem>
+					<NotificationItem type="a11y">
+						The app is now more accessible than ever. There are significant
+						improvements mainly in the area of keyboard navigation.
+					</NotificationItem>
+				</ul>
+			</div>
 
 			<Notification version="3.6.2" {...props} isLatest={true}>
 				<NotificationItem type="bug">

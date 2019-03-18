@@ -2,12 +2,6 @@ import { h, Component } from 'preact';
 import Split from 'split.js';
 
 export class SplitPane extends Component {
-	// shouldComponentUpdate(nextProps, nextState) {
-	// 	return (
-	// 		nextProps.direction !== this.props.direction ||
-	// 		nextProps.sizes.join('') !== this.props.sizes.join('')
-	// 	);
-	// }
 	componentDidMount() {
 		this.updateSplit();
 	}
@@ -16,28 +10,36 @@ export class SplitPane extends Component {
 			this.splitInstance.destroy();
 		}
 	}
-	componentDidUpdate() {
+	componentDidUpdate(prevProps) {
+		if (this.hasGutter() && !this.hasPropsChanged(prevProps, this.props)) {
+			return;
+		}
 		this.updateSplit();
 	}
+	componentWillUnmount() {
+		this.splitInstance.destroy();
+		delete this.splitInstance;
+	}
+	hasGutter() {
+		return (
+			[...this.parent.children].indexOf(
+				this.parent.querySelector('.gutter')
+			) !== -1
+		);
+	}
+	hasPropsChanged(a, b) {
+		return (
+			a.direction !== b.direction ||
+			(a.sizes && b.sizes && a.sizes.join('') !== b.sizes.join(''))
+		);
+	}
 	updateSplit() {
-		const options = {
-			direction: this.props.direction,
-			minSize: this.props.minSize,
-			gutterSize: 6,
-			sizes: this.props.sizes
-		};
-		if (this.props.onDragEnd) {
-			options.onDragEnd = this.props.onDragEnd;
-		}
-		if (this.props.onDragStart) {
-			options.onDragStart = this.props.onDragStart;
-		}
+		const { children, ...options } = this.props;
+		options.gutterSize = 6;
 
 		/* eslint-disable new-cap */
-		this.splitInstance = Split(
-			this.props.children.map(node => '#' + node.attributes.id),
-			options
-		);
+		this.splitInstance = Split([...this.parent.children], options);
+
 		/* eslint-enable new-cap */
 
 		if (this.props.onSplit) {
@@ -49,6 +51,10 @@ export class SplitPane extends Component {
 		const { children, ...props } = this.props;
 		/* eslint-enable no-unused-vars */
 
-		return <div {...props}>{this.props.children}</div>;
+		return (
+			<div ref={el => (this.parent = el)} {...props}>
+				{this.props.children}
+			</div>
+		);
 	}
 }

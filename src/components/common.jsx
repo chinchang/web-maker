@@ -26,3 +26,17 @@ export function A(props) {
 export function Button(props) {
 	return <Clickable Tag={'button'} {...props} />;
 }
+
+export function AutoFocusInput(props) {
+	return (
+		<input ref={el => el && setTimeout(() => el.focus(), 100)} {...props} />
+	);
+}
+
+export function Divider(props) {
+	return <div class={`divider ${props.vertical ? 'divider--vertical' : ''}`} />;
+}
+
+export function BetaTag() {
+	return <span class="beta-tag">Beta</span>;
+}

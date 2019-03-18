@@ -2,9 +2,10 @@
  */
 
 import { h, Component } from 'preact';
-
+// import '../service-worker-registration';
 import { MainHeader } from './MainHeader.jsx';
 import ContentWrap from './ContentWrap.jsx';
+import ContentWrapFiles from './ContentWrapFiles.jsx';
 import Footer from './Footer.jsx';
 import SavedItemPane from './SavedItemPane.jsx';
 import AddLibrary from './AddLibrary.jsx';
@@ -19,8 +20,18 @@ import {
 	handleDownloadsPermission,
 	downloadFile,
 	getCompleteHtml,
-	getFilenameFromUrl
+	getFilenameFromUrl,
+	prettify
 } from '../utils';
+import {
+	linearizeFiles,
+	assignFilePaths,
+	getFileFromPath,
+	removeFileAtPath,
+	doesFileExistInFolder,
+	importGithubRepo
+} from '../fileUtils';
+
 import { itemService } from '../itemService';
 import '../db';
 import { Notifications } from './Notifications';
@@ -45,6 +56,17 @@ import { Js13KModal } from './Js13KModal';
 import { CreateNewModal } from './CreateNewModal';
 import { Icons } from './Icons';
 import JSZip from 'jszip';
+import { CommandPalette } from './CommandPalette';
+import {
+	OPEN_SAVED_CREATIONS_EVENT,
+	SAVE_EVENT,
+	OPEN_SETTINGS_EVENT,
+	NEW_CREATION_EVENT,
+	SHOW_KEYBOARD_SHORTCUTS_EVENT
+} from '../commands';
+import { commandPaletteService } from '../commandPaletteService';
+
+import { I18nProvider } from '@lingui/react';
 
 if (module.hot) {
 	require('preact/debug');
@@ -55,7 +77,7 @@ const LocalStorageKeys = {
 	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
 };
 const UNSAVED_WARNING_COUNT = 15;
-const version = '3.6.2';
+const version = '4.0.0';
 
 export default class App extends Component {
 	constructor() {
@@ -74,7 +96,8 @@ export default class App extends Component {
 			isAskToImportModalOpen: false,
 			isOnboardModalOpen: false,
 			isJs13KModalOpen: false,
-			isCreateNewModalOpen: false
+			isCreateNewModalOpen: false,
+			isCommandPaletteOpen: false
 		};
 		this.state = {
 			isSavedItemPaneOpen: false,
@@ -83,7 +106,8 @@ export default class App extends Component {
 			currentItem: {
 				title: '',
 				externalLibs: { js: '', css: '' }
-			}
+			},
+			catalogs: {}
 		};
 		this.defaultSettings = {
 			preserveLastCode: true,
@@ -109,7 +133,10 @@ export default class App extends Component {
 			infiniteLoopTimeout: 1000,
 			layoutMode: 2,
 			isJs13kModeOn: false,
-			autoCloseTags: true
+			autoCloseTags: true,
+			lang: 'en',
+			isMonacoEditorOn: false,
+			previewDelay: 500
 		};
 		this.prefs = {};
 
@@ -152,9 +179,16 @@ export default class App extends Component {
 	componentWillMount() {
 		var lastCode;
 		window.onunload = () => {
-			this.saveCode('code');
 			if (this.detachedWindow) {
 				this.detachedWindow.close();
+			}
+		};
+		window.onbeforeunload = event => {
+			if (this.state.unsavedEditCount) {
+				console.log(9999999999);
+				event.preventDefault();
+				// Chrome requires returnValue to be set.
+				event.returnValue = '';
 			}
 		};
 
@@ -176,26 +210,13 @@ export default class App extends Component {
 			if (result.preserveLastCode && lastCode) {
 				this.setState({ unsavedEditCount: 0 });
 
-				// For web app environment we don't fetch item from localStorage,
-				// because the item isn't stored in the localStorage.
-				if (lastCode.id && window.IS_EXTENSION) {
-					db.local.get(lastCode.id, itemResult => {
-						if (itemResult[lastCode.id]) {
-							log('Load item ', lastCode.id);
-							this.setCurrentItem(itemResult[lastCode.id]).then(() =>
-								this.refreshEditor()
-							);
-						}
-					});
-				} else {
-					log('Load last unsaved item', lastCode);
-					this.setCurrentItem(lastCode).then(() => this.refreshEditor());
-				}
+				log('Load last unsaved item', lastCode);
+				this.setCurrentItem(lastCode).then(() => this.refreshEditor());
 			} else {
 				this.createNewItem();
 			}
 			Object.assign(this.state.prefs, result);
-			this.setState({ prefs: this.state.prefs });
+			this.setState({ prefs: { ...this.state.prefs } });
 			this.updateSetting();
 		});
 
@@ -232,6 +253,35 @@ export default class App extends Component {
 		});
 	}
 
+	async loadLanguage(lang) {
+		console.log('🇯🇲 fetching defninition');
+
+		const catalog = await import(/* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */ `../locales/${lang}/messages.js`);
+
+		this.setState(state => ({
+			catalogs: {
+				...state.catalogs,
+				[lang]: catalog.default
+			}
+		}));
+	}
+
+	incrementUnsavedChanges() {
+		this.setState({ unsavedEditCount: this.state.unsavedEditCount + 1 });
+
+		if (
+			this.state.unsavedEditCount % UNSAVED_WARNING_COUNT === 0 &&
+			this.state.unsavedEditCount >= UNSAVED_WARNING_COUNT
+		) {
+			window.saveBtn.classList.add('animated');
+			window.saveBtn.classList.add('wobble');
+			window.saveBtn.addEventListener('animationend', () => {
+				window.saveBtn.classList.remove('animated');
+				window.saveBtn.classList.remove('wobble');
+			});
+		}
+	}
+
 	updateProfileUi() {
 		if (this.state.user) {
 			document.body.classList.add('is-logged-in');
@@ -247,12 +297,15 @@ export default class App extends Component {
 		this.updateExternalLibCount();
 		this.contentWrap.refreshEditor();
 	}
+	askForUnsavedChanges() {
+		return confirm(
+			'You have unsaved changes in your current work. Do you want to discard unsaved changes and continue?'
+		);
+	}
 	// Creates a new item with passed item's contents
 	forkItem(sourceItem) {
 		if (this.state.unsavedEditCount) {
-			var shouldDiscard = confirm(
-				'You have unsaved changes in your current work. Do you want to discard unsaved changes and continue?'
-			);
+			var shouldDiscard = this.askForUnsavedChanges();
 			if (!shouldDiscard) {
 				return;
 			}
@@ -265,9 +318,9 @@ export default class App extends Component {
 		alertsService.add(`"${sourceItem.title}" was forked`);
 		trackEvent('fn', 'itemForked');
 	}
-	createNewItem() {
-		var d = new Date();
-		this.setCurrentItem({
+	createNewItem(isFileMode = false, files) {
+		const d = new Date();
+		let item = {
 			title:
 				'Untitled ' +
 				d.getDate() +
@@ -277,12 +330,50 @@ export default class App extends Component {
 				d.getHours() +
 				':' +
 				d.getMinutes(),
-			html: '',
-			css: '',
-			js: '',
-			externalLibs: { js: '', css: '' },
-			layoutMode: this.state.currentLayoutMode
-		}).then(() => this.refreshEditor());
+			createdOn: +d,
+			content: ''
+		};
+		if (isFileMode) {
+			item = {
+				...item,
+				files: assignFilePaths(
+					files || [
+						{
+							name: 'index.html',
+							content: `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Webmaker untitled 1</title>
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+  <body>
+    Hello World
+    <script src="script.js"></script>
+  </body>
+</html>`
+						},
+						{
+							name: 'styles',
+							isFolder: true,
+							children: [{ name: 'style.css', content: '' }]
+						},
+						{ name: 'script.js', content: '' }
+					]
+				)
+			};
+		} else {
+			item = {
+				...item,
+				html: '',
+				css: '',
+				js: '',
+				externalLibs: { js: '', css: '' },
+				layoutMode: this.state.currentLayoutMode
+			};
+		}
+		this.setCurrentItem(item).then(() => this.refreshEditor());
 		alertsService.add('New item created');
 	}
 	openItem(item) {
@@ -318,12 +409,17 @@ export default class App extends Component {
 	setCurrentItem(item) {
 		const d = deferred();
 		// TODO: remove later
-		item.htmlMode =
-			item.htmlMode || this.state.prefs.htmlMode || HtmlModes.HTML;
-		item.cssMode = item.cssMode || this.state.prefs.cssMode || CssModes.CSS;
-		item.jsMode = item.jsMode || this.state.prefs.jsMode || JsModes.JS;
+		if (!item.files) {
+			item.htmlMode =
+				item.htmlMode || this.state.prefs.htmlMode || HtmlModes.HTML;
+			item.cssMode = item.cssMode || this.state.prefs.cssMode || CssModes.CSS;
+			item.jsMode = item.jsMode || this.state.prefs.jsMode || JsModes.JS;
+		}
 
-		this.setState({ currentItem: item }, d.resolve);
+		this.setState({ currentItem: item }, () => {
+			d.resolve();
+			this.saveCode('code');
+		});
 
 		// Reset auto-saving flag
 		this.isAutoSavingEnabled = false;
@@ -357,11 +453,6 @@ export default class App extends Component {
 				shouldOpen === undefined ? !this.state.isSavedItemPaneOpen : shouldOpen
 		});
 
-		if (this.state.isSavedItemPaneOpen) {
-			window.searchInput.focus();
-		} else {
-			window.searchInput.value = '';
-		}
 		document.body.classList[this.state.isSavedItemPaneOpen ? 'add' : 'remove'](
 			'overlay-visible'
 		);
@@ -370,50 +461,24 @@ export default class App extends Component {
 	/**
 	 * Fetches all items from storage
 	 * @param  {boolean} shouldSaveGlobally Whether to store the fetched items in global arr for later use.
+	 * @param  {boolean} shouldFetchLocally Intentionally get local items. Used when importing local items to account.
 	 * @return {promise}                    Promise.
 	 */
 	async fetchItems(shouldSaveGlobally, shouldFetchLocally) {
-		var d = deferred();
 		// HACK: This empty assignment is being used when importing locally saved items
 		// to cloud, `fetchItems` runs once on account login which clears the
 		// savedItems object and hence, while merging no saved item matches with itself.
 		this.state.savedItems = {};
 		var items = [];
-		if (window.user && !shouldFetchLocally) {
-			items = await itemService.getAllItems();
-			log('got items');
-			if (shouldSaveGlobally) {
-				items.forEach(item => {
-					this.state.savedItems[item.id] = item;
-				});
-			}
-			d.resolve(items);
-			return d.promise;
+
+		items = await itemService.getAllItems(shouldFetchLocally);
+		trackEvent('fn', 'fetchItems', items.length);
+		if (shouldSaveGlobally) {
+			items.forEach(item => {
+				this.state.savedItems[item.id] = item;
+			});
 		}
-		db.local.get('items', result => {
-			var itemIds = Object.getOwnPropertyNames(result.items || {});
-			if (!itemIds.length) {
-				d.resolve([]);
-			}
-
-			trackEvent('fn', 'fetchItems', itemIds.length);
-			for (let i = 0; i < itemIds.length; i++) {
-				/* eslint-disable no-loop-func */
-				db.local.get(itemIds[i], itemResult => {
-					if (shouldSaveGlobally) {
-						this.state.savedItems[itemIds[i]] = itemResult[itemIds[i]];
-					}
-					items.push(itemResult[itemIds[i]]);
-					// Check if we have all items now.
-					if (itemIds.length === items.length) {
-						d.resolve(items);
-					}
-				});
-
-				/* eslint-enable no-loop-func */
-			}
-		});
-		return d.promise;
+		return items;
 	}
 
 	openSavedItemsPane() {
@@ -440,6 +505,13 @@ export default class App extends Component {
 			this.editorWithFocus.focus();
 		}
 	}
+	openSettings() {
+		this.setState({ isSettingsModalOpen: true });
+	}
+	openKeyboardShortcuts() {
+		this.setState({ isKeyboardShortcutsModalOpen: true });
+	}
+
 	componentDidMount() {
 		function setBodySize() {
 			document.body.style.height = `${window.innerHeight}px`;
@@ -482,8 +554,27 @@ export default class App extends Component {
 					isKeyboardShortcutsModalOpen: !this.state.isKeyboardShortcutsModalOpen
 				});
 				trackEvent('ui', 'showKeyboardShortcutsShortcut');
-			} else if (event.keyCode === 27) {
+			} else if (
+				event.keyCode === 27 &&
+				(event.target.tagName !== 'INPUT' || event.target.id === 'searchInput')
+			) {
+				// ESCAPE
+				// TODO: whats written next doesn't make sense. Review it.
+				// We might be listening on keydown for some input inside the app, UNLESS its
+				// the search input in saved items pane. In that case
+				// we don't want this to trigger which in turn focuses back the last editor.
 				this.closeSavedItemsPane();
+			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 80) {
+				this.setState({
+					isCommandPaletteOpen: true,
+					isCommandPaletteInCommandMode: !!event.shiftKey
+				});
+				trackEvent(
+					'ui',
+					'openCommandPaletteKeyboardShortcut',
+					!!event.shiftKey ? 'command' : 'files'
+				);
+				event.preventDefault();
 			}
 		});
 
@@ -500,6 +591,40 @@ export default class App extends Component {
 				}
 			}
 		});
+		const commandPalleteHooks = {
+			[NEW_CREATION_EVENT]: () => {
+				this.openNewCreationModal();
+			},
+			[OPEN_SAVED_CREATIONS_EVENT]: () => {
+				this.openSavedItemsPane();
+			},
+			[SAVE_EVENT]: () => {
+				this.saveItem();
+			},
+			[OPEN_SETTINGS_EVENT]: () => {
+				this.openSettings();
+			},
+			[SHOW_KEYBOARD_SHORTCUTS_EVENT]: () => {
+				this.openKeyboardShortcuts();
+			}
+		};
+		for (let eventName in commandPalleteHooks) {
+			commandPaletteService.subscribe(
+				eventName,
+				commandPalleteHooks[eventName]
+			);
+		}
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		const { catalogs } = nextState;
+		const { lang } = nextState.prefs;
+
+		if (lang && lang !== 'en' && !catalogs[lang]) {
+			this.loadLanguage(lang);
+		}
+
+		return true;
 	}
 
 	closeAllOverlays() {
@@ -595,22 +720,48 @@ export default class App extends Component {
 
 	// Calculates the current sizes of code & preview panes.
 	getMainPaneSizes() {
-		var sizes;
+		let sizes;
+
+		function getPercentFromDimension(el, dimension = 'width') {
+			const match = el.style[dimension].match(/[\d.]+(%|px)/);
+			if (match) {
+				return match[0];
+			}
+			return null;
+		}
+
+		// File mode
+		if (this.state.currentItem && this.state.currentItem.files) {
+			const sidebarWidth = 200;
+
+			sizes = [
+				getPercentFromDimension($('#js-sidebar')),
+				getPercentFromDimension($('#js-code-side')),
+				getPercentFromDimension($('#js-demo-side'))
+			];
+
+			// Check if anything was returned falsy, reset in that case
+			if (sizes.filter(s => s).length !== 3) {
+				sizes = [
+					`${sidebarWidth}px`,
+					`calc(50% - ${sidebarWidth / 2}px)`,
+					`calc(50% - ${sidebarWidth / 2}px)`
+				];
+			}
+			return sizes;
+		}
+
 		const currentLayoutMode = this.state.currentLayoutMode;
 		var dimensionProperty = currentLayoutMode === 2 ? 'height' : 'width';
-		try {
-			sizes = [
-				+$('#js-code-side').style[dimensionProperty].match(/([\d.]+)%/)[1],
-				+$('#js-demo-side').style[dimensionProperty].match(/([\d.]+)%/)[1]
-			];
-		} catch (e) {
-			sizes = [50, 50];
-		} finally {
-			/* eslint-disable no-unsafe-finally */
-			return sizes;
+		sizes = [
+			getPercentFromDimension($('#js-code-side'), dimensionProperty),
+			getPercentFromDimension($('#js-demo-side'), dimensionProperty)
+		];
 
-			/* eslint-enable no-unsafe-finally */
+		if (sizes.filter(s => s).length !== 2) {
+			sizes = [50, 50];
 		}
+		return sizes;
 	}
 	saveSetting(setting, value) {
 		const d = deferred();
@@ -622,15 +773,23 @@ export default class App extends Component {
 	}
 
 	saveCode(key) {
-		this.state.currentItem.updatedOn = Date.now();
-		this.state.currentItem.layoutMode = this.state.currentLayoutMode;
+		const { currentItem } = this.state;
+		currentItem.updatedOn = Date.now();
+		currentItem.layoutMode = this.state.currentLayoutMode;
 
-		this.state.currentItem.sizes = this.getCodePaneSizes();
-		this.state.currentItem.mainSizes = this.getMainPaneSizes();
+		currentItem.mainSizes = this.getMainPaneSizes();
+		if (!currentItem.files) {
+			currentItem.sizes = this.getCodePaneSizes();
+		}
 
-		log('saving key', key || this.state.currentItem.id, this.state.currentItem);
+		log('saving key', key || currentItem.id, currentItem);
 
 		function onSaveComplete() {
+			// No feedback on saving `code` key. Its just to silently preserve
+			// last written code.
+			if (key === 'code') {
+				return;
+			}
 			if (window.user && !navigator.onLine) {
 				alertsService.add(
 					'Item saved locally. Will save to account when you are online.'
@@ -642,7 +801,7 @@ export default class App extends Component {
 		}
 
 		return itemService
-			.setItem(key || this.state.currentItem.id, this.state.currentItem)
+			.setItem(key || currentItem.id, currentItem)
 			.then(onSaveComplete.bind(this));
 	}
 
@@ -696,21 +855,17 @@ export default class App extends Component {
 		this.setState({ currentItem: item });
 	}
 	onCodeChange(type, code, isUserChange) {
-		this.state.currentItem[type] = code;
+		if (this.state.currentItem.files) {
+			linearizeFiles(this.state.currentItem.files).map(file => {
+				if (file.path === type.path) {
+					file.content = code;
+				}
+			});
+		} else {
+			this.state.currentItem[type] = code;
+		}
 		if (isUserChange) {
-			this.setState({ unsavedEditCount: this.state.unsavedEditCount + 1 });
-
-			if (
-				this.state.unsavedEditCount % UNSAVED_WARNING_COUNT === 0 &&
-				this.state.unsavedEditCount >= UNSAVED_WARNING_COUNT
-			) {
-				window.saveBtn.classList.add('animated');
-				window.saveBtn.classList.add('wobble');
-				window.saveBtn.addEventListener('animationend', () => {
-					window.saveBtn.classList.remove('animated');
-					window.saveBtn.classList.remove('wobble');
-				});
-			}
+			this.incrementUnsavedChanges();
 		}
 		if (this.state.prefs.isJs13kModeOn) {
 			// Throttling codesize calculation
@@ -741,15 +896,14 @@ export default class App extends Component {
 	/**
 	 * Handles all user triggered preference changes in the UI.
 	 */
-	updateSetting(e) {
+	updateSetting(settingName, value) {
 		// If this was triggered from user interaction, save the setting
-		if (e) {
-			var settingName = e.target.dataset.setting;
+		if (settingName) {
+			// var settingName = e.target.dataset.setting;
 			var obj = {};
-			var el = e.target;
-			log(settingName, el.type === 'checkbox' ? el.checked : el.value);
+			log(settingName, value);
 			const prefs = { ...this.state.prefs };
-			prefs[settingName] = el.type === 'checkbox' ? el.checked : el.value;
+			prefs[settingName] = value;
 			obj[settingName] = prefs[settingName];
 			this.setState({ prefs });
 
@@ -842,8 +996,7 @@ export default class App extends Component {
 			this.forkItem(item);
 		}, 350);
 	}
-	newBtnClickHandler() {
-		trackEvent('ui', 'newBtnClick');
+	openNewCreationModal() {
 		if (this.state.unsavedEditCount) {
 			var shouldDiscard = confirm(
 				'You have unsaved changes. Do you still want to create something new?'
@@ -858,6 +1011,10 @@ export default class App extends Component {
 				isCreateNewModalOpen: true
 			});
 		}
+	}
+	newBtnClickHandler() {
+		trackEvent('ui', 'newBtnClick');
+		this.openNewCreationModal();
 	}
 	openBtnClickHandler() {
 		trackEvent('ui', 'openBtnClick');
@@ -1201,229 +1358,398 @@ export default class App extends Component {
 		this.createNewItem();
 		this.setState({ isCreateNewModalOpen: false });
 	}
+	blankFileTemplateSelectHandler() {
+		itemService.getCountOfFileModeItems().then(count => {
+			if (count < 2) {
+				this.createNewItem(true);
+				this.setState({ isCreateNewModalOpen: false });
+			} else {
+				trackEvent('ui', 'FileModeCreationLimitMessageSeen');
+				return alert(
+					'"Files mode" is currently in beta and is limited to only 2 creations per user. You have already made 2 creations in Files mode.\n\nNote: You can choose to delete old ones to create new.'
+				);
+			}
+		});
+	}
 
-	templateSelectHandler(template) {
-		fetch(`templates/template-${template.id}.json`)
+	templateSelectHandler(template, isFileMode) {
+		fetch(`templates/template-${isFileMode ? 'files-' : ''}${template.id}.json`)
 			.then(res => res.json())
 			.then(json => {
 				this.forkItem(json);
 			});
 		this.setState({ isCreateNewModalOpen: false });
 	}
+	importGithubRepoSelectHandler(repoUrl) {
+		importGithubRepo(repoUrl).then(files => {
+			this.createNewItem(true, files);
+			this.setState({ isCreateNewModalOpen: false });
+		});
+	}
+	addFileHandler(fileName, isFolder) {
+		let newEntry = { name: fileName, content: '' };
+		if (isFolder) {
+			newEntry = {
+				...newEntry,
+				isFolder: true,
+				children: [],
+				isCollapsed: true
+			};
+		}
+		let currentItem = {
+			...this.state.currentItem,
+			files: [...this.state.currentItem.files, newEntry]
+		};
+		assignFilePaths(currentItem.files);
 
-	render() {
+		this.setState({ currentItem });
+		this.incrementUnsavedChanges();
+	}
+	removeFileHandler(filePath) {
+		const currentItem = {
+			...this.state.currentItem,
+			files: [...this.state.currentItem.files]
+		};
+		removeFileAtPath(currentItem.files, filePath);
+
+		this.setState({ currentItem });
+		this.incrementUnsavedChanges();
+	}
+	renameFileHandler(oldFilePath, newFileName) {
+		const currentItem = {
+			...this.state.currentItem,
+			files: [...this.state.currentItem.files]
+		};
+		const { file } = getFileFromPath(currentItem.files, oldFilePath);
+		file.name = newFileName;
+		assignFilePaths(currentItem.files);
+
+		this.setState({ currentItem });
+		this.incrementUnsavedChanges();
+	}
+	fileDropHandler(sourceFilePath, destinationFolder) {
+		let { currentItem } = this.state;
+		const { file } = getFileFromPath(currentItem.files, sourceFilePath);
+		if (doesFileExistInFolder(destinationFolder, file.name)) {
+			alert(
+				`File with name "${
+					file.name
+				}" already exists in the destination folder.`
+			);
+			return;
+		}
+
+		if (file) {
+			destinationFolder.children.push(file);
+			removeFileAtPath(currentItem.files, sourceFilePath);
+			currentItem = {
+				...currentItem,
+				files: [...currentItem.files]
+			};
+			assignFilePaths(currentItem.files);
+
+			this.setState({ currentItem });
+			this.incrementUnsavedChanges();
+		}
+	}
+
+	folderSelectHandler(folder) {
+		// Following will make the change in the existing currentItem
+		folder.isCollapsed = !folder.isCollapsed;
+
+		const currentItem = {
+			...this.state.currentItem,
+			files: [...this.state.currentItem.files]
+		};
+		this.setState({
+			currentItem
+		});
+	}
+
+	getRootClasses() {
+		const classes = [];
+		if (this.state.currentItem && this.state.currentItem.files) {
+			classes.push('is-file-mode');
+		}
+		return classes.join(' ');
+	}
+
+	prettifyHandler(what) {
+		// 3 pane mode
+		if (typeof what === 'string') {
+			prettify({
+				content: this.state.currentItem[what],
+				type: { html: 'html', js: 'js', css: 'css' }[what]
+			}).then(formattedContent => {
+				if (this.state.currentItem[what] === formattedContent) {
+					return;
+				}
+				this.state.currentItem[what] = formattedContent;
+				this.setState({ currentItem: { ...this.state.currentItem } }, () => {
+					// TODO: This is not right way. Editors should refresh automatically
+					// on state change.
+					this.contentWrap.refreshEditor();
+				});
+				this.incrementUnsavedChanges();
+			});
+			return;
+		}
+		const selectedFile = what;
+		const currentItem = {
+			...this.state.currentItem,
+			files: [...this.state.currentItem.files]
+		};
+		prettify({ file: selectedFile }).then(formattedContent => {
+			if (formattedContent !== selectedFile.content) {
+				selectedFile.content = formattedContent;
+				this.incrementUnsavedChanges();
+				this.setState({ currentItem });
+			}
+		});
+	}
+
+	render(props, { catalogs = {}, prefs = {} }) {
 		return (
-			<div>
-				<div class="main-container">
-					<MainHeader
-						externalLibCount={this.state.externalLibCount}
-						openBtnHandler={this.openBtnClickHandler.bind(this)}
-						newBtnHandler={this.newBtnClickHandler.bind(this)}
-						saveBtnHandler={this.saveBtnClickHandler.bind(this)}
-						loginBtnHandler={this.loginBtnClickHandler.bind(this)}
-						profileBtnHandler={this.profileBtnClickHandler.bind(this)}
-						addLibraryBtnHandler={this.openAddLibrary.bind(this)}
-						runBtnClickHandler={this.runBtnClickHandler.bind(this)}
-						isFetchingItems={this.state.isFetchingItems}
-						isSaving={this.state.isSaving}
-						title={this.state.currentItem.title}
-						titleInputBlurHandler={this.titleInputBlurHandler.bind(this)}
-						user={this.state.user}
-						unsavedEditCount={this.state.unsavedEditCount}
-					/>
-					<ContentWrap
-						currentLayoutMode={this.state.currentLayoutMode}
-						currentItem={this.state.currentItem}
-						onCodeChange={this.onCodeChange.bind(this)}
-						onCodeSettingsChange={this.onCodeSettingsChange.bind(this)}
-						onCodeModeChange={this.onCodeModeChange.bind(this)}
-						onRef={comp => (this.contentWrap = comp)}
-						prefs={this.state.prefs}
-						onEditorFocus={this.editorFocusHandler.bind(this)}
-						onSplitUpdate={this.splitUpdateHandler.bind(this)}
+			<I18nProvider language={this.state.prefs.lang} catalogs={catalogs}>
+				<div class={this.getRootClasses()}>
+					<div class="main-container">
+						<MainHeader
+							externalLibCount={this.state.externalLibCount}
+							openBtnHandler={this.openBtnClickHandler.bind(this)}
+							newBtnHandler={this.newBtnClickHandler.bind(this)}
+							saveBtnHandler={this.saveBtnClickHandler.bind(this)}
+							loginBtnHandler={this.loginBtnClickHandler.bind(this)}
+							profileBtnHandler={this.profileBtnClickHandler.bind(this)}
+							addLibraryBtnHandler={this.openAddLibrary.bind(this)}
+							runBtnClickHandler={this.runBtnClickHandler.bind(this)}
+							isFetchingItems={this.state.isFetchingItems}
+							isSaving={this.state.isSaving}
+							title={this.state.currentItem.title}
+							titleInputBlurHandler={this.titleInputBlurHandler.bind(this)}
+							user={this.state.user}
+							unsavedEditCount={this.state.unsavedEditCount}
+							isFileMode={
+								this.state.currentItem && this.state.currentItem.files
+							}
+						/>
+						{this.state.currentItem && this.state.currentItem.files ? (
+							<ContentWrapFiles
+								currentItem={this.state.currentItem}
+								onCodeChange={this.onCodeChange.bind(this)}
+								onCodeSettingsChange={this.onCodeSettingsChange.bind(this)}
+								onCodeModeChange={this.onCodeModeChange.bind(this)}
+								onRef={comp => (this.contentWrap = comp)}
+								prefs={this.state.prefs}
+								onEditorFocus={this.editorFocusHandler.bind(this)}
+								onSplitUpdate={this.splitUpdateHandler.bind(this)}
+								onAddFile={this.addFileHandler.bind(this)}
+								onRemoveFile={this.removeFileHandler.bind(this)}
+								onRenameFile={this.renameFileHandler.bind(this)}
+								onFileDrop={this.fileDropHandler.bind(this)}
+								onFolderSelect={this.folderSelectHandler.bind(this)}
+								onPrettifyBtnClick={this.prettifyHandler.bind(this)}
+							/>
+						) : (
+							<ContentWrap
+								currentLayoutMode={this.state.currentLayoutMode}
+								currentItem={this.state.currentItem}
+								onCodeChange={this.onCodeChange.bind(this)}
+								onCodeSettingsChange={this.onCodeSettingsChange.bind(this)}
+								onCodeModeChange={this.onCodeModeChange.bind(this)}
+								onRef={comp => (this.contentWrap = comp)}
+								prefs={this.state.prefs}
+								onEditorFocus={this.editorFocusHandler.bind(this)}
+								onSplitUpdate={this.splitUpdateHandler.bind(this)}
+								onPrettifyBtnClick={this.prettifyHandler.bind(this)}
+							/>
+						)}
+
+						<Footer
+							prefs={this.state.prefs}
+							layoutBtnClickHandler={this.layoutBtnClickHandler.bind(this)}
+							helpBtnClickHandler={() =>
+								this.setState({ isHelpModalOpen: true })
+							}
+							settingsBtnClickHandler={this.openSettings.bind(this)}
+							notificationsBtnClickHandler={this.notificationsBtnClickHandler.bind(
+								this
+							)}
+							supportDeveloperBtnClickHandler={this.supportDeveloperBtnClickHandler.bind(
+								this
+							)}
+							detachedPreviewBtnHandler={this.detachedPreviewBtnHandler.bind(
+								this
+							)}
+							codepenBtnClickHandler={this.codepenBtnClickHandler.bind(this)}
+							saveHtmlBtnClickHandler={this.saveHtmlBtnClickHandler.bind(this)}
+							keyboardShortcutsBtnClickHandler={this.openKeyboardShortcuts.bind(
+								this
+							)}
+							screenshotBtnClickHandler={this.screenshotBtnClickHandler.bind(
+								this
+							)}
+							onJs13KHelpBtnClick={this.js13KHelpBtnClickHandler.bind(this)}
+							onJs13KDownloadBtnClick={this.js13KDownloadBtnClickHandler.bind(
+								this
+							)}
+							hasUnseenChangelog={this.state.hasUnseenChangelog}
+							codeSize={this.state.codeSize}
+						/>
+					</div>
+
+					<SavedItemPane
+						items={this.state.savedItems}
+						isOpen={this.state.isSavedItemPaneOpen}
+						closeHandler={this.closeSavedItemsPane.bind(this)}
+						itemClickHandler={this.itemClickHandler.bind(this)}
+						itemRemoveBtnClickHandler={this.itemRemoveBtnClickHandler.bind(
+							this
+						)}
+						itemForkBtnClickHandler={this.itemForkBtnClickHandler.bind(this)}
+						exportBtnClickHandler={this.exportBtnClickHandler.bind(this)}
+						mergeImportedItems={this.mergeImportedItems.bind(this)}
 					/>
 
-					<Footer
-						prefs={this.state.prefs}
-						layoutBtnClickHandler={this.layoutBtnClickHandler.bind(this)}
-						helpBtnClickHandler={() => this.setState({ isHelpModalOpen: true })}
-						settingsBtnClickHandler={() =>
-							this.setState({ isSettingsModalOpen: true })
+					<Alerts />
+
+					<Modal
+						show={this.state.isAddLibraryModalOpen}
+						closeHandler={() => this.setState({ isAddLibraryModalOpen: false })}
+					>
+						<AddLibrary
+							js={
+								this.state.currentItem.externalLibs
+									? this.state.currentItem.externalLibs.js
+									: ''
+							}
+							css={
+								this.state.currentItem.externalLibs
+									? this.state.currentItem.externalLibs.css
+									: ''
+							}
+							onChange={this.onExternalLibChange.bind(this)}
+						/>
+					</Modal>
+					<Modal
+						show={this.state.isNotificationsModalOpen}
+						closeHandler={() =>
+							this.setState({ isNotificationsModalOpen: false })
 						}
-						notificationsBtnClickHandler={this.notificationsBtnClickHandler.bind(
-							this
-						)}
-						supportDeveloperBtnClickHandler={this.supportDeveloperBtnClickHandler.bind(
-							this
-						)}
-						detachedPreviewBtnHandler={this.detachedPreviewBtnHandler.bind(
-							this
-						)}
-						codepenBtnClickHandler={this.codepenBtnClickHandler.bind(this)}
-						saveHtmlBtnClickHandler={this.saveHtmlBtnClickHandler.bind(this)}
-						keyboardShortcutsBtnClickHandler={() =>
-							this.setState({ isKeyboardShortcutsModalOpen: true })
-						}
-						screenshotBtnClickHandler={this.screenshotBtnClickHandler.bind(
-							this
-						)}
-						onJs13KHelpBtnClick={this.js13KHelpBtnClickHandler.bind(this)}
-						onJs13KDownloadBtnClick={this.js13KDownloadBtnClickHandler.bind(
-							this
-						)}
-						hasUnseenChangelog={this.state.hasUnseenChangelog}
-						codeSize={this.state.codeSize}
-					/>
-				</div>
-
-				<SavedItemPane
-					items={this.state.savedItems}
-					isOpen={this.state.isSavedItemPaneOpen}
-					closeHandler={this.closeSavedItemsPane.bind(this)}
-					itemClickHandler={this.itemClickHandler.bind(this)}
-					itemRemoveBtnClickHandler={this.itemRemoveBtnClickHandler.bind(this)}
-					itemForkBtnClickHandler={this.itemForkBtnClickHandler.bind(this)}
-					exportBtnClickHandler={this.exportBtnClickHandler.bind(this)}
-					mergeImportedItems={this.mergeImportedItems.bind(this)}
-				/>
-
-				<Alerts />
-
-				<form
-					style="display:none;"
-					action="https://codepen.io/pen/define"
-					method="POST"
-					target="_blank"
-					id="js-codepen-form"
-				>
-					<input
-						type="hidden"
-						name="data"
-						value='{"title": "New Pen!", "html": "<div>Hello, World!</div>"}'
-					/>
-				</form>
-
-				<Modal
-					show={this.state.isAddLibraryModalOpen}
-					closeHandler={() => this.setState({ isAddLibraryModalOpen: false })}
-				>
-					<AddLibrary
-						js={
-							this.state.currentItem.externalLibs
-								? this.state.currentItem.externalLibs.js
-								: ''
-						}
-						css={
-							this.state.currentItem.externalLibs
-								? this.state.currentItem.externalLibs.css
-								: ''
-						}
-						onChange={this.onExternalLibChange.bind(this)}
-					/>
-				</Modal>
-				<Modal
-					show={this.state.isNotificationsModalOpen}
-					closeHandler={() =>
-						this.setState({ isNotificationsModalOpen: false })
-					}
-				>
-					<Notifications
+					>
+						<Notifications
+							onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
+						/>
+					</Modal>
+					<Modal
+						extraClasses="modal--settings"
+						show={this.state.isSettingsModalOpen}
+						closeHandler={() => this.setState({ isSettingsModalOpen: false })}
+					>
+						<Settings
+							prefs={this.state.prefs}
+							onChange={this.updateSetting.bind(this)}
+						/>
+					</Modal>
+					<Modal
+						extraClasses="login-modal"
+						show={this.state.isLoginModalOpen}
+						closeHandler={() => this.setState({ isLoginModalOpen: false })}
+					>
+						<Login />
+					</Modal>
+					<Modal
+						show={this.state.isProfileModalOpen}
+						closeHandler={() => this.setState({ isProfileModalOpen: false })}
+					>
+						<Profile
+							user={this.state.user}
+							logoutBtnHandler={this.logout.bind(this)}
+						/>
+					</Modal>
+					<HelpModal
+						show={this.state.isHelpModalOpen}
+						closeHandler={() => this.setState({ isHelpModalOpen: false })}
 						onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
+						version={version}
 					/>
-				</Modal>
-				<Modal
-					extraClasses="modal--settings"
-					show={this.state.isSettingsModalOpen}
-					closeHandler={() => this.setState({ isSettingsModalOpen: false })}
-				>
-					<Settings
-						prefs={this.state.prefs}
-						onChange={this.updateSetting.bind(this)}
+					<SupportDeveloperModal
+						show={this.state.isSupportDeveloperModalOpen}
+						closeHandler={() =>
+							this.setState({ isSupportDeveloperModalOpen: false })
+						}
 					/>
-				</Modal>
-				<Modal
-					extraClasses="login-modal"
-					show={this.state.isLoginModalOpen}
-					closeHandler={() => this.setState({ isLoginModalOpen: false })}
-				>
-					<Login />
-				</Modal>
-				<Modal
-					show={this.state.isProfileModalOpen}
-					closeHandler={() => this.setState({ isProfileModalOpen: false })}
-				>
-					<Profile
-						user={this.state.user}
-						logoutBtnHandler={this.logout.bind(this)}
+					<KeyboardShortcutsModal
+						show={this.state.isKeyboardShortcutsModalOpen}
+						closeHandler={() =>
+							this.setState({ isKeyboardShortcutsModalOpen: false })
+						}
 					/>
-				</Modal>
-				<HelpModal
-					show={this.state.isHelpModalOpen}
-					closeHandler={() => this.setState({ isHelpModalOpen: false })}
-					onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
-					version={version}
-				/>
-				<SupportDeveloperModal
-					show={this.state.isSupportDeveloperModalOpen}
-					closeHandler={() =>
-						this.setState({ isSupportDeveloperModalOpen: false })
-					}
-				/>
-				<KeyboardShortcutsModal
-					show={this.state.isKeyboardShortcutsModalOpen}
-					closeHandler={() =>
-						this.setState({ isKeyboardShortcutsModalOpen: false })
-					}
-				/>
-				<AskToImportModal
-					show={this.state.isAskToImportModalOpen}
-					closeHandler={() => this.setState({ isAskToImportModalOpen: false })}
-					oldSavedCreationsCount={this.oldSavedCreationsCount}
-					importBtnClickHandler={this.importCreationsAndSettingsIntoApp.bind(
-						this
-					)}
-					dontAskBtnClickHandler={this.dontAskToImportAnymore.bind(this)}
-				/>
-
-				<OnboardingModal
-					show={this.state.isOnboardModalOpen}
-					closeHandler={() => this.setState({ isOnboardModalOpen: false })}
-				/>
-
-				<Js13KModal
-					show={this.state.isJs13KModalOpen}
-					closeHandler={() => this.setState({ isJs13KModalOpen: false })}
-				/>
-
-				<CreateNewModal
-					show={this.state.isCreateNewModalOpen}
-					closeHandler={() => this.setState({ isCreateNewModalOpen: false })}
-					onBlankTemplateSelect={this.blankTemplateSelectHandler.bind(this)}
-					onTemplateSelect={this.templateSelectHandler.bind(this)}
-				/>
-
-				<Portal into="body">
-					<div
-						class="modal-overlay"
-						onClick={this.modalOverlayClickHandler.bind(this)}
+					<AskToImportModal
+						show={this.state.isAskToImportModalOpen}
+						closeHandler={() =>
+							this.setState({ isAskToImportModalOpen: false })
+						}
+						oldSavedCreationsCount={this.oldSavedCreationsCount}
+						importBtnClickHandler={this.importCreationsAndSettingsIntoApp.bind(
+							this
+						)}
+						dontAskBtnClickHandler={this.dontAskToImportAnymore.bind(this)}
 					/>
-				</Portal>
 
-				<Icons />
-				<form
-					style="display:none;"
-					action="https://codepen.io/pen/define"
-					method="POST"
-					target="_blank"
-					id="codepenForm"
-				>
-					<input
-						type="hidden"
-						name="data"
-						value='{"title": "New Pen!", "html": "<div>Hello, World!</div>"}'
+					<OnboardingModal
+						show={this.state.isOnboardModalOpen}
+						closeHandler={() => this.setState({ isOnboardModalOpen: false })}
 					/>
-				</form>
-			</div>
+
+					<Js13KModal
+						show={this.state.isJs13KModalOpen}
+						closeHandler={() => this.setState({ isJs13KModalOpen: false })}
+					/>
+
+					<CreateNewModal
+						show={this.state.isCreateNewModalOpen}
+						closeHandler={() => this.setState({ isCreateNewModalOpen: false })}
+						onBlankTemplateSelect={this.blankTemplateSelectHandler.bind(this)}
+						onBlankFileTemplateSelect={this.blankFileTemplateSelectHandler.bind(
+							this
+						)}
+						onTemplateSelect={this.templateSelectHandler.bind(this)}
+						onImportGithubRepoSelect={this.importGithubRepoSelectHandler.bind(
+							this
+						)}
+					/>
+
+					<CommandPalette
+						show={this.state.isCommandPaletteOpen}
+						closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
+						files={linearizeFiles(this.state.currentItem.files || [])}
+						isCommandMode={this.state.isCommandPaletteInCommandMode}
+						closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
+					/>
+
+					<Portal into="body">
+						<div
+							class="modal-overlay"
+							onClick={this.modalOverlayClickHandler.bind(this)}
+						/>
+					</Portal>
+
+					<Icons />
+					<form
+						style="display:none;"
+						action="https://codepen.io/pen/define"
+						method="POST"
+						target="_blank"
+						id="codepenForm"
+					>
+						<input
+							type="hidden"
+							name="data"
+							value='{"title": "New Pen!", "html": "<div>Hello, World!</div>"}'
+						/>
+					</form>
+				</div>
+			</I18nProvider>
 		);
 	}
 }

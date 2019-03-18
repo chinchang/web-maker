@@ -1,0 +1,58 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2019-03-04 12:06+0530\n"
+"Mime-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/components/MainHeader.jsx:41
+msgid "Add a JS/CSS library"
+msgstr "Add a JS/CSS library"
+
+#: src/components/MainHeader.jsx:43
+#: src/components/MainHeader.jsx:43
+msgid "Add library"
+msgstr "Add library"
+
+#: src/components/Console.jsx:58
+#: src/components/Console.jsx:58
+msgid "Console"
+msgstr "Console"
+
+#: src/components/MainHeader.jsx:105
+#: src/components/MainHeader.jsx:105
+msgid "Login"
+msgstr "Login"
+
+#: src/components/MainHeader.jsx:64
+#: src/components/MainHeader.jsx:64
+msgid "New"
+msgstr "New"
+
+#: src/components/MainHeader.jsx:96
+#: src/components/MainHeader.jsx:96
+msgid "Open"
+msgstr "Open"
+
+#: src/components/MainHeader.jsx:32
+#: src/components/MainHeader.jsx:32
+msgid "Run"
+msgstr "Run"
+
+#: src/components/MainHeader.jsx:80
+#: src/components/MainHeader.jsx:80
+msgid "Save"
+msgstr "Save"
+
+#: src/components/MainHeader.jsx:105
+#: src/components/MainHeader.jsx:105
+msgid "Signup"
+msgstr "Signup"

@@ -623,6 +623,9 @@ export default class ContentWrap extends Component {
 	editorFocusHandler(editor) {
 		this.props.onEditorFocus(editor);
 	}
+	prettifyBtnClickHandler(codeType) {
+		this.props.onPrettifyBtnClick(codeType);
+	}
 
 	render() {
 		// log('contentwrap update');
@@ -683,6 +686,17 @@ export default class ContentWrap extends Component {
 								</select>
 							</label>
 							<div class="code-wrap__header-right-options">
+								{this.props.currentItem.htmlMode === HtmlModes.HTML ? (
+									<a
+										class="code-wrap__header-btn"
+										title="Format code"
+										onClick={this.prettifyBtnClickHandler.bind(this, 'html')}
+									>
+										<svg>
+											<use xlinkHref="#code-brace-icon" />
+										</svg>
+									</a>
+								) : null}
 								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
 									title="Toggle code pane"
@@ -752,6 +766,15 @@ export default class ContentWrap extends Component {
 									</svg>
 								</a>
 								<a
+									class="code-wrap__header-btn "
+									title="Format code"
+									onClick={this.prettifyBtnClickHandler.bind(this, 'css')}
+								>
+									<svg>
+										<use xlinkHref="#code-brace-icon" />
+									</svg>
+								</a>
+								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
 									title="Toggle code pane"
 									onClick={this.collapseBtnHandler.bind(this)}
@@ -807,6 +830,15 @@ export default class ContentWrap extends Component {
 								</select>
 							</label>
 							<div class="code-wrap__header-right-options">
+								<a
+									class="code-wrap__header-btn "
+									title="Format code"
+									onClick={this.prettifyBtnClickHandler.bind(this, 'css')}
+								>
+									<svg>
+										<use xlinkHref="#code-brace-icon" />
+									</svg>
+								</a>
 								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
 									title="Toggle code pane"

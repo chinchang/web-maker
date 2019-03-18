@@ -1470,7 +1470,27 @@ export default class App extends Component {
 		return classes.join(' ');
 	}
 
-	prettifyHandler(selectedFile) {
+	prettifyHandler(what) {
+		// 3 pane mode
+		if (typeof what === 'string') {
+			prettify({
+				content: this.state.currentItem[what],
+				type: { html: 'html', js: 'js', css: 'css' }[what]
+			}).then(formattedContent => {
+				if (this.state.currentItem[what] === formattedContent) {
+					return;
+				}
+				this.state.currentItem[what] = formattedContent;
+				this.setState({ currentItem: { ...this.state.currentItem } }, () => {
+					// TODO: This is not right way. Editors should refresh automatically
+					// on state change.
+					this.contentWrap.refreshEditor();
+				});
+				this.incrementUnsavedChanges();
+			});
+			return;
+		}
+		const selectedFile = what;
 		const currentItem = {
 			...this.state.currentItem,
 			files: [...this.state.currentItem.files]
@@ -1536,6 +1556,7 @@ export default class App extends Component {
 								prefs={this.state.prefs}
 								onEditorFocus={this.editorFocusHandler.bind(this)}
 								onSplitUpdate={this.splitUpdateHandler.bind(this)}
+								onPrettifyBtnClick={this.prettifyHandler.bind(this)}
 							/>
 						)}
 

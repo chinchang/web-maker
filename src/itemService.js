@@ -1,6 +1,6 @@
 import { deferred } from './deferred';
 import { log } from 'util';
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
 
 export const itemService = {
 	async getItem(id) {

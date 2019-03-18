@@ -36,3 +36,7 @@ export function AutoFocusInput(props) {
 export function Divider(props) {
 	return <div class={`divider ${props.vertical ? 'divider--vertical' : ''}`} />;
 }
+
+export function BetaTag() {
+	return <span class="beta-tag">Beta</span>;
+}

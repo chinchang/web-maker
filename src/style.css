@@ -123,6 +123,12 @@ button {
 .jc-sb {
 	justify-content: space-between;
 }
+.fxd-c {
+	flex-direction: column;
+}
+.fxw-w {
+	flex-wrap: wrap;
+}
 
 .fr {
 	float: right;
@@ -1610,19 +1616,15 @@ body > #demo-frame {
 	display: inline-block;
 }
 
-/*
-.web-maker-with-tag:after {
-	content: 'BETA';
-	position: relative;
-	left: 3px;
-	top: -7px;
+.beta-tag {
 	border-radius: 4px;
-	background: #b76b29;
+	text-transform: uppercase;
+	background: #c68955;
 	color: white;
 	letter-spacing: 0.6px;
-	padding: 2px;
-	font-size: 10px;
-} */
+	padding: 2px 5px;
+	font-size: 0.9em;
+}
 
 .is-extension .web-maker-with-tag:after {
 	display: none;
@@ -1948,7 +1950,7 @@ while the theme CSS file is loading */
 	display: flex;
 }
 .tabs__tablist {
-	margin-right: 40px;
+	/* margin-right: 40px; */
 	flex-shrink: 0;
 }
 .tabs__tab {
@@ -1961,10 +1963,22 @@ while the theme CSS file is loading */
 	color: inherit;
 }
 .tabs__tab--selected {
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(0, 0, 0, 0.2);
 }
 .tabs__tabpanel-wrap {
 	flex: 1;
+}
+.tabs__tabpanel {
+	padding: 2em;
+	background-color: rgba(0, 0, 0, 0.2);
+	border-radius: 5px;
+}
+.tabs--horizontal {
+	flex-direction: column;
+}
+.tabs--horizontal .tabs__tablist {
+	display: flex;
+	justify-content: center;
 }
 
 @media screen and (max-width: 600px) {

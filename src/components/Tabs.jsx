@@ -1,7 +1,10 @@
 import { h, Component } from 'preact';
 
 function hyphenate(text) {
-	return text.replace(/\s/g, '-');
+	if (text.replace) {
+		return text.replace(/\s/g, '-');
+	}
+	return '';
 }
 const ID_PREFIX = 'tab-panel-';
 
@@ -63,7 +66,7 @@ export default class Tabs extends Component {
 	render() {
 		const tabs = this.props.children;
 		return (
-			<div class="tabs">
+			<div class={`tabs ${this.props.horizontal ? 'tabs--horizontal' : ''}`}>
 				<div
 					class="tabs__tablist"
 					role="tablist"
@@ -79,8 +82,8 @@ export default class Tabs extends Component {
 					))}
 				</div>
 				<div class="tabs__tabpanel-wrap">
-					{tabs.map(
-						(child, index) => (this.state.selectedTab === index ? child : null)
+					{tabs.map((child, index) =>
+						this.state.selectedTab === index ? child : null
 					)}
 				</div>
 			</div>

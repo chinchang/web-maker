@@ -115,7 +115,7 @@ export default class ContentWrap extends Component {
 
 				// Track when people actually are working.
 				trackEvent.previewCount = (trackEvent.previewCount || 0) + 1;
-				if (trackEvent.previewCount === 4) {
+				if (trackEvent.previewCount % 4 === 0) {
 					trackEvent('fn', 'usingPreview');
 				}
 			}

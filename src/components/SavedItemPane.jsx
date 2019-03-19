@@ -10,9 +10,6 @@ export default class SavedItemPane extends Component {
 	constructor(props) {
 		super(props);
 		this.items = [];
-		this.state = {
-			filteredItems: []
-		};
 	}
 	componentWillUpdate(nextProps) {
 		if (this.props.items !== nextProps.items) {
@@ -20,14 +17,14 @@ export default class SavedItemPane extends Component {
 			this.items.sort(function(a, b) {
 				return b.updatedOn - a.updatedOn;
 			});
-			this.setState({
-				filteredItems: this.items
-			});
 		}
 	}
 	componentDidUpdate(prevProps) {
 		if (this.props.isOpen && !prevProps.isOpen) {
 			window.searchInput.value = '';
+			this.setState({
+				filteredItems: undefined
+			});
 		}
 	}
 	onCloseIntent() {
@@ -137,7 +134,7 @@ export default class SavedItemPane extends Component {
 		trackEvent('ui', 'searchInputType');
 	}
 
-	render() {
+	render(props, { filteredItems = this.items }) {
 		return (
 			<div
 				id="js-saved-items-pane"
@@ -179,10 +176,10 @@ export default class SavedItemPane extends Component {
 				/>
 
 				<div id="js-saved-items-wrap" class="saved-items-pane__container">
-					{!this.state.filteredItems.length && this.items.length ? (
+					{!filteredItems.length && this.items.length ? (
 						<div class="mt-1">No match found.</div>
 					) : null}
-					{this.state.filteredItems.map(item => (
+					{filteredItems.map(item => (
 						<ItemTile
 							item={item}
 							onClick={this.itemClickHandler.bind(this, item)}

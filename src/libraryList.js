@@ -1,6 +1,6 @@
 export const jsLibs = [
 	{
-		url: 'https://code.jquery.com/jquery-3.2.1.min.js',
+		url: 'https://code.jquery.com/jquery-3.3.1.min.js',
 		label: 'jQuery',
 		type: 'js'
 	},
@@ -11,13 +11,13 @@ export const jsLibs = [
 	},
 	{
 		url:
-			'https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js',
+			'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js',
 		label: 'Bootstrap 4',
 		type: 'js'
 	},
 	{
 		url:
-			'https://cdn.jsdelivr.net/npm/foundation-sites@6.5.0-rc.3/dist/js/foundation.min.js',
+			'https://cdn.jsdelivr.net/npm/foundation-sites@6.5.3/dist/js/foundation.min.js',
 		label: 'Foundation',
 		type: 'js'
 	},
@@ -33,13 +33,13 @@ export const jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/react/16.2.0/umd/react.production.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/react/16.8.4/umd/react.production.min.js',
 		label: 'React',
 		type: 'js'
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.2.0/umd/react-dom.production.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.4/umd/react-dom.production.min.js',
 		label: 'React DOM',
 		type: 'js'
 	},
@@ -76,7 +76,7 @@ export const jsLibs = [
 	},
 	{
 		url:
-			'https://getuikit.com/assets/uikit/dist/js/uikit.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/js/uikit.min.js',
 		label: 'UIkit 3',
 		type: 'js'
 	},
@@ -112,13 +112,13 @@ export const cssLibs = [
 	},
 	{
 		url:
-			'https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css',
+			'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css',
 		label: 'Bootstrap 4',
 		type: 'css'
 	},
 	{
 		url:
-			'https://cdn.jsdelivr.net/npm/foundation-sites@6.5.0-rc.3/dist/css/foundation.min.css',
+			'https://cdn.jsdelivr.net/npm/foundation-sites@6.5.3/dist/css/foundation.min.css',
 		label: 'Foundation',
 		type: 'css'
 	},
@@ -128,7 +128,7 @@ export const cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css',
 		label: 'Bulma',
 		type: 'css'
 	},
@@ -151,13 +151,13 @@ export const cssLibs = [
 	},
 	{
 		url:
-			'https://getuikit.com/assets/uikit/dist/css/uikit.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/css/uikit.min.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css',
 		label: 'Animate.css',
 		type: 'css'
 	},
@@ -168,7 +168,7 @@ export const cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://use.fontawesome.com/releases/v5.4.1/css/all.css',
+		url: 'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
 		label: 'FontAwesome 5',
 		type: 'css'
 	}

@@ -752,6 +752,11 @@ body > #demo-frame {
 	z-index: 6;
 }
 
+.footer div > a,
+.footer div > button {
+	cursor: pointer;
+}
+
 .main-header {
 	display: flex;
 	flex-wrap: nowrap;

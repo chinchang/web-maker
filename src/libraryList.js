@@ -59,9 +59,13 @@ export const jsLibs = [
 		type: 'js'
 	},
 	{
-		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js',
 		label: 'Underscore',
+		type: 'js'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js',
+		label: 'Lodash',
 		type: 'js'
 	},
 	{

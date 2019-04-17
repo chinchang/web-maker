@@ -76,7 +76,7 @@ export const jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/js/uikit.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.1.0/js/uikit.min.js',
 		label: 'UIkit 3',
 		type: 'js'
 	},
@@ -151,7 +151,7 @@ export const cssLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.3/css/uikit.min.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.1.0/css/uikit.min.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},

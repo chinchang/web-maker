@@ -4,7 +4,7 @@
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<title>
-			{% if page.url == '/' %}Web Maker{% else %}{{ title}} - Web Maker{% endif
+			{% if page.url == '/' %}Web Maker{% else %}{{ title }} - Web Maker{% endif
 			%}
 		</title>
 		<meta property="og:title" content="Web Maker" />
@@ -87,11 +87,6 @@
 			button {
 				font-size: inherit;
 			}
-
-			figcaption {
-				color: #6a6a6a;
-			}
-
 			.homepage-title {
 				font-size: 3.1em;
 				margin: 0;
@@ -442,7 +437,9 @@
 					<a class="btn  download-btn web-app-btn" href="/app/">
 						<span>Open Web App</span>
 					</a>
-					<p style="margin-top:3px;">Recommended: More features. More fun!</p>
+					<p style="margin-top:3px;">
+						Recommended: Works Offline! More features. More fun!
+					</p>
 					<a
 						class="btn  download-btn js-chrome-btn"
 						href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh"
@@ -520,7 +517,7 @@
 		{% endif %}
 
 		<main class="main-content">
-			{{content}}
+			{{ content }}
 		</main>
 
 		<div id="info" class="info">

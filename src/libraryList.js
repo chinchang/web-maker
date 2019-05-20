@@ -76,7 +76,7 @@ export const jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.1.4/js/uikit.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.1.5/js/uikit.min.js',
 		label: 'UIkit 3',
 		type: 'js'
 	},
@@ -128,7 +128,7 @@ export const cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css',
 		label: 'Bulma',
 		type: 'css'
 	},
@@ -151,7 +151,7 @@ export const cssLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.1.4/css/uikit.min.css',
+			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.1.5/css/uikit.min.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},
@@ -168,7 +168,7 @@ export const cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://use.fontawesome.com/releases/v5.8.1/css/all.css',
+		url: 'https://use.fontawesome.com/releases/v5.8.2/css/all.css',
 		label: 'FontAwesome 5',
 		type: 'css'
 	}

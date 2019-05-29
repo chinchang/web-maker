@@ -7,22 +7,68 @@ function sanitizeDomNode(node) {
 		tagName: node.tagName,
 		childNodes: [...node.childNodes].map(child => sanitizeDomNode(child)),
 		textContent: node.textContent
-	}
-	if(node.attributes) {
-		fakeNode.attributes = [...node.attributes].map(attribute => ({name:attribute.name, value:attribute.value}))
+	};
+	if (node.attributes) {
+		fakeNode.attributes = [...node.attributes].map(attribute => ({
+			name: attribute.name,
+			value: attribute.value
+		}));
 	}
 	return fakeNode;
 }
+
+function sanitizeEvent(event) {
+	const fakeEvent = {};
+
+	// Doing this still does't show class name in inspector
+	// fakeEvent.__proto__.constructor = event.constructor
+
+	function isSerializable(thing) {
+		try {
+			JSON.stringify(thing);
+		} catch (e) {
+			return false;
+		}
+		return true;
+	}
+	const prohibitedKeys = ['srcElement', 'sourceCapabilities'];
+	for (var key in event) {
+		if (typeof event[key] === 'function' || prohibitedKeys.includes(key)) {
+			continue;
+		}
+
+		if (
+			event[key] instanceof HTMLElement ||
+			event[key] instanceof HTMLHtmlElement
+		) {
+			fakeEvent[key] = sanitizeDomNode(event[key]);
+			continue;
+		} else if (event[key] instanceof Window) {
+			fakeEvent[key] = 'Window';
+			continue;
+		} else if (event[key] instanceof Document) {
+			fakeEvent[key] = 'Document';
+			continue;
+		}
+
+		if (isSerializable(event[key])) {
+			fakeEvent[key] = event[key];
+		}
+	}
+	return fakeEvent;
+}
 function sendLog(...args) {
 	const sanitizedArgs = [...args].map(arg => {
-		if(arg && arg instanceof HTMLElement) {
-			return sanitizeDomNode(arg)
+		if (arg && arg instanceof HTMLElement) {
+			return sanitizeDomNode(arg);
+		} else if (arg && arg instanceof Event) {
+			return sanitizeEvent(arg);
 		}
 		return arg;
-	})
-	mainWindow.postMessage({ logs: sanitizedArgs },"*");
+	});
+	mainWindow.postMessage({ logs: sanitizedArgs }, '*');
 }
-	
+
 (function() {
 	var logEl,
 		isInitialized = false,
@@ -224,10 +270,10 @@ window._wmEvaluate = function _wmEvaluate(expr) {
 		sendLog(e.stack || e.message);
 		return;
 	}
-	sendLog(result)
+	sendLog(result);
 };
 window.addEventListener('message', e => {
-	if(e.data && e.data.exprToEval) {
+	if (e.data && e.data.exprToEval) {
 		_wmEvaluate(e.data.exprToEval);
 	}
-})
+});

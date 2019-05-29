@@ -185,7 +185,6 @@ export default class App extends Component {
 		};
 		window.onbeforeunload = event => {
 			if (this.state.unsavedEditCount) {
-				console.log(9999999999);
 				event.preventDefault();
 				// Chrome requires returnValue to be set.
 				event.returnValue = '';
@@ -254,7 +253,7 @@ export default class App extends Component {
 	}
 
 	async loadLanguage(lang) {
-		console.log('🇯🇲 fetching defninition');
+		log('🇯🇲 fetching defninition');
 
 		const catalog = await import(/* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */ `../locales/${lang}/messages.js`);
 
@@ -418,7 +417,12 @@ export default class App extends Component {
 
 		this.setState({ currentItem: item }, () => {
 			d.resolve();
-			this.saveCode('code');
+			// savecode will try to get split sizes from DOM, and DOM
+			// will update after sometime. so delay the saving
+			setTimeout(() => {
+				// Save locally so that something which is simply opened (or created newly) and closed without save can opened the next time
+				this.saveCode('code');
+			}, 2000);
 		});
 
 		// Reset auto-saving flag
@@ -1314,8 +1318,6 @@ export default class App extends Component {
 				const externalLib = result[i];
 				zip.file(externalLib.fileName, externalLib.code);
 			}
-
-			// console.log('ORIGINAL', this.calculateTextSize(fileContent));
 
 			var promise = null;
 			if (0 && JSZip.support.uint8array) {

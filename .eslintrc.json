@@ -174,7 +174,7 @@
 		"sort-imports": "off",
 		"sort-vars": "off",
 		"strict": ["error", "never"],
-		"template-curly-spacing": "error",
+		"template-curly-spacing": "off",
 		"unicode-bom": ["error", "never"],
 		"valid-jsdoc": "off",
 		"vars-on-top": "off",

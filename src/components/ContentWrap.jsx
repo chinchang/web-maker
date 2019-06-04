@@ -145,12 +145,22 @@ export default class ContentWrap extends Component {
 				log('✉️ Sending message to detached window');
 				this.detachedWindow.postMessage({ contents }, '*');
 			} else {
-				this.frame.src = this.frame.src;
-				setTimeout(() => {
+				const writeInsideIframe = () => {
 					this.frame.contentDocument.open();
 					this.frame.contentDocument.write(contents);
 					this.frame.contentDocument.close();
-				}, 10);
+				};
+				Promise.race([
+					// Just in case onload promise doesn't resolves
+					new Promise(resolve => {
+						setTimeout(resolve, 200);
+					}),
+					new Promise(resolve => {
+						this.frame.onload = resolve;
+					})
+				]).then(writeInsideIframe);
+				// Setting to blank string cause frame to reload
+				this.frame.src = '';
 			}
 		} else {
 			// we need to store user script in external JS file to prevent inline-script
@@ -870,7 +880,6 @@ export default class ContentWrap extends Component {
 				<div class="demo-side" id="js-demo-side" style="">
 					<iframe
 						ref={el => (this.frame = el)}
-						src="about://blank"
 						frameborder="0"
 						id="demo-frame"
 						allowfullscreen

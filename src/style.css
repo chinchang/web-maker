@@ -55,6 +55,9 @@ input,
 textarea {
 	font-weight: 500;
 }
+code {
+	font-size: 1.2em;
+}
 
 [role='button'] {
 	cursor: pointer;

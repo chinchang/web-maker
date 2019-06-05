@@ -34,6 +34,15 @@ function Notification({ version, isLatest, ...props }) {
 			{isLatest ? (
 				<div class="mt-2">
 					<p>
+						<strong>🎉 New Product!</strong> If you like Web Maker, you'll
+						probably also like a new product I launched. It's the first ever
+						code-golfing game for CSS ->{' '}
+						<a href="https://cssbattle.dev" target="_blank">
+							CSSBattle
+						</a>
+						.
+					</p>
+					{/*<p>
 						<strong>🚀 Announcement</strong>: Hi! I am Kushagra Gour (creator of
 						Web Maker) and I have launched a
 						<a
@@ -54,7 +63,7 @@ function Notification({ version, isLatest, ...props }) {
 							support me
 						</a>{' '}
 						:)
-					</p>
+						</p>*/}
 					<p>
 						<a
 							href="https://github.com/chinchang/web-maker/issues"
@@ -106,8 +115,32 @@ export function Notifications(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<div class="notification">
-				<span class="notification__version">4.0.0</span>
+			<Notification version="4.0.1" {...props} isLatest={true}>
+				<NotificationItem type="bug">
+					Buggy full-screen option in Files mode. The option is removed till it
+					works correctly with Files mode
+				</NotificationItem>
+				<NotificationItem type="bug">
+					File explorer sidebar taking too much width in Files mode.
+				</NotificationItem>
+				<NotificationItem type="bug">
+					SASS/SCSS compiler updated to version 3.6.3 of Libsass.
+				</NotificationItem>
+				<NotificationItem type="bug">
+					JavaScript evaluation failing randomly with errors like const cannot
+					be reassigned.
+				</NotificationItem>
+				<NotificationItem type="bug">
+					Command palette now opens with <code>F1</code> key instead of{' '}
+					<code>Cmd/Ctrl + shift + P</code>
+				</NotificationItem>
+				<li>
+					⬆️ Popular libraries updated to latest versions. Thanks
+					<ThanksTo url="https://github.com/diomed" name="@diomed" />
+				</li>
+			</Notification>
+
+			<Notification version="4.0.0" {...props}>
 				<p>
 					Sit tight, because this is going to be some amazing set on updates for
 					you! Read{' '}
@@ -182,9 +215,9 @@ export function Notifications(props) {
 						improvements mainly in the area of keyboard navigation.
 					</NotificationItem>
 				</ul>
-			</div>
+			</Notification>
 
-			<Notification version="3.6.2" {...props} isLatest={true}>
+			<Notification version="3.6.2" {...props}>
 				<NotificationItem type="bug">
 					"404 Page not found" showing up in preview window when in detached
 					mode.

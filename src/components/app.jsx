@@ -569,6 +569,10 @@ export default class App extends Component {
 				// we don't want this to trigger which in turn focuses back the last editor.
 				this.closeSavedItemsPane();
 			} else if ((event.ctrlKey || event.metaKey) && event.keyCode === 80) {
+				// cmd+shift+P and this is Firefox, do nothing
+				if (event.shiftKey && navigator.userAgent.match(/Firefox/)) {
+					return true;
+				}
 				this.setState({
 					isCommandPaletteOpen: true,
 					isCommandPaletteInCommandMode: !!event.shiftKey
@@ -578,6 +582,15 @@ export default class App extends Component {
 					'openCommandPaletteKeyboardShortcut',
 					!!event.shiftKey ? 'command' : 'files'
 				);
+				event.preventDefault();
+			} else if (event.key === 'F1' && navigator.userAgent.match(/Firefox/)) {
+				// On firefox, open command palette with F1 because Cmd+Shift+P
+				// is for opening private window
+				this.setState({
+					isCommandPaletteOpen: true,
+					isCommandPaletteInCommandMode: true
+				});
+				trackEvent('ui', 'openCommandPaletteKeyboardShortcut', 'command');
 				event.preventDefault();
 			}
 		});

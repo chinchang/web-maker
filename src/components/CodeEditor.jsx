@@ -69,7 +69,9 @@ export default class CodeEditor extends Component {
 			const { prefs } = nextProps;
 
 			if (this.props.type === 'monaco') {
-				this.instance.updateOptions({ fontSize: prefs.fontSize });
+				this.editorReadyDeferred.promise.then(() => {
+					this.instance.updateOptions({ fontSize: prefs.fontSize });
+				});
 			} else {
 				this.instance.setOption(
 					'indentWithTabs',

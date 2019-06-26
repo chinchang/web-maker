@@ -715,7 +715,13 @@ export default class ContentWrap extends Component {
 							</div>
 						</div>
 						<CodeEditor
-							type={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
+							type={
+								window.forcedSettings.isMonacoEditorOn === true ||
+								(this.props.prefs.isMonacoEditorOn &&
+									window.forcedSettings.isMonacoEditorOn !== false)
+									? 'monaco'
+									: 'codemirror'
+							}
 							options={{
 								mode: 'htmlmixed',
 								profile: 'xhtml',
@@ -792,7 +798,13 @@ export default class ContentWrap extends Component {
 							</div>
 						</div>
 						<CodeEditor
-							type={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
+							type={
+								window.forcedSettings.isMonacoEditorOn === true ||
+								(this.props.prefs.isMonacoEditorOn &&
+									window.forcedSettings.isMonacoEditorOn !== false)
+									? 'monaco'
+									: 'codemirror'
+							}
 							options={{
 								mode: 'css',
 								gutters: [
@@ -857,7 +869,13 @@ export default class ContentWrap extends Component {
 							</div>
 						</div>
 						<CodeEditor
-							type={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
+							type={
+								window.forcedSettings.isMonacoEditorOn === true ||
+								(this.props.prefs.isMonacoEditorOn &&
+									window.forcedSettings.isMonacoEditorOn !== false)
+									? 'monaco'
+									: 'codemirror'
+							}
 							options={{
 								mode: 'javascript',
 								gutters: [

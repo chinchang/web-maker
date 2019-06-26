@@ -79,6 +79,21 @@ const LocalStorageKeys = {
 const UNSAVED_WARNING_COUNT = 15;
 const version = '4.0.1';
 
+// Read forced settings as query parameters
+window.forcedSettings = {};
+if (location.search) {
+	let match = location.search.replace(/^\?/, '').match(/settings=([^=]*)/);
+	if (match) {
+		match = match[1];
+		match.split(',').map(pair => {
+			pair = pair.split(':');
+			if (pair[1] === 'true') pair[1] = true;
+			else if (pair[1] === 'false') pair[1] = false;
+			window.forcedSettings[pair[0]] = pair[1];
+		});
+	}
+}
+
 export default class App extends Component {
 	constructor() {
 		super();

@@ -114,8 +114,21 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+			<Notification version="4.0.2" {...props} isLatest={true}>
+				<li>
+					You can now override settings through query parameters. Currently only{' '}
+					<strong>autoPreview</strong> and <strong>isMonacoEditorOn</strong> are
+					supported. Example:{' '}
+					<code>
+						https://webmaker.app/app?settings=autoPreview:false,isMonacoEditorOn:true
+					</code>
+				</li>
+				<NotificationItem type="bug">
+					"Settings" and "Create New" modals breaking on mobile.
+				</NotificationItem>
+			</Notification>
 
-			<Notification version="4.0.1" {...props} isLatest={true}>
+			<Notification version="4.0.1" {...props}>
 				<NotificationItem type="bug">
 					Buggy full-screen option in Files mode. The option is removed till it
 					works correctly with Files mode

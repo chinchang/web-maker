@@ -293,8 +293,14 @@ export default class ContentWrapFiles extends Component {
 	 * @param {boolean} isManual Is this a manual preview request from user?
 	 */
 	setPreviewContent(isForced, isManual) {
-		if (!this.props.prefs.autoPreview && !isManual) {
-			return;
+		if (!isManual) {
+			let autoPreview =
+				window.forcedSettings.autoPreview !== undefined
+					? window.forcedSettings.autoPreview
+					: this.props.prefs.autoPreview;
+			if (!autoPreview) {
+				return;
+			}
 		}
 
 		if (!this.props.prefs.preserveConsoleLogs) {

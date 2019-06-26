@@ -963,7 +963,11 @@ export default class App extends Component {
 
 		const prefs = this.state.prefs;
 		// Show/hide RUN button based on autoPreview setting.
-		runBtn.classList[prefs.autoPreview ? 'add' : 'remove']('hide');
+		let autoPreview =
+			window.forcedSettings.autoPreview !== undefined
+				? window.forcedSettings
+				: prefs.autoPreview;
+		runBtn.classList[autoPreview ? 'add' : 'remove']('hide');
 
 		this.contentWrap.applyCodemirrorSettings(this.state.prefs);
 

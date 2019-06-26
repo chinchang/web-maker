@@ -695,7 +695,13 @@ export default class ContentWrapFiles extends Component {
 							</div>
 						</div>
 						<CodeEditor
-							type={this.props.prefs.isMonacoEditorOn ? 'monaco' : 'codemirror'}
+							type={
+								window.forcedSettings.isMonacoEditorOn === true ||
+								(this.props.prefs.isMonacoEditorOn &&
+									window.forcedSettings.isMonacoEditorOn !== false)
+									? 'monaco'
+									: 'codemirror'
+							}
 							value={
 								this.state.selectedFile ? this.state.selectedFile.content : ''
 							}

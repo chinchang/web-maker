@@ -99,6 +99,9 @@ button {
 .d-f {
 	display: flex;
 }
+.fxw-w {
+	flex-wrap: wrap;
+}
 .ov-h {
 	overflow: hidden;
 }

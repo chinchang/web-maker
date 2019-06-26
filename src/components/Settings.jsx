@@ -169,7 +169,7 @@ export default class Settings extends Component {
 								<Divider />
 								<div class="line">
 									<span>Default Preprocessors</span>
-									<div class="flex">
+									<div class="flex fxw-w">
 										<select
 											aria-label="Default HTML preprocessor"
 											style="flex:1;margin-left:20px"

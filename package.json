@@ -1,6 +1,6 @@
 {
 	"name": "web-maker",
-	"version": "4.0.1",
+	"version": "4.0.2",
 	"description": "A blazing fast & offline web playground",
 	"scripts": {
 		"start": "npm run -s dev && gulp start-preview-server",

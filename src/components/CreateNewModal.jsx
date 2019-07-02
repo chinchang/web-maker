@@ -175,7 +175,7 @@ export class CreateNewModal extends Component {
 						</div>
 					</TabPanel>
 					<TabPanel label={option2}>
-						<div class="d-f fxw-w">
+						<div class="d-f fxw-w show-when-app">
 							<button
 								type="button"
 								class="btn btn--primary"
@@ -199,6 +199,10 @@ export class CreateNewModal extends Component {
 									);
 								}
 							})}
+						</div>
+						<div class="show-when-extension">
+							Files modes is currently only available in Web app.{' '}
+							<a href="https://webmaker.app/app/">Try the Web app now</a>.
 						</div>
 					</TabPanel>
 				</Tabs>

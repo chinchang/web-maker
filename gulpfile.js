@@ -226,7 +226,7 @@ gulp.task('release', function(callback) {
 		'concatSwRegistration',
 		'minify',
 		'generate-service-worker',
-		// 'packageExtension',
+		'packageExtension',
 		'buildDistFolder',
 		'cleanup',
 		function(error) {

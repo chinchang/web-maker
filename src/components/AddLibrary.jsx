@@ -109,8 +109,8 @@ export default class AddLibrary extends Component {
 				<p class="mt-0 help-text">Put each library in new line</p>
 
 				<p style="font-size: 0.8em;" class="show-when-extension opacity--70">
-					Note: You can load external scripts from following domains: localhost,
-					https://ajax.googleapis.com, https://code.jquery.com,
+					Note: You can load external scripts only from following domains:
+					localhost, https://ajax.googleapis.com, https://code.jquery.com,
 					https://cdnjs.cloudflare.com, https://unpkg.com, https://maxcdn.com,
 					https://cdn77.com, https://maxcdn.bootstrapcdn.com,
 					https://cdn.jsdelivr.net/, https://rawgit.com, https://wzrd.in

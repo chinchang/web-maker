@@ -281,19 +281,25 @@ export default class App extends Component {
 	}
 
 	incrementUnsavedChanges() {
-		this.setState({ unsavedEditCount: this.state.unsavedEditCount + 1 });
+		this.setState(prevState => {
+			const newCount = prevState.unsavedEditCount + 1;
 
-		if (
-			this.state.unsavedEditCount % UNSAVED_WARNING_COUNT === 0 &&
-			this.state.unsavedEditCount >= UNSAVED_WARNING_COUNT
-		) {
-			window.saveBtn.classList.add('animated');
-			window.saveBtn.classList.add('wobble');
-			window.saveBtn.addEventListener('animationend', () => {
-				window.saveBtn.classList.remove('animated');
-				window.saveBtn.classList.remove('wobble');
-			});
-		}
+			console.log('checking on ', newCount);
+
+			if (
+				newCount % UNSAVED_WARNING_COUNT === 0 &&
+				newCount >= UNSAVED_WARNING_COUNT
+			) {
+				window.saveBtn.classList.add('animated');
+				window.saveBtn.classList.add('wobble');
+				window.saveBtn.addEventListener('animationend', () => {
+					window.saveBtn.classList.remove('animated');
+					window.saveBtn.classList.remove('wobble');
+				});
+			}
+
+			return { unsavedEditCount: newCount };
+		});
 	}
 
 	updateProfileUi() {

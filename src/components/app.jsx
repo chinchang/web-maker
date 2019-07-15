@@ -270,7 +270,9 @@ export default class App extends Component {
 	async loadLanguage(lang) {
 		log('🇯🇲 fetching defninition');
 
-		const catalog = await import(/* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */ `../locales/${lang}/messages.js`);
+		const catalog = await import(
+			/* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */ `../locales/${lang}/messages.js`
+		);
 
 		this.setState(state => ({
 			catalogs: {
@@ -1496,9 +1498,7 @@ export default class App extends Component {
 		const { file } = getFileFromPath(currentItem.files, sourceFilePath);
 		if (doesFileExistInFolder(destinationFolder, file.name)) {
 			alert(
-				`File with name "${
-					file.name
-				}" already exists in the destination folder.`
+				`File with name "${file.name}" already exists in the destination folder.`
 			);
 			return;
 		}

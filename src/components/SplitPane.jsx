@@ -38,7 +38,7 @@ export class SplitPane extends Component {
 		options.gutterSize = 6;
 
 		/* eslint-disable new-cap */
-		this.splitInstance = Split([...this.parent.children], options);
+		this.splitInstance = Split(Array.from(this.parent.children), options);
 
 		/* eslint-enable new-cap */
 

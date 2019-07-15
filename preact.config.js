@@ -1,4 +1,4 @@
-var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
+// var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 
 /**
  * Function that mutates original webpack config.
@@ -34,12 +34,12 @@ export default function(config, env, helpers) {
 		// Remove the default hash append in chunk name
 		config.output.chunkFilename = '[name].chunk.js';
 
-		config.plugins.push(
-			new CommonsChunkPlugin({
-				name: 'vendor',
-				minChunks: ({ resource }) => /node_modules/.test(resource)
-			})
-		);
+		// config.plugins.push(
+		// 	new CommonsChunkPlugin({
+		// 		name: 'vendor',
+		// 		minChunks: ({ resource }) => /node_modules/.test(resource)
+		// 	})
+		// );
 
 		const swPlugin = helpers.getPluginsByName(
 			config,

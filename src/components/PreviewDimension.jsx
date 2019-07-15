@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { PureComponent } from 'preact-compat';
+import { PureComponent } from 'preact/compat';
 
 /**
  * This component udpates not through props or state, but by some parent

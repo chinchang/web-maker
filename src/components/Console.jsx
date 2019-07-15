@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import { Inspector, chromeDark } from 'react-inspector';
 import { Trans } from '@lingui/macro';
-import { PureComponent } from 'preact-compat';
+import { PureComponent } from 'preact/compat';
 
 class LogRow extends Component {
 	shouldComponentUpdate() {

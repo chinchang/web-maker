@@ -2,12 +2,15 @@ import { h, Component } from 'preact';
 import CodeEditor from './CodeEditor.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
-import { log, writeFile, loadJS, getCompleteHtml } from '../utils';
+import {
+	log,
+	writeFile,
+	getCompleteHtml,
+	handleModeRequirements
+} from '../utils';
 import { SplitPane } from './SplitPane.jsx';
 import { trackEvent } from '../analytics';
-import CodeMirror from '../CodeMirror';
 import { Console } from './Console';
-import { deferred } from '../deferred';
 import CssSettingsModal from './CssSettingsModal';
 import { PreviewDimension } from './PreviewDimension.jsx';
 const minCodeWrapSize = 33;
@@ -313,9 +316,7 @@ export default class ContentWrap extends Component {
 
 		// Replace correct css file in LINK tags's href
 		if (prefs.editorTheme) {
-			window.editorThemeLinkTag.href = `lib/codemirror/theme/${
-				prefs.editorTheme
-			}.css`;
+			window.editorThemeLinkTag.href = `lib/codemirror/theme/${prefs.editorTheme}.css`;
 		}
 
 		window.fontStyleTag.textContent = window.fontStyleTemplate.textContent.replace(
@@ -450,56 +451,12 @@ export default class ContentWrap extends Component {
 		document.body.classList.remove('is-dragging');
 		this.updateSplits();
 	}
-	/**
-	 * Loaded the code comiler based on the mode selected
-	 */
-	handleModeRequirements(mode) {
-		const baseTranspilerPath = 'lib/transpilers';
-		// Exit if already loaded
-		var d = deferred();
-		if (modes[mode].hasLoaded) {
-			d.resolve();
-			return d.promise;
-		}
-
-		function setLoadedFlag() {
-			modes[mode].hasLoaded = true;
-			d.resolve();
-		}
-
-		if (mode === HtmlModes.JADE) {
-			loadJS(`${baseTranspilerPath}/jade.js`).then(setLoadedFlag);
-		} else if (mode === HtmlModes.MARKDOWN) {
-			loadJS(`${baseTranspilerPath}/marked.js`).then(setLoadedFlag);
-		} else if (mode === CssModes.LESS) {
-			loadJS(`${baseTranspilerPath}/less.min.js`).then(setLoadedFlag);
-		} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
-			loadJS(`${baseTranspilerPath}/sass.js`).then(function() {
-				window.sass = new Sass(`${baseTranspilerPath}/sass.worker.js`);
-				setLoadedFlag();
-			});
-		} else if (mode === CssModes.STYLUS) {
-			loadJS(`${baseTranspilerPath}/stylus.min.js`).then(setLoadedFlag);
-		} else if (mode === CssModes.ACSS) {
-			loadJS(`${baseTranspilerPath}/atomizer.browser.js`).then(setLoadedFlag);
-		} else if (mode === JsModes.COFFEESCRIPT) {
-			loadJS(`${baseTranspilerPath}/coffee-script.js`).then(setLoadedFlag);
-		} else if (mode === JsModes.ES6) {
-			loadJS(`${baseTranspilerPath}/babel.min.js`).then(setLoadedFlag);
-		} else if (mode === JsModes.TS) {
-			loadJS(`${baseTranspilerPath}/typescript.js`).then(setLoadedFlag);
-		} else {
-			d.resolve();
-		}
-
-		return d.promise;
-	}
 
 	updateHtmlMode(value) {
 		this.props.onCodeModeChange('html', value);
 		this.props.currentItem.htmlMode = value;
 		this.cm.html.setLanguage(value);
-		return this.handleModeRequirements(value);
+		return handleModeRequirements(value);
 	}
 	updateCssMode(value) {
 		this.props.onCodeModeChange('css', value);
@@ -509,13 +466,13 @@ export default class ContentWrap extends Component {
 			modes[value].hasSettings ? 'remove' : 'add'
 		]('hide');
 		this.cm.css.setLanguage(value);
-		return this.handleModeRequirements(value);
+		return handleModeRequirements(value);
 	}
 	updateJsMode(value) {
 		this.props.onCodeModeChange('js', value);
 		this.props.currentItem.jsMode = value;
 		this.cm.js.setLanguage(value);
-		return this.handleModeRequirements(value);
+		return handleModeRequirements(value);
 	}
 	codeModeChangeHandler(e) {
 		var mode = e.target.value;

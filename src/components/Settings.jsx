@@ -378,24 +378,24 @@ export default class Settings extends Component {
 								stopped.
 							</HelpText>
 						</div>
-						{/*
-							<Divider />
-							
-							<div>
+
+						<Divider />
+
+						<div>
 							<label class="line">
-							Language
-							<select
-							value={prefs.lang}
-							onChange={e => this.updateSetting(e, 'lang')}
-							>
-							<option value="en">English</option>
-							<option value="hi">Hindi</option>
-							<option value="sa">Sanskrit</option>
-							<option value="es">Spanish</option>
-							</select>
+								Language
+								<select
+									value={prefs.lang}
+									onChange={e => this.updateSetting(e, 'lang')}
+								>
+									<option value="en">English</option>
+									<option value="hi">हिंदी</option>
+									<option value="sa">Sanskrit</option>
+									<option value="es">Español (España)</option>
+									<option value="zh-Hans">中文(简体)</option>
+								</select>
 							</label>
-							</div>
-						*/}
+						</div>
 					</TabPanel>
 				</Tabs>
 			</div>

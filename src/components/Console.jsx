@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import { Inspector, chromeDark } from 'react-inspector';
-import { Trans } from '@lingui/macro';
+import { Trans, t, NumberFormat } from '@lingui/macro';
+import { I18n } from '@lingui/react';
 import { PureComponent } from 'preact/compat';
 
 class LogRow extends Component {
@@ -44,62 +45,68 @@ export class Console extends PureComponent {
 		} = this.props;
 
 		return (
-			<div
-				id="consoleEl"
-				class={`console ${isConsoleOpen ? '' : 'is-minimized'}`}
-			>
-				<div id="consoleLogEl" class="console__log">
+			<I18n>
+				{({ i18n }) => (
 					<div
-						class="js-console__header  code-wrap__header"
-						title="Double click to toggle console"
-						onDblClick={onConsoleHeaderDblClick}
+						id="consoleEl"
+						class={`console ${isConsoleOpen ? '' : 'is-minimized'}`}
 					>
-						<span class="code-wrap__header-label">
-							<Trans>Console</Trans>
-							<span class="count-label">{logs.length}</span>
-						</span>
-						<div class="code-wrap__header-right-options">
-							<a
-								class="code-wrap__header-btn"
-								title="Clear console (CTRL + L)"
-								onClick={onClearConsoleBtnClick}
+						<div id="consoleLogEl" class="console__log">
+							<div
+								class="js-console__header  code-wrap__header"
+								title={i18n._(t`Double click to toggle console`)}
+								onDblClick={onConsoleHeaderDblClick}
 							>
-								<svg>
-									<use xlinkHref="#cancel-icon" />
-								</svg>
-							</a>
-							<a
-								class="code-wrap__header-btn  code-wrap__collapse-btn"
-								title="Toggle console"
-								onClick={toggleConsole}
+								<span class="code-wrap__header-label">
+									<Trans>Console</Trans>
+									<span class="count-label">
+										<NumberFormat value={logs.length} />
+									</span>
+								</span>
+								<div class="code-wrap__header-right-options">
+									<a
+										class="code-wrap__header-btn"
+										title={i18n._(t`Clear console (CTRL + L)`)}
+										onClick={onClearConsoleBtnClick}
+									>
+										<svg>
+											<use xlinkHref="#cancel-icon" />
+										</svg>
+									</a>
+									<a
+										class="code-wrap__header-btn  code-wrap__collapse-btn"
+										title={i18n._(t`Toggle console`)}
+										onClick={toggleConsole}
+									/>
+								</div>
+							</div>
+							<ul
+								class="console__items"
+								ref={el => {
+									this.logContainerEl = el;
+								}}
+							>
+								{logs.map(log => (
+									<LogRow data={log} />
+								))}
+							</ul>
+						</div>
+						<div
+							id="consolePromptEl"
+							class="console__prompt flex flex-v-center flex-shrink-0"
+						>
+							<svg width="18" height="18" fill="#346fd2">
+								<use xlinkHref="#chevron-icon" />
+							</svg>
+							<input
+								tabIndex={isConsoleOpen ? 0 : -1}
+								onKeyUp={onEvalInputKeyup}
+								class="console-exec-input"
 							/>
 						</div>
 					</div>
-					<ul
-						class="console__items"
-						ref={el => {
-							this.logContainerEl = el;
-						}}
-					>
-						{logs.map(log => (
-							<LogRow data={log} />
-						))}
-					</ul>
-				</div>
-				<div
-					id="consolePromptEl"
-					class="console__prompt flex flex-v-center flex-shrink-0"
-				>
-					<svg width="18" height="18" fill="#346fd2">
-						<use xlinkHref="#chevron-icon" />
-					</svg>
-					<input
-						tabIndex={isConsoleOpen ? 0 : -1}
-						onKeyUp={onEvalInputKeyup}
-						class="console-exec-input"
-					/>
-				</div>
-			</div>
+				)}
+			</I18n>
 		);
 	}
 }

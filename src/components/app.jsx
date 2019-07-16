@@ -49,7 +49,7 @@ import { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
 import { takeScreenshot } from '../takeScreenshot';
 import { AskToImportModal } from './AskToImportModal';
 import { Alerts } from './Alerts';
-import Portal from 'preact-portal';
+import Portal from './Portal';
 import { HelpModal } from './HelpModal';
 import { OnboardingModal } from './OnboardingModal';
 import { Js13KModal } from './Js13KModal';
@@ -1791,7 +1791,7 @@ export default class App extends Component {
 						closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
 					/>
 
-					<Portal into="body">
+					<Portal into="#portal">
 						<div
 							class="modal-overlay"
 							onClick={this.modalOverlayClickHandler.bind(this)}

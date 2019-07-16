@@ -1,11 +1,15 @@
 import { h, Component } from 'preact';
-import Portal from 'preact-portal';
+import Portal from './Portal';
 
 export default class Modal extends Component {
 	componentDidMount() {
+		this.container = document.createElement('div');
+		this.container.id = `container-${~~(Math.random() * 1000)}`;
+		document.body.append(this.container);
 		window.addEventListener('keydown', this.onKeyDownHandler.bind(this));
 	}
 	componentWillUnmount() {
+		this.container.remove();
 		window.removeEventListener('keydown', this.onKeyDownHandler.bind(this));
 		if (this.focusGrabber) {
 			this.focusGrabber.remove();
@@ -61,7 +65,7 @@ export default class Modal extends Component {
 		if (!this.props.show) return null;
 
 		return (
-			<Portal into="body">
+			<Portal into={`#${this.container.id}`}>
 				<div
 					role="dialog"
 					class={`${this.props.extraClasses || ''} modal is-modal-visible ${

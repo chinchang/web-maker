@@ -443,28 +443,6 @@ export default class ContentWrapFiles extends Component {
 		// );
 		// return handleModeRequirements(value);
 	}
-	updateCssMode(value) {
-		// this.props.onCodeModeChange('css', value);
-		// this.props.currentItem.cssMode = value;
-		this.cm.setOption('mode', modes[value].cmMode);
-		this.cm.setOption('readOnly', modes[value].cmDisable);
-		/* window.cssSettingsBtn.classList[
-			modes[value].hasSettings ? 'remove' : 'add'
-		]('hide'); */
-		CodeMirror.autoLoadMode(
-			this.cm,
-			modes[value].cmPath || modes[value].cmMode
-		);
-		return handleModeRequirements(value);
-	}
-	updateJsMode(value) {
-		this.cm.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(
-			this.cm,
-			modes[value].cmPath || modes[value].cmMode
-		);
-		return handleModeRequirements(value);
-	}
 
 	getDemoFrame(callback) {
 		callback(this.frame);
@@ -679,8 +657,11 @@ export default class ContentWrapFiles extends Component {
 						id="demo-frame"
 						allowfullscreen
 					/>
+
 					<iframe src={`${PREVIEW_FRAME_HOST}/talk.html`} id="talkFrame" />
+
 					<PreviewDimension ref={comp => (this.previewDimension = comp)} />
+
 					<Console
 						logs={this.state.logs}
 						isConsoleOpen={this.state.isConsoleOpen}

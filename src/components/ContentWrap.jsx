@@ -876,6 +876,7 @@ export default class ContentWrap extends Component {
 						toggleConsole={this.toggleConsole}
 						onEvalInputKeyup={this.evalConsoleExpr}
 					/>
+
 					<CssSettingsModal
 						show={this.state.isCssSettingsModalOpen}
 						closeHandler={() =>

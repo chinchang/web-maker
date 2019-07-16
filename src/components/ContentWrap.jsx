@@ -462,9 +462,6 @@ export default class ContentWrap extends Component {
 		this.props.onCodeModeChange('css', value);
 		this.props.currentItem.cssMode = value;
 		this.cm.css.setOption('readOnly', modes[value].cmDisable);
-		window.cssSettingsBtn.classList[
-			modes[value].hasSettings ? 'remove' : 'add'
-		]('hide');
 		this.cm.css.setLanguage(value);
 		return handleModeRequirements(value);
 	}
@@ -733,17 +730,19 @@ export default class ContentWrap extends Component {
 								</select>
 							</label>
 							<div class="code-wrap__header-right-options">
-								<a
-									href="#"
-									id="cssSettingsBtn"
-									title="Atomic CSS configuration"
-									onClick={this.cssSettingsBtnClickHandler.bind(this)}
-									class="code-wrap__header-btn hide"
-								>
-									<svg>
-										<use xlinkHref="#settings-icon" />
-									</svg>
-								</a>
+								{modes[this.props.currentItem.cssMode || 'css'].hasSettings && (
+									<a
+										href="#"
+										id="cssSettingsBtn"
+										title="Atomic CSS configuration"
+										onClick={this.cssSettingsBtnClickHandler.bind(this)}
+										class="code-wrap__header-btn"
+									>
+										<svg>
+											<use xlinkHref="#settings-icon" />
+										</svg>
+									</a>
+								)}
 								<a
 									class="code-wrap__header-btn "
 									title="Format code"

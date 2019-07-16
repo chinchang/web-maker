@@ -286,8 +286,6 @@ export default class App extends Component {
 		this.setState(prevState => {
 			const newCount = prevState.unsavedEditCount + 1;
 
-			console.log('checking on ', newCount);
-
 			if (
 				newCount % UNSAVED_WARNING_COUNT === 0 &&
 				newCount >= UNSAVED_WARNING_COUNT

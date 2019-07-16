@@ -29,10 +29,12 @@
 		'Clear console (CTRL + L)': 'Clear console (CTRL + L)',
 		'Clear console (works when console input is focused)':
 			'Clear console (works when console input is focused)',
+		'Close saved creations pane': 'Close saved creations pane',
 		'Close saved creations panel & modals':
 			'Close saved creations panel & modals',
 		Console: 'Console',
 		'Detach Preview': 'Detach Preview',
+		'Detach preview': 'Detach preview',
 		Donate: 'Donate',
 		'Double click to toggle console': 'Double click to toggle console',
 		'Download game as zip': 'Download game as zip',
@@ -67,6 +69,8 @@
 		'No match found.': 'No match found.',
 		'Note: You can load external scripts from following domains:':
 			'Note: You can load external scripts from following domains:',
+		'Note: You can load external scripts only from following domains:':
+			'Note: You can load external scripts only from following domains:',
 		'Nothing saved here.': 'Nothing saved here.',
 		Open: 'Open',
 		'Open a saved creation (Ctrl/\u2318 + O)':
@@ -92,6 +96,7 @@
 		'Search your creations here...': 'Search your creations here...',
 		'See Changelog': 'See Changelog',
 		'See awesome libraries used': 'See awesome libraries used',
+		'See changelog': 'See changelog',
 		'See profile or Logout': 'See profile or Logout',
 		'Select next match': 'Select next match',
 		'Select previous match': 'Select previous match',

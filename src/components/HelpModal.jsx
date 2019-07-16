@@ -13,7 +13,7 @@ export function HelpModal(props) {
 
 			<div>
 				<p>
-					<notrans>
+					<Trans>
 						Made with <span style="margin-right: 8px;">💖</span>&{' '}
 						<span style="margin-right: 8px;"> 🙌</span> by{' '}
 						<a
@@ -23,7 +23,7 @@ export function HelpModal(props) {
 						>
 							Kushagra Gour
 						</a>
-					</notrans>
+					</Trans>
 				</p>
 				<p>
 					<a href="/docs" target="_blank" rel="noopener noreferrer">
@@ -31,7 +31,7 @@ export function HelpModal(props) {
 					</a>
 				</p>
 				<p>
-					<notrans>
+					<Trans>
 						Tweet out your feature requests, comments & suggestions to{' '}
 						<a
 							target="_blank"
@@ -40,11 +40,11 @@ export function HelpModal(props) {
 						>
 							@webmakerApp
 						</a>
-					</notrans>
+					</Trans>
 					.
 				</p>
 				<p class="show-when-extension">
-					<notrans>
+					<Trans>
 						Like this extension? Please{' '}
 						<a
 							href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
@@ -54,7 +54,7 @@ export function HelpModal(props) {
 							rate it here
 						</a>
 						.
-					</notrans>
+					</Trans>
 				</p>
 				<p>
 					<Button
@@ -194,7 +194,7 @@ export function HelpModal(props) {
 					<h3>
 						<Trans>License</Trans>
 					</h3>
-					<notrans>
+					<Trans>
 						"Web Maker" is{' '}
 						<a
 							target="_blank"
@@ -211,7 +211,7 @@ export function HelpModal(props) {
 						>
 							MIT License
 						</a>
-					</notrans>
+					</Trans>
 				</p>
 			</div>
 		</Modal>

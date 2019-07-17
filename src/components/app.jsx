@@ -1665,15 +1665,13 @@ export default class App extends Component {
 					</div>
 
 					<SavedItemPane
-						items={this.state.savedItems}
+						itemsMap={this.state.savedItems}
 						isOpen={this.state.isSavedItemPaneOpen}
 						closeHandler={this.closeSavedItemsPane.bind(this)}
-						itemClickHandler={this.itemClickHandler.bind(this)}
-						itemRemoveBtnClickHandler={this.itemRemoveBtnClickHandler.bind(
-							this
-						)}
-						itemForkBtnClickHandler={this.itemForkBtnClickHandler.bind(this)}
-						exportBtnClickHandler={this.exportBtnClickHandler.bind(this)}
+						onItemSelect={this.itemClickHandler.bind(this)}
+						onItemRemove={this.itemRemoveBtnClickHandler.bind(this)}
+						onItemFork={this.itemForkBtnClickHandler.bind(this)}
+						onExport={this.exportBtnClickHandler.bind(this)}
 						mergeImportedItems={this.mergeImportedItems.bind(this)}
 					/>
 

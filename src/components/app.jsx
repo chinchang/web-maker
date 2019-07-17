@@ -179,8 +179,7 @@ export default class App extends Component {
 					if (customUser) {
 						const prefs = { ...this.state.prefs };
 						Object.assign(prefs, user.settings);
-						this.setState({ prefs: prefs });
-						this.updateSetting();
+						this.setState({ prefs }, this.updateSetting);
 					}
 				});
 			} else {
@@ -230,8 +229,7 @@ export default class App extends Component {
 				this.createNewItem();
 			}
 			Object.assign(this.state.prefs, result);
-			this.setState({ prefs: { ...this.state.prefs } });
-			this.updateSetting();
+			this.setState({ prefs: { ...this.state.prefs } }, this.updateSetting);
 		});
 
 		// Check for new version notifications

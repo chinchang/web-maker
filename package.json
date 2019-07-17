@@ -55,7 +55,8 @@
 		"husky": "^0.14.3",
 		"identity-obj-proxy": "^3.0.0",
 		"if-env": "^1.0.0",
-		"jest": "^21.2.1",
+		"jest": "^24.8.0",
+		"jest-cli": "^24.8.0",
 		"lint-staged": "^7.2.0",
 		"markdown-it": "^8.4.2",
 		"markdown-it-anchor": "^5.0.2",
@@ -103,7 +104,7 @@
 			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/__mocks__/fileMock.js",
 			"\\.(css|less|scss)$": "identity-obj-proxy",
 			"^./style$": "identity-obj-proxy",
-			"^preact$": "<rootDir>/node_modules/preact/dist/preact.min.js",
+			"^preact$": "<rootDir>/node_modules/preact/dist/preact.js",
 			"^react$": "preact/compat",
 			"^react-dom$": "preact/compat",
 			"^react-addons-css-transition-group$": "preact-css-transition-group"

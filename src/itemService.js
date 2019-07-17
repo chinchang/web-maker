@@ -39,7 +39,7 @@ export const itemService = {
 		var d = deferred();
 		let itemIds = await this.getUserItemIds(shouldFetchLocally);
 		itemIds = Object.getOwnPropertyNames(itemIds || {});
-		log('itemids', itemIds);
+		// log('itemids', itemIds);
 
 		if (!itemIds.length) {
 			d.resolve([]);

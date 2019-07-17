@@ -95,30 +95,33 @@ export function MainHeader(props) {
 							</svg>
 							<Trans>Open</Trans>
 						</button>
-						<Button
-							onClick={props.loginBtnHandler}
-							data-event-category="ui"
-							data-event-action="loginButtonClick"
-							class="hide-on-login btn btn--dark hint--rounded  hint--bottom-left"
-						>
-							<Trans>Login/Signup</Trans>
-						</Button>
-						<Button
-							onClick={props.profileBtnHandler}
-							data-event-category="ui"
-							data-event-action="headerAvatarClick"
-							aria-label={i18n._(t`See profile or Logout`)}
-							class="hide-on-logout btn--dark hint--rounded  hint--bottom-left"
-						>
-							<img
-								id="headerAvatarImg"
-								width="20"
-								src={
-									props.user ? props.user.photoURL || DEFAULT_PROFILE_IMG : ''
-								}
-								class="main-header__avatar-img"
-							/>
-						</Button>
+						{!props.user ? (
+							<Button
+								onClick={props.loginBtnHandler}
+								data-event-category="ui"
+								data-event-action="loginButtonClick"
+								class="btn btn--dark hint--rounded  hint--bottom-left"
+							>
+								<Trans>Login/Signup</Trans>
+							</Button>
+						) : (
+							<Button
+								onClick={props.profileBtnHandler}
+								data-event-category="ui"
+								data-event-action="headerAvatarClick"
+								aria-label={i18n._(t`See profile or Logout`)}
+								class="btn--dark hint--rounded  hint--bottom-left"
+							>
+								<img
+									id="headerAvatarImg"
+									width="20"
+									src={
+										props.user ? props.user.photoURL || DEFAULT_PROFILE_IMG : ''
+									}
+									class="main-header__avatar-img"
+								/>
+							</Button>
+						)}
 					</div>
 				</div>
 			)}

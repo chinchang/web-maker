@@ -303,11 +303,14 @@ export default class App extends Component {
 	}
 
 	updateProfileUi() {
-		if (this.state.user) {
-			document.body.classList.add('is-logged-in');
-		} else {
-			document.body.classList.remove('is-logged-in');
-		}
+		this.setState(prevState => {
+			if (prevState.user) {
+				document.body.classList.add('is-logged-in');
+			} else {
+				document.body.classList.remove('is-logged-in');
+			}
+			return null;
+		});
 	}
 
 	refreshEditor() {
@@ -464,23 +467,27 @@ export default class App extends Component {
 
 	populateItemsInSavedPane(items) {
 		// TODO: sort desc. by updation date
-		this.setState({
-			savedItems: { ...this.state.savedItems }
-		});
+		// this.setState({
+		// 	savedItems: { ...this.state.savedItems }
+		// });
 
 		this.toggleSavedItemsPane();
 		// HACK: Set overflow after sometime so that the items can animate without getting cropped.
 		// setTimeout(() => $('#js-saved-items-wrap').style.overflowY = 'auto', 1000);
 	}
 	toggleSavedItemsPane(shouldOpen) {
-		this.setState({
-			isSavedItemPaneOpen:
-				shouldOpen === undefined ? !this.state.isSavedItemPaneOpen : shouldOpen
-		});
+		this.setState(prevState => {
+			const isSavedItemPaneOpen =
+				shouldOpen === undefined ? !prevState.isSavedItemPaneOpen : shouldOpen;
 
-		document.body.classList[this.state.isSavedItemPaneOpen ? 'add' : 'remove'](
-			'overlay-visible'
-		);
+			document.body.classList[isSavedItemPaneOpen ? 'add' : 'remove'](
+				'overlay-visible'
+			);
+
+			return {
+				isSavedItemPaneOpen
+			};
+		});
 	}
 
 	/**
@@ -490,17 +497,17 @@ export default class App extends Component {
 	 * @return {promise}                    Promise.
 	 */
 	async fetchItems(shouldSaveGlobally, shouldFetchLocally) {
-		// HACK: This empty assignment is being used when importing locally saved items
-		// to cloud, `fetchItems` runs once on account login which clears the
-		// savedItems object and hence, while merging no saved item matches with itself.
-		this.state.savedItems = {};
 		var items = [];
+		const savedItems = {};
 
 		items = await itemService.getAllItems(shouldFetchLocally);
 		trackEvent('fn', 'fetchItems', items.length);
 		if (shouldSaveGlobally) {
 			items.forEach(item => {
-				this.state.savedItems[item.id] = item;
+				savedItems[item.id] = item;
+			});
+			this.setState({
+				savedItems
 			});
 		}
 		return items;
@@ -1178,7 +1185,7 @@ export default class App extends Component {
 		}
 	}
 
-	mergeImportedItems(items) {
+	mergeImportedItems(items, isMergingToCloud = false) {
 		var existingItemIds = [];
 		var toMergeItems = {};
 		const d = deferred();
@@ -1187,10 +1194,10 @@ export default class App extends Component {
 			// We can access `savedItems` here because this gets set when user
 			// opens the saved creations panel. And import option is available
 			// inside the saved items panel.
-			// HACK: Also when this fn is called for importing locally saved items
-			// to cloud, `fetchItems` runs once on account login which clears the
-			// savedItems object and hence, no match happens for `existingItemIds`.
-			if (savedItems[item.id]) {
+
+			// When we are merging to cloud, savedItems contains the local items. And if we start matching,
+			// all items will match with themselves and nothing would import :P
+			if (!isMergingToCloud && savedItems[item.id]) {
 				// Item already exists
 				existingItemIds.push(item.id);
 			} else {
@@ -1231,7 +1238,7 @@ export default class App extends Component {
 	 * Called from inside ask-to-import-modal
 	 */
 	importCreationsAndSettingsIntoApp() {
-		this.mergeImportedItems(this.oldSavedItems).then(() => {
+		this.mergeImportedItems(this.oldSavedItems, true).then(() => {
 			trackEvent('fn', 'oldItemsImported');
 			this.dontAskToImportAnymore();
 		});

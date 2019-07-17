@@ -6,7 +6,8 @@ import {
 	log,
 	writeFile,
 	getCompleteHtml,
-	handleModeRequirements
+	handleModeRequirements,
+	sanitizeSplitSizes
 } from '../utils';
 import { SplitPane } from './SplitPane.jsx';
 import { trackEvent } from '../analytics';
@@ -392,12 +393,18 @@ export default class ContentWrap extends Component {
 
 	resetSplitting() {
 		this.setState({
-			codeSplitSizes: this.getCodeSplitSizes(),
-			mainSplitSizes: this.getMainSplitSizesToApply()
+			codeSplitSizes: sanitizeSplitSizes(this.getCodeSplitSizes()),
+			mainSplitSizes: sanitizeSplitSizes(this.getMainSplitSizesToApply())
 		});
 	}
-	updateSplits() {
-		this.props.onSplitUpdate();
+	updateSplits(sizes) {
+		// HACK: This is weird thing happening. We call `onSplitUpdate` on parent. That calculates
+		// and sets sizes from the DOM on the currentItem. And then we read that size to update
+		// this component's state (codeSplitSizes and mainSPlitSizes).
+		// If we don't update, then some re-render will reset the pane sizes as ultimately the state
+		// variables here govern the split.
+		this.props.onSplitUpdate(sizes);
+
 		// Not using setState to avoid re-render
 		this.state.codeSplitSizes = this.props.currentItem.sizes;
 		this.state.mainSplitSizes = this.props.currentItem.mainSizes;
@@ -427,7 +434,7 @@ export default class ContentWrap extends Component {
 		return [33.33, 33.33, 33.33];
 	}
 
-	mainSplitDragEndHandler() {
+	mainSplitDragEndHandler(sizes) {
 		if (this.props.prefs.refreshOnResize) {
 			// Running preview updation in next call stack, so that error there
 			// doesn't affect this dragend listener.
@@ -435,7 +442,7 @@ export default class ContentWrap extends Component {
 				this.setPreviewContent(true);
 			}, 1);
 		}
-		this.updateSplits();
+		this.updateSplits(sizes);
 	}
 	mainSplitDragHandler() {
 		this.previewDimension.update({
@@ -446,10 +453,10 @@ export default class ContentWrap extends Component {
 	codeSplitDragStart() {
 		document.body.classList.add('is-dragging');
 	}
-	codeSplitDragEnd() {
+	codeSplitDragEnd(sizes) {
 		this.updateCodeWrapCollapseStates();
 		document.body.classList.remove('is-dragging');
-		this.updateSplits();
+		this.updateSplits(sizes);
 	}
 
 	updateHtmlMode(value) {

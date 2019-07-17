@@ -21,7 +21,8 @@ import {
 	downloadFile,
 	getCompleteHtml,
 	getFilenameFromUrl,
-	prettify
+	prettify,
+	sanitizeSplitSizes
 } from '../utils';
 import {
 	linearizeFiles,
@@ -755,7 +756,7 @@ export default class App extends Component {
 			sizes = [33.33, 33.33, 33.33];
 		} finally {
 			/* eslint-disable no-unsafe-finally */
-			return sizes;
+			return sanitizeSplitSizes(sizes);
 
 			/* eslint-enable no-unsafe-finally */
 		}
@@ -791,7 +792,7 @@ export default class App extends Component {
 					`calc(50% - ${sidebarWidth / 2}px)`
 				];
 			}
-			return sizes;
+			return sanitizeSplitSizes(sizes);
 		}
 
 		const currentLayoutMode = this.state.currentLayoutMode;
@@ -804,7 +805,7 @@ export default class App extends Component {
 		if (sizes.filter(s => s).length !== 2) {
 			sizes = [50, 50];
 		}
-		return sizes;
+		return sanitizeSplitSizes(sizes);
 	}
 	saveSetting(setting, value) {
 		const d = deferred();
@@ -928,7 +929,9 @@ export default class App extends Component {
 	}
 
 	titleInputBlurHandler(e) {
-		this.state.currentItem.title = e.target.value;
+		this.setState({
+			currentItem: { ...this.state.currentItem, title: e.target.value }
+		});
 
 		if (this.state.currentItem.id) {
 			this.saveItem();
@@ -1193,7 +1196,7 @@ export default class App extends Component {
 				// Item already exists
 				existingItemIds.push(item.id);
 			} else {
-				log('merging', item.id);
+				// log('merging', item.id);
 				toMergeItems[item.id] = item;
 			}
 		});
@@ -1243,10 +1246,23 @@ export default class App extends Component {
 		this.closeAllOverlays();
 	}
 
-	splitUpdateHandler(mainSplitInstance, codeSplitInstance) {
+	splitUpdateHandler(sizes) {
+		const { currentItem } = this.state;
+		if (!sizes) {
+			currentItem.mainSizes = this.getMainPaneSizes();
+			currentItem.sizes = this.getCodePaneSizes();
+			return;
+		}
 		// Not using setState to avoid re-render
-		this.state.currentItem.sizes = this.getCodePaneSizes();
-		this.state.currentItem.mainSizes = this.getMainPaneSizes();
+		if (sizes.length === 3) {
+			if (currentItem.files) {
+				currentItem.mainSizes = sizes;
+			} else {
+				currentItem.sizes = sizes;
+			}
+		} else {
+			currentItem.mainSizes = sizes;
+		}
 	}
 
 	/**

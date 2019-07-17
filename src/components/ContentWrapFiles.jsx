@@ -1,7 +1,12 @@
 import { h, Component } from 'preact';
 import CodeEditor from './CodeEditor';
 import { modes, HtmlModes } from '../codeModes';
-import { log, handleModeRequirements, BASE_PATH } from '../utils';
+import {
+	log,
+	handleModeRequirements,
+	BASE_PATH,
+	sanitizeSplitSizes
+} from '../utils';
 
 import {
 	linearizeFiles,
@@ -390,11 +395,11 @@ export default class ContentWrapFiles extends Component {
 
 	resetSplitting() {
 		this.setState({
-			mainSplitSizes: this.getMainSplitSizesToApply()
+			mainSplitSizes: sanitizeSplitSizes(this.getMainSplitSizesToApply())
 		});
 	}
-	updateSplits() {
-		this.props.onSplitUpdate();
+	updateSplits(sizes) {
+		this.props.onSplitUpdate(sizes);
 		// Not using setState to avoid re-render
 		this.state.mainSplitSizes = this.props.currentItem.mainSizes;
 	}
@@ -416,7 +421,7 @@ export default class ContentWrapFiles extends Component {
 		return mainSplitSizes;
 	}
 
-	mainSplitDragEndHandler() {
+	mainSplitDragEndHandler(sizes) {
 		if (this.props.prefs.refreshOnResize) {
 			// Running preview updation in next call stack, so that error there
 			// doesn't affect this dragend listener.
@@ -424,7 +429,7 @@ export default class ContentWrapFiles extends Component {
 				this.setPreviewContent(true);
 			}, 1);
 		}
-		this.updateSplits();
+		this.updateSplits(sizes);
 	}
 	mainSplitDragHandler() {
 		this.previewDimension.update({

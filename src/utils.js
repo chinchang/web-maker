@@ -556,6 +556,35 @@ export function handleModeRequirements(mode) {
 	return d.promise;
 }
 
+export function sanitizeSplitSizes(sizes) {
+	// console.log('got', sizes);
+	let hasAllNumbers = !sizes.some(size => !Number(size));
+	if (hasAllNumbers) return sizes;
+
+	// Get just the perentage values from expressions like calc(93.34% - 3px)
+	const newSizes = sizes.map(size => {
+		if (typeof size.match !== 'function') return size;
+		const match = size.match(/([\d.]*)%/);
+		if (match) return parseInt(match[1], 10);
+
+		return size;
+	});
+	// console.log('percents ', newSizes);
+
+	// Do we still have any non-number?
+	hasAllNumbers = !newSizes.some(size => !Number(size));
+	// console.log('hasAllnumbers? ', hasAllNumbers);
+
+	// Make the sum 100
+	if (hasAllNumbers) {
+		const sum = newSizes.reduce((sum, val) => sum + val, 0);
+		// console.log('sum ', sum);
+		newSizes[newSizes.length - 1] += 100 - sum;
+	}
+
+	return newSizes;
+}
+
 if (window.IS_EXTENSION) {
 	document.body.classList.add('is-extension');
 } else {

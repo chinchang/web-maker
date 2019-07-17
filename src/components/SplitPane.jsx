@@ -40,6 +40,10 @@ export class SplitPane extends Component {
 		/* eslint-disable new-cap */
 		this.splitInstance = Split(Array.from(this.parent.children), options);
 
+		if (this.parent.children.length >= 5) {
+			window.splitInstance = this.splitInstance;
+		}
+
 		/* eslint-enable new-cap */
 
 		if (this.props.onSplit) {

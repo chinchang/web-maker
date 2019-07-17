@@ -36,7 +36,8 @@ export default class Login extends Component {
 						>
 							<svg>
 								<use xlinkHref="#github-icon" />
-							</svg>Login with Github
+							</svg>
+							Login with Github
 						</button>
 					</p>
 					<p>
@@ -49,7 +50,8 @@ export default class Login extends Component {
 						>
 							<svg>
 								<use xlinkHref="#google-icon" />
-							</svg>Login with Google
+							</svg>
+							Login with Google
 						</button>
 					</p>
 					<p class="mb-2">
@@ -62,7 +64,8 @@ export default class Login extends Component {
 						>
 							<svg>
 								<use xlinkHref="#fb-icon" />
-							</svg>Login with Facebook
+							</svg>
+							Login with Facebook (deprecated)
 						</button>
 					</p>
 					<p>Join a community of 50,000+ Developers</p>

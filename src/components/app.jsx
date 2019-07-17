@@ -1,4 +1,4 @@
-/* global htmlCodeEl, cssCodeEl, jsCodeEl, runBtn
+/* global htmlCodeEl, cssCodeEl, jsCodeEl
  */
 
 import { h, Component } from 'preact';
@@ -973,12 +973,6 @@ export default class App extends Component {
 		}
 
 		const prefs = this.state.prefs;
-		// Show/hide RUN button based on autoPreview setting.
-		let autoPreview =
-			window.forcedSettings.autoPreview !== undefined
-				? window.forcedSettings
-				: prefs.autoPreview;
-		runBtn.classList[autoPreview ? 'add' : 'remove']('hide');
 
 		this.contentWrap.applyCodemirrorSettings(this.state.prefs);
 
@@ -1594,6 +1588,7 @@ export default class App extends Component {
 							title={this.state.currentItem.title}
 							titleInputBlurHandler={this.titleInputBlurHandler.bind(this)}
 							user={this.state.user}
+							isAutoPreviewOn={this.state.prefs.autoPreview}
 							unsavedEditCount={this.state.unsavedEditCount}
 							isFileMode={
 								this.state.currentItem && this.state.currentItem.files

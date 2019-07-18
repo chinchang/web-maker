@@ -161,8 +161,6 @@ export default class CodeEditor extends Component {
 		});
 	}
 	setLanguage(value) {
-		if (!window.monaco) return;
-
 		this.editorReadyDeferred.promise.then(() => {
 			if (this.props.type === 'monaco') {
 				monaco.editor.setModelLanguage(

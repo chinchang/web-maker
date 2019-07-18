@@ -797,15 +797,23 @@ export default class App extends Component {
 
 		const currentLayoutMode = this.state.currentLayoutMode;
 		var dimensionProperty = currentLayoutMode === 2 ? 'height' : 'width';
-		sizes = [
-			getPercentFromDimension($('#js-code-side'), dimensionProperty),
-			getPercentFromDimension($('#js-demo-side'), dimensionProperty)
-		];
+		try {
+			sizes = [
+				getPercentFromDimension($('#js-code-side'), dimensionProperty),
+				getPercentFromDimension($('#js-demo-side'), dimensionProperty)
+			];
 
-		if (sizes.filter(s => s).length !== 2) {
+			if (sizes.filter(s => s).length !== 2) {
+				sizes = [50, 50];
+			}
+		} catch (e) {
 			sizes = [50, 50];
+		} finally {
+			/* eslint-disable no-unsafe-finally */
+			return sanitizeSplitSizes(sizes);
+
+			/* eslint-enable no-unsafe-finally */
 		}
-		return sanitizeSplitSizes(sizes);
 	}
 	saveSetting(setting, value) {
 		const d = deferred();

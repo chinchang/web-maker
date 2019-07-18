@@ -25,6 +25,10 @@ class LogRow extends Component {
 }
 
 export class Console extends PureComponent {
+	constructor(props) {
+		super(props);
+		this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
+	}
 	componentDidUpdate(previousProps) {
 		if (this.props.logs !== previousProps.logs) {
 			// Scroll down after new log dom is inserted
@@ -32,6 +36,42 @@ export class Console extends PureComponent {
 				this.logContainerEl.scrollTop = this.logContainerEl.scrollHeight;
 			}, 1);
 		}
+	}
+	componentWillUnmount() {
+		this.endDragging();
+	}
+
+	endDragging() {
+		if (!this.isDragging) {
+			return;
+		}
+
+		this.isDragging = false;
+		window.consoleEl.style.transition = this.savedTransition;
+		window.removeEventListener('mousemove', this.mouseMoveHandler);
+		window.removeEventListener('mouseup', this.mouseUpHandler);
+	}
+	mouseDownHandler(e) {
+		if (!this.props.isConsoleOpen) {
+			return true;
+		}
+		this.isDragging = true;
+		this.startY = e.pageY;
+		this.startHeight = window.consoleEl.getBoundingClientRect().height;
+		this.savedTransition = window.getComputedStyle(window.consoleEl).transition;
+		window.consoleEl.style.transition = 'none';
+
+		window.addEventListener('mousemove', this.mouseMoveHandler);
+		window.addEventListener('mouseup', this.mouseUpHandler);
+	}
+	mouseUpHandler() {
+		this.endDragging();
+	}
+
+	mouseMoveHandler(e) {
+		if (!this.isDragging) return true;
+		const newHeight = this.startHeight + (this.startY - e.pageY);
+		window.consoleEl.style.height = `${newHeight}px`;
 	}
 
 	render() {
@@ -56,6 +96,8 @@ export class Console extends PureComponent {
 								class="js-console__header  code-wrap__header"
 								title={i18n._(t`Double click to toggle console`)}
 								onDblClick={onConsoleHeaderDblClick}
+								onMouseDown={this.mouseDownHandler.bind(this)}
+								onMouseUp={this.mouseUpHandler.bind(this)}
 							>
 								<span class="code-wrap__header-label">
 									<Trans>Console</Trans>

@@ -78,7 +78,7 @@ const LocalStorageKeys = {
 	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
 };
 const UNSAVED_WARNING_COUNT = 15;
-const version = '4.0.2';
+const version = '4.0.3';
 
 // Read forced settings as query parameters
 window.forcedSettings = {};

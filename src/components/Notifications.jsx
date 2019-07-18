@@ -114,7 +114,13 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
-			<Notification version="4.0.2" {...props} isLatest={true}>
+			<Notification version="4.0.3" {...props} isLatest={true}>
+				<NotificationItem>
+					Broken syntax highlighting in non-default Preprocessors.
+				</NotificationItem>
+			</Notification>
+
+			<Notification version="4.0.2" {...props}>
 				<li>
 					You can now override settings through query parameters. Currently only{' '}
 					<strong>autoPreview</strong> and <strong>isMonacoEditorOn</strong> are

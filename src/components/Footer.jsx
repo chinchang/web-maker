@@ -73,7 +73,7 @@ export default class Footer extends Component {
 		return (
 			<div id="footer" class="footer">
 				<div>
-					<a href="/" target="_blank" rel="noopener noreferrer">
+					<a href="/index.html" target="_blank" rel="noopener noreferrer">
 						<div class="logo" />
 					</a>
 					&copy;

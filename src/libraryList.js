@@ -1,6 +1,6 @@
 export const jsLibs = [
 	{
-		url: 'https://code.jquery.com/jquery-3.3.1.min.js',
+		url: 'https://code.jquery.com/jquery-3.4.1.min.js',
 		label: 'jQuery',
 		type: 'js'
 	},
@@ -11,13 +11,13 @@ export const jsLibs = [
 	},
 	{
 		url:
-			'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js',
+			'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js',
 		label: 'Bootstrap 4',
 		type: 'js'
 	},
 	{
 		url:
-			'https://cdn.jsdelivr.net/npm/foundation-sites@6.5.3/dist/js/foundation.min.js',
+			'https://cdn.jsdelivr.net/npm/foundation-sites@6.6.1/dist/js/foundation.min.js',
 		label: 'Foundation',
 		type: 'js'
 	},
@@ -27,19 +27,24 @@ export const jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js',
+		label: 'Materialize CSS',
+		type: 'js'
+	},
+	{
+		url: 'https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js',
 		label: 'Angular',
 		type: 'js'
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/react/16.8.4/umd/react.production.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/react/16.12.0/umd/react.production.min.js',
 		label: 'React',
 		type: 'js'
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.4/umd/react-dom.production.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.11.0/umd/react-dom.production.min.js',
 		label: 'React DOM',
 		type: 'js'
 	},
@@ -49,7 +54,7 @@ export const jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js',
 		label: 'Three.js',
 		type: 'js'
 	},
@@ -59,18 +64,18 @@ export const jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js',
 		label: 'Underscore',
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js',
 		label: 'Lodash',
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js',
-		label: 'Greensock TweenMax',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.0.5/gsap.min.js',
+		label: 'Greensock GSAP V3',
 		type: 'js'
 	},
 	{
@@ -81,11 +86,23 @@ export const jsLibs = [
 	{
 		url:
 			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.1.5/js/uikit.min.js',
-		label: 'UIkit 3',
+		label: 'UIkit 3.1.x',
 		type: 'js'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.min.js',
+		url:
+			'https://cdn.jsdelivr.net/npm/uikit@3.2.7/dist/js/uikit.min.js',
+		label: 'UIkit 3.2.x',
+		type: 'js'
+	},
+	{
+		url:
+			'https://cdn.jsdelivr.net/npm/uikit@3.2.7/dist/js/uikit-icons.min.js',
+		label: 'UIkit icons 3.2.x',
+		type: 'js'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.min.js',
 		label: 'p5.js',
 		type: 'js'
 	},
@@ -97,7 +114,7 @@ export const jsLibs = [
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/addons/p5.sound.min.js',
 		label: 'p5.js Sound',
 		type: 'js'
 	},
@@ -116,13 +133,13 @@ export const cssLibs = [
 	},
 	{
 		url:
-			'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css',
+			'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css',
 		label: 'Bootstrap 4',
 		type: 'css'
 	},
 	{
 		url:
-			'https://cdn.jsdelivr.net/npm/foundation-sites@6.5.3/dist/css/foundation.min.css',
+			'https://cdn.jsdelivr.net/npm/foundation-sites@6.6.1/dist/css/foundation.min.css',
 		label: 'Foundation',
 		type: 'css'
 	},
@@ -132,13 +149,17 @@ export const cssLibs = [
 		type: 'css'
 	},
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css',
+		label: 'Materialize CSS',
+		type: 'css'
+	},
+	{
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.0/css/bulma.min.css',
 		label: 'Bulma',
 		type: 'css'
 	},
-
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.5.0/hint.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.6.0/hint.min.css',
 		label: 'Hint.css',
 		type: 'css'
 	},
@@ -156,12 +177,18 @@ export const cssLibs = [
 	{
 		url:
 			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.1.5/css/uikit.min.css',
-		label: 'UIkit 3',
+		label: 'UIkit 3.1.x',
 		type: 'css'
 	},
 	{
 		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css',
+			'https://cdn.jsdelivr.net/npm/uikit@3.2.7/dist/css/uikit.min.css',
+		label: 'UIkit 3.2.x',
+		type: 'css'
+	},
+	{
+		url:
+			'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css',
 		label: 'Animate.css',
 		type: 'css'
 	},

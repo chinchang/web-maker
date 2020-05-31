@@ -23,7 +23,7 @@ export function HelpModal(props) {
 					</a>
 				</p>
 				<p>
-					<a href="/docs" target="_blank" rel="noopener noreferrer">
+					<a href="https://webmaker.app/docs" target="_blank" rel="noopener noreferrer">
 						Read the documentation
 					</a>
 					.

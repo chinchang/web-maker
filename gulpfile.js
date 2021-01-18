@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const gulp = require('gulp');
-const runSequence = require('run-sequence');
+const { parallel, series } = require('gulp');
 const useref = require('gulp-useref');
 const cleanCSS = require('gulp-clean-css');
 const rename = require('gulp-rename');
@@ -23,15 +23,16 @@ function minifyJs(fileName) {
 	).code;
 	fs.writeFileSync(fileName, minifiedContent);
 	console.log(
-		`[${fileName}]: ${content.length / 1024}K -> ${minifiedContent.length /
-			1024}K`
+		`[${fileName}]: ${content.length / 1024}K -> ${
+			minifiedContent.length / 1024
+		}K`
 	);
 }
-gulp.task('runWebpack', function() {
-	return child_process.execSync('yarn run build');
+gulp.task('runWebpack', function () {
+	return child_process.exec('npm run build');
 });
 
-gulp.task('copyFiles', function() {
+gulp.task('copyFiles', function () {
 	return merge(
 		gulp
 			.src('src/lib/codemirror/theme/*')
@@ -56,7 +57,7 @@ gulp.task('copyFiles', function() {
 				'src/detached-window.js',
 				'src/icon-48.png',
 				'src/icon-128.png',
-				'manifest.json'
+				'src/manifest.json',
 			])
 			.pipe(gulp.dest('app')),
 
@@ -93,27 +94,24 @@ gulp.task('copyFiles', function() {
 				'src/FiraCode.ttf',
 				'src/FixedSys.ttf',
 				'src/Inconsolata.ttf',
-				'src/Monoid.ttf'
+				'src/Monoid.ttf',
 			])
 			.pipe(gulp.dest('app'))
 	);
 });
 
-gulp.task('useRef', function() {
-	return gulp
-		.src('build/index.html')
-		.pipe(useref())
-		.pipe(gulp.dest('app'));
+gulp.task('useRef', function () {
+	return gulp.src('build/index.html').pipe(useref()).pipe(gulp.dest('app'));
 });
 
-gulp.task('concatSwRegistration', function() {
+gulp.task('concatSwRegistration', function () {
 	return gulp
 		.src(['src/service-worker-registration.js', 'app/script.js'])
 		.pipe(concat('script.js'))
 		.pipe(gulp.dest('app'));
 });
 
-gulp.task('minify', function() {
+gulp.task('minify', function () {
 	minifyJs('app/script.js');
 	minifyJs('app/vendor.js');
 	minifyJs('app/lib/screenlog.js');
@@ -123,13 +121,11 @@ gulp.task('minify', function() {
 		.pipe(
 			cleanCSS(
 				{
-					debug: true
+					debug: true,
 				},
-				details => {
+				(details) => {
 					console.log(
-						`${details.name}: ${details.stats.originalSize} 👉🏼  ${
-							details.stats.minifiedSize
-						}`
+						`${details.name}: ${details.stats.originalSize} 👉🏼  ${details.stats.minifiedSize}`
 					);
 				}
 			)
@@ -137,7 +133,7 @@ gulp.task('minify', function() {
 		.pipe(gulp.dest('app'));
 });
 
-gulp.task('fixIndex', function() {
+gulp.task('fixIndex', function (cb) {
 	var contents = fs.readFileSync('build/index.html', 'utf8');
 	// Replace hashed-filename script tags with unhashed ones
 	contents = contents.replace(
@@ -152,9 +148,10 @@ gulp.task('fixIndex', function() {
 	);
 
 	fs.writeFileSync('build/index.html', contents, 'utf8');
+	cb();
 });
 
-gulp.task('generate-service-worker', function(callback) {
+gulp.task('generate-service-worker', function (callback) {
 	var swPrecache = require('sw-precache');
 	var rootDir = 'app';
 
@@ -162,18 +159,18 @@ gulp.task('generate-service-worker', function(callback) {
 		`${rootDir}/service-worker.js`,
 		{
 			staticFileGlobs: [
-				rootDir + '/**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'
+				rootDir + '/**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}',
 			],
 			stripPrefix: `${rootDir}/`,
 
 			// has to be increased to around 2.8mb for sass.worker.js
-			maximumFileSizeToCacheInBytes: 2900000
+			maximumFileSizeToCacheInBytes: 2900000,
 		},
 		callback
 	);
 });
 
-gulp.task('packageExtension', function() {
+gulp.task('packageExtension', function () {
 	child_process.execSync('rm -rf extension');
 	child_process.execSync('cp -R app extension');
 	child_process.execSync('cp src/manifest.json extension');
@@ -195,68 +192,57 @@ gulp.task('packageExtension', function() {
 	);
 });
 
-gulp.task('buildWebsite', function() {
-	return child_process.execSync('yarn run build-website');
+gulp.task('buildWebsite', function () {
+	return child_process.exec('npm run build-website');
 });
 
-gulp.task('buildDistFolder', function() {
+gulp.task('buildDistFolder', function (cb) {
 	child_process.execSync('rm -rf dist');
 	child_process.execSync('mv packages/website/_site dist');
 	child_process.execSync('mv app dist/');
+	cb();
 });
 
-gulp.task('cleanup', function() {
-	return child_process.execSync('rm -rf build');
+gulp.task('cleanup', function () {
+	return child_process.exec('rm -rf build');
 });
 
-gulp.task('start-preview-server', function() {
+gulp.task('start-preview-server', function () {
 	connect.server({
 		root: 'preview',
 		port: 7888,
-		https: false
+		https: false,
 	});
 });
 
-gulp.task('release', function(callback) {
-	runSequence(
-		['runWebpack', 'buildWebsite'],
-		'copyFiles',
-		'fixIndex',
-		'useRef',
-		'concatSwRegistration',
-		'minify',
-		'generate-service-worker',
-		'packageExtension',
-		'buildDistFolder',
-		'cleanup',
-		function(error) {
-			if (error) {
-				console.log(error.message);
-			} else {
-				console.log('RELEASE FINISHED SUCCESSFULLY');
-			}
-			callback(error);
+exports.release = series(
+	parallel('runWebpack', 'buildWebsite'),
+	'copyFiles',
+	'fixIndex',
+	'useRef',
+	'concatSwRegistration',
+	'minify',
+	'generate-service-worker',
+	'packageExtension',
+	'buildDistFolder',
+	'cleanup',
+	function (error) {
+		if (error) {
+			console.log(error.message);
+		} else {
+			console.log('RELEASE FINISHED SUCCESSFULLY');
 		}
-	);
-});
+		callback(error);
+	}
+);
 
-gulp.task('dev-release', function(callback) {
-	runSequence(
-		['runWebpack', 'buildWebsite'],
-		'copyFiles',
-		'fixIndex',
-		'useRef',
-		'concatSwRegistration',
-		'generate-service-worker',
-		'buildDistFolder',
-		'cleanup',
-		function(error) {
-			if (error) {
-				console.log(error.message);
-			} else {
-				console.log('DEV RELEASE FINISHED SUCCESSFULLY');
-			}
-			callback(error);
-		}
-	);
-});
+exports.devRelease = gulp.series(
+	parallel('runWebpack', 'buildWebsite'),
+	'copyFiles',
+	'fixIndex',
+	'useRef',
+	'concatSwRegistration',
+	'generate-service-worker',
+	'buildDistFolder',
+	'cleanup'
+);

@@ -44,7 +44,7 @@
 		"eslint": "^4.9.0",
 		"eslint-config-prettier": "^2.3.0",
 		"eslint-config-synacor": "^2.0.2",
-		"gulp": "^3.9.1",
+		"gulp": "^4.0.2",
 		"gulp-clean-css": "^3.9.2",
 		"gulp-concat": "^2.6.1",
 		"gulp-connect": "^5.7.0",
@@ -63,7 +63,6 @@
 		"merge-stream": "^1.0.1",
 		"preact-cli": "^3.0.0-rc.3",
 		"preact-render-spy": "^1.2.1",
-		"run-sequence": "^2.2.1",
 		"sw-precache": "^5.2.0"
 	},
 	"dependencies": {
@@ -75,10 +74,10 @@
 		"esprima": "^4.0.0",
 		"firebase": "^5.5.8",
 		"jszip": "^3.1.5",
-		"preact": "^10.0.0-rc.0",
+		"preact": "^10.5.10",
 		"preact-portal": "^1.1.3",
-		"preact-router": "^2.5.7",
-		"prettier": "^1.18.2",
+		"preact-router": "^3.2.1",
+		"prettier": "^2.2.1",
 		"react-inspector": "^2.3.0",
 		"split.js": "^1.5.11"
 	},

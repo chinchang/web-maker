@@ -14,7 +14,8 @@
 		"precommit": "lint-staged",
 		"add-locale": "lingui add-locale",
 		"extract": "lingui extract",
-		"compile": "lingui compile"
+		"compile": "lingui compile",
+		"release:dev": "gulp devRelease"
 	},
 	"eslintConfig": {
 		"extends": "eslint-config-synacor"

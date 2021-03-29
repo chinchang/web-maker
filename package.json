@@ -4,9 +4,9 @@
 	"description": "A blazing fast & offline web playground",
 	"scripts": {
 		"start": "npm run -s dev",
-		"build": "preact build --template src/index.html --no-prerender --service-worker false",
+		"build": "preact build --template src/index.html --prerender false --sw false",
 		"serve": "preact build && preact serve",
-		"dev": "preact watch --template src/index.html --no-prerender",
+		"dev": "preact watch --template src/index.html --prerender false",
 		"serve-website": "cd packages/website; npm start",
 		"build-website": "cd packages/website; npm run build",
 		"lint": "eslint src",
@@ -62,7 +62,7 @@
 		"markdown-it": "^8.4.2",
 		"markdown-it-anchor": "^5.0.2",
 		"merge-stream": "^1.0.1",
-		"preact-cli": "^3.0.0-rc.3",
+		"preact-cli": "^3.0.0",
 		"preact-render-spy": "^1.2.1",
 		"sw-precache": "^5.2.0"
 	},
@@ -75,8 +75,9 @@
 		"esprima": "^4.0.0",
 		"firebase": "^5.5.8",
 		"jszip": "^3.1.5",
-		"preact": "^10.5.10",
+		"preact": "^10.5.13",
 		"preact-portal": "^1.1.3",
+		"preact-render-to-string": "^5.1.4",
 		"preact-router": "^3.2.1",
 		"prettier": "^2.2.1",
 		"react-inspector": "^2.3.0",
@@ -130,5 +131,5 @@
 	"bugs": {
 		"url": "https://github.com/chinchang/web-maker/issues"
 	},
-	"homepage": "https://webmakerapp.com"
+	"homepage": "https://webmaker.com"
 }

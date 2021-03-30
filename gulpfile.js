@@ -29,7 +29,9 @@ function minifyJs(fileName) {
 	);
 }
 gulp.task('runWebpack', function () {
-	return child_process.exec('npm run build');
+	return child_process.exec('npm run build', (error, stdout, stderr) => {
+		console.log('runWebpack', error, stdout, stderr);
+	});
 });
 
 gulp.task('copyFiles', function () {
@@ -193,7 +195,12 @@ gulp.task('packageExtension', function () {
 });
 
 gulp.task('buildWebsite', function () {
-	return child_process.exec('npm run build-website');
+	return child_process.exec(
+		'npm run build-website',
+		(error, stdout, stderr) => {
+			console.log('buildWebsite', error, stdout, stderr);
+		}
+	);
 });
 
 gulp.task('buildDistFolder', function (cb) {

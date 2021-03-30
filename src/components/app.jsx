@@ -66,6 +66,7 @@ import {
 	SHOW_KEYBOARD_SHORTCUTS_EVENT
 } from '../commands';
 import { commandPaletteService } from '../commandPaletteService';
+import './../style.css';
 
 import { I18nProvider } from '@lingui/react';
 
@@ -951,19 +952,21 @@ export default class App extends Component {
 	 * Handles all user triggered preference changes in the UI.
 	 */
 	updateSetting(settingName, value) {
+		const prefs = { ...this.state.prefs };
+
 		// If this was triggered from user interaction, save the setting
 		if (settingName) {
 			// var settingName = e.target.dataset.setting;
 			var obj = {};
 			log(settingName, value);
-			const prefs = { ...this.state.prefs };
+			// const prefs = { ...this.state.prefs };
 			prefs[settingName] = value;
 			obj[settingName] = prefs[settingName];
 			this.setState({ prefs });
 
 			// We always save locally so that it gets fetched
 			// faster on future loads.
-			db.sync.set(obj, function() {
+			db.sync.set(obj, function () {
 				alertsService.add('Setting saved');
 			});
 			if (window.user) {
@@ -983,9 +986,7 @@ export default class App extends Component {
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
 
-		const prefs = this.state.prefs;
-
-		this.contentWrap.applyCodemirrorSettings(this.state.prefs);
+		this.contentWrap.applyCodemirrorSettings(prefs);
 
 		if (prefs.autoSave) {
 			if (!this.autoSaveInterval) {
@@ -1286,7 +1287,7 @@ export default class App extends Component {
 			whitespace = /(\r?\n|\r|\s+)/g;
 
 		const ByteSize = {
-			count: function(text, options) {
+			count: function (text, options) {
 				// Set option defaults
 				options = options || {};
 				options.lineBreaks = options.lineBreaks || 1;
@@ -1310,7 +1311,7 @@ export default class App extends Component {
 				}
 			},
 
-			format: function(count, plainText) {
+			format: function (count, plainText) {
 				var level = 0;
 
 				while (count > 1024) {

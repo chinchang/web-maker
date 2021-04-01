@@ -15,7 +15,7 @@ export default function (config, env, helpers) {
 	)[0];
 	Object.assign(htmlWebpackPlugin.plugin.options.minify, {
 		removeComments: false,
-		collapseWhitespace: false,
+		collapseWhitespace: false
 	});
 	htmlWebpackPlugin.plugin.options.preload = false;
 	htmlWebpackPlugin.plugin.options.favicon = false;
@@ -46,12 +46,12 @@ export default function (config, env, helpers) {
 			'SWPrecacheWebpackPlugin'
 		)[0];
 		if (swPlugin) {
-			config.plugins.splice(swPlugin.index, 1);
+			// config.plugins.splice(swPlugin.index, 1);
 		}
 
 		const uglifyPlugin = helpers.getPluginsByName(config, 'UglifyJsPlugin')[0];
 		if (uglifyPlugin) {
-			config.plugins.splice(uglifyPlugin.index, 1);
+			// config.plugins.splice(uglifyPlugin.index, 1);
 		}
 	}
 }

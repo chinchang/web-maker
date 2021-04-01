@@ -59,7 +59,7 @@ gulp.task('copyFiles', function () {
 				'src/detached-window.js',
 				'src/icon-48.png',
 				'src/icon-128.png',
-				'src/manifest.json',
+				'src/manifest.json'
 			])
 			.pipe(gulp.dest('app')),
 
@@ -96,7 +96,7 @@ gulp.task('copyFiles', function () {
 				'src/FiraCode.ttf',
 				'src/FixedSys.ttf',
 				'src/Inconsolata.ttf',
-				'src/Monoid.ttf',
+				'src/Monoid.ttf'
 			])
 			.pipe(gulp.dest('app'))
 	);
@@ -123,9 +123,9 @@ gulp.task('minify', function () {
 		.pipe(
 			cleanCSS(
 				{
-					debug: true,
+					debug: true
 				},
-				(details) => {
+				details => {
 					console.log(
 						`${details.name}: ${details.stats.originalSize} 👉🏼  ${details.stats.minifiedSize}`
 					);
@@ -149,7 +149,7 @@ gulp.task('fixIndex', function (cb) {
 		''
 	);
 
-	fs.writeFileSync('build/index.html', contents, 'utf8');
+	// fs.writeFileSync('build/index.html', contents, 'utf8');
 	cb();
 });
 
@@ -161,12 +161,12 @@ gulp.task('generate-service-worker', function (callback) {
 		`${rootDir}/service-worker.js`,
 		{
 			staticFileGlobs: [
-				rootDir + '/**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}',
+				rootDir + '/**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'
 			],
 			stripPrefix: `${rootDir}/`,
 
 			// has to be increased to around 2.8mb for sass.worker.js
-			maximumFileSizeToCacheInBytes: 2900000,
+			maximumFileSizeToCacheInBytes: 2900000
 		},
 		callback
 	);
@@ -185,12 +185,12 @@ gulp.task('packageExtension', function () {
 		gulp
 			.src('build/bundle.*.js')
 			.pipe(rename('script.js'))
-			.pipe(gulp.dest('extension')),
+			.pipe(gulp.dest('extension'))
 
-		gulp
-			.src('extension/**/*')
-			.pipe(zip(`extension-${packageJson.version}.zip`))
-			.pipe(gulp.dest('./'))
+		// gulp
+		// 	.src('extension/**/*')
+		// 	.pipe(zip(`extension-${packageJson.version}.zip`))
+		// 	.pipe(gulp.dest('./'))
 	);
 });
 
@@ -218,7 +218,7 @@ gulp.task('start-preview-server', function () {
 	connect.server({
 		root: 'preview',
 		port: 7888,
-		https: false,
+		https: false
 	});
 });
 
@@ -248,8 +248,8 @@ exports.devRelease = gulp.series(
 	'copyFiles',
 	'fixIndex',
 	'useRef',
-	'concatSwRegistration',
-	'generate-service-worker',
+	// 'concatSwRegistration',
+	// 'generate-service-worker',
 	'buildDistFolder',
 	'cleanup'
 );

@@ -4,9 +4,9 @@
 	"description": "A blazing fast & offline web playground",
 	"scripts": {
 		"start": "npm run -s dev",
-		"build": "preact build --template src/index.html --prerender false --sw false",
+		"build": "preact build --prerender false",
 		"serve": "preact build && preact serve",
-		"dev": "preact watch --template src/index.html --prerender false",
+		"dev": "preact watch",
 		"serve-website": "cd packages/website; npm start",
 		"build-website": "cd packages/website; npm run build",
 		"lint": "eslint src",

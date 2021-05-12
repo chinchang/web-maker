@@ -66,7 +66,7 @@
 		"@emmetio/codemirror-plugin": "^0.5.4",
 		"@lingui/react": "^2.7.0",
 		"code-blast-codemirror": "chinchang/code-blast-codemirror#web-maker",
-		"codemirror": "^5.37.0",
+		"codemirror": "^5.58.2",
 		"copy-webpack-plugin": "^4.5.1",
 		"esprima": "^4.0.0",
 		"firebase": "^5.5.8",

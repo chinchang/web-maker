@@ -48,4 +48,4 @@ Web Maker stays stable as rock with every release, thanks to the sponsored testi
 
 MIT Licensed
 
-Copyright (c) 2016-2019 Kushagra Gour, [webmakerapp.com](https://webmakerapp.com)
+Copyright (c) 2016-2021 Kushagra Gour, [webmakerapp.com](https://webmakerapp.com)

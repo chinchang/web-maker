@@ -71,7 +71,7 @@
 		"esprima": "^4.0.0",
 		"firebase": "^5.5.8",
 		"gulp-connect": "^5.7.0",
-		"jszip": "^3.1.5",
+		"jszip": "^3.7.0",
 		"preact": "^8.2.6",
 		"preact-compat": "^3.17.0",
 		"preact-portal": "^1.1.3",

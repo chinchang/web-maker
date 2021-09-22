@@ -1,4 +1,4 @@
-# Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/web-maker)
+# Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) 
 
 ---
 
@@ -46,7 +46,7 @@ If not that, you can support by simply sharing about how much you love 💖 [@we
 
 
 Web Maker stays stable as rock with every release, thanks to the sponsored testing on the awesome <a href="http://browserstack.com/">BrowserStack</a>!
-<a href="http://browserstack.com/"><img alt="Browserstack logo" src="https://user-images.githubusercontent.com/379918/134403020-50167453-223a-4841-8ef6-312219bcb2e6.png" height="80"></a>
+<a href="http://browserstack.com/"><img alt="Browserstack logo" src="https://user-images.githubusercontent.com/379918/134403020-50167453-223a-4841-8ef6-312219bcb2e6.png" height="60"></a>
 
 ## License
 

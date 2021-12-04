@@ -39,13 +39,15 @@ Hi! I am Kushagra Gour. Web Maker is a free and open-source project. To keep mys
 
 [![Become a patron](/src/assets/patreon.png)](https://patreon.com/kushagra)
 
+Support with $ETH - 0x39989c0E53cfdcF6792e09d7573c65E911e774bA
+
 If not that, you can support by simply sharing about how much you love 💖 [@webmakerapp](https://twitter.com/webmakerApp).
 
 ## Sponsors
 [![](https://user-images.githubusercontent.com/379918/134402085-15cf29bc-2266-4b2d-9354-1830adc4a240.png)](https://cssbattle.dev)
 
 
-Web Maker stays stable as rock with every release, thanks to the sponsored testing on the awesome <a href="http://browserstack.com/">BrowserStack</a>!
+Web Maker stays stable as rock with every release, thanks to the sponsored testing on the awesome 
 <a href="http://browserstack.com/"><img alt="Browserstack logo" src="https://user-images.githubusercontent.com/379918/134403020-50167453-223a-4841-8ef6-312219bcb2e6.png" height="60"></a>
 
 ## License

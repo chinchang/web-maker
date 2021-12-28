@@ -113,7 +113,8 @@ export default class AddLibrary extends Component {
 					localhost, https://ajax.googleapis.com, https://code.jquery.com,
 					https://cdnjs.cloudflare.com, https://unpkg.com, https://maxcdn.com,
 					https://cdn77.com, https://maxcdn.bootstrapcdn.com,
-					https://cdn.jsdelivr.net/, https://rawgit.com, https://wzrd.in
+					https://cdn.jsdelivr.net/, https://rawgit.com, https://wzrd.in,
+					https://cdn.tailwindcss.com/3.0.0
 				</p>
 
 				<textarea

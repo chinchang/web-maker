@@ -50,6 +50,8 @@ If not that, you can support by simply sharing about how much you love 💖 [@we
 Web Maker stays stable as rock with every release, thanks to the sponsored testing on the awesome 
 <a href="http://browserstack.com/"><img alt="Browserstack logo" src="https://user-images.githubusercontent.com/379918/134403020-50167453-223a-4841-8ef6-312219bcb2e6.png" height="60"></a>
 
+Deployed on the superfast [Netlify](https://www.netlify.com/) platform.
+
 ## License
 
 MIT Licensed

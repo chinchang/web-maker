@@ -260,3 +260,21 @@ gulp.task('dev-release', function(callback) {
 		}
 	);
 });
+
+gulp.task('build-extension', function(callback) {
+	runSequence(
+		'runWebpack',
+		'copyFiles',
+		'fixIndex',
+		'useRef',
+		'packageExtension',
+		function(error) {
+			if (error) {
+				console.log(error.message);
+			} else {
+				console.log('DEV RELEASE FINISHED SUCCESSFULLY');
+			}
+			callback(error);
+		}
+	);
+});

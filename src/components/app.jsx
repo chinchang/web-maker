@@ -77,7 +77,7 @@ const LocalStorageKeys = {
 	ASKED_TO_IMPORT_CREATIONS: 'askedToImportCreations'
 };
 const UNSAVED_WARNING_COUNT = 15;
-const version = '4.0.3';
+const version = '4.2.0';
 
 // Read forced settings as query parameters
 window.forcedSettings = {};
@@ -1779,7 +1779,6 @@ export default class App extends Component {
 
 					<CommandPalette
 						show={this.state.isCommandPaletteOpen}
-						closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
 						files={linearizeFiles(this.state.currentItem.files || [])}
 						isCommandMode={this.state.isCommandPaletteInCommandMode}
 						closeHandler={() => this.setState({ isCommandPaletteOpen: false })}

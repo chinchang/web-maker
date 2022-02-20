@@ -115,12 +115,13 @@ export function Notifications(props) {
 		<div>
 			<h1>Whats new?</h1>
 			<Notification version="4.2.0" {...props} isLatest={true}>
-				<NotificationItem>
-					Tailwind CSS now added to popular libraries list.
-				</NotificationItem>
+				<li>
+					Tailwind CSS now added to popular libraries list. Thanks
+					<a href="https://github.com/LoganDark"> @LoganDark</a>
+				</li>
 			</Notification>
 			<Notification version="4.0.3" {...props}>
-				<NotificationItem>
+				<NotificationItem type="bug">
 					Broken syntax highlighting in non-default Preprocessors.
 				</NotificationItem>
 			</Notification>

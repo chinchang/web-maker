@@ -36,7 +36,7 @@ function Notification({ version, isLatest, ...props }) {
 					<p>
 						<strong>🎉 New Product!</strong> If you like Web Maker, you'll
 						probably also like a new product I launched. It's the first ever
-						code-golfing game for CSS ->{' '}
+						code-golfing game for CSS -&gt;{' '}
 						<a href="https://cssbattle.dev" target="_blank">
 							CSSBattle
 						</a>
@@ -114,8 +114,14 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
-			<Notification version="4.0.3" {...props} isLatest={true}>
-				<NotificationItem>
+			<Notification version="4.2.0" {...props} isLatest={true}>
+				<li>
+					Tailwind CSS now added to popular libraries list. Thanks
+					<a href="https://github.com/LoganDark"> @LoganDark</a>
+				</li>
+			</Notification>
+			<Notification version="4.0.3" {...props}>
+				<NotificationItem type="bug">
 					Broken syntax highlighting in non-default Preprocessors.
 				</NotificationItem>
 			</Notification>
@@ -517,7 +523,7 @@ export function Notifications(props) {
 					<li>
 						Web Maker is no more just a Chrome extension, it is also available
 						as web app that runs offline just like the extension! Checkout it
-						out ->
+						out -&gt;
 						<a
 							href="https://webmaker.app/app/"
 							target="_blank"

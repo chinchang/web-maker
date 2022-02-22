@@ -1402,6 +1402,74 @@ export default class App extends Component {
 					onTemplateSelect={this.templateSelectHandler.bind(this)}
 				/>
 
+				<div
+					style={{
+						display: 'flex',
+						background: 'rgba(0, 0, 0, 0.4)',
+						justifyContent: 'center',
+						alignItems: 'center',
+						position: 'absolute',
+						inset: 0,
+						zIndex: 999999
+					}}
+				>
+					<div
+						style={{
+							background: 'black',
+
+							padding: '2rem',
+							maxWidth: 600
+						}}
+					>
+						<p>
+							Web Maker app has a new home on{' '}
+							<a href="https://webmaker.app/app" target="_blank">
+								https://webmaker.app/app
+							</a>
+							. This deprecated version will be discontinued from 10 March 2020.
+						</p>
+
+						<p>
+							Migrating to new web app is simple! If you are logged in, all your
+							creations are saved in your cloud account. So simply login in the
+							new web app and you are good to go!
+						</p>
+						<p>
+							If you save everything locally here, you can do following steps to
+							migrate your creations:
+						</p>
+						<ol>
+							<li>
+								Export your creations here -{' '}
+								<button onClick={this.exportBtnClickHandler.bind(this)}>
+									Export creations
+								</button>
+							</li>
+							<li>
+								Go to new web app -{' '}
+								<a href="https://webmaker.app/app" target="_blank">
+									https://webmaker.app/app
+								</a>
+							</li>
+							<li>
+								Click on "Open" in the header and then "Import". And import the
+								file created in above step. And done!
+							</li>
+						</ol>
+
+						<p>
+							In case you face any issue, please{' '}
+							<a
+								target="_blank"
+								href="https://github.com/chinchang/web-maker/issues"
+							>
+								open an issue
+							</a>{' '}
+							or mail me at chinchang457@gmail.com
+						</p>
+					</div>
+				</div>
+
 				<Portal into="body">
 					<div
 						class="modal-overlay"

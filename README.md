@@ -2,7 +2,7 @@
 
 ---
 
-**Web-Maker** is an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and offline supported because it runs completely on your system.
+**Web-Maker** is an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and works offline because it runs completely on your system.
 
 ## [Open Web App](https://webmaker.app/app/) (Recommended: More features. More fun!)
 
@@ -56,4 +56,4 @@ Deployed on the superfast [Netlify](https://www.netlify.com/) platform.
 
 MIT Licensed
 
-Copyright (c) 2016-2021 Kushagra Gour, [webmaker.app](https://webmaker.app)
+Copyright (c) 2016-2022 Kushagra Gour, [webmaker.app](https://webmaker.app)

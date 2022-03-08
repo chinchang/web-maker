@@ -82,7 +82,7 @@
 		"split.js": "^1.5.11"
 	},
 	"engines": {
-		"node": "10"
+		"node": "16"
 	},
 	"jest": {
 		"verbose": true,

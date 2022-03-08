@@ -18,7 +18,7 @@
   height: 14px;
   box-shadow: inset 0px 0px 5px 0px rgba(4, 4, 4, 0.5);
   background-color: #d6d6d6;
-  background-image: linear-gradient(top, #d6d6d6, #ebebeb);
+  background-image: linear-gradient(to top, #d6d6d6, #ebebeb);
 }
 .inlet_slider:hover {
   opacity: 0.98;
@@ -55,7 +55,7 @@
   box-shadow: 0px 0px 3px 0px rgba(4, 4, 4, 0.4);
   background-color: #424242;
   background-color: crimson;
-  background-image: linear-gradient(top, #424242, #212121);
+  background-image: linear-gradient(to top, #424242, #212121);
 }
 /*
  * =========================================================
@@ -87,11 +87,11 @@
   width: 229px;
   z-index: 100;
   border-radius: 3px;
-  -webkit-box-shadow: inset 0px 0px 5px 0px rgba(4, 4, 4, 0.5);
+
   box-shadow: inset 0px 0px 5px 0px rgba(4, 4, 4, 0.5);
   background-color: rgba(214, 214, 215, 0.85);
   /*
-  background-image: linear-gradient(top, rgb(214, 214, 214), rgb(235, 235, 235));
+  background-image: linear-gradient(to top, rgb(214, 214, 214), rgb(235, 235, 235));
   */
 }
 .ColorPicker br {
@@ -104,8 +104,8 @@
   color: #aa1212;
 }
 .ColorPicker input.hexInput {
-  -webkit-transition-property: color;
-  -webkit-transition-duration: .5s;
+transition-property: color;
+transition-duration: .5s;
   background: none;
   border: 0;
   margin: 0;

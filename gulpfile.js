@@ -81,7 +81,7 @@ gulp.task('copyFiles', function () {
 			.pipe(gulp.dest('build/lib/codemirror/addon/dialog')),
 		gulp.src('src/lib/hint.min.css').pipe(gulp.dest('build/lib')),
 		gulp.src('src/lib/inlet.css').pipe(gulp.dest('build/lib')),
-		// gulp.src('src/style.css').pipe(gulp.dest('build')),
+		gulp.src('src/style.css').pipe(gulp.dest('build')),
 
 		gulp
 			.src([

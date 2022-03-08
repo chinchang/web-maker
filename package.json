@@ -1,6 +1,6 @@
 {
 	"name": "web-maker",
-	"version": "4.0.3",
+	"version": "4.2.0",
 	"description": "A blazing fast & offline web playground",
 	"scripts": {
 		"start": "npm run -s dev",
@@ -80,6 +80,9 @@
 		"prettier": "^2.2.1",
 		"react-inspector": "^2.3.0",
 		"split.js": "^1.5.11"
+	},
+	"engines": {
+		"node": "10"
 	},
 	"jest": {
 		"verbose": true,

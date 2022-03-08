@@ -1,18 +1,18 @@
-# Web-Maker ![Build](https://travis-ci.org/chinchang/web-maker.svg?branch=master) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/web-maker)
+# Web-Maker 🕸🛠
 
 ---
 
-**Web-Maker** is an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and offline supported because it runs completely on your system.
+**Web-Maker** is an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and works offline because it runs completely on your system.
 
-### [Open Web App](https://webmaker.app/app/) (Recommended: More features. More fun!)
+## [Open Web App](https://webmaker.app/app/) (Recommended: More features. More fun!)
 
 or
 
-### [Install Chrome extension](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
+## [Install Chrome extension](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
 
 ![Screenshot](/packages/website/images/ss1.png)
 
-### Features
+## Features
 
 - Supports Preprocessors: HTML (Pug & Markdown), CSS (SCSS, LESS & Stylus, Atomic CSS) & JavaScript (ES6, TypeScript & CoffeeScript)
 - Works offline
@@ -33,19 +33,27 @@ or
 
 Follow [@webmakerApp](https://twitter.com/intent/follow?screen_name=webmakerApp) for updates or tweet out feature requests and suggestions.
 
-### Support Web Maker
+## Support Web Maker
 
-Hi! I am Kushagra Gour. Web Maker is a free and open-source project. To keep myself motivated for working on such open-source and free [side projects](https://kushagragour.in/lab/), I have launched a [Patreon campaign](https://patreon.com/kushagra). Your pledge, no matter how small, will act as an appreciation towards my work and keep me going forward making Web Maker more awesome🔥.
+Hi! I am Kushagra Gour. Web Maker is a free and open-source project. To keep myself motivated for working on such open-source and free [side projects](https://kushagra.dev/lab), I have launched a [Patreon campaign](https://patreon.com/kushagra). Your pledge, no matter how small, will act as an appreciation towards my work and keep me going forward making Web Maker more awesome🔥.
 
 [![Become a patron](/src/assets/patreon.png)](https://patreon.com/kushagra)
 
+Support with $ETH - 0x39989c0E53cfdcF6792e09d7573c65E911e774bA
+
 If not that, you can support by simply sharing about how much you love 💖 [@webmakerapp](https://twitter.com/webmakerApp).
 
-Web Maker stays stable as rock with every release, thanks to the sponsored testing on the awesome <a href="http://browserstack.com/">BrowserStack</a>!
-<a href="http://browserstack.com/"><img alt="Browserstack logo" src="https://p14.zdusercontent.com/attachment/1015988/l8WVB4MN3qYX5Vfa2GYq9OhWc?token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..LkuIkSrr7JH57LIX8ndSRQ.vNbwvs4ANfS_axE84eEYNrqx79qup9c1w0gK7z7lw9nq2YV05HLKdKb1GbXDAb-oYFqeyWo3D8RSaXtcq0kK6hmM20D95sS0IiSdqLo8o86QEPvrMkxjhg0Nu0yViwlFnDVhjrMoeKlFSMyDexFf-v_ejBJdNrr_rr_8Nc_D1BLa82BgUPaahkIHsJFXmNmS51AbhN4BbxEnAcYNf11xqCTLbN1XwZk6FmSgWjWDIscxF3TpGHTGYLOq4qcdRGXT_08C8rm6SKqEV9FVN7AxnyW3-pzhGZ_QpgzEYg_d-IY.9_wfbVeTNES4ZpwgzPg66A" height="100"></a>
+## Sponsors
 
-### License
+[![](https://user-images.githubusercontent.com/379918/134402085-15cf29bc-2266-4b2d-9354-1830adc4a240.png)](https://cssbattle.dev)
+
+Web Maker stays stable as rock with every release, thanks to the sponsored testing on the awesome
+<a href="http://browserstack.com/"><img alt="Browserstack logo" src="https://user-images.githubusercontent.com/379918/134403020-50167453-223a-4841-8ef6-312219bcb2e6.png" height="60"></a>
+
+Deployed on the superfast [Netlify](https://www.netlify.com/) platform.
+
+## License
 
 MIT Licensed
 
-Copyright (c) 2016-2019 Kushagra Gour, [webmakerapp.com](https://webmakerapp.com)
+Copyright (c) 2016-2022 Kushagra Gour, [webmaker.app](https://webmaker.app)

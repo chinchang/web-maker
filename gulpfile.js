@@ -231,6 +231,7 @@ exports.release = series(
 		} else {
 			console.log('RELEASE FINISHED SUCCESSFULLY');
 		}
+
 		callback(error);
 	}
 );
@@ -242,6 +243,33 @@ exports.devRelease = gulp.series(
 	'useRef',
 	// 'concatSwRegistration',
 	// 'generate-service-worker',
-	'buildDistFolder'
-	// 'cleanup'
+	'buildDistFolder',
+	'cleanup',
+	function (error) {
+		if (error) {
+			console.log(error.message);
+		} else {
+			console.log('DEV-RELEASE FINISHED SUCCESSFULLY');
+		}
+
+		callback(error);
+	}
 );
+
+// gulp.task('build-extension', function (callback) {
+// 	runSequence(
+// 		'runWebpack',
+// 		'copyFiles',
+// 		'fixIndex',
+// 		'useRef',
+// 		'packageExtension',
+// 		function (error) {
+// 			if (error) {
+// 				console.log(error.message);
+// 			} else {
+// 				console.log('DEV RELEASE FINISHED SUCCESSFULLY');
+// 			}
+// 			callback(error);
+// 		}
+// 	);
+// });

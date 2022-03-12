@@ -6,5 +6,6 @@ import './lib/codemirror/addon/fold/foldgutter.css';
 import './lib/codemirror/addon/dialog/dialog.css';
 import './lib/hint.min.css';
 import './lib/inlet.css';
+import './style.css';
 
 export default App;

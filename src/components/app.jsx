@@ -66,7 +66,6 @@ import {
 	SHOW_KEYBOARD_SHORTCUTS_EVENT
 } from '../commands';
 import { commandPaletteService } from '../commandPaletteService';
-import './../style.css';
 
 import { I18nProvider } from '@lingui/react';
 

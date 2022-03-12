@@ -3,7 +3,7 @@
 	"version": "4.2.0",
 	"description": "A blazing fast & offline web playground",
 	"scripts": {
-		"start": "npm run -s dev",
+		"start": "concurrently --kill-others \"gulp start-preview-server\" \"npm run -s dev\"",
 		"build": "preact build --template src/index.html --prerender false",
 		"dev": "preact watch --template src/index.html",
 		"serve-website": "cd packages/website; npm start",
@@ -41,6 +41,7 @@
 		"babel-eslint": "^7.2.3",
 		"babel-minify": "^0.2.0",
 		"babel-plugin-macros": "^2.6.1",
+		"concurrently": "^7.0.0",
 		"eslint": "^4.9.0",
 		"eslint-config-prettier": "^2.3.0",
 		"eslint-config-synacor": "^2.0.2",

@@ -31,7 +31,7 @@ const Modal = ({
 	useEffect(() => {
 		window.addEventListener('keydown', onKeyDownHandler);
 		return () => {
-			window.removeEventListener('keydown', this.onKeyDownHandler.bind(this));
+			window.removeEventListener('keydown', onKeyDownHandler.bind(this));
 			if (focusGrabberRef.current) {
 				focusGrabberRef.current.remove();
 				focusGrabberRef.current = null;

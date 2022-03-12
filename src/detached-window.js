@@ -9,7 +9,7 @@ window.addEventListener('message', e => {
 			frame.contentDocument.close();
 		}, 10);
 	}
-	if (e.data && e.data.url && e.data.url.match(/preview\.html/)) {
+	if (e.data && e.data.url && e.data.url.match(/index\.html/)) {
 		document.querySelector('iframe').src = e.data.url;
 	}
 

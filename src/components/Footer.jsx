@@ -285,7 +285,7 @@ export default class Footer extends Component {
 							<button
 								onClick={this.layoutBtnClickhandler.bind(this, 4)}
 								id="layoutBtn4"
-								class="mode-btn hint--top-left hint--rounded hide-in-file-mode hide-on-mobile"
+								class="mode-btn hint--top-left hint--rounded hide-on-mobile"
 								aria-label={i18n._(t`Switch to full screen preview`)}
 							>
 								<svg viewBox="0 0 100 100">

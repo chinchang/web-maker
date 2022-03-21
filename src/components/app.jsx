@@ -735,6 +735,9 @@ export default class App extends Component {
 	}
 
 	layoutBtnClickHandler(layoutId) {
+		if (layoutId === this.state.currentLayoutMode) {
+			layoutId = 2;
+		}
 		this.saveSetting('layoutMode', layoutId);
 		trackEvent('ui', 'toggleLayoutClick', layoutId);
 		this.toggleLayout(layoutId);

@@ -46,7 +46,7 @@ const Modal = ({
 		if (show) {
 			// HACK: refs will evaluate on next tick due to portals
 			setTimeout(() => {
-				const closeButton = this.overlayEl.querySelector(
+				const closeButton = overlayRef.current.querySelector(
 					'.js-modal__close-btn'
 				);
 				if (closeButton) {

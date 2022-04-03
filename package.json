@@ -4,7 +4,7 @@
 	"description": "A blazing fast & offline web playground",
 	"scripts": {
 		"start": "concurrently --kill-others \"gulp start-preview-server\" \"npm run -s dev\"",
-		"build": "preact build --template src/index.html --prerender false",
+		"build": "preact build --template src/index.html --prerender false --no-inline-css",
 		"dev": "preact watch --template src/index.html",
 		"serve-website": "cd packages/website; npm start",
 		"build-website": "cd packages/website; npm run build",

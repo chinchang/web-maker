@@ -81,7 +81,7 @@ gulp.task('copyFiles', function () {
 			.pipe(gulp.dest('build/lib/codemirror/addon/dialog')),
 		gulp.src('src/lib/hint.min.css').pipe(gulp.dest('build/lib')),
 		gulp.src('src/lib/inlet.css').pipe(gulp.dest('build/lib')),
-		gulp.src('src/style.css').pipe(gulp.dest('build')),
+		// gulp.src('src/style.css').pipe(gulp.dest('build')),
 
 		gulp
 			.src([
@@ -100,14 +100,16 @@ gulp.task('useRef', function () {
 
 gulp.task('concatSwRegistration', function () {
 	return gulp
-		.src(['src/service-worker-registration.js', 'app/script.js'])
+		.src(['src/service-worker-registration.js', 'app/script.js'], {
+			allowEmpty: true
+		})
 		.pipe(concat('script.js'))
 		.pipe(gulp.dest('app'));
 });
 
 gulp.task('minify', function () {
 	minifyJs('app/script.js');
-	minifyJs('app/vendor.js');
+	// minifyJs('app/vendor.js');
 	minifyJs('app/lib/screenlog.js');
 
 	return gulp
@@ -225,7 +227,7 @@ exports.release = series(
 	'packageExtension',
 	'buildDistFolder',
 	'cleanup',
-	function (error) {
+	function (callback, error) {
 		if (error) {
 			console.log(error.message);
 		} else {
@@ -245,7 +247,7 @@ exports.devRelease = gulp.series(
 	// 'generate-service-worker',
 	'buildDistFolder',
 	'cleanup',
-	function (error) {
+	function (callback, error) {
 		if (error) {
 			console.log(error.message);
 		} else {

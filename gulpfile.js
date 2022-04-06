@@ -99,16 +99,20 @@ gulp.task('useRef', function () {
 });
 
 gulp.task('concatSwRegistration', function () {
+	const bundleFile = fs
+		.readdirSync('app')
+		.filter(allFilesPaths => allFilesPaths.match(/bundle.*\.js$/) !== null)[0];
+
+	console.log('matched', bundleFile);
+
 	return gulp
-		.src(['src/service-worker-registration.js', 'app/script.js'], {
-			allowEmpty: true
-		})
-		.pipe(concat('script.js'))
+		.src(['src/service-worker-registration.js', `app/${bundleFile}`])
+		.pipe(concat(bundleFile))
 		.pipe(gulp.dest('app'));
 });
 
 gulp.task('minify', function () {
-	minifyJs('app/script.js');
+	// minifyJs('app/script.js');
 	// minifyJs('app/vendor.js');
 	minifyJs('app/lib/screenlog.js');
 

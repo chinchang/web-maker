@@ -1226,6 +1226,7 @@ body > #demo-frame {
 .saved-item-tile__btn {
 	padding: 7px 10px;
 	color: white;
+	border: 0;
 	border-radius: 20px;
 	margin-left: 2px;
 	background: rgba(255, 255, 255, 0.1);
@@ -1254,6 +1255,7 @@ body > #demo-frame {
 	overflow-y: auto;
 	overflow-x: hidden;
 	max-height: calc(100vh - 90px);
+	scroll-behavior: smooth;
 }
 
 .notifications-btn {

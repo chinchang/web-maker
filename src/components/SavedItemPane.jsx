@@ -11,7 +11,7 @@ export default function SavedItemPane({
 	isOpen,
 	closeHandler,
 	onItemSelect,
-	onitemRemove,
+	onItemRemove,
 	onItemFork,
 	onExport,
 	mergeImportedItems
@@ -23,7 +23,7 @@ export default function SavedItemPane({
 	useEffect(() => {
 		if (!itemsMap) return;
 		const newItems = Object.values(itemsMap);
-		newItems.sort(function(a, b) {
+		newItems.sort(function (a, b) {
 			return b.updatedOn - a.updatedOn;
 		});
 		setItems(newItems);
@@ -50,7 +50,7 @@ export default function SavedItemPane({
 	}
 	function itemRemoveBtnClickHandler(item, e) {
 		e.stopPropagation();
-		onitemRemove(item);
+		onItemRemove(item);
 	}
 	function itemForkBtnClickHandler(item, e) {
 		e.stopPropagation();
@@ -213,8 +213,8 @@ export default function SavedItemPane({
 							<ItemTile
 								item={item}
 								onClick={() => itemClickHandler(item)}
-								onForkBtnClick={() => itemForkBtnClickHandler(item)}
-								onRemoveBtnClick={() => itemRemoveBtnClickHandler(item)}
+								onForkBtnClick={e => itemForkBtnClickHandler(item, e)}
+								onRemoveBtnClick={e => itemRemoveBtnClickHandler(item, e)}
 							/>
 						))}
 						{!items.length ? (

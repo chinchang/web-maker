@@ -1,6 +1,6 @@
 /* eslint-disable */ export default {
 	languageData: {
-		plurals: function(n, ord) {
+		plurals: function (n, ord) {
 			if (ord) return 'other';
 			return 'other';
 		}
@@ -50,7 +50,7 @@
 		'Login/Signup': 'Login/Signup',
 		'Made with <0>\uD83D\uDC96</0>& <1> \uD83D\uDE4C</1> by <2>Kushagra Gour</2>':
 			'Made with <0>\uD83D\uDC96</0>& <1> \uD83D\uDE4C</1> by <2>Kushagra Gour</2>',
-		'My Library ({0})': function(a) {
+		'My Library ({0})': function (a) {
 			return ['My Library (', a('0'), ')'];
 		},
 		New: 'New',

@@ -1,6 +1,6 @@
 /* eslint-disable */ export default {
 	languageData: {
-		plurals: function(n, ord) {
+		plurals: function (n, ord) {
 			if (ord)
 				return n == 1
 					? 'one'
@@ -62,7 +62,7 @@
 			'\u0932\u0949\u0917\u093F\u0928 / \u0938\u093E\u0907\u0928\u092A',
 		'Made with <0>\uD83D\uDC96</0>& <1> \uD83D\uDE4C</1> by <2>Kushagra Gour</2>':
 			'<0>\uD83D\uDC96</0> \u0914\u0930 <1> \uD83D\uDE4C</1> \u0938\u0947 <2>\u0915\u0941\u0936\u093E\u0917\u094D\u0930 \u0917\u094C\u0930</2> \u0926\u094D\u0935\u093E\u0930\u093E \u092C\u0928\u093E\u092F\u093E \u0917\u092F\u093E',
-		'My Library ({0})': function(a) {
+		'My Library ({0})': function (a) {
 			return [
 				'\u092E\u0947\u0930\u0940 \u0930\u091A\u0928\u093E\u090F\u0901 (',
 				a('0'),
@@ -94,8 +94,7 @@
 		'Run Prettier': 'Run Prettier',
 		'Run preview (Ctrl/\u2318 + Shift + 5)':
 			'Run preview (Ctrl/\u2318 + Shift + 5)',
-		Save:
-			'\u0938\u0941\u0930\u0915\u094D\u0937\u093F\u0924 \u0915\u0930\u0947\u0902',
+		Save: '\u0938\u0941\u0930\u0915\u094D\u0937\u093F\u0924 \u0915\u0930\u0947\u0902',
 		'Save as HTML file': 'Save as HTML file',
 		'Save current creation (Ctrl/\u2318 + S)':
 			'Save current creation (Ctrl/\u2318 + S)',

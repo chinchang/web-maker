@@ -114,6 +114,23 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+			<Notification version="5.0.0" {...props} isLatest={true}>
+				<li>
+					<strong>We are Back! 😎</strong>: After almost 2 years of nothing
+					being shipped, we are back in action. That too with a bang! We have a
+					small team of amazing developers working on Web Maker now. So expect
+					some crazy useful features coming soon!
+				</li>
+				<NotificationItem type="ui">
+					First up, is local language support! We have added Hindi and Spanish
+					to start with! Thanks{' '}
+					<ThanksTo
+						url="https://github.com/leninalbertolp"
+						name="@leninalbertolp"
+					/>{' '}
+					for the Spanish translation. It was long due!
+				</NotificationItem>
+			</Notification>
 			<Notification version="4.2.0" {...props} isLatest={true}>
 				<li>
 					Tailwind CSS now added to popular libraries list. Thanks

@@ -187,7 +187,7 @@
 			.screenshot {
 				box-shadow: 0 51px 33px -40px rgba(0, 0, 0, 0.6);
 				transform: rotateX(4deg) rotateY(-2deg);
-    				border: 1px solid black;
+				border: 1px solid black;
 				border-radius: 10px;
 			}
 
@@ -430,21 +430,19 @@
 				<svg class="logo" width="160" height="84">
 					<use xlink:href="#logo"></use>
 				</svg>
-				<h1 class="homepage-title">
-					Web Maker
-				</h1>
-				<h2 style="margin-bottom:0.4em;">
+				<h1 class="homepage-title">Web Maker</h1>
+				<h2 style="margin-bottom: 0.4em">
 					A blazing fast & offline web playground in your browser
 				</h2>
-				<div style="margin-top: 30px;" id="cta" class="mb-2">
-					<a class="btn  download-btn web-app-btn" href="/app/">
+				<div style="margin-top: 30px" id="cta" class="mb-2">
+					<a class="btn download-btn web-app-btn" href="/app/">
 						<span>Open Web App</span>
 					</a>
-					<p style="margin-top:3px;">
+					<p style="margin-top: 3px">
 						Recommended: Works Offline! More features. More fun!
 					</p>
 					<a
-						class="btn  download-btn js-chrome-btn"
+						class="btn download-btn js-chrome-btn"
 						href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh"
 					>
 						<img src="images/chrome-logo.png" height="40" alt="" />
@@ -478,7 +476,7 @@
 					>
 				</div>
 			</header>
-			<div style="margin-top:30px; perspective: 400px">
+			<div style="margin-top: 30px; perspective: 400px">
 				<img
 					class="screenshot"
 					src="images/ss1.png?v4"
@@ -490,7 +488,7 @@
 		{% else %}
 		<header class="site-header">
 			<div>
-				<h2 style="display: inline;">
+				<h2 style="display: inline">
 					<a href="/">
 						<svg class="site-header__logo">
 							<use xlink:href="#logo"></use>
@@ -519,9 +517,7 @@
 		</header>
 		{% endif %}
 
-		<main class="main-content">
-			{{ content }}
-		</main>
+		<main class="main-content">{{ content }}</main>
 
 		<div id="info" class="info">
 			<p>
@@ -550,7 +546,7 @@
 				or you can set up a filter in Adblock Plus or similar ad blocker tools
 				like AdBlock, uBlock or Adblock Pro.
 			</p>
-			<div style="text-align: center;">
+			<div style="text-align: center">
 				<a class="btn" href="javascript:void(0)" onclick="closeInfo()">Close</a>
 			</div>
 		</div>
@@ -572,7 +568,7 @@
 
 		{% include footer.html %}
 
-		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="display:none">
+		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" style="display: none">
 			<symbol id="logo" viewBox="-145 -2 372 175">
 				<g
 					stroke="none"
@@ -625,7 +621,7 @@
 		<script type="text/javascript">
 			window.$crisp = [];
 			window.CRISP_WEBSITE_ID = 'c00b07b9-42da-45dd-87b0-e614bf7fb240';
-			(function() {
+			(function () {
 				d = document;
 				s = d.createElement('script');
 				s.src = 'https://client.crisp.chat/l.js';

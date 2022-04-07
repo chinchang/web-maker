@@ -1,4 +1,4 @@
-/* global htmlCodeEl, cssCodeEl, jsCodeEl, runBtn
+/* global htmlCodeEl, cssCodeEl, jsCodeEl
  */
 
 import { h, Component } from 'preact';
@@ -21,7 +21,8 @@ import {
 	downloadFile,
 	getCompleteHtml,
 	getFilenameFromUrl,
-	prettify
+	prettify,
+	sanitizeSplitSizes
 } from '../utils';
 import {
 	linearizeFiles,
@@ -49,7 +50,7 @@ import { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
 import { takeScreenshot } from '../takeScreenshot';
 import { AskToImportModal } from './AskToImportModal';
 import { Alerts } from './Alerts';
-import Portal from 'preact-portal';
+import Portal from './Portal';
 import { HelpModal } from './HelpModal';
 import { OnboardingModal } from './OnboardingModal';
 import { Js13KModal } from './Js13KModal';
@@ -179,8 +180,7 @@ export default class App extends Component {
 					if (customUser) {
 						const prefs = { ...this.state.prefs };
 						Object.assign(prefs, user.settings);
-						this.setState({ prefs: prefs });
-						this.updateSetting();
+						this.setState({ prefs }, this.updateSetting);
 					}
 				});
 			} else {
@@ -230,8 +230,7 @@ export default class App extends Component {
 				this.createNewItem();
 			}
 			Object.assign(this.state.prefs, result);
-			this.setState({ prefs: { ...this.state.prefs } });
-			this.updateSetting();
+			this.setState({ prefs: { ...this.state.prefs } }, this.updateSetting);
 		});
 
 		// Check for new version notifications
@@ -270,7 +269,9 @@ export default class App extends Component {
 	async loadLanguage(lang) {
 		log('🇯🇲 fetching defninition');
 
-		const catalog = await import(/* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */ `../locales/${lang}/messages.js`);
+		const catalog = await import(
+			/* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */ `../locales/${lang}/messages.js`
+		);
 
 		this.setState(state => ({
 			catalogs: {
@@ -281,27 +282,34 @@ export default class App extends Component {
 	}
 
 	incrementUnsavedChanges() {
-		this.setState({ unsavedEditCount: this.state.unsavedEditCount + 1 });
+		this.setState(prevState => {
+			const newCount = prevState.unsavedEditCount + 1;
 
-		if (
-			this.state.unsavedEditCount % UNSAVED_WARNING_COUNT === 0 &&
-			this.state.unsavedEditCount >= UNSAVED_WARNING_COUNT
-		) {
-			window.saveBtn.classList.add('animated');
-			window.saveBtn.classList.add('wobble');
-			window.saveBtn.addEventListener('animationend', () => {
-				window.saveBtn.classList.remove('animated');
-				window.saveBtn.classList.remove('wobble');
-			});
-		}
+			if (
+				newCount % UNSAVED_WARNING_COUNT === 0 &&
+				newCount >= UNSAVED_WARNING_COUNT
+			) {
+				window.saveBtn.classList.add('animated');
+				window.saveBtn.classList.add('wobble');
+				window.saveBtn.addEventListener('animationend', () => {
+					window.saveBtn.classList.remove('animated');
+					window.saveBtn.classList.remove('wobble');
+				});
+			}
+
+			return { unsavedEditCount: newCount };
+		});
 	}
 
 	updateProfileUi() {
-		if (this.state.user) {
-			document.body.classList.add('is-logged-in');
-		} else {
-			document.body.classList.remove('is-logged-in');
-		}
+		this.setState(prevState => {
+			if (prevState.user) {
+				document.body.classList.add('is-logged-in');
+			} else {
+				document.body.classList.remove('is-logged-in');
+			}
+			return null;
+		});
 	}
 
 	refreshEditor() {
@@ -458,23 +466,27 @@ export default class App extends Component {
 
 	populateItemsInSavedPane(items) {
 		// TODO: sort desc. by updation date
-		this.setState({
-			savedItems: { ...this.state.savedItems }
-		});
+		// this.setState({
+		// 	savedItems: { ...this.state.savedItems }
+		// });
 
 		this.toggleSavedItemsPane();
 		// HACK: Set overflow after sometime so that the items can animate without getting cropped.
 		// setTimeout(() => $('#js-saved-items-wrap').style.overflowY = 'auto', 1000);
 	}
 	toggleSavedItemsPane(shouldOpen) {
-		this.setState({
-			isSavedItemPaneOpen:
-				shouldOpen === undefined ? !this.state.isSavedItemPaneOpen : shouldOpen
-		});
+		this.setState(prevState => {
+			const isSavedItemPaneOpen =
+				shouldOpen === undefined ? !prevState.isSavedItemPaneOpen : shouldOpen;
 
-		document.body.classList[this.state.isSavedItemPaneOpen ? 'add' : 'remove'](
-			'overlay-visible'
-		);
+			document.body.classList[isSavedItemPaneOpen ? 'add' : 'remove'](
+				'overlay-visible'
+			);
+
+			return {
+				isSavedItemPaneOpen
+			};
+		});
 	}
 
 	/**
@@ -484,17 +496,17 @@ export default class App extends Component {
 	 * @return {promise}                    Promise.
 	 */
 	async fetchItems(shouldSaveGlobally, shouldFetchLocally) {
-		// HACK: This empty assignment is being used when importing locally saved items
-		// to cloud, `fetchItems` runs once on account login which clears the
-		// savedItems object and hence, while merging no saved item matches with itself.
-		this.state.savedItems = {};
 		var items = [];
+		const savedItems = {};
 
 		items = await itemService.getAllItems(shouldFetchLocally);
 		trackEvent('fn', 'fetchItems', items.length);
 		if (shouldSaveGlobally) {
 			items.forEach(item => {
-				this.state.savedItems[item.id] = item;
+				savedItems[item.id] = item;
+			});
+			this.setState({
+				savedItems
 			});
 		}
 		return items;
@@ -723,6 +735,9 @@ export default class App extends Component {
 	}
 
 	layoutBtnClickHandler(layoutId) {
+		if (layoutId === this.state.currentLayoutMode) {
+			layoutId = 2;
+		}
 		this.saveSetting('layoutMode', layoutId);
 		trackEvent('ui', 'toggleLayoutClick', layoutId);
 		this.toggleLayout(layoutId);
@@ -744,7 +759,7 @@ export default class App extends Component {
 			sizes = [33.33, 33.33, 33.33];
 		} finally {
 			/* eslint-disable no-unsafe-finally */
-			return sizes;
+			return sanitizeSplitSizes(sizes);
 
 			/* eslint-enable no-unsafe-finally */
 		}
@@ -780,20 +795,28 @@ export default class App extends Component {
 					`calc(50% - ${sidebarWidth / 2}px)`
 				];
 			}
-			return sizes;
+			return sanitizeSplitSizes(sizes);
 		}
 
 		const currentLayoutMode = this.state.currentLayoutMode;
 		var dimensionProperty = currentLayoutMode === 2 ? 'height' : 'width';
-		sizes = [
-			getPercentFromDimension($('#js-code-side'), dimensionProperty),
-			getPercentFromDimension($('#js-demo-side'), dimensionProperty)
-		];
+		try {
+			sizes = [
+				getPercentFromDimension($('#js-code-side'), dimensionProperty),
+				getPercentFromDimension($('#js-demo-side'), dimensionProperty)
+			];
 
-		if (sizes.filter(s => s).length !== 2) {
+			if (sizes.filter(s => s).length !== 2) {
+				sizes = [50, 50];
+			}
+		} catch (e) {
 			sizes = [50, 50];
+		} finally {
+			/* eslint-disable no-unsafe-finally */
+			return sanitizeSplitSizes(sizes);
+
+			/* eslint-enable no-unsafe-finally */
 		}
-		return sizes;
 	}
 	saveSetting(setting, value) {
 		const d = deferred();
@@ -917,7 +940,9 @@ export default class App extends Component {
 	}
 
 	titleInputBlurHandler(e) {
-		this.state.currentItem.title = e.target.value;
+		this.setState({
+			currentItem: { ...this.state.currentItem, title: e.target.value }
+		});
 
 		if (this.state.currentItem.id) {
 			this.saveItem();
@@ -929,19 +954,21 @@ export default class App extends Component {
 	 * Handles all user triggered preference changes in the UI.
 	 */
 	updateSetting(settingName, value) {
+		const prefs = { ...this.state.prefs };
+
 		// If this was triggered from user interaction, save the setting
 		if (settingName) {
 			// var settingName = e.target.dataset.setting;
 			var obj = {};
 			log(settingName, value);
-			const prefs = { ...this.state.prefs };
+			// const prefs = { ...this.state.prefs };
 			prefs[settingName] = value;
 			obj[settingName] = prefs[settingName];
 			this.setState({ prefs });
 
 			// We always save locally so that it gets fetched
 			// faster on future loads.
-			db.sync.set(obj, function() {
+			db.sync.set(obj, function () {
 				alertsService.add('Setting saved');
 			});
 			if (window.user) {
@@ -961,15 +988,7 @@ export default class App extends Component {
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
 
-		const prefs = this.state.prefs;
-		// Show/hide RUN button based on autoPreview setting.
-		let autoPreview =
-			window.forcedSettings.autoPreview !== undefined
-				? window.forcedSettings
-				: prefs.autoPreview;
-		runBtn.classList[autoPreview ? 'add' : 'remove']('hide');
-
-		this.contentWrap.applyCodemirrorSettings(this.state.prefs);
+		this.contentWrap.applyCodemirrorSettings(prefs);
 
 		if (prefs.autoSave) {
 			if (!this.autoSaveInterval) {
@@ -1172,7 +1191,7 @@ export default class App extends Component {
 		}
 	}
 
-	mergeImportedItems(items) {
+	mergeImportedItems(items, isMergingToCloud = false) {
 		var existingItemIds = [];
 		var toMergeItems = {};
 		const d = deferred();
@@ -1181,14 +1200,14 @@ export default class App extends Component {
 			// We can access `savedItems` here because this gets set when user
 			// opens the saved creations panel. And import option is available
 			// inside the saved items panel.
-			// HACK: Also when this fn is called for importing locally saved items
-			// to cloud, `fetchItems` runs once on account login which clears the
-			// savedItems object and hence, no match happens for `existingItemIds`.
-			if (savedItems[item.id]) {
+
+			// When we are merging to cloud, savedItems contains the local items. And if we start matching,
+			// all items will match with themselves and nothing would import :P
+			if (!isMergingToCloud && savedItems[item.id]) {
 				// Item already exists
 				existingItemIds.push(item.id);
 			} else {
-				log('merging', item.id);
+				// log('merging', item.id);
 				toMergeItems[item.id] = item;
 			}
 		});
@@ -1225,7 +1244,7 @@ export default class App extends Component {
 	 * Called from inside ask-to-import-modal
 	 */
 	importCreationsAndSettingsIntoApp() {
-		this.mergeImportedItems(this.oldSavedItems).then(() => {
+		this.mergeImportedItems(this.oldSavedItems, true).then(() => {
 			trackEvent('fn', 'oldItemsImported');
 			this.dontAskToImportAnymore();
 		});
@@ -1238,10 +1257,23 @@ export default class App extends Component {
 		this.closeAllOverlays();
 	}
 
-	splitUpdateHandler(mainSplitInstance, codeSplitInstance) {
+	splitUpdateHandler(sizes) {
+		const { currentItem } = this.state;
+		if (!sizes) {
+			currentItem.mainSizes = this.getMainPaneSizes();
+			currentItem.sizes = this.getCodePaneSizes();
+			return;
+		}
 		// Not using setState to avoid re-render
-		this.state.currentItem.sizes = this.getCodePaneSizes();
-		this.state.currentItem.mainSizes = this.getMainPaneSizes();
+		if (sizes.length === 3) {
+			if (currentItem.files) {
+				currentItem.mainSizes = sizes;
+			} else {
+				currentItem.sizes = sizes;
+			}
+		} else {
+			currentItem.mainSizes = sizes;
+		}
 	}
 
 	/**
@@ -1257,7 +1289,7 @@ export default class App extends Component {
 			whitespace = /(\r?\n|\r|\s+)/g;
 
 		const ByteSize = {
-			count: function(text, options) {
+			count: function (text, options) {
 				// Set option defaults
 				options = options || {};
 				options.lineBreaks = options.lineBreaks || 1;
@@ -1281,7 +1313,7 @@ export default class App extends Component {
 				}
 			},
 
-			format: function(count, plainText) {
+			format: function (count, plainText) {
 				var level = 0;
 
 				while (count > 1024) {
@@ -1490,9 +1522,7 @@ export default class App extends Component {
 		const { file } = getFileFromPath(currentItem.files, sourceFilePath);
 		if (doesFileExistInFolder(destinationFolder, file.name)) {
 			alert(
-				`File with name "${
-					file.name
-				}" already exists in the destination folder.`
+				`File with name "${file.name}" already exists in the destination folder.`
 			);
 			return;
 		}
@@ -1585,6 +1615,7 @@ export default class App extends Component {
 							title={this.state.currentItem.title}
 							titleInputBlurHandler={this.titleInputBlurHandler.bind(this)}
 							user={this.state.user}
+							isAutoPreviewOn={this.state.prefs.autoPreview}
 							unsavedEditCount={this.state.unsavedEditCount}
 							isFileMode={
 								this.state.currentItem && this.state.currentItem.files
@@ -1656,15 +1687,13 @@ export default class App extends Component {
 					</div>
 
 					<SavedItemPane
-						items={this.state.savedItems}
+						itemsMap={this.state.savedItems}
 						isOpen={this.state.isSavedItemPaneOpen}
 						closeHandler={this.closeSavedItemsPane.bind(this)}
-						itemClickHandler={this.itemClickHandler.bind(this)}
-						itemRemoveBtnClickHandler={this.itemRemoveBtnClickHandler.bind(
-							this
-						)}
-						itemForkBtnClickHandler={this.itemForkBtnClickHandler.bind(this)}
-						exportBtnClickHandler={this.exportBtnClickHandler.bind(this)}
+						onItemSelect={this.itemClickHandler.bind(this)}
+						onItemRemove={this.itemRemoveBtnClickHandler.bind(this)}
+						onItemFork={this.itemForkBtnClickHandler.bind(this)}
+						onExport={this.exportBtnClickHandler.bind(this)}
 						mergeImportedItems={this.mergeImportedItems.bind(this)}
 					/>
 
@@ -1784,7 +1813,7 @@ export default class App extends Component {
 						closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
 					/>
 
-					<Portal into="body">
+					<Portal into="#portal">
 						<div
 							class="modal-overlay"
 							onClick={this.modalOverlayClickHandler.bind(this)}

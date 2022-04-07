@@ -22,22 +22,22 @@ export function ItemTile({
 		>
 			<div class="saved-item-tile__btns">
 				{onForkBtnClick ? (
-					<a
+					<button
 						class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium"
 						aria-label="Creates a duplicate of this creation (Ctrl/⌘ + F)"
 						onClick={onForkBtnClick}
 					>
 						Fork<span class="show-when-selected">(Ctrl/⌘ + F)</span>
-					</a>
+					</button>
 				) : null}
 				{onRemoveBtnClick ? (
-					<a
+					<button
 						class="js-saved-item-tile__remove-btn  saved-item-tile__btn hint--left"
 						aria-label="Remove"
 						onClick={onRemoveBtnClick}
 					>
 						X
-					</a>
+					</button>
 				) : null}
 			</div>
 			<div className="flex flex-v-center">

@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const gulp = require('gulp');
-const runSequence = require('run-sequence');
+const { parallel, series } = require('gulp');
 const useref = require('gulp-useref');
 const cleanCSS = require('gulp-clean-css');
 const rename = require('gulp-rename');
@@ -23,15 +23,18 @@ function minifyJs(fileName) {
 	).code;
 	fs.writeFileSync(fileName, minifiedContent);
 	console.log(
-		`[${fileName}]: ${content.length / 1024}K -> ${minifiedContent.length /
-			1024}K`
+		`[${fileName}]: ${content.length / 1024}K -> ${
+			minifiedContent.length / 1024
+		}K`
 	);
 }
-gulp.task('runWebpack', function() {
-	return child_process.execSync('yarn run build');
+gulp.task('runWebpack', function () {
+	return child_process.exec('npm run build', (error, stdout, stderr) => {
+		console.log('runWebpack', error, stdout, stderr);
+	});
 });
 
-gulp.task('copyFiles', function() {
+gulp.task('copyFiles', function () {
 	return merge(
 		gulp
 			.src('src/lib/codemirror/theme/*')
@@ -56,19 +59,11 @@ gulp.task('copyFiles', function() {
 				'src/detached-window.js',
 				'src/icon-48.png',
 				'src/icon-128.png',
-				'manifest.json'
+				'src/manifest.json'
 			])
 			.pipe(gulp.dest('app')),
 
-		gulp
-			.src('build/bundle.*.js')
-			.pipe(rename('script.js'))
-			.pipe(gulp.dest('app')),
-		gulp
-			.src('build/vendor.*.js')
-			.pipe(rename('vendor.js'))
-			.pipe(gulp.dest('app')),
-		gulp.src('build/monaco.*.js').pipe(gulp.dest('app')),
+		gulp.src('build/*').pipe(gulp.dest('app')),
 
 		// Following CSS are copied to build/ folder where they'll be referenced by
 		// useRef plugin to concat into one.
@@ -86,7 +81,7 @@ gulp.task('copyFiles', function() {
 			.pipe(gulp.dest('build/lib/codemirror/addon/dialog')),
 		gulp.src('src/lib/hint.min.css').pipe(gulp.dest('build/lib')),
 		gulp.src('src/lib/inlet.css').pipe(gulp.dest('build/lib')),
-		gulp.src('src/style.css').pipe(gulp.dest('build')),
+		// gulp.src('src/style.css').pipe(gulp.dest('build')),
 
 		gulp
 			.src([
@@ -99,23 +94,26 @@ gulp.task('copyFiles', function() {
 	);
 });
 
-gulp.task('useRef', function() {
+gulp.task('useRef', function () {
+	return gulp.src('build/index.html').pipe(useref()).pipe(gulp.dest('app'));
+});
+
+gulp.task('concatSwRegistration', function () {
+	const bundleFile = fs
+		.readdirSync('app')
+		.filter(allFilesPaths => allFilesPaths.match(/bundle.*\.js$/) !== null)[0];
+
+	console.log('matched', bundleFile);
+
 	return gulp
-		.src('build/index.html')
-		.pipe(useref())
+		.src(['src/service-worker-registration.js', `app/${bundleFile}`])
+		.pipe(concat(bundleFile))
 		.pipe(gulp.dest('app'));
 });
 
-gulp.task('concatSwRegistration', function() {
-	return gulp
-		.src(['src/service-worker-registration.js', 'app/script.js'])
-		.pipe(concat('script.js'))
-		.pipe(gulp.dest('app'));
-});
-
-gulp.task('minify', function() {
-	minifyJs('app/script.js');
-	minifyJs('app/vendor.js');
+gulp.task('minify', function () {
+	// minifyJs('app/script.js');
+	// minifyJs('app/vendor.js');
 	minifyJs('app/lib/screenlog.js');
 
 	return gulp
@@ -127,9 +125,7 @@ gulp.task('minify', function() {
 				},
 				details => {
 					console.log(
-						`${details.name}: ${details.stats.originalSize} 👉🏼  ${
-							details.stats.minifiedSize
-						}`
+						`${details.name}: ${details.stats.originalSize} 👉🏼  ${details.stats.minifiedSize}`
 					);
 				}
 			)
@@ -137,7 +133,7 @@ gulp.task('minify', function() {
 		.pipe(gulp.dest('app'));
 });
 
-gulp.task('fixIndex', function() {
+gulp.task('fixIndex', function (cb) {
 	var contents = fs.readFileSync('build/index.html', 'utf8');
 	// Replace hashed-filename script tags with unhashed ones
 	contents = contents.replace(
@@ -151,10 +147,11 @@ gulp.task('fixIndex', function() {
 		''
 	);
 
-	fs.writeFileSync('build/index.html', contents, 'utf8');
+	// fs.writeFileSync('build/index.html', contents, 'utf8');
+	cb();
 });
 
-gulp.task('generate-service-worker', function(callback) {
+gulp.task('generate-service-worker', function (callback) {
 	var swPrecache = require('sw-precache');
 	var rootDir = 'app';
 
@@ -173,7 +170,7 @@ gulp.task('generate-service-worker', function(callback) {
 	);
 });
 
-gulp.task('packageExtension', function() {
+gulp.task('packageExtension', function () {
 	child_process.execSync('rm -rf extension');
 	child_process.execSync('cp -R app extension');
 	child_process.execSync('cp src/manifest.json extension');
@@ -186,30 +183,36 @@ gulp.task('packageExtension', function() {
 		gulp
 			.src('build/bundle.*.js')
 			.pipe(rename('script.js'))
-			.pipe(gulp.dest('extension')),
+			.pipe(gulp.dest('extension'))
 
-		gulp
-			.src('extension/**/*')
-			.pipe(zip(`extension-${packageJson.version}.zip`))
-			.pipe(gulp.dest('./'))
+		// gulp
+		// 	.src('extension/**/*')
+		// 	.pipe(zip(`extension-${packageJson.version}.zip`))
+		// 	.pipe(gulp.dest('./'))
 	);
 });
 
-gulp.task('buildWebsite', function() {
-	return child_process.execSync('yarn run build-website');
+gulp.task('buildWebsite', function () {
+	return child_process.exec(
+		'npm run build-website',
+		(error, stdout, stderr) => {
+			console.log('buildWebsite', error, stdout, stderr);
+		}
+	);
 });
 
-gulp.task('buildDistFolder', function() {
+gulp.task('buildDistFolder', function (cb) {
 	child_process.execSync('rm -rf dist');
 	child_process.execSync('mv packages/website/_site dist');
 	child_process.execSync('mv app dist/');
+	cb();
 });
 
-gulp.task('cleanup', function() {
-	return child_process.execSync('rm -rf build');
+gulp.task('cleanup', function () {
+	return child_process.exec('rm -rf build');
 });
 
-gulp.task('start-preview-server', function() {
+gulp.task('start-preview-server', function () {
 	connect.server({
 		root: 'preview',
 		port: 7888,
@@ -217,64 +220,62 @@ gulp.task('start-preview-server', function() {
 	});
 });
 
-gulp.task('release', function(callback) {
-	runSequence(
-		['runWebpack', 'buildWebsite'],
-		'copyFiles',
-		'fixIndex',
-		'useRef',
-		'concatSwRegistration',
-		'minify',
-		'generate-service-worker',
-		'packageExtension',
-		'buildDistFolder',
-		'cleanup',
-		function(error) {
-			if (error) {
-				console.log(error.message);
-			} else {
-				console.log('RELEASE FINISHED SUCCESSFULLY');
-			}
-			callback(error);
+exports.release = series(
+	parallel('runWebpack', 'buildWebsite'),
+	'copyFiles',
+	'fixIndex',
+	'useRef',
+	'concatSwRegistration',
+	'minify',
+	'generate-service-worker',
+	'packageExtension',
+	'buildDistFolder',
+	'cleanup',
+	function (callback, error) {
+		if (error) {
+			console.log(error.message);
+		} else {
+			console.log('RELEASE FINISHED SUCCESSFULLY');
 		}
-	);
-});
 
-gulp.task('dev-release', function(callback) {
-	runSequence(
-		['runWebpack', 'buildWebsite'],
-		'copyFiles',
-		'fixIndex',
-		'useRef',
-		'concatSwRegistration',
-		'generate-service-worker',
-		'buildDistFolder',
-		'cleanup',
-		function(error) {
-			if (error) {
-				console.log(error.message);
-			} else {
-				console.log('DEV RELEASE FINISHED SUCCESSFULLY');
-			}
-			callback(error);
-		}
-	);
-});
+		callback(error);
+	}
+);
 
-gulp.task('build-extension', function(callback) {
-	runSequence(
-		'runWebpack',
-		'copyFiles',
-		'fixIndex',
-		'useRef',
-		'packageExtension',
-		function(error) {
-			if (error) {
-				console.log(error.message);
-			} else {
-				console.log('DEV RELEASE FINISHED SUCCESSFULLY');
-			}
-			callback(error);
+exports.devRelease = gulp.series(
+	parallel('runWebpack', 'buildWebsite'),
+	'copyFiles',
+	'fixIndex',
+	'useRef',
+	// 'concatSwRegistration',
+	// 'generate-service-worker',
+	'buildDistFolder',
+	'cleanup',
+	function (callback, error) {
+		if (error) {
+			console.log(error.message);
+		} else {
+			console.log('DEV-RELEASE FINISHED SUCCESSFULLY');
 		}
-	);
-});
+
+		callback(error);
+	}
+);
+
+// gulp.task('build-extension', function (callback) {
+// 	runSequence(
+// 		'runWebpack',
+// 		'copyFiles',
+// 		'fixIndex',
+// 		'useRef',
+// 		'packageExtension',
+// 		function (error) {
+// 			if (error) {
+// 				console.log(error.message);
+// 			} else {
+// 				console.log('DEV RELEASE FINISHED SUCCESSFULLY');
+// 			}
+// 			callback(error);
+// 		}
+// 	);
+// });

@@ -1,12 +1,17 @@
 import { h } from 'preact';
 import { Button } from './common';
-import { Trans, t } from '@lingui/macro';
+import { Trans, NumberFormat, t } from '@lingui/macro';
 import { I18n } from '@lingui/react';
 
 const DEFAULT_PROFILE_IMG =
 	"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ccc' d='M12,19.2C9.5,19.2 7.29,17.92 6,16C6.03,14 10,12.9 12,12.9C14,12.9 17.97,14 18,16C16.71,17.92 14.5,19.2 12,19.2M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z'/%3E%3C/svg%3E";
 
 export function MainHeader(props) {
+	const isAutoPreviewOn =
+		window.forcedSettings.autoPreview !== undefined
+			? window.forcedSettings
+			: props.isAutoPreviewOn;
+
 	return (
 		<I18n>
 			{({ i18n }) => (
@@ -20,19 +25,20 @@ export function MainHeader(props) {
 						onBlur={props.titleInputBlurHandler}
 					/>
 					<div class="main-header__btn-wrap  flex  flex-v-center">
-						<button
-							id="runBtn"
-							class="hide btn btn btn--dark flex flex-v-center hint--rounded hint--bottom-left"
-							aria-label="Run preview (Ctrl/⌘ + Shift + 5)"
-							onClick={props.runBtnClickHandler}
-						>
-							<svg>
-								<use xlinkHref="#play-icon" />
-							</svg>
-							<Trans>Run</Trans>
-						</button>
+						{!isAutoPreviewOn && (
+							<button
+								class="btn btn btn--dark flex flex-v-center hint--rounded hint--bottom-left"
+								aria-label={i18n._(t`Run preview (Ctrl/⌘ + Shift + 5)`)}
+								onClick={props.runBtnClickHandler}
+							>
+								<svg>
+									<use xlinkHref="#play-icon" />
+								</svg>
+								<Trans>Run</Trans>
+							</button>
+						)}
 
-						{!this.props.isFileMode && (
+						{!props.isFileMode && (
 							<Button
 								onClick={props.addLibraryBtnHandler}
 								data-event-category="ui"
@@ -48,14 +54,14 @@ export function MainHeader(props) {
 									}`}
 									class="count-label"
 								>
-									{props.externalLibCount}
+									<NumberFormat value={props.externalLibCount} />
 								</span>
 							</Button>
 						)}
 
 						<button
 							class="btn btn--dark hint--rounded hint--bottom-left"
-							aria-label="Start a new creation"
+							aria-label={i18n._(t`Start a new creation`)}
 							onClick={props.newBtnHandler}
 						>
 							<svg viewBox="0 0 24 24">
@@ -68,7 +74,7 @@ export function MainHeader(props) {
 							class={`btn btn--dark hint--rounded hint--bottom-left ${
 								props.isSaving ? 'is-loading' : ''
 							} ${props.unsavedEditCount ? 'is-marked' : 0}`}
-							aria-label="Save current creation (Ctrl/⌘ + S)"
+							aria-label={i18n._(t`Save current creation (Ctrl/⌘ + S)`)}
 							onClick={props.saveBtnHandler}
 						>
 							<svg viewBox="0 0 24 24">
@@ -84,7 +90,7 @@ export function MainHeader(props) {
 							class={`btn btn--dark hint--rounded hint--bottom-left ${
 								props.isFetchingItems ? 'is-loading' : ''
 							}`}
-							aria-label="Open a saved creation (Ctrl/⌘ + O)"
+							aria-label={i18n._(t`Open a saved creation (Ctrl/⌘ + O)`)}
 							onClick={props.openBtnHandler}
 						>
 							<svg viewBox="0 0 24 24">
@@ -95,31 +101,33 @@ export function MainHeader(props) {
 							</svg>
 							<Trans>Open</Trans>
 						</button>
-						<Button
-							onClick={props.loginBtnHandler}
-							data-event-category="ui"
-							data-event-action="loginButtonClick"
-							class="hide-on-login btn btn--dark hint--rounded  hint--bottom-left"
-							aria-label="Login/Signup"
-						>
-							<Trans>Login</Trans>/<Trans>Signup</Trans>
-						</Button>
-						<Button
-							onClick={props.profileBtnHandler}
-							data-event-category="ui"
-							data-event-action="headerAvatarClick"
-							aria-label="See profile or Logout"
-							class="hide-on-logout btn--dark hint--rounded  hint--bottom-left"
-						>
-							<img
-								id="headerAvatarImg"
-								width="20"
-								src={
-									props.user ? props.user.photoURL || DEFAULT_PROFILE_IMG : ''
-								}
-								class="main-header__avatar-img"
-							/>
-						</Button>
+						{!props.user ? (
+							<Button
+								onClick={props.loginBtnHandler}
+								data-event-category="ui"
+								data-event-action="loginButtonClick"
+								class="btn btn--dark hint--rounded  hint--bottom-left"
+							>
+								<Trans>Login/Signup</Trans>
+							</Button>
+						) : (
+							<Button
+								onClick={props.profileBtnHandler}
+								data-event-category="ui"
+								data-event-action="headerAvatarClick"
+								aria-label={i18n._(t`See profile or Logout`)}
+								class="btn--dark hint--rounded  hint--bottom-left"
+							>
+								<img
+									id="headerAvatarImg"
+									width="20"
+									src={
+										props.user ? props.user.photoURL || DEFAULT_PROFILE_IMG : ''
+									}
+									class="main-header__avatar-img"
+								/>
+							</Button>
+						)}
 					</div>
 				</div>
 			)}

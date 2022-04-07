@@ -1,4 +1,4 @@
-var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
+// var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
 
 /**
  * Function that mutates original webpack config.
@@ -8,7 +8,7 @@ var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
  * @param {object} env - options passed to CLI.
  * @param {WebpackConfigHelpers} helpers - object with useful helpers when working with config.
  **/
-export default function(config, env, helpers) {
+export default function (config, env, helpers) {
 	const htmlWebpackPlugin = helpers.getPluginsByName(
 		config,
 		'HtmlWebpackPlugin'
@@ -34,20 +34,24 @@ export default function(config, env, helpers) {
 		// Remove the default hash append in chunk name
 		config.output.chunkFilename = '[name].chunk.js';
 
-		config.plugins.push(
-			new CommonsChunkPlugin({
-				name: 'vendor',
-				minChunks: ({ resource }) => /node_modules/.test(resource)
-			})
-		);
+		// config.plugins.push(
+		// 	new CommonsChunkPlugin({
+		// 		name: 'vendor',
+		// 		minChunks: ({ resource }) => /node_modules/.test(resource)
+		// 	})
+		// );
 
 		const swPlugin = helpers.getPluginsByName(
 			config,
 			'SWPrecacheWebpackPlugin'
 		)[0];
-		config.plugins.splice(swPlugin.index, 1);
+		if (swPlugin) {
+			// config.plugins.splice(swPlugin.index, 1);
+		}
 
 		const uglifyPlugin = helpers.getPluginsByName(config, 'UglifyJsPlugin')[0];
-		config.plugins.splice(uglifyPlugin.index, 1);
+		if (uglifyPlugin) {
+			// config.plugins.splice(uglifyPlugin.index, 1);
+		}
 	}
 }

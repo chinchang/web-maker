@@ -1,7 +1,12 @@
 import { h, Component } from 'preact';
 import CodeEditor from './CodeEditor';
-import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
-import { log, loadJS, BASE_PATH } from '../utils';
+import { modes, HtmlModes } from '../codeModes';
+import {
+	log,
+	handleModeRequirements,
+	BASE_PATH,
+	sanitizeSplitSizes
+} from '../utils';
 
 import {
 	linearizeFiles,
@@ -14,7 +19,6 @@ import { SplitPane } from './SplitPane';
 import { trackEvent } from '../analytics';
 import CodeMirror from '../CodeMirror';
 import 'codemirror/mode/meta';
-import { deferred } from '../deferred';
 import { SidePane } from './SidePane';
 import { Console } from './Console';
 import { SWITCH_FILE_EVENT } from '../commands';
@@ -353,9 +357,7 @@ export default class ContentWrapFiles extends Component {
 
 		// Replace correct css file in LINK tags's href
 		if (prefs.editorTheme) {
-			window.editorThemeLinkTag.href = `lib/codemirror/theme/${
-				prefs.editorTheme
-			}.css`;
+			window.editorThemeLinkTag.href = `lib/codemirror/theme/${prefs.editorTheme}.css`;
 		}
 
 		window.fontStyleTag.textContent = window.fontStyleTemplate.textContent.replace(
@@ -393,11 +395,11 @@ export default class ContentWrapFiles extends Component {
 
 	resetSplitting() {
 		this.setState({
-			mainSplitSizes: this.getMainSplitSizesToApply()
+			mainSplitSizes: sanitizeSplitSizes(this.getMainSplitSizesToApply())
 		});
 	}
-	updateSplits() {
-		this.props.onSplitUpdate();
+	updateSplits(sizes) {
+		this.props.onSplitUpdate(sizes);
 		// Not using setState to avoid re-render
 		this.state.mainSplitSizes = this.props.currentItem.mainSizes;
 	}
@@ -419,7 +421,7 @@ export default class ContentWrapFiles extends Component {
 		return mainSplitSizes;
 	}
 
-	mainSplitDragEndHandler() {
+	mainSplitDragEndHandler(sizes) {
 		if (this.props.prefs.refreshOnResize) {
 			// Running preview updation in next call stack, so that error there
 			// doesn't affect this dragend listener.
@@ -427,58 +429,13 @@ export default class ContentWrapFiles extends Component {
 				this.setPreviewContent(true);
 			}, 1);
 		}
-		this.updateSplits();
+		this.updateSplits(sizes);
 	}
 	mainSplitDragHandler() {
 		this.previewDimension.update({
 			w: this.frame.clientWidth,
 			h: this.frame.clientHeight
 		});
-	}
-
-	/**
-	 * Loaded the code comiler based on the mode selected
-	 */
-	handleModeRequirements(mode) {
-		const baseTranspilerPath = 'lib/transpilers';
-		// Exit if already loaded
-		var d = deferred();
-		if (modes[mode].hasLoaded) {
-			d.resolve();
-			return d.promise;
-		}
-
-		function setLoadedFlag() {
-			modes[mode].hasLoaded = true;
-			d.resolve();
-		}
-
-		if (mode === HtmlModes.JADE) {
-			loadJS(`${baseTranspilerPath}/jade.js`).then(setLoadedFlag);
-		} else if (mode === HtmlModes.MARKDOWN) {
-			loadJS(`${baseTranspilerPath}/marked.js`).then(setLoadedFlag);
-		} else if (mode === CssModes.LESS) {
-			loadJS(`${baseTranspilerPath}/less.min.js`).then(setLoadedFlag);
-		} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
-			loadJS(`${baseTranspilerPath}/sass.js`).then(function() {
-				window.sass = new Sass(`${baseTranspilerPath}/sass.worker.js`);
-				setLoadedFlag();
-			});
-		} else if (mode === CssModes.STYLUS) {
-			loadJS(`${baseTranspilerPath}/stylus.min.js`).then(setLoadedFlag);
-		} else if (mode === CssModes.ACSS) {
-			loadJS(`${baseTranspilerPath}/atomizer.browser.js`).then(setLoadedFlag);
-		} else if (mode === JsModes.COFFEESCRIPT) {
-			loadJS(`${baseTranspilerPath}/coffee-script.js`).then(setLoadedFlag);
-		} else if (mode === JsModes.ES6) {
-			loadJS(`${baseTranspilerPath}/babel.min.js`).then(setLoadedFlag);
-		} else if (mode === JsModes.TS) {
-			loadJS(`${baseTranspilerPath}/typescript.js`).then(setLoadedFlag);
-		} else {
-			d.resolve();
-		}
-
-		return d.promise;
 	}
 
 	updateHtmlMode(value) {
@@ -489,29 +446,7 @@ export default class ContentWrapFiles extends Component {
 		// 	this.cm,
 		// 	modes[value].cmPath || modes[value].cmMode
 		// );
-		// return this.handleModeRequirements(value);
-	}
-	updateCssMode(value) {
-		// this.props.onCodeModeChange('css', value);
-		// this.props.currentItem.cssMode = value;
-		this.cm.setOption('mode', modes[value].cmMode);
-		this.cm.setOption('readOnly', modes[value].cmDisable);
-		/* window.cssSettingsBtn.classList[
-			modes[value].hasSettings ? 'remove' : 'add'
-		]('hide'); */
-		CodeMirror.autoLoadMode(
-			this.cm,
-			modes[value].cmPath || modes[value].cmMode
-		);
-		return this.handleModeRequirements(value);
-	}
-	updateJsMode(value) {
-		this.cm.setOption('mode', modes[value].cmMode);
-		CodeMirror.autoLoadMode(
-			this.cm,
-			modes[value].cmPath || modes[value].cmMode
-		);
-		return this.handleModeRequirements(value);
+		// return handleModeRequirements(value);
 	}
 
 	getDemoFrame(callback) {
@@ -727,8 +662,11 @@ export default class ContentWrapFiles extends Component {
 						id="demo-frame"
 						allowfullscreen
 					/>
+
 					<iframe src={`${PREVIEW_FRAME_HOST}/talk.html`} id="talkFrame" />
+
 					<PreviewDimension ref={comp => (this.previewDimension = comp)} />
+
 					<Console
 						logs={this.state.logs}
 						isConsoleOpen={this.state.isConsoleOpen}

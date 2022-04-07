@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import Modal from './Modal';
 import { Button } from './common';
+import { Trans } from '@lingui/macro';
 
 export function HelpModal(props) {
 	return (
@@ -12,47 +13,51 @@ export function HelpModal(props) {
 
 			<div>
 				<p>
-					Made with <span style="margin-right: 8px;">💖</span>&{' '}
-					<span style="margin-right: 8px;"> 🙌</span> by{' '}
-					<a
-						href="https://twitter.com/chinchang457"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						Kushagra Gour
+					<Trans>
+						Made with <span style="margin-right: 8px;">💖</span>&{' '}
+						<span style="margin-right: 8px;"> 🙌</span> by{' '}
+						<a
+							href="https://twitter.com/chinchang457"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Kushagra Gour
+						</a>
+					</Trans>
+				</p>
+				<p>
+					<a href="/docs" target="_blank" rel="noopener noreferrer">
+						<Trans>Read the documentation.</Trans>
 					</a>
 				</p>
 				<p>
-					<a href="https://webmaker.app/docs" target="_blank" rel="noopener noreferrer">
-						Read the documentation
-					</a>
-					.
-				</p>
-				<p>
-					Tweet out your feature requests, comments & suggestions to{' '}
-					<a
-						target="_blank"
-						rel="noopener noreferrer"
-						href="https://twitter.com/webmakerApp"
-					>
-						@webmakerApp
-					</a>
+					<Trans>
+						Tweet out your feature requests, comments & suggestions to{' '}
+						<a
+							target="_blank"
+							rel="noopener noreferrer"
+							href="https://twitter.com/webmakerApp"
+						>
+							@webmakerApp
+						</a>
+					</Trans>
 					.
 				</p>
 				<p class="show-when-extension">
-					Like this extension? Please{' '}
-					<a
-						href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						rate it here
-					</a>
-					.
+					<Trans>
+						Like this extension? Please{' '}
+						<a
+							href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							rate it here
+						</a>
+						.
+					</Trans>
 				</p>
 				<p>
 					<Button
-						aria-label="Support the developer"
 						onClick={props.onSupportBtnClick}
 						data-event-action="supportDeveloperHelpBtnClick"
 						data-event-category="ui"
@@ -61,10 +66,9 @@ export function HelpModal(props) {
 						<svg>
 							<use xlinkHref="#gift-icon" />
 						</svg>
-						Support the developer
+						<Trans>Support the developer</Trans>
 					</Button>{' '}
 					<a
-						aria-label="Rate Web Maker"
 						href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
 						target="_blank"
 						rel="noopener noreferrer"
@@ -73,10 +77,9 @@ export function HelpModal(props) {
 						<svg>
 							<use xlinkHref="#heart-icon" />
 						</svg>
-						Review Web Maker
+						<Trans>Review Web Maker</Trans>
 					</a>{' '}
 					<a
-						aria-label="Chat"
 						href="https://spectrum.chat/web-maker"
 						target="_blank"
 						rel="noopener noreferrer"
@@ -85,10 +88,9 @@ export function HelpModal(props) {
 						<svg>
 							<use xlinkHref="#chat-icon" />
 						</svg>
-						Chat
+						<Trans>Chat</Trans>
 					</a>{' '}
 					<a
-						aria-label="Report a Bug"
 						href="https://github.com/chinchang/web-maker/issues"
 						target="_blank"
 						rel="noopener noreferrer"
@@ -97,14 +99,16 @@ export function HelpModal(props) {
 						<svg>
 							<use xlinkHref="#bug-icon" />
 						</svg>
-						Report a bug
+						<Trans>Report a bug</Trans>
 					</a>
 				</p>
 
 				<p>
 					<details>
 						<summary>
-							<h3 class="d-i">See awesome libraries used</h3>
+							<h3 class="d-i">
+								<Trans>See awesome libraries used</Trans>
+							</h3>
 						</summary>
 						<ul>
 							<li>
@@ -187,24 +191,27 @@ export function HelpModal(props) {
 				</p>
 
 				<p>
-					<h3>License</h3>
-					"Web Maker" is{' '}
-					<a
-						target="_blank"
-						rel="noopener noreferrer"
-						href="https://github.com/chinchang/web-maker"
-					>
-						open-source
-					</a>{' '}
-					under the{' '}
-					<a
-						href="https://opensource.org/licenses/MIT"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						MIT License
-					</a>
-					.
+					<h3>
+						<Trans>License</Trans>
+					</h3>
+					<Trans>
+						"Web Maker" is{' '}
+						<a
+							target="_blank"
+							rel="noopener noreferrer"
+							href="https://github.com/chinchang/web-maker"
+						>
+							open-source
+						</a>{' '}
+						under the{' '}
+						<a
+							href="https://opensource.org/licenses/MIT"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							MIT License
+						</a>
+					</Trans>
 				</p>
 			</div>
 		</Modal>

@@ -1,12 +1,11 @@
 {
 	"name": "web-maker",
-	"version": "4.2.0",
+	"version": "5.0.0",
 	"description": "A blazing fast & offline web playground",
 	"scripts": {
-		"start": "npm run -s dev && gulp start-preview-server",
-		"build": "preact build --template src/index.html --no-prerender --service-worker false",
-		"serve": "preact build && preact serve",
-		"dev": "preact watch --template src/index.html --no-prerender",
+		"start": "concurrently --kill-others \"gulp start-preview-server\" \"npm run -s dev\"",
+		"build": "preact build --template src/index.html --prerender false --no-inline-css --sw false --esm false",
+		"dev": "preact watch --template src/index.html",
 		"serve-website": "cd packages/website; npm start",
 		"build-website": "cd packages/website; npm run build",
 		"lint": "eslint src",
@@ -14,7 +13,8 @@
 		"precommit": "lint-staged",
 		"add-locale": "lingui add-locale",
 		"extract": "lingui extract",
-		"compile": "lingui compile"
+		"compile": "lingui compile",
+		"release:dev": "gulp devRelease"
 	},
 	"eslintConfig": {
 		"extends": "eslint-config-synacor"
@@ -33,17 +33,22 @@
 		]
 	},
 	"devDependencies": {
-		"@lingui/cli": "^2.7.0",
-		"@lingui/macro": "^2.7.0",
-		"babel-core": "^6.26.3",
+		"@11ty/eleventy": "^0.7.1",
+		"@babel/core": "^7.5.4",
+		"@lingui/cli": "^2.8.3",
+		"@lingui/macro": "^2.8.3",
+		"babel-core": "^7.0.0-bridge.0",
 		"babel-eslint": "^7.2.3",
 		"babel-minify": "^0.2.0",
+		"babel-plugin-macros": "^2.6.1",
+		"concurrently": "^7.0.0",
 		"eslint": "^4.9.0",
 		"eslint-config-prettier": "^2.3.0",
 		"eslint-config-synacor": "^2.0.2",
-		"gulp": "^3.9.1",
+		"gulp": "^4.0.2",
 		"gulp-clean-css": "^3.9.2",
 		"gulp-concat": "^2.6.1",
+		"gulp-connect": "^5.7.0",
 		"gulp-rename": "^1.3.0",
 		"gulp-uglify": "^3.0.0",
 		"gulp-useref": "^3.1.3",
@@ -51,37 +56,34 @@
 		"husky": "^0.14.3",
 		"identity-obj-proxy": "^3.0.0",
 		"if-env": "^1.0.0",
-		"jest": "^21.2.1",
+		"jest": "^24.8.0",
+		"jest-cli": "^24.8.0",
 		"lint-staged": "^7.2.0",
-		"merge-stream": "^1.0.1",
-		"preact-cli": "^2.1.0",
-		"preact-render-spy": "^1.2.1",
-		"run-sequence": "^2.2.1",
-		"sw-precache": "^5.2.0",
-		"@11ty/eleventy": "^0.7.1",
 		"markdown-it": "^8.4.2",
-		"markdown-it-anchor": "^5.0.2"
+		"markdown-it-anchor": "^5.0.2",
+		"merge-stream": "^1.0.1",
+		"preact-cli": "^3.0.0",
+		"sw-precache": "^5.2.0"
 	},
 	"dependencies": {
 		"@emmetio/codemirror-plugin": "^0.5.4",
-		"@lingui/react": "^2.7.0",
+		"@lingui/react": "^2.8.3",
 		"code-blast-codemirror": "chinchang/code-blast-codemirror#web-maker",
 		"codemirror": "^5.37.0",
 		"copy-webpack-plugin": "^4.5.1",
 		"esprima": "^4.0.0",
-		"firebase": "^5.5.8",
-		"gulp-connect": "^5.7.0",
+		"firebase": "^8.10.0",
 		"jszip": "^3.1.5",
-		"preact": "^8.2.6",
-		"preact-compat": "^3.17.0",
+		"preact": "^10.5.13",
 		"preact-portal": "^1.1.3",
-		"preact-router": "^2.5.7",
-		"prettier": "^1.16.4",
+		"preact-render-to-string": "^5.1.4",
+		"preact-router": "^3.2.1",
+		"prettier": "^2.2.1",
 		"react-inspector": "^2.3.0",
-		"split.js": "1.3.4"
+		"split.js": "^1.5.11"
 	},
 	"engines": {
-		"node": "10"
+		"node": "16"
 	},
 	"jest": {
 		"verbose": true,
@@ -105,10 +107,9 @@
 			"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/__mocks__/fileMock.js",
 			"\\.(css|less|scss)$": "identity-obj-proxy",
 			"^./style$": "identity-obj-proxy",
-			"^preact$": "<rootDir>/node_modules/preact/dist/preact.min.js",
-			"^react$": "preact-compat",
-			"^react-dom$": "preact-compat",
-			"^create-react-class$": "preact-compat/lib/create-react-class",
+			"^preact$": "<rootDir>/node_modules/preact/dist/preact.js",
+			"^react$": "preact/compat",
+			"^react-dom$": "preact/compat",
 			"^react-addons-css-transition-group$": "preact-css-transition-group"
 		}
 	},
@@ -132,5 +133,5 @@
 	"bugs": {
 		"url": "https://github.com/chinchang/web-maker/issues"
 	},
-	"homepage": "https://webmakerapp.com"
+	"homepage": "https://webmaker.app"
 }

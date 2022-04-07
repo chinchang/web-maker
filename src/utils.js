@@ -1,7 +1,7 @@
 import { trackEvent } from './analytics';
 
 import { computeHtml, computeCss, computeJs } from './computes';
-import { JsModes } from './codeModes';
+import { modes, HtmlModes, CssModes, JsModes } from './codeModes';
 import { deferred } from './deferred';
 import { getExtensionFromFileName } from './fileUtils';
 const esprima = require('esprima');
@@ -394,9 +394,7 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 			'<script src="' +
 			(chrome.extension
 				? chrome.extension.getURL('lib/transpilers/babel-polyfill.min.js')
-				: `${
-						location.origin
-				  }${BASE_PATH}/lib/transpilers/babel-polyfill.min.js`) +
+				: `${location.origin}${BASE_PATH}/lib/transpilers/babel-polyfill.min.js`) +
 			'"></script>';
 	}
 
@@ -511,6 +509,80 @@ export function prettify({ file, content, type }) {
 		worker.terminate();
 	});
 	return d.promise;
+}
+
+/**
+ * Loaded the code comiler based on the mode selected
+ */
+export function handleModeRequirements(mode) {
+	const baseTranspilerPath = 'lib/transpilers';
+	// Exit if already loaded
+	var d = deferred();
+	if (modes[mode].hasLoaded) {
+		d.resolve();
+		return d.promise;
+	}
+
+	function setLoadedFlag() {
+		modes[mode].hasLoaded = true;
+		d.resolve();
+	}
+
+	if (mode === HtmlModes.JADE) {
+		loadJS(`${baseTranspilerPath}/jade.js`).then(setLoadedFlag);
+	} else if (mode === HtmlModes.MARKDOWN) {
+		loadJS(`${baseTranspilerPath}/marked.js`).then(setLoadedFlag);
+	} else if (mode === CssModes.LESS) {
+		loadJS(`${baseTranspilerPath}/less.min.js`).then(setLoadedFlag);
+	} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
+		loadJS(`${baseTranspilerPath}/sass.js`).then(function() {
+			window.sass = new Sass(`${baseTranspilerPath}/sass.worker.js`);
+			setLoadedFlag();
+		});
+	} else if (mode === CssModes.STYLUS) {
+		loadJS(`${baseTranspilerPath}/stylus.min.js`).then(setLoadedFlag);
+	} else if (mode === CssModes.ACSS) {
+		loadJS(`${baseTranspilerPath}/atomizer.browser.js`).then(setLoadedFlag);
+	} else if (mode === JsModes.COFFEESCRIPT) {
+		loadJS(`${baseTranspilerPath}/coffee-script.js`).then(setLoadedFlag);
+	} else if (mode === JsModes.ES6) {
+		loadJS(`${baseTranspilerPath}/babel.min.js`).then(setLoadedFlag);
+	} else if (mode === JsModes.TS) {
+		loadJS(`${baseTranspilerPath}/typescript.js`).then(setLoadedFlag);
+	} else {
+		d.resolve();
+	}
+
+	return d.promise;
+}
+
+export function sanitizeSplitSizes(sizes) {
+	// console.log('got', sizes);
+	let hasAllNumbers = !sizes.some(size => !Number(size));
+	if (hasAllNumbers) return sizes;
+
+	// Get just the perentage values from expressions like calc(93.34% - 3px)
+	const newSizes = sizes.map(size => {
+		if (typeof size.match !== 'function') return size;
+		const match = size.match(/([\d.]*)%/);
+		if (match) return parseInt(match[1], 10);
+
+		return size;
+	});
+	// console.log('percents ', newSizes);
+
+	// Do we still have any non-number?
+	hasAllNumbers = !newSizes.some(size => !Number(size));
+	// console.log('hasAllnumbers? ', hasAllNumbers);
+
+	// Make the sum 100
+	if (hasAllNumbers) {
+		const sum = newSizes.reduce((sum, val) => sum + val, 0);
+		// console.log('sum ', sum);
+		newSizes[newSizes.length - 1] += 100 - sum;
+	}
+
+	return newSizes;
 }
 
 if (window.IS_EXTENSION) {

@@ -43,12 +43,10 @@ export default class ContentWrap extends Component {
 		// `clearConsole` is on window because it gets called from inside iframe also.
 		window.clearConsole = this.clearConsole.bind(this);
 
-		this.consoleHeaderDblClickHandler = this.consoleHeaderDblClickHandler.bind(
-			this
-		);
-		this.clearConsoleBtnClickHandler = this.clearConsoleBtnClickHandler.bind(
-			this
-		);
+		this.consoleHeaderDblClickHandler =
+			this.consoleHeaderDblClickHandler.bind(this);
+		this.clearConsoleBtnClickHandler =
+			this.clearConsoleBtnClickHandler.bind(this);
 		this.toggleConsole = this.toggleConsole.bind(this);
 		this.evalConsoleExpr = this.evalConsoleExpr.bind(this);
 	}
@@ -170,11 +168,11 @@ export default class ContentWrap extends Component {
 			// we need to store user script in external JS file to prevent inline-script
 			// CSP from affecting it.
 			writeFile('script.js', blobjs, () => {
-				writeFile('preview.html', blob, () => {
+				writeFile('index.html', blob, () => {
 					var origin = chrome.i18n.getMessage()
 						? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
 						: `${location.origin}`;
-					var src = `filesystem:${origin}/temporary/preview.html`;
+					var src = `filesystem:${origin}/temporary/index.html`;
 					if (this.detachedWindow) {
 						this.detachedWindow.postMessage({ url: src }, '*');
 					} else {
@@ -320,12 +318,13 @@ export default class ContentWrap extends Component {
 			window.editorThemeLinkTag.href = `lib/codemirror/theme/${prefs.editorTheme}.css`;
 		}
 
-		window.fontStyleTag.textContent = window.fontStyleTemplate.textContent.replace(
-			/fontname/g,
-			(prefs.editorFont === 'other'
-				? prefs.editorCustomFont
-				: prefs.editorFont) || 'FiraCode'
-		);
+		window.fontStyleTag.textContent =
+			window.fontStyleTemplate.textContent.replace(
+				/fontname/g,
+				(prefs.editorFont === 'other'
+					? prefs.editorCustomFont
+					: prefs.editorFont) || 'FiraCode'
+			);
 	}
 
 	// Check all the code wrap if they are minimized or maximized
@@ -336,7 +335,7 @@ export default class ContentWrap extends Component {
 			const { currentLayoutMode } = this.props;
 			const prop =
 				currentLayoutMode === 2 || currentLayoutMode === 5 ? 'width' : 'height';
-			[htmlCodeEl, cssCodeEl, jsCodeEl].forEach(function(el) {
+			[htmlCodeEl, cssCodeEl, jsCodeEl].forEach(function (el) {
 				const bounds = el.getBoundingClientRect();
 				const size = bounds[prop];
 				if (size < 100) {
@@ -481,9 +480,10 @@ export default class ContentWrap extends Component {
 	codeModeChangeHandler(e) {
 		var mode = e.target.value;
 		var type = e.target.dataset.type;
-		var currentMode = this.props.currentItem[
-			type === 'html' ? 'htmlMode' : type === 'css' ? 'cssMode' : 'jsMode'
-		];
+		var currentMode =
+			this.props.currentItem[
+				type === 'html' ? 'htmlMode' : type === 'css' ? 'cssMode' : 'jsMode'
+			];
 		if (currentMode !== mode) {
 			if (type === 'html') {
 				this.updateHtmlMode(mode).then(() => this.setPreviewContent(true));

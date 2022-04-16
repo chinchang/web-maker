@@ -43,6 +43,7 @@ export function MainHeader(props) {
 								onClick={props.addLibraryBtnHandler}
 								data-event-category="ui"
 								data-event-action="addLibraryButtonClick"
+								data-testid="addLibraryButton"
 								class="btn btn--dark hint--rounded hint--bottom-left"
 								aria-label={i18n._(t`Add a JS/CSS library`)}
 							>
@@ -62,6 +63,7 @@ export function MainHeader(props) {
 						<button
 							class="btn btn--dark hint--rounded hint--bottom-left"
 							aria-label={i18n._(t`Start a new creation`)}
+							data-testid="newButton"
 							onClick={props.newBtnHandler}
 						>
 							<svg viewBox="0 0 24 24">
@@ -106,6 +108,7 @@ export function MainHeader(props) {
 								onClick={props.loginBtnHandler}
 								data-event-category="ui"
 								data-event-action="loginButtonClick"
+								data-testid="loginButton"
 								class="btn btn--dark hint--rounded  hint--bottom-left"
 							>
 								<Trans>Login/Signup</Trans>

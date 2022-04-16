@@ -92,6 +92,7 @@ const Modal = ({
 							type="button"
 							onClick={closeHandler}
 							aria-label="Close modal"
+							data-testid="closeModalButton"
 							title="Close"
 							class="js-modal__close-btn modal__close-btn"
 						>

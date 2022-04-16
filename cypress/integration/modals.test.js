@@ -6,9 +6,9 @@ describe('Modals pop-up when header btns are pressed', () => {
 	});
 
 	// Selectors for each button
-	const ADD_LIBRARY_SEL = '[data-event-action=addLibraryButtonClick]';
-	const NEW_SEL = '[aria-label="Start a new creation"]';
-	const LOGIN_SEL = '[data-event-action=loginButtonClick]';
+	const ADD_LIBRARY_SEL = '[data-testid=addLibraryButton]';
+	const NEW_SEL = '[data-testid=newButton]';
+	const LOGIN_SEL = '[data-testid=loginButton]';
 
 	it('Add Library', () => {
 		cy.get(ADD_LIBRARY_SEL).click();

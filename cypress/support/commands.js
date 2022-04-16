@@ -15,7 +15,7 @@ Cypress.Commands.add('init', () => {
 	cy.visit('http://localhost:8080');
 
 	// closing the Welcome modal
-	cy.get('button[aria-label="Close modal"]').click();
+	cy.get('button[data-testid=closeModalButton]').click();
 });
 //
 //

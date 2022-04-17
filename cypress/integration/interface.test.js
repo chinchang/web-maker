@@ -32,4 +32,20 @@ describe('Testing interfaces', () => {
 		});
 		cy.get('.modal__content').should('not.exist');
 	});
+
+	it('Save button click should save the current work with a notification.', () => {
+		cy.get('#htmlCodeEl').type('Hello');
+
+		cy.on('window:confirm', text => {
+			expect(text).to.contains('Do you still want to continue saving locally?');
+		});
+
+		cy.get('#saveBtn').click();
+
+		cy.then(() => {
+			const ls = JSON.parse(localStorage.getItem('code'));
+			expect(ls).to.be.not.null;
+			expect(ls['title']).to.contain('Untitled');
+		});
+	});
 });

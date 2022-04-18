@@ -34,7 +34,47 @@ describe('Testing interfaces', () => {
 	});
 
 	it('Save button click should save the current work with a notification.', () => {
-		cy.get('#htmlCodeEl').type('Hello');
+		const sampleText = 'Hello';
+		cy.get('#htmlCodeEl').type(sampleText);
+
+		cy.on('window:confirm', text => {
+			expect(text).to.contains('Do you still want to continue saving locally?');
+		});
+
+		cy.get('#saveBtn').click();
+		cy.get('#js-alerts-container').should('be.visible');
+		cy.get('#js-alerts-container').contains('Auto-save enabled');
+
+		cy.then(() => {
+			const ls = JSON.parse(localStorage.getItem('code'));
+			expect(ls).to.be.not.null;
+			expect(ls['title']).to.contain('Untitled');
+			expect(ls['html']).to.eq(sampleText);
+		});
+	});
+
+	it('Cmd + S (Save) should save the current work with a notification.', () => {
+		const sampleText = 'Hello';
+
+		cy.on('window:confirm', text => {
+			expect(text).to.contains('Do you still want to continue saving locally?');
+		});
+
+		cy.get('#htmlCodeEl').type(sampleText + '{ctrl+s}');
+		cy.get('#js-alerts-container').should('be.visible');
+		cy.get('#js-alerts-container').contains('Auto-save enabled');
+
+		cy.then(() => {
+			const ls = JSON.parse(localStorage.getItem('code'));
+			expect(ls).to.be.not.null;
+			expect(ls['title']).to.contain('Untitled');
+			expect(ls['html']).to.eq(sampleText);
+		});
+	});
+
+	it('Changing creation title should auto save in localstorage', () => {
+		const sampleText = 'Hello';
+		cy.get('#htmlCodeEl').type(sampleText);
 
 		cy.on('window:confirm', text => {
 			expect(text).to.contains('Do you still want to continue saving locally?');
@@ -46,6 +86,22 @@ describe('Testing interfaces', () => {
 			const ls = JSON.parse(localStorage.getItem('code'));
 			expect(ls).to.be.not.null;
 			expect(ls['title']).to.contain('Untitled');
+			expect(ls['html']).to.eq(sampleText);
+		});
+
+		cy.get('#titleInput').clear().type('test');
+
+		cy.get('#saveBtn').click();
+		cy.get('#js-alerts-container').should('be.visible');
+		cy.get('#js-alerts-container').contains('Item saved');
+
+		cy.wait(1000); // for the localstorage to reflect the changes
+
+		cy.then(() => {
+			const ls = JSON.parse(localStorage.getItem('code'));
+			expect(ls).to.be.not.null;
+			expect(ls['title']).to.eq('test');
+			expect(ls['html']).to.eq(sampleText);
 		});
 	});
 });

@@ -104,4 +104,48 @@ describe('Testing interfaces', () => {
 			expect(ls['html']).to.eq(sampleText);
 		});
 	});
+
+	it('Clicking "OPEN" should open the saved items pane', () => {
+		cy.on('window:confirm', text => {
+			expect(text).to.contains('Do you still want to continue saving locally?');
+			return true;
+		});
+
+		const addCreation = message => {
+			// start with blank project
+			cy.get('[data-testid=newButton').click();
+			cy.get('[data-testid=startBlankButton]').click();
+
+			// type a message in the HTML section
+			cy.get('#htmlCodeEl').type('{ctrl+a}{backspace}' + message);
+
+			// type the title
+			cy.get('#titleInput').clear().type(message);
+
+			// save it
+			cy.get('#saveBtn').click();
+			// cy.get('#saveBtn').click();
+			cy.wait(1500);
+			cy.then(() => {
+				const ls = JSON.parse(localStorage.getItem('code'));
+				console.log(ls);
+				expect(ls).to.be.not.null;
+				expect(ls['title']).to.eq(message);
+				expect(ls['html']).to.eq(message);
+			});
+		};
+
+		// save some projects
+		const messages = ['test', 'test2', 'abc'];
+		messages.forEach(m => addCreation(m));
+
+		// check for the saved projects
+		cy.get('#openItemsBtn').click();
+		messages.forEach((m, index) => {
+			cy.get('#js-saved-items-wrap')
+				.children()
+				.eq(messages.length - index - 1)
+				.contains(m);
+		});
+	});
 });

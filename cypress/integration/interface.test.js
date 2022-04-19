@@ -141,11 +141,37 @@ describe('Testing interfaces', () => {
 
 		// check for the saved projects
 		cy.get('#openItemsBtn').click();
+		cy.get('#js-saved-items-wrap').should('be.visible');
 		messages.forEach((m, index) => {
 			cy.get('#js-saved-items-wrap')
 				.children()
 				.eq(messages.length - index - 1)
 				.contains(m);
+		});
+	});
+
+	it('Selecting a library from dropdown should change URL in textarea', () => {
+		cy.get('[data-testid=addLibraryButton]').click();
+
+		cy.get('#externalJsTextarea').should('exist');
+		cy.get('#externalCssTextarea').should('exist');
+
+		const checkLibrary = (label, url, type) => {
+			cy.get('#js-add-library-select').select(label);
+
+			cy.get(`#external${type}Textarea`).should('contain.value', '\n' + url); // \n because every url should be in a new line
+		};
+
+		cy.fixture('libraries').then(data => {
+			data['jsLibs'].forEach(lib =>
+				checkLibrary(lib['label'], lib['urlPref'], 'Js')
+			);
+		});
+
+		cy.fixture('libraries').then(data => {
+			data['csLibs'].forEach(lib =>
+				checkLibrary(lib['label'], lib['urlPref'], 'Css')
+			);
 		});
 	});
 });

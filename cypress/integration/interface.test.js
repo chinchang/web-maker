@@ -118,14 +118,12 @@ describe('Testing interfaces', () => {
 
 			// type a message in the HTML section
 			cy.get('#htmlCodeEl').type('{ctrl+a}{backspace}' + message);
-
 			// type the title
-			cy.get('#titleInput').clear().type(message);
+			cy.get('#titleInput').clear().type(message).blur();
 
 			// save it
 			cy.get('#saveBtn').click();
-			// cy.get('#saveBtn').click();
-			cy.wait(1500);
+			cy.wait(1000);
 			cy.then(() => {
 				const ls = JSON.parse(localStorage.getItem('code'));
 				console.log(ls);
@@ -169,7 +167,7 @@ describe('Testing interfaces', () => {
 		});
 
 		cy.fixture('libraries').then(data => {
-			data['csLibs'].forEach(lib =>
+			data['cssLibs'].forEach(lib =>
 				checkLibrary(lib['label'], lib['urlPref'], 'Css')
 			);
 		});

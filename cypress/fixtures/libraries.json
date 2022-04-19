@@ -21,7 +21,7 @@
 			"label": "Vue.js"
 		}
 	],
-	"csLibs": [
+	"cssLibs": [
 		{
 			"urlPref": "https://cdnjs.cloudflare.com/ajax/libs/bulma/",
 			"label": "Bulma"

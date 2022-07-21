@@ -114,6 +114,11 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+			<Notification version="5.0.1" {...props}>
+				<NotificationItem type="bug">
+					Add library feature is fixed.
+				</NotificationItem>
+			</Notification>
 			<Notification version="5.0.0" {...props} isLatest={true}>
 				<li>
 					<strong>We are Back! 😎</strong>: After almost 2 years of nothing

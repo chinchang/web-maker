@@ -59,7 +59,7 @@
 		"jest": "^24.8.0",
 		"jest-cli": "^24.8.0",
 		"lint-staged": "^7.2.0",
-		"markdown-it": "^8.4.2",
+		"markdown-it": "^12.3.2",
 		"markdown-it-anchor": "^5.0.2",
 		"merge-stream": "^1.0.1",
 		"preact-cli": "^3.0.0",

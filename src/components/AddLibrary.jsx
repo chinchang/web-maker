@@ -19,20 +19,21 @@ export default class AddLibrary extends Component {
 			return;
 		}
 		const type = target.selectedOptions[0].dataset.type;
-		if (type === 'js') {
-			this.setState({
-				js: `${this.state.js}\n${target.value}`
-			});
-		} else {
-			this.setState({
-				css: `${this.state.css}\n${target.value}`
-			});
-		}
 
 		trackEvent('ui', 'addLibrarySelect', target.selectedOptions[0].label);
-		this.props.onChange({ js: this.state.js, css: this.state.css });
-		// Reset the select to the default value
-		target.value = '';
+
+		this.setState(state => {
+			const targetValue = target.value;
+			this.props.onChange({
+				...state,
+				[type]: `${this.state[type]}\n${targetValue}`
+			});
+			// Reset the select to the default value
+			target.value = '';
+			return {
+				[type]: `${this.state[type]}\n${targetValue}`
+			};
+		});
 	}
 	textareaBlurHandler(e, textarea) {
 		const target = e ? e.target : textarea;

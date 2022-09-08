@@ -14,6 +14,7 @@ import { trackEvent } from '../analytics';
 import { Console } from './Console';
 import CssSettingsModal from './CssSettingsModal';
 import { PreviewDimension } from './PreviewDimension.jsx';
+import Modal from './Modal.jsx';
 const minCodeWrapSize = 33;
 
 /* global htmlCodeEl
@@ -25,6 +26,7 @@ export default class ContentWrap extends Component {
 		this.state = {
 			isConsoleOpen: false,
 			isCssSettingsModalOpen: false,
+			isPreviewNotWorkingModalVisible: false,
 			logs: []
 		};
 
@@ -43,19 +45,21 @@ export default class ContentWrap extends Component {
 		// `clearConsole` is on window because it gets called from inside iframe also.
 		window.clearConsole = this.clearConsole.bind(this);
 
-		this.consoleHeaderDblClickHandler = this.consoleHeaderDblClickHandler.bind(
-			this
-		);
-		this.clearConsoleBtnClickHandler = this.clearConsoleBtnClickHandler.bind(
-			this
-		);
+		this.consoleHeaderDblClickHandler =
+			this.consoleHeaderDblClickHandler.bind(this);
+		this.clearConsoleBtnClickHandler =
+			this.clearConsoleBtnClickHandler.bind(this);
 		this.toggleConsole = this.toggleConsole.bind(this);
 		this.evalConsoleExpr = this.evalConsoleExpr.bind(this);
+		this.dismissPreviewNotWorkingModal =
+			this.dismissPreviewNotWorkingModal.bind(this);
 	}
 	shouldComponentUpdate(nextProps, nextState) {
 		return (
 			this.state.isConsoleOpen !== nextState.isConsoleOpen ||
 			this.state.isCssSettingsModalOpen !== nextState.isCssSettingsModalOpen ||
+			this.state.isPreviewNotWorkingModalVisible !==
+				nextState.isPreviewNotWorkingModalVisible ||
 			this.state.logs !== nextState.logs ||
 			this.state.codeSplitSizes !== nextState.codeSplitSizes ||
 			this.state.mainSplitSizes !== nextState.mainSplitSizes ||
@@ -127,8 +131,12 @@ export default class ContentWrap extends Component {
 	}
 
 	createPreviewFile(html, css, js) {
+		const versionMatch = navigator.userAgent.match(/Chrome\/(\d+)/);
+
 		const shouldInlineJs =
-			!window.webkitRequestFileSystem || !window.IS_EXTENSION;
+			!window.webkitRequestFileSystem ||
+			!window.IS_EXTENSION ||
+			(versionMatch && +versionMatch[1] >= 104);
 		var contents = getCompleteHtml(
 			html,
 			css,
@@ -278,6 +286,19 @@ export default class ContentWrap extends Component {
 						this.showErrors(resultItem.errors.lang, resultItem.errors.data);
 					}
 				});
+
+				const versionMatch = navigator.userAgent.match(/Chrome\/(\d+)/);
+				if (
+					result[2].code &&
+					versionMatch &&
+					+versionMatch[1] >= 104 &&
+					window.IS_EXTENSION &&
+					!window.sessionStorage.getItem('previewErrorMessageDismissed')
+				) {
+					this.setState({
+						isPreviewNotWorkingModalVisible: true
+					});
+				}
 			});
 		}
 
@@ -320,12 +341,13 @@ export default class ContentWrap extends Component {
 			window.editorThemeLinkTag.href = `lib/codemirror/theme/${prefs.editorTheme}.css`;
 		}
 
-		window.fontStyleTag.textContent = window.fontStyleTemplate.textContent.replace(
-			/fontname/g,
-			(prefs.editorFont === 'other'
-				? prefs.editorCustomFont
-				: prefs.editorFont) || 'FiraCode'
-		);
+		window.fontStyleTag.textContent =
+			window.fontStyleTemplate.textContent.replace(
+				/fontname/g,
+				(prefs.editorFont === 'other'
+					? prefs.editorCustomFont
+					: prefs.editorFont) || 'FiraCode'
+			);
 	}
 
 	// Check all the code wrap if they are minimized or maximized
@@ -336,7 +358,7 @@ export default class ContentWrap extends Component {
 			const { currentLayoutMode } = this.props;
 			const prop =
 				currentLayoutMode === 2 || currentLayoutMode === 5 ? 'width' : 'height';
-			[htmlCodeEl, cssCodeEl, jsCodeEl].forEach(function(el) {
+			[htmlCodeEl, cssCodeEl, jsCodeEl].forEach(function (el) {
 				const bounds = el.getBoundingClientRect();
 				const size = bounds[prop];
 				if (size < 100) {
@@ -481,9 +503,10 @@ export default class ContentWrap extends Component {
 	codeModeChangeHandler(e) {
 		var mode = e.target.value;
 		var type = e.target.dataset.type;
-		var currentMode = this.props.currentItem[
-			type === 'html' ? 'htmlMode' : type === 'css' ? 'cssMode' : 'jsMode'
-		];
+		var currentMode =
+			this.props.currentItem[
+				type === 'html' ? 'htmlMode' : type === 'css' ? 'cssMode' : 'jsMode'
+			];
 		if (currentMode !== mode) {
 			if (type === 'html') {
 				this.updateHtmlMode(mode).then(() => this.setPreviewContent(true));
@@ -602,6 +625,13 @@ export default class ContentWrap extends Component {
 	}
 	prettifyBtnClickHandler(codeType) {
 		this.props.onPrettifyBtnClick(codeType);
+	}
+
+	dismissPreviewNotWorkingModal() {
+		this.setState({
+			isPreviewNotWorkingModalVisible: false
+		});
+		window.sessionStorage.setItem('previewErrorMessageDismissed', true);
 	}
 
 	render() {
@@ -892,6 +922,34 @@ export default class ContentWrap extends Component {
 						settings={this.props.currentItem.cssSettings}
 						editorTheme={this.props.prefs.editorTheme}
 					/>
+
+					<Modal
+						show={this.state.isPreviewNotWorkingModalVisible}
+						closeHandler={this.dismissPreviewNotWorkingModal}
+					>
+						<h1>🔴 JavaScript preview not working!</h1>
+						<p>
+							Latest version of Chrome has changed a few things because of which
+							JavaScript preview has stopped working.
+						</p>
+
+						<p>
+							If you want to work with just HTML & CSS, you can still continue
+							here. Otherwise, it is recommended to switch to the Web Maker web
+							app which is much more powerful and works offline too -{' '}
+							<a href="https://webmaker.app/app" target="_blank">
+								Go to web app
+							</a>
+						</p>
+						<div class="flex flex-h-end">
+							<button
+								class="btn btn--primary"
+								onClick={this.dismissPreviewNotWorkingModal}
+							>
+								Dismiss
+							</button>
+						</div>
+					</Modal>
 				</div>
 			</SplitPane>
 		);

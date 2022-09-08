@@ -36,7 +36,7 @@ var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
  * @param  Selector that should match for next siblings
  * @return element Next element that mathes `selector`
  */
-Node.prototype.nextUntil = function(selector) {
+Node.prototype.nextUntil = function (selector) {
 	const siblings = Array.from(this.parentNode.querySelectorAll(selector));
 	const index = siblings.indexOf(this);
 	return siblings[index + 1];
@@ -46,7 +46,7 @@ Node.prototype.nextUntil = function(selector) {
  * @param  Selector that should match for next siblings
  * @return element Next element that mathes `selector`
  */
-Node.prototype.previousUntil = function(selector) {
+Node.prototype.previousUntil = function (selector) {
 	const siblings = Array.from(this.parentNode.querySelectorAll(selector));
 	const index = siblings.indexOf(this);
 	return siblings[index - 1];
@@ -55,7 +55,7 @@ Node.prototype.previousUntil = function(selector) {
 // Safari doesn't have this!
 window.requestIdleCallback =
 	window.requestIdleCallback ||
-	function(fn) {
+	function (fn) {
 		setTimeout(fn, 10);
 	};
 
@@ -102,12 +102,7 @@ export function log() {
 	if (window.DEBUG) {
 		const err = new Error();
 		console.log(
-			parseInt(
-				Date.now()
-					.toString()
-					.substr(4),
-				10
-			),
+			parseInt(Date.now().toString().substr(4), 10),
 			...arguments,
 			err.stack.split('\n')[2].replace(/\(.*\)/, '')
 		);
@@ -133,7 +128,7 @@ export function addInfiniteLoopProtection(code, { timeout }) {
 			range: true,
 			jsx: true
 		},
-		function(node) {
+		function (node) {
 			switch (node.type) {
 				case 'DoWhileStatement':
 				case 'ForStatement':
@@ -175,10 +170,10 @@ export function addInfiniteLoopProtection(code, { timeout }) {
 
 	/* eslint-disable no-param-reassign */
 	patches
-		.sort(function(a, b) {
+		.sort(function (a, b) {
 			return b.pos - a.pos;
 		})
-		.forEach(function(patch) {
+		.forEach(function (patch) {
 			code = code.slice(0, patch.pos) + patch.str + code.slice(patch.pos);
 		});
 
@@ -213,7 +208,7 @@ export function getHumanDate(timestamp) {
 // create a one-time event
 export function once(node, type, callback) {
 	// create event
-	node.addEventListener(type, function(e) {
+	node.addEventListener(type, function (e) {
 		// remove event
 		e.target.removeEventListener(type, arguments.callee);
 		// call handler
@@ -258,13 +253,13 @@ export function writeFile(name, blob, cb) {
 	var fileWritten = false;
 
 	function getErrorHandler(type) {
-		return function() {
+		return function () {
 			log(arguments);
 			trackEvent('fn', 'error', type);
 			// When there are too many write errors, show a message.
 			writeFile.errorCount = (writeFile.errorCount || 0) + 1;
 			if (writeFile.errorCount === 4) {
-				setTimeout(function() {
+				setTimeout(function () {
 					alert(
 						"Oops! Seems like your preview isn't updating. It's recommended to switch to the web app: https://webmaker.app/app/.\n\n If you still want to get the extension working, please try the following steps until it fixes:\n - Refresh Web Maker\n - Restart browser\n - Update browser\n - Reinstall Web Maker (don't forget to export all your creations from saved items pane (click the OPEN button) before reinstalling)\n\nIf nothing works, please tweet out to @webmakerApp."
 					);
@@ -278,13 +273,13 @@ export function writeFile(name, blob, cb) {
 	window.webkitRequestFileSystem(
 		window.TEMPORARY,
 		1024 * 1024 * 5,
-		function(fs) {
+		function (fs) {
 			fs.root.getFile(
 				name,
 				{
 					create: true
 				},
-				function(fileEntry) {
+				function (fileEntry) {
 					fileEntry.createWriter(fileWriter => {
 						function onWriteComplete() {
 							if (fileWritten) {
@@ -317,7 +312,7 @@ export function loadJS(src) {
 	script.src = src;
 	script.async = true;
 	ref.parentNode.insertBefore(script, ref);
-	script.onload = function() {
+	script.onload = function () {
 		d.resolve();
 	};
 	return d.promise;
@@ -332,7 +327,7 @@ export function loadCss({ url, id }) {
 		style.setAttribute('id', id);
 	}
 	document.head.appendChild(style);
-	style.onload = function() {
+	style.onload = function () {
 		d.resolve();
 	};
 	return d.promise;
@@ -350,12 +345,12 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 	if (item.externalLibs) {
 		externalJs = item.externalLibs.js
 			.split('\n')
-			.reduce(function(scripts, url) {
+			.reduce(function (scripts, url) {
 				return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
 			}, '');
 		externalCss = item.externalLibs.css
 			.split('\n')
-			.reduce(function(links, url) {
+			.reduce(function (links, url) {
 				return (
 					links +
 					(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
@@ -399,7 +394,7 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 	}
 
 	if (typeof js === 'string') {
-		contents += '<script>\n' + js + '\n//# sourceURL=userscript.js';
+		contents += js ? '<script>\n' + js + '\n//# sourceURL=userscript.js' : '';
 	} else {
 		var origin = chrome.i18n.getMessage()
 			? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
@@ -458,7 +453,7 @@ export function handleDownloadsPermission() {
 		{
 			permissions: ['downloads']
 		},
-		function(result) {
+		function (result) {
 			if (result) {
 				d.resolve();
 			} else {
@@ -466,7 +461,7 @@ export function handleDownloadsPermission() {
 					{
 						permissions: ['downloads']
 					},
-					function(granted) {
+					function (granted) {
 						if (granted) {
 							trackEvent('fn', 'downloadsPermGiven');
 							d.resolve();
@@ -535,7 +530,7 @@ export function handleModeRequirements(mode) {
 	} else if (mode === CssModes.LESS) {
 		loadJS(`${baseTranspilerPath}/less.min.js`).then(setLoadedFlag);
 	} else if (mode === CssModes.SCSS || mode === CssModes.SASS) {
-		loadJS(`${baseTranspilerPath}/sass.js`).then(function() {
+		loadJS(`${baseTranspilerPath}/sass.js`).then(function () {
 			window.sass = new Sass(`${baseTranspilerPath}/sass.worker.js`);
 			setLoadedFlag();
 		});

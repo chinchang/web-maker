@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const gulp = require('gulp');
-const { parallel, series } = require('gulp');
+const { parallel, series, watch } = require('gulp');
 const useref = require('gulp-useref');
 const cleanCSS = require('gulp-clean-css');
 const rename = require('gulp-rename');
@@ -10,7 +10,7 @@ const concat = require('gulp-concat');
 const babelMinify = require('babel-minify');
 const child_process = require('child_process');
 const merge = require('merge-stream');
-const zip = require('gulp-zip');
+// const zip = require('gulp-zip');
 var packageJson = JSON.parse(fs.readFileSync('./package.json'));
 const connect = require('gulp-connect');
 
@@ -27,6 +27,12 @@ function minifyJs(fileName) {
 			minifiedContent.length / 1024
 		}K`
 	);
+}
+
+function runWebpack() {
+	return child_process.exec('npm run build', (error, stdout, stderr) => {
+		console.log('runWebpack', error, stdout, stderr);
+	});
 }
 gulp.task('runWebpack', function () {
 	return child_process.exec('npm run build', (error, stdout, stderr) => {
@@ -262,20 +268,32 @@ exports.devRelease = gulp.series(
 	}
 );
 
-// gulp.task('build-extension', function (callback) {
-// 	runSequence(
-// 		'runWebpack',
-// 		'copyFiles',
-// 		'fixIndex',
-// 		'useRef',
-// 		'packageExtension',
-// 		function (error) {
-// 			if (error) {
-// 				console.log(error.message);
-// 			} else {
-// 				console.log('DEV RELEASE FINISHED SUCCESSFULLY');
-// 			}
-// 			callback(error);
-// 		}
-// 	);
-// });
+const buildExtension = series(
+	'runWebpack',
+	'copyFiles',
+	'fixIndex',
+	'useRef',
+	'packageExtension'
+);
+
+function runWatcher(cb) {
+	return watch(['src/**/*.js', 'src/**/*.jsx'], function (cbb) {
+		buildExtension();
+		cbb();
+	});
+	cb();
+}
+
+exports.setupExtension = series(
+	buildExtension,
+	runWatcher,
+	function (callback, error) {
+		if (error) {
+			console.log(error.message);
+		} else {
+			console.log('RELEASE FINISHED SUCCESSFULLY');
+		}
+
+		callback(error);
+	}
+);

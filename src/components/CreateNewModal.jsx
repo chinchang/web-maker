@@ -159,6 +159,7 @@ export class CreateNewModal extends Component {
 									trackEvent('ui', 'startBlankBtnClick');
 									onBlankTemplateSelect();
 								}}
+								data-testid="startBlankButton"
 							>
 								Start Blank
 							</button>

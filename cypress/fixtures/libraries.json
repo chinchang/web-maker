@@ -1,0 +1,38 @@
+{
+	"jsLibs": [
+		{
+			"urlPref": "https://code.jquery.com/jquery",
+			"label": "jQuery"
+		},
+		{
+			"urlPref": "https://ajax.googleapis.com/ajax/libs/angularjs/",
+			"label": "Angular"
+		},
+		{
+			"urlPref": "https://cdnjs.cloudflare.com/ajax/libs/react/",
+			"label": "React"
+		},
+		{
+			"urlPref": "https://cdnjs.cloudflare.com/ajax/libs/react-dom/",
+			"label": "React DOM"
+		},
+		{
+			"urlPref": "https://unpkg.com/vue/dist/vue.min.js",
+			"label": "Vue.js"
+		}
+	],
+	"cssLibs": [
+		{
+			"urlPref": "https://cdnjs.cloudflare.com/ajax/libs/bulma/",
+			"label": "Bulma"
+		},
+		{
+			"urlPref": "https://cdnjs.cloudflare.com/ajax/libs/hint.css/",
+			"label": "Hint.css"
+		},
+		{
+			"urlPref": "https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css",
+			"label": "Tailwind.css"
+		}
+	]
+}

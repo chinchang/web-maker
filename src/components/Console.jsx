@@ -119,6 +119,7 @@ export class Console extends PureComponent {
 										class="code-wrap__header-btn  code-wrap__collapse-btn"
 										title={i18n._(t`Toggle console`)}
 										onClick={toggleConsole}
+										data-testid="toggleConsole"
 									/>
 								</div>
 							</div>
@@ -127,6 +128,7 @@ export class Console extends PureComponent {
 								ref={el => {
 									this.logContainerEl = el;
 								}}
+								data-testid="consoleItems"
 							>
 								{logs.map(log => (
 									<LogRow data={log} />

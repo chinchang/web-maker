@@ -35,7 +35,7 @@
 		]
 	},
 	"devDependencies": {
-		"@11ty/eleventy": "^0.7.1",
+		"@11ty/eleventy": "^1.0.2",
 		"@babel/core": "^7.5.4",
 		"@lingui/cli": "^2.8.3",
 		"@lingui/macro": "^2.8.3",

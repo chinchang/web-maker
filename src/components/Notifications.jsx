@@ -114,7 +114,7 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
-			<Notification version="5.0.2" {...props}>
+			<Notification version="5.0.3" {...props}>
 				<li>
 					⬆️ Popular libraries updated to latest versions. Thanks
 					<ThanksTo url="https://github.com/diomed" name="@diomed" />

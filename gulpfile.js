@@ -297,3 +297,5 @@ exports.setupExtension = series(
 		callback(error);
 	}
 );
+
+exports.buildExtension = buildExtension;

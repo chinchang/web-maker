@@ -114,6 +114,12 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+			<Notification version="5.0.2" {...props}>
+				<li>
+					⬆️ Popular libraries updated to latest versions. Thanks
+					<ThanksTo url="https://github.com/diomed" name="@diomed" />
+				</li>
+			</Notification>
 			<Notification version="5.0.1" {...props}>
 				<NotificationItem type="bug">
 					Add library feature is fixed.

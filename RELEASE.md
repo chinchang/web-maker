@@ -8,6 +8,6 @@
   - package.json
   - manifest.json
 - commit and tag (`git tag {version}`)
-- Run `gulp build-extension`
+- Run `gulp buildExtension`
 - Test out extension-{version}.zip
 - If everything is good, push to master

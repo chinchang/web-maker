@@ -26,5 +26,5 @@ title: 'Documentation'
 Want to send in some suggestions, comments, feature requests or just have a question? Here are your options:
 
 - Twitter  — [ @webmakerApp](https://twitter.com/webmakerapp)
-- [Community forum](https://spectrum.chat/web-maker)
+- [Community forum](https://github.com/chinchang/web-maker/discussions)
 - [Github repository](https://github.com/chinchang/web-maker/issues)

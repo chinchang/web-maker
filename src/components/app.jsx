@@ -68,6 +68,7 @@ import {
 import { commandPaletteService } from '../commandPaletteService';
 
 import { I18nProvider } from '@lingui/react';
+import { Assets } from './Assets.jsx';
 
 if (module.hot) {
 	require('preact/debug');
@@ -113,7 +114,8 @@ export default class App extends Component {
 			isOnboardModalOpen: false,
 			isJs13KModalOpen: false,
 			isCreateNewModalOpen: false,
-			isCommandPaletteOpen: false
+			isCommandPaletteOpen: false,
+			isAssetsOpen: false
 		};
 		this.state = {
 			isSavedItemPaneOpen: false,
@@ -525,6 +527,9 @@ export default class App extends Component {
 	}
 	openAddLibrary() {
 		this.setState({ isAddLibraryModalOpen: true });
+	}
+	assetsBtnClickHandler() {
+		this.setState({ isAssetsOpen: true });
 	}
 	closeSavedItemsPane() {
 		this.setState({
@@ -1609,6 +1614,7 @@ export default class App extends Component {
 							loginBtnHandler={this.loginBtnClickHandler.bind(this)}
 							profileBtnHandler={this.profileBtnClickHandler.bind(this)}
 							addLibraryBtnHandler={this.openAddLibrary.bind(this)}
+							assetsBtnHandler={this.assetsBtnClickHandler.bind(this)}
 							runBtnClickHandler={this.runBtnClickHandler.bind(this)}
 							isFetchingItems={this.state.isFetchingItems}
 							isSaving={this.state.isSaving}
@@ -1716,6 +1722,12 @@ export default class App extends Component {
 							}
 							onChange={this.onExternalLibChange.bind(this)}
 						/>
+					</Modal>
+					<Modal
+						show={this.state.isAssetsOpen}
+						closeHandler={() => this.setState({ isAssetsOpen: false })}
+					>
+						<Assets />
 					</Modal>
 					<Modal
 						show={this.state.isNotificationsModalOpen}

@@ -2002,6 +2002,15 @@ while the theme CSS file is loading */
 	justify-content: center;
 }
 
+.asset_manager__upload-box {
+	padding: 1rem 2rem;
+	border: 3px dashed rgb(255 255 255 / 10%);
+	border-radius: 1rem;
+	text-align: center;
+	margin-bottom: 1rem;
+	transition: 0.3s ease;
+}
+
 @media screen and (max-width: 600px) {
 	body {
 		font-size: 70%;

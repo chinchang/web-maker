@@ -38,6 +38,17 @@ export function MainHeader(props) {
 							</button>
 						)}
 
+						<Button
+							onClick={props.assetsBtnHandler}
+							data-event-category="ui"
+							data-event-action="addLibraryButtonClick"
+							data-testid="addLibraryButton"
+							class="btn btn--dark hint--rounded hint--bottom-left"
+							aria-label={i18n._(t`Upload/Use assets`)}
+						>
+							<Trans>Assets</Trans>{' '}
+						</Button>
+
 						{!props.isFileMode && (
 							<Button
 								onClick={props.addLibraryBtnHandler}

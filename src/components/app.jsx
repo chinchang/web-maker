@@ -100,6 +100,7 @@ export default class App extends Component {
 	constructor() {
 		super();
 		this.AUTO_SAVE_INTERVAL = 15000; // 15 seconds
+		const savedUser = window.localStorage.getItem('user');
 		this.modalDefaultStates = {
 			isModalOpen: false,
 			isAddLibraryModalOpen: false,
@@ -125,7 +126,8 @@ export default class App extends Component {
 				title: '',
 				externalLibs: { js: '', css: '' }
 			},
-			catalogs: {}
+			catalogs: {},
+			user: savedUser
 		};
 		this.defaultSettings = {
 			preserveLastCode: true,
@@ -158,6 +160,10 @@ export default class App extends Component {
 		};
 		this.prefs = {};
 
+		if (savedUser) {
+			window.user = savedUser;
+		}
+
 		firebase.auth().onAuthStateChanged(user => {
 			this.setState({ isLoginModalOpen: false });
 			if (user) {
@@ -165,6 +171,7 @@ export default class App extends Component {
 				alertsService.add('You are now logged in!');
 				this.setState({ user });
 				window.user = user;
+				window.localStorage.setItem('user', user);
 				if (!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS]) {
 					this.fetchItems(false, true).then(items => {
 						if (!items.length) {

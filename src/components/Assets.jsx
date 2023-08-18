@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import { Stack } from './Stack';
+import { copyToClipboard } from '../utils';
 
 const Assets = () => {
 	const [files, setFiles] = useState([]);
@@ -22,8 +23,12 @@ const Assets = () => {
 		}
 
 		setIsUploading(true);
+		const metadata = {
+			cacheControl: 'public, max-age=3600' // 1 hr
+		};
+
 		const fileRef = storageRef.child(file.name);
-		const task = fileRef.put(file);
+		const task = fileRef.put(file, metadata);
 
 		task.on(
 			'state_changed',
@@ -125,14 +130,9 @@ const Assets = () => {
 	};
 
 	const copyFileUrl = url => {
-		const input = document.createElement('input');
-		input.value = url;
-		input.style.opacity = 0;
-		document.body.appendChild(input);
-		input.select();
-		document.execCommand('copy');
-		document.body.removeChild(input);
-		alertsService.add('File URL copied!');
+		copyToClipboard(url).then(() => {
+			alertsService.add('File URL copied!');
+		});
 	};
 
 	return (

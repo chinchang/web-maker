@@ -343,19 +343,21 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 	var externalJs = '',
 		externalCss = '';
 	if (item.externalLibs) {
-		externalJs = item.externalLibs.js
-			.split('\n')
-			.reduce(function (scripts, url) {
-				return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
-			}, '');
-		externalCss = item.externalLibs.css
-			.split('\n')
-			.reduce(function (links, url) {
-				return (
-					links +
-					(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
-				);
-			}, '');
+		externalJs = item.externalLibs.js.split('\n').reduce(function (
+			scripts,
+			url
+		) {
+			return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
+		}, '');
+		externalCss = item.externalLibs.css.split('\n').reduce(function (
+			links,
+			url
+		) {
+			return (
+				links +
+				(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
+			);
+		}, '');
 	}
 	var contents =
 		'<!DOCTYPE html>\n' +
@@ -584,4 +586,11 @@ if (window.IS_EXTENSION) {
 	document.body.classList.add('is-extension');
 } else {
 	document.body.classList.add('is-app');
+}
+export async function copyToClipboard(text) {
+	try {
+		await navigator.clipboard.writeText(text);
+	} catch (err) {
+		console.error('Failed to copy text: ', err);
+	}
 }

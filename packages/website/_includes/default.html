@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 	<head>
 		<meta charset="utf-8" />
@@ -48,6 +48,7 @@
 
 						html {
 							font-size: var(--base-font-size);
+							scroll-timeline: --root-scroll block;
 						}
 
 						body {
@@ -60,6 +61,7 @@
 							margin: 0;
 							color: #3a3a3a;
 							-webkit-font-smoothing: antialiased;
+
 						}
 						body.docs {
 							max-width: 70ch;
@@ -482,6 +484,20 @@
 			}
 			.people-say-bottom .say {
 				--shadow-y: -5px;
+			}
+
+			@keyframes hero-img-progress {
+				from {
+					transform: rotateX(4deg) rotateY(-6deg);
+				}
+
+				to {
+					transform: rotateX(-40deg) rotateY(100deg);
+				}
+			}
+			.screenshot {
+				animation: hero-img-progress auto linear;
+				animation-timeline: --root-scroll;
 			}
 		</style>
 	</head>

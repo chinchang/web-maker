@@ -83,6 +83,8 @@ const version = '5.0.3';
 
 // Read forced settings as query parameters
 window.forcedSettings = {};
+window.codeHtml = '';
+window.codeCss = '';
 if (location.search) {
 	let match = location.search.replace(/^\?/, '').match(/settings=([^=]*)/);
 	if (match) {
@@ -94,6 +96,10 @@ if (location.search) {
 			window.forcedSettings[pair[0]] = pair[1];
 		});
 	}
+
+	const params = new URLSearchParams(location.search);
+	window.codeHtml = params.get('html') || '';
+	window.codeCss = params.get('css') || '';
 }
 
 export default class App extends Component {
@@ -124,7 +130,9 @@ export default class App extends Component {
 			prefs: {},
 			currentItem: {
 				title: '',
-				externalLibs: { js: '', css: '' }
+				externalLibs: { js: '', css: '' },
+				html: window.codeHtml,
+				css: window.codeCss
 			},
 			catalogs: {},
 			user: savedUser
@@ -228,11 +236,18 @@ export default class App extends Component {
 				}
 			}
 		);
+
 		// Get synced `preserveLastCode` setting to get back last code (or not).
 		db.getSettings(this.defaultSettings).then(result => {
-			if (result.preserveLastCode && lastCode) {
+			if (window.codeHtml || window.codeCss) {
+				log('Load item from query params', lastCode);
+				this.prettifyHandler('html');
+				this.prettifyHandler('css');
+				this.setCurrentItem(this.state.currentItem).then(() => {
+					this.refreshEditor();
+				});
+			} else if (result.preserveLastCode && lastCode) {
 				this.setState({ unsavedEditCount: 0 });
-
 				log('Load last unsaved item', lastCode);
 				this.setCurrentItem(lastCode).then(() => this.refreshEditor());
 			} else {

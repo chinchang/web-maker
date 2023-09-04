@@ -97,12 +97,8 @@ if (location.search) {
 	}
 
 	const params = new URLSearchParams(location.search);
-	window.codeHtml = params.get('html')
-		? decodeURIComponent(params.get('html'))
-		: '';
-	window.codeCss = params.get('css')
-		? decodeURIComponent(params.get('css'))
-		: '';
+	window.codeHtml = params.get('html') || '';
+	window.codeCss = params.get('css') || '';
 }
 
 export default class App extends Component {
@@ -236,6 +232,8 @@ export default class App extends Component {
 		db.getSettings(this.defaultSettings).then(result => {
 			if (window.codeHtml || window.codeCss) {
 				log('Load item from query params', lastCode);
+				this.prettifyHandler('html');
+				this.prettifyHandler('css');
 				this.setCurrentItem(this.state.currentItem).then(() => {
 					this.refreshEditor();
 				});

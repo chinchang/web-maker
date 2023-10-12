@@ -344,18 +344,18 @@ export default class CodeEditor extends Component {
 							if (didEmmetWork === true) {
 								return;
 							}
-							const input = $('[data-setting=indentWith]:checked');
-							if (
-								!editor.somethingSelected() &&
-								(!prefs.indentWith || prefs.indentWith === 'spaces')
-							) {
-								// softtabs adds spaces. This is required because by default tab key will put tab, but we want
-								// to indent with spaces if `spaces` is preferred mode of indentation.
-								// `somethingSelected` needs to be checked otherwise, all selected code is replaced with softtab.
-								CodeMirror.commands.insertSoftTab(editor);
-							} else {
-								CodeMirror.commands.defaultTab(editor);
-							}
+						}
+						const input = $('[data-setting=indentWith]:checked');
+						if (
+							!editor.somethingSelected() &&
+							(!prefs.indentWith || prefs.indentWith === 'spaces')
+						) {
+							// softtabs adds spaces. This is required because by default tab key will put tab, but we want
+							// to indent with spaces if `spaces` is preferred mode of indentation.
+							// `somethingSelected` needs to be checked otherwise, all selected code is replaced with softtab.
+							CodeMirror.commands.insertSoftTab(editor);
+						} else {
+							CodeMirror.commands.defaultTab(editor);
 						}
 					},
 					Enter: 'emmetInsertLineBreak'

@@ -10,14 +10,12 @@ export const jsLibs = [
 		type: 'js'
 	},
 	{
-		url:
-			'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js',
+		url: 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js',
 		label: 'Bootstrap 4',
 		type: 'js'
 	},
 	{
-		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.7.5/js/foundation.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.7.5/js/foundation.min.js',
 		label: 'Foundation',
 		type: 'js'
 	},
@@ -32,14 +30,12 @@ export const jsLibs = [
 		type: 'js'
 	},
 	{
-		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js',
 		label: 'React',
 		type: 'js'
 	},
 	{
-		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js',
 		label: 'React DOM',
 		type: 'js'
 	},
@@ -74,7 +70,7 @@ export const jsLibs = [
 		type: 'js'
 	},
 	{
-		url:'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.19/js/uikit.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.19/js/uikit.min.js',
 		label: 'UIkit 3',
 		type: 'js'
 	},
@@ -84,14 +80,12 @@ export const jsLibs = [
 		type: 'js'
 	},
 	{
-		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.min.js',
 		label: 'p5.js DOM',
 		type: 'js'
 	},
 	{
-		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.min.js',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.min.js',
 		label: 'p5.js Sound',
 		type: 'js'
 	},
@@ -99,24 +93,26 @@ export const jsLibs = [
 		url: 'https://unpkg.com/rxjs/bundles/rxjs.umd.min.js',
 		label: 'RxJS',
 		type: 'js'
+	},
+	{
+		url: 'https://cdn.tailwindcss.com/3.3.1',
+		label: 'Tailwind 3',
+		type: 'js'
 	}
 ];
 export const cssLibs = [
 	{
-		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css',
 		label: 'Bootstrap 5',
 		type: 'css'
 	},
 	{
-		url:
-			'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css',
+		url: 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css',
 		label: 'Bootstrap 4',
 		type: 'css'
 	},
 	{
-		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.7.5/css/foundation.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/foundation/6.7.5/css/foundation.min.css',
 		label: 'Foundation',
 		type: 'css'
 	},
@@ -141,27 +137,19 @@ export const cssLibs = [
 		label: 'Tailwind 2',
 		type: 'css'
 	},
+
 	{
-		url:
-			'https://cdn.tailwindcss.com/3.3.1',
-		label: 'Tailwind 3',
-		type: 'css'
-	},
-	{
-		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.19/css/uikit.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.19/css/uikit.min.css',
 		label: 'UIkit 3',
 		type: 'css'
 	},
 	{
-		url:
-			'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css',
 		label: 'Animate.css',
 		type: 'css'
 	},
 	{
-		url:
-			'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
+		url: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css',
 		label: 'FontAwesome 4',
 		type: 'css'
 	},

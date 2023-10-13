@@ -571,7 +571,9 @@ body:not(.light-version).overlay-visible .main-container {
 	overflow: hidden;
 	position: relative;
 	background: var(--color-bg);
-	transition: height 0.3s ease, width 0.3s ease;
+	transition:
+		height 0.3s ease,
+		width 0.3s ease;
 	will-change: height;
 }
 
@@ -890,6 +892,10 @@ body > #demo-frame {
 .footer a:hover svg,
 .footer button:hover svg {
 	fill: rgba(255, 255, 255, 0.6);
+}
+.footer a,
+.footer button {
+	cursor: pointer;
 }
 
 .mode-btn svg {

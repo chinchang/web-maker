@@ -128,7 +128,7 @@ export function Notifications(props) {
 					<ThanksTo url="https://github.com/nhogle" name="@nhogle" />
 				</NotificationItem>
 				<NotificationItem type="bug">
-					3rd party libraries not updating is fixed.
+					3rd party libraries not updating sometimes is fixed.
 				</NotificationItem>
 			</Notification>
 			<Notification version="5.0.3" {...props}>

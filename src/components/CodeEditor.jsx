@@ -187,8 +187,9 @@ export default class CodeEditor extends Component {
 
 	showErrors(errors) {
 		if (this.props.type === 'codemirror') {
-			errors.forEach(function(error) {
-				this.instance.operation(function() {
+			const editor = this.instance;
+			errors.forEach(function (error) {
+				editor.operation(function () {
 					var n = document.createElement('div');
 					n.setAttribute('data-title', error.message);
 					n.classList.add('gutter-error-marker');
@@ -235,11 +236,11 @@ export default class CodeEditor extends Component {
 			if (!monacoDepsDeferred) {
 				monacoDepsDeferred = deferred();
 				loadCss({ url: 'lib/monaco/monaco.css', id: 'monaco-css' });
-				import(/* webpackChunkName: "monaco" */ '../lib/monaco/monaco.bundle.js').then(
-					() => {
-						monacoDepsDeferred.resolve();
-					}
-				);
+				import(
+					/* webpackChunkName: "monaco" */ '../lib/monaco/monaco.bundle.js'
+				).then(() => {
+					monacoDepsDeferred.resolve();
+				});
 			}
 			return monacoDepsDeferred.promise;
 		}
@@ -311,23 +312,23 @@ export default class CodeEditor extends Component {
 				// cursorScrollMargin: '20', has issue with scrolling
 				profile: options.profile || '',
 				extraKeys: {
-					Up: function(editor) {
+					Up: function (editor) {
 						// Stop up/down keys default behavior when saveditempane is open
 						// if (isSavedItemsPaneOpen) {
 						// return;
 						// }
 						CodeMirror.commands.goLineUp(editor);
 					},
-					Down: function(editor) {
+					Down: function (editor) {
 						// if (isSavedItemsPaneOpen) {
 						// return;
 						// }
 						CodeMirror.commands.goLineDown(editor);
 					},
-					'Shift-Tab': function(editor) {
+					'Shift-Tab': function (editor) {
 						CodeMirror.commands.indentAuto(editor);
 					},
-					'Shift-Ctrl-F': function(editor) {
+					'Shift-Ctrl-F': function (editor) {
 						if (options.prettier) {
 							prettify({
 								content: editor.getValue(),
@@ -336,7 +337,7 @@ export default class CodeEditor extends Component {
 						}
 						trackEvent('ui', 'prettifyKeyboardShortcut');
 					},
-					Tab: function(editor) {
+					Tab: function (editor) {
 						if (options.emmet) {
 							const didEmmetWork = editor.execCommand(
 								'emmetExpandAbbreviation'

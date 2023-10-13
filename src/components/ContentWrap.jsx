@@ -15,6 +15,7 @@ import { Console } from './Console';
 import CssSettingsModal from './CssSettingsModal';
 import { PreviewDimension } from './PreviewDimension.jsx';
 import Modal from './Modal.jsx';
+import { LocalStorageKeys } from '../constants.js';
 const minCodeWrapSize = 33;
 
 /* global htmlCodeEl
@@ -24,7 +25,9 @@ export default class ContentWrap extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isConsoleOpen: false,
+			isConsoleOpen:
+				window.localStorage.getItem(LocalStorageKeys.WAS_CONSOLE_OPEN) ===
+				'true',
 			isCssSettingsModalOpen: false,
 			isPreviewNotWorkingModalVisible: false,
 			logs: []
@@ -574,8 +577,10 @@ export default class ContentWrap extends Component {
 	}
 
 	toggleConsole() {
-		this.setState({ isConsoleOpen: !this.state.isConsoleOpen });
+		const newValue = !this.state.isConsoleOpen;
+		this.setState({ isConsoleOpen: newValue });
 		trackEvent('ui', 'consoleToggle');
+		window.localStorage.setItem(LocalStorageKeys.WAS_CONSOLE_OPEN, newValue);
 	}
 	consoleHeaderDblClickHandler(e) {
 		if (!e.target.classList.contains('js-console__header')) {

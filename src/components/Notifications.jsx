@@ -114,6 +114,23 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+			<Notification version="5.1.0" {...props}>
+				<NotificationItem type="interface">
+					Console's open state is preserved across refreshes.
+				</NotificationItem>
+				<NotificationItem type="bug">
+					Error highlighting fixed in JS pane when using Codemirror editor.
+					Thanks
+					<ThanksTo url="https://github.com/nhogle" name="@nhogle" />
+				</NotificationItem>
+				<NotificationItem type="bug">
+					Tab key not working in JS pane is fixed. Thanks
+					<ThanksTo url="https://github.com/nhogle" name="@nhogle" />
+				</NotificationItem>
+				<NotificationItem type="bug">
+					3rd party libraries not updating is fixed.
+				</NotificationItem>
+			</Notification>
 			<Notification version="5.0.3" {...props}>
 				<li>
 					⬆️ Popular libraries updated to latest versions. Thanks

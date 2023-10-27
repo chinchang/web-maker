@@ -114,6 +114,11 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+			<Notification version="5.1.1" {...props}>
+				<NotificationItem type="bug">
+					Detached preview now renders correctly.
+				</NotificationItem>
+			</Notification>
 			<Notification version="5.1.0" {...props}>
 				<NotificationItem type="interface">
 					Console's open state is preserved across refreshes.

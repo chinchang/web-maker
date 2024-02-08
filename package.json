@@ -1,6 +1,6 @@
 {
 	"name": "web-maker",
-	"version": "5.1.1",
+	"version": "5.2.0",
 	"description": "A blazing fast & offline web playground",
 	"scripts": {
 		"start": "concurrently --kill-others \"gulp start-preview-server\" \"npm run -s dev\"",

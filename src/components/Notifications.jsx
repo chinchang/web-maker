@@ -114,6 +114,16 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+			<Notification version="5.2.0" {...props}>
+				<li>
+					<strong>Improvement</strong>: Atomic CSS (Atomizer) has been updated
+					to latest version. Now you can do things like Grid and more!
+				</li>
+				<li>
+					<strong>Improvement</strong>: Atomic CSS config can now be written
+					with unquoted keys too. No need to have a valid JSON syntax.
+				</li>
+			</Notification>
 			<Notification version="5.1.1" {...props}>
 				<NotificationItem type="bug">
 					Detached preview now renders correctly.

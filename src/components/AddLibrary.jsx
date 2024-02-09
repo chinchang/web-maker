@@ -37,19 +37,23 @@ export default class AddLibrary extends Component {
 	}
 	textareaBlurHandler(e, textarea) {
 		const target = e ? e.target : textarea;
+		const data = { js: this.state.js, css: this.state.css };
+
 		const type = target.dataset.lang;
 		if (type === 'js') {
+			data.js = target.value || '';
 			this.setState({
-				js: target.value || ''
+				js: data.js
 			});
 		} else {
+			data.css = target.value || '';
 			this.setState({
-				css: target.value || ''
+				css: data.css
 			});
 		}
 
 		// trackEvent('ui', 'addLibrarySelect', target.selectedOptions[0].label);
-		this.props.onChange({ js: this.state.js, css: this.state.css });
+		this.props.onChange(data);
 	}
 	suggestionSelectHandler(value) {
 		const textarea = value.match(/\.js$/)

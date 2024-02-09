@@ -1,8 +1,6 @@
-npm install atomizer
-touch atomizer.js
-echo "require('atomizer');" > atomizer.js
-webpack --output-library Atomizer --output-library-target umd atomizer atomizer-web.js
-uglifyjs atomizer-web.js --compress > atomizer-web.min.js
-echo 'window.atomizer = new Atomizer();' >> atomizer-web.min.js
-mv atomizer-web.min.js src/lib/atomizer.browser.js
-rm atomizer-web.js atomizer.js
+# needs node >= 20
+npm install atomizer 
+npm i -g parcel
+parcel build scripts/atomizer.mjs --no-source-maps
+mv dist/atomizer.js src/lib/transpilers/atomizer.browser.js
+rm -rf dist

@@ -114,6 +114,38 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+			<Notification version="5.2.0" {...props}>
+				<li>
+					<strong>Improvement</strong>: Atomic CSS (Atomizer) has been updated
+					to latest version. Now you can do things like Grid and more!
+				</li>
+				<li>
+					<strong>Improvement</strong>: Atomic CSS config can now be written
+					with unquoted keys too. No need to have a valid JSON syntax.
+				</li>
+			</Notification>
+			<Notification version="5.1.1" {...props}>
+				<NotificationItem type="bug">
+					Detached preview now renders correctly.
+				</NotificationItem>
+			</Notification>
+			<Notification version="5.1.0" {...props}>
+				<NotificationItem type="interface">
+					Console's open state is preserved across refreshes.
+				</NotificationItem>
+				<NotificationItem type="bug">
+					Error highlighting fixed in JS pane when using Codemirror editor.
+					Thanks
+					<ThanksTo url="https://github.com/nhogle" name="@nhogle" />
+				</NotificationItem>
+				<NotificationItem type="bug">
+					Tab key not working in JS pane is fixed. Thanks
+					<ThanksTo url="https://github.com/nhogle" name="@nhogle" />
+				</NotificationItem>
+				<NotificationItem type="bug">
+					3rd party libraries not updating sometimes is fixed.
+				</NotificationItem>
+			</Notification>
 			<Notification version="5.0.3" {...props}>
 				<li>
 					⬆️ Popular libraries updated to latest versions. Thanks

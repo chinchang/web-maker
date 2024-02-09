@@ -54,7 +54,7 @@ export function computeCss(userCode, mode, settings) {
 				{
 					indentedSyntax: mode === CssModes.SASS
 				},
-				function(result) {
+				function (result) {
 					// Something was wrong
 					if (result.line && result.message) {
 						errors = {
@@ -80,12 +80,12 @@ export function computeCss(userCode, mode, settings) {
 		}
 	} else if (mode === CssModes.LESS) {
 		less.render(code).then(
-			function(result) {
+			function (result) {
 				d.resolve({
 					code: result.css
 				});
 			},
-			function(error) {
+			function (error) {
 				errors = {
 					lang: 'css',
 					data: [
@@ -102,7 +102,7 @@ export function computeCss(userCode, mode, settings) {
 			}
 		);
 	} else if (mode === CssModes.STYLUS) {
-		stylus(code).render(function(error, result) {
+		stylus(code).render(function (error, result) {
 			if (error) {
 				window.err = error;
 				// Last line of message is the actual message
@@ -132,10 +132,18 @@ export function computeCss(userCode, mode, settings) {
 			const html = code;
 			const foundClasses = atomizer.findClassNames(html);
 			var finalConfig;
+
+			// Regular expression to find unquoted keys: looks for word characters (including _) followed by a colon
+			// and put them in quotes
+			const fixedConfigJson = (settings.acssConfig || '{}').replace(
+				/([{,]\s*)([^\s"{:]+)(\s*:\s*)/g,
+				'$1"$2"$3'
+			);
+
 			try {
 				finalConfig = atomizer.getConfig(
 					foundClasses,
-					JSON.parse(settings.acssConfig)
+					JSON.parse(fixedConfigJson)
 				);
 			} catch (e) {
 				finalConfig = atomizer.getConfig(foundClasses, {});

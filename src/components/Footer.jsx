@@ -2,6 +2,8 @@ import { h, Component } from 'preact';
 import { Button } from './common';
 import { Trans, t } from '@lingui/macro';
 import { I18n } from '@lingui/react';
+import { ProBadge } from './ProBadge';
+import { HStack } from './Stack';
 
 class JS13K extends Component {
 	constructor(props) {
@@ -131,15 +133,18 @@ export default class Footer extends Component {
 								</svg>
 							</a>
 							<Button
-								onClick={this.props.supportDeveloperBtnClickHandler}
+								onClick={this.props.getProBtnClickHandler}
 								data-event-category="ui"
-								data-event-action="supportDeveloperFooterBtnClick"
+								data-event-action="getProFooterBtnClick"
 								class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
 								aria-label={i18n._(
-									t`Support the developer by pledging some amount`
+									t`Be a PRO and get some advanced superpowers!`
 								)}
 							>
-								<Trans>Donate</Trans>
+								<HStack gap={1}>
+									<Trans>Get</Trans>
+									<ProBadge />
+								</HStack>
 							</Button>
 						</div>
 

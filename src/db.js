@@ -1,6 +1,7 @@
-import './firebaseInit';
-import firebase from 'firebase/app';
+// import './firebaseInit';
 import 'firebase/firestore';
+import { db } from './firebaseInit';
+import { getDoc, getDocs, doc, updateDoc, setDoc } from 'firebase/firestore';
 import { deferred } from './deferred';
 import { trackEvent } from './analytics';
 import { log } from './utils';
@@ -8,7 +9,7 @@ import { log } from './utils';
 (() => {
 	const FAUX_DELAY = 1;
 
-	var db;
+	// var db;
 	var dbPromise;
 
 	var local = {
@@ -55,13 +56,13 @@ import { log } from './utils';
 			if (db) {
 				return resolve(db);
 			}
-			const firestoreInstance = firebase.firestore();
+			const firestoreInstance = db;
 
 			return firestoreInstance
 				.enablePersistence({ experimentalTabSynchronization: true })
-				.then(function() {
+				.then(function () {
 					// Initialize Cloud Firestore through firebase
-					db = firebase.firestore();
+					// db = firebase.firestore();
 					// const settings = {
 					// 	timestampsInSnapshots: true
 					// };
@@ -69,7 +70,7 @@ import { log } from './utils';
 					log('firebase db ready', db);
 					resolve(db);
 				})
-				.catch(function(err) {
+				.catch(function (err) {
 					reject(err.code);
 					if (err.code === 'failed-precondition') {
 						// Multiple tabs open, persistence can only be enabled
@@ -113,11 +114,11 @@ import { log } from './utils';
 			{
 				lastSeenVersion: version
 			},
-			function() {}
+			function () {}
 		);
 		if (window.user) {
 			const remoteDb = await getDb();
-			remoteDb.doc(`users/${window.user.uid}`).update({
+			updateDoc(doc(remoteDb, `users/${window.user.uid}`), {
 				lastSeenVersion: version
 			});
 		}
@@ -125,21 +126,16 @@ import { log } from './utils';
 
 	async function getUser(userId) {
 		const remoteDb = await getDb();
-		return remoteDb
-			.doc(`users/${userId}`)
-			.get()
-			.then(doc => {
-				if (!doc.exists)
-					return remoteDb.doc(`users/${userId}`).set(
-						{},
-						{
-							merge: true
-						}
-					);
-				const user = doc.data();
-				Object.assign(window.user, user);
-				return user;
-			});
+
+		return getDoc(doc(remoteDb, `users/${userId}`)).then(doc => {
+			if (!doc.exists()) {
+				return setDoc(doc(remoteDb, `users/${userId}`), {}, { merge: true });
+			}
+
+			const user = doc.data();
+			Object.assign(window.user, user);
+			return user;
+		});
 	}
 
 	// Fetch user settings.

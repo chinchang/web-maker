@@ -1,12 +1,12 @@
 import { h, Component } from 'preact';
 import { trackEvent } from '../analytics';
-import { auth } from '../auth';
+import { authh } from '../auth';
 
 export default class Login extends Component {
 	login(e) {
 		const provider = e.target.dataset.authProvider;
 		trackEvent('ui', 'loginProviderClick', provider);
-		auth.login(provider);
+		authh.login(provider);
 	}
 	componentDidMount() {
 		window.db.local.get(

@@ -41,10 +41,10 @@ import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { trackEvent } from '../analytics';
 import { deferred } from '../deferred';
 import { alertsService } from '../notifications';
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import { auth } from '../firebaseInit';
+import { onAuthStateChanged } from 'firebase/auth';
 import { Profile } from './Profile';
-import { auth } from '../auth';
+import { authh } from '../auth';
 import { SupportDeveloperModal } from './SupportDeveloperModal';
 import { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
 import { takeScreenshot } from '../takeScreenshot';
@@ -161,7 +161,7 @@ export default class App extends Component {
 		};
 		this.prefs = {};
 
-		firebase.auth().onAuthStateChanged(user => {
+		onAuthStateChanged(auth, user => {
 			this.setState({ isLoginModalOpen: false });
 			if (user) {
 				log('You are -> ', user);
@@ -1043,7 +1043,7 @@ export default class App extends Component {
 			}
 		}
 		trackEvent('fn', 'loggedOut');
-		auth.logout();
+		authh.logout();
 		this.setState({ isProfileModalOpen: false });
 		alertsService.add('Log out successfull');
 	}

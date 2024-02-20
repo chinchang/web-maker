@@ -166,6 +166,8 @@ export default class App extends Component {
 			if (user) {
 				log('You are -> ', user);
 				alertsService.add('You are now logged in!');
+				trackEvent('fn', 'loggedIn', window.IS_EXTENSION ? 'extension' : 'web');
+
 				this.setState({ user });
 				window.user = user;
 				if (!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS]) {

@@ -277,10 +277,13 @@ const buildExtension = series(
 );
 
 function runWatcher(cb) {
-	return watch(['src/**/*.js', 'src/**/*.jsx'], function (cbb) {
-		buildExtension();
-		cbb();
-	});
+	return watch(
+		['src/**/*.js', 'src/**/*.jsx', 'src/**/*.json'],
+		function (cbb) {
+			buildExtension();
+			cbb();
+		}
+	);
 	cb();
 }
 

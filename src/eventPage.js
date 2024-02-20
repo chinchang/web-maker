@@ -1,16 +1,16 @@
 function openApp() {
 	chrome.tabs.create({
-		url: chrome.extension.getURL('index.html'),
+		url: chrome.runtime.getURL('index.html'),
 		selected: true
 	});
 }
 
-chrome.browserAction.onClicked.addListener(function() {
+chrome.action.onClicked.addListener(function () {
 	openApp();
 });
 
 // Listen for tabs getting created.
-chrome.tabs.onCreated.addListener(function(tab) {
+chrome.tabs.onCreated.addListener(function (tab) {
 	// If a new tab is opened (without any URL), check user's
 	// replace Tab setting and act accordingly. Default is false.
 	if (tab.url === 'chrome://newtab/') {
@@ -18,12 +18,12 @@ chrome.tabs.onCreated.addListener(function(tab) {
 			{
 				replaceNewTab: false
 			},
-			function(items) {
+			function (items) {
 				if (items.replaceNewTab) {
 					chrome.tabs.update(
 						tab.id,
 						{
-							url: chrome.extension.getURL('index.html')
+							url: chrome.runtime.getURL('index.html')
 						},
 						function callback() {
 							console.log('ho gaya');

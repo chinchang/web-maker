@@ -194,7 +194,9 @@ export default class App extends Component {
 					if (customUser) {
 						const prefs = { ...this.state.prefs };
 						Object.assign(prefs, user.settings);
-						this.setState({ prefs }, this.updateSetting);
+						const newUser = { ...user, isPro: false, ...customUser };
+						window.localStorage.setItem('user', newUser);
+						this.setState({ user: newUser, prefs }, this.updateSetting);
 					}
 				});
 			} else {

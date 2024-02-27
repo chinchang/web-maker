@@ -574,7 +574,9 @@ body:not(.light-version).overlay-visible .main-container {
 	overflow: hidden;
 	position: relative;
 	background: var(--color-bg);
-	transition: height 0.3s ease, width 0.3s ease;
+	transition:
+		height 0.3s ease,
+		width 0.3s ease;
 	will-change: height;
 }
 
@@ -993,7 +995,9 @@ body > #demo-frame {
 
 	/* fix me */
 	background: linear-gradient(45deg, #2d063c, #3a2b63);
-	box-shadow: inset 1px -1px 0 0 #ffffff17, 0 20px 31px 0 #0000008a;
+	box-shadow:
+		inset 1px -1px 0 0 #ffffff17,
+		0 20px 31px 0 #0000008a;
 
 	color: var(--color-text);
 	position: relative;
@@ -2122,10 +2126,10 @@ while the theme CSS file is loading */
 	padding: 0.1rem 0.3rem;
 	background-color: #fff91f;
 	border-radius: 1rem;
-	font-size: 0.8em;
+	font-size: 0.7em;
 	color: #222;
 	box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.3);
-	font-weight: 700;
+	font-weight: 800;
 	line-height: 1;
 }
 @media screen and (max-width: 600px) {

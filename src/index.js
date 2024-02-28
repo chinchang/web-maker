@@ -14,6 +14,8 @@ export default function () {
 		<Router>
 			<App path="/" />
 			<App path="/creation/:itemId" />
+			<App path="/app/creation/:itemId" />
+			<App default />
 		</Router>
 	);
 }

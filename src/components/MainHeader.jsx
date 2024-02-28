@@ -48,9 +48,7 @@ export function MainHeader(props) {
 							class="btn btn--dark hint--rounded hint--bottom-left"
 							aria-label={i18n._(t`Upload/Use assets`)}
 						>
-							<Stack gap={1}>
-								<Trans>Assets</Trans> <ProBadge />
-							</Stack>
+							<Trans>Assets</Trans>
 						</Button>
 
 						{!props.isFileMode && (

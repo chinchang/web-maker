@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/storage';
-import { Stack } from './Stack';
+import { HStack, Stack, VStack } from './Stack';
 import { copyToClipboard } from '../utils';
+import { Trans } from '@lingui/macro';
+import { ProBadge } from './ProBadge';
 
 const Assets = () => {
 	const [files, setFiles] = useState([]);
@@ -142,6 +144,13 @@ const Assets = () => {
 			onDragOver={handleDragDropEvent}
 			onDrop={handleDrop}
 		>
+			<HStack gap={1} align="center">
+				<h1>
+					<Trans>Assets</Trans>
+				</h1>
+				<ProBadge />
+			</HStack>
+
 			<div
 				class="asset-manager__upload-box"
 				style={{
@@ -161,40 +170,42 @@ const Assets = () => {
 				</div>
 			</div>
 			{isFetchingFiles && <p>Fetching your files...</p>}
-			{files.length ? (
-				<Stack>
-					<input
-						type="text"
-						placeholder="Search files"
-						value={searchTerm}
-						onChange={handleSearchChange}
-						style={{ width: '100%' }}
-					/>
-					<button onClick={() => setListType('list')}>List</button>
-					<button onClick={() => setListType('grid')}>Grid</button>
-				</Stack>
-			) : null}
-			<div
-				class={`asset-manager__file-container ${
-					listType === 'grid' ? 'asset-manager__file-container--grid' : ''
-				}`}
-			>
-				{filteredFiles.map((file, index) => (
-					<button
-						type="button"
-						key={index}
-						onClick={() => copyFileUrl(file.url)}
-						class={`asset-manager__file ${
-							listType === 'grid' ? 'asset-manager__file--grid' : ''
-						}`}
-					>
-						{/* <a href={file.url} target="_blank" rel="noopener noreferrer"> */}
-						<img src={file.url} />{' '}
-						<span class="asset-manager__file-name">{file.name}</span>
-						{/* </a> */}
-					</button>
-				))}
-			</div>
+			<VStack align="stretch" gap={1}>
+				{files.length ? (
+					<Stack>
+						<input
+							type="text"
+							placeholder="Search files"
+							value={searchTerm}
+							onChange={handleSearchChange}
+							style={{ width: '100%' }}
+						/>
+						<button onClick={() => setListType('list')}>List</button>
+						<button onClick={() => setListType('grid')}>Grid</button>
+					</Stack>
+				) : null}
+				<div
+					class={`asset-manager__file-container ${
+						listType === 'grid' ? 'asset-manager__file-container--grid' : ''
+					}`}
+				>
+					{filteredFiles.map((file, index) => (
+						<button
+							type="button"
+							key={index}
+							onClick={() => copyFileUrl(file.url)}
+							class={`asset-manager__file ${
+								listType === 'grid' ? 'asset-manager__file--grid' : ''
+							}`}
+						>
+							{/* <a href={file.url} target="_blank" rel="noopener noreferrer"> */}
+							<img src={file.url} />{' '}
+							<span class="asset-manager__file-name">{file.name}</span>
+							{/* </a> */}
+						</button>
+					))}
+				</div>
+			</VStack>
 		</div>
 	);
 };

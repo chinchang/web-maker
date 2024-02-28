@@ -25,3 +25,9 @@ ID = "webmaker"
   to = "/app/preview/:splat"
   status = 200
   force = true
+
+[[redirects]]
+  from = "https://webmaker.app/app/creation/*"
+  to = "/app/:splat"
+  status = 200
+  force = true

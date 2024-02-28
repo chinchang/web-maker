@@ -512,7 +512,7 @@ export function prettify({ file, content, type }) {
  * Loaded the code comiler based on the mode selected
  */
 export function handleModeRequirements(mode) {
-	const baseTranspilerPath = 'lib/transpilers';
+	const baseTranspilerPath = '/lib/transpilers';
 	// Exit if already loaded
 	var d = deferred();
 	if (modes[mode].hasLoaded) {

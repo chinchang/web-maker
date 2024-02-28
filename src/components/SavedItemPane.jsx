@@ -235,7 +235,7 @@ export default function SavedItemPane({
 								</h2>
 								<img
 									style="max-width: 80%; opacity:0.4"
-									src="assets/empty.svg"
+									src="/assets/empty.svg"
 								/>
 							</div>
 						) : null}

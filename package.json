@@ -4,8 +4,8 @@
 	"description": "A blazing fast & offline web playground",
 	"scripts": {
 		"start": "concurrently --kill-others \"gulp start-preview-server\" \"npm run -s dev\"",
-		"build": "preact build --template src/index.html --prerender false --no-inline-css --sw false --esm false",
-		"dev": "preact watch --template src/index.html",
+		"build": "preact build --template src/index.ejs --prerender false --no-inline-css --sw false --esm false",
+		"dev": "preact watch --template src/index.ejs",
 		"serve-website": "cd packages/website; npm start",
 		"build-website": "cd packages/website; npm run build",
 		"lint": "eslint src",
@@ -65,7 +65,7 @@
 		"markdown-it": "^8.4.2",
 		"markdown-it-anchor": "^5.0.2",
 		"merge-stream": "^1.0.1",
-		"preact-cli": "^3.0.0",
+		"preact-cli": "^4.0.0-next.6",
 		"sw-precache": "^5.2.0"
 	},
 	"dependencies": {

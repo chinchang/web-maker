@@ -7,6 +7,7 @@ export function ItemTile({
 	onClick,
 	onForkBtnClick,
 	onRemoveBtnClick,
+	onToggleVisibilityBtnClick,
 	focusable,
 	inline
 }) {
@@ -21,6 +22,15 @@ export function ItemTile({
 			onClick={onClick}
 		>
 			<div class="saved-item-tile__btns">
+				{onToggleVisibilityBtnClick ? (
+					<button
+						class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium"
+						aria-label="Creates a duplicate of this creation (Ctrl/⌘ + F)"
+						onClick={onToggleVisibilityBtnClick}
+					>
+						Toggle Visibility
+					</button>
+				) : null}
 				{onForkBtnClick ? (
 					<button
 						class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium"

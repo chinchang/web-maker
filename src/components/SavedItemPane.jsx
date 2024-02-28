@@ -226,6 +226,9 @@ export default function SavedItemPane({
 								onClick={() => itemClickHandler(item)}
 								onForkBtnClick={e => itemForkBtnClickHandler(item, e)}
 								onRemoveBtnClick={e => itemRemoveBtnClickHandler(item, e)}
+								onToggleVisibilityBtnClick={e =>
+									itemVisibilityToggleHandler(item, e)
+								}
 							/>
 						))}
 						{!items.length ? (

@@ -1,5 +1,5 @@
 import { deferred } from './deferred';
-import { log } from 'util';
+import { log } from './utils';
 import firebase from 'firebase/app';
 
 export const itemService = {
@@ -52,15 +52,15 @@ export const itemService = {
 				.collection('items')
 				.where('createdBy', '==', window.user.uid)
 				.onSnapshot(
-					function(querySnapshot) {
-						querySnapshot.forEach(function(doc) {
+					function (querySnapshot) {
+						querySnapshot.forEach(function (doc) {
 							items.push(doc.data());
 						});
 						log('Items fetched in ', Date.now() - t, 'ms');
 
 						d.resolve(items);
 					},
-					function() {
+					function () {
 						d.resolve([]);
 					}
 				);
@@ -147,7 +147,7 @@ export const itemService = {
 				{
 					items: {}
 				},
-				function(result) {
+				function (result) {
 					/* eslint-disable guard-for-in */
 					for (var id in items) {
 						result.items[id] = true;
@@ -205,7 +205,7 @@ export const itemService = {
 				{
 					items: {}
 				},
-				function(result) {
+				function (result) {
 					result.items[itemId] = true;
 					window.db.local.set({
 						items: result.items
@@ -235,7 +235,7 @@ export const itemService = {
 				{
 					items: {}
 				},
-				function(result) {
+				function (result) {
 					delete result.items[itemId];
 					window.db.local.set({
 						items: result.items

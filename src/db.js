@@ -59,7 +59,7 @@ import { log } from './utils';
 
 			return firestoreInstance
 				.enablePersistence({ experimentalTabSynchronization: true })
-				.then(function() {
+				.then(function () {
 					// Initialize Cloud Firestore through firebase
 					db = firebase.firestore();
 					// const settings = {
@@ -69,7 +69,7 @@ import { log } from './utils';
 					log('firebase db ready', db);
 					resolve(db);
 				})
-				.catch(function(err) {
+				.catch(function (err) {
 					reject(err.code);
 					if (err.code === 'failed-precondition') {
 						// Multiple tabs open, persistence can only be enabled
@@ -113,7 +113,7 @@ import { log } from './utils';
 			{
 				lastSeenVersion: version
 			},
-			function() {}
+			function () {}
 		);
 		if (window.user) {
 			const remoteDb = await getDb();
@@ -142,6 +142,18 @@ import { log } from './utils';
 			});
 	}
 
+	async function fetchItem(itemId) {
+		const remoteDb = await getDb();
+		return remoteDb
+			.doc(`items/${itemId}`)
+			.get()
+			.then(doc => {
+				if (!doc.exists) return {};
+				const data = doc.data();
+				return data;
+			});
+	}
+
 	// Fetch user settings.
 	// This isn't hitting the remote db because remote settings
 	// get fetch asynchronously (in user/) and update the envioronment.
@@ -161,6 +173,7 @@ import { log } from './utils';
 		getUserLastSeenVersion,
 		setUserLastSeenVersion,
 		getSettings,
+		fetchItem,
 		local: dbLocalAlias,
 		sync: dbSyncAlias
 	};

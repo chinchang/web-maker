@@ -147,7 +147,7 @@ export function MainHeader(props) {
 										}
 										class="main-header__avatar-img"
 									/>
-									{props.user && props.user.isPro ? <ProBadge /> : null}
+									{props.user?.isPro ? <ProBadge /> : null}
 								</HStack>
 							</Button>
 						)}

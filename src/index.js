@@ -1,3 +1,4 @@
+import Router from 'preact-router';
 import App from './components/app.jsx';
 
 import './lib/codemirror/lib/codemirror.css';
@@ -8,4 +9,11 @@ import './lib/hint.min.css';
 import './lib/inlet.css';
 import './style.css';
 
-export default App;
+export default function () {
+	return (
+		<Router>
+			<App path="/" />
+			<App path="/creation/:itemId" />
+		</Router>
+	);
+}

@@ -245,6 +245,10 @@ export default class App extends Component {
 				this.setCurrentItem(this.state.currentItem).then(() => {
 					this.refreshEditor();
 				});
+			} else if (this.props.itemId) {
+				window.db.fetchItem(this.props.itemId).then(item => {
+					this.setCurrentItem(item).then(() => this.refreshEditor());
+				});
 			} else if (result.preserveLastCode && lastCode) {
 				this.setState({ unsavedEditCount: 0 });
 				log('Load last unsaved item', lastCode);
@@ -570,6 +574,7 @@ export default class App extends Component {
 	}
 
 	componentDidMount() {
+		console.log('itemId', this.props.itemId);
 		function setBodySize() {
 			document.body.style.height = `${window.innerHeight}px`;
 		}

@@ -27,7 +27,7 @@ ID = "webmaker"
   force = true
 
 [[redirects]]
-  from = "/app/creation/*"
-  to = "/app/:splat"
+  from = "/create"
+  to = "/app"
   status = 200
   force = true

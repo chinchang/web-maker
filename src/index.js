@@ -13,8 +13,8 @@ export default function () {
 	return (
 		<Router>
 			<App path="/" />
-			<App path="/creation/:itemId" />
-			<App path="/app/creation/:itemId" />
+			<App path="/create/:itemId" />
+			<App path="/app/create/:itemId" />
 			<App default />
 		</Router>
 	);

@@ -28,5 +28,5 @@ ID = "webmaker"
 
 [[redirects]]
   from = "/create/*"
-  to = "/app/index.html"
+  to = "/create/index.html"
   status = 200

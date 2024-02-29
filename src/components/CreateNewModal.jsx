@@ -150,11 +150,10 @@ export class CreateNewModal extends Component {
 				<h1 class="mt-0">Create New</h1>
 				<Tabs horizontal onChange={this.modeChangeHandler}>
 					<TabPanel label={option1}>
-						<div class="d-f fxw-w">
+						<div class="templates-container">
 							<button
 								type="button"
 								class="btn btn--primary"
-								style="margin:20px 10px"
 								onClick={() => {
 									trackEvent('ui', 'startBlankBtnClick');
 									onBlankTemplateSelect();
@@ -176,11 +175,10 @@ export class CreateNewModal extends Component {
 						</div>
 					</TabPanel>
 					<TabPanel label={option2}>
-						<div class="d-f fxw-w show-when-app">
+						<div class="templates-container show-when-app">
 							<button
 								type="button"
 								class="btn btn--primary"
-								style="margin:20px 10px"
 								onClick={() => {
 									trackEvent('ui', 'startBlankFileBtnClick');
 									onBlankFileTemplateSelect();

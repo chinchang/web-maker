@@ -15,7 +15,7 @@ const Assets = () => {
 	const [uploadProgress, setUploadProgress] = useState();
 	const [listType, setListType] = useState('grid');
 
-	const storageRef = firebase.storage().ref(`assets/${window.user.uid}`);
+	const storageRef = firebase.storage().ref(`assets/${window.user?.uid}`);
 
 	const uploadFile = file => {
 		if (file.size > 5 * 1024 * 1024) {
@@ -137,6 +137,18 @@ const Assets = () => {
 		});
 	};
 
+	if (!window.user?.isPro) {
+		return (
+			<VStack align="stretch" gap={2}>
+				<p>Assets feature is available in PRO plan.</p>
+				<button class="btn  btn--primary ">
+					<HStack gap={1} fullWidth justify="center">
+						Upgrade to <ProBadge />
+					</HStack>
+				</button>
+			</VStack>
+		);
+	}
 	return (
 		<div
 			onDragEnter={handleDragDropEvent}

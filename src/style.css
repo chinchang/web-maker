@@ -1041,7 +1041,7 @@ body > #demo-frame {
 	/* transition-duration: 0.3s; */
 	/* transform: translateY(0px) scale(1); */
 	/* opacity: 1; */
-	backdrop-filter: (3px);
+	backdrop-filter: blur(3px);
 }
 
 .modal-overlay {

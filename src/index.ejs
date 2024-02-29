@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
@@ -11,9 +11,10 @@
 			rel="manifest"
 			href="<%= htmlWebpackPlugin.files.publicPath %>manifest.json"
 		/>
-		
+		<base href="/create/" />
+
 		<% if (cli.manifest.theme_color) { %>
-			<meta name="theme-color" content="<%= cli.manifest.theme_color %>">
+		<meta name="theme-color" content="<%= cli.manifest.theme_color %>" />
 		<% } %>
 
 		<style>
@@ -71,12 +72,11 @@
 	<body>
 		<div id="root"></div>
 		<div id="portal"></div>
-		
-		<%= cli.ssr %>
-		<% if (cli.config.prerender === true) { %>
-			<script type="__PREACT_CLI_DATA__">
-				<%= encodeURI(JSON.stringify(cli.CLI_DATA)) %>
-			</script>
+
+		<%= cli.ssr %> <% if (cli.config.prerender === true) { %>
+		<script type="__PREACT_CLI_DATA__">
+			<%= encodeURI(JSON.stringify(cli.CLI_DATA)) %>
+		</script>
 		<% } %>
 		<script type="module" src="<%= cli.entrypoints['bundle'] %>"></script>
 		<script nomodule src="<%= cli.entrypoints['dom-polyfills'] %>"></script>

@@ -22,7 +22,7 @@ ID = "webmaker"
 # routing internally.
 [[redirects]]
   from = "https://preview.webmaker.app/*"
-  to = "/app/preview/:splat"
+  to = "/create/preview/:splat"
   status = 200
   force = true
 

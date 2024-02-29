@@ -355,7 +355,7 @@ export default class ContentWrapFiles extends Component {
 
 		// Replace correct css file in LINK tags's href
 		if (prefs.editorTheme) {
-			window.editorThemeLinkTag.href = `lib/codemirror/theme/${prefs.editorTheme}.css`;
+			window.editorThemeLinkTag.href = `./lib/codemirror/theme/${prefs.editorTheme}.css`;
 		}
 
 		window.fontStyleTag.textContent =

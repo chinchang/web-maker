@@ -482,8 +482,6 @@ a > svg {
 body:not(.light-version).overlay-visible .main-container {
 	transition-duration: 0.5s;
 	transform: scale(0.98);
-	/* transition-delay: 0.4s; */
-	filter: blur(2px);
 }
 
 .content-wrap {

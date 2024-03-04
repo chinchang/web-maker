@@ -167,6 +167,18 @@ import { log } from './utils';
 		return d.promise;
 	}
 
+	async function getPublicItemCount(userId) {
+		const remoteDb = await getDb();
+		return remoteDb
+			.collection('items')
+			.where('createdBy', '==', userId)
+			.where('isPublic', '==', true)
+			.get()
+			.then(snapShot => {
+				return snapShot.size;
+			});
+	}
+
 	window.db = {
 		getDb,
 		getUser,
@@ -174,6 +186,7 @@ import { log } from './utils';
 		setUserLastSeenVersion,
 		getSettings,
 		fetchItem,
+		getPublicItemCount,
 		local: dbLocalAlias,
 		sync: dbSyncAlias
 	};

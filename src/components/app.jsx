@@ -70,6 +70,7 @@ import { commandPaletteService } from '../commandPaletteService';
 import { I18nProvider } from '@lingui/react';
 import { Assets } from './Assets.jsx';
 import { LocalStorageKeys } from '../constants.js';
+import { Share } from './Share.jsx';
 
 if (module.hot) {
 	require('preact/debug');
@@ -119,7 +120,8 @@ export default class App extends Component {
 			isJs13KModalOpen: false,
 			isCreateNewModalOpen: false,
 			isCommandPaletteOpen: false,
-			isAssetsOpen: false
+			isAssetsOpen: false,
+			isShareModalOpen: false
 		};
 		this.state = {
 			isSavedItemPaneOpen: false,
@@ -169,14 +171,14 @@ export default class App extends Component {
 			window.user = savedUser;
 		}
 
-		firebase.auth().onAuthStateChanged(user => {
+		firebase.auth().onAuthStateChanged(authUser => {
 			this.setState({ isLoginModalOpen: false });
-			if (user) {
-				log('You are -> ', user);
+			if (authUser) {
+				log('You are -> ', authUser);
 				alertsService.add('You are now logged in!');
-				this.setState({ user });
-				window.user = user;
-				window.localStorage.setItem('user', user);
+				this.setState({ user: authUser });
+				window.user = authUser;
+				window.localStorage.setItem('user', authUser);
 				if (!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS]) {
 					this.fetchItems(false, true).then(items => {
 						if (!items.length) {
@@ -190,11 +192,14 @@ export default class App extends Component {
 						trackEvent('ui', 'askToImportModalSeen');
 					});
 				}
-				window.db.getUser(user.uid).then(customUser => {
+				// storing actual firebase user object for accessing functions like updateProfile
+				// window.user.firebaseUser = authUser
+
+				window.db.getUser(authUser.uid).then(customUser => {
 					if (customUser) {
 						const prefs = { ...this.state.prefs };
-						Object.assign(prefs, user.settings);
-						const newUser = { ...user, isPro: false, ...customUser };
+						Object.assign(prefs, authUser.settings);
+						const newUser = { ...authUser, isPro: false, ...customUser };
 						window.localStorage.setItem('user', newUser);
 						this.setState({ user: newUser, prefs }, this.updateSetting);
 					}
@@ -1106,6 +1111,10 @@ export default class App extends Component {
 		trackEvent('ui', 'openBtnClick');
 		this.openSavedItemsPane();
 	}
+	shareBtnClickHandler() {
+		trackEvent('ui', 'shareBtnClick');
+		this.setState({ isShareModalOpen: true });
+	}
 	detachedPreviewBtnHandler() {
 		trackEvent('ui', 'detachPreviewBtnClick');
 
@@ -1641,10 +1650,11 @@ export default class App extends Component {
 							profileBtnHandler={this.profileBtnClickHandler.bind(this)}
 							addLibraryBtnHandler={this.openAddLibrary.bind(this)}
 							assetsBtnHandler={this.assetsBtnClickHandler.bind(this)}
+							shareBtnHandler={this.shareBtnClickHandler.bind(this)}
 							runBtnClickHandler={this.runBtnClickHandler.bind(this)}
 							isFetchingItems={this.state.isFetchingItems}
 							isSaving={this.state.isSaving}
-							title={this.state.currentItem.title}
+							currentItem={this.state.currentItem}
 							titleInputBlurHandler={this.titleInputBlurHandler.bind(this)}
 							user={this.state.user}
 							isAutoPreviewOn={this.state.prefs.autoPreview}
@@ -1789,6 +1799,22 @@ export default class App extends Component {
 						<Profile
 							user={this.state.user}
 							logoutBtnHandler={this.logout.bind(this)}
+						/>
+					</Modal>
+					<Modal
+						show={this.state.isShareModalOpen}
+						closeHandler={() => this.setState({ isShareModalOpen: false })}
+					>
+						<Share
+							user={this.state.user}
+							item={this.state.currentItem}
+							onVisibilityChange={visibility => {
+								const item = {
+									...this.state.currentItem,
+									isPublic: visibility
+								};
+								this.setState({ currentItem: item });
+							}}
 						/>
 					</Modal>
 					<HelpModal

@@ -2133,6 +2133,7 @@ while the theme CSS file is loading */
 }
 
 .pro-badge {
+	display: inline-block;
 	padding: 0.1rem 0.3rem;
 	background-color: #fff91f;
 	border-radius: 1rem;

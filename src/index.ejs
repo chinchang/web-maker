@@ -13,6 +13,8 @@
 		/>
 		<% if (cli.env.isProd) { %>
 		<base href="/create/" />
+		<% } else { %>
+		<base href="/" />
 		<% } %> <% if (cli.manifest.theme_color) { %>
 		<meta name="theme-color" content="<%= cli.manifest.theme_color %>" />
 		<% } %>

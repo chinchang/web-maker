@@ -133,9 +133,9 @@ export default class Footer extends Component {
 								</svg>
 							</a>
 							<Button
-								onClick={this.props.getProBtnClickHandler}
+								onClick={this.props.proBtnClickHandler}
 								data-event-category="ui"
-								data-event-action="getProFooterBtnClick"
+								data-event-action="proFooterBtnClick"
 								class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
 								aria-label={i18n._(
 									t`Be a PRO and get some advanced superpowers!`

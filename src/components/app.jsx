@@ -71,6 +71,7 @@ import { I18nProvider } from '@lingui/react';
 import { Assets } from './Assets.jsx';
 import { LocalStorageKeys } from '../constants.js';
 import { Share } from './Share.jsx';
+import { Pro } from './Pro.jsx';
 
 if (module.hot) {
 	require('preact/debug');
@@ -121,7 +122,8 @@ export default class App extends Component {
 			isCreateNewModalOpen: false,
 			isCommandPaletteOpen: false,
 			isAssetsOpen: false,
-			isShareModalOpen: false
+			isShareModalOpen: false,
+			isProModalOpen: false
 		};
 		this.state = {
 			isSavedItemPaneOpen: false,
@@ -1131,6 +1133,10 @@ export default class App extends Component {
 		trackEvent('ui', 'notificationButtonClick', version);
 		return false;
 	}
+	proBtnClickHandler() {
+		this.setState({ isProModalOpen: true });
+		trackEvent('ui', 'proBtnClick');
+	}
 	codepenBtnClickHandler(e) {
 		if (this.state.currentItem.cssMode === CssModes.ACSS) {
 			alert(
@@ -1723,6 +1729,7 @@ export default class App extends Component {
 							onJs13KDownloadBtnClick={this.js13KDownloadBtnClickHandler.bind(
 								this
 							)}
+							proBtnClickHandler={this.proBtnClickHandler.bind(this)}
 							hasUnseenChangelog={this.state.hasUnseenChangelog}
 							codeSize={this.state.codeSize}
 						/>
@@ -1816,6 +1823,12 @@ export default class App extends Component {
 								this.setState({ currentItem: item });
 							}}
 						/>
+					</Modal>
+					<Modal
+						show={this.state.isProModalOpen}
+						closeHandler={() => this.setState({ isProModalOpen: false })}
+					>
+						<Pro user={this.state.user} />
 					</Modal>
 					<HelpModal
 						show={this.state.isHelpModalOpen}

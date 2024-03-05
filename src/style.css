@@ -376,6 +376,7 @@ a > svg {
 	float: right;
 	display: flex;
 	align-items: center;
+	margin-inline-start: 2rem;
 }
 
 .btn {

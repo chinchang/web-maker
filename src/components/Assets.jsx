@@ -6,6 +6,7 @@ import { copyToClipboard } from '../utils';
 import { Trans } from '@lingui/macro';
 import { ProBadge } from './ProBadge';
 import { LoaderWithText } from './Loader';
+import { Text } from './Text';
 
 const Assets = () => {
 	const [files, setFiles] = useState([]);
@@ -174,12 +175,19 @@ const Assets = () => {
 				{isUploading ? <div class="asset-manager__progress-bar"></div> : null}
 
 				<div style={{ visibility: isUploading ? 'hidden' : 'visible' }}>
-					<p>Drop file here to upload</p>
-					<input
-						type="file"
-						onChange={handleFileUpload}
-						style={{ marginTop: 'auto' }}
-					/>
+					<VStack gap={1} align="center">
+						<Text tag="p" align="center">
+							Drop files here to upload
+						</Text>
+						<Text tag="p" appearance="secondary" align="center">
+							File should be max 300KB in size
+						</Text>
+						<input
+							type="file"
+							onChange={handleFileUpload}
+							style={{ marginTop: 'auto' }}
+						/>
+					</VStack>
 				</div>
 			</div>
 			{isFetchingFiles && <LoaderWithText>Fetching files...</LoaderWithText>}

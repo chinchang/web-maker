@@ -110,7 +110,7 @@ const Assets = () => {
 
 	const [isDropTarget, setIsDropTarget] = useState(false);
 	const handleDragDropEvent = e => {
-		console.log('drag event, ', e.type);
+		console.log('drag event, ', e.type, e.target.dataset.dragTarget);
 		if (e.type === 'dragover') {
 			// required for drop to work
 			e.preventDefault();
@@ -157,6 +157,7 @@ const Assets = () => {
 			onDragLeave={handleDragDropEvent}
 			onDragOver={handleDragDropEvent}
 			onDrop={handleDrop}
+			data-drag-target
 		>
 			<HStack gap={1} align="center">
 				<h1>
@@ -175,18 +176,20 @@ const Assets = () => {
 				{isUploading ? <div class="asset-manager__progress-bar"></div> : null}
 
 				<div style={{ visibility: isUploading ? 'hidden' : 'visible' }}>
-					<VStack gap={1} align="center">
-						<Text tag="p" align="center">
-							Drop files here to upload
-						</Text>
-						<Text tag="p" appearance="secondary" align="center">
-							File should be max 300KB in size
-						</Text>
-						<input
-							type="file"
-							onChange={handleFileUpload}
-							style={{ marginTop: 'auto' }}
-						/>
+					<VStack gap={1} align="stretch">
+						<label style="background: #00000001">
+							<Text tag="p" align="center">
+								Drop files here to upload
+							</Text>
+							<Text tag="p" appearance="secondary" align="center">
+								File should be max 300KB in size
+							</Text>
+							<input
+								type="file"
+								onChange={handleFileUpload}
+								style={{ marginTop: 'auto', display: 'none' }}
+							/>
+						</label>
 					</VStack>
 				</div>
 			</div>

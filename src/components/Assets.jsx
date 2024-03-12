@@ -5,6 +5,7 @@ import { HStack, Stack, VStack } from './Stack';
 import { copyToClipboard } from '../utils';
 import { Trans } from '@lingui/macro';
 import { ProBadge } from './ProBadge';
+import { LoaderWithText } from './Loader';
 
 const Assets = () => {
 	const [files, setFiles] = useState([]);
@@ -18,9 +19,9 @@ const Assets = () => {
 	const storageRef = firebase.storage().ref(`assets/${window.user?.uid}`);
 
 	const uploadFile = file => {
-		if (file.size > 5 * 1024 * 1024) {
+		if (file.size > 300 * 1024) {
 			// 5MB limit
-			alert('File size must be less than 5MB');
+			alert('File size must be less than 300KB');
 			return;
 		}
 
@@ -181,10 +182,10 @@ const Assets = () => {
 					/>
 				</div>
 			</div>
-			{isFetchingFiles && <p>Fetching your files...</p>}
+			{isFetchingFiles && <LoaderWithText>Fetching files...</LoaderWithText>}
 			<VStack align="stretch" gap={1}>
 				{files.length ? (
-					<Stack>
+					<Stack gap={1}>
 						<input
 							type="text"
 							placeholder="Search files"
@@ -192,8 +193,29 @@ const Assets = () => {
 							onChange={handleSearchChange}
 							style={{ width: '100%' }}
 						/>
-						<button onClick={() => setListType('list')}>List</button>
-						<button onClick={() => setListType('grid')}>Grid</button>
+						<button
+							class={`btn btn--dark ${
+								listType === 'list' ? 'btn--active' : ''
+							}  hint--rounded hint--top-left`}
+							onClick={() => setListType('list')}
+							aria-label="List view"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+								<title>view-list</title>
+								<path d="M9,5V9H21V5M9,19H21V15H9M9,14H21V10H9M4,9H8V5H4M4,19H8V15H4M4,14H8V10H4V14Z" />
+							</svg>
+						</button>
+						<button
+							class={`btn btn--dark ${
+								listType === 'grid' ? 'btn--active' : ''
+							}  hint--rounded hint--top-left`}
+							onClick={() => setListType('grid')}
+							aria-label="Grid view"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+								<path d="M3 11h8V3H3m0 18h8v-8H3m10 8h8v-8h-8m0-10v8h8V3" />
+							</svg>
+						</button>
 					</Stack>
 				) : null}
 				<div

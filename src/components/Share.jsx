@@ -15,7 +15,7 @@ export function Share({ user, item, onVisibilityChange }) {
 		if (!user) return;
 		window.db.getPublicItemCount(user.uid).then(c => {
 			setPublicItemCount(c);
-			console.log(c);
+			console.log('public items', c);
 		});
 	}, []);
 
@@ -74,7 +74,7 @@ export function Share({ user, item, onVisibilityChange }) {
 			{!user?.isPro ? (
 				<VStack gap={1} align="stretch">
 					<p>
-						You have {FREE_PUBLIC_ITEM_COUNT - publicItemCount}/
+						You have {Math.max(0, FREE_PUBLIC_ITEM_COUNT - publicItemCount)}/
 						{FREE_PUBLIC_ITEM_COUNT} public creations left.
 					</p>
 					<p>

@@ -259,6 +259,10 @@ label {
 	width: 1px;
 	height: 100%;
 }
+[class*='hint--']:after,
+[class*='hint--']:before {
+	background-color: #000;
+}
 [class*='hint--']:after {
 	text-transform: none;
 	font-weight: normal;
@@ -819,6 +823,10 @@ body > #demo-frame {
 .btn--dark:hover > svg {
 	fill: #111;
 }
+.btn--dark.btn--active {
+	background: linear-gradient(0deg, hsl(0, 0%, 25%) 0, hsl(0, 0%, 13%) 100%);
+	box-shadow: inset 0 -1px 0px 0 rgba(255, 255, 255, 0.15);
+}
 .btn--chromeless {
 	box-shadow: none;
 	background: transparent;
@@ -1091,7 +1099,8 @@ body > #demo-frame {
 	right: 0;
 	top: 0;
 	bottom: 0;
-	width: 450px;
+	width: 35vw;
+	max-width: 60ch;
 	padding: 20px 30px;
 	z-index: 6;
 	visibility: hidden; /* prevents tabbing */
@@ -1286,6 +1295,7 @@ body > #demo-frame {
 	overflow-x: hidden;
 	max-height: calc(100vh - 130px);
 	margin-top: 1rem;
+	padding-inline: 1rem;
 	scroll-behavior: smooth;
 }
 
@@ -2080,7 +2090,7 @@ while the theme CSS file is loading */
 	/* padding: 0; */
 	/* margin: 0; */
 	display: flex;
-	background: rgb(255 255 255 / 4%);
+	background: none;
 	gap: 0.5rem;
 	padding: 0.2rem;
 	border-radius: 0.4rem;
@@ -2090,7 +2100,7 @@ while the theme CSS file is loading */
 	/* align-items: center; */
 }
 .asset-manager__file:hover {
-	background: rgb(255 255 255 / 7%);
+	background: rgb(255 255 255 / 5%);
 }
 .asset-manager__file--grid {
 	display: flex;
@@ -2103,7 +2113,8 @@ while the theme CSS file is loading */
 }
 .asset-manager__file-container--grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+	grid-template-columns: repeat(7, minmax(90px, 1fr));
+	width: 50rem;
 }
 
 .asset-manager__file {
@@ -2119,11 +2130,12 @@ while the theme CSS file is loading */
 .asset-manager__file img {
 	height: 1.5rem;
 	aspect-ratio: 1;
-	/* border-radius: 0.5rem; */
-	object-fit: cover;
+	border-radius: 0.3rem;
+	object-fit: contain;
 }
 .asset-manager__file--grid img {
-	height: 80px;
+	width: 100%;
+	height: auto;
 }
 .stack {
 	display: flex;

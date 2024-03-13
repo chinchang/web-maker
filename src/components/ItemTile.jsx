@@ -1,7 +1,8 @@
 import { h } from 'preact';
 import { getHumanDate } from '../utils';
 import Modal from './Modal';
-import { HStack } from './Stack';
+import { HStack, Stack } from './Stack';
+import { Icon } from './Icons';
 
 export function ItemTile({
 	item,
@@ -23,26 +24,6 @@ export function ItemTile({
 			onClick={onClick}
 		>
 			<div class="saved-item-tile__btns">
-				{onToggleVisibilityBtnClick ? (
-					<button
-						class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium"
-						aria-label="Creates a duplicate of this creation (Ctrl/⌘ + F)"
-						onClick={onToggleVisibilityBtnClick}
-					>
-						Toggle Visibility
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							fill="currentColor"
-						>
-							{item.isPublic ? (
-								<path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5Z" />
-							) : (
-								<path d="M11.83 9 15 12.16V12a3 3 0 0 0-3-3h-.17m-4.3.8 1.55 1.55c-.05.21-.08.42-.08.65a3 3 0 0 0 3 3c.22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53a5 5 0 0 1-5-5c0-.79.2-1.53.53-2.2M2 4.27l2.28 2.28.45.45C3.08 8.3 1.78 10 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.43.42L19.73 22 21 20.73 3.27 3M12 7a5 5 0 0 1 5 5c0 .64-.13 1.26-.36 1.82l2.93 2.93c1.5-1.25 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-4 .7l2.17 2.15C10.74 7.13 11.35 7 12 7Z" />
-							)}
-						</svg>
-					</button>
-				) : null}
 				{onForkBtnClick ? (
 					<button
 						class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium"
@@ -113,7 +94,16 @@ export function ItemTile({
 							</>
 						) : null}
 					</div>
-					<div>right</div>
+					<div>
+						<Stack gap={1} align="center">
+							<Icon
+								size="16"
+								color="currentColor"
+								name={item.isPublic ? 'eye' : 'eye-striked'}
+							/>
+							{item.isPublic ? 'Public' : ''}
+						</Stack>
+					</div>
 				</HStack>
 			</div>
 		</div>

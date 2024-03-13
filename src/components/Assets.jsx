@@ -254,30 +254,28 @@ const Assets = () => {
 							}`}
 						>
 							{/* <a href={file.url} target="_blank" rel="noopener noreferrer"> */}
-							<div class="d-f relative">
-								<img src={file.url} />{' '}
-								<div class="asset-manager__file-actions">
-									<Stack gap={1} fullWidth justify="center">
-										<button
-											class={`btn btn--dark ${
-												listType === 'list' ? 'btn--active' : ''
-											}  hint--rounded hint--top-left`}
-											onClick={() => copyFileUrl(file.url)}
-											aria-label="Copy URL"
-										>
-											<Icon name="copy" />
-										</button>
-										<button
-											class={`btn btn--dark ${
-												listType === 'list' ? 'btn--active' : ''
-											}  hint--rounded hint--top-left`}
-											onClick={() => removeFileHandler(index)}
-											aria-label="Delete"
-										>
-											<Icon name="trash" />
-										</button>
-									</Stack>
-								</div>
+							<img src={file.url} />{' '}
+							<div class="asset-manager__file-actions">
+								<Stack gap={1} fullWidth justify="center">
+									<button
+										class={`btn btn--dark ${
+											listType === 'list' ? 'btn--active' : ''
+										}  hint--rounded hint--top-left`}
+										onClick={() => copyFileUrl(file.url)}
+										aria-label="Copy URL"
+									>
+										<Icon name="copy" />
+									</button>
+									<button
+										class={`btn btn--dark ${
+											listType === 'list' ? 'btn--active' : ''
+										}  hint--rounded hint--top-left`}
+										onClick={() => removeFileHandler(index)}
+										aria-label="Delete"
+									>
+										<Icon name="trash" />
+									</button>
+								</Stack>
 							</div>
 							<span class="asset-manager__file-name">{file.name}</span>
 							{/* </a> */}

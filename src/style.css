@@ -2125,6 +2125,7 @@ while the theme CSS file is loading */
 .asset-manager__file {
 	display: flex;
 	gap: 0.5rem;
+	position: relative;
 }
 .asset-manager__file-name {
 	max-width: 100%;
@@ -2145,7 +2146,6 @@ while the theme CSS file is loading */
 .asset-manager__file-actions {
 	position: absolute;
 	bottom: 0;
-	left: 0;
 	right: 0;
 	opacity: 0;
 	padding: 0.5rem 0;
@@ -2154,6 +2154,10 @@ while the theme CSS file is loading */
 	transition: 0.3s ease;
 	background-color: rgb(255 255 255 / 15%);
 	backdrop-filter: blur(5px);
+}
+.asset-manager__file--grid .asset-manager__file-actions {
+	left: 0;
+	bottom: 1.5em;
 }
 .asset-manager__file:hover .asset-manager__file-actions {
 	transform: translateY(0rem);

@@ -7,6 +7,7 @@ import { Trans } from '@lingui/macro';
 import { ProBadge } from './ProBadge';
 import { LoaderWithText } from './Loader';
 import { Text } from './Text';
+import { Icon } from './Icons';
 
 const Assets = () => {
 	const [files, setFiles] = useState([]);
@@ -227,10 +228,7 @@ const Assets = () => {
 							onClick={() => setListType('list')}
 							aria-label="List view"
 						>
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-								<title>view-list</title>
-								<path d="M9,5V9H21V5M9,19H21V15H9M9,14H21V10H9M4,9H8V5H4M4,19H8V15H4M4,14H8V10H4V14Z" />
-							</svg>
+							<Icon name="view-list" />
 						</button>
 						<button
 							class={`btn btn--dark ${
@@ -239,9 +237,7 @@ const Assets = () => {
 							onClick={() => setListType('grid')}
 							aria-label="Grid view"
 						>
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-								<path d="M3 11h8V3H3m0 18h8v-8H3m10 8h8v-8h-8m0-10v8h8V3" />
-							</svg>
+							<Icon name="view-grid" />
 						</button>
 					</Stack>
 				) : null}
@@ -269,12 +265,7 @@ const Assets = () => {
 											onClick={() => copyFileUrl(file.url)}
 											aria-label="Copy URL"
 										>
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												viewBox="0 0 24 24"
-											>
-												<path d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1Z" />
-											</svg>
+											<Icon name="copy" />
 										</button>
 										<button
 											class={`btn btn--dark ${
@@ -283,13 +274,7 @@ const Assets = () => {
 											onClick={() => removeFileHandler(index)}
 											aria-label="Delete"
 										>
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												viewBox="0 0 24 24"
-												fill="currentColor"
-											>
-												<path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9M7 6h10v13H7V6m2 2v9h2V8H9m4 0v9h2V8h-2Z" />
-											</svg>
+											<Icon name="trash" />
 										</button>
 									</Stack>
 								</div>

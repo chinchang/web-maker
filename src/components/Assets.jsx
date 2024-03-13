@@ -110,12 +110,13 @@ const Assets = () => {
 
 	const [isDropTarget, setIsDropTarget] = useState(false);
 	const handleDragDropEvent = e => {
-		console.log('drag event, ', e.type, e.target.dataset.dragTarget);
 		if (e.type === 'dragover') {
 			// required for drop to work
 			e.preventDefault();
 		} else if (e.type === 'dragleave') {
 			e.preventDefault();
+			// so that individual nested elements don't trigger dragleave
+			if (e.currentTarget.contains(e.target)) return;
 			setIsDropTarget(false);
 		} else if (e.type === 'dragenter') {
 			setIsDropTarget(true);
@@ -157,7 +158,6 @@ const Assets = () => {
 			onDragLeave={handleDragDropEvent}
 			onDragOver={handleDragDropEvent}
 			onDrop={handleDrop}
-			data-drag-target
 		>
 			<HStack gap={1} align="center">
 				<h1>
@@ -179,7 +179,7 @@ const Assets = () => {
 					<VStack gap={1} align="stretch">
 						<label style="background: #00000001">
 							<Text tag="p" align="center">
-								Drop files here to upload
+								Drop files or click here to upload
 							</Text>
 							<Text tag="p" appearance="secondary" align="center">
 								File should be max 300KB in size

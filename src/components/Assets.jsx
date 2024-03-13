@@ -140,6 +140,22 @@ const Assets = () => {
 		});
 	};
 
+	const removeFileHandler = index => {
+		const file = files[index];
+		const answer = confirm(`Are you sure you want to delete "${file.name}"?`);
+		if (!answer) return;
+		const fileRef = storageRef.child(file.name);
+		fileRef
+			.delete()
+			.then(() => {
+				alertsService.add('File deleted successfully');
+				setFiles(files.filter((_, i) => i !== index));
+			})
+			.catch(error => {
+				console.error('File delete error:', error);
+			});
+	};
+
 	if (!window.user?.isPro) {
 		return (
 			<VStack align="stretch" gap={2}>
@@ -235,19 +251,52 @@ const Assets = () => {
 					}`}
 				>
 					{filteredFiles.map((file, index) => (
-						<button
-							type="button"
+						<div
 							key={index}
-							onClick={() => copyFileUrl(file.url)}
 							class={`asset-manager__file ${
 								listType === 'grid' ? 'asset-manager__file--grid' : ''
 							}`}
 						>
 							{/* <a href={file.url} target="_blank" rel="noopener noreferrer"> */}
-							<img src={file.url} />{' '}
+							<div class="d-f relative">
+								<img src={file.url} />{' '}
+								<div class="asset-manager__file-actions">
+									<Stack gap={1} fullWidth justify="center">
+										<button
+											class={`btn btn--dark ${
+												listType === 'list' ? 'btn--active' : ''
+											}  hint--rounded hint--top-left`}
+											onClick={() => copyFileUrl(file.url)}
+											aria-label="Copy URL"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												viewBox="0 0 24 24"
+											>
+												<path d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1Z" />
+											</svg>
+										</button>
+										<button
+											class={`btn btn--dark ${
+												listType === 'list' ? 'btn--active' : ''
+											}  hint--rounded hint--top-left`}
+											onClick={() => removeFileHandler(index)}
+											aria-label="Delete"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												viewBox="0 0 24 24"
+												fill="currentColor"
+											>
+												<path d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9M7 6h10v13H7V6m2 2v9h2V8H9m4 0v9h2V8h-2Z" />
+											</svg>
+										</button>
+									</Stack>
+								</div>
+							</div>
 							<span class="asset-manager__file-name">{file.name}</span>
 							{/* </a> */}
-						</button>
+						</div>
 					))}
 				</div>
 			</VStack>

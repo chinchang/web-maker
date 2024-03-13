@@ -2142,6 +2142,24 @@ while the theme CSS file is loading */
 	width: 100%;
 	height: auto;
 }
+.asset-manager__file-actions {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	opacity: 0;
+	padding: 0.5rem 0;
+	visibility: hidden;
+	transform: translateY(-0.5rem);
+	transition: 0.3s ease;
+	background-color: rgb(255 255 255 / 15%);
+	backdrop-filter: blur(5px);
+}
+.asset-manager__file:hover .asset-manager__file-actions {
+	transform: translateY(0rem);
+	opacity: 1;
+	visibility: visible;
+}
 .stack {
 	display: flex;
 	align-items: center;

@@ -18,6 +18,17 @@ const appearanceStyles = {
 	}
 };
 
+const sizes = {
+	0: '0.875rem',
+	1: '1rem',
+	2: '1.125rem',
+	3: '1.25rem',
+	4: '1.5rem',
+	5: '2rem',
+	6: '2.5rem',
+	7: '3rem',
+	8: '4rem'
+};
 export const Text = forwardRef(
 	(
 		{
@@ -29,6 +40,7 @@ export const Text = forwardRef(
 			letterSpacing = 0,
 			lineHeight = 1.4,
 			align = 'left',
+			transform,
 			classes = '',
 			children
 		},
@@ -38,8 +50,8 @@ export const Text = forwardRef(
 
 		const styles = {
 			letterSpacing: letterSpacing,
-			fontSize: `var(--font-size-${size})`,
-
+			fontSize: sizes[size],
+			textTransform: transform,
 			fontWeight: weight,
 			textAlign: align,
 			lineHeight: lineHeight,

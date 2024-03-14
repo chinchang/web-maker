@@ -10,10 +10,13 @@
 	--color-focus-outline: #d3a447;
 	--color-form-control-bg: #2c214b;
 
-	--color-heading: #efecf9;
+	--color-heading: #fff;
 	--color-text-light: #b0a5d6;
 	--color-text-lightest-final: #787090;
 	--clr-brand: purple;
+
+	--color-pro-1: #1fffb3;
+	--color-pro-2: #f2ff00;
 
 	--footer-height: 37px;
 	--console-height: 32px;
@@ -128,11 +131,13 @@ button {
 .ai-c {
 	align-items: center;
 }
-.flex-h-center {
+.flex-h-center,
+.jc-c {
 	justify-content: center;
 }
 
-.flex-h-end {
+.flex-h-end,
+.jc-fe {
 	justify-content: flex-end;
 }
 
@@ -395,7 +400,7 @@ a > svg {
 	font-size: inherit;
 	background: transparent;
 	border: 3px solid var(--color-button);
-	border-radius: 5px;
+	border-radius: 2rem;
 	padding: 9px 15px;
 	cursor: pointer;
 	letter-spacing: 0.2px;
@@ -803,6 +808,7 @@ body > #demo-frame {
 	margin-left: 10px;
 	padding: 3px 8px;
 	border: 1px solid rgba(0, 0, 0, 0.9);
+	border-radius: 5px;
 	background: linear-gradient(180deg, hsl(0, 0%, 25%) 0, hsl(0, 0%, 13%) 100%);
 	box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.15);
 }
@@ -2175,7 +2181,7 @@ while the theme CSS file is loading */
 .pro-badge {
 	display: inline-block;
 	padding: 0.1rem 0.3rem;
-	background-color: #fff91f;
+	background: linear-gradient(45deg, var(--color-pro-1), var(--color-pro-2));
 	border-radius: 1rem;
 	font-size: 0.7em;
 	color: #222;
@@ -2190,6 +2196,14 @@ while the theme CSS file is loading */
 }
 .templates-container .saved-item-tile {
 	margin: 0;
+}
+.pro-modal {
+	background: url('/assets/pro-panda-flying.png') no-repeat;
+	background-position: bottom right;
+}
+.plan-card {
+	border-radius: 0.4rem;
+	padding: 1rem;
 }
 @media screen and (max-width: 600px) {
 	body {

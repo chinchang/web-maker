@@ -1827,6 +1827,7 @@ export default class App extends Component {
 					<Modal
 						show={this.state.isProModalOpen}
 						closeHandler={() => this.setState({ isProModalOpen: false })}
+						extraClasses="pro-modal"
 					>
 						<Pro user={this.state.user} />
 					</Modal>

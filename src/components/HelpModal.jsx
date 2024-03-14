@@ -80,7 +80,7 @@ export function HelpModal(props) {
 						<Trans>Review Web Maker</Trans>
 					</a>{' '}
 					<a
-						href="https://spectrum.chat/web-maker"
+						href="https://github.com/chinchang/web-maker/discussions"
 						target="_blank"
 						rel="noopener noreferrer"
 						class="btn btn-icon"
@@ -88,7 +88,7 @@ export function HelpModal(props) {
 						<svg>
 							<use xlinkHref="#chat-icon" />
 						</svg>
-						<Trans>Chat</Trans>
+						<Trans>Discuss</Trans>
 					</a>{' '}
 					<a
 						href="https://github.com/chinchang/web-maker/issues"

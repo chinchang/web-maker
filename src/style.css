@@ -6,7 +6,7 @@
 	--color-overlay: rgba(3, 8, 27, 0.7);
 	--color-close-btn: #d12b4a;
 	--code-font-size: 16px;
-	--color-button: #d3a447;
+	--color-button: #e3ba26;
 	--color-focus-outline: #d3a447;
 	--color-form-control-bg: #2c214b;
 
@@ -412,6 +412,7 @@ a > svg {
 }
 
 .btn--primary {
+	--black-mix: 70%;
 	background: linear-gradient(
 		180deg,
 		var(--color-button),
@@ -419,7 +420,8 @@ a > svg {
 	);
 	color: black;
 	font-weight: 600;
-	border: 1px solid color-mix(in lch, var(--color-button), black 70%);
+	border: 1px solid
+		color-mix(in lch, var(--color-button), black var(--black-mix));
 	box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.15);
 }
 
@@ -434,8 +436,11 @@ a > svg {
 }
 
 .btn:hover {
+	--black-mix: 90%;
 	text-decoration: none;
-	box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.25);
+	box-shadow:
+		rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
+		rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
 }
 
 *:focus {
@@ -795,6 +800,8 @@ body > #demo-frame {
 
 .btn--dark,
 .main-header__btn-wrap > button {
+	--clr-1: hsl(0, 0%, 25%);
+	--clr-2: hsl(0, 0%, 13%);
 	box-sizing: content-box;
 	/* text-transform: uppercase; */
 	/* font-size: 0.875rem; */
@@ -809,7 +816,7 @@ body > #demo-frame {
 	padding: 3px 8px;
 	border: 1px solid rgba(0, 0, 0, 0.9);
 	border-radius: 5px;
-	background: linear-gradient(180deg, hsl(0, 0%, 25%) 0, hsl(0, 0%, 13%) 100%);
+	background: linear-gradient(180deg, var(--clr-1) 0, var(--clr-2) 100%);
 	box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.15);
 }
 
@@ -827,12 +834,12 @@ body > #demo-frame {
 }
 
 .btn--dark:hover {
-	background: #9297b3;
-	color: #111;
+	--clr-1: #6844ad;
+	/* color: #111; */
 	/* border-color: rgba(146, 151, 179, 0.5); */
 }
 .btn--dark:hover > svg {
-	fill: #111;
+	/* fill: #111; */
 }
 .btn--dark.btn--active {
 	background: linear-gradient(0deg, hsl(0, 0%, 25%) 0, hsl(0, 0%, 13%) 100%);
@@ -2202,8 +2209,19 @@ while the theme CSS file is loading */
 	background-position: bottom right;
 }
 .plan-card {
+	background: rgb(255 255 255 / 10%);
 	border-radius: 0.4rem;
 	padding: 1rem;
+	--shadow-color: 253deg 47% 15%;
+	--shadow-elevation-low: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.34),
+		0.4px 0.8px 1px -1.2px hsl(var(--shadow-color) / 0.34),
+		1px 2px 2.5px -2.5px hsl(var(--shadow-color) / 0.34);
+	--shadow-elevation-medium: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.36),
+		0.8px 1.6px 2px -0.8px hsl(var(--shadow-color) / 0.36),
+		2.1px 4.1px 5.2px -1.7px hsl(var(--shadow-color) / 0.36),
+		5px 10px 12.6px -2.5px hsl(var(--shadow-color) / 0.36);
+
+	box-shadow: var(--shadow-elevation-low);
 }
 @media screen and (max-width: 600px) {
 	body {

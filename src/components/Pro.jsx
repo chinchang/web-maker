@@ -7,9 +7,15 @@ import { A, Button } from './common';
 import { useCheckout } from '../hooks/useCheckout';
 import { Text } from './Text';
 import { Icon } from './Icons';
+import { showConfetti } from '../utils';
 
+const checkoutIds = {
+	monthly: '1601bc00-9623-435b-b1de-2a70a2445c13',
+	annual: 'aae95d78-05c8-46f5-b11e-2d40ddd211d3'
+};
 export function Pro({ user }) {
 	const hasCheckoutLoaded = useCheckout();
+	const [isAnnual, setIsAnnual] = useState(true);
 
 	useEffect(() => {
 		if (hasCheckoutLoaded) {
@@ -17,7 +23,13 @@ export function Pro({ user }) {
 				eventHandler: e => {
 					console.log('eventHandler', e);
 					if (e.event === 'Checkout.Success') {
-						window.location.reload();
+						showConfetti(2);
+						alertsService.add(
+							'You are now PRO! 🎉. Reloading your superpowers...'
+						);
+						setTimeout(() => {
+							window.location.reload();
+						}, 2000);
 					}
 				}
 			});
@@ -25,7 +37,17 @@ export function Pro({ user }) {
 		}
 	}, [hasCheckoutLoaded]);
 	return (
-		<VStack gap={4} align="stretch">
+		<VStack gap={2} align="stretch">
+			<Stack justify="center">
+				<Switch
+					labels={['Monthly', 'Annually']}
+					checked={isAnnual}
+					showBothLabels={true}
+					onChange={e => {
+						setIsAnnual(e.target.checked);
+					}}
+				/>
+			</Stack>
 			<Stack gap={2} align="stretch">
 				<Card
 					price="Free"
@@ -38,13 +60,15 @@ export function Pro({ user }) {
 				/>
 				<Card
 					bg="#674dad"
-					price="$6/mo"
+					price={!isAnnual ? '$8/mo' : '$65/yr'}
 					name="Pro"
 					action={
 						<A
 							class="btn btn--primary lemonsqueezy-button d-f jc-c ai-c"
 							style="gap:0.2rem"
-							href={`https://web-maker.lemonsqueezy.com/checkout/buy/1601bc00-9623-435b-b1de-2a70a2445c13?embed=1&checkout[custom][userId]=${user.uid}`}
+							href={`https://web-maker.lemonsqueezy.com/checkout/buy/${
+								checkoutIds[isAnnual ? 'annual' : 'monthly']
+							}?embed=1&checkout[custom][userId]=${user.uid}`}
 						>
 							Go <ProBadge />
 						</A>
@@ -58,6 +82,11 @@ export function Pro({ user }) {
 						'No Ads'
 					]}
 				/>
+			</Stack>
+			<Stack justify="center">
+				<Text tag="p" appearance="secondary">
+					Prices are excluding taxes. 30 days refund policy if not satisfied.
+				</Text>
 			</Stack>
 		</VStack>
 	);

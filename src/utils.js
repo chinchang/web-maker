@@ -1,9 +1,9 @@
 import { trackEvent } from './analytics';
-
 import { computeHtml, computeCss, computeJs } from './computes';
 import { modes, HtmlModes, CssModes, JsModes } from './codeModes';
 import { deferred } from './deferred';
 import { getExtensionFromFileName } from './fileUtils';
+import confetti from 'canvas-confetti';
 const esprima = require('esprima');
 
 window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
@@ -593,4 +593,36 @@ export async function copyToClipboard(text) {
 	} catch (err) {
 		console.error('Failed to copy text: ', err);
 	}
+}
+
+export function showConfetti(time = 4) {
+	var end = Date.now() + time * 1000;
+
+	(function frame() {
+		confetti({
+			particleCount: 1,
+			startVelocity: 0,
+			ticks: 100,
+			origin: {
+				x: Math.random(),
+				// since they fall down, start a bit higher than random
+				y: Math.random() - 0.2
+			},
+			colors: [
+				[
+					'#26ccff',
+					'#a25afd',
+					'#ff5e7e',
+					'#88ff5a',
+					'#fcff42',
+					'#ffa62d',
+					'#ff36ff'
+				][~~(Math.random() * 7)]
+			]
+		});
+
+		if (Date.now() < end) {
+			requestAnimationFrame(frame);
+		}
+	})();
 }

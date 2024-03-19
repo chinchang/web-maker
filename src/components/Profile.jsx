@@ -4,6 +4,7 @@ import { HStack, Stack, VStack } from './Stack';
 import { Panel } from './Panel';
 import { Text } from './Text';
 import { getHumanReadableDate } from '../utils';
+import { LoaderWithText } from './Loader';
 
 const DEFAULT_PROFILE_IMG =
 	"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ccc' d='M12,19.2C9.5,19.2 7.29,17.92 6,16C6.03,14 10,12.9 12,12.9C14,12.9 17.97,14 18,16C16.71,17.92 14.5,19.2 12,19.2M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z'/%3E%3C/svg%3E";
@@ -44,10 +45,13 @@ const Header = ({ user, logoutBtnHandler }) => {
 
 export function Profile({ user, logoutBtnHandler }) {
 	const [currentSubscription, setCurrentSubscription] = useState(null);
+	const [isFetchingSubscription, setIsFetchingSubscription] = useState(false);
 	useEffect(() => {
 		if (user?.isPro) {
+			setIsFetchingSubscription(true);
 			window.db.getUserSubscriptionEvents(user.uid).then(events => {
-				console.log(events);
+				setIsFetchingSubscription(false);
+
 				const creationEvent = events
 					.filter(event => event.type === 'subscription_created')
 					.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds)[0];
@@ -62,8 +66,11 @@ export function Profile({ user, logoutBtnHandler }) {
 	return (
 		<VStack gap={2}>
 			<Header user={user} logoutBtnHandler={logoutBtnHandler} />
-			{currentSubscription ? (
-				<Panel>
+			<Panel>
+				{isFetchingSubscription ? (
+					<LoaderWithText>Loading subscription details...</LoaderWithText>
+				) : null}
+				{currentSubscription ? (
 					<VStack align="stretch" gap={1}>
 						<Text>
 							Plan:
@@ -106,7 +113,15 @@ export function Profile({ user, logoutBtnHandler }) {
 							Link 3
 						</a> */}
 					</VStack>
-				</Panel>
+				) : null}
+			</Panel>
+			{user?.isPro && currentSubscription ? (
+				<img
+					class="profile-modal__panda"
+					src="/assets/pro-panda.png"
+					width="300"
+					style="position:absolute;bottom:-3rem; right: -7rem;"
+				/>
 			) : null}
 		</VStack>
 	);

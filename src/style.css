@@ -2242,6 +2242,20 @@ while the theme CSS file is loading */
 	background-clip: text;
 }
 
+.profile-modal__panda {
+	animation: slide-up 0.3s forwards;
+}
+
+@keyframes slide-up {
+	0% {
+		opacity: 0;
+		transform: translateX(-1.5rem);
+	}
+	100% {
+		opacity: 1;
+		transform: rotate(0deg);
+	}
+}
 /* .PANEL */
 .panel {
 	--panel-bg: rgb(255 255 255 / 5%);

@@ -2223,6 +2223,60 @@ while the theme CSS file is loading */
 
 	box-shadow: var(--shadow-elevation-low);
 }
+.profile-modal__avatar-img.is-pro {
+	background: linear-gradient(45deg, var(--color-pro-1), var(--color-pro-2));
+	padding: 0.2rem;
+	animation: avatar-rotate 2s forwards;
+}
+@keyframes avatar-rotate {
+	0% {
+		transform: rotate(10deg);
+	}
+	100% {
+		transform: rotate(0deg);
+	}
+}
+.profile-modal__name.is-pro {
+	background: linear-gradient(45deg, var(--color-pro-1), var(--color-pro-2));
+	color: transparent;
+	background-clip: text;
+}
+
+/* .PANEL */
+.panel {
+	--panel-bg: rgb(255 255 255 / 5%);
+	position: relative;
+	background: var(--panel-bg);
+	box-shadow: var(--panel-shadow);
+	border-radius: 1rem;
+	/* backdrop-filter: blur(20px); */
+	overflow: hidden;
+}
+
+.panelOnlyBorder {
+	background: none;
+	box-shadow: none;
+	backdrop-filter: none;
+	border: 2px solid var(--clr-border-1);
+}
+
+.panelGlowing {
+	box-shadow: var(--glow-shadow);
+}
+
+.panelTopFocus {
+	background: radial-gradient(
+		82.25% 100% at 50% 0%,
+		rgba(var(--rgb-gray-1), 0.75) 37.28%,
+		rgba(var(--rgb-gray-0), 0) 100%
+	);
+
+	box-shadow:
+		0 0 30px rgba(var(--rgb-brand), 0),
+		0px 20px 50px rgba(0, 0, 0, 0.1),
+		inset 0px 1px 3px rgba(255, 255, 255, 0.1);
+}
+
 @media screen and (max-width: 600px) {
 	body {
 		font-size: 70%;

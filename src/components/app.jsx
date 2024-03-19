@@ -1134,8 +1134,13 @@ export default class App extends Component {
 		return false;
 	}
 	proBtnClickHandler() {
-		this.setState({ isProModalOpen: true });
-		trackEvent('ui', 'proBtnClick');
+		if (user?.isPro) {
+			this.setState({ isProfileModalOpen: true });
+			trackEvent('ui', 'manageProBtnClick');
+		} else {
+			this.setState({ isProModalOpen: true });
+			trackEvent('ui', 'proBtnClick');
+		}
 	}
 	codepenBtnClickHandler(e) {
 		if (this.state.currentItem.cssMode === CssModes.ACSS) {

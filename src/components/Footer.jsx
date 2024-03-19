@@ -132,20 +132,35 @@ export default class Footer extends Component {
 									<use xlinkHref="#twitter-icon" />
 								</svg>
 							</a>
-							<Button
-								onClick={this.props.proBtnClickHandler}
-								data-event-category="ui"
-								data-event-action="proFooterBtnClick"
-								class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
-								aria-label={i18n._(
-									t`Be a PRO and get some advanced superpowers!`
-								)}
-							>
-								<HStack gap={1}>
-									<Trans>Get</Trans>
-									<ProBadge />
-								</HStack>
-							</Button>
+							{user?.isPro ? (
+								<Button
+									onClick={this.props.proBtnClickHandler}
+									data-event-category="ui"
+									data-event-action="manageProFooterBtnClick"
+									class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
+									aria-label={i18n._(t`Manage your PRO subscription`)}
+								>
+									<HStack gap={1}>
+										<Trans>Manage</Trans>
+										<ProBadge />
+									</HStack>
+								</Button>
+							) : (
+								<Button
+									onClick={this.props.proBtnClickHandler}
+									data-event-category="ui"
+									data-event-action="proFooterBtnClick"
+									class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
+									aria-label={i18n._(
+										t`Be a PRO and get some advanced superpowers!`
+									)}
+								>
+									<HStack gap={1}>
+										<Trans>Get</Trans>
+										<ProBadge />
+									</HStack>
+								</Button>
+							)}
 						</div>
 
 						{this.props.prefs.isJs13kModeOn ? (

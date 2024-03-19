@@ -205,6 +205,41 @@ export function getHumanDate(timestamp) {
 	return retVal;
 }
 
+/**
+ * Convert any date-ish string/obj to human readable form -> Jul 02, 2021
+ * @param {string?object} date date to be formatted
+ * @returns string
+ */
+export function getHumanReadableDate(
+	date,
+	{ showTime = true, utc = false } = {}
+) {
+	if (!date) return '';
+	let d = typeof date.toDate === 'function' ? date.toDate() : new Date(date);
+	if (utc) {
+		d = new Date(
+			Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours())
+		);
+	}
+
+	let options = {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric'
+	};
+	if (showTime) {
+		options = {
+			...options,
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+			hour12: true
+		};
+	}
+	const dateTimeString = d.toLocaleString(false, options);
+	return dateTimeString;
+}
+
 // create a one-time event
 export function once(node, type, callback) {
 	// create event

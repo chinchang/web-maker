@@ -32,7 +32,7 @@ const sizes = {
 export const Text = forwardRef(
 	(
 		{
-			size = 0,
+			size = 1,
 			weight = 'normal',
 			tag,
 			style = 'normal',

@@ -181,11 +181,11 @@ export default class ContentWrap extends Component {
 			// we need to store user script in external JS file to prevent inline-script
 			// CSP from affecting it.
 			writeFile('script.js', blobjs, () => {
-				writeFile('preview.html', blob, () => {
+				writeFile('index.html', blob, () => {
 					var origin = chrome.i18n.getMessage()
 						? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
 						: `${location.origin}`;
-					var src = `filesystem:${origin}/temporary/preview.html`;
+					var src = `filesystem:${origin}/temporary/index.html`;
 					if (this.detachedWindow) {
 						this.detachedWindow.postMessage({ url: src }, '*');
 					} else {

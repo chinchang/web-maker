@@ -239,7 +239,7 @@ export default class ContentWrap extends Component {
 		};
 		log('🔎 setPreviewContent', isForced);
 		const targetFrame = this.detachedWindow
-			? this.detachedWindow.document.querySelector('iframe')
+			? this.detachedWindow //this.detachedWindow.document.querySelector('iframe')
 			: this.frame;
 
 		const cssMode = this.props.currentItem.cssMode;

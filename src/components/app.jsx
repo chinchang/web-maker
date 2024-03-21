@@ -6,7 +6,7 @@ import { h, Component } from 'preact';
 import { MainHeader } from './MainHeader.jsx';
 import ContentWrap from './ContentWrap.jsx';
 import ContentWrapFiles from './ContentWrapFiles.jsx';
-import Footer from './Footer.jsx';
+import { Footer } from './Footer.jsx';
 import SavedItemPane from './SavedItemPane.jsx';
 import AddLibrary from './AddLibrary.jsx';
 import Modal from './Modal.jsx';
@@ -1134,7 +1134,7 @@ export default class App extends Component {
 		return false;
 	}
 	proBtnClickHandler() {
-		if (user?.isPro) {
+		if (this.state.user?.isPro) {
 			this.setState({ isProfileModalOpen: true });
 			trackEvent('ui', 'manageProBtnClick');
 		} else {
@@ -1708,6 +1708,7 @@ export default class App extends Component {
 
 						<Footer
 							prefs={this.state.prefs}
+							user={this.state.user}
 							layoutBtnClickHandler={this.layoutBtnClickHandler.bind(this)}
 							helpBtnClickHandler={() =>
 								this.setState({ isHelpModalOpen: true })

@@ -21,6 +21,10 @@ const minCodeWrapSize = 33;
 /* global htmlCodeEl
  */
 
+const PREVIEW_FRAME_HOST = window.DEBUG
+	? 'http://localhost:7888'
+	: `https://preview.${location.host}`;
+
 export default class ContentWrap extends Component {
 	constructor(props) {
 		super(props);
@@ -161,9 +165,11 @@ export default class ContentWrap extends Component {
 				this.detachedWindow.postMessage({ contents }, '*');
 			} else {
 				const writeInsideIframe = () => {
-					this.frame.contentDocument.open();
-					this.frame.contentDocument.write(contents);
-					this.frame.contentDocument.close();
+					// this.frame.contentDocument.open();
+					console.log('sending postmessage');
+					this.frame.contentWindow.postMessage({ contents }, '*');
+					// this.frame.contentDocument.write(contents);
+					// this.frame.contentDocument.close();
 				};
 				Promise.race([
 					// Just in case onload promise doesn't resolves
@@ -175,7 +181,7 @@ export default class ContentWrap extends Component {
 					})
 				]).then(writeInsideIframe);
 				// Setting to blank string cause frame to reload
-				this.frame.src = '';
+				// this.frame.src = '';
 			}
 		} else {
 			// we need to store user script in external JS file to prevent inline-script
@@ -242,7 +248,8 @@ export default class ContentWrap extends Component {
 		if (
 			!isForced &&
 			currentCode.html === this.codeInPreview.html &&
-			currentCode.js === this.codeInPreview.js
+			currentCode.js === this.codeInPreview.js &&
+			false
 		) {
 			computeCss(
 				cssMode === CssModes.ACSS ? currentCode.html : currentCode.css,
@@ -901,10 +908,14 @@ export default class ContentWrap extends Component {
 				</SplitPane>
 				<div class="demo-side" id="js-demo-side" style="">
 					<iframe
+						src={`${PREVIEW_FRAME_HOST}/preview.html`}
 						ref={el => (this.frame = el)}
 						frameborder="0"
 						id="demo-frame"
-						allowfullscreen
+						sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+						allow="accelerometer; camera; encrypted-media; display-capture; geolocation; gyroscope; microphone; midi; clipboard-read; clipboard-write; web-share"
+						allowpaymentrequest="true"
+						allowfullscreen="true"
 					/>
 
 					<PreviewDimension ref={comp => (this.previewDimension = comp)} />

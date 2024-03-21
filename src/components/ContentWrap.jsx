@@ -21,7 +21,7 @@ const minCodeWrapSize = 33;
 /* global htmlCodeEl
  */
 
-const PREVIEW_FRAME_HOST = !window.DEBUG
+const PREVIEW_FRAME_HOST = window.DEBUG
 	? 'http://localhost:7888'
 	: `https://wbmakr.com`;
 

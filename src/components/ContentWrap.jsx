@@ -21,9 +21,9 @@ const minCodeWrapSize = 33;
 /* global htmlCodeEl
  */
 
-const PREVIEW_FRAME_HOST = window.DEBUG
+const PREVIEW_FRAME_HOST = !window.DEBUG
 	? 'http://localhost:7888'
-	: `https://preview.${location.host}`;
+	: `https://wbmakr.com`;
 
 export default class ContentWrap extends Component {
 	constructor(props) {
@@ -540,7 +540,7 @@ export default class ContentWrap extends Component {
 		document.body.classList.add('is-detached-mode');
 
 		this.detachedWindow = window.open(
-			'./preview.html',
+			`${PREVIEW_FRAME_HOST}/preview.html`,
 			'Web Maker',
 			`width=${iframeWidth},height=${iframeHeight},resizable,scrollbars=yes,status=1`
 		);

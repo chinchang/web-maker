@@ -29,7 +29,7 @@ import { FileIcon } from './FileIcon';
 const minCodeWrapSize = 33;
 const PREVIEW_FRAME_HOST = window.DEBUG
 	? 'http://localhost:7888'
-	: `https://preview.${location.host}`;
+	: `https://wbmakr.com`;
 
 /* global htmlCodeEl
  */

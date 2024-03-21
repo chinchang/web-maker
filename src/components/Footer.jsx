@@ -5,8 +5,6 @@ import { ProBadge } from './ProBadge';
 import { HStack } from './Stack';
 import { useEffect, useState } from 'preact/hooks';
 
-import React, { useState } from 'react';
-
 const JS13K = props => {
 	const [daysLeft, setDaysLeft] = useState(0);
 

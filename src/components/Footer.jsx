@@ -1,59 +1,55 @@
-import { Component } from 'preact';
 import { Button } from './common';
 import { Trans, t } from '@lingui/macro';
 import { I18n } from '@lingui/react';
 import { ProBadge } from './ProBadge';
 import { HStack } from './Stack';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 
-class JS13K extends Component {
-	constructor(props) {
-		super(props);
-		const compoDate = new Date('August 13 2018 11:00 GMT');
-		var now = new Date();
-		var daysLeft;
+import React, { useState } from 'react';
+
+const JS13K = props => {
+	const [daysLeft, setDaysLeft] = useState(0);
+
+	useEffect(() => {
+		const compoDate = new Date('August 13 2024 11:00 GMT');
+		const now = new Date();
 		if (+compoDate > +now) {
-			daysLeft = Math.floor((compoDate - now) / 1000 / 3600 / 24);
+			const _daysLeft = Math.floor((compoDate - now) / 1000 / 3600 / 24);
+			setDaysLeft(_daysLeft);
 		}
-		this.setState({
-			daysLeft
-		});
-	}
+	}, []);
 
-	render() {
-		const codeSizeInKb = this.props.codeSize
-			? (this.props.codeSize / 1024).toFixed(2)
-			: 0;
-		return (
+	const codeSizeInKb = props.codeSize ? (props.codeSize / 1024).toFixed(2) : 0;
+
+	return (
+		<div
+			role="button"
+			className="flex flex-v-center"
+			tabIndex="0"
+			onClick={props.onClick}
+			onBlur={props.onBlur}
+		>
+			<img src="assets/js13kgames.png" alt="JS13K Games logo" height="24" />{' '}
+			<div className="footer__js13k-days-left">{daysLeft} days to go</div>
 			<div
-				role="button"
-				class="flex flex-v-center"
-				tabIndex="0"
-				onClick={this.props.onClick}
-				onBlur={this.props.onBlur}
+				className="footer__js13k-code-size"
+				style={{
+					color: codeSizeInKb > 10 ? 'crimson' : 'limegreen'
+				}}
 			>
-				<img src="assets/js13kgames.png" alt="JS13K Games logo" height="24" />{' '}
-				<div class="footer__js13k-days-left">
-					{this.state.daysLeft} days to go
-				</div>
-				<div
-					class="footer__js13k-code-size"
-					style={{
-						color: codeSizeInKb > 10 ? 'crimson' : 'limegreen'
-					}}
-				>
-					{codeSizeInKb} KB/ 13KB
-				</div>
-				<span
-					class="caret"
-					style={`transition:0.3s ease; transform-origin: center 2px; ${
-						this.props.isOpen ? 'transform:rotate(180deg);' : ''
-					}`}
-				/>
+				{codeSizeInKb} KB/ 13KB
 			</div>
-		);
-	}
-}
+			<span
+				className="caret"
+				style={{
+					transition: '0.3s ease',
+					transformOrigin: 'center 2px',
+					transform: props.isOpen ? 'rotate(180deg)' : ''
+				}}
+			/>
+		</div>
+	);
+};
 
 export const Footer = props => {
 	const [isKeyboardShortcutsModalOpen, setIsKeyboardShortcutsModalOpen] =

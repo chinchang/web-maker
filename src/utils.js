@@ -23,7 +23,7 @@ export const BASE_PATH =
 	window.DEBUG ||
 	process.env.NODE_ENV === 'development'
 		? '/'
-		: '/app';
+		: '/create';
 /* eslint-enable no-process-env */
 
 var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

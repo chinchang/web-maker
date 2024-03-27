@@ -181,7 +181,7 @@ export default class ContentWrap extends Component {
 					})
 				]).then(writeInsideIframe);
 				// Setting to blank string cause frame to reload
-				// this.frame.src = '';
+				this.frame.src = this.frame.src;
 			}
 		} else {
 			// we need to store user script in external JS file to prevent inline-script
@@ -908,11 +908,11 @@ export default class ContentWrap extends Component {
 				</SplitPane>
 				<div class="demo-side" id="js-demo-side" style="">
 					<iframe
-						src={`${PREVIEW_FRAME_HOST}/preview.html`}
+						src={`./indexpm.html`}
 						ref={el => (this.frame = el)}
 						frameborder="0"
 						id="demo-frame"
-						sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+						sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-scripts allow-top-navigation-by-user-activation"
 						allow="accelerometer; camera; encrypted-media; display-capture; geolocation; gyroscope; microphone; midi; clipboard-read; clipboard-write; web-share"
 						allowpaymentrequest="true"
 						allowfullscreen="true"

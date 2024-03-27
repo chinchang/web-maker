@@ -164,24 +164,38 @@ export default class ContentWrap extends Component {
 				log('✉️ Sending message to detached window');
 				this.detachedWindow.postMessage({ contents }, '*');
 			} else {
+				const refreshAndDo = fn => {
+					Promise.race([
+						// Just in case onload promise doesn't resolves
+						new Promise(resolve => {
+							setTimeout(resolve, 200);
+						}),
+						new Promise(resolve => {
+							this.frame.onload = resolve;
+						})
+					]).then(fn);
+					// Setting to blank string cause frame to reload
+					this.frame.src = this.frame.src;
+				};
 				const writeInsideIframe = () => {
-					// this.frame.contentDocument.open();
+					const sandbox = this.frame.getAttribute('sweet');
+					console.log('setting back sandbox attr', sandbox);
+					this.frame.setAttribute('sandbox', sandbox);
+					this.frame.removeAttribute('sweet');
 					console.log('sending postmessage');
 					this.frame.contentWindow.postMessage({ contents }, '*');
+					// this.frame.contentDocument.open();
 					// this.frame.contentDocument.write(contents);
 					// this.frame.contentDocument.close();
 				};
-				Promise.race([
-					// Just in case onload promise doesn't resolves
-					new Promise(resolve => {
-						setTimeout(resolve, 200);
-					}),
-					new Promise(resolve => {
-						this.frame.onload = resolve;
-					})
-				]).then(writeInsideIframe);
-				// Setting to blank string cause frame to reload
-				this.frame.src = this.frame.src;
+				refreshAndDo(() => {
+					const sandbox = this.frame.getAttribute('sandbox');
+					console.log('removing sandbox', sandbox);
+					this.frame.setAttribute('sweet', sandbox);
+					this.frame.removeAttribute('sandbox');
+					refreshAndDo(writeInsideIframe);
+				});
+				// refreshAndDo(writeInsideIframe);
 			}
 		} else {
 			// we need to store user script in external JS file to prevent inline-script

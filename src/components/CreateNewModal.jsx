@@ -169,6 +169,7 @@ export class CreateNewModal extends Component {
 										item={template}
 										focusable
 										onClick={onTemplateSelect.bind(null, template, false)}
+										hasOptions={false}
 									/>
 								);
 							})}

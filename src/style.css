@@ -1697,16 +1697,6 @@ body > #demo-frame {
 	display: inline-block;
 }
 
-.beta-tag {
-	border-radius: 4px;
-	text-transform: uppercase;
-	background: #c68955;
-	color: white;
-	letter-spacing: 0.6px;
-	padding: 2px 5px;
-	font-size: 0.9em;
-}
-
 .is-extension .web-maker-with-tag:after {
 	display: none;
 }
@@ -2184,17 +2174,25 @@ while the theme CSS file is loading */
 .stack > * {
 	margin: 0;
 }
-
-.pro-badge {
+.badge {
+	text-transform: uppercase;
 	display: inline-block;
 	padding: 0.1rem 0.3rem;
-	background: linear-gradient(45deg, var(--color-pro-1), var(--color-pro-2));
+	background: crimson;
 	border-radius: 1rem;
 	font-size: 0.7em;
 	color: #222;
-	box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.3);
 	font-weight: 800;
 	line-height: 1;
+}
+.beta-tag {
+	background: #ee9d59;
+}
+.pro-badge {
+	display: inline-block;
+	background: linear-gradient(45deg, var(--color-pro-1), var(--color-pro-2));
+	color: #222;
+	box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.3);
 }
 .templates-container {
 	display: flex;

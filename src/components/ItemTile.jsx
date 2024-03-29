@@ -11,7 +11,8 @@ export function ItemTile({
 	onRemoveBtnClick,
 	onToggleVisibilityBtnClick,
 	focusable,
-	inline
+	inline,
+	hasOptions = true
 }) {
 	return (
 		<div
@@ -58,7 +59,7 @@ export function ItemTile({
 			</div>
 			<div className="flex flex-v-center">
 				{item.img ? (
-					<div>
+					<div class="d-f">
 						<img
 							class="saved-item-tile__img"
 							height="40"
@@ -82,30 +83,32 @@ export function ItemTile({
 					</div>
 				) : null}
 			</div>
-			<div class="saved-item-tile__meta">
-				<HStack justify="space-between">
-					<div>
-						{item.updatedOn ? (
-							<>
-								Last updated:{' '}
-								<time dateTime={item.updatedOn}>
-									{getHumanDate(item.updatedOn)}
-								</time>
-							</>
-						) : null}
-					</div>
-					<div>
-						<Stack gap={1} align="center">
-							<Icon
-								size="16"
-								color="currentColor"
-								name={item.isPublic ? 'eye' : 'eye-striked'}
-							/>
-							{item.isPublic ? 'Public' : ''}
-						</Stack>
-					</div>
-				</HStack>
-			</div>
+			{hasOptions && (
+				<div class="saved-item-tile__meta">
+					<HStack justify="space-between">
+						<div>
+							{item.updatedOn ? (
+								<>
+									Last updated:{' '}
+									<time dateTime={item.updatedOn}>
+										{getHumanDate(item.updatedOn)}
+									</time>
+								</>
+							) : null}
+						</div>
+						<div>
+							<Stack gap={1} align="center">
+								<Icon
+									size="16"
+									color="currentColor"
+									name={item.isPublic ? 'eye' : 'eye-striked'}
+								/>
+								{item.isPublic ? 'Public' : ''}
+							</Stack>
+						</div>
+					</HStack>
+				</div>
+			)}
 		</div>
 	);
 }

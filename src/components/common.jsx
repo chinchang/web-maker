@@ -42,5 +42,5 @@ export function Divider(props) {
 }
 
 export function BetaTag() {
-	return <span class="beta-tag">Beta</span>;
+	return <span class="badge beta-tag">Beta</span>;
 }

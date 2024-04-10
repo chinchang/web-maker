@@ -62,6 +62,7 @@ gulp.task('copyFiles', function () {
 		gulp
 			.src([
 				'src/preview.html',
+				'src/indexpm.html',
 				'src/detached-window.js',
 				'src/icon-48.png',
 				'src/icon-128.png',

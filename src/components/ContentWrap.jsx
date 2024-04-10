@@ -29,7 +29,7 @@ export default class ContentWrap extends Component {
 				window.localStorage.getItem(LocalStorageKeys.WAS_CONSOLE_OPEN) ===
 				'true',
 			isCssSettingsModalOpen: false,
-			isPreviewNotWorkingModalVisible: false,
+
 			logs: []
 		};
 
@@ -54,15 +54,11 @@ export default class ContentWrap extends Component {
 			this.clearConsoleBtnClickHandler.bind(this);
 		this.toggleConsole = this.toggleConsole.bind(this);
 		this.evalConsoleExpr = this.evalConsoleExpr.bind(this);
-		this.dismissPreviewNotWorkingModal =
-			this.dismissPreviewNotWorkingModal.bind(this);
 	}
 	shouldComponentUpdate(nextProps, nextState) {
 		return (
 			this.state.isConsoleOpen !== nextState.isConsoleOpen ||
 			this.state.isCssSettingsModalOpen !== nextState.isCssSettingsModalOpen ||
-			this.state.isPreviewNotWorkingModalVisible !==
-				nextState.isPreviewNotWorkingModalVisible ||
 			this.state.logs !== nextState.logs ||
 			this.state.codeSplitSizes !== nextState.codeSplitSizes ||
 			this.state.mainSplitSizes !== nextState.mainSplitSizes ||
@@ -136,10 +132,10 @@ export default class ContentWrap extends Component {
 	createPreviewFile(html, css, js) {
 		const versionMatch = navigator.userAgent.match(/Chrome\/(\d+)/);
 
-		const shouldInlineJs =
-			!window.webkitRequestFileSystem ||
-			!window.IS_EXTENSION ||
-			(versionMatch && +versionMatch[1] >= 104);
+		const shouldInlineJs = true;
+		// !window.webkitRequestFileSystem ||
+		// !window.IS_EXTENSION ||
+		// (versionMatch && +versionMatch[1] >= 104);
 		var contents = getCompleteHtml(
 			html,
 			css,
@@ -156,28 +152,31 @@ export default class ContentWrap extends Component {
 		}
 
 		if (shouldInlineJs) {
-			if (this.detachedWindow) {
-				log('✉️ Sending message to detached window');
-				this.detachedWindow.postMessage({ contents }, '*');
-			} else {
-				const writeInsideIframe = () => {
+			const writeInsideIframe = () => {
+				if (this.detachedWindow) {
+					log('✉️ Sending message to detached window');
+					this.detachedWindow.postMessage({ contents }, '*');
+				} else if (window.IS_EXTENSION) {
+					this.frame.contentWindow.postMessage({ contents }, '*');
+				} else {
 					this.frame.contentDocument.open();
 					this.frame.contentDocument.write(contents);
 					this.frame.contentDocument.close();
-				};
-				Promise.race([
-					// Just in case onload promise doesn't resolves
-					new Promise(resolve => {
-						setTimeout(resolve, 200);
-					}),
-					new Promise(resolve => {
-						this.frame.onload = resolve;
-					})
-				]).then(writeInsideIframe);
-				// Setting to blank string cause frame to reload
-				this.frame.src = '';
-			}
+				}
+			};
+			Promise.race([
+				// Just in case onload promise doesn't resolves
+				new Promise(resolve => {
+					setTimeout(resolve, 200);
+				}),
+				new Promise(resolve => {
+					this.frame.onload = resolve;
+				})
+			]).then(writeInsideIframe);
+			// Setting to blank string cause frame to reload
+			this.frame.src = this.frame.src;
 		} else {
+			// DEPRECATED
 			// we need to store user script in external JS file to prevent inline-script
 			// CSP from affecting it.
 			writeFile('script.js', blobjs, () => {
@@ -232,14 +231,13 @@ export default class ContentWrap extends Component {
 			js: this.cmCodes.js
 		};
 		log('🔎 setPreviewContent', isForced);
-		const targetFrame = this.detachedWindow
-			? this.detachedWindow.document.querySelector('iframe')
-			: this.frame;
+		const targetFrame = this.detachedWindow ? this.detachedWindow : this.frame;
 
 		const cssMode = this.props.currentItem.cssMode;
 		// If just CSS was changed (and everything shudn't be empty),
 		// change the styles inside the iframe.
 		if (
+			false &&
 			!isForced &&
 			currentCode.html === this.codeInPreview.html &&
 			currentCode.js === this.codeInPreview.js
@@ -289,19 +287,6 @@ export default class ContentWrap extends Component {
 						this.showErrors(resultItem.errors.lang, resultItem.errors.data);
 					}
 				});
-
-				const versionMatch = navigator.userAgent.match(/Chrome\/(\d+)/);
-				if (
-					result[2].code &&
-					versionMatch &&
-					+versionMatch[1] >= 104 &&
-					window.IS_EXTENSION &&
-					!window.sessionStorage.getItem('previewErrorMessageDismissed')
-				) {
-					this.setState({
-						isPreviewNotWorkingModalVisible: true
-					});
-				}
 			});
 		}
 
@@ -632,13 +617,6 @@ export default class ContentWrap extends Component {
 		this.props.onPrettifyBtnClick(codeType);
 	}
 
-	dismissPreviewNotWorkingModal() {
-		this.setState({
-			isPreviewNotWorkingModalVisible: false
-		});
-		window.sessionStorage.setItem('previewErrorMessageDismissed', true);
-	}
-
 	render() {
 		// log('contentwrap update');
 
@@ -905,6 +883,7 @@ export default class ContentWrap extends Component {
 						frameborder="0"
 						id="demo-frame"
 						allowfullscreen
+						src="./indexpm.html"
 					/>
 
 					<PreviewDimension ref={comp => (this.previewDimension = comp)} />
@@ -927,34 +906,6 @@ export default class ContentWrap extends Component {
 						settings={this.props.currentItem.cssSettings}
 						editorTheme={this.props.prefs.editorTheme}
 					/>
-
-					<Modal
-						show={this.state.isPreviewNotWorkingModalVisible}
-						closeHandler={this.dismissPreviewNotWorkingModal}
-					>
-						<h1>🔴 JavaScript preview not working!</h1>
-						<p>
-							Latest version of Chrome has changed a few things because of which
-							JavaScript preview has stopped working.
-						</p>
-
-						<p>
-							If you want to work with just HTML & CSS, you can still continue
-							here. Otherwise, it is recommended to switch to the Web Maker web
-							app which is much more powerful and works offline too -{' '}
-							<a href="https://webmaker.app/app" target="_blank">
-								Go to web app
-							</a>
-						</p>
-						<div class="flex flex-h-end">
-							<button
-								class="btn btn--primary"
-								onClick={this.dismissPreviewNotWorkingModal}
-							>
-								Dismiss
-							</button>
-						</div>
-					</Modal>
 				</div>
 			</SplitPane>
 		);

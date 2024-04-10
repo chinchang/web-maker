@@ -55,7 +55,7 @@ export function Pro({ user }) {
 					features={[
 						'Unlimited private creations',
 						'2 Public creations',
-						'1 Files mode creation'
+						'2 Files mode creations'
 					]}
 				/>
 				<Card

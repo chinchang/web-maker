@@ -1126,7 +1126,11 @@ export default class App extends Component {
 	}
 	shareBtnClickHandler() {
 		trackEvent('ui', 'shareBtnClick');
-		this.setState({ isShareModalOpen: true });
+		if (!window.user || this.state.currentItem.id) {
+			this.setState({ isShareModalOpen: true });
+		} else {
+			alertsService.add('Please save your creation before sharing.');
+		}
 	}
 	detachedPreviewBtnHandler() {
 		trackEvent('ui', 'detachPreviewBtnClick');
@@ -1783,21 +1787,7 @@ export default class App extends Component {
 							onChange={this.onExternalLibChange.bind(this)}
 						/>
 					</Modal>
-					<Modal
-						show={this.state.isAssetsOpen}
-						closeHandler={() => this.setState({ isAssetsOpen: false })}
-					>
-						<Assets
-							onProBtnClick={() => {
-								this.proBtnClickHandler();
-								this.setState({ isAssetsOpen: false });
-							}}
-							onLoginBtnClick={() => {
-								this.loginBtnClickHandler();
-								this.setState({ isAssetsOpen: false });
-							}}
-						/>
-					</Modal>
+
 					<Modal
 						show={this.state.isNotificationsModalOpen}
 						closeHandler={() =>
@@ -1818,13 +1808,7 @@ export default class App extends Component {
 							onChange={this.updateSetting.bind(this)}
 						/>
 					</Modal>
-					<Modal
-						extraClasses="login-modal"
-						show={this.state.isLoginModalOpen}
-						closeHandler={() => this.setState({ isLoginModalOpen: false })}
-					>
-						<Login />
-					</Modal>
+
 					<Modal
 						show={this.state.isProfileModalOpen}
 						closeHandler={() => this.setState({ isProfileModalOpen: false })}
@@ -1832,6 +1816,21 @@ export default class App extends Component {
 						<Profile
 							user={this.state.user}
 							logoutBtnHandler={this.logout.bind(this)}
+						/>
+					</Modal>
+					<Modal
+						show={this.state.isAssetsOpen}
+						closeHandler={() => this.setState({ isAssetsOpen: false })}
+					>
+						<Assets
+							onProBtnClick={() => {
+								this.setState({ isAssetsOpen: false });
+								this.proBtnClickHandler();
+							}}
+							onLoginBtnClick={() => {
+								this.setState({ isAssetsOpen: false });
+								this.loginBtnClickHandler();
+							}}
 						/>
 					</Modal>
 					<Modal
@@ -1848,6 +1847,10 @@ export default class App extends Component {
 								};
 								this.setState({ currentItem: item });
 							}}
+							onLoginBtnClick={() => {
+								this.setState({ isShareModalOpen: false });
+								this.loginBtnClickHandler();
+							}}
 						/>
 					</Modal>
 					<Modal
@@ -1857,6 +1860,18 @@ export default class App extends Component {
 					>
 						<Pro user={this.state.user} />
 					</Modal>
+
+					{/* Login modal is intentionally kept here after assets & share modal because 
+					they trigger this modal and if order isn't maintainer, the modal overlay doesn't
+					show properly */}
+					<Modal
+						extraClasses="login-modal"
+						show={this.state.isLoginModalOpen}
+						closeHandler={() => this.setState({ isLoginModalOpen: false })}
+					>
+						<Login />
+					</Modal>
+
 					<HelpModal
 						show={this.state.isHelpModalOpen}
 						closeHandler={() => this.setState({ isHelpModalOpen: false })}

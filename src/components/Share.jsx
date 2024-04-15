@@ -11,7 +11,7 @@ import { Text } from './Text';
 const FREE_PUBLIC_ITEM_COUNT = 1;
 const BASE_URL = location.origin;
 
-export function Share({ user, item, onVisibilityChange }) {
+export function Share({ user, item, onVisibilityChange, onLoginBtnClick }) {
 	const [publicItemCount, setPublicItemCount] = useState(0);
 	useEffect(() => {
 		if (!user) return;
@@ -62,8 +62,8 @@ export function Share({ user, item, onVisibilityChange }) {
 	if (!user) {
 		return (
 			<HStack justify="center" gap={2}>
-				<Text>Login to share this creation</Text>
-				<Button class="btn btn--primary" onClick={copyUrl} aria-label="Copy">
+				<Text>Login to share this creation publicly</Text>
+				<Button class="btn btn--primary" onClick={onLoginBtnClick}>
 					Login
 				</Button>
 			</HStack>

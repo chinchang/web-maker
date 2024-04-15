@@ -26,6 +26,10 @@
 
 	--duration-modal-show: 0.3s;
 	--duration-modal-overlay-show: 0.2s;
+
+	--zindex-modal-overlay: 5;
+	--zindex-footer: 6;
+	--zindex-modal: 2000;
 }
 
 html {
@@ -796,7 +800,7 @@ body > #demo-frame {
 	display: flex;
 	justify-content: space-between;
 	/* Because .console is 6 */
-	z-index: 6;
+	z-index: var(--zindex-footer);
 }
 
 .main-header {
@@ -1016,12 +1020,22 @@ body > #demo-frame {
 	display: flex;
 	align-items: baseline;
 	justify-content: center;
-	z-index: 2000;
+	z-index: var(--zindex-modal);
 	visibility: hidden;
-	/* background-color: rgba(102, 51, 153, 0.7); */
-	/* background-color: rgba(0, 0, 0, 0.7); */
 	/* To prevent scroll repaint inside modal */
+
+	z-index: var(--zindex-modal-overlay);
+	/* opacity: 0; */
+	will-change: opacity;
+	/* background: var(--color-overlay); */
+	backdrop-filter: blur(5px) grayscale(1);
+	transition: opacity var(--duration-modal-overlay-show);
+
 	will-change: transform;
+}
+.modal--no-overlay {
+	background: none;
+	backdrop-filter: none;
 }
 
 @keyframes anim-modal-overlay {
@@ -1102,7 +1116,7 @@ body > #demo-frame {
 	visibility: hidden;
 	top: 0;
 	left: 0;
-	z-index: 5;
+	z-index: var(--zindex-modal-overlay);
 	opacity: 0;
 	will-change: opacity;
 	/* background: var(--color-overlay); */

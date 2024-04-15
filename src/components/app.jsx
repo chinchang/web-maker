@@ -73,6 +73,9 @@ import { Assets } from './Assets.jsx';
 import { LocalStorageKeys } from '../constants.js';
 import { Share } from './Share.jsx';
 import { Pro } from './Pro.jsx';
+import { VStack } from './Stack.jsx';
+import { ProBadge } from './ProBadge.jsx';
+import { Text } from './Text.jsx';
 
 if (module.hot) {
 	require('preact/debug');
@@ -124,7 +127,8 @@ export default class App extends Component {
 			isCommandPaletteOpen: false,
 			isAssetsOpen: false,
 			isShareModalOpen: false,
-			isProModalOpen: false
+			isProModalOpen: false,
+			isFilesLimitModalOpen: false
 		};
 		this.state = {
 			isSavedItemPaneOpen: false,
@@ -1497,9 +1501,11 @@ export default class App extends Component {
 				this.setState({ isCreateNewModalOpen: false });
 			} else {
 				trackEvent('ui', 'FileModeCreationLimitMessageSeen');
-				return alert(
-					'"Files mode" is currently in beta and is limited to only 2 creations per user. You have already made 2 creations in Files mode.\n\nNote: You can choose to delete old ones to create new.'
-				);
+				// this.closeAllOverlays();
+				this.setState({ isFilesLimitModalOpen: true });
+				// return alert(
+				// 	'"Files mode" is currently in beta and is limited to only 2 creations per user. You have already made 2 creations in Files mode.\n\nNote: You can choose to delete old ones to create new.'
+				// );
 			}
 		});
 	}
@@ -1828,7 +1834,7 @@ export default class App extends Component {
 								this.proBtnClickHandler();
 							}}
 							onLoginBtnClick={() => {
-								this.setState({ isAssetsOpen: false });
+								this.closeAllOverlays();
 								this.loginBtnClickHandler();
 							}}
 						/>
@@ -1848,7 +1854,7 @@ export default class App extends Component {
 								this.setState({ currentItem: item });
 							}}
 							onLoginBtnClick={() => {
-								this.setState({ isShareModalOpen: false });
+								this.closeAllOverlays();
 								this.loginBtnClickHandler();
 							}}
 						/>
@@ -1924,6 +1930,23 @@ export default class App extends Component {
 							this
 						)}
 					/>
+
+					<Modal
+						extraClasses=""
+						show={this.state.isFilesLimitModalOpen}
+						closeHandler={() => this.setState({ isFilesLimitModalOpen: false })}
+					>
+						<VStack align="stretch" gap={2}>
+							<Text tag="p">
+								You have used your quota of 2 'Files mode' creations in Free
+								plan.
+							</Text>
+							<Text tag="p">
+								You can choose to delete old ones to free quota or upgrade to{' '}
+								<ProBadge />.{' '}
+							</Text>
+						</VStack>
+					</Modal>
 
 					<CommandPalette
 						show={this.state.isCommandPaletteOpen}

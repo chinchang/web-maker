@@ -2,6 +2,7 @@
  */
 
 import { h, Component } from 'preact';
+import { route } from 'preact-router';
 // import '../service-worker-registration';
 import { MainHeader } from './MainHeader.jsx';
 import ContentWrap from './ContentWrap.jsx';
@@ -253,9 +254,17 @@ export default class App extends Component {
 					this.refreshEditor();
 				});
 			} else if (this.props.itemId) {
-				window.db.fetchItem(this.props.itemId).then(item => {
-					this.setCurrentItem(item).then(() => this.refreshEditor());
-				});
+				window.db
+					.fetchItem(this.props.itemId)
+					.then(item => {
+						this.setCurrentItem(item).then(() => this.refreshEditor());
+					})
+					.catch(err => {
+						alert('No such creation found!');
+						this.createNewItem();
+
+						// route('/');
+					});
 			} else if (result.preserveLastCode && lastCode) {
 				this.setState({ unsavedEditCount: 0 });
 				log('Load last unsaved item', lastCode);
@@ -430,10 +439,12 @@ export default class App extends Component {
 			};
 		}
 		this.setCurrentItem(item).then(() => this.refreshEditor());
+		route('/create');
 		alertsService.add('New item created');
 	}
 	openItem(item) {
 		this.setCurrentItem(item).then(() => this.refreshEditor());
+		route(`/create/${item.id}`);
 		alertsService.add('Saved item loaded');
 	}
 	removeItem(item) {

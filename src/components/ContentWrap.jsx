@@ -179,10 +179,10 @@ export default class ContentWrap extends Component {
 				};
 				const writeInsideIframe = () => {
 					const sandbox = this.frame.getAttribute('sweet');
-					console.log('setting back sandbox attr', sandbox);
+					// console.log('setting back sandbox attr', sandbox);
 					this.frame.setAttribute('sandbox', sandbox);
 					this.frame.removeAttribute('sweet');
-					console.log('sending postmessage');
+					// console.log('sending postmessage');
 					this.frame.contentWindow.postMessage({ contents }, '*');
 					// this.frame.contentDocument.open();
 					// this.frame.contentDocument.write(contents);
@@ -190,7 +190,7 @@ export default class ContentWrap extends Component {
 				};
 				refreshAndDo(() => {
 					const sandbox = this.frame.getAttribute('sandbox');
-					console.log('removing sandbox', sandbox);
+					// console.log('removing sandbox', sandbox);
 					this.frame.setAttribute('sweet', sandbox);
 					this.frame.removeAttribute('sandbox');
 					refreshAndDo(writeInsideIframe);

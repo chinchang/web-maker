@@ -443,6 +443,11 @@ a > svg {
 		rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
 }
 
+.btn:disabled {
+	opacity: 0.5;
+	pointer-events: none;
+	cursor: not-allowed;
+}
 *:focus {
 	outline-width: 3px;
 	outline-color: var(--color-button);

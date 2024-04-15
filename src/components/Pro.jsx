@@ -68,7 +68,7 @@ export function Pro({ user }) {
 							style="gap:0.2rem"
 							href={`https://web-maker.lemonsqueezy.com/checkout/buy/${
 								checkoutIds[isAnnual ? 'annual' : 'monthly']
-							}?embed=1&checkout[custom][userId]=${user.uid}`}
+							}?embed=1&checkout[custom][userId]=${user?.uid}`}
 						>
 							Go <ProBadge />
 						</A>

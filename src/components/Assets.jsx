@@ -9,7 +9,7 @@ import { LoaderWithText } from './Loader';
 import { Text } from './Text';
 import { Icon } from './Icons';
 
-const Assets = () => {
+const Assets = ({ onProBtnClick }) => {
 	const [files, setFiles] = useState([]);
 	const [isFetchingFiles, setIsFetchingFiles] = useState(false);
 	const [searchTerm, setSearchTerm] = useState('');
@@ -161,7 +161,7 @@ const Assets = () => {
 		return (
 			<VStack align="stretch" gap={2}>
 				<p>Assets feature is available in PRO plan.</p>
-				<button class="btn  btn--primary ">
+				<button class="btn  btn--primary" onClick={onProBtnClick}>
 					<HStack gap={1} fullWidth justify="center">
 						Upgrade to <ProBadge />
 					</HStack>

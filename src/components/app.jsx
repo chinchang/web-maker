@@ -1776,7 +1776,12 @@ export default class App extends Component {
 						show={this.state.isAssetsOpen}
 						closeHandler={() => this.setState({ isAssetsOpen: false })}
 					>
-						<Assets />
+						<Assets
+							onProBtnClick={() => {
+								this.proBtnClickHandler();
+								this.setState({ isAssetsOpen: false });
+							}}
+						/>
 					</Modal>
 					<Modal
 						show={this.state.isNotificationsModalOpen}

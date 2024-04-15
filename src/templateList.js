@@ -16,6 +16,11 @@ export default [
 		img: 'assets/preact-logo.svg'
 	},
 	{
+		id: 'tailwind',
+		title: 'Tailwind CSS',
+		img: 'assets/tailwind-logo.svg'
+	},
+	{
 		id: 'kontra-game-engine',
 		title: 'Kontra Game Engine',
 		img: 'assets/html5-logo.svg',

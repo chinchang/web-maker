@@ -1792,6 +1792,10 @@ export default class App extends Component {
 								this.proBtnClickHandler();
 								this.setState({ isAssetsOpen: false });
 							}}
+							onLoginBtnClick={() => {
+								this.loginBtnClickHandler();
+								this.setState({ isAssetsOpen: false });
+							}}
 						/>
 					</Modal>
 					<Modal

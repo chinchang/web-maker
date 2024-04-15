@@ -9,7 +9,7 @@ import { LoaderWithText } from './Loader';
 import { Text } from './Text';
 import { Icon } from './Icons';
 
-const Assets = ({ onProBtnClick }) => {
+const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 	const [files, setFiles] = useState([]);
 	const [isFetchingFiles, setIsFetchingFiles] = useState(false);
 	const [searchTerm, setSearchTerm] = useState('');
@@ -94,7 +94,9 @@ const Assets = ({ onProBtnClick }) => {
 	};
 
 	useEffect(() => {
-		fetchFiles();
+		if (window.user?.isPro) {
+			fetchFiles();
+		}
 	}, []);
 
 	useEffect(() => {
@@ -161,9 +163,20 @@ const Assets = ({ onProBtnClick }) => {
 		return (
 			<VStack align="stretch" gap={2}>
 				<p>Assets feature is available in PRO plan.</p>
-				<button class="btn  btn--primary" onClick={onProBtnClick}>
+				<button
+					class="btn  btn--primary"
+					onClick={window.user ? onProBtnClick : onLoginBtnClick}
+				>
 					<HStack gap={1} fullWidth justify="center">
-						Upgrade to <ProBadge />
+						{window.user ? (
+							<>
+								Upgrade to <ProBadge />
+							</>
+						) : (
+							<>
+								Login & upgrade to <ProBadge />
+							</>
+						)}
 					</HStack>
 				</button>
 			</VStack>

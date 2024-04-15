@@ -6,6 +6,7 @@ import { itemService } from '../itemService';
 import { alertsService } from '../notifications';
 import { Button } from './common';
 import { Icon } from './Icons';
+import { Text } from './Text';
 
 const FREE_PUBLIC_ITEM_COUNT = 1;
 const BASE_URL = location.origin;
@@ -58,6 +59,16 @@ export function Share({ user, item, onVisibilityChange }) {
 		navigator.clipboard.writeText(`${BASE_URL}/create/${item.id}`);
 		alertsService.add('URL copied to clipboard');
 	};
+	if (!user) {
+		return (
+			<HStack justify="center" gap={2}>
+				<Text>Login to share this creation</Text>
+				<Button class="btn btn--primary" onClick={copyUrl} aria-label="Copy">
+					Login
+				</Button>
+			</HStack>
+		);
+	}
 	return (
 		<VStack gap={4} align="stretch">
 			<div style="min-width: 46ch">

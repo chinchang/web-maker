@@ -75,7 +75,7 @@ export function MainHeader(props) {
 
 						<button
 							class="btn btn--dark hint--rounded hint--bottom-left"
-							aria-label={i18n._(t`Start a new creation`)}
+							aria-label={i18n._(t`Share this creation publicly`)}
 							data-testid="newButton"
 							onClick={props.shareBtnHandler}
 						>

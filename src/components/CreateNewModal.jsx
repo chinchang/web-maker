@@ -5,6 +5,7 @@ import templates from '../templateList';
 import { BetaTag } from './common';
 import { trackEvent } from '../analytics';
 import Tabs, { TabPanel } from './Tabs';
+import { ProBadge } from './ProBadge';
 
 export class CreateNewModal extends Component {
 	constructor(props) {
@@ -203,11 +204,11 @@ export class CreateNewModal extends Component {
 						</div>
 						<p>
 							2 files mode creations available in Free plan. To create unlimited
-							files mode creations, become PRO.
+							files mode creations, upgrade to <ProBadge />.
 						</p>
 						<div class="show-when-extension">
 							Files modes is currently only available in Web app.{' '}
-							<a href="https://webmaker.app/app/">Try the Web app now</a>.
+							<a href="https://webmaker.app/create/">Try the Web app now</a>.
 						</div>
 					</TabPanel>
 				</Tabs>

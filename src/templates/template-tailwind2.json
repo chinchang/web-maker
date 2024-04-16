@@ -4,8 +4,8 @@
 	"css": "",
 	"js": "",
 	"externalLibs": {
-		"js": "https://cdn.tailwindcss.com/3.4.3",
-		"css": ""
+		"js": "",
+		"css": "https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css"
 	},
 	"layoutMode": 1,
 	"htmlMode": "html",

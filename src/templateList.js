@@ -16,8 +16,13 @@ export default [
 		img: 'assets/preact-logo.svg'
 	},
 	{
+		id: 'tailwind2',
+		title: 'Tailwind CSS 2',
+		img: 'assets/tailwind-logo.svg'
+	},
+	{
 		id: 'tailwind',
-		title: 'Tailwind CSS',
+		title: 'Tailwind CSS 3',
 		img: 'assets/tailwind-logo.svg'
 	},
 	{

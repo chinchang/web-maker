@@ -74,7 +74,7 @@ function Notification({ version, isLatest, ...props }) {
 						</a>
 					</p>
 					<p>
-						Web Maker now has more than 50K weekly active users! Thank you for
+						Web Maker now has more than 60K weekly active users! Thank you for
 						being a part of this community of awesome developers. If you find
 						Web Maker helpful,{' '}
 						<a
@@ -114,6 +114,17 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+			<Notification version="5.3.0" {...props} isLatest={true}>
+				<li>
+					<strong>Tailwind CSS templates</strong>: Tailwind CSS template is now
+					available! If you are on the Chrome extension, use the Tailwind CSS 2
+					template which is old but works without JavaScript (since JavaScript
+					is disabled currently in Chrome extension). That said, JavaScript is
+					coming back soon to the Chrome extension! 😃
+				</li>
+				<li>⬆️ Popular libraries updated to latest versions.</li>
+			</Notification>
+
 			<Notification version="5.2.0" {...props}>
 				<li>
 					<strong>Improvement</strong>: Atomic CSS (Atomizer) has been updated
@@ -157,7 +168,7 @@ export function Notifications(props) {
 					Add library feature is fixed.
 				</NotificationItem>
 			</Notification>
-			<Notification version="5.0.0" {...props} isLatest={true}>
+			<Notification version="5.0.0" {...props}>
 				<li>
 					<strong>We are Back! 😎</strong>: After almost 2 years of nothing
 					being shipped, we are back in action. That too with a bang! We have a

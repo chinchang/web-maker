@@ -43,11 +43,11 @@ export function HelpModal(props) {
 					</Trans>
 					.
 				</p>
-				<p class="show-when-extension">
+				<p>
 					<Trans>
-						Like this extension? Please{' '}
+						Like this app? Please{' '}
 						<a
-							href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
+							href="https://chromewebstore.google.com/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
@@ -69,7 +69,7 @@ export function HelpModal(props) {
 						<Trans>Support the developer</Trans>
 					</Button>{' '}
 					<a
-						href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
+						href="https://chromewebstore.google.com/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
 						target="_blank"
 						rel="noopener noreferrer"
 						class="btn btn-icon"

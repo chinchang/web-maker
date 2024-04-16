@@ -140,7 +140,7 @@ export function MainHeader(props) {
 								data-event-category="ui"
 								data-event-action="loginButtonClick"
 								data-testid="loginButton"
-								class="btn btn--dark hint--rounded  hint--bottom-left"
+								class="btn btn--dark"
 							>
 								<Trans>Login/Signup</Trans>
 							</Button>

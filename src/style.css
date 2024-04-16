@@ -3,7 +3,7 @@
 	--color-text-dark-1: #b3aec4;
 	--color-bg: #252637;
 	--color-popup: #3a2b63;
-	--color-overlay: rgba(3, 8, 27, 0.7);
+	--color-overlay: rgb(0 0 0 / 40%);
 	--color-close-btn: #d12b4a;
 	--code-font-size: 16px;
 	--color-button: #e3ba26;
@@ -1027,7 +1027,7 @@ body > #demo-frame {
 	z-index: var(--zindex-modal-overlay);
 	/* opacity: 0; */
 	will-change: opacity;
-	/* background: var(--color-overlay); */
+	background: var(--color-overlay);
 	backdrop-filter: blur(5px) grayscale(1);
 	transition: opacity var(--duration-modal-overlay-show);
 

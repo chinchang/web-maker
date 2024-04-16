@@ -66,38 +66,43 @@ export function Profile({ user, logoutBtnHandler }) {
 	return (
 		<VStack gap={2}>
 			<Header user={user} logoutBtnHandler={logoutBtnHandler} />
-			<Panel>
-				{isFetchingSubscription ? (
-					<LoaderWithText>Loading subscription details...</LoaderWithText>
-				) : null}
-				{currentSubscription ? (
-					<VStack align="stretch" gap={1}>
-						<Text>
-							Plan:
-							<Text weight="700">
-								{' '}
-								{currentSubscription.attributes.product_name}
+			{window.user?.isPro && (
+				<Panel>
+					{isFetchingSubscription ? (
+						<LoaderWithText>Loading subscription details...</LoaderWithText>
+					) : null}
+					{currentSubscription ? (
+						<VStack align="stretch" gap={1}>
+							<Text>
+								Plan:
+								<Text weight="700">
+									{' '}
+									{currentSubscription.attributes.product_name}
+								</Text>
 							</Text>
-						</Text>
-						<Text>
-							Subscription Status:{' '}
-							<Text weight="700">{currentSubscription.attributes.status}</Text>
-						</Text>
-
-						<Text>
-							Renews on:{' '}
-							<Text weight="700">
-								{getHumanReadableDate(currentSubscription.attributes.renews_at)}
+							<Text>
+								Subscription Status:{' '}
+								<Text weight="700">
+									{currentSubscription.attributes.status}
+								</Text>
 							</Text>
-						</Text>
 
-						<a
-							target="_blank"
-							href={currentSubscription.attributes.urls.customer_portal}
-						>
-							Cancel subscription
-						</a>
-						{/* <a
+							<Text>
+								Renews on:{' '}
+								<Text weight="700">
+									{getHumanReadableDate(
+										currentSubscription.attributes.renews_at
+									)}
+								</Text>
+							</Text>
+
+							<a
+								target="_blank"
+								href={currentSubscription.attributes.urls.customer_portal}
+							>
+								Cancel subscription
+							</a>
+							{/* <a
 							target="_blank"
 							href={
 								currentSubscription.attributes.urls
@@ -112,9 +117,10 @@ export function Profile({ user, logoutBtnHandler }) {
 						>
 							Link 3
 						</a> */}
-					</VStack>
-				) : null}
-			</Panel>
+						</VStack>
+					) : null}
+				</Panel>
+			)}
 			{user?.isPro && currentSubscription ? (
 				<img
 					class="profile-modal__panda"

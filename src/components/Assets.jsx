@@ -137,9 +137,42 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 		}
 	};
 
+	const [lastCopiedFile, setLastCopiedFile] = useState({ name: '', count: 0 });
 	const copyFileUrl = url => {
-		copyToClipboard(url).then(() => {
-			alertsService.add('File URL copied!');
+		console.log(lastCopiedFile, url);
+		let copyContent = url;
+		if (lastCopiedFile.name === url) {
+			lastCopiedFile.count = (lastCopiedFile.count + 1) % 3;
+		} else {
+			lastCopiedFile.count = 0;
+			lastCopiedFile.name = url;
+		}
+
+		switch (lastCopiedFile.count) {
+			case 0:
+				copyContent = url;
+				break;
+			case 1:
+				copyContent = `<img src="${url}" />`;
+				break;
+			case 2:
+				copyContent = `url("${url}")`;
+				break;
+		}
+		setLastCopiedFile({ ...lastCopiedFile });
+
+		copyToClipboard(copyContent).then(() => {
+			switch (lastCopiedFile.count) {
+				case 0:
+					alertsService.add('File URL copied');
+					break;
+				case 1:
+					alertsService.add('File URL copied as <IMG> tag');
+					break;
+				case 2:
+					alertsService.add('File URL copied as CSS image URL');
+					break;
+			}
 		});
 	};
 
@@ -273,9 +306,9 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 									<button
 										class={`btn btn--dark ${
 											listType === 'list' ? 'btn--active' : ''
-										}  hint--rounded hint--top-left`}
+										}  hint--rounded hint--top hint--medium`}
 										onClick={() => copyFileUrl(file.url)}
-										aria-label="Copy URL"
+										aria-label="Copy URL (or keep clicking to copy other formats)"
 									>
 										<Icon name="copy" />
 									</button>

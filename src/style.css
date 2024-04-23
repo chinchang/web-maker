@@ -2158,7 +2158,7 @@ while the theme CSS file is loading */
 .asset-manager__file-container--grid {
 	display: grid;
 	grid-template-columns: repeat(7, minmax(90px, 1fr));
-	width: 50rem;
+	max-width: 50rem;
 }
 
 .asset-manager__file {
@@ -2172,15 +2172,27 @@ while the theme CSS file is loading */
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
-.asset-manager__file img {
+.asset-manager__file-image {
 	height: 1.5rem;
 	aspect-ratio: 1;
 	border-radius: 0.3rem;
 	object-fit: contain;
 }
-.asset-manager__file--grid img {
+.asset-manager__file--grid .asset-manager__file-image {
 	width: 100%;
 	height: auto;
+}
+.asset-manager__file-ext {
+	text-transform: uppercase;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	letter-spacing: -1px;
+	font-weight: 800;
+	display: none;
+}
+.asset-manager__file--grid .asset-manager__file-ext {
+	display: block;
 }
 .asset-manager__file-actions {
 	position: absolute;

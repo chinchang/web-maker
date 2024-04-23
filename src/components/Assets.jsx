@@ -9,6 +9,14 @@ import { LoaderWithText } from './Loader';
 import { Text } from './Text';
 import { Icon } from './Icons';
 
+function getFileType(url) {
+	// get extension from a url using URL API
+	const ext = new URL(url).pathname.split('.').pop();
+	if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(ext)) {
+		return 'image';
+	}
+	return ext;
+}
 const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 	const [files, setFiles] = useState([]);
 	const [isFetchingFiles, setIsFetchingFiles] = useState(false);
@@ -21,9 +29,9 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 	const storageRef = firebase.storage().ref(`assets/${window.user?.uid}`);
 
 	const uploadFile = file => {
-		if (file.size > 300 * 1024) {
-			// 5MB limit
-			alert('File size must be less than 300KB');
+		if (file.size > 1024 * 1024) {
+			// 1MB limit
+			alert('File size must be less than 1MB');
 			return;
 		}
 
@@ -47,6 +55,7 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 				// Handle unsuccessful uploads
 				setIsUploading(false);
 				console.error('File upload error:', error);
+				alertsService.add('⚠️ File upload failed');
 			},
 			() => {
 				// uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
@@ -78,7 +87,10 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 					});
 				});
 
-				Promise.all(filePromises).then(setFiles);
+				Promise.all(filePromises).then(files => {
+					files.forEach(f => (f.ext = getFileType(f.url)));
+					setFiles(files);
+				});
 				setIsFetchingFiles(false);
 			})
 			.catch(error => {
@@ -128,7 +140,6 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 
 	const handleDrop = e => {
 		e.preventDefault();
-		console.log('drop');
 		setIsDropTarget(false);
 
 		if (e.dataTransfer.items) {
@@ -139,7 +150,6 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 
 	const [lastCopiedFile, setLastCopiedFile] = useState({ name: '', count: 0 });
 	const copyFileUrl = url => {
-		console.log(lastCopiedFile, url);
 		let copyContent = url;
 		if (lastCopiedFile.name === url) {
 			lastCopiedFile.count = (lastCopiedFile.count + 1) % 3;
@@ -300,7 +310,26 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 							}`}
 						>
 							{/* <a href={file.url} target="_blank" rel="noopener noreferrer"> */}
-							<img src={file.url} />{' '}
+							{file.ext === 'image' ? (
+								<img src={file.url} class="asset-manager__file-image" />
+							) : (
+								<div
+									style={{
+										position: 'relative',
+										display: 'flex'
+									}}
+									class="asset-manager__file-image"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="#ffffff33"
+										viewBox="0 0 24 24"
+									>
+										<path d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
+									</svg>
+									<span className="asset-manager__file-ext">{file.ext}</span>
+								</div>
+							)}
 							<div class="asset-manager__file-actions">
 								<Stack gap={1} fullWidth justify="center">
 									<button

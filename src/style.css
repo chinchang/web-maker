@@ -279,12 +279,14 @@ label {
 [class*='hint--']:after,
 [class*='hint--']:before {
 	background-color: #000;
+	border-radius: 0 4px 0 0;
 }
 [class*='hint--']:after {
 	text-transform: none;
 	font-weight: normal;
 	letter-spacing: 0.5px;
 	font-size: 14px;
+	border-radius: 4px;
 }
 
 .line {

@@ -1153,7 +1153,7 @@ body > #demo-frame {
 	top: 0;
 	bottom: 0;
 	width: 35vw;
-	min-width: 35ch;
+	min-width: 40ch;
 	max-width: 60ch;
 	padding: 20px 30px;
 	z-index: 6;
@@ -2185,8 +2185,8 @@ while the theme CSS file is loading */
 .asset-manager__file-ext {
 	text-transform: uppercase;
 	position: absolute;
-	bottom: 0;
-	right: 0;
+	bottom: 0.5rem;
+	left: 1.4rem;
 	letter-spacing: -1px;
 	font-weight: 800;
 	display: none;

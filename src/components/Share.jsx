@@ -10,14 +10,16 @@ import { Text } from './Text';
 
 const FREE_PUBLIC_ITEM_COUNT = 1;
 const BASE_URL = location.origin;
-
+const TOGGLE_VISIBILITY_API = !window.location.origin.includes('localhost')
+	? 'http://127.0.0.1:5001/web-maker-app/us-central1/toggleVisibility'
+	: 'https://togglevisibility-ajhkrtmkaq-uc.a.run.app';
 export function Share({ user, item, onVisibilityChange, onLoginBtnClick }) {
 	const [publicItemCount, setPublicItemCount] = useState(0);
 	useEffect(() => {
 		if (!user) return;
 		window.db.getPublicItemCount(user.uid).then(c => {
 			setPublicItemCount(c);
-			console.log('public items', c);
+			// console.log('public items', c);
 		});
 	}, []);
 
@@ -30,7 +32,7 @@ export function Share({ user, item, onVisibilityChange, onLoginBtnClick }) {
 			let res;
 			try {
 				res = await fetch(
-					`http://127.0.0.1:5001/web-maker-app/us-central1/toggleVisibility?token=${token}&itemId=${item.id}`
+					`${TOGGLE_VISIBILITY_API}?token=${token}&itemId=${item.id}`
 				);
 			} catch (e) {
 				alertsService.add('Could not change visibility');

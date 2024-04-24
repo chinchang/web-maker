@@ -124,7 +124,7 @@ export function Profile({ user, logoutBtnHandler }) {
 			{user?.isPro && currentSubscription ? (
 				<img
 					class="profile-modal__panda"
-					src="/assets/pro-panda.png"
+					src="assets/pro-panda.png"
 					width="300"
 					style="position:absolute;bottom:-3rem; right: -7rem;"
 				/>

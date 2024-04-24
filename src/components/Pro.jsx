@@ -11,7 +11,8 @@ import { showConfetti } from '../utils';
 
 const checkoutIds = {
 	monthly: '1601bc00-9623-435b-b1de-2a70a2445c13',
-	annual: 'aae95d78-05c8-46f5-b11e-2d40ddd211d3'
+	annual: 'aae95d78-05c8-46f5-b11e-2d40ddd211d3',
+	generic: 'f8c64e50-7734-438b-a122-3510156f14ed'
 };
 export function Pro({ user }) {
 	const hasCheckoutLoaded = useCheckout();
@@ -38,7 +39,7 @@ export function Pro({ user }) {
 	}, [hasCheckoutLoaded]);
 	return (
 		<VStack gap={2} align="stretch">
-			<Stack justify="center">
+			{/* <Stack justify="center">
 				<Switch
 					labels={['Monthly', 'Annually']}
 					checked={isAnnual}
@@ -47,7 +48,7 @@ export function Pro({ user }) {
 						setIsAnnual(e.target.checked);
 					}}
 				/>
-			</Stack>
+			</Stack> */}
 			<Stack gap={2} align="stretch">
 				<Card
 					price="Free"
@@ -60,17 +61,15 @@ export function Pro({ user }) {
 				/>
 				<Card
 					bg="#674dad"
-					price={!isAnnual ? '$8/mo' : '$65/yr'}
+					price={'Starting $6/mo'}
 					name="Pro"
 					action={
 						<A
-							class="btn btn--primary lemonsqueezy-button d-f jc-c ai-c"
+							class="btn btn--pro lemonsqueezy-button d-f jc-c ai-c"
 							style="gap:0.2rem"
-							href={`https://web-maker.lemonsqueezy.com/checkout/buy/${
-								checkoutIds[isAnnual ? 'annual' : 'monthly']
-							}?embed=1&checkout[custom][userId]=${user?.uid}`}
+							href={`https://web-maker.lemonsqueezy.com/checkout/buy/${checkoutIds.generic}?embed=1&checkout[custom][userId]=${user?.uid}`}
 						>
-							Go <ProBadge />
+							Go PRO
 						</A>
 					}
 					features={[

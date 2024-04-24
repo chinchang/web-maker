@@ -53,7 +53,11 @@ export function Profile({ user, logoutBtnHandler }) {
 				setIsFetchingSubscription(false);
 
 				const creationEvent = events
-					.filter(event => event.type === 'subscription_created')
+					.filter(
+						event =>
+							event.type === 'subscription_created' ||
+							event.type === 'order_created'
+					)
 					.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds)[0];
 				if (creationEvent) {
 					console.log(creationEvent);
@@ -69,7 +73,7 @@ export function Profile({ user, logoutBtnHandler }) {
 			{window.user?.isPro && (
 				<Panel>
 					{isFetchingSubscription ? (
-						<LoaderWithText>Loading subscription details...</LoaderWithText>
+						<LoaderWithText>Loading billing details...</LoaderWithText>
 					) : null}
 					{currentSubscription ? (
 						<VStack align="stretch" gap={1}>
@@ -77,31 +81,39 @@ export function Profile({ user, logoutBtnHandler }) {
 								Plan:
 								<Text weight="700">
 									{' '}
-									{currentSubscription.attributes.product_name}
+									Web Maker PRO (
+									{currentSubscription.attributes.first_order_item.variant_name}
+									)
 								</Text>
 							</Text>
 							<Text>
 								Subscription Status:{' '}
 								<Text weight="700">
-									{currentSubscription.attributes.status}
+									{currentSubscription.attributes.status === 'paid'
+										? 'PRO for life ❤️'
+										: currentSubscription.attributes.status}
 								</Text>
 							</Text>
 
 							<Text>
 								Renews on:{' '}
 								<Text weight="700">
-									{getHumanReadableDate(
-										currentSubscription.attributes.renews_at
-									)}
+									{currentSubscription.attributes.status === 'paid'
+										? 'Never ever'
+										: getHumanReadableDate(
+												currentSubscription.attributes.renews_at
+										  )}
 								</Text>
 							</Text>
 
-							<a
-								target="_blank"
-								href={currentSubscription.attributes.urls.customer_portal}
-							>
-								Cancel subscription
-							</a>
+							{currentSubscription.attributes.status === 'paid' ? null : (
+								<a
+									target="_blank"
+									href={currentSubscription.attributes.urls.customer_portal}
+								>
+									Cancel subscription
+								</a>
+							)}
 							{/* <a
 							target="_blank"
 							href={

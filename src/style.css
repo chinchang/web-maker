@@ -478,6 +478,31 @@ a > svg {
 	margin-right: 12px;
 }
 
+@property --angle {
+	syntax: '<angle>';
+	initial-value: 0deg;
+	inherits: false;
+}
+.btn--pro {
+	background: linear-gradient(
+		var(--angle),
+		var(--color-pro-1),
+		var(--color-pro-2)
+	);
+	color: #222;
+	border: 0;
+	font-weight: 700;
+	animation: gradient_move 3s ease infinite;
+}
+@keyframes gradient_move {
+	from {
+		--angle: 0deg;
+	}
+	to {
+		--angle: 360deg;
+	}
+}
+
 .btn-loader {
 	display: none;
 }
@@ -2228,7 +2253,7 @@ while the theme CSS file is loading */
 	padding: 0.1rem 0.3rem;
 	background: crimson;
 	border-radius: 1rem;
-	font-size: 0.7em;
+	font-size: 0.75em;
 	color: #222;
 	font-weight: 800;
 	line-height: 1;

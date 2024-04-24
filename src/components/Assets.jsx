@@ -207,19 +207,11 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 			<VStack align="stretch" gap={2}>
 				<p>Assets feature is available in PRO plan.</p>
 				<button
-					class="btn  btn--primary"
+					class="btn  btn--pro"
 					onClick={window.user ? onProBtnClick : onLoginBtnClick}
 				>
 					<HStack gap={1} fullWidth justify="center">
-						{window.user ? (
-							<>
-								Upgrade to <ProBadge />
-							</>
-						) : (
-							<>
-								Login & upgrade to <ProBadge />
-							</>
-						)}
+						{window.user ? <>Upgrade to PRO</> : <>Login & upgrade to PRO</>}
 					</HStack>
 				</button>
 			</VStack>

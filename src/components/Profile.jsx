@@ -52,13 +52,23 @@ export function Profile({ user, logoutBtnHandler }) {
 			window.db.getUserSubscriptionEvents(user.uid).then(events => {
 				setIsFetchingSubscription(false);
 
-				const creationEvent = events
+				let creationEvent = events
 					.filter(
 						event =>
 							event.type === 'subscription_created' ||
 							event.type === 'order_created'
 					)
-					.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds)[0];
+					.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds)
+					// remove order_created events which correspond to subscriptions (non lifetime orders)
+					.filter(
+						event =>
+							!(
+								event.type === 'order_created' &&
+								!event.data.data.attributes.first_order_item?.variant_name?.match(
+									/lifetime/
+								)
+							)
+					)[0];
 				if (creationEvent) {
 					console.log(creationEvent);
 					creationEvent.attributes = creationEvent.data.data.attributes;
@@ -82,7 +92,9 @@ export function Profile({ user, logoutBtnHandler }) {
 								<Text weight="700">
 									{' '}
 									Web Maker PRO (
-									{currentSubscription.attributes.first_order_item.variant_name}
+									{currentSubscription.attributes.variant_name ||
+										currentSubscription.attributes.first_order_item
+											?.variant_name}
 									)
 								</Text>
 							</Text>
@@ -102,7 +114,7 @@ export function Profile({ user, logoutBtnHandler }) {
 										? 'Never ever'
 										: getHumanReadableDate(
 												currentSubscription.attributes.renews_at
-										  )}
+											)}
 								</Text>
 							</Text>
 

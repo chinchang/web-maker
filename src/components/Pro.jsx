@@ -14,7 +14,7 @@ const checkoutIds = {
 	annual: 'aae95d78-05c8-46f5-b11e-2d40ddd211d3',
 	generic: 'f8c64e50-7734-438b-a122-3510156f14ed'
 };
-export function Pro({ user }) {
+export function Pro({ user, onLoginClick }) {
 	const hasCheckoutLoaded = useCheckout();
 	const [isAnnual, setIsAnnual] = useState(true);
 
@@ -64,13 +64,23 @@ export function Pro({ user }) {
 					price={'Starting $6/mo'}
 					name="Pro"
 					action={
-						<A
-							class="btn btn--pro lemonsqueezy-button d-f jc-c ai-c"
-							style="gap:0.2rem"
-							href={`https://web-maker.lemonsqueezy.com/checkout/buy/${checkoutIds.generic}?embed=1&checkout[custom][userId]=${user?.uid}`}
-						>
-							Go PRO
-						</A>
+						window.user ? (
+							<A
+								class="btn btn--pro lemonsqueezy-button d-f jc-c ai-c"
+								style="gap:0.2rem"
+								href={`https://web-maker.lemonsqueezy.com/checkout/buy/${checkoutIds.generic}?embed=1&checkout[custom][userId]=${user?.uid}`}
+							>
+								Go PRO
+							</A>
+						) : (
+							<button
+								type="button"
+								className="btn btn--pro jc-c"
+								onClick={onLoginClick}
+							>
+								Login & upgrade to PRO
+							</button>
+						)
 					}
 					features={[
 						'Unlimited private creations',
@@ -84,7 +94,7 @@ export function Pro({ user }) {
 			</Stack>
 			<Stack justify="center">
 				<Text tag="p" appearance="secondary">
-					Prices are excluding taxes. 30 days refund policy if not satisfied.
+					30 days refund policy if not satisfied.
 				</Text>
 			</Stack>
 		</VStack>

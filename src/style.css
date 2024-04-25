@@ -444,6 +444,13 @@ a > svg {
 	align-items: center;
 }
 
+.btn--small {
+	padding: 0.2rem 0.5rem;
+	text-transform: uppercase;
+	/* border-radius: 3px; */
+	font-size: 0.8rem;
+}
+
 .btn:hover {
 	--black-mix: 90%;
 	text-decoration: none;

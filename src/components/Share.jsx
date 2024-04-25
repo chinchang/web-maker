@@ -10,11 +10,19 @@ import { Text } from './Text';
 
 const FREE_PUBLIC_ITEM_COUNT = 1;
 const BASE_URL = location.origin;
-const TOGGLE_VISIBILITY_API = !window.location.origin.includes('localhost')
+const TOGGLE_VISIBILITY_API =
+	/*!window.location.origin.includes('localhost')
 	? 'http://127.0.0.1:5001/web-maker-app/us-central1/toggleVisibility'
-	: 'https://togglevisibility-ajhkrtmkaq-uc.a.run.app';
-export function Share({ user, item, onVisibilityChange, onLoginBtnClick }) {
-	const [publicItemCount, setPublicItemCount] = useState(0);
+	: */ 'https://togglevisibility-ajhkrtmkaq-uc.a.run.app';
+
+export function Share({
+	user,
+	item,
+	onVisibilityChange,
+	onLoginBtnClick,
+	onProBtnClick
+}) {
+	const [publicItemCount, setPublicItemCount] = useState();
 	useEffect(() => {
 		if (!user) return;
 		window.db.getPublicItemCount(user.uid).then(c => {
@@ -35,10 +43,10 @@ export function Share({ user, item, onVisibilityChange, onLoginBtnClick }) {
 					`${TOGGLE_VISIBILITY_API}?token=${token}&itemId=${item.id}`
 				);
 			} catch (e) {
-				alertsService.add('Could not change visibility');
+				alertsService.add('Could not set visiblity to public');
 				setTimeout(() => {
 					setVal(!newVal);
-				}, 1000);
+				}, 400);
 				return;
 			}
 
@@ -48,6 +56,9 @@ export function Share({ user, item, onVisibilityChange, onLoginBtnClick }) {
 				alertsService.add('Visiblity set to public');
 			} else {
 				alertsService.add('Could not set visiblity to public');
+				setTimeout(() => {
+					setVal(!newVal);
+				}, 400);
 			}
 		} else {
 			itemService.setItem(item.id, { isPublic: false });
@@ -103,11 +114,17 @@ export function Share({ user, item, onVisibilityChange, onLoginBtnClick }) {
 			{!user?.isPro ? (
 				<VStack gap={1} align="stretch">
 					<p>
-						You have {Math.max(0, FREE_PUBLIC_ITEM_COUNT - publicItemCount)}/
-						{FREE_PUBLIC_ITEM_COUNT} public creations left.
+						Public creations available: {FREE_PUBLIC_ITEM_COUNT}. Used:{' '}
+						{publicItemCount === undefined ? '-' : publicItemCount}. Left:{' '}
+						{Math.max(0, FREE_PUBLIC_ITEM_COUNT - publicItemCount)}
 					</p>
 					<p>
-						For unlimited public creations, upgrade to <ProBadge />
+						<HStack gap={1}>
+							<span>For unlimited public creations, </span>
+							<button onClick={onProBtnClick} class="btn btn--pro btn--small">
+								Upgrade to Pro
+							</button>
+						</HStack>
 					</p>
 				</VStack>
 			) : null}

@@ -1088,6 +1088,7 @@ export default class App extends Component {
 		trackEvent('fn', 'loggedOut');
 		auth.logout();
 		this.setState({ isProfileModalOpen: false });
+		this.createNewItem();
 		alertsService.add('Log out successfull');
 	}
 
@@ -1859,6 +1860,10 @@ export default class App extends Component {
 								this.closeAllOverlays();
 								this.loginBtnClickHandler();
 							}}
+							onProBtnClick={() => {
+								this.closeAllOverlays();
+								this.proBtnClickHandler();
+							}}
 						/>
 					</Modal>
 					<Modal
@@ -1866,7 +1871,13 @@ export default class App extends Component {
 						closeHandler={() => this.setState({ isProModalOpen: false })}
 						extraClasses="pro-modal"
 					>
-						<Pro user={this.state.user} />
+						<Pro
+							user={this.state.user}
+							onLoginClick={() => {
+								this.closeAllOverlays();
+								this.loginBtnClickHandler();
+							}}
+						/>
 					</Modal>
 
 					{/* Login modal is intentionally kept here after assets & share modal because 

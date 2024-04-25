@@ -55,7 +55,7 @@ export default class Login extends Component {
 						</button>
 					</p>
 
-					<p>Join a community of 60,000+ Developers</p>
+					<p>Join a community of 70,000+ Developers</p>
 				</div>
 			</div>
 		);

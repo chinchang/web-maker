@@ -74,11 +74,11 @@ function Notification({ version, isLatest, ...props }) {
 						</a>
 					</p>
 					<p>
-						Web Maker now has more than 60K weekly active users! Thank you for
+						Web Maker now has more than 70K weekly active users! Thank you for
 						being a part of this community of awesome developers. If you find
 						Web Maker helpful,{' '}
 						<a
-							href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
+							href="https://chromewebstore.google.com/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="btn"
@@ -87,23 +87,13 @@ function Notification({ version, isLatest, ...props }) {
 						</a>
 						&nbsp;
 						<a
-							href="http://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
+							href="http://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline frontend playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="btn"
 						>
 							Share it
 						</a>
-						&nbsp;
-						<Button
-							aria-label="Support the developer"
-							onClick={props.onSupportBtnClick}
-							data-event-action="supportDeveloperChangelogBtnClick"
-							data-event-category="ui"
-							class="btn btn-icon"
-						>
-							Support the developer
-						</Button>
 					</p>
 				</div>
 			) : null}
@@ -114,6 +104,33 @@ export function Notifications(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+			<Notification version="6.0.0" {...props} isLatest={true}>
+				<li>
+					<strong>🎁 PRO plan 🎉</strong>: Today I introduce to use Web Maker's
+					PRO plan! A set of additional super-features which you can buy. The
+					PRO plan is available as monthly/annual subscription as well as a
+					one-time lifetime price! Let's see what you get as a PRO.
+				</li>
+				<li>
+					<strong>🔓 Share your creations</strong>: Web Maker has always been a
+					privacy-first app. Continuing that culture, today we introduce "Share
+					your creation" feature. Your creations are still created as private
+					but now you can securely make them public to share with the world. As
+					a free user you can make 1 creation public. Upgrading to PRO gives you
+					unlimited public creations.
+				</li>
+				<li>
+					<strong>🗄️ Asset hosting</strong>: No more going to other places in
+					order to host your images, CSS or JS files. Web Maker PRO gives you
+					the ability to host your assets right inside Web Maker. You can upload
+					images, CSS and JS files and use them in your creations.
+				</li>
+				<li>
+					<strong>📁 Files mode</strong>: As a free user you could always create
+					2 creations in Files mode. With PRO, you can create unlimited
+					creations in Files mode.
+				</li>
+			</Notification>
 			<Notification version="5.3.0" {...props} isLatest={true}>
 				<li>
 					<strong>Tailwind CSS templates</strong>: Tailwind CSS template is now

@@ -1,0 +1,17 @@
+{
+	"title": "Tailwind CSS 3 template",
+	"html": "<div class=\"m-6 p-3 shadow-lg text-xl bg-purple-100 text-purple-800 rounded-md\">\n  Hello world\n</div>",
+	"css": "",
+	"js": "",
+	"externalLibs": {
+		"js": "https://cdn.tailwindcss.com/3.4.3",
+		"css": ""
+	},
+	"layoutMode": 1,
+	"htmlMode": "html",
+	"cssMode": "css",
+	"jsMode": "js",
+	"updatedOn": 1713157902575,
+	"mainSizes": [50, 50],
+	"sizes": [51, 45, 4]
+}

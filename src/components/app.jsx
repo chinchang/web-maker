@@ -82,7 +82,7 @@ if (module.hot) {
 }
 
 const UNSAVED_WARNING_COUNT = 15;
-const version = '5.2.0';
+const version = '5.3.0';
 
 // Read forced settings as query parameters
 window.forcedSettings = {};
@@ -186,6 +186,8 @@ export default class App extends Component {
 				this.setState({ user: authUser });
 				window.user = authUser;
 				window.localStorage.setItem('user', authUser);
+				trackEvent('fn', 'loggedIn', window.IS_EXTENSION ? 'extension' : 'web');
+
 				if (!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS]) {
 					this.fetchItems(false, true).then(items => {
 						if (!items.length) {

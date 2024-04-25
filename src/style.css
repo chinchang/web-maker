@@ -499,7 +499,7 @@ a > svg {
 	color: #222;
 	border: 0;
 	font-weight: 700;
-	animation: gradient_move 3s ease infinite;
+	animation: gradient_move 3s linear infinite;
 }
 @keyframes gradient_move {
 	from {

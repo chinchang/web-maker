@@ -68,7 +68,7 @@ export function Profile({ user, logoutBtnHandler }) {
 		}
 	}, [user]);
 	return (
-		<VStack gap={2}>
+		<VStack gap={4}>
 			<Header user={user} logoutBtnHandler={logoutBtnHandler} />
 			{window.user?.isPro && (
 				<Panel>

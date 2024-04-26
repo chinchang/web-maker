@@ -147,13 +147,15 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 			.doc(`users/${userId}`)
 			.get()
 			.then(doc => {
-				if (!doc.exists)
-					return remoteDb.doc(`users/${userId}`).set(
-						{},
-						{
-							merge: true
-						}
-					);
+				if (!doc.exists) {
+					// return remoteDb.doc(`users/${userId}`).set(
+					// 	{},
+					// 	{
+					// 		merge: true
+					// 	}
+					// );
+					return {};
+				}
 				const user = doc.data();
 				Object.assign(window.user, user);
 				return user;

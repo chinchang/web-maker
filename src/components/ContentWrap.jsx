@@ -164,6 +164,10 @@ export default class ContentWrap extends Component {
 				log('✉️ Sending message to detached window');
 				this.detachedWindow.postMessage({ contents }, '*');
 			} else {
+				// 1. we refresh the frame so that all JS is cleared in the frame. this will
+				// break the iframe since sandboxed frame isn't served by SW (needed for offline support)
+				// 2. we cache and remove the sandbox attribute and refresh again so that it gets served by SW
+				// 3. we add back cached sandbox attr & write the contents to the iframe
 				const refreshAndDo = fn => {
 					Promise.race([
 						// Just in case onload promise doesn't resolves
@@ -179,7 +183,7 @@ export default class ContentWrap extends Component {
 				};
 				const writeInsideIframe = () => {
 					const sandbox = this.frame.getAttribute('sweet');
-					// console.log('setting back sandbox attr', sandbox);
+					console.log('setting back sandbox attr', sandbox);
 					this.frame.setAttribute('sandbox', sandbox);
 					this.frame.removeAttribute('sweet');
 					// console.log('sending postmessage');
@@ -190,7 +194,7 @@ export default class ContentWrap extends Component {
 				};
 				refreshAndDo(() => {
 					const sandbox = this.frame.getAttribute('sandbox');
-					// console.log('removing sandbox', sandbox);
+					console.log('removing sandbox', sandbox);
 					this.frame.setAttribute('sweet', sandbox);
 					this.frame.removeAttribute('sandbox');
 					refreshAndDo(writeInsideIframe);

@@ -168,7 +168,7 @@ export default function SavedItemPane({
 						style="justify-content: space-between;"
 					>
 						<h3>
-							<Trans>My Library ({filteredItems.length})</Trans>
+							<Trans>My Library</Trans> ({filteredItems.length})
 						</h3>
 
 						<div>

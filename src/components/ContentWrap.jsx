@@ -25,6 +25,8 @@ const PREVIEW_FRAME_HOST = window.DEBUG
 	? 'http://localhost:7888'
 	: `https://wbmakr.com`;
 
+let cachedSandboxAttribute = '';
+
 export default class ContentWrap extends Component {
 	constructor(props) {
 		super(props);
@@ -182,9 +184,11 @@ export default class ContentWrap extends Component {
 					this.frame.src = this.frame.src;
 				};
 				const writeInsideIframe = () => {
-					const sandbox = this.frame.getAttribute('sweet');
-					console.log('setting back sandbox attr', sandbox);
-					this.frame.setAttribute('sandbox', sandbox);
+					if (!cachedSandboxAttribute && window.DEBUG) {
+						alert('sandbox empty');
+					}
+					// console.log('setting back sandbox attr', sandbox);
+					this.frame.setAttribute('sandbox', cachedSandboxAttribute);
 					this.frame.removeAttribute('sweet');
 					// console.log('sending postmessage');
 					this.frame.contentWindow.postMessage({ contents }, '*');
@@ -193,9 +197,9 @@ export default class ContentWrap extends Component {
 					// this.frame.contentDocument.close();
 				};
 				refreshAndDo(() => {
-					const sandbox = this.frame.getAttribute('sandbox');
-					console.log('removing sandbox', sandbox);
-					this.frame.setAttribute('sweet', sandbox);
+					cachedSandboxAttribute = this.frame.getAttribute('sandbox');
+					// console.log('removing sandbox', sandbox);
+					// this.frame.setAttribute('sweet', sandbox);
 					this.frame.removeAttribute('sandbox');
 					refreshAndDo(writeInsideIframe);
 				});

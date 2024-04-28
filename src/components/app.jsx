@@ -384,6 +384,7 @@ export default class App extends Component {
 		const fork = JSON.parse(JSON.stringify(sourceItem));
 		delete fork.id;
 		delete fork.createdBy;
+		delete fork.isPublic;
 		fork.title = '(Forked) ' + sourceItem.title;
 		fork.updatedOn = Date.now();
 		this.setCurrentItem(fork).then(() => this.refreshEditor());

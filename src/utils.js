@@ -1,9 +1,9 @@
 import { trackEvent } from './analytics';
-
 import { computeHtml, computeCss, computeJs } from './computes';
 import { modes, HtmlModes, CssModes, JsModes } from './codeModes';
 import { deferred } from './deferred';
 import { getExtensionFromFileName } from './fileUtils';
+import confetti from 'canvas-confetti';
 const esprima = require('esprima');
 
 window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
@@ -23,7 +23,7 @@ export const BASE_PATH =
 	window.DEBUG ||
 	process.env.NODE_ENV === 'development'
 		? '/'
-		: '/app';
+		: '/create';
 /* eslint-enable no-process-env */
 
 var alphaNum = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -205,6 +205,41 @@ export function getHumanDate(timestamp) {
 	return retVal;
 }
 
+/**
+ * Convert any date-ish string/obj to human readable form -> Jul 02, 2021
+ * @param {string?object} date date to be formatted
+ * @returns string
+ */
+export function getHumanReadableDate(
+	date,
+	{ showTime = true, utc = false } = {}
+) {
+	if (!date) return '';
+	let d = typeof date.toDate === 'function' ? date.toDate() : new Date(date);
+	if (utc) {
+		d = new Date(
+			Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours())
+		);
+	}
+
+	let options = {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric'
+	};
+	if (showTime) {
+		options = {
+			...options,
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+			hour12: true
+		};
+	}
+	const dateTimeString = d.toLocaleString(false, options);
+	return dateTimeString;
+}
+
 // create a one-time event
 export function once(node, type, callback) {
 	// create event
@@ -343,19 +378,21 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 	var externalJs = '',
 		externalCss = '';
 	if (item.externalLibs) {
-		externalJs = item.externalLibs.js
-			.split('\n')
-			.reduce(function (scripts, url) {
-				return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
-			}, '');
-		externalCss = item.externalLibs.css
-			.split('\n')
-			.reduce(function (links, url) {
-				return (
-					links +
-					(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
-				);
-			}, '');
+		externalJs = item.externalLibs.js.split('\n').reduce(function (
+			scripts,
+			url
+		) {
+			return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
+		}, '');
+		externalCss = item.externalLibs.css.split('\n').reduce(function (
+			links,
+			url
+		) {
+			return (
+				links +
+				(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
+			);
+		}, '');
 	}
 	var contents =
 		'<!DOCTYPE html>\n' +
@@ -584,4 +621,43 @@ if (window.IS_EXTENSION) {
 	document.body.classList.add('is-extension');
 } else {
 	document.body.classList.add('is-app');
+}
+export async function copyToClipboard(text) {
+	try {
+		await navigator.clipboard.writeText(text);
+	} catch (err) {
+		console.error('Failed to copy text: ', err);
+	}
+}
+
+export function showConfetti(time = 4) {
+	var end = Date.now() + time * 1000;
+
+	(function frame() {
+		confetti({
+			particleCount: 1,
+			startVelocity: 0,
+			ticks: 100,
+			origin: {
+				x: Math.random(),
+				// since they fall down, start a bit higher than random
+				y: Math.random() - 0.2
+			},
+			colors: [
+				[
+					'#26ccff',
+					'#a25afd',
+					'#ff5e7e',
+					'#88ff5a',
+					'#fcff42',
+					'#ffa62d',
+					'#ff36ff'
+				][~~(Math.random() * 7)]
+			]
+		});
+
+		if (Date.now() < end) {
+			requestAnimationFrame(frame);
+		}
+	})();
 }

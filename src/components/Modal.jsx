@@ -77,31 +77,47 @@ const Modal = ({
 	if (!show) return null;
 
 	return (
-		<Portal into={`body`}>
-			<div
-				role="dialog"
-				class={`${extraClasses || ''} modal is-modal-visible ${
-					small ? 'modal--small' : ''
-				}`}
-				ref={overlayRef}
-				onClick={onOverlayClick}
-			>
-				<div class="modal__content">
-					{hideCloseButton ? null : (
-						<button
-							type="button"
-							onClick={closeHandler}
-							aria-label="Close modal"
-							data-testid="closeModalButton"
-							title="Close"
-							class="js-modal__close-btn modal__close-btn"
-						>
-							Close
-						</button>
-					)}
-					{children}
+		<Portal into={`#portal`}>
+			<>
+				{/* <div class="modal-overlay" /> */}
+				<div
+					role="dialog"
+					class={`${extraClasses || ''} modal is-modal-visible ${
+						small ? 'modal--small' : ''
+					}   
+					${noOverlay ? 'modal--no-overlay' : ''}
+					`}
+					ref={overlayRef}
+					onClick={onOverlayClick}
+				>
+					<div class="modal__content">
+						{hideCloseButton ? null : (
+							<button
+								type="button"
+								onClick={closeHandler}
+								aria-label="Close modal"
+								data-testid="closeModalButton"
+								title="Close"
+								class="js-modal__close-btn dialog__close-btn modal__close-btn"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="3.5"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+								>
+									<line x1="18" y1="6" x2="6" y2="18"></line>
+									<line x1="6" y1="6" x2="18" y2="18"></line>
+								</svg>
+							</button>
+						)}
+						{children}
+					</div>
 				</div>
-			</div>
+			</>
 		</Portal>
 	);
 };

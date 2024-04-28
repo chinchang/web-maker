@@ -44,18 +44,18 @@ window.MonacoEnvironment = {
 	getWorkerUrl(moduleId, label) {
 		switch (label) {
 			case 'html':
-				return 'lib/monaco/workers/html.worker.bundle.js';
+				return '/lib/monaco/workers/html.worker.bundle.js';
 			case 'json':
-				return 'lib/monaco/workers/json.worker.bundle.js';
+				return '/lib/monaco/workers/json.worker.bundle.js';
 			case 'css':
 			case 'scss':
 			case 'less':
-				return 'lib/monaco/workers/css.worker.bundle.js';
+				return '/lib/monaco/workers/css.worker.bundle.js';
 			case 'typescript':
 			case 'javascript':
-				return 'lib/monaco/workers/ts.worker.bundle.js';
+				return '/lib/monaco/workers/ts.worker.bundle.js';
 			default:
-				return 'lib/monaco/workers/editor.worker.bundle.js';
+				return '/lib/monaco/workers/editor.worker.bundle.js';
 		}
 	}
 };
@@ -235,9 +235,9 @@ export default class CodeEditor extends Component {
 		if (this.props.type === 'monaco') {
 			if (!monacoDepsDeferred) {
 				monacoDepsDeferred = deferred();
-				loadCss({ url: 'lib/monaco/monaco.css', id: 'monaco-css' });
+				loadCss({ url: '/lib/monaco/monaco.css', id: 'monaco-css' });
 				import(
-					/* webpackChunkName: "monaco" */ '../lib/monaco/monaco.bundle.js'
+					/* webpackChunkName: "monaco" */ '/lib/monaco/monaco.bundle.js'
 				).then(() => {
 					monacoDepsDeferred.resolve();
 				});

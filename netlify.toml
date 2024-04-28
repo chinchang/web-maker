@@ -18,10 +18,19 @@ ID = "webmaker"
   # been specified, include it in the publish directory path.
   publish = "dist"
 
-# The following redirect is intended for use with most SPAs that handle
-# routing internally.
 [[redirects]]
   from = "https://preview.webmaker.app/*"
-  to = "/app/preview/:splat"
+  to = "/create/preview/:splat"
   status = 200
   force = true
+
+[[redirects]]
+  from = "https://preview.v6--webmaker.netlify.app/*"
+  to = "/create/preview/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/create/*"
+  to = "/create/index.html"
+  status = 200

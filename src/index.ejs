@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
@@ -11,11 +11,12 @@
 			rel="manifest"
 			href="<%= htmlWebpackPlugin.files.publicPath %>manifest.json"
 		/>
-		<% if (htmlWebpackPlugin.options.manifest.theme_color) { %>
-		<meta
-			name="theme-color"
-			content="<%= htmlWebpackPlugin.options.manifest.theme_color %>"
-		/>
+		<% if (cli.env.isProd) { %>
+		<base href="/create/" />
+		<% } else { %>
+		<base href="/" />
+		<% } %> <% if (cli.manifest.theme_color) { %>
+		<meta name="theme-color" content="<%= cli.manifest.theme_color %>" />
 		<% } %>
 
 		<style>
@@ -38,7 +39,7 @@
 		<link
 			rel="stylesheet"
 			id="editorThemeLinkTag"
-			href="lib/codemirror/theme/monokai.css"
+			href="./lib/codemirror/theme/monokai.css"
 		/>
 
 		<style id="fontStyleTemplate" type="template">
@@ -73,13 +74,13 @@
 	<body>
 		<div id="root"></div>
 		<div id="portal"></div>
-		<!-- SCRIPT-TAGS -->
-		<%= htmlWebpackPlugin.options.ssr({ url: '/' }) %>
-		<script
-			defer
-			src="<%= htmlWebpackPlugin.files.chunks['bundle'].entry %>"
-		></script>
 
-		<!-- END-SCRIPT-TAGS -->
+		<%= cli.ssr %> <% if (cli.config.prerender === true) { %>
+		<script type="__PREACT_CLI_DATA__">
+			<%= encodeURI(JSON.stringify(cli.CLI_DATA)) %>
+		</script>
+		<% } %>
+		<script type="module" src="<%= cli.entrypoints['bundle'] %>"></script>
+		<script nomodule src="<%= cli.entrypoints['dom-polyfills'] %>"></script>
 	</body>
 </html>

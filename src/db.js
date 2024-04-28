@@ -5,6 +5,24 @@ import { deferred } from './deferred';
 import { trackEvent } from './analytics';
 import { log } from './utils';
 
+/**
+ * Converts a firestore query snapshot into native array
+ * @param {snapshot} querySnapshot Snapshot object returned by a firestore query
+ */
+function getArrayFromQuerySnapshot(querySnapshot) {
+	const arr = [];
+	querySnapshot.forEach(doc => {
+		// doc.data() has to be after doc.id because docs can have `id` key in them which
+		// should override the explicit `id` being set
+		arr.push({
+			id: doc.id,
+			...doc.data()
+		});
+		//   documentCache[doc.id] = doc.data()
+	});
+	return arr;
+}
+
 (() => {
 	const FAUX_DELAY = 1;
 
@@ -59,7 +77,7 @@ import { log } from './utils';
 
 			return firestoreInstance
 				.enablePersistence({ experimentalTabSynchronization: true })
-				.then(function() {
+				.then(function () {
 					// Initialize Cloud Firestore through firebase
 					db = firebase.firestore();
 					// const settings = {
@@ -69,7 +87,7 @@ import { log } from './utils';
 					log('firebase db ready', db);
 					resolve(db);
 				})
-				.catch(function(err) {
+				.catch(function (err) {
 					reject(err.code);
 					if (err.code === 'failed-precondition') {
 						// Multiple tabs open, persistence can only be enabled
@@ -113,7 +131,7 @@ import { log } from './utils';
 			{
 				lastSeenVersion: version
 			},
-			function() {}
+			function () {}
 		);
 		if (window.user) {
 			const remoteDb = await getDb();
@@ -129,16 +147,30 @@ import { log } from './utils';
 			.doc(`users/${userId}`)
 			.get()
 			.then(doc => {
-				if (!doc.exists)
-					return remoteDb.doc(`users/${userId}`).set(
-						{},
-						{
-							merge: true
-						}
-					);
+				if (!doc.exists) {
+					// return remoteDb.doc(`users/${userId}`).set(
+					// 	{},
+					// 	{
+					// 		merge: true
+					// 	}
+					// );
+					return {};
+				}
 				const user = doc.data();
-				Object.assign(window.user, user);
+				window.user = { ...window.user, ...user };
 				return user;
+			});
+	}
+
+	async function fetchItem(itemId) {
+		const remoteDb = await getDb();
+		return remoteDb
+			.doc(`items/${itemId}`)
+			.get()
+			.then(doc => {
+				if (!doc.exists) return {};
+				const data = doc.data();
+				return data;
 			});
 	}
 
@@ -155,12 +187,36 @@ import { log } from './utils';
 		return d.promise;
 	}
 
+	async function getPublicItemCount(userId) {
+		const remoteDb = await getDb();
+		return remoteDb
+			.collection('items')
+			.where('createdBy', '==', userId)
+			.where('isPublic', '==', true)
+			.get()
+			.then(snapShot => {
+				return snapShot.size;
+			});
+	}
+
+	async function getUserSubscriptionEvents(userId) {
+		const remoteDb = await getDb();
+		return remoteDb
+			.collection('subscriptions')
+			.where('userId', '==', userId)
+			.get()
+			.then(getArrayFromQuerySnapshot);
+	}
+
 	window.db = {
 		getDb,
 		getUser,
 		getUserLastSeenVersion,
 		setUserLastSeenVersion,
 		getSettings,
+		fetchItem,
+		getPublicItemCount,
+		getUserSubscriptionEvents,
 		local: dbLocalAlias,
 		sync: dbSyncAlias
 	};

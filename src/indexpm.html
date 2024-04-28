@@ -1,0 +1,12 @@
+<script>
+	function callback(e) {
+		// console.log('post message recvd', e.data);
+		window.document.open();
+
+		const { contents } = e.data;
+		window.document.write(e.data.contents);
+		window.document.close();
+		window.addEventListener('message', callback);
+	}
+	window.addEventListener('message', callback);
+</script>

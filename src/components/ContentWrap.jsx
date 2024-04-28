@@ -21,6 +21,12 @@ const minCodeWrapSize = 33;
 /* global htmlCodeEl
  */
 
+const PREVIEW_FRAME_HOST = window.DEBUG
+	? 'http://localhost:7888'
+	: `https://wbmakr.com`;
+
+let cachedSandboxAttribute = '';
+
 export default class ContentWrap extends Component {
 	constructor(props) {
 		super(props);
@@ -160,22 +166,44 @@ export default class ContentWrap extends Component {
 				log('✉️ Sending message to detached window');
 				this.detachedWindow.postMessage({ contents }, '*');
 			} else {
-				const writeInsideIframe = () => {
-					this.frame.contentDocument.open();
-					this.frame.contentDocument.write(contents);
-					this.frame.contentDocument.close();
+				// 1. we refresh the frame so that all JS is cleared in the frame. this will
+				// break the iframe since sandboxed frame isn't served by SW (needed for offline support)
+				// 2. we cache and remove the sandbox attribute and refresh again so that it gets served by SW
+				// 3. we add back cached sandbox attr & write the contents to the iframe
+				const refreshAndDo = fn => {
+					Promise.race([
+						// Just in case onload promise doesn't resolves
+						new Promise(resolve => {
+							setTimeout(resolve, 200);
+						}),
+						new Promise(resolve => {
+							this.frame.onload = resolve;
+						})
+					]).then(fn);
+					// Setting to blank string cause frame to reload
+					this.frame.src = this.frame.src;
 				};
-				Promise.race([
-					// Just in case onload promise doesn't resolves
-					new Promise(resolve => {
-						setTimeout(resolve, 200);
-					}),
-					new Promise(resolve => {
-						this.frame.onload = resolve;
-					})
-				]).then(writeInsideIframe);
-				// Setting to blank string cause frame to reload
-				this.frame.src = '';
+				const writeInsideIframe = () => {
+					if (!cachedSandboxAttribute && window.DEBUG) {
+						alert('sandbox empty');
+					}
+					// console.log('setting back sandbox attr', sandbox);
+					this.frame.setAttribute('sandbox', cachedSandboxAttribute);
+					this.frame.removeAttribute('sweet');
+					// console.log('sending postmessage');
+					this.frame.contentWindow.postMessage({ contents }, '*');
+					// this.frame.contentDocument.open();
+					// this.frame.contentDocument.write(contents);
+					// this.frame.contentDocument.close();
+				};
+				refreshAndDo(() => {
+					cachedSandboxAttribute = this.frame.getAttribute('sandbox');
+					// console.log('removing sandbox', sandbox);
+					// this.frame.setAttribute('sweet', sandbox);
+					this.frame.removeAttribute('sandbox');
+					refreshAndDo(writeInsideIframe);
+				});
+				// refreshAndDo(writeInsideIframe);
 			}
 		} else {
 			// we need to store user script in external JS file to prevent inline-script
@@ -233,7 +261,7 @@ export default class ContentWrap extends Component {
 		};
 		log('🔎 setPreviewContent', isForced);
 		const targetFrame = this.detachedWindow
-			? this.detachedWindow.document.querySelector('iframe')
+			? this.detachedWindow //this.detachedWindow.document.querySelector('iframe')
 			: this.frame;
 
 		const cssMode = this.props.currentItem.cssMode;
@@ -242,7 +270,8 @@ export default class ContentWrap extends Component {
 		if (
 			!isForced &&
 			currentCode.html === this.codeInPreview.html &&
-			currentCode.js === this.codeInPreview.js
+			currentCode.js === this.codeInPreview.js &&
+			false
 		) {
 			computeCss(
 				cssMode === CssModes.ACSS ? currentCode.html : currentCode.css,
@@ -341,7 +370,7 @@ export default class ContentWrap extends Component {
 
 		// Replace correct css file in LINK tags's href
 		if (prefs.editorTheme) {
-			window.editorThemeLinkTag.href = `lib/codemirror/theme/${prefs.editorTheme}.css`;
+			window.editorThemeLinkTag.href = `./lib/codemirror/theme/${prefs.editorTheme}.css`;
 		}
 
 		window.fontStyleTag.textContent =
@@ -533,7 +562,7 @@ export default class ContentWrap extends Component {
 		document.body.classList.add('is-detached-mode');
 
 		this.detachedWindow = window.open(
-			'./preview.html',
+			`${PREVIEW_FRAME_HOST}/preview.html`,
 			'Web Maker',
 			`width=${iframeWidth},height=${iframeHeight},resizable,scrollbars=yes,status=1`
 		);
@@ -901,10 +930,14 @@ export default class ContentWrap extends Component {
 				</SplitPane>
 				<div class="demo-side" id="js-demo-side" style="">
 					<iframe
+						src={`./indexpm.html`}
 						ref={el => (this.frame = el)}
 						frameborder="0"
 						id="demo-frame"
-						allowfullscreen
+						sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-scripts allow-top-navigation-by-user-activation"
+						allow="accelerometer; camera; encrypted-media; display-capture; geolocation; gyroscope; microphone; midi; clipboard-read; clipboard-write; web-share"
+						allowpaymentrequest="true"
+						allowfullscreen="true"
 					/>
 
 					<PreviewDimension ref={comp => (this.previewDimension = comp)} />

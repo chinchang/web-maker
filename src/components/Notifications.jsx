@@ -116,8 +116,8 @@ export function Notifications(props) {
 					privacy-first app. Continuing that culture, today we introduce "Share
 					your creation" feature. Your creations are still created as private
 					but now you can securely make them public to share with the world. As
-					a free user you can make 1 creation public. Upgrading to PRO gives you
-					unlimited public creations.
+					a free user you can have 1 creation public at a time. Upgrading to PRO
+					gives you unlimited public creations.
 				</li>
 				<li>
 					<strong>🗄️ Asset hosting</strong>: No more going to other places in
@@ -130,6 +130,9 @@ export function Notifications(props) {
 					2 creations in Files mode. With PRO, you can create unlimited
 					creations in Files mode.
 				</li>
+				<NotificationItem type="ui">
+					Fork button is now available in the header too
+				</NotificationItem>
 			</Notification>
 			<Notification version="5.3.0" {...props} isLatest={true}>
 				<li>

@@ -55,7 +55,7 @@ export function Pro({ user, onLoginClick }) {
 					name="Starter"
 					features={[
 						'Unlimited private creations',
-						'2 Public creations',
+						'1 Public creation',
 						'2 Files mode creations'
 					]}
 				/>

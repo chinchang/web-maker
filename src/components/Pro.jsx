@@ -12,7 +12,7 @@ import { showConfetti } from '../utils';
 const checkoutIds = {
 	monthly: '1601bc00-9623-435b-b1de-2a70a2445c13',
 	annual: 'aae95d78-05c8-46f5-b11e-2d40ddd211d3',
-	generic: 'f8c64e50-7734-438b-a122-3510156f14ed'
+	generic: 'd1d2da1a-ae8f-4222-bbaf-6e07da8954bf' //'f8c64e50-7734-438b-a122-3510156f14ed'
 };
 export function Pro({ user, onLoginClick }) {
 	const hasCheckoutLoaded = useCheckout();

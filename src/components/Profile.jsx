@@ -65,12 +65,12 @@ export function Profile({ user, logoutBtnHandler }) {
 							!(
 								event.type === 'order_created' &&
 								!event.data.data.attributes.first_order_item?.variant_name?.match(
-									/lifetime/
+									/lifetime/i
 								)
 							)
 					)[0];
 				if (creationEvent) {
-					console.log(creationEvent);
+					// log(creationEvent);
 					creationEvent.attributes = creationEvent.data.data.attributes;
 					setCurrentSubscription(creationEvent);
 				}

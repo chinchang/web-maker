@@ -383,9 +383,11 @@ export default class App extends Component {
 		}
 		const fork = JSON.parse(JSON.stringify(sourceItem));
 		delete fork.id;
+		delete fork.createdBy;
 		fork.title = '(Forked) ' + sourceItem.title;
 		fork.updatedOn = Date.now();
 		this.setCurrentItem(fork).then(() => this.refreshEditor());
+		route('/create');
 		alertsService.add(`"${sourceItem.title}" was forked`);
 		trackEvent('fn', 'itemForked');
 	}
@@ -936,6 +938,15 @@ export default class App extends Component {
 		var isNewItem = !this.state.currentItem.id;
 		this.state.currentItem.id =
 			this.state.currentItem.id || 'item-' + generateRandomId();
+		if (
+			this.state.currentItem.createdBy &&
+			this.state.currentItem.createdBy !== this.state.user.uid
+		) {
+			alertsService.add(
+				'You cannot save this item as it was created by someone else. Fork it to save it as your own.'
+			);
+			return;
+		}
 		this.setState({
 			isSaving: true
 		});
@@ -1697,6 +1708,9 @@ export default class App extends Component {
 							isFileMode={
 								this.state.currentItem && this.state.currentItem.files
 							}
+							onItemFork={() => {
+								this.forkItem(this.state.currentItem);
+							}}
 						/>
 						{this.state.currentItem && this.state.currentItem.files ? (
 							<ContentWrapFiles

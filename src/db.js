@@ -157,7 +157,7 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 					return {};
 				}
 				const user = doc.data();
-				Object.assign(window.user, user);
+				window.user = { ...window.user, ...user };
 				return user;
 			});
 	}

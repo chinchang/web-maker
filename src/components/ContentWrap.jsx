@@ -185,11 +185,11 @@ export default class ContentWrap extends Component {
 				};
 				const writeInsideIframe = () => {
 					if (!cachedSandboxAttribute && window.DEBUG) {
-						alert('sandbox empty');
+						// alert('sandbox empty');
 					}
 					// console.log('setting back sandbox attr', sandbox);
-					this.frame.setAttribute('sandbox', cachedSandboxAttribute);
-					this.frame.removeAttribute('sweet');
+					// this.frame.setAttribute('sandbox', cachedSandboxAttribute);
+					// this.frame.removeAttribute('sweet');
 					// console.log('sending postmessage');
 					this.frame.contentWindow.postMessage({ contents }, '*');
 					// this.frame.contentDocument.open();
@@ -200,7 +200,7 @@ export default class ContentWrap extends Component {
 					cachedSandboxAttribute = this.frame.getAttribute('sandbox');
 					// console.log('removing sandbox', sandbox);
 					// this.frame.setAttribute('sweet', sandbox);
-					this.frame.removeAttribute('sandbox');
+					// this.frame.removeAttribute('sandbox');
 					refreshAndDo(writeInsideIframe);
 				});
 				// refreshAndDo(writeInsideIframe);

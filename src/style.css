@@ -546,7 +546,7 @@ a > svg {
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
-	transition: 0.1s ease;
+	transition: 0.25s ease;
 	will-change: filter, transform;
 }
 

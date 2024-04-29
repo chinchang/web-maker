@@ -1181,7 +1181,7 @@ export default class App extends Component {
 	notificationsBtnClickHandler() {
 		this.setState({ isNotificationsModalOpen: true });
 
-		if (this.state.isNotificationsModalOpen && !this.hasSeenNotifications) {
+		if (!this.state.isNotificationsModalOpen && !this.hasSeenNotifications) {
 			this.hasSeenNotifications = true;
 			this.setState({ hasUnseenChangelog: false });
 			window.db.setUserLastSeenVersion(version);

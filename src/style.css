@@ -2369,6 +2369,52 @@ while the theme CSS file is loading */
 		inset 0px 1px 3px rgba(255, 255, 255, 0.1);
 }
 
+.skeleton {
+	display: inline-block;
+	height: 0.5em;
+	background-color: currentColor;
+	border-radius: 999px;
+	animation: 2s linear infinite skeleton;
+	transform-origin: left;
+}
+
+@keyframes skeleton {
+	20% {
+		transform-origin: left;
+		opacity: 1;
+		transform: scaleX(1.5);
+		opacity: 0.5;
+	}
+	20.1% {
+		transform-origin: right;
+		transform: scaleX(1.5) translateX(33%);
+	}
+	50% {
+		transform-origin: right;
+		transform: scaleX(1) translateX(50%);
+		opacity: 1;
+	}
+	70% {
+		transform-origin: right;
+		transform: scaleX(1.5) translateX(33%);
+	}
+	70.1% {
+		transform-origin: left;
+		transform: scaleX(1.5);
+	}
+	90% {
+		transform-origin: left;
+		transform: scaleX(1);
+		opacity: 0.5;
+	}
+
+	/* 100% {
+	  transform-origin: right;
+	  transform: scaleX(1.5) translateX(33%);
+	  opacity: 1;
+	} */
+}
+
 @media screen and (max-width: 600px) {
 	body {
 		font-size: 70%;

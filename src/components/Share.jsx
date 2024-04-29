@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import { ProBadge } from './ProBadge';
+import { Skeleton } from './Skeleton';
 import { HStack, Stack, VStack } from './Stack';
 import Switch from './Switch';
 import { itemService } from '../itemService';
@@ -114,9 +114,25 @@ export function Share({
 			{!user?.isPro ? (
 				<VStack gap={1} align="stretch">
 					<p>
-						Public creations available: {FREE_PUBLIC_ITEM_COUNT}. Used:{' '}
-						{publicItemCount === undefined ? '-' : publicItemCount}. Left:{' '}
-						{Math.max(0, FREE_PUBLIC_ITEM_COUNT - publicItemCount)}
+						<HStack gap={3} justify="flex-start">
+							<span>Public creations available: {FREE_PUBLIC_ITEM_COUNT}</span>
+							<span>
+								Used:{' '}
+								{publicItemCount === undefined ? (
+									<Skeleton width="2ch" />
+								) : (
+									publicItemCount
+								)}
+							</span>
+							<span>
+								Left:{' '}
+								{publicItemCount === undefined ? (
+									<Skeleton width="2ch" />
+								) : (
+									Math.max(0, FREE_PUBLIC_ITEM_COUNT - publicItemCount)
+								)}
+							</span>
+						</HStack>
 					</p>
 					<p>
 						<HStack gap={1}>

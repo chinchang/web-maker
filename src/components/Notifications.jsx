@@ -131,6 +131,10 @@ export function Notifications(props) {
 					creations in Files mode.
 				</li>
 				<NotificationItem type="ui">
+					Web app is now available on webmaker.app/create (Previously available
+					on webmaker.app/app)
+				</NotificationItem>
+				<NotificationItem type="ui">
 					Fork button is now available in the header too
 				</NotificationItem>
 			</Notification>

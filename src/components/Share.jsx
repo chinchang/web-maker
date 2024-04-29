@@ -36,7 +36,7 @@ export function Share({
 		const newVal = e.target.checked;
 		setVal(newVal);
 		if (newVal) {
-			const token = await window.user.getIdToken();
+			const token = await window.user.firebaseUser.getIdToken();
 			let res;
 			try {
 				res = await fetch(

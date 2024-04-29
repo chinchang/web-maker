@@ -23,7 +23,8 @@ import {
 	getCompleteHtml,
 	getFilenameFromUrl,
 	prettify,
-	sanitizeSplitSizes
+	sanitizeSplitSizes,
+	persistAuthUserLocally
 } from '../utils';
 import {
 	linearizeFiles,
@@ -183,9 +184,24 @@ export default class App extends Component {
 			if (authUser) {
 				log('You are -> ', authUser);
 				alertsService.add('You are now logged in!');
-				this.setState({ user: authUser });
-				window.user = authUser;
-				window.localStorage.setItem('user', authUser);
+
+				let newUser = {
+					uid: authUser.uid,
+					photoURL: authUser.photoURL
+				};
+				// port some keys from localstorage user to new auth user
+				const keysToPort = ['isPro', 'displayName', 'settings'];
+				keysToPort.forEach(key => {
+					if (user && user[key] !== undefined) {
+						newUser[key] = user[key];
+					}
+				});
+				// storing actual firebase user object for accessing functions like updateProfile
+				newUser.firebaseUser = authUser;
+
+				this.setState({ user: newUser });
+				window.user = newUser;
+				// window.localStorage.setItem('user', authUser);
 				trackEvent('fn', 'loggedIn', window.IS_EXTENSION ? 'extension' : 'web');
 
 				if (!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS]) {
@@ -201,17 +217,23 @@ export default class App extends Component {
 						trackEvent('ui', 'askToImportModalSeen');
 					});
 				}
-				// storing actual firebase user object for accessing functions like updateProfile
-				// window.user.firebaseUser = authUser
 
 				window.db.getUser(authUser.uid).then(customUser => {
 					if (customUser) {
 						const prefs = { ...this.state.prefs };
-						Object.assign(prefs, authUser.settings);
-						const newUser = { ...authUser, isPro: false, ...customUser };
-						window.localStorage.setItem('user', newUser);
+						Object.assign(prefs, customUser.settings);
+
+						// spreading authUser doesn't work below anymore because the required properties are
+						// not enumerable anymore
+						newUser = {
+							...newUser,
+							isPro: false,
+							...customUser
+						};
+						window.user = newUser;
 						this.setState({ user: newUser, prefs }, this.updateSetting);
 					}
+					persistAuthUserLocally(newUser);
 				});
 			} else {
 				// User is signed out.

@@ -417,7 +417,7 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 				? chrome.extension.getURL('lib/screenlog.js')
 				: `${location.origin}${
 						window.DEBUG ? '' : BASE_PATH
-				  }/lib/screenlog.js`) +
+					}/lib/screenlog.js`) +
 			'"></script>';
 	}
 
@@ -660,4 +660,15 @@ export function showConfetti(time = 4) {
 			requestAnimationFrame(frame);
 		}
 	})();
+}
+
+/**
+ * Persists the firebase user with a subset of it's keys.
+ * @param {object} user User object from firebase
+ */
+export function persistAuthUserLocally(user) {
+	const keys = ['uid', 'displayName', 'photoURL', 'isPro', 'settings'];
+	const obj = {};
+	keys.map(key => (obj[key] = user[key]));
+	window.localStorage.setItem('user', JSON.stringify(obj));
 }

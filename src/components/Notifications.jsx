@@ -106,10 +106,10 @@ export function Notifications(props) {
 			<h1>Whats new?</h1>
 			<Notification version="6.0.0" {...props} isLatest={true}>
 				<li>
-					<strong>🎁 PRO plan 🎉</strong>: Today I introduce to use Web Maker's
-					PRO plan! A set of additional super-features which you can buy. The
-					PRO plan is available as monthly/annual subscription as well as a
-					one-time lifetime price! Let's see what you get as a PRO.
+					<strong>🎁 PRO plan 🎉</strong>: Today I introduce to you - Web
+					Maker's PRO plan! A set of additional super-features which you can
+					buy. The PRO plan is available as monthly/annual subscription as well
+					as a one-time lifetime price! Let's see what you get as a PRO.
 				</li>
 				<li>
 					<strong>🔓 Share your creations</strong>: Web Maker has always been a

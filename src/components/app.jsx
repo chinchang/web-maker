@@ -192,8 +192,8 @@ export default class App extends Component {
 				// port some keys from localstorage user to new auth user
 				const keysToPort = ['isPro', 'displayName', 'settings'];
 				keysToPort.forEach(key => {
-					if (user && user[key] !== undefined) {
-						newUser[key] = user[key];
+					if (this.state.user && this.state.user[key] !== undefined) {
+						newUser[key] = this.state.user[key];
 					}
 				});
 				// storing actual firebase user object for accessing functions like updateProfile

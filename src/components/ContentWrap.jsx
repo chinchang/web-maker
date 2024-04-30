@@ -174,7 +174,7 @@ export default class ContentWrap extends Component {
 					Promise.race([
 						// Just in case onload promise doesn't resolves
 						new Promise(resolve => {
-							setTimeout(resolve, 200);
+							setTimeout(resolve, 400);
 						}),
 						new Promise(resolve => {
 							this.frame.onload = resolve;

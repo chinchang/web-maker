@@ -1029,14 +1029,17 @@ export default class App extends Component {
 	}
 
 	titleInputBlurHandler(e) {
-		this.setState({
-			currentItem: { ...this.state.currentItem, title: e.target.value }
-		});
-
-		if (this.state.currentItem.id) {
-			this.saveItem();
-			trackEvent('ui', 'titleChanged');
-		}
+		this.setState(
+			{
+				currentItem: { ...this.state.currentItem, title: e.target.value }
+			},
+			() => {
+				if (this.state.currentItem.id) {
+					this.saveItem();
+					trackEvent('ui', 'titleChanged');
+				}
+			}
+		);
 	}
 
 	/**

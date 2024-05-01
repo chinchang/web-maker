@@ -237,7 +237,7 @@ export default class CodeEditor extends Component {
 				monacoDepsDeferred = deferred();
 				loadCss({ url: 'lib/monaco/monaco.css', id: 'monaco-css' });
 				import(
-					/* webpackChunkName: "monaco" */ 'lib/monaco/monaco.bundle.js'
+					/* webpackChunkName: "monaco" */ '/lib/monaco/monaco.bundle.js'
 				).then(() => {
 					monacoDepsDeferred.resolve();
 				});

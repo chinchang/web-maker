@@ -227,7 +227,7 @@ export function Notifications(props) {
 					<strong>autoPreview</strong> and <strong>isMonacoEditorOn</strong> are
 					supported. Example:{' '}
 					<code>
-						https://webmaker.app/app?settings=autoPreview:false,isMonacoEditorOn:true
+						https://webmaker.app/create?settings=autoPreview:false,isMonacoEditorOn:true
 					</code>
 				</li>
 				<NotificationItem type="bug">
@@ -620,11 +620,11 @@ export function Notifications(props) {
 						as web app that runs offline just like the extension! Checkout it
 						out -&gt;
 						<a
-							href="https://webmaker.app/app/"
+							href="https://webmaker.app/create/"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
-							https://webmaker.app/app/
+							https://webmaker.app/create/
 						</a>
 						.
 					</li>

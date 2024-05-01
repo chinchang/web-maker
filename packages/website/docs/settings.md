@@ -9,13 +9,13 @@ At rare times, you might find yourself in a situation where you are not able to 
 Say, you want to turn off `autoPreview` (which runs your code automatically on fresh launch and then on subsequent changes). You can do so by opening the following URL:
 
 ```
-https://webmaker.app/app?settings=autoPreview:false
+https://webmaker.app/create?settings=autoPreview:false
 ```
 
 Say, you want to turn off monaco editor also:
 
 ```
-https://webmaker.app/app?settings=autoPreview:false,isMonacoEditorOn:false
+https://webmaker.app/create?settings=autoPreview:false,isMonacoEditorOn:false
 ```
 
 **Note**: Currently overrides work only for `autoPreview` and `isMonacoEditorOn` options. More coming soon.

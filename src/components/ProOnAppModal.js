@@ -17,7 +17,11 @@ export function ProOnAppModal({ show, closeHandler }) {
 				</p>
 
 				<Stack justify="center">
-					<a href="https://webmaker.app/create" className="btn btn--pro">
+					<a
+						href="https://webmaker.app/create"
+						className="btn btn--pro"
+						target="_blank"
+					>
 						Upgrade on Web app
 					</a>
 				</Stack>

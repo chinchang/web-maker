@@ -107,6 +107,14 @@ if (location.search) {
 	window.codeCss = params.get('css') || '';
 }
 
+function customRoute(path) {
+	// we don't /create redirections on extension since SPA paths don't work there
+	if (window.IS_EXTENSION) return;
+	else {
+		route(path);
+	}
+}
+
 export default class App extends Component {
 	constructor() {
 		super();
@@ -411,7 +419,7 @@ export default class App extends Component {
 		fork.title = '(Forked) ' + sourceItem.title;
 		fork.updatedOn = Date.now();
 		this.setCurrentItem(fork).then(() => this.refreshEditor());
-		route('/create');
+		customRoute('/create');
 		alertsService.add(`"${sourceItem.title}" was forked`);
 		trackEvent('fn', 'itemForked');
 	}
@@ -471,12 +479,12 @@ export default class App extends Component {
 			};
 		}
 		this.setCurrentItem(item).then(() => this.refreshEditor());
-		route('/create');
+		customRoute('/create');
 		alertsService.add('New item created');
 	}
 	openItem(item) {
 		this.setCurrentItem(item).then(() => this.refreshEditor());
-		route(`/create/${item.id}`);
+		customRoute(`/create/${item.id}`);
 		alertsService.add('Saved item loaded');
 	}
 	removeItem(item) {

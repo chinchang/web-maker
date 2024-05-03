@@ -632,7 +632,7 @@ body:not(.light-version).overlay-visible .main-container {
 }
 
 .is-detached-mode.layout-2 .code-side {
-	height: auto !important;
+	height: 100% !important;
 }
 
 .code-wrap {

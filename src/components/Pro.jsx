@@ -8,6 +8,7 @@ import { useCheckout } from '../hooks/useCheckout';
 import { Text } from './Text';
 import { Icon } from './Icons';
 import { showConfetti } from '../utils';
+import { trackEvent } from '../analytics';
 
 const checkoutIds = {
 	monthly: '1601bc00-9623-435b-b1de-2a70a2445c13',
@@ -69,6 +70,9 @@ export function Pro({ user, onLoginClick }) {
 								class="btn btn--pro lemonsqueezy-button d-f jc-c ai-c"
 								style="gap:0.2rem"
 								href={`https://web-maker.lemonsqueezy.com/checkout/buy/${checkoutIds.generic}?embed=1&checkout[custom][userId]=${user?.uid}`}
+								onClick={() => {
+									trackEvent('ui', 'buyBtnClick');
+								}}
 							>
 								Go PRO
 							</A>

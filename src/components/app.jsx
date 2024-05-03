@@ -237,7 +237,8 @@ export default class App extends Component {
 						// not enumerable anymore
 						newUser = {
 							...newUser,
-							isPro: false
+							isPro: false,
+							...customUser
 						};
 						window.user = newUser;
 						this.setState({ user: newUser, prefs }, this.updateSetting);

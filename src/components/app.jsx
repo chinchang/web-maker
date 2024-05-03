@@ -77,6 +77,7 @@ import { Pro } from './Pro.jsx';
 import { VStack } from './Stack.jsx';
 import { ProBadge } from './ProBadge.jsx';
 import { Text } from './Text.jsx';
+import { ProOnAppModal } from './ProOnAppModal.js';
 
 if (module.hot) {
 	require('preact/debug');
@@ -129,7 +130,8 @@ export default class App extends Component {
 			isAssetsOpen: false,
 			isShareModalOpen: false,
 			isProModalOpen: false,
-			isFilesLimitModalOpen: false
+			isFilesLimitModalOpen: false,
+			isProOnAppModalOpen: false
 		};
 		this.state = {
 			isSavedItemPaneOpen: false,
@@ -227,8 +229,7 @@ export default class App extends Component {
 						// not enumerable anymore
 						newUser = {
 							...newUser,
-							isPro: false,
-							...customUser
+							isPro: false
 						};
 						window.user = newUser;
 						this.setState({ user: newUser, prefs }, this.updateSetting);
@@ -1803,7 +1804,6 @@ export default class App extends Component {
 							codeSize={this.state.codeSize}
 						/>
 					</div>
-
 					<SavedItemPane
 						itemsMap={this.state.savedItems}
 						isOpen={this.state.isSavedItemPaneOpen}
@@ -1814,9 +1814,7 @@ export default class App extends Component {
 						onExport={this.exportBtnClickHandler.bind(this)}
 						mergeImportedItems={this.mergeImportedItems.bind(this)}
 					/>
-
 					<Alerts />
-
 					<Modal
 						show={this.state.isAddLibraryModalOpen}
 						closeHandler={() => this.setState({ isAddLibraryModalOpen: false })}
@@ -1835,7 +1833,6 @@ export default class App extends Component {
 							onChange={this.onExternalLibChange.bind(this)}
 						/>
 					</Modal>
-
 					<Modal
 						show={this.state.isNotificationsModalOpen}
 						closeHandler={() =>
@@ -1856,7 +1853,6 @@ export default class App extends Component {
 							onChange={this.updateSetting.bind(this)}
 						/>
 					</Modal>
-
 					<Modal
 						show={this.state.isProfileModalOpen}
 						closeHandler={() => this.setState({ isProfileModalOpen: false })}
@@ -1916,9 +1912,13 @@ export default class App extends Component {
 								this.closeAllOverlays();
 								this.loginBtnClickHandler();
 							}}
+							onBuyFromExtensionClick={() => {
+								console.log('open modal');
+								this.closeAllOverlays();
+								this.setState({ isProOnAppModalOpen: true });
+							}}
 						/>
 					</Modal>
-
 					{/* Login modal is intentionally kept here after assets & share modal because 
 					they trigger this modal and if order isn't maintainer, the modal overlay doesn't
 					show properly */}
@@ -1929,7 +1929,6 @@ export default class App extends Component {
 					>
 						<Login />
 					</Modal>
-
 					<HelpModal
 						show={this.state.isHelpModalOpen}
 						closeHandler={() => this.setState({ isHelpModalOpen: false })}
@@ -1959,17 +1958,14 @@ export default class App extends Component {
 						)}
 						dontAskBtnClickHandler={this.dontAskToImportAnymore.bind(this)}
 					/>
-
 					<OnboardingModal
 						show={this.state.isOnboardModalOpen}
 						closeHandler={() => this.setState({ isOnboardModalOpen: false })}
 					/>
-
 					<Js13KModal
 						show={this.state.isJs13KModalOpen}
 						closeHandler={() => this.setState({ isJs13KModalOpen: false })}
 					/>
-
 					<CreateNewModal
 						show={this.state.isCreateNewModalOpen}
 						closeHandler={() => this.setState({ isCreateNewModalOpen: false })}
@@ -1982,7 +1978,10 @@ export default class App extends Component {
 							this
 						)}
 					/>
-
+					<ProOnAppModal
+						show={this.state.isProOnAppModalOpen}
+						closeHandler={() => this.setState({ isProOnAppModalOpen: false })}
+					/>
 					<Modal
 						extraClasses=""
 						show={this.state.isFilesLimitModalOpen}
@@ -1999,21 +1998,18 @@ export default class App extends Component {
 							</Text>
 						</VStack>
 					</Modal>
-
 					<CommandPalette
 						show={this.state.isCommandPaletteOpen}
 						files={linearizeFiles(this.state.currentItem.files || [])}
 						isCommandMode={this.state.isCommandPaletteInCommandMode}
 						closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
 					/>
-
 					<Portal into="#portal">
 						<div
 							class="modal-overlay"
 							onClick={this.modalOverlayClickHandler.bind(this)}
 						/>
 					</Portal>
-
 					<Icons />
 					<form
 						style="display:none;"

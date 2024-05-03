@@ -233,6 +233,10 @@ button {
 	color: #f7ae2d;
 }
 
+.para {
+	max-width: 60ch;
+}
+
 @media screen and (max-width: 600px) {
 	.block--mobile {
 		display: block;

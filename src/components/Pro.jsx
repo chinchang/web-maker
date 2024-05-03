@@ -15,7 +15,7 @@ const checkoutIds = {
 	annual: 'aae95d78-05c8-46f5-b11e-2d40ddd211d3',
 	generic: 'd1d2da1a-ae8f-4222-bbaf-6e07da8954bf' //'f8c64e50-7734-438b-a122-3510156f14ed'
 };
-export function Pro({ user, onLoginClick }) {
+export function Pro({ user, onLoginClick, onBuyFromExtensionClick }) {
 	const hasCheckoutLoaded = useCheckout();
 	const [isAnnual, setIsAnnual] = useState(true);
 
@@ -38,6 +38,42 @@ export function Pro({ user, onLoginClick }) {
 			window.LemonSqueezy.Refresh();
 		}
 	}, [hasCheckoutLoaded]);
+
+	let upgradeActionEl;
+	if (window.IS_EXTENSION) {
+		upgradeActionEl = (
+			<button
+				type="button"
+				className="btn btn--pro jc-c"
+				onClick={onBuyFromExtensionClick}
+			>
+				Upgrade to PRO
+			</button>
+		);
+	} else if (window.user) {
+		upgradeActionEl = (
+			<A
+				class="btn btn--pro lemonsqueezy-button d-f jc-c ai-c"
+				style="gap:0.2rem"
+				href={`https://web-maker.lemonsqueezy.com/checkout/buy/${checkoutIds.generic}?embed=1&checkout[custom][userId]=${user?.uid}`}
+				onClick={() => {
+					trackEvent('ui', 'buyBtnClick');
+				}}
+			>
+				Go PRO
+			</A>
+		);
+	} else {
+		upgradeActionEl = (
+			<button
+				type="button"
+				className="btn btn--pro jc-c"
+				onClick={onLoginClick}
+			>
+				Login & upgrade to PRO
+			</button>
+		);
+	}
 	return (
 		<VStack gap={2} align="stretch">
 			{/* <Stack justify="center">
@@ -66,28 +102,7 @@ export function Pro({ user, onLoginClick }) {
 					price={'Starting $6/mo'}
 					subTitle="Annual & One-time pricing available"
 					name="Pro"
-					action={
-						window.user ? (
-							<A
-								class="btn btn--pro lemonsqueezy-button d-f jc-c ai-c"
-								style="gap:0.2rem"
-								href={`https://web-maker.lemonsqueezy.com/checkout/buy/${checkoutIds.generic}?embed=1&checkout[custom][userId]=${user?.uid}`}
-								onClick={() => {
-									trackEvent('ui', 'buyBtnClick');
-								}}
-							>
-								Go PRO
-							</A>
-						) : (
-							<button
-								type="button"
-								className="btn btn--pro jc-c"
-								onClick={onLoginClick}
-							>
-								Login & upgrade to PRO
-							</button>
-						)
-					}
+					action={upgradeActionEl}
 					features={[
 						'Unlimited private creations',
 						'Unlimited public creations',

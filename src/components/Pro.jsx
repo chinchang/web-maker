@@ -53,6 +53,7 @@ export function Pro({ user, onLoginClick }) {
 			<Stack gap={2} align="stretch">
 				<Card
 					price="Free"
+					subTitle="&nbsp;"
 					name="Starter"
 					features={[
 						'Unlimited private creations',
@@ -63,6 +64,7 @@ export function Pro({ user, onLoginClick }) {
 				<Card
 					bg="#674dad"
 					price={'Starting $6/mo'}
+					subTitle="Annual & One-time pricing available"
 					name="Pro"
 					action={
 						window.user ? (
@@ -105,7 +107,7 @@ export function Pro({ user, onLoginClick }) {
 	);
 }
 
-const Card = ({ bg, name, price, action, features }) => {
+const Card = ({ bg, name, price, subTitle, action, features }) => {
 	return (
 		<div class="plan-card" style={{ background: bg }}>
 			<VStack gap={2} align="stretch" justify="flex-start">
@@ -114,8 +116,10 @@ const Card = ({ bg, name, price, action, features }) => {
 						{name}
 					</Text>
 					<Text size="5" weight="800" appearance="primary">
-						{' '}
 						{price}
+					</Text>
+					<Text size="1" weight="400">
+						{subTitle}
 					</Text>
 				</VStack>
 				{action}

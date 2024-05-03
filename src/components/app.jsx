@@ -959,8 +959,7 @@ export default class App extends Component {
 			trackEvent('ui', LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN, 'local');
 		}
 		var isNewItem = !this.state.currentItem.id;
-		this.state.currentItem.id =
-			this.state.currentItem.id || 'item-' + generateRandomId();
+		this.state.currentItem.id = this.state.currentItem.id || generateRandomId();
 		if (
 			this.state.currentItem.createdBy &&
 			this.state.currentItem.createdBy !== this.state.user.uid

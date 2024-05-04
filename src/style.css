@@ -440,7 +440,7 @@ a > svg {
 
 .btn--big {
 	padding: 15px 30px;
-	border-radius: 3px;
+	border-radius: 0.5rem;
 }
 
 .btn-icon {
@@ -484,9 +484,9 @@ a > svg {
 }
 
 .btn--big > svg {
-	width: 25px;
-	height: 25px;
-	margin-right: 12px;
+	width: 2rem;
+	height: 2rem;
+	margin-right: 1rem;
 }
 
 @property --angle {
@@ -1773,22 +1773,16 @@ body > #demo-frame {
 	display: none;
 }
 
-.social-login-btn--github {
-	color: white;
-	background: #656b6f;
-	border-color: #656b6f;
-}
-
-.social-login-btn--facebook {
-	color: white;
-	background: #4e62c0;
-	border-color: #4e62c0;
-}
-
-.social-login-btn--google {
+.social-login-btn {
 	background: white;
 	border: 2px solid currentColor;
 	color: black;
+}
+
+.social-login-btn--github {
+}
+
+.social-login-btn--google {
 }
 
 body.is-logged-in .hide-on-login,

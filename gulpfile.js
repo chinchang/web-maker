@@ -226,7 +226,7 @@ gulp.task('buildDistFolder', function (cb) {
 });
 
 gulp.task('cleanup', function () {
-	return child_process.exec('rm -rf build');
+	return child_process.exec('rm -rf build dist create');
 });
 
 gulp.task('start-preview-server', function () {
@@ -237,6 +237,7 @@ gulp.task('start-preview-server', function () {
 	});
 });
 
+// TODO: fix tasks. eg. buildWebsite isn't needed anymore
 exports.release = series(
 	parallel('runWebpack', 'buildWebsite'),
 	'copyFiles',
@@ -284,7 +285,8 @@ const buildExtension = series(
 	'copyFiles',
 	'fixIndex',
 	'useRef',
-	'packageExtension'
+	'packageExtension',
+	'cleanup'
 );
 
 function runWatcher(cb) {

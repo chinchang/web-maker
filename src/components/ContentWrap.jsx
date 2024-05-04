@@ -160,6 +160,7 @@ export default class ContentWrap extends Component {
 			trackEvent('fn', 'hasCode');
 			trackEvent.hasTrackedCode = true;
 		}
+		console.log('writing start', html);
 
 		if (shouldInlineJs) {
 			if (this.detachedWindow) {
@@ -194,7 +195,7 @@ export default class ContentWrap extends Component {
 					// console.log('setting back sandbox attr', sandbox);
 					// this.frame.setAttribute('sandbox', cachedSandboxAttribute);
 					// this.frame.removeAttribute('sweet');
-					// console.log('sending postmessage');
+					console.log('sending postmessage', html);
 					if (window.IS_EXTENSION) {
 						this.frame.contentDocument.open();
 						this.frame.contentDocument.write(contents);
@@ -203,14 +204,14 @@ export default class ContentWrap extends Component {
 						this.frame.contentWindow.postMessage({ contents }, '*');
 					}
 				};
-				refreshAndDo(() => {
-					cachedSandboxAttribute = this.frame.getAttribute('sandbox');
-					// console.log('removing sandbox', sandbox);
-					// this.frame.setAttribute('sweet', sandbox);
-					// this.frame.removeAttribute('sandbox');
-					refreshAndDo(writeInsideIframe);
-				});
-				// refreshAndDo(writeInsideIframe);
+				// refreshAndDo(() => {
+				// 	cachedSandboxAttribute = this.frame.getAttribute('sandbox');
+				// 	// console.log('removing sandbox', sandbox);
+				// 	// this.frame.setAttribute('sweet', sandbox);
+				// 	// this.frame.removeAttribute('sandbox');
+				// 	refreshAndDo(writeInsideIframe);
+				// });
+				refreshAndDo(writeInsideIframe);
 			}
 		} else {
 			// we need to store user script in external JS file to prevent inline-script

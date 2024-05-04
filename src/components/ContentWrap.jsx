@@ -160,7 +160,6 @@ export default class ContentWrap extends Component {
 			trackEvent('fn', 'hasCode');
 			trackEvent.hasTrackedCode = true;
 		}
-		console.log('writing start', html);
 
 		if (shouldInlineJs) {
 			if (this.detachedWindow) {
@@ -195,7 +194,7 @@ export default class ContentWrap extends Component {
 					// console.log('setting back sandbox attr', sandbox);
 					// this.frame.setAttribute('sandbox', cachedSandboxAttribute);
 					// this.frame.removeAttribute('sweet');
-					console.log('sending postmessage', html);
+
 					if (window.IS_EXTENSION) {
 						this.frame.contentDocument.open();
 						this.frame.contentDocument.write(contents);

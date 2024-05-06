@@ -336,8 +336,8 @@ export default class App extends Component {
 				semverCompare(lastSeenVersion, version) === -1 &&
 				!window.localStorage.pledgeModalSeen
 			) {
-				this.openSupportDeveloperModal();
-				window.localStorage.pledgeModalSeen = true;
+				// this.openSupportDeveloperModal();
+				// window.localStorage.pledgeModalSeen = true;
 			}
 
 			if (!lastSeenVersion || semverCompare(lastSeenVersion, version) === -1) {

@@ -904,7 +904,7 @@ export default class ContentWrap extends Component {
 								<a
 									class="code-wrap__header-btn "
 									title="Format code"
-									onClick={this.prettifyBtnClickHandler.bind(this, 'css')}
+									onClick={this.prettifyBtnClickHandler.bind(this, 'js')}
 								>
 									<svg>
 										<use xlinkHref="#code-brace-icon" />

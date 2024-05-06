@@ -1687,7 +1687,7 @@ export default class App extends Component {
 		// 3 pane mode
 		if (typeof what === 'string') {
 			prettify({
-				content: this.state.currentItem[what],
+				content: this.state.currentItem[what] || '',
 				type: { html: 'html', js: 'js', css: 'css' }[what]
 			}).then(formattedContent => {
 				if (this.state.currentItem[what] === formattedContent) {
@@ -1708,6 +1708,7 @@ export default class App extends Component {
 			...this.state.currentItem,
 			files: [...this.state.currentItem.files]
 		};
+
 		prettify({ file: selectedFile }).then(formattedContent => {
 			if (formattedContent !== selectedFile.content) {
 				selectedFile.content = formattedContent;

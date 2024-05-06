@@ -30,5 +30,10 @@ export default [
 		title: 'Kontra Game Engine',
 		img: 'assets/html5-logo.svg',
 		isFileModeSupported: true
+	},
+	{
+		id: 'kaboom',
+		title: 'Kaboom',
+		img: 'assets/kaboom-logo.png'
 	}
 ];

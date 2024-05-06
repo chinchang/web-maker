@@ -98,6 +98,11 @@ export const jsLibs = [
 		url: 'https://cdn.tailwindcss.com/3.4.3',
 		label: 'Tailwind 3',
 		type: 'js'
+	},
+	{
+		url: 'https://unpkg.com/kaboom@3000/dist/kaboom.js',
+		label: 'Kaboom',
+		type: 'js'
 	}
 ];
 export const cssLibs = [

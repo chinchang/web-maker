@@ -4,7 +4,7 @@
 
 **Web-Maker** is an offline playground for your web experiments. Something like CodePen or JSFiddle, but much more faster and works offline because it runs completely on your system.
 
-## [Open Web App](https://webmaker.app/app/) (Recommended: More features. More fun!)
+## [Open Web App](https://webmaker.app/create/) (Recommended: More features. More fun!)
 
 or
 

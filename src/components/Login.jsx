@@ -54,21 +54,8 @@ export default class Login extends Component {
 							Login with Google
 						</button>
 					</p>
-					<p class="mb-2">
-						<button
-							type="button"
-							onClick={this.login.bind(this)}
-							class="social-login-btn social-login-btn--facebook  btn btn-icon btn--big full-width hint--right hint--always"
-							data-auth-provider="facebook"
-							data-hint="You logged in with Facebook last time"
-						>
-							<svg>
-								<use xlinkHref="#fb-icon" />
-							</svg>
-							Login with Facebook (deprecated)
-						</button>
-					</p>
-					<p>Join a community of 50,000+ Developers</p>
+
+					<p>Join a community of 70,000+ Developers</p>
 				</div>
 			</div>
 		);

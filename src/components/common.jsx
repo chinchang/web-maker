@@ -4,11 +4,15 @@ import { trackEvent } from '../analytics';
 class Clickable extends Component {
 	handleClick(e) {
 		const el = e.currentTarget;
-		trackEvent(
-			el.getAttribute('data-event-category'),
-			el.getAttribute('data-event-action')
-		);
-		this.props.onClick(e);
+		if (el.getAttribute('data-event-category')) {
+			trackEvent(
+				el.getAttribute('data-event-category'),
+				el.getAttribute('data-event-action')
+			);
+		}
+		if (this.props.onClick) {
+			this.props.onClick(e);
+		}
 	}
 	render() {
 		/* eslint-disable no-unused-vars */
@@ -38,5 +42,5 @@ export function Divider(props) {
 }
 
 export function BetaTag() {
-	return <span class="beta-tag">Beta</span>;
+	return <span class="badge beta-tag">Beta</span>;
 }

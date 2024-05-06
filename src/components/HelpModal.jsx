@@ -1,5 +1,5 @@
-import { h } from 'preact';
 import Modal from './Modal';
+import { Stack, VStack } from './Stack';
 import { Button } from './common';
 import { Trans } from '@lingui/macro';
 
@@ -7,15 +7,21 @@ export function HelpModal(props) {
 	return (
 		<Modal show={props.show} closeHandler={props.closeHandler}>
 			<h1>
-				<div class="web-maker-with-tag">Web Maker</div>
-				<small style="font-size:14px;">{props.version}</small>
+				<Stack gap={1} align="center">
+					<div class="web-maker-with-tag">Web Maker</div>
+					<span className="badge">{props.version}</span>
+				</Stack>
 			</h1>
 
 			<div>
 				<p>
 					<Trans>
 						Made with <span style="margin-right: 8px;">💖</span>&{' '}
-						<span style="margin-right: 8px;"> 🙌</span> by{' '}
+						<span style="margin-right: 0.2rem;position:relative;top:-3px;">
+							{' '}
+							🙌
+						</span>{' '}
+						by{' '}
 						<a
 							href="https://twitter.com/chinchang457"
 							target="_blank"
@@ -43,11 +49,11 @@ export function HelpModal(props) {
 					</Trans>
 					.
 				</p>
-				<p class="show-when-extension">
+				<p>
 					<Trans>
-						Like this extension? Please{' '}
+						Like this app? Please{' '}
 						<a
-							href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
+							href="https://chromewebstore.google.com/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
@@ -56,20 +62,16 @@ export function HelpModal(props) {
 						.
 					</Trans>
 				</p>
-				<p>
-					<Button
-						onClick={props.onSupportBtnClick}
-						data-event-action="supportDeveloperHelpBtnClick"
-						data-event-category="ui"
+				<p style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+					<a
+						href="http://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
+						rel="noopener noreferrer"
 						class="btn btn-icon"
 					>
-						<svg>
-							<use xlinkHref="#gift-icon" />
-						</svg>
-						<Trans>Support the developer</Trans>
-					</Button>{' '}
+						<Trans>Share Web Maker</Trans>
+					</a>{' '}
 					<a
-						href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
+						href="https://chromewebstore.google.com/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
 						target="_blank"
 						rel="noopener noreferrer"
 						class="btn btn-icon"
@@ -80,7 +82,7 @@ export function HelpModal(props) {
 						<Trans>Review Web Maker</Trans>
 					</a>{' '}
 					<a
-						href="https://spectrum.chat/web-maker"
+						href="https://github.com/chinchang/web-maker/discussions"
 						target="_blank"
 						rel="noopener noreferrer"
 						class="btn btn-icon"
@@ -88,7 +90,7 @@ export function HelpModal(props) {
 						<svg>
 							<use xlinkHref="#chat-icon" />
 						</svg>
-						<Trans>Chat</Trans>
+						<Trans>Discuss</Trans>
 					</a>{' '}
 					<a
 						href="https://github.com/chinchang/web-maker/issues"
@@ -190,29 +192,31 @@ export function HelpModal(props) {
 					</details>
 				</p>
 
-				<p>
+				<VStack gap={1} align="stretch" fullWidth={true}>
 					<h3>
 						<Trans>License</Trans>
 					</h3>
-					<Trans>
-						"Web Maker" is{' '}
-						<a
-							target="_blank"
-							rel="noopener noreferrer"
-							href="https://github.com/chinchang/web-maker"
-						>
-							open-source
-						</a>{' '}
-						under the{' '}
-						<a
-							href="https://opensource.org/licenses/MIT"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							MIT License
-						</a>
-					</Trans>
-				</p>
+					<p>
+						<Trans>
+							"Web Maker" is{' '}
+							<a
+								target="_blank"
+								rel="noopener noreferrer"
+								href="https://github.com/chinchang/web-maker"
+							>
+								open-source
+							</a>{' '}
+							under the{' '}
+							<a
+								href="https://opensource.org/licenses/MIT"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								MIT License
+							</a>
+						</Trans>
+					</p>
+				</VStack>
 			</div>
 		</Modal>
 	);

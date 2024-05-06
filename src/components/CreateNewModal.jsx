@@ -5,6 +5,7 @@ import templates from '../templateList';
 import { BetaTag } from './common';
 import { trackEvent } from '../analytics';
 import Tabs, { TabPanel } from './Tabs';
+import { ProBadge } from './ProBadge';
 
 export class CreateNewModal extends Component {
 	constructor(props) {
@@ -150,11 +151,10 @@ export class CreateNewModal extends Component {
 				<h1 class="mt-0">Create New</h1>
 				<Tabs horizontal onChange={this.modeChangeHandler}>
 					<TabPanel label={option1}>
-						<div class="d-f fxw-w">
+						<div class="templates-container">
 							<button
 								type="button"
 								class="btn btn--primary"
-								style="margin:20px 10px"
 								onClick={() => {
 									trackEvent('ui', 'startBlankBtnClick');
 									onBlankTemplateSelect();
@@ -170,17 +170,17 @@ export class CreateNewModal extends Component {
 										item={template}
 										focusable
 										onClick={onTemplateSelect.bind(null, template, false)}
+										hasOptions={false}
 									/>
 								);
 							})}
 						</div>
 					</TabPanel>
 					<TabPanel label={option2}>
-						<div class="d-f fxw-w show-when-app">
+						<div class="templates-container show-when-app">
 							<button
 								type="button"
 								class="btn btn--primary"
-								style="margin:20px 10px"
 								onClick={() => {
 									trackEvent('ui', 'startBlankFileBtnClick');
 									onBlankFileTemplateSelect();
@@ -196,14 +196,19 @@ export class CreateNewModal extends Component {
 											item={template}
 											focusable
 											onClick={onTemplateSelect.bind(null, template, true)}
+											hasOptions={false}
 										/>
 									);
 								}
 							})}
 						</div>
+						<p>
+							2 files mode creations available in Free plan. To create unlimited
+							files mode creations, upgrade to <ProBadge />.
+						</p>
 						<div class="show-when-extension">
 							Files modes is currently only available in Web app.{' '}
-							<a href="https://webmaker.app/app/">Try the Web app now</a>.
+							<a href="https://webmaker.app/create/">Try the Web app now</a>.
 						</div>
 					</TabPanel>
 				</Tabs>

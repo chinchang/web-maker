@@ -10,6 +10,12 @@ export function trackEvent(category, action, label, value) {
 	}
 	if (window.ga) {
 		ga('send', 'event', category, action, label, value);
+
+		fetch('https://event-ajhkrtmkaq-uc.a.run.app', {
+			method: 'post',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ category, action, label, value })
+		});
 	}
 }
 

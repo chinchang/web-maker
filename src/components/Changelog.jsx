@@ -74,46 +74,94 @@ function Notification({ version, isLatest, ...props }) {
 						</a>
 					</p>
 					<p>
-						Web Maker now has more than 50K weekly active users! Thank you for
+						Web Maker now has more than 70K weekly active users! Thank you for
 						being a part of this community of awesome developers. If you find
 						Web Maker helpful,{' '}
 						<a
-							href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
+							href="https://chromewebstore.google.com/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="btn"
 						>
-							Please rate Web Maker <span class="star" />
+							Please rate Web Maker &nbsp;
+							<span class="star" />
 						</a>
 						&nbsp;
 						<a
-							href="http://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
+							class="btn"
+							href="http://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline frontend playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="btn"
 						>
 							Share it
 						</a>
-						&nbsp;
-						<Button
-							aria-label="Support the developer"
-							onClick={props.onSupportBtnClick}
-							data-event-action="supportDeveloperChangelogBtnClick"
-							data-event-category="ui"
-							class="btn btn-icon"
-						>
-							Support the developer
-						</Button>
 					</p>
 				</div>
 			) : null}
 		</div>
 	);
 }
-export function Notifications(props) {
+export function Changelog(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+			<Notification version="6.1.0" {...props} isLatest={true}>
+				<li>
+					<strong>🕹️ Kaboom game engine</strong>: Kaboom.js is now available in
+					quick-add library list. Also, a new template to quick-start in Kaboom
+					has been added.
+				</li>
+				<NotificationItem type="bug">
+					Incorrect/old preview rendering bug is fixed.
+				</NotificationItem>
+			</Notification>
+
+			<Notification version="6.0.0" {...props}>
+				<li>
+					<strong>🎁 PRO plan 🎉</strong>: Today I introduce to you - Web
+					Maker's PRO plan! A set of additional super-features which you can
+					buy. The PRO plan is available as monthly/annual subscription as well
+					as a one-time lifetime price! Let's see what you get as a PRO.
+				</li>
+				<li>
+					<strong>🔓 Share your creations</strong>: Web Maker has always been a
+					privacy-first app. Continuing that culture, today we introduce "Share
+					your creation" feature. Your creations are still created as private
+					but now you can securely make them public to share with the world. As
+					a free user you can have 1 creation public at a time. Upgrading to PRO
+					gives you unlimited public creations.
+				</li>
+				<li>
+					<strong>🗄️ Asset hosting</strong>: No more going to other places in
+					order to host your images, CSS or JS files. Web Maker PRO gives you
+					the ability to host your assets right inside Web Maker. You can upload
+					images, CSS and JS files and use them in your creations.
+				</li>
+				<li>
+					<strong>📁 Files mode</strong>: As a free user you could always create
+					2 creations in Files mode. With PRO, you can create unlimited
+					creations in Files mode.
+				</li>
+				<NotificationItem type="ui">
+					Web app is now available on webmaker.app/create (Previously available
+					on webmaker.app/app)
+				</NotificationItem>
+				<NotificationItem type="ui">
+					Fork button is now available in the header too
+				</NotificationItem>
+			</Notification>
+			<Notification version="5.3.0" {...props} isLatest={true}>
+				<li>
+					<strong>Tailwind CSS templates</strong>: Tailwind CSS template is now
+					available! If you are on the Chrome extension, use the Tailwind CSS 2
+					template which is old but works without JavaScript (since JavaScript
+					is disabled currently in Chrome extension). That said, JavaScript is
+					coming back soon to the Chrome extension! 😃
+				</li>
+				<li>⬆️ Popular libraries updated to latest versions.</li>
+			</Notification>
+
 			<Notification version="5.2.0" {...props}>
 				<li>
 					<strong>Improvement</strong>: Atomic CSS (Atomizer) has been updated
@@ -157,7 +205,7 @@ export function Notifications(props) {
 					Add library feature is fixed.
 				</NotificationItem>
 			</Notification>
-			<Notification version="5.0.0" {...props} isLatest={true}>
+			<Notification version="5.0.0" {...props}>
 				<li>
 					<strong>We are Back! 😎</strong>: After almost 2 years of nothing
 					being shipped, we are back in action. That too with a bang! We have a
@@ -192,7 +240,7 @@ export function Notifications(props) {
 					<strong>autoPreview</strong> and <strong>isMonacoEditorOn</strong> are
 					supported. Example:{' '}
 					<code>
-						https://webmaker.app/app?settings=autoPreview:false,isMonacoEditorOn:true
+						https://webmaker.app/create?settings=autoPreview:false,isMonacoEditorOn:true
 					</code>
 				</li>
 				<NotificationItem type="bug">
@@ -585,11 +633,11 @@ export function Notifications(props) {
 						as web app that runs offline just like the extension! Checkout it
 						out -&gt;
 						<a
-							href="https://webmaker.app/app/"
+							href="https://webmaker.app/create/"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
-							https://webmaker.app/app/
+							https://webmaker.app/create/
 						</a>
 						.
 					</li>

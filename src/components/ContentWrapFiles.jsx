@@ -29,7 +29,7 @@ import { FileIcon } from './FileIcon';
 const minCodeWrapSize = 33;
 const PREVIEW_FRAME_HOST = window.DEBUG
 	? 'http://localhost:7888'
-	: `https://preview.${location.host}`;
+	: `https://wbmakr.com`;
 
 /* global htmlCodeEl
  */
@@ -355,7 +355,7 @@ export default class ContentWrapFiles extends Component {
 
 		// Replace correct css file in LINK tags's href
 		if (prefs.editorTheme) {
-			window.editorThemeLinkTag.href = `lib/codemirror/theme/${prefs.editorTheme}.css`;
+			window.editorThemeLinkTag.href = `./lib/codemirror/theme/${prefs.editorTheme}.css`;
 		}
 
 		window.fontStyleTag.textContent =

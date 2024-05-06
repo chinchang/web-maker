@@ -13,6 +13,7 @@ const merge = require('merge-stream');
 // const zip = require('gulp-zip');
 var packageJson = JSON.parse(fs.readFileSync('./package.json'));
 const connect = require('gulp-connect');
+const APP_FOLDER = 'create';
 
 function minifyJs(fileName) {
 	const content = fs.readFileSync(fileName, 'utf8');
@@ -44,21 +45,27 @@ gulp.task('copyFiles', function () {
 	return merge(
 		gulp
 			.src('src/lib/codemirror/theme/*')
-			.pipe(gulp.dest('app/lib/codemirror/theme')),
+			.pipe(gulp.dest(`${APP_FOLDER}/lib/codemirror/theme`)),
 		gulp
 			.src('src/lib/codemirror/mode/**/*')
-			.pipe(gulp.dest('app/lib/codemirror/mode')),
-		gulp.src('src/lib/transpilers/*').pipe(gulp.dest('app/lib/transpilers')),
-		gulp.src('src/lib/prettier-worker.js').pipe(gulp.dest('app/lib/')),
-		gulp.src('src/lib/prettier/*').pipe(gulp.dest('app/lib/prettier')),
+			.pipe(gulp.dest(`${APP_FOLDER}/lib/codemirror/mode`)),
+		gulp
+			.src('src/lib/transpilers/*')
+			.pipe(gulp.dest(`${APP_FOLDER}/lib/transpilers`)),
+		gulp
+			.src('src/lib/prettier-worker.js')
+			.pipe(gulp.dest(`${APP_FOLDER}/lib/`)),
+		gulp
+			.src('src/lib/prettier/*')
+			.pipe(gulp.dest(`${APP_FOLDER}/lib/prettier`)),
 		gulp
 			.src(['!src/lib/monaco/monaco.bundle.js', 'src/lib/monaco/**/*'])
-			.pipe(gulp.dest('app/lib/monaco')),
-		gulp.src('src/lib/screenlog.js').pipe(gulp.dest('app/lib')),
-		gulp.src('icons/*').pipe(gulp.dest('app/icons')),
-		gulp.src('src/assets/*').pipe(gulp.dest('app/assets')),
-		gulp.src('src/templates/*').pipe(gulp.dest('app/templates')),
-		gulp.src('preview/*').pipe(gulp.dest('app/preview')),
+			.pipe(gulp.dest(`${APP_FOLDER}/lib/monaco`)),
+		gulp.src('src/lib/screenlog.js').pipe(gulp.dest(`${APP_FOLDER}/lib`)),
+		gulp.src('icons/*').pipe(gulp.dest(`${APP_FOLDER}/icons`)),
+		gulp.src('src/assets/*').pipe(gulp.dest(`${APP_FOLDER}/assets`)),
+		gulp.src('src/templates/*').pipe(gulp.dest(`${APP_FOLDER}/templates`)),
+		gulp.src('preview/*').pipe(gulp.dest(`${APP_FOLDER}/preview`)),
 		gulp
 			.src([
 				'src/preview.html',
@@ -68,24 +75,24 @@ gulp.task('copyFiles', function () {
 				'src/icon-128.png',
 				'src/manifest.json'
 			])
-			.pipe(gulp.dest('app')),
+			.pipe(gulp.dest(APP_FOLDER)),
 
-		gulp.src('build/*').pipe(gulp.dest('app')),
+		gulp.src('build/*').pipe(gulp.dest(APP_FOLDER)),
 
 		// Following CSS are copied to build/ folder where they'll be referenced by
 		// useRef plugin to concat into one.
 		gulp
 			.src('src/lib/codemirror/lib/codemirror.css')
-			.pipe(gulp.dest('build/lib/codemirror/lib')),
+			.pipe(gulp.dest(`build/lib/codemirror/lib`)),
 		gulp
 			.src('src/lib/codemirror/addon/hint/show-hint.css')
-			.pipe(gulp.dest('build/lib/codemirror/addon/hint')),
+			.pipe(gulp.dest(`build/lib/codemirror/addon/hint`)),
 		gulp
 			.src('src/lib/codemirror/addon/fold/foldgutter.css')
-			.pipe(gulp.dest('build/lib/codemirror/addon/fold')),
+			.pipe(gulp.dest(`build/lib/codemirror/addon/fold`)),
 		gulp
 			.src('src/lib/codemirror/addon/dialog/dialog.css')
-			.pipe(gulp.dest('build/lib/codemirror/addon/dialog')),
+			.pipe(gulp.dest(`build/lib/codemirror/addon/dialog`)),
 		gulp.src('src/lib/hint.min.css').pipe(gulp.dest('build/lib')),
 		gulp.src('src/lib/inlet.css').pipe(gulp.dest('build/lib')),
 		// gulp.src('src/style.css').pipe(gulp.dest('build')),
@@ -97,34 +104,37 @@ gulp.task('copyFiles', function () {
 				'src/Inconsolata.ttf',
 				'src/Monoid.ttf'
 			])
-			.pipe(gulp.dest('app'))
+			.pipe(gulp.dest(APP_FOLDER))
 	);
 });
 
 gulp.task('useRef', function () {
-	return gulp.src('build/index.html').pipe(useref()).pipe(gulp.dest('app'));
+	return gulp
+		.src('build/index.html')
+		.pipe(useref())
+		.pipe(gulp.dest(APP_FOLDER));
 });
 
 gulp.task('concatSwRegistration', function () {
 	const bundleFile = fs
-		.readdirSync('app')
+		.readdirSync(APP_FOLDER)
 		.filter(allFilesPaths => allFilesPaths.match(/bundle.*\.js$/) !== null)[0];
 
 	console.log('matched', bundleFile);
 
 	return gulp
-		.src(['src/service-worker-registration.js', `app/${bundleFile}`])
+		.src(['src/service-worker-registration.js', `${APP_FOLDER}/${bundleFile}`])
 		.pipe(concat(bundleFile))
-		.pipe(gulp.dest('app'));
+		.pipe(gulp.dest(APP_FOLDER));
 });
 
 gulp.task('minify', function () {
 	// minifyJs('app/script.js');
 	// minifyJs('app/vendor.js');
-	minifyJs('app/lib/screenlog.js');
+	minifyJs(`${APP_FOLDER}/lib/screenlog.js`);
 
 	return gulp
-		.src('app/*.css')
+		.src(`${APP_FOLDER}/*.css`)
 		.pipe(
 			cleanCSS(
 				{
@@ -137,7 +147,7 @@ gulp.task('minify', function () {
 				}
 			)
 		)
-		.pipe(gulp.dest('app'));
+		.pipe(gulp.dest(APP_FOLDER));
 });
 
 gulp.task('fixIndex', function (cb) {
@@ -160,7 +170,7 @@ gulp.task('fixIndex', function (cb) {
 
 gulp.task('generate-service-worker', function (callback) {
 	var swPrecache = require('sw-precache');
-	var rootDir = 'app';
+	var rootDir = APP_FOLDER;
 
 	swPrecache.write(
 		`${rootDir}/service-worker.js`,
@@ -179,7 +189,7 @@ gulp.task('generate-service-worker', function (callback) {
 
 gulp.task('packageExtension', function () {
 	child_process.execSync('rm -rf extension');
-	child_process.execSync('cp -R app extension');
+	child_process.execSync(`cp -R ${APP_FOLDER} extension`);
 	child_process.execSync('cp src/manifest.json extension');
 	child_process.execSync('cp src/options.js extension');
 	child_process.execSync('cp src/options.html extension');
@@ -211,12 +221,12 @@ gulp.task('buildWebsite', function () {
 gulp.task('buildDistFolder', function (cb) {
 	child_process.execSync('rm -rf dist');
 	child_process.execSync('mv packages/website/_site dist');
-	child_process.execSync('mv app dist/');
+	child_process.execSync(`mv ${APP_FOLDER} dist/`);
 	cb();
 });
 
 gulp.task('cleanup', function () {
-	return child_process.exec('rm -rf build');
+	return child_process.exec('rm -rf build create');
 });
 
 gulp.task('start-preview-server', function () {
@@ -227,6 +237,7 @@ gulp.task('start-preview-server', function () {
 	});
 });
 
+// TODO: fix tasks. eg. buildWebsite isn't needed anymore
 exports.release = series(
 	parallel('runWebpack', 'buildWebsite'),
 	'copyFiles',
@@ -274,7 +285,8 @@ const buildExtension = series(
 	'copyFiles',
 	'fixIndex',
 	'useRef',
-	'packageExtension'
+	'packageExtension',
+	'cleanup'
 );
 
 function runWatcher(cb) {

@@ -8,7 +8,7 @@ Web Maker is available as a Web app and a Chrome extension. Web app is recommend
 
 **Web app**
 
-The web app requires no installation. Just [goto the app url](/app/). Once you open the app, it is available for offline use in future.
+The web app requires no installation. Just [goto the app url](/create/). Once you open the app, it is available for offline use in future.
 
 **Chrome extension**
 
@@ -20,7 +20,7 @@ Here is the link to the Chrome extension 👉 [Chrome Web Store](https://chrome.
 
 **Web app**
 
-As mentioned, the Web app can be simply opened by visiting [https://webmaker.app/app/](/app/).
+As mentioned, the Web app can be simply opened by visiting [https://webmaker.app/create/](/create/).
 
 **Chrome extension**
 

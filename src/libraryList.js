@@ -95,8 +95,13 @@ export const jsLibs = [
 		type: 'js'
 	},
 	{
-		url: 'https://cdn.tailwindcss.com/3.3.1',
+		url: 'https://cdn.tailwindcss.com/3.4.3',
 		label: 'Tailwind 3',
+		type: 'js'
+	},
+	{
+		url: 'https://unpkg.com/kaboom@3000/dist/kaboom.js',
+		label: 'Kaboom',
 		type: 'js'
 	}
 ];
@@ -128,7 +133,7 @@ export const cssLibs = [
 	},
 
 	{
-		url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/2.7.0/hint.min.css',
+		url: 'https://cdnjs.cloudflare.com/ajax/libs/hint.css/3.0.0/hint.min.css',
 		label: 'Hint.css',
 		type: 'css'
 	},

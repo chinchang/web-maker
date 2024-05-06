@@ -2,11 +2,12 @@
  */
 
 import { h, Component } from 'preact';
+import { route } from 'preact-router';
 // import '../service-worker-registration';
 import { MainHeader } from './MainHeader.jsx';
 import ContentWrap from './ContentWrap.jsx';
 import ContentWrapFiles from './ContentWrapFiles.jsx';
-import Footer from './Footer.jsx';
+import { Footer } from './Footer.jsx';
 import SavedItemPane from './SavedItemPane.jsx';
 import AddLibrary from './AddLibrary.jsx';
 import Modal from './Modal.jsx';
@@ -22,7 +23,8 @@ import {
 	getCompleteHtml,
 	getFilenameFromUrl,
 	prettify,
-	sanitizeSplitSizes
+	sanitizeSplitSizes,
+	persistAuthUserLocally
 } from '../utils';
 import {
 	linearizeFiles,
@@ -35,7 +37,7 @@ import {
 
 import { itemService } from '../itemService';
 import '../db';
-import { Notifications } from './Notifications';
+import { Changelog } from './Changelog';
 import Settings from './Settings.jsx';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { trackEvent } from '../analytics';
@@ -68,14 +70,21 @@ import {
 import { commandPaletteService } from '../commandPaletteService';
 
 import { I18nProvider } from '@lingui/react';
+import { Assets } from './Assets.jsx';
 import { LocalStorageKeys } from '../constants.js';
+import { Share } from './Share.jsx';
+import { Pro } from './Pro.jsx';
+import { VStack } from './Stack.jsx';
+import { ProBadge } from './ProBadge.jsx';
+import { Text } from './Text.jsx';
+import { ProOnAppModal } from './ProOnAppModal.js';
 
 if (module.hot) {
 	require('preact/debug');
 }
 
 const UNSAVED_WARNING_COUNT = 15;
-const version = '5.2.0';
+const version = '6.1.0';
 
 // Read forced settings as query parameters
 window.forcedSettings = {};
@@ -98,10 +107,19 @@ if (location.search) {
 	window.codeCss = params.get('css') || '';
 }
 
+function customRoute(path) {
+	// we don't /create redirections on extension since SPA paths don't work there
+	if (window.IS_EXTENSION) return;
+	else {
+		route(path);
+	}
+}
+
 export default class App extends Component {
 	constructor() {
 		super();
 		this.AUTO_SAVE_INTERVAL = 15000; // 15 seconds
+		const savedUser = window.localStorage.getItem('user');
 		this.modalDefaultStates = {
 			isModalOpen: false,
 			isAddLibraryModalOpen: false,
@@ -116,7 +134,12 @@ export default class App extends Component {
 			isOnboardModalOpen: false,
 			isJs13KModalOpen: false,
 			isCreateNewModalOpen: false,
-			isCommandPaletteOpen: false
+			isCommandPaletteOpen: false,
+			isAssetsOpen: false,
+			isShareModalOpen: false,
+			isProModalOpen: false,
+			isFilesLimitModalOpen: false,
+			isProOnAppModalOpen: false
 		};
 		this.state = {
 			isSavedItemPaneOpen: false,
@@ -128,7 +151,8 @@ export default class App extends Component {
 				html: window.codeHtml,
 				css: window.codeCss
 			},
-			catalogs: {}
+			catalogs: {},
+			user: savedUser
 		};
 		this.defaultSettings = {
 			preserveLastCode: true,
@@ -161,13 +185,35 @@ export default class App extends Component {
 		};
 		this.prefs = {};
 
-		onAuthStateChanged(auth, user => {
+		if (savedUser) {
+			window.user = savedUser;
+		}
+
+		onAuthStateChanged(auth, authUser => {
 			this.setState({ isLoginModalOpen: false });
-			if (user) {
-				log('You are -> ', user);
+			if (authUser) {
+				log('You are -> ', authUser);
 				alertsService.add('You are now logged in!');
-				this.setState({ user });
-				window.user = user;
+
+				let newUser = {
+					uid: authUser.uid,
+					photoURL: authUser.photoURL
+				};
+				// port some keys from localstorage user to new auth user
+				const keysToPort = ['isPro', 'displayName', 'settings'];
+				keysToPort.forEach(key => {
+					if (this.state.user && this.state.user[key] !== undefined) {
+						newUser[key] = this.state.user[key];
+					}
+				});
+				// storing actual firebase user object for accessing functions like updateProfile
+				newUser.firebaseUser = authUser;
+
+				this.setState({ user: newUser });
+				window.user = newUser;
+				// window.localStorage.setItem('user', authUser);
+				trackEvent('fn', 'loggedIn', window.IS_EXTENSION ? 'extension' : 'web');
+
 				if (!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS]) {
 					this.fetchItems(false, true).then(items => {
 						if (!items.length) {
@@ -181,12 +227,23 @@ export default class App extends Component {
 						trackEvent('ui', 'askToImportModalSeen');
 					});
 				}
-				window.db.getUser(user.uid).then(customUser => {
+
+				window.db.getUser(authUser.uid).then(customUser => {
 					if (customUser) {
 						const prefs = { ...this.state.prefs };
-						Object.assign(prefs, user.settings);
-						this.setState({ prefs }, this.updateSetting);
+						Object.assign(prefs, customUser.settings);
+
+						// spreading authUser doesn't work below anymore because the required properties are
+						// not enumerable anymore
+						newUser = {
+							...newUser,
+							isPro: false,
+							...customUser
+						};
+						window.user = newUser;
+						this.setState({ user: newUser, prefs }, this.updateSetting);
 					}
+					persistAuthUserLocally(newUser);
 				});
 			} else {
 				// User is signed out.
@@ -234,6 +291,18 @@ export default class App extends Component {
 				this.setCurrentItem(this.state.currentItem).then(() => {
 					this.refreshEditor();
 				});
+			} else if (this.props.itemId) {
+				window.db
+					.fetchItem(this.props.itemId)
+					.then(item => {
+						this.setCurrentItem(item).then(() => this.refreshEditor());
+					})
+					.catch(err => {
+						alert('No such creation found!');
+						this.createNewItem();
+
+						// route('/');
+					});
 			} else if (result.preserveLastCode && lastCode) {
 				this.setState({ unsavedEditCount: 0 });
 				log('Load last unsaved item', lastCode);
@@ -267,8 +336,8 @@ export default class App extends Component {
 				semverCompare(lastSeenVersion, version) === -1 &&
 				!window.localStorage.pledgeModalSeen
 			) {
-				this.openSupportDeveloperModal();
-				window.localStorage.pledgeModalSeen = true;
+				// this.openSupportDeveloperModal();
+				// window.localStorage.pledgeModalSeen = true;
 			}
 
 			if (!lastSeenVersion || semverCompare(lastSeenVersion, version) === -1) {
@@ -346,9 +415,12 @@ export default class App extends Component {
 		}
 		const fork = JSON.parse(JSON.stringify(sourceItem));
 		delete fork.id;
+		delete fork.createdBy;
+		delete fork.isPublic;
 		fork.title = '(Forked) ' + sourceItem.title;
 		fork.updatedOn = Date.now();
 		this.setCurrentItem(fork).then(() => this.refreshEditor());
+		customRoute('/create');
 		alertsService.add(`"${sourceItem.title}" was forked`);
 		trackEvent('fn', 'itemForked');
 	}
@@ -408,10 +480,12 @@ export default class App extends Component {
 			};
 		}
 		this.setCurrentItem(item).then(() => this.refreshEditor());
+		customRoute('/create');
 		alertsService.add('New item created');
 	}
 	openItem(item) {
 		this.setCurrentItem(item).then(() => this.refreshEditor());
+		customRoute(`/create/${item.id}`);
 		alertsService.add('Saved item loaded');
 	}
 	removeItem(item) {
@@ -538,6 +612,9 @@ export default class App extends Component {
 	openAddLibrary() {
 		this.setState({ isAddLibraryModalOpen: true });
 	}
+	assetsBtnClickHandler() {
+		this.setState({ isAssetsOpen: true });
+	}
 	closeSavedItemsPane() {
 		this.setState({
 			isSavedItemPaneOpen: false
@@ -556,6 +633,7 @@ export default class App extends Component {
 	}
 
 	componentDidMount() {
+		console.log('itemId', this.props.itemId);
 		function setBodySize() {
 			document.body.style.height = `${window.innerHeight}px`;
 		}
@@ -891,8 +969,16 @@ export default class App extends Component {
 			trackEvent('ui', LocalStorageKeys.LOGIN_AND_SAVE_MESSAGE_SEEN, 'local');
 		}
 		var isNewItem = !this.state.currentItem.id;
-		this.state.currentItem.id =
-			this.state.currentItem.id || 'item-' + generateRandomId();
+		this.state.currentItem.id = this.state.currentItem.id || generateRandomId();
+		if (
+			this.state.currentItem.createdBy &&
+			this.state.currentItem.createdBy !== this.state.user.uid
+		) {
+			alertsService.add(
+				'You cannot save this item as it was created by someone else. Fork it to save it as your own.'
+			);
+			return;
+		}
 		this.setState({
 			isSaving: true
 		});
@@ -952,14 +1038,17 @@ export default class App extends Component {
 	}
 
 	titleInputBlurHandler(e) {
-		this.setState({
-			currentItem: { ...this.state.currentItem, title: e.target.value }
-		});
-
-		if (this.state.currentItem.id) {
-			this.saveItem();
-			trackEvent('ui', 'titleChanged');
-		}
+		this.setState(
+			{
+				currentItem: { ...this.state.currentItem, title: e.target.value }
+			},
+			() => {
+				if (this.state.currentItem.id) {
+					this.saveItem();
+					trackEvent('ui', 'titleChanged');
+				}
+			}
+		);
 	}
 
 	/**
@@ -1045,6 +1134,7 @@ export default class App extends Component {
 		trackEvent('fn', 'loggedOut');
 		authh.logout();
 		this.setState({ isProfileModalOpen: false });
+		this.createNewItem();
 		alertsService.add('Log out successfull');
 	}
 
@@ -1087,6 +1177,14 @@ export default class App extends Component {
 		trackEvent('ui', 'openBtnClick');
 		this.openSavedItemsPane();
 	}
+	shareBtnClickHandler() {
+		trackEvent('ui', 'shareBtnClick');
+		if (!window.user || this.state.currentItem.id) {
+			this.setState({ isShareModalOpen: true });
+		} else {
+			alertsService.add('Please save your creation before sharing.');
+		}
+	}
 	detachedPreviewBtnHandler() {
 		trackEvent('ui', 'detachPreviewBtnClick');
 
@@ -1095,13 +1193,22 @@ export default class App extends Component {
 	notificationsBtnClickHandler() {
 		this.setState({ isNotificationsModalOpen: true });
 
-		if (this.state.isNotificationsModalOpen && !this.hasSeenNotifications) {
+		if (!this.state.isNotificationsModalOpen && !this.hasSeenNotifications) {
 			this.hasSeenNotifications = true;
 			this.setState({ hasUnseenChangelog: false });
 			window.db.setUserLastSeenVersion(version);
 		}
 		trackEvent('ui', 'notificationButtonClick', version);
 		return false;
+	}
+	proBtnClickHandler() {
+		if (this.state.user?.isPro) {
+			this.setState({ isProfileModalOpen: true });
+			trackEvent('ui', 'manageProBtnClick');
+		} else {
+			this.setState({ isProModalOpen: true });
+			trackEvent('ui', 'proBtnClick');
+		}
 	}
 	codepenBtnClickHandler(e) {
 		if (this.state.currentItem.cssMode === CssModes.ACSS) {
@@ -1443,9 +1550,11 @@ export default class App extends Component {
 				this.setState({ isCreateNewModalOpen: false });
 			} else {
 				trackEvent('ui', 'FileModeCreationLimitMessageSeen');
-				return alert(
-					'"Files mode" is currently in beta and is limited to only 2 creations per user. You have already made 2 creations in Files mode.\n\nNote: You can choose to delete old ones to create new.'
-				);
+				// this.closeAllOverlays();
+				this.setState({ isFilesLimitModalOpen: true });
+				// return alert(
+				// 	'"Files mode" is currently in beta and is limited to only 2 creations per user. You have already made 2 creations in Files mode.\n\nNote: You can choose to delete old ones to create new.'
+				// );
 			}
 		});
 	}
@@ -1578,7 +1687,7 @@ export default class App extends Component {
 		// 3 pane mode
 		if (typeof what === 'string') {
 			prettify({
-				content: this.state.currentItem[what],
+				content: this.state.currentItem[what] || '',
 				type: { html: 'html', js: 'js', css: 'css' }[what]
 			}).then(formattedContent => {
 				if (this.state.currentItem[what] === formattedContent) {
@@ -1599,6 +1708,7 @@ export default class App extends Component {
 			...this.state.currentItem,
 			files: [...this.state.currentItem.files]
 		};
+
 		prettify({ file: selectedFile }).then(formattedContent => {
 			if (formattedContent !== selectedFile.content) {
 				selectedFile.content = formattedContent;
@@ -1621,10 +1731,12 @@ export default class App extends Component {
 							loginBtnHandler={this.loginBtnClickHandler.bind(this)}
 							profileBtnHandler={this.profileBtnClickHandler.bind(this)}
 							addLibraryBtnHandler={this.openAddLibrary.bind(this)}
+							assetsBtnHandler={this.assetsBtnClickHandler.bind(this)}
+							shareBtnHandler={this.shareBtnClickHandler.bind(this)}
 							runBtnClickHandler={this.runBtnClickHandler.bind(this)}
 							isFetchingItems={this.state.isFetchingItems}
 							isSaving={this.state.isSaving}
-							title={this.state.currentItem.title}
+							currentItem={this.state.currentItem}
 							titleInputBlurHandler={this.titleInputBlurHandler.bind(this)}
 							user={this.state.user}
 							isAutoPreviewOn={this.state.prefs.autoPreview}
@@ -1632,6 +1744,9 @@ export default class App extends Component {
 							isFileMode={
 								this.state.currentItem && this.state.currentItem.files
 							}
+							onItemFork={() => {
+								this.forkItem(this.state.currentItem);
+							}}
 						/>
 						{this.state.currentItem && this.state.currentItem.files ? (
 							<ContentWrapFiles
@@ -1667,6 +1782,7 @@ export default class App extends Component {
 
 						<Footer
 							prefs={this.state.prefs}
+							user={this.state.user}
 							layoutBtnClickHandler={this.layoutBtnClickHandler.bind(this)}
 							helpBtnClickHandler={() =>
 								this.setState({ isHelpModalOpen: true })
@@ -1693,11 +1809,11 @@ export default class App extends Component {
 							onJs13KDownloadBtnClick={this.js13KDownloadBtnClickHandler.bind(
 								this
 							)}
+							proBtnClickHandler={this.proBtnClickHandler.bind(this)}
 							hasUnseenChangelog={this.state.hasUnseenChangelog}
 							codeSize={this.state.codeSize}
 						/>
 					</div>
-
 					<SavedItemPane
 						itemsMap={this.state.savedItems}
 						isOpen={this.state.isSavedItemPaneOpen}
@@ -1708,9 +1824,7 @@ export default class App extends Component {
 						onExport={this.exportBtnClickHandler.bind(this)}
 						mergeImportedItems={this.mergeImportedItems.bind(this)}
 					/>
-
 					<Alerts />
-
 					<Modal
 						show={this.state.isAddLibraryModalOpen}
 						closeHandler={() => this.setState({ isAddLibraryModalOpen: false })}
@@ -1735,7 +1849,7 @@ export default class App extends Component {
 							this.setState({ isNotificationsModalOpen: false })
 						}
 					>
-						<Notifications
+						<Changelog
 							onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
 						/>
 					</Modal>
@@ -1750,13 +1864,6 @@ export default class App extends Component {
 						/>
 					</Modal>
 					<Modal
-						extraClasses="login-modal"
-						show={this.state.isLoginModalOpen}
-						closeHandler={() => this.setState({ isLoginModalOpen: false })}
-					>
-						<Login />
-					</Modal>
-					<Modal
 						show={this.state.isProfileModalOpen}
 						closeHandler={() => this.setState({ isProfileModalOpen: false })}
 					>
@@ -1764,6 +1871,73 @@ export default class App extends Component {
 							user={this.state.user}
 							logoutBtnHandler={this.logout.bind(this)}
 						/>
+					</Modal>
+					<Modal
+						show={this.state.isAssetsOpen}
+						closeHandler={() => this.setState({ isAssetsOpen: false })}
+					>
+						<Assets
+							onProBtnClick={() => {
+								this.setState({ isAssetsOpen: false });
+								this.proBtnClickHandler();
+							}}
+							onLoginBtnClick={() => {
+								this.closeAllOverlays();
+								this.loginBtnClickHandler();
+							}}
+						/>
+					</Modal>
+					<Modal
+						show={this.state.isShareModalOpen}
+						closeHandler={() => this.setState({ isShareModalOpen: false })}
+					>
+						<Share
+							user={this.state.user}
+							item={this.state.currentItem}
+							onVisibilityChange={visibility => {
+								const item = {
+									...this.state.currentItem,
+									isPublic: visibility
+								};
+								this.setState({ currentItem: item });
+							}}
+							onLoginBtnClick={() => {
+								this.closeAllOverlays();
+								this.loginBtnClickHandler();
+							}}
+							onProBtnClick={() => {
+								this.closeAllOverlays();
+								this.proBtnClickHandler();
+							}}
+						/>
+					</Modal>
+					<Modal
+						show={this.state.isProModalOpen}
+						closeHandler={() => this.setState({ isProModalOpen: false })}
+						extraClasses="pro-modal"
+					>
+						<Pro
+							user={this.state.user}
+							onLoginClick={() => {
+								this.closeAllOverlays();
+								this.loginBtnClickHandler();
+							}}
+							onBuyFromExtensionClick={() => {
+								console.log('open modal');
+								this.closeAllOverlays();
+								this.setState({ isProOnAppModalOpen: true });
+							}}
+						/>
+					</Modal>
+					{/* Login modal is intentionally kept here after assets & share modal because 
+					they trigger this modal and if order isn't maintainer, the modal overlay doesn't
+					show properly */}
+					<Modal
+						extraClasses="login-modal"
+						show={this.state.isLoginModalOpen}
+						closeHandler={() => this.setState({ isLoginModalOpen: false })}
+					>
+						<Login />
 					</Modal>
 					<HelpModal
 						show={this.state.isHelpModalOpen}
@@ -1794,17 +1968,14 @@ export default class App extends Component {
 						)}
 						dontAskBtnClickHandler={this.dontAskToImportAnymore.bind(this)}
 					/>
-
 					<OnboardingModal
 						show={this.state.isOnboardModalOpen}
 						closeHandler={() => this.setState({ isOnboardModalOpen: false })}
 					/>
-
 					<Js13KModal
 						show={this.state.isJs13KModalOpen}
 						closeHandler={() => this.setState({ isJs13KModalOpen: false })}
 					/>
-
 					<CreateNewModal
 						show={this.state.isCreateNewModalOpen}
 						closeHandler={() => this.setState({ isCreateNewModalOpen: false })}
@@ -1817,21 +1988,38 @@ export default class App extends Component {
 							this
 						)}
 					/>
-
+					<ProOnAppModal
+						show={this.state.isProOnAppModalOpen}
+						closeHandler={() => this.setState({ isProOnAppModalOpen: false })}
+					/>
+					<Modal
+						extraClasses=""
+						show={this.state.isFilesLimitModalOpen}
+						closeHandler={() => this.setState({ isFilesLimitModalOpen: false })}
+					>
+						<VStack align="stretch" gap={2}>
+							<Text tag="p">
+								You have used your quota of 2 'Files mode' creations in Free
+								plan.
+							</Text>
+							<Text tag="p">
+								You can choose to delete old ones to free quota or upgrade to{' '}
+								<ProBadge />.{' '}
+							</Text>
+						</VStack>
+					</Modal>
 					<CommandPalette
 						show={this.state.isCommandPaletteOpen}
 						files={linearizeFiles(this.state.currentItem.files || [])}
 						isCommandMode={this.state.isCommandPaletteInCommandMode}
 						closeHandler={() => this.setState({ isCommandPaletteOpen: false })}
 					/>
-
 					<Portal into="#portal">
 						<div
 							class="modal-overlay"
 							onClick={this.modalOverlayClickHandler.bind(this)}
 						/>
 					</Portal>
-
 					<Icons />
 					<form
 						style="display:none;"

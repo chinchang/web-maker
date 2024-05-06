@@ -6,6 +6,24 @@ import { deferred } from './deferred';
 import { trackEvent } from './analytics';
 import { log } from './utils';
 
+/**
+ * Converts a firestore query snapshot into native array
+ * @param {snapshot} querySnapshot Snapshot object returned by a firestore query
+ */
+function getArrayFromQuerySnapshot(querySnapshot) {
+	const arr = [];
+	querySnapshot.forEach(doc => {
+		// doc.data() has to be after doc.id because docs can have `id` key in them which
+		// should override the explicit `id` being set
+		arr.push({
+			id: doc.id,
+			...doc.data()
+		});
+		//   documentCache[doc.id] = doc.data()
+	});
+	return arr;
+}
+
 (() => {
 	const FAUX_DELAY = 1;
 
@@ -129,13 +147,26 @@ import { log } from './utils';
 
 		return getDoc(doc(remoteDb, `users/${userId}`)).then(doc => {
 			if (!doc.exists()) {
-				return setDoc(doc(remoteDb, `users/${userId}`), {}, { merge: true });
+				// return setDoc(doc(remoteDb, `users/${userId}`), {}, { merge: true });
+				return {};
 			}
 
 			const user = doc.data();
-			Object.assign(window.user, user);
+			// Object.assign(window.user, user);
 			return user;
 		});
+	}
+
+	async function fetchItem(itemId) {
+		const remoteDb = await getDb();
+		return remoteDb
+			.doc(`items/${itemId}`)
+			.get()
+			.then(doc => {
+				if (!doc.exists) return {};
+				const data = doc.data();
+				return data;
+			});
 	}
 
 	// Fetch user settings.
@@ -151,12 +182,36 @@ import { log } from './utils';
 		return d.promise;
 	}
 
+	async function getPublicItemCount(userId) {
+		const remoteDb = await getDb();
+		return remoteDb
+			.collection('items')
+			.where('createdBy', '==', userId)
+			.where('isPublic', '==', true)
+			.get()
+			.then(snapShot => {
+				return snapShot.size;
+			});
+	}
+
+	async function getUserSubscriptionEvents(userId) {
+		const remoteDb = await getDb();
+		return remoteDb
+			.collection('subscriptions')
+			.where('userId', '==', userId)
+			.get()
+			.then(getArrayFromQuerySnapshot);
+	}
+
 	window.db = {
 		getDb,
 		getUser,
 		getUserLastSeenVersion,
 		setUserLastSeenVersion,
 		getSettings,
+		fetchItem,
+		getPublicItemCount,
+		getUserSubscriptionEvents,
 		local: dbLocalAlias,
 		sync: dbSyncAlias
 	};

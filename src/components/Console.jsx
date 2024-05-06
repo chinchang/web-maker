@@ -12,15 +12,12 @@ class LogRow extends Component {
 		const theme = {
 			...chromeDark,
 			...{
-				OBJECT_VALUE_STRING_COLOR: 'green',
 				BASE_FONT_SIZE: '20px',
 				TREENODE_FONT_SIZE: '20px'
 			}
 		};
 
-		return (
-			<Inspector theme={theme} theme="chromeDark" data={this.props.data} />
-		);
+		return <Inspector theme={theme} data={this.props.data} />;
 	}
 }
 

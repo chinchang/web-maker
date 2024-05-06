@@ -1,7 +1,7 @@
 {
 	"name": "Web Maker",
-	"version": "5.2.0",
-	"manifest_version": 3,
+	"version": "6.0.0",
+	"manifest_version": 2,
 	"description": "Blazing fast & offline playground for your web experiments",
 	"homepage_url": "https://webmaker.app",
 	"permissions": ["storage", "tabs"],
@@ -9,7 +9,7 @@
 	"host_permissions": ["<all_urls>"],
 	"content_security_policy": {
 		"extension_pages": "script-src 'self'; object-src 'self'",
-		"sandbox": "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' filesystem: http://localhost:* https://localhost:* https://apis.google.com https://ajax.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://unpkg.com https://maxcdn.com https://cdn77.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net/ https://*.stripe.com/ https://builds.framerjs.com/ https://rawgit.com https://wzrd.in https://www.gstatic.com https://semantic-ui.com https://www.google-analytics.com https://cdn.tailwindcss.com 'unsafe-inline' 'unsafe-eval'; child-src 'self';"
+		"sandbox": "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' filesystem: http://localhost:* https://localhost:* https://apis.google.com https://ajax.googleapis.com https://code.jquery.com https://cdnjs.cloudflare.com https://unpkg.com https://maxcdn.com https://cdn77.com https://maxcdn.bootstrapcdn.com https://cdn.jsdelivr.net/ https://*.stripe.com/ https://builds.framerjs.com/ https://rawgit.com https://wzrd.in https://www.gstatic.com https://semantic-ui.com https://www.google-analytics.com https://cdn.tailwindcss.com https://www.googletagmanager.com 'unsafe-inline' 'unsafe-eval'; child-src 'self';"
 	},
 	"options_ui": {
 		"page": "options.html",

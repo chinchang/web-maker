@@ -21,6 +21,12 @@ const minCodeWrapSize = 33;
 /* global htmlCodeEl
  */
 
+const PREVIEW_FRAME_HOST = window.DEBUG
+	? 'http://localhost:7888'
+	: `https://wbmakr.com`;
+
+let cachedSandboxAttribute = '';
+
 export default class ContentWrap extends Component {
 	constructor(props) {
 		super(props);
@@ -152,29 +158,56 @@ export default class ContentWrap extends Component {
 		}
 
 		if (shouldInlineJs) {
-			const writeInsideIframe = () => {
-				if (this.detachedWindow) {
-					log('✉️ Sending message to detached window');
-					this.detachedWindow.postMessage({ contents }, '*');
-				} else if (window.IS_EXTENSION) {
+			if (this.detachedWindow) {
+				log('✉️ Sending message to detached window');
+				this.detachedWindow.postMessage({ contents }, '*');
+			} else {
+				// 1. we refresh the frame so that all JS is cleared in the frame. this will
+				// break the iframe since sandboxed frame isn't served by SW (needed for offline support)
+				// 2. we cache and remove the sandbox attribute and refresh again so that it gets served by SW
+				// 3. we add back cached sandbox attr & write the contents to the iframe
+				const refreshAndDo = fn => {
+					Promise.race([
+						// Just in case onload promise doesn't resolves
+						new Promise(resolve => {
+							setTimeout(resolve, 400);
+						}),
+						new Promise(resolve => {
+							this.frame.onload = resolve;
+						})
+					]).then(fn);
+					// Setting to blank string cause frame to reload
+					// if (window.IS_EXTENSION) {
+					// 	this.frame.src = '';
+					// } else {
+					this.frame.src = this.frame.src;
+					// }
+				};
+				const writeInsideIframe = () => {
+					if (!cachedSandboxAttribute && window.DEBUG) {
+						// alert('sandbox empty');
+					}
+					// console.log('setting back sandbox attr', sandbox);
+					// this.frame.setAttribute('sandbox', cachedSandboxAttribute);
+					// this.frame.removeAttribute('sweet');
+
+					// if (window.IS_EXTENSION) {
+					// 	this.frame.contentDocument.open();
+					// 	this.frame.contentDocument.write(contents);
+					// 	this.frame.contentDocument.close();
+					// } else {
 					this.frame.contentWindow.postMessage({ contents }, '*');
-				} else {
-					this.frame.contentDocument.open();
-					this.frame.contentDocument.write(contents);
-					this.frame.contentDocument.close();
-				}
-			};
-			Promise.race([
-				// Just in case onload promise doesn't resolves
-				new Promise(resolve => {
-					setTimeout(resolve, 200);
-				}),
-				new Promise(resolve => {
-					this.frame.onload = resolve;
-				})
-			]).then(writeInsideIframe);
-			// Setting to blank string cause frame to reload
-			this.frame.src = this.frame.src;
+					// }
+				};
+				// refreshAndDo(() => {
+				// 	cachedSandboxAttribute = this.frame.getAttribute('sandbox');
+				// 	// console.log('removing sandbox', sandbox);
+				// 	// this.frame.setAttribute('sweet', sandbox);
+				// 	// this.frame.removeAttribute('sandbox');
+				// 	refreshAndDo(writeInsideIframe);
+				// });
+				refreshAndDo(writeInsideIframe);
+			}
 		} else {
 			// DEPRECATED
 			// we need to store user script in external JS file to prevent inline-script
@@ -240,7 +273,8 @@ export default class ContentWrap extends Component {
 			false &&
 			!isForced &&
 			currentCode.html === this.codeInPreview.html &&
-			currentCode.js === this.codeInPreview.js
+			currentCode.js === this.codeInPreview.js &&
+			false
 		) {
 			computeCss(
 				cssMode === CssModes.ACSS ? currentCode.html : currentCode.css,
@@ -326,7 +360,7 @@ export default class ContentWrap extends Component {
 
 		// Replace correct css file in LINK tags's href
 		if (prefs.editorTheme) {
-			window.editorThemeLinkTag.href = `lib/codemirror/theme/${prefs.editorTheme}.css`;
+			window.editorThemeLinkTag.href = `./lib/codemirror/theme/${prefs.editorTheme}.css`;
 		}
 
 		window.fontStyleTag.textContent =
@@ -517,11 +551,20 @@ export default class ContentWrap extends Component {
 		const iframeHeight = iframeBounds.height;
 		document.body.classList.add('is-detached-mode');
 
-		this.detachedWindow = window.open(
-			'./preview.html',
-			'Web Maker',
-			`width=${iframeWidth},height=${iframeHeight},resizable,scrollbars=yes,status=1`
-		);
+		if (window.IS_EXTENSION) {
+			this.detachedWindow = window.open(
+				'./preview.html',
+				'Web Maker',
+				`width=${iframeWidth},height=${iframeHeight},resizable,scrollbars=yes,status=1`
+			);
+		} else {
+			this.detachedWindow = window.open(
+				`${PREVIEW_FRAME_HOST}/preview.html`,
+				'Web Maker',
+				`width=${iframeWidth},height=${iframeHeight},resizable,scrollbars=yes,status=1`
+			);
+		}
+
 		// Trigger initial render in detached window
 		setTimeout(() => {
 			this.setPreviewContent(true);
@@ -837,7 +880,7 @@ export default class ContentWrap extends Component {
 								<a
 									class="code-wrap__header-btn "
 									title="Format code"
-									onClick={this.prettifyBtnClickHandler.bind(this, 'css')}
+									onClick={this.prettifyBtnClickHandler.bind(this, 'js')}
 								>
 									<svg>
 										<use xlinkHref="#code-brace-icon" />
@@ -878,13 +921,26 @@ export default class ContentWrap extends Component {
 					</div>
 				</SplitPane>
 				<div class="demo-side" id="js-demo-side" style="">
-					<iframe
-						ref={el => (this.frame = el)}
-						frameborder="0"
-						id="demo-frame"
-						allowfullscreen
-						src="./indexpm.html"
-					/>
+					{window.IS_EXTENSION ? (
+						<iframe
+							ref={el => (this.frame = el)}
+							frameborder="0"
+							id="demo-frame"
+							src="./indexpm.html"
+							allowfullscreen="true"
+						/>
+					) : (
+						<iframe
+							src={`./indexpm.html`}
+							ref={el => (this.frame = el)}
+							frameborder="0"
+							id="demo-frame"
+							sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-scripts allow-top-navigation-by-user-activation"
+							allow="accelerometer; camera; encrypted-media; display-capture; geolocation; gyroscope; microphone; midi; clipboard-read; clipboard-write; web-share"
+							allowpaymentrequest="true"
+							allowfullscreen="true"
+						/>
+					)}
 
 					<PreviewDimension ref={comp => (this.previewDimension = comp)} />
 

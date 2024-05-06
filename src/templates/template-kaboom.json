@@ -1,0 +1,18 @@
+{
+	"title": "Kaboom game engine template",
+	"content": "",
+	"html": "",
+	"css": "",
+	"js": "// Responding to gravity & jumping\n\n// Start kaboom\nkaboom()\n\n// Load assets\nloadSprite(\"bean\", \"https://kaboomjs.com/sprites/bean.png\")\n\n// Set the gravity acceleration (pixels per second)\nsetGravity(1600)\n\n// Add player game object\nconst player = add([\n\tsprite(\"bean\"),\n\tpos(center()),\n\tarea(),\n\t// body() component gives the ability to respond to gravity\n\tbody(),\n])\n\nonKeyPress(\"space\", () => {\n\t// .isGrounded() is provided by body()\n\tif (player.isGrounded()) {\n\t\t// .jump() is provided by body()\n\t\tplayer.jump()\n\t}\n})\n\n// .onGround() is provided by body(). It registers an event that runs whenever player hits the ground.\nplayer.onGround(() => {\n\tdebug.log(\"ouch\")\n})\n\n// Accelerate falling when player holding down arrow key\nonKeyDown(\"down\", () => {\n\tif (!player.isGrounded()) {\n\t\tplayer.vel.y += dt() * 1200\n\t}\n})\n\n// Jump higher if space is held\nonKeyDown(\"space\", () => {\n\tif (!player.isGrounded() && player.vel.y < 0) {\n\t\tplayer.vel.y -= dt() * 600\n\t}\n})\n\n// Add a platform to hold the player\nadd([\n\trect(width(), 48),\n\toutline(4),\n\tarea(),\n\tpos(0, height() - 48),\n\t// Give objects a body() component if you don't want other solid objects pass through\n\tbody({ isStatic: true }),\n])\n\nadd([\n\ttext(\"Press space key\", { width: width() / 2 }),\n\tpos(12, 12),\n])\n\n// Check out https://kaboomjs.com#BodyComp for everything body() provides\n",
+	"externalLibs": {
+		"js": "\nhttps://unpkg.com/kaboom@3000/dist/kaboom.js",
+		"css": ""
+	},
+	"layoutMode": 1,
+	"htmlMode": "html",
+	"cssMode": "css",
+	"jsMode": "js",
+
+	"mainSizes": [50, 50],
+	"sizes": ["33px", "33px", 100]
+}

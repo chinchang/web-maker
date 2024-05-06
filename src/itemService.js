@@ -59,8 +59,6 @@ export const itemService = {
 
 		if (window.user && !shouldFetchLocally) {
 			var remoteDb = await window.db.getDb();
-			// console.log(query, window.user.uid);
-			// d.resolve([]);
 
 			const q = query(
 				collection(remoteDb, 'items'),

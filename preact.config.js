@@ -1,5 +1,3 @@
-// var CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
-
 /**
  * Function that mutates original webpack config.
  * Supports asynchronous changes when promise is returned.
@@ -21,9 +19,9 @@ export default function (config, env, helpers) {
 	htmlWebpackPlugin.plugin.options.favicon = false;
 
 	// Required for lingui-macros
-	let { rule } = helpers.getLoadersByName(config, 'babel-loader')[0];
-	let babelConfig = rule.options;
-	babelConfig.plugins.push('macros');
+	// let { rule } = helpers.getLoadersByName(config, 'babel-loader')[0];
+	// let babelConfig = rule.options;
+	// babelConfig.plugins.push('macros');
 
 	if (env.isProd) {
 		config.devtool = false; // disable sourcemaps
@@ -33,25 +31,5 @@ export default function (config, env, helpers) {
 
 		// Remove the default hash append in chunk name
 		config.output.chunkFilename = '[name].chunk.js';
-
-		// config.plugins.push(
-		// 	new CommonsChunkPlugin({
-		// 		name: 'vendor',
-		// 		minChunks: ({ resource }) => /node_modules/.test(resource)
-		// 	})
-		// );
-
-		const swPlugin = helpers.getPluginsByName(
-			config,
-			'SWPrecacheWebpackPlugin'
-		)[0];
-		if (swPlugin) {
-			// config.plugins.splice(swPlugin.index, 1);
-		}
-
-		const uglifyPlugin = helpers.getPluginsByName(config, 'UglifyJsPlugin')[0];
-		if (uglifyPlugin) {
-			// config.plugins.splice(uglifyPlugin.index, 1);
-		}
 	}
 }

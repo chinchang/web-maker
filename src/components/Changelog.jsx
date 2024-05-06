@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { Button } from './common';
+import { Icon } from './Icons';
 
 function NotificationItem({ type, label, children }) {
 	var strongTag;
@@ -83,15 +84,18 @@ function Notification({ version, isLatest, ...props }) {
 							rel="noopener noreferrer"
 							class="btn"
 						>
-							Please rate Web Maker <span class="star" />
+							Please rate Web Maker &nbsp;
+							<span class="star" />
 						</a>
 						&nbsp;
 						<a
+							class="btn"
 							href="http://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline frontend playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="btn"
 						>
+							<Icon name="twitter" />
 							Share it
 						</a>
 					</p>
@@ -100,11 +104,19 @@ function Notification({ version, isLatest, ...props }) {
 		</div>
 	);
 }
-export function Notifications(props) {
+export function Changelog(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
-			<Notification version="6.0.0" {...props} isLatest={true}>
+			<Notification version="6.1.0" {...props} isLatest={true}>
+				<li>
+					<strong>🕹️ Kaboom game engine</strong>: Kaboom.js is now available in
+					quick-add library list. Also, a new template to quick-start in Kaboom
+					has been added.
+				</li>
+			</Notification>
+
+			<Notification version="6.0.0" {...props}>
 				<li>
 					<strong>🎁 PRO plan 🎉</strong>: Today I introduce to you - Web
 					Maker's PRO plan! A set of additional super-features which you can

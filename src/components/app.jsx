@@ -37,7 +37,7 @@ import {
 
 import { itemService } from '../itemService';
 import '../db';
-import { Notifications } from './Notifications';
+import { Changelog } from './Changelog';
 import Settings from './Settings.jsx';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { trackEvent } from '../analytics';
@@ -1848,7 +1848,7 @@ export default class App extends Component {
 							this.setState({ isNotificationsModalOpen: false })
 						}
 					>
-						<Notifications
+						<Changelog
 							onSupportBtnClick={this.openSupportDeveloperModal.bind(this)}
 						/>
 					</Modal>

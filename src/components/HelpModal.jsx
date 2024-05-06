@@ -63,17 +63,13 @@ export function HelpModal(props) {
 					</Trans>
 				</p>
 				<p style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-					<Button
-						onClick={props.onSupportBtnClick}
-						data-event-action="supportDeveloperHelpBtnClick"
-						data-event-category="ui"
+					<a
+						href="http://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
+						rel="noopener noreferrer"
 						class="btn btn-icon"
 					>
-						<svg>
-							<use xlinkHref="#gift-icon" />
-						</svg>
-						<Trans>Support the developer</Trans>
-					</Button>{' '}
+						<Trans>Share Web Maker</Trans>
+					</a>{' '}
 					<a
 						href="https://chromewebstore.google.com/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
 						target="_blank"

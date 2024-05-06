@@ -226,7 +226,7 @@ gulp.task('buildDistFolder', function (cb) {
 });
 
 gulp.task('cleanup', function () {
-	return child_process.exec('rm -rf build dist create');
+	return child_process.exec('rm -rf build create');
 });
 
 gulp.task('start-preview-server', function () {

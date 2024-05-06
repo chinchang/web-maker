@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import { Button } from './common';
-import { Icon } from './Icons';
 
 function NotificationItem({ type, label, children }) {
 	var strongTag;
@@ -95,7 +94,6 @@ function Notification({ version, isLatest, ...props }) {
 							rel="noopener noreferrer"
 							class="btn"
 						>
-							<Icon name="twitter" />
 							Share it
 						</a>
 					</p>
@@ -114,6 +112,9 @@ export function Changelog(props) {
 					quick-add library list. Also, a new template to quick-start in Kaboom
 					has been added.
 				</li>
+				<NotificationItem type="bug">
+					Incorrect/old preview rendering bug is fixed.
+				</NotificationItem>
 			</Notification>
 
 			<Notification version="6.0.0" {...props}>

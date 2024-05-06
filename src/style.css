@@ -1609,12 +1609,15 @@ body > #demo-frame {
 }
 
 .onboard-step {
-	margin: 15px;
-	padding: 20px 30px;
+	margin: 0.5rem;
+	padding: 1rem;
 	background-color: rgba(255, 255, 255, 0.1);
-	border-radius: 10px;
+	border-radius: 0.8rem;
 	box-shadow: 0 16px 22px rgba(0, 0, 0, 0.1);
 	flex: 1;
+}
+.onboard-step--full-width {
+	grid-column: 1 / -1;
 }
 
 .onboard-step__icon {

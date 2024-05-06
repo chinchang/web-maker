@@ -1,7 +1,7 @@
 {
 	"name": "Web Maker",
 	"version": "6.0.0",
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"description": "Blazing fast & offline playground for your web experiments",
 	"homepage_url": "https://webmaker.app",
 	"permissions": ["storage", "tabs"],

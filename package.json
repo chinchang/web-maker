@@ -75,7 +75,7 @@
 		"code-blast-codemirror": "chinchang/code-blast-codemirror#web-maker",
 		"codemirror": "^5.65.16",
 		"copy-webpack-plugin": "^4.5.1",
-		"esprima": "^4.0.0",
+		"esprima-next": "^6.0.3",
 		"firebase": "^8.10.0",
 		"jszip": "^3.1.5",
 		"preact": "^10.17.0",

@@ -130,12 +130,12 @@ const Card = ({ bg, name, price, subTitle, action, features }) => {
 					<Text transform="uppercase" weight="600">
 						{name}
 					</Text>
-					<Text size="5" weight="800" appearance="primary">
+					{/* <Text size="5" weight="800" appearance="primary">
 						{price}
 					</Text>
 					<Text size="1" weight="400">
 						{subTitle}
-					</Text>
+					</Text> */}
 				</VStack>
 				{action}
 				{!action && (

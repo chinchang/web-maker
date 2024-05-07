@@ -234,13 +234,13 @@ export default class CodeEditor extends Component {
 	async loadDeps() {
 		if (this.props.type === 'monaco') {
 			if (!monacoDepsDeferred) {
-				monacoDepsDeferred = deferred();
-				loadCss({ url: 'lib/monaco/monaco.css', id: 'monaco-css' });
-				import(
-					/* webpackChunkName: "monaco" */ '/lib/monaco/monaco.bundle.js'
-				).then(() => {
-					monacoDepsDeferred.resolve();
-				});
+				// monacoDepsDeferred = deferred();
+				// loadCss({ url: 'lib/monaco/monaco.css', id: 'monaco-css' });
+				// import(
+				// 	/* webpackChunkName: "monaco" */ '/lib/monaco/monaco.bundle.js'
+				// ).then(() => {
+				// 	monacoDepsDeferred.resolve();
+				// });
 			}
 			return monacoDepsDeferred.promise;
 		}

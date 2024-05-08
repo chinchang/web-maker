@@ -962,7 +962,7 @@ export default class ContentWrap extends Component {
 						/>
 					) : (
 						<iframe
-							src={`${PREVIEW_FRAME_HOST}/preview.html`}
+							src={`${PREVIEW_FRAME_HOST}/preview.htm`}
 							ref={el => (this.frame = el)}
 							frameborder="0"
 							id="demo-frame"

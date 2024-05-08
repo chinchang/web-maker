@@ -1552,10 +1552,17 @@ export default class App extends Component {
 		this.setState({ isCreateNewModalOpen: false });
 	}
 	blankFileTemplateSelectHandler() {
+		function create() {
+			this.createNewItem(true);
+			this.setState({ isCreateNewModalOpen: false });
+		}
+		if (this.state.user?.isPro) {
+			create();
+			return;
+		}
 		itemService.getCountOfFileModeItems().then(count => {
 			if (count < 2) {
-				this.createNewItem(true);
-				this.setState({ isCreateNewModalOpen: false });
+				create();
 			} else {
 				trackEvent('ui', 'FileModeCreationLimitMessageSeen');
 				// this.closeAllOverlays();
@@ -1568,24 +1575,29 @@ export default class App extends Component {
 	}
 
 	templateSelectHandler(template, isFileMode) {
+		function create() {
+			fetch(
+				`templates/template-${isFileMode ? 'files-' : ''}${template.id}.json`
+			)
+				.then(res => res.json())
+				.then(json => {
+					this.forkItem(json);
+				});
+			this.setState({ isCreateNewModalOpen: false });
+		}
+
 		if (isFileMode) {
+			if (this.state.user?.isPro) {
+				create();
+				return;
+			}
+
 			itemService.getCountOfFileModeItems().then(count => {
 				if (count < 2) {
-					fetch(
-						`templates/template-${isFileMode ? 'files-' : ''}${
-							template.id
-						}.json`
-					)
-						.then(res => res.json())
-						.then(json => {
-							this.forkItem(json);
-						});
-					this.setState({ isCreateNewModalOpen: false });
+					create();
 				} else {
 					trackEvent('ui', 'FileModeCreationLimitMessageSeen');
-					return alert(
-						'"Files mode" is currently in beta and is limited to only 2 creations per user. You have already made 2 creations in Files mode.\n\nNote: You can choose to delete old ones to create new.'
-					);
+					this.setState({ isFilesLimitModalOpen: true });
 				}
 			});
 		} else {

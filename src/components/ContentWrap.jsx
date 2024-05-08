@@ -206,7 +206,6 @@ export default class ContentWrap extends Component {
 						this.frame.contentDocument.write(contents);
 						this.frame.contentDocument.close();
 					} else {
-						console.log('sending PM');
 						this.frame.contentWindow.postMessage({ contents }, '*');
 					}
 				};

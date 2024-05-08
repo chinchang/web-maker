@@ -106,7 +106,22 @@ export function Changelog(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
-			<Notification version="6.1.0" {...props} isLatest={true}>
+			<Notification version="6.2.0" {...props} isLatest={true}>
+				<li>Preact template updated to latest version with hooks.</li>
+				<li>Mail option added in help modal.</li>
+				<li>
+					JS error checks updated to latest version. No more red errors on
+					latest syntax.
+				</li>
+				<NotificationItem type="bug">
+					Bugs related to light-weight mode and creation not opening on page
+					refresh in logged out state are fixed.
+				</NotificationItem>
+				<NotificationItem type="bug">
+					Code auto-format for JS is fixed.
+				</NotificationItem>
+			</Notification>
+			<Notification version="6.1.0" {...props}>
 				<li>
 					<strong>🕹️ Kaboom game engine</strong>: Kaboom.js is now available in
 					quick-add library list. Also, a new template to quick-start in Kaboom

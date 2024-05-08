@@ -1066,11 +1066,14 @@ body > #demo-frame {
 	/* opacity: 0; */
 	will-change: opacity;
 	background: var(--color-overlay);
-	backdrop-filter: blur(5px) grayscale(1);
 	transition: opacity var(--duration-modal-overlay-show);
 
 	will-change: transform;
 }
+body:not(.light-version) .modal {
+	backdrop-filter: blur(5px) grayscale(1);
+}
+
 .modal--no-overlay {
 	background: none;
 	backdrop-filter: none;
@@ -1097,10 +1100,11 @@ body > #demo-frame {
 	transition: 0.25s ease;
 }
 .modal__content {
+	--opaque: 68%;
 	background: var(--color-popup);
 
 	/* fix me */
-	background: linear-gradient(45deg, #2d063cad, #3a2b63);
+	background: linear-gradient(45deg, rgb(45 6 60 / var(--opaque)), #3a2b63);
 	box-shadow:
 		inset 1px -1px 0 0 #ffffff17,
 		0 20px 31px 0 #0000008a;
@@ -1122,6 +1126,9 @@ body > #demo-frame {
 		forwards;
 	/* animation-delay: 150ms; */
 }
+body.light-version .modal__content {
+	--opaque: 100%;
+}
 
 @keyframes anim-modal {
 	to {
@@ -1140,10 +1147,7 @@ body > #demo-frame {
 	visibility: visible;
 }
 
-.is-modal-visible .modal__content {
-	/* transition-duration: 0.3s; */
-	/* transform: translateY(0px) scale(1); */
-	/* opacity: 1; */
+body:not(.light-version).is-modal-visible .modal__content {
 	backdrop-filter: blur(3px);
 }
 
@@ -1158,8 +1162,10 @@ body > #demo-frame {
 	opacity: 0;
 	will-change: opacity;
 	/* background: var(--color-overlay); */
-	backdrop-filter: blur(5px) grayscale(1);
 	transition: opacity var(--duration-modal-overlay-show);
+}
+body:not(.light-version) .modal-overlay {
+	backdrop-filter: blur(5px) grayscale(1);
 }
 
 /* Make settings modal smaller */

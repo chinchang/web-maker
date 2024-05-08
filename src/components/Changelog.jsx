@@ -114,6 +114,9 @@ export function Changelog(props) {
 					latest syntax.
 				</li>
 				<NotificationItem type="bug">
+					Localstorage/Cookies not being available to creations is now fixed.
+				</NotificationItem>
+				<NotificationItem type="bug">
 					Bugs related to light-weight mode and creation not opening on page
 					refresh in logged out state are fixed.
 				</NotificationItem>

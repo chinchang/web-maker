@@ -21,11 +21,14 @@ const minCodeWrapSize = 33;
 /* global htmlCodeEl
  */
 
-const PREVIEW_FRAME_HOST = window.location.href.includes('localhost')
+const PREVIEW_FRAME_HOST = !window.location.href.includes('localhost')
 	? 'http://localhost:7888'
 	: `https://wbmakr.com`;
 
 let cachedSandboxAttribute = '';
+
+// prevents refreshes when iframe is currently being refreshed
+let frameRefreshPromise = null;
 
 export default class ContentWrap extends Component {
 	constructor(props) {
@@ -171,21 +174,24 @@ export default class ContentWrap extends Component {
 				// 2. we cache and remove the sandbox attribute and refresh again so that it gets served by SW
 				// 3. we add back cached sandbox attr & write the contents to the iframe
 				const refreshAndDo = fn => {
-					Promise.race([
-						// Just in case onload promise doesn't resolves
-						new Promise(resolve => {
-							setTimeout(() => {
-								log('resolved with timeout');
-								resolve();
-							}, 1000);
-						}),
-						new Promise(resolve => {
-							this.frame.onload = () => {
-								log('resolved with onload');
-								resolve();
-							};
-						})
-					]).then(fn);
+					frameRefreshPromise =
+						frameRefreshPromise ||
+						// Race earlier had a settimeout too as a fallback. It was removed because onload
+						// was firing 100% times.
+						// TODO: remove race
+						Promise.race([
+							new Promise(resolve => {
+								this.frame.onload = () => {
+									resolve('onload');
+								};
+							})
+						]);
+
+					frameRefreshPromise.then(resolutionReason => {
+						frameRefreshPromise = null;
+						log('resolved with ', resolutionReason);
+						fn();
+					});
 					// Setting to blank string cause frame to reload
 					if (window.IS_EXTENSION) {
 						this.frame.src = '';
@@ -197,9 +203,7 @@ export default class ContentWrap extends Component {
 					if (!cachedSandboxAttribute && window.DEBUG) {
 						// alert('sandbox empty');
 					}
-					// console.log('setting back sandbox attr', sandbox);
-					// this.frame.setAttribute('sandbox', cachedSandboxAttribute);
-					// this.frame.removeAttribute('sweet');
+					log('sending PM');
 
 					if (window.IS_EXTENSION) {
 						this.frame.contentDocument.open();

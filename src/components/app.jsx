@@ -108,8 +108,16 @@ if (location.search) {
 }
 
 function customRoute(path) {
-	// we don't /create redirections on extension since SPA paths don't work there
+	// we don't /create redirections on extension since SPA paths don't work there.
 	if (window.IS_EXTENSION) return;
+
+	// And also for logged out users, since it will send them to /create/ID and refreshing
+	// that will try to find that creation in their database, which doesn't exist. LOgged out
+	// users anyways can't do anything with the urls.
+	// Exception is /create. this is needed because a logged out user can visit a /create/ID
+	// of some other user and then create a new item...at which point they shud come back
+	// to /create
+	if (!window.user && path !== '/create') return;
 	else {
 		route(path);
 	}

@@ -955,11 +955,11 @@ export default class ContentWrap extends Component {
 						/>
 					) : (
 						<iframe
-							src={`./indexpm.html`}
+							src={`${PREVIEW_FRAME_HOST}/preview.html`}
 							ref={el => (this.frame = el)}
 							frameborder="0"
 							id="demo-frame"
-							sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-scripts allow-top-navigation-by-user-activation"
+							sandbox="allow-same-origin allow-downloads allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-scripts allow-top-navigation-by-user-activation"
 							allow="accelerometer; camera; encrypted-media; display-capture; geolocation; gyroscope; microphone; midi; clipboard-read; clipboard-write; web-share"
 							allowpaymentrequest="true"
 							allowfullscreen="true"

@@ -1552,10 +1552,10 @@ export default class App extends Component {
 		this.setState({ isCreateNewModalOpen: false });
 	}
 	blankFileTemplateSelectHandler() {
-		function create() {
+		const create = () => {
 			this.createNewItem(true);
 			this.setState({ isCreateNewModalOpen: false });
-		}
+		};
 		if (this.state.user?.isPro) {
 			create();
 			return;
@@ -1575,7 +1575,7 @@ export default class App extends Component {
 	}
 
 	templateSelectHandler(template, isFileMode) {
-		function create() {
+		const create = () => {
 			fetch(
 				`templates/template-${isFileMode ? 'files-' : ''}${template.id}.json`
 			)
@@ -1584,7 +1584,7 @@ export default class App extends Component {
 					this.forkItem(json);
 				});
 			this.setState({ isCreateNewModalOpen: false });
-		}
+		};
 
 		if (isFileMode) {
 			if (this.state.user?.isPro) {

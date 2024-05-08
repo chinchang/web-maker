@@ -21,7 +21,7 @@ const minCodeWrapSize = 33;
 /* global htmlCodeEl
  */
 
-const PREVIEW_FRAME_HOST = window.DEBUG
+const PREVIEW_FRAME_HOST = window.location.href.includes('localhost')
 	? 'http://localhost:7888'
 	: `https://wbmakr.com`;
 
@@ -174,10 +174,16 @@ export default class ContentWrap extends Component {
 					Promise.race([
 						// Just in case onload promise doesn't resolves
 						new Promise(resolve => {
-							setTimeout(resolve, 400);
+							setTimeout(() => {
+								log('resolved with timeout');
+								resolve();
+							}, 1000);
 						}),
 						new Promise(resolve => {
-							this.frame.onload = resolve;
+							this.frame.onload = () => {
+								log('resolved with onload');
+								resolve();
+							};
 						})
 					]).then(fn);
 					// Setting to blank string cause frame to reload
@@ -200,6 +206,7 @@ export default class ContentWrap extends Component {
 						this.frame.contentDocument.write(contents);
 						this.frame.contentDocument.close();
 					} else {
+						console.log('sending PM');
 						this.frame.contentWindow.postMessage({ contents }, '*');
 					}
 				};

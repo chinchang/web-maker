@@ -41,7 +41,7 @@ export default class Settings extends Component {
 						<HelpText>Loads the last open creation when app starts</HelpText>
 						<Divider />
 						<CheckboxSetting
-							label="Fast/light version"
+							label="Fast/light-weight version"
 							pref={prefs.lightVersion}
 							onChange={e => this.updateSetting(e, 'lightVersion')}
 						/>

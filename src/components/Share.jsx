@@ -9,7 +9,9 @@ import { Icon } from './Icons';
 import { Text } from './Text';
 
 const FREE_PUBLIC_ITEM_COUNT = 1;
-const BASE_URL = location.origin;
+const BASE_URL = location.origin.includes('chrome-extension://')
+	? 'webmaker.app'
+	: location.origin;
 const TOGGLE_VISIBILITY_API =
 	/*!window.location.origin.includes('localhost')
 	? 'http://127.0.0.1:5001/web-maker-app/us-central1/toggleVisibility'

@@ -1,5 +1,5 @@
 // This URL must point to the public site
-const _URL = 'http://localhost:1234';
+const _URL = 'https://webmaker.app/signup';
 const iframe = document.createElement('iframe');
 iframe.src = _URL;
 document.documentElement.appendChild(iframe);

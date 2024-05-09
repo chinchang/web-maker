@@ -1,7 +1,17 @@
 // import './firebaseInit';
 import 'firebase/firestore';
 import { db } from './firebaseInit';
-import { getDoc, getDocs, doc, updateDoc, setDoc } from 'firebase/firestore';
+import {
+	getDoc,
+	getDocs,
+	doc,
+	updateDoc,
+	setDoc,
+	where,
+	collection,
+	getCountFromServer,
+	query
+} from 'firebase/firestore';
 import { deferred } from './deferred';
 import { trackEvent } from './analytics';
 import { log } from './utils';
@@ -159,14 +169,11 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 
 	async function fetchItem(itemId) {
 		const remoteDb = await getDb();
-		return remoteDb
-			.doc(`items/${itemId}`)
-			.get()
-			.then(doc => {
-				if (!doc.exists) return {};
-				const data = doc.data();
-				return data;
-			});
+		getDoc(doc(remoteDb, `items/${itemId}`)).then(doc => {
+			if (!doc.exists) return {};
+			const data = doc.data();
+			return data;
+		});
 	}
 
 	// Fetch user settings.
@@ -184,23 +191,23 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 
 	async function getPublicItemCount(userId) {
 		const remoteDb = await getDb();
-		return remoteDb
-			.collection('items')
-			.where('createdBy', '==', userId)
-			.where('isPublic', '==', true)
-			.get()
-			.then(snapShot => {
-				return snapShot.size;
-			});
+		const q = query(
+			collection(remoteDb, 'items'),
+			where('createdBy', '==', userId),
+			where('isPublic', '==', true)
+		);
+		const snapshot = await getCountFromServer(q);
+		return snapshot.data().count;
 	}
 
 	async function getUserSubscriptionEvents(userId) {
 		const remoteDb = await getDb();
-		return remoteDb
-			.collection('subscriptions')
-			.where('userId', '==', userId)
-			.get()
-			.then(getArrayFromQuerySnapshot);
+		const q = query(
+			collection(remoteDb, 'subscriptions'),
+			where('userId', '==', userId)
+		);
+
+		return getDocs(q).then(getArrayFromQuerySnapshot);
 	}
 
 	window.db = {

@@ -8,12 +8,23 @@ import {
 	signOut
 } from 'firebase/auth';
 import { log } from './utils';
+import { signInWithCredential } from 'firebase/auth/web-extension';
 
 export const authh = {
 	logout() {
 		signOut();
 	},
-	login(providerName) {
+	async login(providerName) {
+		debugger;
+		const authenticationObject = await chrome.runtime.sendMessage({
+			type: 'firebase-auth',
+			provider: providerName
+		});
+		const credential =
+			GoogleAuthProvider.credentialFromResult(authenticationObject);
+		// authenticationObject is of the type UserCredentialImpl. Use it to authenticate here
+		return signInWithCredential(auth, credential);
+
 		var provider;
 		if (providerName === 'facebook') {
 			provider = new FacebookAuthProvider();

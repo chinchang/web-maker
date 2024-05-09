@@ -4,7 +4,7 @@ import { modes, HtmlModes, CssModes, JsModes } from './codeModes';
 import { deferred } from './deferred';
 import { getExtensionFromFileName } from './fileUtils';
 import confetti from 'canvas-confetti';
-const esprima = require('esprima');
+const esprima = require('esprima-next');
 
 window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
 window.$ = document.querySelector.bind(document);
@@ -378,19 +378,21 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 	var externalJs = '',
 		externalCss = '';
 	if (item.externalLibs) {
-		externalJs = item.externalLibs.js
-			.split('\n')
-			.reduce(function (scripts, url) {
-				return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
-			}, '');
-		externalCss = item.externalLibs.css
-			.split('\n')
-			.reduce(function (links, url) {
-				return (
-					links +
-					(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
-				);
-			}, '');
+		externalJs = item.externalLibs.js.split('\n').reduce(function (
+			scripts,
+			url
+		) {
+			return scripts + (url ? '\n<script src="' + url + '"></script>' : '');
+		}, '');
+		externalCss = item.externalLibs.css.split('\n').reduce(function (
+			links,
+			url
+		) {
+			return (
+				links +
+				(url ? '\n<link rel="stylesheet" href="' + url + '"></link>' : '')
+			);
+		}, '');
 	}
 	var contents =
 		'<!DOCTYPE html>\n' +
@@ -415,7 +417,7 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 				? chrome.runtime.getURL('lib/screenlog.js')
 				: `${location.origin}${
 						window.DEBUG ? '' : BASE_PATH
-				  }/lib/screenlog.js`) +
+					}/lib/screenlog.js`) +
 			'"></script>';
 	}
 

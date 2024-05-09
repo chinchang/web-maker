@@ -224,6 +224,8 @@ gulp.task('buildDistFolder', function (cb) {
 	child_process.execSync('rm -rf dist');
 	child_process.execSync('mv packages/website/_site dist');
 	child_process.execSync(`mv ${APP_FOLDER} dist/`);
+	child_process.execSync(`mkdir dist/signup`);
+	child_process.execSync(`cp packages/signup/dist/*.* dist/signup/`);
 	cb();
 });
 

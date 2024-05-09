@@ -2,7 +2,7 @@ import { deferred } from './deferred';
 import { addInfiniteLoopProtection } from './utils';
 import { HtmlModes, CssModes, JsModes } from './codeModes';
 
-const esprima = require('esprima');
+const esprima = require('esprima-next');
 
 // computeHtml, computeCss & computeJs evaluate the final code according
 // to whatever mode is selected and resolve the returned promise with the code.
@@ -18,20 +18,20 @@ export function computeHtml(userCode, mode) {
 			window.marked
 				? {
 						code: marked(code)
-				  }
+					}
 				: {
 						code
-				  }
+					}
 		);
 	} else if (mode === HtmlModes.JADE) {
 		d.resolve(
 			window.jade
 				? {
 						code: jade.render(code)
-				  }
+					}
 				: {
 						code
-				  }
+					}
 		);
 	}
 
@@ -198,7 +198,7 @@ export function computeJs(
 					? code
 					: addInfiniteLoopProtection(code, {
 							timeout: infiniteLoopTimeout
-					  });
+						});
 			}
 
 			d.resolve({
@@ -231,7 +231,7 @@ export function computeJs(
 					? code
 					: addInfiniteLoopProtection(code, {
 							timeout: infiniteLoopTimeout
-					  });
+						});
 			}
 			d.resolve({
 				code,
@@ -267,7 +267,7 @@ export function computeJs(
 					? code
 					: addInfiniteLoopProtection(code, {
 							timeout: infiniteLoopTimeout
-					  });
+						});
 			}
 			d.resolve({
 				code,

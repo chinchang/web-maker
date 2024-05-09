@@ -202,10 +202,12 @@ export class CreateNewModal extends Component {
 								}
 							})}
 						</div>
-						<p>
-							2 files mode creations available in Free plan. To create unlimited
-							files mode creations, upgrade to <ProBadge />.
-						</p>
+						{!window.user?.isPro && (
+							<p>
+								2 files mode creations available in Free plan. To create
+								unlimited files mode creations, upgrade to <ProBadge />.
+							</p>
+						)}
 						<div class="show-when-extension">
 							Files modes is currently only available in Web app.{' '}
 							<a href="https://webmaker.app/create/">Try the Web app now</a>.

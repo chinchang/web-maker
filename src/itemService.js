@@ -48,13 +48,7 @@ export const itemService = {
 	async getAllItems(shouldFetchLocally) {
 		var t = Date.now();
 		var d = deferred();
-		let itemIds = await this.getUserItemIds(shouldFetchLocally);
-		itemIds = Object.getOwnPropertyNames(itemIds || {});
-		// log('itemids', itemIds);
 
-		if (!itemIds.length) {
-			d.resolve([]);
-		}
 		const items = [];
 
 		if (window.user && !shouldFetchLocally) {
@@ -76,6 +70,13 @@ export const itemService = {
 					d.resolve([]);
 				});
 		} else {
+			let itemIds = await this.getUserItemIds(shouldFetchLocally);
+			itemIds = Object.getOwnPropertyNames(itemIds || {});
+
+			if (!itemIds.length) {
+				d.resolve([]);
+			}
+
 			for (let i = 0; i < itemIds.length; i++) {
 				/* eslint-disable no-loop-func */
 				window.db.local.get(itemIds[i], itemResult => {

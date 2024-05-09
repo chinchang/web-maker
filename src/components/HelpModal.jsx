@@ -1,3 +1,4 @@
+import { Icon } from './Icons';
 import Modal from './Modal';
 import { Stack, VStack } from './Stack';
 import { Button } from './common';
@@ -68,6 +69,7 @@ export function HelpModal(props) {
 						rel="noopener noreferrer"
 						class="btn btn-icon"
 					>
+						<Icon name="twitter-icon" />
 						<Trans>Share Web Maker</Trans>
 					</a>{' '}
 					<a
@@ -102,6 +104,15 @@ export function HelpModal(props) {
 							<use xlinkHref="#bug-icon" />
 						</svg>
 						<Trans>Report a bug</Trans>
+					</a>
+					<a
+						href="mailto:chinchang457@gmail.com"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="btn btn-icon"
+					>
+						<Icon name="email" />
+						<Trans>Mail me</Trans>
 					</a>
 				</p>
 

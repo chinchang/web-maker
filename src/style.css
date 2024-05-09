@@ -458,7 +458,8 @@ a > svg {
 .btn:hover {
 	--black-mix: 90%;
 	text-decoration: none;
-	box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
+	box-shadow:
+		rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
 		rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
 }
 
@@ -646,7 +647,9 @@ body:not(.light-version).overlay-visible .main-container {
 	overflow: hidden;
 	position: relative;
 	background: var(--color-bg);
-	transition: height 0.3s ease, width 0.3s ease;
+	transition:
+		height 0.3s ease,
+		width 0.3s ease;
 	will-change: height;
 }
 
@@ -1063,11 +1066,14 @@ body > #demo-frame {
 	/* opacity: 0; */
 	will-change: opacity;
 	background: var(--color-overlay);
-	backdrop-filter: blur(5px) grayscale(1);
 	transition: opacity var(--duration-modal-overlay-show);
 
 	will-change: transform;
 }
+body:not(.light-version) .modal {
+	backdrop-filter: blur(5px) grayscale(1);
+}
+
 .modal--no-overlay {
 	background: none;
 	backdrop-filter: none;
@@ -1094,11 +1100,14 @@ body > #demo-frame {
 	transition: 0.25s ease;
 }
 .modal__content {
+	--opaque: 68%;
 	background: var(--color-popup);
 
 	/* fix me */
-	background: linear-gradient(45deg, #2d063cad, #3a2b63);
-	box-shadow: inset 1px -1px 0 0 #ffffff17, 0 20px 31px 0 #0000008a;
+	background: linear-gradient(45deg, rgb(45 6 60 / var(--opaque)), #3a2b63);
+	box-shadow:
+		inset 1px -1px 0 0 #ffffff17,
+		0 20px 31px 0 #0000008a;
 
 	color: var(--color-text);
 	position: relative;
@@ -1116,6 +1125,9 @@ body > #demo-frame {
 	animation: anim-modal var(--duration-modal-show) cubic-bezier(0.4, 0, 0.2, 1)
 		forwards;
 	/* animation-delay: 150ms; */
+}
+body.light-version .modal__content {
+	--opaque: 100%;
 }
 
 @keyframes anim-modal {
@@ -1135,10 +1147,7 @@ body > #demo-frame {
 	visibility: visible;
 }
 
-.is-modal-visible .modal__content {
-	/* transition-duration: 0.3s; */
-	/* transform: translateY(0px) scale(1); */
-	/* opacity: 1; */
+body:not(.light-version).is-modal-visible .modal__content {
 	backdrop-filter: blur(3px);
 }
 
@@ -1153,8 +1162,10 @@ body > #demo-frame {
 	opacity: 0;
 	will-change: opacity;
 	/* background: var(--color-overlay); */
-	backdrop-filter: blur(5px) grayscale(1);
 	transition: opacity var(--duration-modal-overlay-show);
+}
+body:not(.light-version) .modal-overlay {
+	backdrop-filter: blur(5px) grayscale(1);
 }
 
 /* Make settings modal smaller */
@@ -2359,8 +2370,10 @@ while the theme CSS file is loading */
 		rgba(var(--rgb-gray-0), 0) 100%
 	);
 
-	box-shadow: 0 0 30px rgba(var(--rgb-brand), 0),
-		0px 20px 50px rgba(0, 0, 0, 0.1), inset 0px 1px 3px rgba(255, 255, 255, 0.1);
+	box-shadow:
+		0 0 30px rgba(var(--rgb-brand), 0),
+		0px 20px 50px rgba(0, 0, 0, 0.1),
+		inset 0px 1px 3px rgba(255, 255, 255, 0.1);
 }
 
 .skeleton {

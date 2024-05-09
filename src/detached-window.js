@@ -13,6 +13,6 @@ window.addEventListener('message', e => {
 
 	// Recieving from preview iframe
 	if (e.data && e.data.logs) {
-		window.opener.postMessage(e.data, '*');
+		(window.opener || window.top).postMessage(e.data, '*');
 	}
 });

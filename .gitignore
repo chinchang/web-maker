@@ -19,3 +19,4 @@ extension/
 yarn-error.log
 src/locales/_build
 extension-*.zip
+.parcel-cache/

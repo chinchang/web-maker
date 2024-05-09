@@ -24,6 +24,7 @@ function handleChromeMessages(message, sender, sendResponse) {
 			data = JSON.parse(data);
 			self.removeEventListener('message', handleIframeMessage);
 
+			// being sent back to worker
 			sendResponse(data);
 		} catch (e) {
 			console.log(`json parse failed - ${e.message}`);
@@ -35,6 +36,9 @@ function handleChromeMessages(message, sender, sendResponse) {
 	// Initialize the authentication flow in the iframed document. You must set the
 	// second argument (targetOrigin) of the message in order for it to be successfully
 	// delivered.
-	iframe.contentWindow.postMessage({ initAuth: true }, new URL(_URL).origin);
+	iframe.contentWindow.postMessage(
+		{ initAuth: true, providerName: message.providerName },
+		new URL(_URL).origin
+	);
 	return true;
 }

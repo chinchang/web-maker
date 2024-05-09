@@ -79,20 +79,22 @@ async function closeOffscreenDocument() {
 	await chrome.offscreen.closeDocument();
 }
 
-function getAuth() {
+function getAuth(providerName) {
 	return new Promise(async (resolve, reject) => {
+		// sending to offscreen document
 		const auth = await chrome.runtime.sendMessage({
 			type: 'firebase-auth',
-			target: 'offscreen'
+			target: 'offscreen',
+			providerName
 		});
 		auth?.name !== 'FirebaseError' ? resolve(auth) : reject(auth);
 	});
 }
 
-async function firebaseAuth() {
+async function firebaseAuth(providerName) {
 	await setupOffscreenDocument(OFFSCREEN_DOCUMENT_PATH);
 
-	const auth = await getAuth()
+	const auth = await getAuth(providerName)
 		.then(auth => {
 			console.log('User Authenticated', auth);
 			return auth;
@@ -115,8 +117,9 @@ async function firebaseAuth() {
 }
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+	//  received from the app
 	if (message.type === 'firebase-auth') {
-		firebaseAuth().then(sendResponse);
+		firebaseAuth(message.providerName).then(sendResponse);
 		return true;
 	}
 });

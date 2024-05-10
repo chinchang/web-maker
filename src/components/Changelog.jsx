@@ -113,6 +113,10 @@ export function Changelog(props) {
 					now migrated to MV3 which means its much more secure, and of course,
 					JavaScript now works again! 🥳
 				</NotificationItem>
+				<NotificationItem type="ui">
+					Tailwind CSS 2 template has been removed since Extension now supports
+					the lateat Tailwind CSS 3 template.
+				</NotificationItem>
 			</Notification>
 
 			<Notification version="6.2.0" {...props} isLatest={true}>

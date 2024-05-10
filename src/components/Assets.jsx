@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import firebase from 'firebase/app';
-import 'firebase/storage';
+import {
+	deleteObject,
+	uploadBytesResumable,
+	ref,
+	listAll,
+	getDownloadURL
+} from 'firebase/storage';
+import { storage } from '../firebaseInit';
 import { HStack, Stack, VStack } from './Stack';
 import { copyToClipboard } from '../utils';
 import { Trans } from '@lingui/macro';
@@ -17,6 +23,7 @@ function getFileType(url) {
 	}
 	return ext;
 }
+
 const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 	const [files, setFiles] = useState([]);
 	const [isFetchingFiles, setIsFetchingFiles] = useState(false);
@@ -25,8 +32,6 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 	const [isUploading, setIsUploading] = useState(false);
 	const [uploadProgress, setUploadProgress] = useState();
 	const [listType, setListType] = useState('grid');
-
-	const storageRef = firebase.storage().ref(`assets/${window.user?.uid}`);
 
 	const uploadFile = file => {
 		if (file.size > 1024 * 1024) {
@@ -39,9 +44,11 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 		const metadata = {
 			cacheControl: 'public, max-age=3600' // 1 hr
 		};
-
-		const fileRef = storageRef.child(file.name);
-		const task = fileRef.put(file, metadata);
+		const task = uploadBytesResumable(
+			ref(storage, `assets/${window.user?.uid}/${file.name}`),
+			file,
+			metadata
+		);
 
 		task.on(
 			'state_changed',
@@ -49,12 +56,12 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 				// Observe state change events such as progress, pause, and resume
 				// Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
 				var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-				console.log('Upload is ' + progress + '% done');
+				// console.log('Upload is ' + progress + '% done');
 			},
 			error => {
 				// Handle unsuccessful uploads
 				setIsUploading(false);
-				console.error('File upload error:', error);
+				// console.log('File upload error:', error);
 				alertsService.add('⚠️ File upload failed');
 			},
 			() => {
@@ -78,11 +85,11 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 	// Function to fetch existing files
 	const fetchFiles = () => {
 		setIsFetchingFiles(true);
-		storageRef
-			.listAll()
+
+		listAll(ref(storage, `assets/${window.user?.uid}`))
 			.then(result => {
 				const filePromises = result.items.map(item => {
-					return item.getDownloadURL().then(url => {
+					return getDownloadURL(item).then(url => {
 						return { name: item.name, url };
 					});
 				});
@@ -190,9 +197,8 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 		const file = files[index];
 		const answer = confirm(`Are you sure you want to delete "${file.name}"?`);
 		if (!answer) return;
-		const fileRef = storageRef.child(file.name);
-		fileRef
-			.delete()
+		const fileRef = ref(storage, file.url);
+		deleteObject(fileRef)
 			.then(() => {
 				alertsService.add('File deleted successfully');
 				setFiles(files.filter((_, i) => i !== index));
@@ -259,6 +265,15 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 				</div>
 			</div>
 			{isFetchingFiles && <LoaderWithText>Fetching files...</LoaderWithText>}
+
+			{!isFetchingFiles && !files.length ? (
+				<Stack justify="center">
+					<Text align="center" appearance="secondary">
+						No files uploaded yet
+					</Text>
+				</Stack>
+			) : null}
+
 			<VStack align="stretch" gap={1}>
 				{files.length ? (
 					<Stack gap={1}>

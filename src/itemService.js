@@ -177,9 +177,7 @@ export const itemService = {
 					batch.update(doc(remoteDb, `users/${window.user.uid}`), {
 						[`items.${id}`]: true
 					});
-					batch.update(doc(remoteDb, `users/${window.user.uid}`), {
-						[`items.${id}`]: true
-					});
+
 					// Set these items on our cached user object too
 					window.user.items = window.user.items || {};
 					window.user.items[id] = true;

@@ -106,6 +106,15 @@ export function Changelog(props) {
 	return (
 		<div>
 			<h1>Whats new?</h1>
+
+			<Notification version="6.3.0" {...props} isLatest={true}>
+				<NotificationItem type="bug">
+					Extension Only: JavaScript is NOW WORKING, again! 🎉 The extension is
+					now migrated to MV3 which means its much more secure, and of course,
+					JavaScript now works again! 🥳
+				</NotificationItem>
+			</Notification>
+
 			<Notification version="6.2.0" {...props} isLatest={true}>
 				<li>Preact template updated to latest version with hooks.</li>
 				<li>Mail option added in help modal.</li>

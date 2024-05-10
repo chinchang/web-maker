@@ -210,6 +210,14 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 		return getDocs(q).then(getArrayFromQuerySnapshot);
 	}
 
+	async function updateUserSetting(userId, settingName, settingValue) {
+		const remoteDb = await getDb();
+
+		return updateDoc(doc(remoteDb, `users/${userId}`), {
+			[`settings.${settingName}`]: settingValue
+		});
+	}
+
 	window.db = {
 		getDb,
 		getUser,
@@ -219,6 +227,7 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 		fetchItem,
 		getPublicItemCount,
 		getUserSubscriptionEvents,
+		updateUserSetting,
 		local: dbLocalAlias,
 		sync: dbSyncAlias
 	};

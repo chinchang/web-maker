@@ -1081,18 +1081,15 @@ export default class App extends Component {
 				alertsService.add('Setting saved');
 			});
 			if (window.user) {
-				window.db.getDb().then(remoteDb => {
-					remoteDb
-						.collection('users')
-						.doc(window.user.uid)
-						.update({
-							[`settings.${settingName}`]: this.state.prefs[settingName]
-						})
-						.then(arg => {
-							log(`Setting "${settingName}" for user`, arg);
-						})
-						.catch(error => log(error));
-				});
+				db.updateUserSetting(
+					window.user.uid,
+					settingName,
+					this.state.prefs[settingName]
+				)
+					.then(arg => {
+						log(`Setting "${settingName}" saved`, arg);
+					})
+					.catch(error => log(error));
 			}
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}

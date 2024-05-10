@@ -114,7 +114,7 @@ export function Profile({ user, logoutBtnHandler }) {
 										? 'Never ever'
 										: getHumanReadableDate(
 												currentSubscription.attributes.renews_at
-											)}
+										  )}
 								</Text>
 							</Text>
 

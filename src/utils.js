@@ -406,26 +406,26 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 		'</head>\n' +
 		'<body>\n' +
 		html +
-		'\n' +
-		externalJs +
 		'\n';
 
 	if (!isForExport) {
 		contents +=
 			'<script src="' +
 			(chrome.extension
-				? chrome.extension.getURL('lib/screenlog.js')
+				? chrome.runtime.getURL('lib/screenlog.js')
 				: `${location.origin}${
 						window.DEBUG ? '' : BASE_PATH
 					}/lib/screenlog.js`) +
 			'"></script>';
 	}
 
+	contents += '\n' + externalJs;
+
 	if (item.jsMode === JsModes.ES6) {
 		contents +=
 			'<script src="' +
 			(chrome.extension
-				? chrome.extension.getURL('lib/transpilers/babel-polyfill.min.js')
+				? chrome.runtime.getURL('lib/transpilers/babel-polyfill.min.js')
 				: `${location.origin}${BASE_PATH}/lib/transpilers/babel-polyfill.min.js`) +
 			'"></script>';
 	}
@@ -532,7 +532,7 @@ export function prettify({ file, content, type }) {
 	}
 	const worker = new Worker(
 		chrome.extension
-			? chrome.extension.getURL('lib/prettier-worker.js')
+			? chrome.runtime.getURL('lib/prettier-worker.js')
 			: `${BASE_PATH !== '/' ? BASE_PATH : ''}/lib/prettier-worker.js`
 	);
 	worker.postMessage({ content, type });

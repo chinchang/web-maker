@@ -43,10 +43,10 @@ import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
 import { trackEvent } from '../analytics';
 import { deferred } from '../deferred';
 import { alertsService } from '../notifications';
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import { auth } from '../firebaseInit';
+import { onAuthStateChanged } from 'firebase/auth';
 import { Profile } from './Profile';
-import { auth } from '../auth';
+import { authh } from '../auth';
 import { SupportDeveloperModal } from './SupportDeveloperModal';
 import { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
 import { takeScreenshot } from '../takeScreenshot';
@@ -84,7 +84,7 @@ if (module.hot) {
 }
 
 const UNSAVED_WARNING_COUNT = 15;
-const version = '6.2.0';
+const version = '6.3.0';
 
 // Read forced settings as query parameters
 window.forcedSettings = {};
@@ -197,7 +197,7 @@ export default class App extends Component {
 			window.user = savedUser;
 		}
 
-		firebase.auth().onAuthStateChanged(authUser => {
+		onAuthStateChanged(auth, authUser => {
 			this.setState({ isLoginModalOpen: false });
 			if (authUser) {
 				log('You are -> ', authUser);
@@ -220,7 +220,6 @@ export default class App extends Component {
 				this.setState({ user: newUser });
 				window.user = newUser;
 				// window.localStorage.setItem('user', authUser);
-				trackEvent('fn', 'loggedIn', window.IS_EXTENSION ? 'extension' : 'web');
 
 				if (!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS]) {
 					this.fetchItems(false, true).then(items => {
@@ -641,7 +640,6 @@ export default class App extends Component {
 	}
 
 	componentDidMount() {
-		console.log('itemId', this.props.itemId);
 		function setBodySize() {
 			document.body.style.height = `${window.innerHeight}px`;
 		}
@@ -1081,18 +1079,15 @@ export default class App extends Component {
 				alertsService.add('Setting saved');
 			});
 			if (window.user) {
-				window.db.getDb().then(remoteDb => {
-					remoteDb
-						.collection('users')
-						.doc(window.user.uid)
-						.update({
-							[`settings.${settingName}`]: this.state.prefs[settingName]
-						})
-						.then(arg => {
-							log(`Setting "${settingName}" for user`, arg);
-						})
-						.catch(error => log(error));
-				});
+				db.updateUserSetting(
+					window.user.uid,
+					settingName,
+					this.state.prefs[settingName]
+				)
+					.then(arg => {
+						log(`Setting "${settingName}" saved`, arg);
+					})
+					.catch(error => log(error));
 			}
 			trackEvent('ui', 'updatePref-' + settingName, prefs[settingName]);
 		}
@@ -1140,7 +1135,7 @@ export default class App extends Component {
 			}
 		}
 		trackEvent('fn', 'loggedOut');
-		auth.logout();
+		authh.logout();
 		this.setState({ isProfileModalOpen: false });
 		this.createNewItem();
 		alertsService.add('Log out successfull');
@@ -1943,7 +1938,6 @@ export default class App extends Component {
 								this.loginBtnClickHandler();
 							}}
 							onBuyFromExtensionClick={() => {
-								console.log('open modal');
 								this.closeAllOverlays();
 								this.setState({ isProOnAppModalOpen: true });
 							}}

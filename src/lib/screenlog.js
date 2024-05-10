@@ -1,4 +1,4 @@
-let mainWindow = window.parent;
+let mainWindow = window.parent === window ? window.opener : window.parent;
 
 function sanitizeDomNode(node) {
 	const fakeNode = {

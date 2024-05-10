@@ -1,6 +1,17 @@
-import './firebaseInit';
-import firebase from 'firebase/app';
+// import './firebaseInit';
 import 'firebase/firestore';
+import { db } from './firebaseInit';
+import {
+	getDoc,
+	getDocs,
+	doc,
+	updateDoc,
+	setDoc,
+	where,
+	collection,
+	getCountFromServer,
+	query
+} from 'firebase/firestore';
 import { deferred } from './deferred';
 import { trackEvent } from './analytics';
 import { log } from './utils';
@@ -25,9 +36,6 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 
 (() => {
 	const FAUX_DELAY = 1;
-
-	var db;
-	var dbPromise;
 
 	var local = {
 		get: (obj, cb) => {
@@ -64,46 +72,9 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 	const dbLocalAlias = chrome && chrome.storage ? chrome.storage.local : local;
 	const dbSyncAlias = chrome && chrome.storage ? chrome.storage.sync : local;
 
-	async function getDb() {
-		if (dbPromise) {
-			return dbPromise;
-		}
+	function getDb() {
 		log('Initializing firestore');
-		dbPromise = new Promise((resolve, reject) => {
-			if (db) {
-				return resolve(db);
-			}
-			const firestoreInstance = firebase.firestore();
-
-			return firestoreInstance
-				.enablePersistence({ experimentalTabSynchronization: true })
-				.then(function () {
-					// Initialize Cloud Firestore through firebase
-					db = firebase.firestore();
-					// const settings = {
-					// 	timestampsInSnapshots: true
-					// };
-					// db.settings(settings);
-					log('firebase db ready', db);
-					resolve(db);
-				})
-				.catch(function (err) {
-					reject(err.code);
-					if (err.code === 'failed-precondition') {
-						// Multiple tabs open, persistence can only be enabled
-						// in one tab at a a time.
-						alert(
-							"Opening Web Maker web app in multiple tabs isn't supported at present and it seems like you already have it opened in another tab. Please use in one tab."
-						);
-						trackEvent('fn', 'multiTabError');
-					} else if (err.code === 'unimplemented') {
-						// The current browser does not support all of the
-						// features required to enable persistence
-						// ...
-					}
-				});
-		});
-		return dbPromise;
+		return db;
 	}
 
 	async function getUserLastSeenVersion() {
@@ -134,44 +105,31 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 			function () {}
 		);
 		if (window.user) {
-			const remoteDb = await getDb();
-			remoteDb.doc(`users/${window.user.uid}`).update({
+			updateDoc(doc(db, `users/${window.user.uid}`), {
 				lastSeenVersion: version
 			});
 		}
 	}
 
 	async function getUser(userId) {
-		const remoteDb = await getDb();
-		return remoteDb
-			.doc(`users/${userId}`)
-			.get()
-			.then(doc => {
-				if (!doc.exists) {
-					// return remoteDb.doc(`users/${userId}`).set(
-					// 	{},
-					// 	{
-					// 		merge: true
-					// 	}
-					// );
-					return {};
-				}
-				const user = doc.data();
+		return getDoc(doc(db, `users/${userId}`)).then(doc => {
+			if (!doc.exists()) {
+				// return setDoc(doc(db, `users/${userId}`), {}, { merge: true });
+				return {};
+			}
 
-				return user;
-			});
+			const user = doc.data();
+			// Object.assign(window.user, user);
+			return user;
+		});
 	}
 
 	async function fetchItem(itemId) {
-		const remoteDb = await getDb();
-		return remoteDb
-			.doc(`items/${itemId}`)
-			.get()
-			.then(doc => {
-				if (!doc.exists) return {};
-				const data = doc.data();
-				return data;
-			});
+		getDoc(doc(db, `items/${itemId}`)).then(doc => {
+			if (!doc.exists) return {};
+			const data = doc.data();
+			return data;
+		});
 	}
 
 	// Fetch user settings.
@@ -188,24 +146,28 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 	}
 
 	async function getPublicItemCount(userId) {
-		const remoteDb = await getDb();
-		return remoteDb
-			.collection('items')
-			.where('createdBy', '==', userId)
-			.where('isPublic', '==', true)
-			.get()
-			.then(snapShot => {
-				return snapShot.size;
-			});
+		const q = query(
+			collection(db, 'items'),
+			where('createdBy', '==', userId),
+			where('isPublic', '==', true)
+		);
+		const snapshot = await getCountFromServer(q);
+		return snapshot.data().count;
 	}
 
 	async function getUserSubscriptionEvents(userId) {
-		const remoteDb = await getDb();
-		return remoteDb
-			.collection('subscriptions')
-			.where('userId', '==', userId)
-			.get()
-			.then(getArrayFromQuerySnapshot);
+		const q = query(
+			collection(db, 'subscriptions'),
+			where('userId', '==', userId)
+		);
+
+		return getDocs(q).then(getArrayFromQuerySnapshot);
+	}
+
+	async function updateUserSetting(userId, settingName, settingValue) {
+		return updateDoc(doc(db, `users/${userId}`), {
+			[`settings.${settingName}`]: settingValue
+		});
 	}
 
 	window.db = {
@@ -217,6 +179,7 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 		fetchItem,
 		getPublicItemCount,
 		getUserSubscriptionEvents,
+		updateUserSetting,
 		local: dbLocalAlias,
 		sync: dbSyncAlias
 	};

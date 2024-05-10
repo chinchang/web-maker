@@ -257,7 +257,7 @@ export default class ContentWrapFiles extends Component {
 				obj[file.path] =
 					'<script src="' +
 					(chrome.extension
-						? chrome.extension.getURL('/lib/screenlog.js')
+						? chrome.runtime.getURL('lib/screenlog.js')
 						: `${location.origin}${
 								window.DEBUG ? '' : BASE_PATH
 						  }/lib/screenlog.js`) +

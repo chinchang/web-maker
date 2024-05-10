@@ -38,7 +38,7 @@ export default class ContentWrap extends Component {
 				window.localStorage.getItem(LocalStorageKeys.WAS_CONSOLE_OPEN) ===
 				'true',
 			isCssSettingsModalOpen: false,
-			isPreviewNotWorkingModalVisible: false,
+
 			logs: []
 		};
 
@@ -63,15 +63,11 @@ export default class ContentWrap extends Component {
 			this.clearConsoleBtnClickHandler.bind(this);
 		this.toggleConsole = this.toggleConsole.bind(this);
 		this.evalConsoleExpr = this.evalConsoleExpr.bind(this);
-		this.dismissPreviewNotWorkingModal =
-			this.dismissPreviewNotWorkingModal.bind(this);
 	}
 	shouldComponentUpdate(nextProps, nextState) {
 		return (
 			this.state.isConsoleOpen !== nextState.isConsoleOpen ||
 			this.state.isCssSettingsModalOpen !== nextState.isCssSettingsModalOpen ||
-			this.state.isPreviewNotWorkingModalVisible !==
-				nextState.isPreviewNotWorkingModalVisible ||
 			this.state.logs !== nextState.logs ||
 			this.state.codeSplitSizes !== nextState.codeSplitSizes ||
 			this.state.mainSplitSizes !== nextState.mainSplitSizes ||
@@ -145,10 +141,7 @@ export default class ContentWrap extends Component {
 	createPreviewFile(html, css, js) {
 		const versionMatch = navigator.userAgent.match(/Chrome\/(\d+)/);
 
-		const shouldInlineJs =
-			!window.webkitRequestFileSystem ||
-			!window.IS_EXTENSION ||
-			(versionMatch && +versionMatch[1] >= 104);
+		const shouldInlineJs = true;
 		var contents = getCompleteHtml(
 			html,
 			css,
@@ -164,80 +157,52 @@ export default class ContentWrap extends Component {
 			trackEvent.hasTrackedCode = true;
 		}
 
-		if (shouldInlineJs) {
-			if (this.detachedWindow) {
-				log('✉️ Sending message to detached window');
-				this.detachedWindow.postMessage({ contents }, '*');
-			} else {
-				// 1. we refresh the frame so that all JS is cleared in the frame. this will
-				// break the iframe since sandboxed frame isn't served by SW (needed for offline support)
-				// 2. we cache and remove the sandbox attribute and refresh again so that it gets served by SW
-				// 3. we add back cached sandbox attr & write the contents to the iframe
-				const refreshAndDo = fn => {
-					frameRefreshPromise =
-						frameRefreshPromise ||
-						// Race earlier had a settimeout too as a fallback. It was removed because onload
-						// was firing 100% times.
-						// TODO: remove race
-						Promise.race([
-							new Promise(resolve => {
-								this.frame.onload = () => {
-									resolve('onload');
-								};
-							})
-						]);
-
-					frameRefreshPromise.then(resolutionReason => {
-						frameRefreshPromise = null;
-						log('resolved with ', resolutionReason);
-						fn();
-					});
-					// Setting to blank string cause frame to reload
-					if (window.IS_EXTENSION) {
-						this.frame.src = '';
-					} else {
-						this.frame.src = this.frame.src;
-					}
-				};
-				const writeInsideIframe = () => {
-					if (!cachedSandboxAttribute && window.DEBUG) {
-						// alert('sandbox empty');
-					}
-					log('sending PM');
-
-					if (window.IS_EXTENSION) {
-						this.frame.contentDocument.open();
-						this.frame.contentDocument.write(contents);
-						this.frame.contentDocument.close();
-					} else {
-						this.frame.contentWindow.postMessage({ contents }, '*');
-					}
-				};
-				// refreshAndDo(() => {
-				// 	cachedSandboxAttribute = this.frame.getAttribute('sandbox');
-				// 	// console.log('removing sandbox', sandbox);
-				// 	// this.frame.setAttribute('sweet', sandbox);
-				// 	// this.frame.removeAttribute('sandbox');
-				// 	refreshAndDo(writeInsideIframe);
-				// });
-				refreshAndDo(writeInsideIframe);
-			}
+		if (this.detachedWindow) {
+			log('✉️ Sending message to detached window');
+			this.detachedWindow.postMessage({ contents }, '*');
 		} else {
-			// we need to store user script in external JS file to prevent inline-script
-			// CSP from affecting it.
-			writeFile('script.js', blobjs, () => {
-				writeFile('preview.html', blob, () => {
-					var origin = chrome.i18n.getMessage()
-						? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
-						: `${location.origin}`;
-					var src = `filesystem:${origin}/temporary/preview.html`;
-					if (this.detachedWindow) {
-						this.detachedWindow.postMessage({ url: src }, '*');
-					} else {
-						this.frame.src = src;
-					}
+			// 1. we refresh the frame so that all JS is cleared in the frame. this will
+			// break the iframe since sandboxed frame isn't served by SW (needed for offline support)
+			// 2. we cache and remove the sandbox attribute and refresh again so that it gets served by SW
+			// 3. we add back cached sandbox attr & write the contents to the iframe
+			const refreshAndDo = fn => {
+				frameRefreshPromise =
+					frameRefreshPromise ||
+					// Race earlier had a settimeout too as a fallback. It was removed because onload
+					// was firing 100% times.
+					// TODO: remove race
+					Promise.race([
+						new Promise(resolve => {
+							this.frame.onload = () => {
+								resolve('onload');
+							};
+						})
+					]);
+
+				frameRefreshPromise.then(resolutionReason => {
+					frameRefreshPromise = null;
+					log('resolved with ', resolutionReason);
+					fn();
 				});
-			});
+
+				this.frame.src = this.frame.src;
+			};
+			const writeInsideIframe = () => {
+				if (!cachedSandboxAttribute && window.DEBUG) {
+					// alert('sandbox empty');
+				}
+				log('sending PM');
+
+				this.frame.contentWindow.postMessage({ contents }, '*');
+			};
+			// refreshAndDo(() => {
+			// 	cachedSandboxAttribute = this.frame.getAttribute('sandbox');
+			// 	// console.log('removing sandbox', sandbox);
+			// 	// this.frame.setAttribute('sweet', sandbox);
+			// 	// this.frame.removeAttribute('sandbox');
+			// 	refreshAndDo(writeInsideIframe);
+			// });
+			refreshAndDo(writeInsideIframe);
 		}
 	}
 	cleanupErrors(lang) {
@@ -277,14 +242,13 @@ export default class ContentWrap extends Component {
 			js: this.cmCodes.js
 		};
 		log('🔎 setPreviewContent', isForced);
-		const targetFrame = this.detachedWindow
-			? this.detachedWindow //this.detachedWindow.document.querySelector('iframe')
-			: this.frame;
+		const targetFrame = this.detachedWindow ? this.detachedWindow : this.frame;
 
 		const cssMode = this.props.currentItem.cssMode;
 		// If just CSS was changed (and everything shudn't be empty),
 		// change the styles inside the iframe.
 		if (
+			false &&
 			!isForced &&
 			currentCode.html === this.codeInPreview.html &&
 			currentCode.js === this.codeInPreview.js &&
@@ -335,19 +299,6 @@ export default class ContentWrap extends Component {
 						this.showErrors(resultItem.errors.lang, resultItem.errors.data);
 					}
 				});
-
-				const versionMatch = navigator.userAgent.match(/Chrome\/(\d+)/);
-				if (
-					result[2].code &&
-					versionMatch &&
-					+versionMatch[1] >= 104 &&
-					window.IS_EXTENSION &&
-					!window.sessionStorage.getItem('previewErrorMessageDismissed')
-				) {
-					this.setState({
-						isPreviewNotWorkingModalVisible: true
-					});
-				}
 			});
 		}
 
@@ -687,13 +638,6 @@ export default class ContentWrap extends Component {
 		this.props.onPrettifyBtnClick(codeType);
 	}
 
-	dismissPreviewNotWorkingModal() {
-		this.setState({
-			isPreviewNotWorkingModalVisible: false
-		});
-		window.sessionStorage.setItem('previewErrorMessageDismissed', true);
-	}
-
 	render() {
 		// log('contentwrap update');
 
@@ -960,7 +904,7 @@ export default class ContentWrap extends Component {
 							ref={el => (this.frame = el)}
 							frameborder="0"
 							id="demo-frame"
-							allowpaymentrequest="true"
+							src="./indexpm.html"
 							allowfullscreen="true"
 						/>
 					) : (
@@ -996,34 +940,6 @@ export default class ContentWrap extends Component {
 						settings={this.props.currentItem.cssSettings}
 						editorTheme={this.props.prefs.editorTheme}
 					/>
-
-					<Modal
-						show={this.state.isPreviewNotWorkingModalVisible}
-						closeHandler={this.dismissPreviewNotWorkingModal}
-					>
-						<h1>🔴 JavaScript preview not working!</h1>
-						<p>
-							Latest version of Chrome has changed a few things because of which
-							JavaScript preview has stopped working.
-						</p>
-
-						<p>
-							If you want to work with just HTML & CSS, you can still continue
-							here. Otherwise, it is recommended to switch to the Web Maker web
-							app which is much more powerful and works offline too -{' '}
-							<a href="https://webmaker.app/app" target="_blank">
-								Go to web app
-							</a>
-						</p>
-						<div class="flex flex-h-end">
-							<button
-								class="btn btn--primary"
-								onClick={this.dismissPreviewNotWorkingModal}
-							>
-								Dismiss
-							</button>
-						</div>
-					</Modal>
 				</div>
 			</SplitPane>
 		);

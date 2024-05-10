@@ -1,16 +1,27 @@
 import { deferred } from './deferred';
 import { log } from './utils';
-import firebase from 'firebase/app';
+import {
+	collection,
+	deleteField,
+	where,
+	getDoc,
+	query,
+	setDoc,
+	writeBatch,
+	doc,
+	deleteDoc,
+	updateDoc,
+	getDocs
+} from 'firebase/firestore';
 
 export const itemService = {
 	async getItem(id) {
-		var remoteDb = await window.db.getDb();
-		return remoteDb
-			.doc(`items/${id}`)
-			.get()
+		var remoteDb = window.db.getDb();
+		return getDoc(doc(remoteDb, `items/${id}`))
 			.then(doc => {
 				return doc.data();
-			});
+			})
+			.catch(error => log(error));
 	},
 
 	/**
@@ -41,23 +52,23 @@ export const itemService = {
 		const items = [];
 
 		if (window.user && !shouldFetchLocally) {
-			var remoteDb = await window.db.getDb();
-			remoteDb
-				.collection('items')
-				.where('createdBy', '==', window.user.uid)
-				.onSnapshot(
-					function (querySnapshot) {
-						querySnapshot.forEach(function (doc) {
-							items.push(doc.data());
-						});
-						log('Items fetched in ', Date.now() - t, 'ms');
+			var remoteDb = window.db.getDb();
 
-						d.resolve(items);
-					},
-					function () {
-						d.resolve([]);
-					}
-				);
+			const q = query(
+				collection(remoteDb, 'items'),
+				where('createdBy', '==', window.user.uid)
+			);
+			getDocs(q)
+				.then(querySnapshot => {
+					querySnapshot.forEach(doc => {
+						items.push(doc.data());
+					});
+					log(`${items.length} items fetched in `, Date.now() - t, 'ms');
+					d.resolve(items);
+				})
+				.catch(() => {
+					d.resolve([]);
+				});
 		} else {
 			let itemIds = await this.getUserItemIds(shouldFetchLocally);
 			itemIds = Object.getOwnPropertyNames(itemIds || {});
@@ -83,8 +94,8 @@ export const itemService = {
 	},
 
 	async setUser() {
-		const remoteDb = await window.db.getDb();
-		return remoteDb.doc(`users/${window.user.uid}`).set({
+		const remoteDb = window.db.getDb();
+		return setDoc(doc(remoteDb, `users/${window.user.uid}`), {
 			items: {}
 		});
 	},
@@ -112,16 +123,13 @@ export const itemService = {
 		}
 
 		// LOGGED IN
-		var remoteDb = await window.db.getDb();
+		var remoteDb = window.db.getDb();
 		item.createdBy = window.user.uid;
-		remoteDb
-			.collection('items')
-			.doc(id)
-			.set(item, {
-				merge: true
-			})
-			.then(arg => {
-				log('Document written', arg);
+		setDoc(doc(remoteDb, `items/${id}`), item, {
+			merge: true
+		})
+			.then(() => {
+				log(`Document written`);
 				d.resolve();
 			})
 			.catch(d.reject);
@@ -161,14 +169,15 @@ export const itemService = {
 			);
 		} else {
 			window.db.getDb().then(remoteDb => {
-				const batch = remoteDb.batch();
+				const batch = writeBatch(remoteDb);
 				/* eslint-disable guard-for-in */
 				for (var id in items) {
 					items[id].createdBy = window.user.uid;
-					batch.set(remoteDb.doc(`items/${id}`), items[id]);
-					batch.update(remoteDb.doc(`users/${window.user.uid}`), {
+					batch.set(doc(remoteDb, `items/${id}`), items[id]);
+					batch.update(doc(remoteDb, `users/${window.user.uid}`), {
 						[`items.${id}`]: true
 					});
+
 					// Set these items on our cached user object too
 					window.user.items = window.user.items || {};
 					window.user.items[id] = true;
@@ -187,14 +196,11 @@ export const itemService = {
 			window.db.local.remove(id, d.resolve);
 			return d.promise;
 		}
-		const remoteDb = await window.db.getDb();
+		const remoteDb = window.db.getDb();
 		log(`Starting to save item ${id}`);
-		return remoteDb
-			.collection('items')
-			.doc(id)
-			.delete()
-			.then(arg => {
-				log('Document removed', arg);
+		return deleteDoc(doc(remoteDb, `items/${id}`))
+			.then(() => {
+				log('Document removed');
 			})
 			.catch(error => log(error));
 	},
@@ -214,13 +220,10 @@ export const itemService = {
 				}
 			);
 		}
-		const remoteDb = await window.db.getDb();
-		return remoteDb
-			.collection('users')
-			.doc(window.user.uid)
-			.update({
-				[`items.${itemId}`]: true
-			})
+		const remoteDb = window.db.getDb();
+		return updateDoc(doc(remoteDb, `users/${window.user.uid}`), {
+			[`items.${itemId}`]: true
+		})
 			.then(arg => {
 				log(`Item ${itemId} set for user`, arg);
 				window.user.items = window.user.items || {};
@@ -244,16 +247,13 @@ export const itemService = {
 				}
 			);
 		}
-		const remoteDb = await window.db.getDb();
-		return remoteDb
-			.collection('users')
-			.doc(window.user.uid)
-			.update({
-				[`items.${itemId}`]: firebase.firestore.FieldValue.delete()
-			})
+		const remoteDb = window.db.getDb();
+		return updateDoc(doc(remoteDb, `users/${window.user.uid}`), {
+			[`items.${itemId}`]: deleteField()
+		})
 			.then(arg => {
-				delete window.user.items[itemId];
 				log(`Item ${itemId} unset for user`, arg);
+				delete window.user.items[itemId];
 			})
 			.catch(error => log(error));
 	},

@@ -195,6 +195,8 @@ gulp.task('packageExtension', function () {
 	child_process.execSync('cp src/options.html extension');
 	child_process.execSync('cp src/eventPage.js extension');
 	child_process.execSync('cp src/icon-16.png extension');
+	child_process.execSync('cp offscreen.html extension');
+	child_process.execSync('cp offscreen.js extension');
 	child_process.execSync('rm -rf extension/service-worker.js');
 	return merge(
 		gulp
@@ -292,10 +294,13 @@ const buildExtension = series(
 );
 
 function runWatcher(cb) {
-	return watch(['src/**/*.js', 'src/**/*.jsx'], function (cbb) {
-		buildExtension();
-		cbb();
-	});
+	return watch(
+		['src/**/*.js', 'src/**/*.jsx', 'src/**/*.json'],
+		function (cbb) {
+			buildExtension();
+			cbb();
+		}
+	);
 	cb();
 }
 

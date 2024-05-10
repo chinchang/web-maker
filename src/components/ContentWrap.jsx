@@ -142,9 +142,6 @@ export default class ContentWrap extends Component {
 		const versionMatch = navigator.userAgent.match(/Chrome\/(\d+)/);
 
 		const shouldInlineJs = true;
-		// !window.webkitRequestFileSystem ||
-		// !window.IS_EXTENSION ||
-		// (versionMatch && +versionMatch[1] >= 104);
 		var contents = getCompleteHtml(
 			html,
 			css,
@@ -160,81 +157,52 @@ export default class ContentWrap extends Component {
 			trackEvent.hasTrackedCode = true;
 		}
 
-		if (shouldInlineJs) {
-			if (this.detachedWindow) {
-				log('✉️ Sending message to detached window');
-				this.detachedWindow.postMessage({ contents }, '*');
-			} else {
-				// 1. we refresh the frame so that all JS is cleared in the frame. this will
-				// break the iframe since sandboxed frame isn't served by SW (needed for offline support)
-				// 2. we cache and remove the sandbox attribute and refresh again so that it gets served by SW
-				// 3. we add back cached sandbox attr & write the contents to the iframe
-				const refreshAndDo = fn => {
-					frameRefreshPromise =
-						frameRefreshPromise ||
-						// Race earlier had a settimeout too as a fallback. It was removed because onload
-						// was firing 100% times.
-						// TODO: remove race
-						Promise.race([
-							new Promise(resolve => {
-								this.frame.onload = () => {
-									resolve('onload');
-								};
-							})
-						]);
-
-					frameRefreshPromise.then(resolutionReason => {
-						frameRefreshPromise = null;
-						log('resolved with ', resolutionReason);
-						fn();
-					});
-					// Setting to blank string cause frame to reload
-					// if (window.IS_EXTENSION) {
-					// 	this.frame.src = '';
-					// } else {
-					this.frame.src = this.frame.src;
-					// }
-				};
-				const writeInsideIframe = () => {
-					if (!cachedSandboxAttribute && window.DEBUG) {
-						// alert('sandbox empty');
-					}
-					log('sending PM');
-
-					// if (window.IS_EXTENSION) {
-					// 	this.frame.contentDocument.open();
-					// 	this.frame.contentDocument.write(contents);
-					// 	this.frame.contentDocument.close();
-					// } else {
-					this.frame.contentWindow.postMessage({ contents }, '*');
-					// }
-				};
-				// refreshAndDo(() => {
-				// 	cachedSandboxAttribute = this.frame.getAttribute('sandbox');
-				// 	// console.log('removing sandbox', sandbox);
-				// 	// this.frame.setAttribute('sweet', sandbox);
-				// 	// this.frame.removeAttribute('sandbox');
-				// 	refreshAndDo(writeInsideIframe);
-				// });
-				refreshAndDo(writeInsideIframe);
-			}
+		if (this.detachedWindow) {
+			log('✉️ Sending message to detached window');
+			this.detachedWindow.postMessage({ contents }, '*');
 		} else {
-			// DEPRECATED
-			// we need to store user script in external JS file to prevent inline-script
-			// CSP from affecting it.
-			writeFile('script.js', blobjs, () => {
-				writeFile('preview.html', blob, () => {
-					var origin = chrome.i18n.getMessage()
-						? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
-						: `${location.origin}`;
-					var src = `filesystem:${origin}/temporary/preview.html`;
-					if (this.detachedWindow) {
-						this.detachedWindow.postMessage({ url: src }, '*');
-					} else {
-						this.frame.src = src;
-					}
+			// 1. we refresh the frame so that all JS is cleared in the frame. this will
+			// break the iframe since sandboxed frame isn't served by SW (needed for offline support)
+			// 2. we cache and remove the sandbox attribute and refresh again so that it gets served by SW
+			// 3. we add back cached sandbox attr & write the contents to the iframe
+			const refreshAndDo = fn => {
+				frameRefreshPromise =
+					frameRefreshPromise ||
+					// Race earlier had a settimeout too as a fallback. It was removed because onload
+					// was firing 100% times.
+					// TODO: remove race
+					Promise.race([
+						new Promise(resolve => {
+							this.frame.onload = () => {
+								resolve('onload');
+							};
+						})
+					]);
+
+				frameRefreshPromise.then(resolutionReason => {
+					frameRefreshPromise = null;
+					log('resolved with ', resolutionReason);
+					fn();
 				});
-			});
+
+				this.frame.src = this.frame.src;
+			};
+			const writeInsideIframe = () => {
+				if (!cachedSandboxAttribute && window.DEBUG) {
+					// alert('sandbox empty');
+				}
+				log('sending PM');
+
+				this.frame.contentWindow.postMessage({ contents }, '*');
+			};
+			// refreshAndDo(() => {
+			// 	cachedSandboxAttribute = this.frame.getAttribute('sandbox');
+			// 	// console.log('removing sandbox', sandbox);
+			// 	// this.frame.setAttribute('sweet', sandbox);
+			// 	// this.frame.removeAttribute('sandbox');
+			// 	refreshAndDo(writeInsideIframe);
+			// });
+			refreshAndDo(writeInsideIframe);
 		}
 	}
 	cleanupErrors(lang) {

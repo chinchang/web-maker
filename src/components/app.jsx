@@ -220,7 +220,6 @@ export default class App extends Component {
 				this.setState({ user: newUser });
 				window.user = newUser;
 				// window.localStorage.setItem('user', authUser);
-				trackEvent('fn', 'loggedIn', window.IS_EXTENSION ? 'extension' : 'web');
 
 				if (!window.localStorage[LocalStorageKeys.ASKED_TO_IMPORT_CREATIONS]) {
 					this.fetchItems(false, true).then(items => {

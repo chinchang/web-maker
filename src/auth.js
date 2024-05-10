@@ -19,7 +19,13 @@ export const authh = {
 	},
 	async login(providerName) {
 		const onSuccess = () => {
-			trackEvent('fn', 'loggedIn', providerName);
+			trackEvent(
+				'fn',
+				'loggedIn',
+				providerName,
+				window.IS_EXTENSION ? 'extension' : 'web'
+			);
+
 			// Save to recommend next time
 			window.db.local.set({
 				lastAuthProvider: providerName

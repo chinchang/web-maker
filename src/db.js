@@ -37,9 +37,6 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 (() => {
 	const FAUX_DELAY = 1;
 
-	// var db;
-	var dbPromise;
-
 	var local = {
 		get: (obj, cb) => {
 			const retVal = {};
@@ -75,46 +72,9 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 	const dbLocalAlias = chrome && chrome.storage ? chrome.storage.local : local;
 	const dbSyncAlias = chrome && chrome.storage ? chrome.storage.sync : local;
 
-	async function getDb() {
-		if (dbPromise) {
-			return dbPromise;
-		}
+	function getDb() {
 		log('Initializing firestore');
-		dbPromise = new Promise((resolve, reject) => {
-			if (db) {
-				return resolve(db);
-			}
-			const firestoreInstance = db;
-
-			return firestoreInstance
-				.enablePersistence({ experimentalTabSynchronization: true })
-				.then(function () {
-					// Initialize Cloud Firestore through firebase
-					// db = firebase.firestore();
-					// const settings = {
-					// 	timestampsInSnapshots: true
-					// };
-					// db.settings(settings);
-					log('firebase db ready', db);
-					resolve(db);
-				})
-				.catch(function (err) {
-					reject(err.code);
-					if (err.code === 'failed-precondition') {
-						// Multiple tabs open, persistence can only be enabled
-						// in one tab at a a time.
-						alert(
-							"Opening Web Maker web app in multiple tabs isn't supported at present and it seems like you already have it opened in another tab. Please use in one tab."
-						);
-						trackEvent('fn', 'multiTabError');
-					} else if (err.code === 'unimplemented') {
-						// The current browser does not support all of the
-						// features required to enable persistence
-						// ...
-					}
-				});
-		});
-		return dbPromise;
+		return db;
 	}
 
 	async function getUserLastSeenVersion() {
@@ -145,19 +105,16 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 			function () {}
 		);
 		if (window.user) {
-			const remoteDb = await getDb();
-			updateDoc(doc(remoteDb, `users/${window.user.uid}`), {
+			updateDoc(doc(db, `users/${window.user.uid}`), {
 				lastSeenVersion: version
 			});
 		}
 	}
 
 	async function getUser(userId) {
-		const remoteDb = await getDb();
-
-		return getDoc(doc(remoteDb, `users/${userId}`)).then(doc => {
+		return getDoc(doc(db, `users/${userId}`)).then(doc => {
 			if (!doc.exists()) {
-				// return setDoc(doc(remoteDb, `users/${userId}`), {}, { merge: true });
+				// return setDoc(doc(db, `users/${userId}`), {}, { merge: true });
 				return {};
 			}
 
@@ -168,8 +125,7 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 	}
 
 	async function fetchItem(itemId) {
-		const remoteDb = await getDb();
-		getDoc(doc(remoteDb, `items/${itemId}`)).then(doc => {
+		getDoc(doc(db, `items/${itemId}`)).then(doc => {
 			if (!doc.exists) return {};
 			const data = doc.data();
 			return data;
@@ -190,9 +146,8 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 	}
 
 	async function getPublicItemCount(userId) {
-		const remoteDb = await getDb();
 		const q = query(
-			collection(remoteDb, 'items'),
+			collection(db, 'items'),
 			where('createdBy', '==', userId),
 			where('isPublic', '==', true)
 		);
@@ -201,9 +156,8 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 	}
 
 	async function getUserSubscriptionEvents(userId) {
-		const remoteDb = await getDb();
 		const q = query(
-			collection(remoteDb, 'subscriptions'),
+			collection(db, 'subscriptions'),
 			where('userId', '==', userId)
 		);
 
@@ -211,9 +165,7 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 	}
 
 	async function updateUserSetting(userId, settingName, settingValue) {
-		const remoteDb = await getDb();
-
-		return updateDoc(doc(remoteDb, `users/${userId}`), {
+		return updateDoc(doc(db, `users/${userId}`), {
 			[`settings.${settingName}`]: settingValue
 		});
 	}

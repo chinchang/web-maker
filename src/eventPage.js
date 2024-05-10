@@ -48,9 +48,6 @@ chrome.runtime.onInstalled.addListener(function callback(details) {
 
 const OFFSCREEN_DOCUMENT_PATH = '/offscreen.html';
 
-// A global promise to avoid concurrency issues
-let creatingOffscreenDocument;
-
 // Chrome only allows for a single offscreenDocument. This is a helper function
 // that returns a boolean indicating if a document is already active.
 async function hasDocument() {

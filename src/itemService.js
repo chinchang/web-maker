@@ -16,7 +16,7 @@ import {
 
 export const itemService = {
 	async getItem(id) {
-		var remoteDb = await window.db.getDb();
+		var remoteDb = window.db.getDb();
 		return getDoc(doc(remoteDb, `items/${id}`))
 			.then(doc => {
 				return doc.data();
@@ -52,7 +52,7 @@ export const itemService = {
 		const items = [];
 
 		if (window.user && !shouldFetchLocally) {
-			var remoteDb = await window.db.getDb();
+			var remoteDb = window.db.getDb();
 
 			const q = query(
 				collection(remoteDb, 'items'),
@@ -94,7 +94,7 @@ export const itemService = {
 	},
 
 	async setUser() {
-		const remoteDb = await window.db.getDb();
+		const remoteDb = window.db.getDb();
 		return setDoc(doc(remoteDb, `users/${window.user.uid}`), {
 			items: {}
 		});
@@ -123,7 +123,7 @@ export const itemService = {
 		}
 
 		// LOGGED IN
-		var remoteDb = await window.db.getDb();
+		var remoteDb = window.db.getDb();
 		item.createdBy = window.user.uid;
 		setDoc(doc(remoteDb, `items/${id}`), item, {
 			merge: true
@@ -196,7 +196,7 @@ export const itemService = {
 			window.db.local.remove(id, d.resolve);
 			return d.promise;
 		}
-		const remoteDb = await window.db.getDb();
+		const remoteDb = window.db.getDb();
 		log(`Starting to save item ${id}`);
 		return deleteDoc(doc(remoteDb, `items/${id}`))
 			.then(() => {
@@ -220,7 +220,7 @@ export const itemService = {
 				}
 			);
 		}
-		const remoteDb = await window.db.getDb();
+		const remoteDb = window.db.getDb();
 		return updateDoc(doc(remoteDb, `users/${window.user.uid}`), {
 			[`items.${itemId}`]: true
 		})
@@ -247,7 +247,7 @@ export const itemService = {
 				}
 			);
 		}
-		const remoteDb = await window.db.getDb();
+		const remoteDb = window.db.getDb();
 		return updateDoc(doc(remoteDb, `users/${window.user.uid}`), {
 			[`items.${itemId}`]: deleteField()
 		})

@@ -640,7 +640,6 @@ export default class App extends Component {
 	}
 
 	componentDidMount() {
-		console.log('itemId', this.props.itemId);
 		function setBodySize() {
 			document.body.style.height = `${window.innerHeight}px`;
 		}
@@ -1939,7 +1938,6 @@ export default class App extends Component {
 								this.loginBtnClickHandler();
 							}}
 							onBuyFromExtensionClick={() => {
-								console.log('open modal');
 								this.closeAllOverlays();
 								this.setState({ isProOnAppModalOpen: true });
 							}}

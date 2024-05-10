@@ -406,8 +406,6 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 		'</head>\n' +
 		'<body>\n' +
 		html +
-		'\n' +
-		externalJs +
 		'\n';
 
 	if (!isForExport) {
@@ -420,6 +418,8 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 					}/lib/screenlog.js`) +
 			'"></script>';
 	}
+
+	contents += '\n' + externalJs;
 
 	if (item.jsMode === JsModes.ES6) {
 		contents +=

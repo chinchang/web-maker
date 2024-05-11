@@ -7,6 +7,7 @@ import { alertsService } from '../notifications';
 import { Button } from './common';
 import { Icon } from './Icons';
 import { Text } from './Text';
+import { LoaderWithText } from './Loader';
 
 const FREE_PUBLIC_ITEM_COUNT = 1;
 const BASE_URL = location.origin.includes('chrome-extension://')
@@ -34,6 +35,7 @@ export function Share({
 	}, []);
 
 	const [val, setVal] = useState(item.isPublic);
+	const [isSyncing, setIsSyncing] = useState(false);
 	const onChange = async e => {
 		const newVal = e.target.checked;
 		setVal(newVal);
@@ -41,6 +43,7 @@ export function Share({
 			const token = await window.user.firebaseUser.getIdToken();
 			let res;
 			try {
+				setIsSyncing(true);
 				res = await fetch(
 					`${TOGGLE_VISIBILITY_API}?token=${token}&itemId=${item.id}`
 				);
@@ -50,6 +53,8 @@ export function Share({
 					setVal(!newVal);
 				}, 400);
 				return;
+			} finally {
+				setIsSyncing(false);
 			}
 
 			if (res.status >= 200 && res.status < 400) {
@@ -95,6 +100,11 @@ export function Share({
 					>
 						Access
 					</Switch>
+					{isSyncing && (
+						<p>
+							<LoaderWithText>Syncing...</LoaderWithText>
+						</p>
+					)}
 					{item.isPublic && (
 						<p>
 							Public at{' '}

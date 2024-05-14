@@ -93,7 +93,7 @@ async function firebaseAuth(providerName) {
 
 	const auth = await getAuth(providerName)
 		.then(auth => {
-			console.log('User Authenticated', auth);
+			// console.log('User Authenticated', auth);
 			return auth;
 		})
 		.catch(err => {

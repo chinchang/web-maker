@@ -5,7 +5,7 @@ import CodeMirror from 'codemirror';
 // Make CodeMirror available globally so the modes' can register themselves.
 window.CodeMirror = CodeMirror;
 
-if (!CodeMirror.modeURL) CodeMirror.modeURL = '/lib/codemirror/mode/%N/%N.js';
+if (!CodeMirror.modeURL) CodeMirror.modeURL = './lib/codemirror/mode/%N/%N.js';
 
 var loading = {};
 

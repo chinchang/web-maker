@@ -8,6 +8,13 @@
   - package.json
   - manifest.json
 - commit and tag (`git tag {version}`)
-- Run `gulp buildExtension`. This will generate a zip - `extension-{version}.zip`
-- Test out extension-{version}.zip
-- If everything is good, push to master
+- Conditional code changes for extension:
+  - Remove base tag from index.ejs
+  - Remove auth code for signInWithPopup
+  - Remove ga.js loading in analytics.js and add window.ga = () => {};
+  - Remove lemonsqueezy.js script loading from useCheckout.js
+  - Change import from 'firebase/auth' to 'firebase/auth/web-extension'
+- Run `gulp buildExtension`. This will generate a folder called `extension`.
+- Test out the extension by loading the `extension` folder.
+- If everything is good, push to master.
+- Zip the folder and submit to webstore.

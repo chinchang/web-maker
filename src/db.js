@@ -125,7 +125,7 @@ function getArrayFromQuerySnapshot(querySnapshot) {
 	}
 
 	async function fetchItem(itemId) {
-		getDoc(doc(db, `items/${itemId}`)).then(doc => {
+		return getDoc(doc(db, `items/${itemId}`)).then(doc => {
 			if (!doc.exists) return {};
 			const data = doc.data();
 			return data;

@@ -107,6 +107,12 @@ export function Changelog(props) {
 		<div>
 			<h1>Whats new?</h1>
 
+			<Notification version="6.3.4" {...props} isLatest={true}>
+				<NotificationItem type="bug">
+					Public creations are now working.
+				</NotificationItem>
+			</Notification>
+
 			<Notification version="6.3.0" {...props} isLatest={true}>
 				<NotificationItem type="bug">
 					Extension Only: JavaScript is NOW WORKING, again! 🎉 The extension is

@@ -168,23 +168,23 @@ export const itemService = {
 				}
 			);
 		} else {
-			window.db.getDb().then(remoteDb => {
-				const batch = writeBatch(remoteDb);
-				/* eslint-disable guard-for-in */
-				for (var id in items) {
-					items[id].createdBy = window.user.uid;
-					batch.set(doc(remoteDb, `items/${id}`), items[id]);
-					batch.update(doc(remoteDb, `users/${window.user.uid}`), {
-						[`items.${id}`]: true
-					});
+			const remoteDb = window.db.getDb();
 
-					// Set these items on our cached user object too
-					window.user.items = window.user.items || {};
-					window.user.items[id] = true;
-				}
-				batch.commit().then(d.resolve);
-				/* eslint-enable guard-for-in */
-			});
+			const batch = writeBatch(remoteDb);
+			/* eslint-disable guard-for-in */
+			for (var id in items) {
+				items[id].createdBy = window.user.uid;
+				batch.set(doc(remoteDb, `items/${id}`), items[id]);
+				batch.update(doc(remoteDb, `users/${window.user.uid}`), {
+					[`items.${id}`]: true
+				});
+
+				// Set these items on our cached user object too
+				window.user.items = window.user.items || {};
+				window.user.items[id] = true;
+			}
+			batch.commit().then(d.resolve);
+			/* eslint-enable guard-for-in */
 		}
 		return d.promise;
 	},

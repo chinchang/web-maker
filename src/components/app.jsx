@@ -1348,10 +1348,13 @@ export default class App extends Component {
 			}
 		}
 		if (mergedItemCount) {
+			alertsService.add(
+				`Importing ${mergedItemCount} creation(s) in the background...`
+			);
 			itemService.saveItems(toMergeItems).then(() => {
 				d.resolve();
 				alertsService.add(
-					mergedItemCount + ' creations imported successfully.'
+					`${mergedItemCount} creation(s) imported successfully.`
 				);
 				trackEvent('fn', 'itemsImported', mergedItemCount);
 			});

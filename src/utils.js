@@ -672,3 +672,16 @@ export function persistAuthUserLocally(user) {
 	keys.map(key => (obj[key] = user[key]));
 	window.localStorage.setItem('user', JSON.stringify(obj));
 }
+
+/**
+ * items is an object of  {itemId: item}. This fn changes all the keys to new item IDs
+ * */
+export function refreshItemIds(items) {
+	const newItems = {};
+	for (var id in items) {
+		const newId = generateRandomId();
+		items[id].id = newId;
+		newItems[newId] = items[id];
+	}
+	return newItems;
+}

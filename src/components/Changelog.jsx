@@ -107,6 +107,13 @@ export function Changelog(props) {
 		<div>
 			<h1>Whats new?</h1>
 
+			<Notification version="6.3.6" {...props} isLatest={true}>
+				<NotificationItem type="bug">
+					Import of creations (in logged in state) now always works even if the
+					same creations have been imported to some other account.
+				</NotificationItem>
+			</Notification>
+
 			<Notification version="6.3.4" {...props} isLatest={true}>
 				<NotificationItem type="bug">
 					Public creations are now working.

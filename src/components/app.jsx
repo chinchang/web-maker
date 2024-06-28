@@ -1078,12 +1078,9 @@ export default class App extends Component {
 			db.sync.set(obj, function () {
 				alertsService.add('Setting saved');
 			});
+			debugger;
 			if (window.user) {
-				db.updateUserSetting(
-					window.user.uid,
-					settingName,
-					this.state.prefs[settingName]
-				)
+				db.updateUserSetting(window.user.uid, settingName, value)
 					.then(arg => {
 						log(`Setting "${settingName}" saved`, arg);
 					})

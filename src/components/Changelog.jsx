@@ -107,6 +107,12 @@ export function Changelog(props) {
 		<div>
 			<h1>Whats new?</h1>
 
+			<Notification version="6.3.7" {...props} isLatest={true}>
+				<NotificationItem type="bug">
+					Setting changes not saving to database is fixed.
+				</NotificationItem>
+			</Notification>
+
 			<Notification version="6.3.6" {...props} isLatest={true}>
 				<NotificationItem type="bug">
 					Import of creations (in logged in state) now always works even if the

@@ -113,7 +113,7 @@ export function Changelog(props) {
 				</NotificationItem>
 			</Notification>
 
-			<Notification version="6.3.6" {...props} isLatest={true}>
+			<Notification version="6.3.6" {...props}>
 				<NotificationItem type="bug">
 					Import of creations (in logged in state) now always works even if the
 					same creations have been imported to some other account.

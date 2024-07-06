@@ -430,16 +430,19 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 			'"></script>';
 	}
 
-	if (typeof js === 'string') {
-		contents += js ? '<script>\n' + js + '\n//# sourceURL=userscript.js' : '';
-	} else {
-		var origin = chrome.i18n.getMessage()
-			? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
-			: `${location.origin}`;
-		contents +=
-			'<script src="' + `filesystem:${origin}/temporary/script.js` + '">';
+	if (js) {
+		if (typeof js === 'string') {
+			contents += js ? '<script>\n' + js + '\n//# sourceURL=userscript.js' : '';
+		} else {
+			var origin = chrome.i18n.getMessage()
+				? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`
+				: `${location.origin}`;
+			contents +=
+				'<script src="' + `filesystem:${origin}/temporary/script.js` + '">';
+		}
+		contents += '\n</script>';
 	}
-	contents += '\n</script>\n</body>\n</html>';
+	contents += '\n</body>\n</html>';
 
 	return contents;
 }
@@ -448,12 +451,14 @@ export function saveAsHtml(item) {
 	var htmlPromise = computeHtml(item.html, item.htmlMode);
 	var cssPromise = computeCss(item.css, item.cssMode);
 	var jsPromise = computeJs(item.js, item.jsMode, false);
-	Promise.all([htmlPromise, cssPromise, jsPromise]).then(result => {
+	Promise.all([htmlPromise, cssPromise, jsPromise]).then(async result => {
 		var html = result[0].code,
 			css = result[1].code,
 			js = result[2].code;
 
-		var fileContent = getCompleteHtml(html, css, js, item, true);
+		var fileContent = await inlineAssetsInHtml(
+			getCompleteHtml(html, css, js, item, true)
+		);
 
 		var d = new Date();
 		var fileName = [
@@ -480,6 +485,56 @@ export function saveAsHtml(item) {
 	});
 }
 
+export async function inlineAssetsInHtml(html) {
+	const encodeFileToBase64 = async url => {
+		const response = await fetch(url);
+		const blob = await response.blob();
+		const reader = new FileReader();
+
+		return new Promise((resolve, reject) => {
+			reader.onloadend = () => {
+				const base64String = reader.result.split(',')[1];
+				const mimeType = blob.type;
+				resolve(`data:${mimeType};base64,${base64String}`);
+			};
+			reader.onerror = reject;
+			reader.readAsDataURL(blob);
+		});
+	};
+
+	const inlineAssets = async htmlContent => {
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(htmlContent, 'text/html');
+
+		const processElement = async (element, attr) => {
+			const url = element.getAttribute(attr);
+			if (url && !url.startsWith('data:')) {
+				try {
+					const encodedData = await encodeFileToBase64(url);
+					element.setAttribute(attr, encodedData);
+				} catch (error) {
+					console.error(`Failed to inline ${url}:`, error);
+				}
+			}
+		};
+
+		const images = Array.from(doc.querySelectorAll('img'));
+		const audios = Array.from(doc.querySelectorAll('audio'));
+		const videos = Array.from(doc.querySelectorAll('video'));
+
+		await Promise.all([
+			...images.map(img => processElement(img, 'src')),
+			...audios.map(audio => processElement(audio, 'src')),
+			...videos.map(video => processElement(video, 'src'))
+		]);
+
+		return doc.documentElement.outerHTML;
+	};
+
+	const output = await inlineAssets(html);
+	// console.log(html, output);
+	return output;
+}
 export function handleDownloadsPermission() {
 	var d = deferred();
 	if (!window.IS_EXTENSION) {

@@ -1245,8 +1245,8 @@ export default class App extends Component {
 		trackEvent('ui', 'openInCodepen');
 		e.preventDefault();
 	}
-	saveHtmlBtnClickHandler(e) {
-		saveAsHtml(this.state.currentItem);
+	saveHtmlBtnClickHandler(inlineAssets) {
+		saveAsHtml(this.state.currentItem, { inlineAssets });
 		trackEvent('ui', 'saveHtmlClick');
 		e.preventDefault();
 	}

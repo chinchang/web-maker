@@ -1099,6 +1099,7 @@ body:not(.light-version) .modal {
 	bottom: calc(100% + 0.2rem);
 	transition: 0.25s ease;
 }
+.popup,
 .modal__content {
 	--opaque: 68%;
 	background: var(--color-popup);
@@ -2420,6 +2421,51 @@ while the theme CSS file is loading */
 	  transform: scaleX(1.5) translateX(33%);
 	  opacity: 1;
 	} */
+}
+
+/* DROPDOWN */
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.dropdown-menu {
+	position: absolute;
+	left: 0;
+	--opaque: 68%;
+	background: var(--color-popup);
+	width: max-content;
+	list-style: none;
+	padding: 0.5rem;
+	margin: 0;
+	z-index: 1000;
+}
+
+.dropdown-menu-top {
+	bottom: 100%;
+	margin-bottom: 8px;
+}
+
+.dropdown-menu-bottom {
+	top: 100%;
+	margin-top: 8px;
+}
+
+.dropdown-item {
+	padding: 0.5rem 1rem;
+	width: 100%;
+	text-align: left;
+	background: none;
+	border: none;
+	border-radius: 0.3rem;
+	cursor: pointer;
+	color: white;
+	font-size: 1rem;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+	background-color: #f0f0f033;
 }
 
 @media screen and (max-width: 600px) {

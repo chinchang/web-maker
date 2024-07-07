@@ -447,7 +447,7 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 	return contents;
 }
 
-export function saveAsHtml(item) {
+export function saveAsHtml(item, { inlineAssets }) {
 	var htmlPromise = computeHtml(item.html, item.htmlMode);
 	var cssPromise = computeCss(item.css, item.cssMode);
 	var jsPromise = computeJs(item.js, item.jsMode, false);
@@ -456,9 +456,9 @@ export function saveAsHtml(item) {
 			css = result[1].code,
 			js = result[2].code;
 
-		var fileContent = await inlineAssetsInHtml(
-			getCompleteHtml(html, css, js, item, true)
-		);
+		var fileContent = inlineAssets
+			? await inlineAssetsInHtml(getCompleteHtml(html, css, js, item, true))
+			: getCompleteHtml(html, css, js, item, true);
 
 		var d = new Date();
 		var fileName = [

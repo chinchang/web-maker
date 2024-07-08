@@ -97,8 +97,8 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 				Promise.all(filePromises).then(files => {
 					files.forEach(f => (f.ext = getFileType(f.url)));
 					setFiles(files);
+					setIsFetchingFiles(false);
 				});
-				setIsFetchingFiles(false);
 			})
 			.catch(error => {
 				console.error('File fetch error:', error);

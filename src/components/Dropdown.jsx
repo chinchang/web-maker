@@ -34,6 +34,7 @@ const DropdownMenu = ({
 	return (
 		<div className="dropdown">
 			<button
+				type="button"
 				ref={triggerRef}
 				onClick={toggleDropdown}
 				aria-haspopup="true"

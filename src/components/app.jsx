@@ -1248,7 +1248,6 @@ export default class App extends Component {
 	saveHtmlBtnClickHandler(inlineAssets) {
 		saveAsHtml(this.state.currentItem, { inlineAssets });
 		trackEvent('ui', 'saveHtmlClick');
-		e.preventDefault();
 	}
 	runBtnClickHandler() {
 		this.contentWrap.setPreviewContent(true, true);

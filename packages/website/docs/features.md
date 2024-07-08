@@ -3,8 +3,11 @@ title: 'Features'
 ---
 
 - Works offline
+- Privacy first. All creation are private by default.
+- Public sharing
 - Supports Preprocessors: HTML (Pug & Markdown), CSS (SCSS, LESS & Stylus, Atomic CSS) & JavaScript (ES6, TypeScript & CoffeeScript)
 - Inbuilt Console
+- Asset Hosting
 - Save and load your creations
 - Auto-save feature
 - Code auto-completion
@@ -15,5 +18,5 @@ title: 'Features'
 - Very easily accessible. Simply open a new tab in Chrome!
 - Multiple layouts to choose from
 - Capture preview screenshot
-- Save as HTML file
+- Save as HTML file, with option to inline all assets in the HTML
 - Edit in CodePen

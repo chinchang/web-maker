@@ -8,5 +8,3 @@ Hi! I am [Kushagra Gour](https://twitter.com/chinchang457), a frontend developer
 - Sitepoint: https://www.sitepoint.com/web-maker-an-offline-browser-based-codepen-alternative/
 
 Make sure to read them if you like to get more behind the scenes of my journey with Web Maker.
-
-Oh yes, I am [running a Patreon campaign](https://www.patreon.com/kushagra) to support my free and open-source projects such as Web Maker. Consider pledging if you use and love Web Maker. 🤗

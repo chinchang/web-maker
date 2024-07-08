@@ -1,0 +1,141 @@
+diff --git a/src/analytics.js b/src/analytics.js
+index 0966ee4..edb626e 100644
+--- a/src/analytics.js
++++ b/src/analytics.js
+@@ -23,31 +23,7 @@ export function trackEvent(category, action, label, value) {
+ if (navigator.onLine && !window.DEBUG) {
+ 	/* eslint-disable */
+ 
+-	// prettier-ignore
+-	setTimeout(function () {
+-		(function (i, s, o, g, r, a, m) {
+-			i['GoogleAnalyticsObject'] = r;
+-			i[r] = i[r] || function () {
+-				(i[r].q = i[r].q || []).push(arguments)
+-			}, i[r].l = 1 * new Date();
+-			a = s.createElement(o),
+-				m = s.getElementsByTagName(o)[0];
+-			a.async = 1;
+-			a.src = g;
+-			m.parentNode.insertBefore(a, m)
+-		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+-
+-		if (location.href.indexOf('chrome-extension://') === -1) {
+-			ga('create', 'UA-87786708-2');
+-		} else {
+-			ga('create', 'UA-87786708-2', {
+-				'cookieDomain': 'none'
+-			});
+-			// required for chrome extension protocol
+-			ga('set', 'checkProtocolTask', function () { /* nothing */ });
+-		}
+-		ga('send', 'pageview');
+-	}, 100);
++	window.ga = () => {};
+ 
+ 	/* eslint-enable */
+ }
+diff --git a/src/auth.js b/src/auth.js
+index cb3507b..28d5725 100644
+--- a/src/auth.js
++++ b/src/auth.js
+@@ -7,11 +7,6 @@ import {
+ 	signOut,
+ 	signInWithCredential
+ } from 'firebase/auth/web-extension';
+-import {
+-	signInWithPopup,
+-	GithubAuthProvider,
+-	GoogleAuthProvider
+-} from 'firebase/auth';
+ 
+ export const authh = {
+ 	logout() {
+@@ -61,24 +56,5 @@ export const authh = {
+ 			// authenticationObject is of the type UserCredentialImpl. Use it to authenticate here
+ 			return signInWithCredential(auth, credential).then(onSuccess);
+ 		}
+-
+-		var provider;
+-		if (providerName === 'google') {
+-			provider = new GoogleAuthProvider();
+-			provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+-		} else {
+-			provider = new GithubAuthProvider();
+-		}
+-
+-		return signInWithPopup(auth, provider)
+-			.then(onSuccess)
+-			.catch(function (error) {
+-				log(error);
+-				if (error.code === 'auth/account-exists-with-different-credential') {
+-					alert(
+-						'You have already signed up with the same email using different social login'
+-					);
+-				}
+-			});
+ 	}
+ };
+diff --git a/src/components/app.jsx b/src/components/app.jsx
+index 0264cdd..3bcf1a5 100644
+--- a/src/components/app.jsx
++++ b/src/components/app.jsx
+@@ -44,7 +44,7 @@ import { trackEvent } from '../analytics';
+ import { deferred } from '../deferred';
+ import { alertsService } from '../notifications';
+ import { auth } from '../firebaseInit';
+-import { onAuthStateChanged } from 'firebase/auth';
++import { onAuthStateChanged } from 'firebase/auth/web-extension';
+ import { Profile } from './Profile';
+ import { authh } from '../auth';
+ import { SupportDeveloperModal } from './SupportDeveloperModal';
+diff --git a/src/firebaseInit.js b/src/firebaseInit.js
+index 71140c5..7a31245 100644
+--- a/src/firebaseInit.js
++++ b/src/firebaseInit.js
+@@ -1,5 +1,5 @@
+ import { initializeApp } from 'firebase/app';
+-import { getAuth } from 'firebase/auth';
++import { getAuth } from 'firebase/auth/web-extension';
+ import {
+ 	initializeFirestore,
+ 	persistentLocalCache,
+diff --git a/src/hooks/useCheckout.js b/src/hooks/useCheckout.js
+index f34b3b3..63463d0 100644
+--- a/src/hooks/useCheckout.js
++++ b/src/hooks/useCheckout.js
+@@ -4,16 +4,6 @@ function useCheckout() {
+ 	const [hasVendorScriptLoaded, setHasVendorScriptLoaded] = useState();
+ 	useEffect(() => {
+ 		if (window.IS_EXTENSION) return;
+-
+-		const script = document.createElement('script');
+-		script.src = 'https://app.lemonsqueezy.com/js/lemon.js';
+-		script.async = 'true';
+-		script.defer = 'true';
+-		script.addEventListener('load', () => {
+-			window.createLemonSqueezy();
+-			setHasVendorScriptLoaded(true);
+-		});
+-		document.body.appendChild(script);
+ 	}, []);
+ 
+ 	return hasVendorScriptLoaded;
+diff --git a/src/index.ejs b/src/index.ejs
+index e3978c0..89a8a07 100644
+--- a/src/index.ejs
++++ b/src/index.ejs
+@@ -11,11 +11,8 @@
+ 			rel="manifest"
+ 			href="<%= htmlWebpackPlugin.files.publicPath %>manifest.json"
+ 		/>
+-		<% if (cli.env.isProd) { %>
+-		<base href="/create/" />
+-		<% } else { %>
+-		<base href="/" />
+-		<% } %> <% if (cli.manifest.theme_color) { %>
++		
++		<% if (cli.manifest.theme_color) { %>
+ 		<meta name="theme-color" content="<%= cli.manifest.theme_color %>" />
+ 		<% } %>
+ 

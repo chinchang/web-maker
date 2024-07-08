@@ -243,7 +243,7 @@ gulp.task('start-preview-server', function () {
 
 // TODO: fix tasks. eg. buildWebsite isn't needed anymore
 exports.release = series(
-	'runWebpack',
+	parallel('runWebpack', 'buildWebsite'),
 	'copyFiles',
 	'fixIndex',
 	'useRef',

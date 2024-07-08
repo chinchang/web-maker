@@ -38,6 +38,7 @@
 			href="https://chrome.google.com/webstore/detail/lkfkkhfhhdkiemehlpkgjeojomhpccnh"
 		/>
 		<style type="text/css">
+
 						:root {
 							--layout-max-width: 90ch;
 							--base-font-size: 1em;
@@ -51,22 +52,37 @@
 							scroll-timeline: --root-scroll block;
 						}
 
+						html:has(body.docs) {
+							background: linear-gradient(45deg, #000001, #65487d);
+						}
+
 						body {
 							font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 								Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-							background: white;
-							min-height: 100vh;
-							line-height: 1.4;
-							padding: 0;
-							margin: 0;
-							color: #3a3a3a;
-							-webkit-font-smoothing: antialiased;
+								min-height: 100vh;
+								line-height: 1.4;
+								padding: 0;
+								margin: 0;
+								color: #3a3a3a;
+								-webkit-font-smoothing: antialiased;
+								background: white;
+							}
+							body.docs {
+								max-width: 70ch;
+								margin: 2rem auto;
+								background: none;
+							}
+							body.docs  .main-content{
+								background: white;
+								border-radius: 1rem;
+								padding: 2rem;
+							}
 
-						}
-						body.docs {
-							max-width: 70ch;
-							margin: 0 auto;
-						}
+							body.docs .site-header a,
+							body.docs .site-footer a{
+								color: white;
+							}
+
 
 						.ml-1 {
 							margin-left: 1rem;

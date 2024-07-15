@@ -432,7 +432,7 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 
 	if (js) {
 		if (typeof js === 'string') {
-			contents += js ? '<script>\n' + js + '\n//# sourceURL=userscript.js' : '';
+			contents += js ? '<script>' + js + '\n//# sourceURL=userscript.js' : '';
 		} else {
 			var origin = chrome.i18n.getMessage()
 				? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`

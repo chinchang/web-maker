@@ -65,7 +65,7 @@ export function HelpModal(props) {
 				</p>
 				<p style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
 					<a
-						href="http://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline web playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
+						href="http://twitter.com/share?url=https://webmaker.app&text=Web Maker - A blazing fast %26 offline frontend playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
 						rel="noopener noreferrer"
 						class="btn btn-icon"
 					>

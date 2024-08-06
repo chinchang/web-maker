@@ -34,3 +34,10 @@ ID = "webmaker"
   from = "/create/*"
   to = "/create/index.html"
   status = 200
+
+## redirect /app to /create
+[[redirects]]
+  from = "/app"
+  to = "/create"
+  status = 301
+  force = true

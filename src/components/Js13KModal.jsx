@@ -29,7 +29,7 @@ export function Js13KModal({ show, closeHandler }) {
 					<strong>HTML5 Game Developers</strong>. The fun part of the compo is
 					the file size limit set to <strong>13 kilobytes</strong>. The
 					competition will start at <strong>13:00 CEST, 13th August</strong> and
-					will end at <strong>13:00 CEST, 13th September 2018</strong>.
+					will end at <strong>13:00 CEST, 13th September</strong>.
 				</p>
 
 				<p>
@@ -43,7 +43,8 @@ export function Js13KModal({ show, closeHandler }) {
 						rel="noopener"
 					>
 						Read more about this collaboration
-					</a>.
+					</a>
+					.
 				</p>
 
 				<ul>

@@ -1867,6 +1867,7 @@ body:not(.is-app) .show-when-app {
 
 .footer__js13k-days-left {
 	padding: 1px 9px;
+	font-size: 0.8em;
 	text-transform: uppercase;
 	background: #b12a34;
 	color: white;

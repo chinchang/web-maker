@@ -10,10 +10,14 @@ const JS13K = props => {
 	const [daysLeft, setDaysLeft] = useState(0);
 
 	useEffect(() => {
-		const compoDate = new Date('August 13 2024 11:00 GMT');
+		const compoStartDate = new Date('August 13 2024 11:00 GMT');
+		const compoEndDate = new Date('September 13 2024 11:00 GMT');
 		const now = new Date();
-		if (+compoDate > +now) {
-			const _daysLeft = Math.floor((compoDate - now) / 1000 / 3600 / 24);
+		if (+compoStartDate > +now) {
+			const _daysLeft = Math.floor((compoStartDate - now) / 1000 / 3600 / 24);
+			setDaysLeft(_daysLeft);
+		} else if (+compoEndDate > +now) {
+			const _daysLeft = Math.floor((compoEndDate - now) / 1000 / 3600 / 24);
 			setDaysLeft(_daysLeft);
 		}
 	}, []);

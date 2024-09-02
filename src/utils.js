@@ -432,7 +432,12 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 
 	if (js) {
 		if (typeof js === 'string') {
-			contents += js ? '<script>' + js + '\n//# sourceURL=userscript.js' : '';
+			const importRegex =
+				/^\s*import\s+(?:(?:\w+\s*,?\s*(?:\{[^}]*\})?\s*from\s*)?['"][^'"]+['"]|(?:\{[^}]*\}|\*\s+as\s+\w+)\s+from\s+['"][^'"]+['"])/m;
+			const hasImport = importRegex.test(js);
+			contents += js
+				? `<script${hasImport ? ' type="module"' : ''}>${js}\n//# sourceURL=userscript.js`
+				: '';
 		} else {
 			var origin = chrome.i18n.getMessage()
 				? `chrome-extension://${chrome.i18n.getMessage('@@extension_id')}`

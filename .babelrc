@@ -1,5 +1,6 @@
 {
-	// "presets": ["preact-cli/babel"],
+	"presets": ["@babel/preset-react"],
+	"plugins": ["macros"],
 	"env": {
 		"test": {
 			"presets": [["preact-cli/babel", { "modules": "commonjs" }]]

@@ -281,6 +281,7 @@ export default class App extends Component {
 				code: ''
 			},
 			result => {
+				// debugger;
 				this.toggleLayout(result.layoutMode);
 				this.state.prefs.layoutMode = result.layoutMode;
 				if (result.code) {
@@ -824,8 +825,9 @@ export default class App extends Component {
 		$('#layoutBtn' + mode).classList.add('selected');
 		document.body.classList.add('layout-' + mode);
 
-		this.setState({ currentLayoutMode: mode }, () => {
+		this.setState({ currentLayoutMode: mode }, async () => {
 			this.contentWrap.resetSplitting();
+			await this.contentWrap.handleAllModeRequirements();
 			this.contentWrap.setPreviewContent(true);
 		});
 	}

@@ -219,6 +219,11 @@ export default class ContentWrap extends Component {
 	 * @param {boolean} isManual Is this a manual preview request from user?
 	 */
 	setPreviewContent(isForced, isManual) {
+		console.log(
+			'🔎 setPreviewContent',
+			this.cmCodes.css,
+			this.props.currentItem
+		);
 		if (!isManual) {
 			let autoPreview =
 				window.forcedSettings.autoPreview !== undefined
@@ -308,6 +313,16 @@ export default class ContentWrap extends Component {
 	}
 	isValidItem(item) {
 		return !!item.title;
+	}
+	handleAllModeRequirements() {
+		if (!this.props.currentItem) {
+			return Promise.resolve();
+		}
+		return Promise.all([
+			handleModeRequirements(this.props.currentItem.htmlMode),
+			handleModeRequirements(this.props.currentItem.cssMode),
+			handleModeRequirements(this.props.currentItem.jsMode)
+		]);
 	}
 	refreshEditor() {
 		this.cmCodes.html = this.props.currentItem.html;

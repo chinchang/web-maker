@@ -281,7 +281,6 @@ export default class App extends Component {
 				code: ''
 			},
 			result => {
-				// debugger;
 				this.toggleLayout(result.layoutMode);
 				this.state.prefs.layoutMode = result.layoutMode;
 				if (result.code) {
@@ -1080,7 +1079,7 @@ export default class App extends Component {
 			db.sync.set(obj, function () {
 				alertsService.add('Setting saved');
 			});
-			debugger;
+
 			if (window.user) {
 				db.updateUserSetting(window.user.uid, settingName, value)
 					.then(arg => {

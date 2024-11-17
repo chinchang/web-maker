@@ -219,11 +219,6 @@ export default class ContentWrap extends Component {
 	 * @param {boolean} isManual Is this a manual preview request from user?
 	 */
 	setPreviewContent(isForced, isManual) {
-		console.log(
-			'🔎 setPreviewContent',
-			this.cmCodes.css,
-			this.props.currentItem
-		);
 		if (!isManual) {
 			let autoPreview =
 				window.forcedSettings.autoPreview !== undefined

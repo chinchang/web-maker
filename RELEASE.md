@@ -18,3 +18,8 @@
 - Test out the extension by loading the `extension` folder.
 - If everything is good, push to master.
 - Zip the folder and submit to webstore.
+
+## Sidenotes
+
+- The /preview folder needs to hosted on separate domain (wbmakr.com on production)
+- Whenever something changes in /preview folder, the built version of /preview (inside /create) needs to re-uploaded

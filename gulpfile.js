@@ -187,6 +187,125 @@ gulp.task('generate-service-worker', function (callback) {
 	);
 });
 
+/**
+ * This task generates a service worker for the preview domain (inside iframe).
+ * It first generates a precaching worker using sw-precache, then adds custom
+ * code to handle the virtual filesystem for files mode
+ */
+gulp.task('generate-preview-service-worker', function (callback) {
+	var swPrecache = require('sw-precache');
+	var rootDir = `${APP_FOLDER}/preview`;
+
+	// First generate the base service worker with sw-precache
+	swPrecache.write(
+		`${rootDir}/service-worker.js`,
+		{
+			staticFileGlobs: [
+				rootDir + '/**/*.{js,html,htm,css,png,jpg,gif,svg,eot,ttf,woff}'
+			],
+			stripPrefix: `${rootDir}/`,
+			maximumFileSizeToCacheInBytes: 29000,
+			clientsClaim: true
+		},
+		function (error) {
+			if (error) {
+				callback(error);
+				return;
+			}
+
+			// Read the generated service worker
+			var swContent = fs.readFileSync(`${rootDir}/service-worker.js`, 'utf8');
+
+			const pattern =
+				/self\.addEventListener\(\s*['"]fetch['"]\s*,\s*function\s*\(([^)]*)\)\s*\{([\s\S]*?)^\}\s*\);/m;
+
+			swContent = swContent.replace(pattern, function (match, args, body) {
+				return `function fetchHandler(${args}) {${body}\n}`;
+			});
+
+			// Add our custom code after the generated code
+			var customCode = `
+// Custom code for handling message events and caching
+const CACHE_NAME = 'webmaker-vfiles';
+
+function getContentType(url) {
+	if (url.match(/\\.html$/)) {
+		return 'text/html; charset=UTF-8';
+	} else if (url.match(/\\.css$/)) {
+		return 'text/css; charset=UTF-8';
+	} else if (url.match(/\\.js$/)) {
+		return 'application/javascript; charset=UTF-8';
+	} else if (url.match(/\\.json$/)) {
+		return 'application/json; charset=UTF-8';
+	}
+	return 'text/html; charset=UTF-8';
+}
+
+self.addEventListener('message', function(e) {
+	if (!e.data) return;
+	
+	caches.open(CACHE_NAME).then(function(cache) {
+		for (const url in e.data) {
+			if (Object.prototype.hasOwnProperty.call(e.data, url)) {
+				const response = new Response(e.data[url], {
+					headers: {
+						'Content-Type': getContentType(url)
+					}
+				});
+				cache.put(url, response);
+			}
+		}
+	});
+});
+
+self.addEventListener('fetch', function(event) {
+	//console.log('fetch event', event.request.url, event.request);
+	// First, remove all the ignored parameters and hash fragment, and see if we
+    // have that URL in our cache. If so, great! shouldRespond will be true.
+    var url = stripIgnoredUrlParameters(event.request.url, ignoreUrlParametersMatching);
+    const isAppFile = urlsToCacheKeys.has(url);
+
+	if(isAppFile){
+		return fetchHandler(event);
+	}
+
+
+	event.respondWith(
+		caches.open(CACHE_NAME).then(function(cache) {
+			return cache
+				.match(event.request)
+				.then(response => {
+					// console.log('responding with ', response);
+					if (response !== undefined) {
+						return response;
+					}
+					return fetch(event.request);
+				})
+				.catch(function(e) {
+					// Fall back to just fetch()ing the request if some unexpected error
+					// prevented the cached response from being valid.
+					console.warn(
+						'Could not serve response for "%s" from cache: %O',
+						event.request.url,
+						e
+					);
+					return fetch(event.request);
+				});
+		})
+	);
+});
+`;
+
+			// Append our custom code to the generated service worker
+			swContent += customCode;
+
+			// Write the final service worker file
+			fs.writeFileSync(`${rootDir}/service-worker.js`, swContent, 'utf8');
+			callback();
+		}
+	);
+});
+
 gulp.task('packageExtension', function () {
 	child_process.execSync('rm -rf extension');
 	child_process.execSync(`cp -R ${APP_FOLDER} extension`);
@@ -250,6 +369,7 @@ exports.release = series(
 	'concatSwRegistration',
 	'minify',
 	'generate-service-worker',
+	'generate-preview-service-worker',
 	'packageExtension',
 	'buildDistFolder',
 	'cleanup',

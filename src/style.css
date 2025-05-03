@@ -808,6 +808,10 @@ li.CodeMirror-hint-active {
 	/*color: white;*/
 }
 
+[data-type="css"] .cm-error {
+	background: inherit !important;
+}
+
 #demo-frame {
 	border: 0;
 	width: 100%;

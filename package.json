@@ -74,7 +74,7 @@
 		"@lingui/react": "^2.8.3",
 		"canvas-confetti": "^1.9.2",
 		"code-blast-codemirror": "chinchang/code-blast-codemirror#web-maker",
-		"codemirror": "^5.65.16",
+		"codemirror": "^5.65.19",
 		"copy-webpack-plugin": "^4.5.1",
 		"esprima-next": "^6.0.3",
 		"firebase": "^10.8.0",

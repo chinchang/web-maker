@@ -127,7 +127,16 @@ export default class App extends Component {
 	constructor() {
 		super();
 		this.AUTO_SAVE_INTERVAL = 15000; // 15 seconds
-		const savedUser = window.localStorage.getItem('user');
+		const savedUser = (() => {
+			const user = window.localStorage.getItem('user');
+			try {
+				if (user) {
+					return JSON.parse(user);
+				}
+			} catch (e) {
+				return null;
+			}
+		})();
 		this.modalDefaultStates = {
 			isModalOpen: false,
 			isAddLibraryModalOpen: false,
@@ -218,6 +227,7 @@ export default class App extends Component {
 				newUser.firebaseUser = authUser;
 
 				this.setState({ user: newUser });
+
 				window.user = newUser;
 				// window.localStorage.setItem('user', authUser);
 

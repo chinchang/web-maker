@@ -92,7 +92,7 @@ export function Share({
 	return (
 		<VStack gap={4} align="stretch">
 			<div style="min-width: 46ch">
-				<VStack gap={1} align="stretch">
+				<VStack gap={2} align="stretch">
 					<Switch
 						checked={val}
 						onChange={onChange}
@@ -116,7 +116,7 @@ export function Share({
 								onClick={copyUrl}
 								aria-label="Copy"
 							>
-								<Icon name="copy" />
+								<Icon name="copy" /> Copy
 							</Button>
 						</p>
 					)}

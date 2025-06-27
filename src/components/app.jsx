@@ -110,7 +110,7 @@ if (location.search) {
 		const layout = params.get('layout');
 		if (!layout) return null;
 		if (layout === 'full') {
-			return 5;
+			return 4;
 		}
 		const _val = parseInt(layout, 10);
 		if (_val >= 1 && _val <= 5) {

@@ -90,6 +90,7 @@ const version = '6.4.0';
 window.forcedSettings = {};
 window.codeHtml = '';
 window.codeCss = '';
+window.codeLayout = null;
 if (location.search) {
 	let match = location.search.replace(/^\?/, '').match(/settings=([^=]*)/);
 	if (match) {
@@ -105,6 +106,18 @@ if (location.search) {
 	const params = new URLSearchParams(location.search);
 	window.codeHtml = params.get('html') || '';
 	window.codeCss = params.get('css') || '';
+	window.codeLayout = (() => {
+		const layout = params.get('layout');
+		if (!layout) return null;
+		if (layout === 'full') {
+			return 5;
+		}
+		const _val = parseInt(layout, 10);
+		if (_val >= 1 && _val <= 5) {
+			return _val;
+		}
+		return null;
+	})();
 }
 
 function customRoute(path) {
@@ -291,6 +304,9 @@ export default class App extends Component {
 				code: ''
 			},
 			result => {
+				if (window.codeLayout) {
+					result.layoutMode = window.codeLayout;
+				}
 				this.toggleLayout(result.layoutMode);
 				this.state.prefs.layoutMode = result.layoutMode;
 				if (result.code) {
@@ -411,8 +427,11 @@ export default class App extends Component {
 	}
 
 	refreshEditor() {
+		// if window.codeLayout is set, use it, otherwise use the current item's layout mode
 		this.toggleLayout(
-			this.state.currentItem.layoutMode || this.state.prefs.layoutMode
+			window.codeLayout
+				? window.codeLayout
+				: this.state.currentItem.layoutMode || this.state.prefs.layoutMode
 		);
 		this.updateExternalLibCount();
 		this.contentWrap.refreshEditor();

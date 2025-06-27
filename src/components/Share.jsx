@@ -18,6 +18,55 @@ const TOGGLE_VISIBILITY_API =
 	? 'http://127.0.0.1:5001/web-maker-app/us-central1/toggleVisibility'
 	: */ 'https://togglevisibility-ajhkrtmkaq-uc.a.run.app';
 
+// Layout mode definitions with icons
+const LAYOUT_MODES = [
+	{
+		id: 1,
+		name: 'Preview on right',
+		icon: (
+			<svg viewBox="0 0 100 100" style="transform:rotate(-90deg)">
+				<use xlinkHref="#mode-icon" />
+			</svg>
+		)
+	},
+	{
+		id: 2,
+		name: 'Preview on bottom',
+		icon: (
+			<svg viewBox="0 0 100 100">
+				<use xlinkHref="#mode-icon" />
+			</svg>
+		)
+	},
+	{
+		id: 3,
+		name: 'Preview on left',
+		icon: (
+			<svg viewBox="0 0 100 100" style="transform:rotate(90deg)">
+				<use xlinkHref="#mode-icon" />
+			</svg>
+		)
+	},
+	{
+		id: 4,
+		name: 'Full screen preview',
+		icon: (
+			<svg viewBox="0 0 100 100">
+				<rect x="0" y="0" width="100" height="100" />
+			</svg>
+		)
+	},
+	{
+		id: 5,
+		name: 'Three-pane horizontal',
+		icon: (
+			<svg viewBox="0 0 100 100">
+				<use xlinkHref="#vertical-mode-icon" />
+			</svg>
+		)
+	}
+];
+
 export function Share({
 	user,
 	item,
@@ -26,6 +75,8 @@ export function Share({
 	onProBtnClick
 }) {
 	const [publicItemCount, setPublicItemCount] = useState();
+	const [selectedLayout, setSelectedLayout] = useState(2); // Default to layout 2
+
 	useEffect(() => {
 		if (!user) return;
 		window.db.getPublicItemCount(user.uid).then(c => {
@@ -75,10 +126,16 @@ export function Share({
 		}
 	};
 
+	const getShareUrl = () => {
+		const baseUrl = `${BASE_URL}/create/${item.id}`;
+		return selectedLayout ? `${baseUrl}?layout=${selectedLayout}` : baseUrl;
+	};
+
 	const copyUrl = () => {
-		navigator.clipboard.writeText(`${BASE_URL}/create/${item.id}`);
+		navigator.clipboard.writeText(getShareUrl());
 		alertsService.add('URL copied to clipboard');
 	};
+
 	if (!user) {
 		return (
 			<HStack justify="center" gap={2}>
@@ -106,19 +163,70 @@ export function Share({
 						</p>
 					)}
 					{item.isPublic && (
-						<p>
-							Public at{' '}
-							<a href={`${BASE_URL}/create/${item.id}`} target="_blank">
-								{BASE_URL}/create/{item.id}
-							</a>{' '}
-							<Button
-								class="btn btn--dark hint--bottom hint--rounded"
-								onClick={copyUrl}
-								aria-label="Copy"
-							>
-								<Icon name="copy" /> Copy
-							</Button>
-						</p>
+						<VStack gap={2} align="stretch">
+							<p>
+								Public at{' '}
+								<a href={getShareUrl()} target="_blank">
+									{getShareUrl()}
+								</a>{' '}
+								<Button
+									class="btn btn--dark hint--bottom hint--rounded"
+									onClick={copyUrl}
+									aria-label="Copy"
+								>
+									<Icon name="copy" /> Copy
+								</Button>
+							</p>
+
+							{/* Layout Mode Selector */}
+							<HStack gap={3} align="center">
+								<label style="display: block; font-weight: 500;">
+									Layout Mode:
+								</label>
+								<HStack gap={1} align="center">
+									{LAYOUT_MODES.map(layout => (
+										<label
+											key={layout.id}
+											style={{
+												display: 'flex',
+												cursor: 'pointer',
+												padding: '8px',
+												border:
+													selectedLayout === layout.id
+														? '2px solid var(--clr-brand-2)'
+														: '2px solid transparent',
+												borderRadius: '0.5rem',
+												transition: 'all 0.2s ease'
+											}}
+										>
+											<input
+												type="radio"
+												name="layout-mode"
+												value={layout.id}
+												checked={selectedLayout === layout.id}
+												onChange={e =>
+													setSelectedLayout(parseInt(e.target.value, 10))
+												}
+												style={{ display: 'none' }}
+											/>
+											<div
+												style={{
+													fill:
+														selectedLayout === layout.id
+															? 'var(--clr-brand-2)'
+															: 'currentColor',
+													width: '26px',
+													height: '26px',
+													display: 'flex'
+												}}
+											>
+												{layout.icon}
+											</div>
+										</label>
+									))}
+								</HStack>
+							</HStack>
+						</VStack>
 					)}
 				</VStack>
 			</div>

@@ -14,6 +14,7 @@
 	--color-text-light: #b0a5d6;
 	--color-text-lightest-final: #787090;
 	--clr-brand: purple;
+	--clr-brand-2: #e3ba26;
 
 	--color-pro-1: #1fffb3;
 	--color-pro-2: #f2ff00;
@@ -808,7 +809,7 @@ li.CodeMirror-hint-active {
 	/*color: white;*/
 }
 
-[data-type="css"] .cm-error {
+[data-type='css'] .cm-error {
 	background: inherit !important;
 }
 

@@ -1,11 +1,18 @@
 <script>
 	function callback(e) {
 		// console.log('post message recvd', e.data);
-		window.document.open();
 
-		const { contents } = e.data;
-		window.document.write(e.data.contents);
-		window.document.close();
+		const { contents, isCssOnly } = e.data;
+
+		if (isCssOnly) {
+			if (document.querySelector('#webmakerstyle')) {
+				document.querySelector('#webmakerstyle').textContent = e.data.css;
+			}
+		} else {
+			window.document.open();
+			window.document.write(e.data.contents);
+			window.document.close();
+		}
 		window.addEventListener('message', callback);
 	}
 	window.addEventListener('message', callback);

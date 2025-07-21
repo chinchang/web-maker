@@ -248,11 +248,9 @@ export default class ContentWrap extends Component {
 		// If just CSS was changed (and everything shudn't be empty),
 		// change the styles inside the iframe.
 		if (
-			false &&
 			!isForced &&
 			currentCode.html === this.codeInPreview.html &&
-			currentCode.js === this.codeInPreview.js &&
-			false
+			currentCode.js === this.codeInPreview.js
 		) {
 			computeCss(
 				cssMode === CssModes.ACSS ? currentCode.html : currentCode.css,
@@ -262,11 +260,11 @@ export default class ContentWrap extends Component {
 				if (cssMode === CssModes.ACSS) {
 					this.cm.css.setValue(result.code || '');
 				}
-				if (targetFrame.contentDocument.querySelector('#webmakerstyle')) {
-					targetFrame.contentDocument.querySelector(
-						'#webmakerstyle'
-					).textContent = result.code || '';
-				}
+
+				this.frame.contentWindow.postMessage(
+					{ isCssOnly: true, css: result.code || '' },
+					'*'
+				);
 			});
 		} else {
 			var htmlPromise = computeHtml(

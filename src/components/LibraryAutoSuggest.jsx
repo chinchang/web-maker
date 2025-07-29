@@ -33,7 +33,6 @@ export class LibraryAutoSuggest extends Component {
 		var line = this.currentLineNumber;
 		return this.t.value.split('\n')[line - 1];
 	}
-	listMouseDownHandler() {}
 	closeSuggestions() {
 		this.list.classList.remove('is-open');
 		this.isShowingSuggestions = false;
@@ -70,9 +69,7 @@ export class LibraryAutoSuggest extends Component {
 						arr = arr.filter(this.filter);
 					}
 					for (var i = 0; i < Math.min(arr.length, 10); i++) {
-						this.list.innerHTML += `<li data-url="${arr[i].latest}"><a>${
-							arr[i].name
-						}</a></li>`;
+						this.list.innerHTML += `<li data-url="${arr[i].latest}"><a>${arr[i].name}</a></li>`;
 					}
 					this.isShowingSuggestions = true;
 					// if (!this.textareaBounds) {

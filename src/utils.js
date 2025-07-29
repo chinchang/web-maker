@@ -5,7 +5,7 @@ import { deferred } from './deferred';
 import { getExtensionFromFileName } from './fileUtils';
 import { getAllAssets, LOCAL_ASSET_PREFIX } from './localAssetService';
 import confetti from 'canvas-confetti';
-const esprima = require('esprima-next');
+const esprima = { parse: c => c }; //require('esprima-next');
 
 window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
 window.$ = document.querySelector.bind(document);

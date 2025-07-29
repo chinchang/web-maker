@@ -92,9 +92,9 @@ import {
 } from '../multiplayerService';
 import { getRoomIdFromUrl } from '../multiplayerUtils';
 
-if (module.hot) {
-	require('preact/debug');
-}
+// if (module.hot) {
+// require('preact/debug');
+// }
 
 const UNSAVED_WARNING_COUNT = 15;
 const version = '7.0.1';

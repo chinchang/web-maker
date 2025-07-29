@@ -79,9 +79,9 @@ import { ProBadge } from './ProBadge.jsx';
 import { Text } from './Text.jsx';
 import { ProOnAppModal } from './ProOnAppModal.js';
 
-if (module.hot) {
-	require('preact/debug');
-}
+// if (module.hot) {
+// require('preact/debug');
+// }
 
 const UNSAVED_WARNING_COUNT = 15;
 const version = '6.4.1';

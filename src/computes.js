@@ -2,7 +2,7 @@ import { deferred } from './deferred';
 import { addInfiniteLoopProtection } from './utils';
 import { HtmlModes, CssModes, JsModes } from './codeModes';
 
-const esprima = require('esprima-next');
+const esprima = { parse: c => c }; //require('esprima-next');
 
 // computeHtml, computeCss & computeJs evaluate the final code according
 // to whatever mode is selected and resolve the returned promise with the code.

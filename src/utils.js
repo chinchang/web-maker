@@ -4,7 +4,7 @@ import { modes, HtmlModes, CssModes, JsModes } from './codeModes';
 import { deferred } from './deferred';
 import { getExtensionFromFileName } from './fileUtils';
 import confetti from 'canvas-confetti';
-const esprima = require('esprima-next');
+const esprima = { parse: c => c }; //require('esprima-next');
 
 window.DEBUG = document.cookie.indexOf('wmdebug') > -1;
 window.$ = document.querySelector.bind(document);

@@ -92,7 +92,6 @@ function Notification({ version, isLatest, ...props }) {
 							href="http://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline frontend playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="btn"
 						>
 							Share it
 						</a>

@@ -44,7 +44,7 @@ import { trackEvent } from '../analytics';
 import { deferred } from '../deferred';
 import { alertsService } from '../notifications';
 import { auth } from '../firebaseInit';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth/web-extension';
 import { Profile } from './Profile';
 import { authh } from '../auth';
 import { SupportDeveloperModal } from './SupportDeveloperModal';
@@ -84,7 +84,7 @@ if (module.hot) {
 }
 
 const UNSAVED_WARNING_COUNT = 15;
-const version = '6.4.0';
+const version = '6.4.1';
 
 // Read forced settings as query parameters
 window.forcedSettings = {};

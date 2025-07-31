@@ -383,9 +383,7 @@ export default class App extends Component {
 	async loadLanguage(lang) {
 		log('🇯🇲 fetching defninition');
 
-		const catalog = await import(
-			/* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */ `../locales/${lang}/messages.js`
-		);
+		const catalog = await import(`../locales/${lang}/messages.js`);
 
 		this.setState(state => ({
 			catalogs: {

@@ -6,7 +6,13 @@ export default defineConfig(({ command, mode }) => {
 	const isProd = mode === 'production';
 
 	return {
-		plugins: [preact()],
+		plugins: [
+			preact({
+				babel: {
+					plugins: ['macros']
+				}
+			})
+		],
 
 		// HTML template configuration
 		root: 'src',

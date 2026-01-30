@@ -359,6 +359,9 @@ export const Footer = props => {
 								<use xlinkHref="#settings-icon" />
 							</svg>
 						</Button>
+					</div>
+
+					<div class="footer__center-absolute">
 						<Button
 							onClick={props.onFeedbackBtnClick}
 							class="mode-btn hint--top-left hint--rounded hide-on-mobile"

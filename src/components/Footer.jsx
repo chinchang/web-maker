@@ -359,6 +359,15 @@ export const Footer = props => {
 								<use xlinkHref="#settings-icon" />
 							</svg>
 						</Button>
+						<Button
+							onClick={props.onFeedbackBtnClick}
+							class="mode-btn hint--top-left hint--rounded hide-on-mobile"
+							aria-label={i18n._(t`Feedback & Suggestions`)}
+						>
+							<svg viewBox="0 0 24 24">
+								<path d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M14,14H7V12H14M17,10H7V8H17" />
+							</svg>
+						</Button>
 					</div>
 				</div>
 			)}

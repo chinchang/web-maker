@@ -78,6 +78,7 @@ import { VStack } from './Stack.jsx';
 import { ProBadge } from './ProBadge.jsx';
 import { Text } from './Text.jsx';
 import { ProOnAppModal } from './ProOnAppModal.js';
+import { FeedbackBoard } from './FeedbackBoard.jsx';
 
 if (module.hot) {
 	require('preact/debug');
@@ -169,7 +170,8 @@ export default class App extends Component {
 			isShareModalOpen: false,
 			isProModalOpen: false,
 			isFilesLimitModalOpen: false,
-			isProOnAppModalOpen: false
+			isProOnAppModalOpen: false,
+			isFeedbackModalOpen: false
 		};
 		this.state = {
 			isSavedItemPaneOpen: false,
@@ -1856,6 +1858,9 @@ export default class App extends Component {
 							proBtnClickHandler={this.proBtnClickHandler.bind(this)}
 							hasUnseenChangelog={this.state.hasUnseenChangelog}
 							codeSize={this.state.codeSize}
+							onFeedbackBtnClick={() =>
+								this.setState({ isFeedbackModalOpen: true })
+							}
 						/>
 					</div>
 					<SavedItemPane
@@ -2034,6 +2039,11 @@ export default class App extends Component {
 					<ProOnAppModal
 						show={this.state.isProOnAppModalOpen}
 						closeHandler={() => this.setState({ isProOnAppModalOpen: false })}
+					/>
+					<FeedbackBoard
+						isOpen={this.state.isFeedbackModalOpen}
+						onClose={() => this.setState({ isFeedbackModalOpen: false })}
+						user={this.state.user}
 					/>
 					<Modal
 						extraClasses=""

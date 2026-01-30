@@ -2496,3 +2496,105 @@ while the theme CSS file is loading */
 		padding: 10px 20px;
 	}
 }
+
+/* Feedback Board */
+.feedback-modal .modal__content {
+	max-width: 600px;
+	width: 100%;
+	height: 80vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.feedback-board {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.feedback-board__title {
+	margin-bottom: 1rem;
+	margin-top: 0;
+}
+
+.feedback-board__subtitle {
+	margin-bottom: 2rem;
+	color: var(--color-text-dark-1);
+	margin-top: 0;
+}
+
+.feedback-board__form {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+	margin-bottom: 1.5rem;
+}
+
+.feedback-board__input {
+	flex: 1;
+}
+
+.feedback-list {
+	flex: 1;
+	overflow-y: auto;
+}
+
+.feedback-board__empty {
+	text-align: center;
+	margin-top: 2rem;
+	color: var(--color-text-dark-1);
+}
+
+.feedback-item {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 1rem;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.feedback-item:last-child {
+	border-bottom: none;
+}
+
+.feedback-item__vote-btn {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 0.5rem;
+	border-radius: 4px;
+	background: rgba(255, 255, 255, 0.05);
+	min-width: 40px;
+	border: none;
+	color: inherit;
+	transition: background 0.2s;
+}
+
+.feedback-item__vote-btn:hover {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.feedback-item__vote-btn--active {
+	background: #fff;
+	color: var(--clr-brand);
+}
+
+.feedback-item__vote-btn--active:hover {
+	background: #fff;
+	opacity: 0.9;
+}
+
+.feedback-item__vote-icon {
+	transform: rotate(-90deg);
+	font-size: 10px;
+	margin-bottom: 2px;
+}
+
+.feedback-item__vote-count {
+	font-weight: bold;
+}
+
+.feedback-item__text {
+	flex: 1;
+}

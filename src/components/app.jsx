@@ -85,7 +85,7 @@ if (module.hot) {
 }
 
 const UNSAVED_WARNING_COUNT = 15;
-const version = '6.4.1';
+const version = '6.5.0';
 
 // Read forced settings as query parameters
 window.forcedSettings = {};

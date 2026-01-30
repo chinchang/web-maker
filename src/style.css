@@ -967,8 +967,10 @@ body > #demo-frame {
 	background: transparent;
 	border: 0;
 	padding: 0;
-	margin-left: 10px;
 	display: inline-block;
+}
+.mode-btn:not(:first-child) {
+	margin-left: 10px;
 }
 
 .footer__link:first-of-type {
@@ -2614,4 +2616,51 @@ while the theme CSS file is loading */
 	font-size: 0.8rem;
 	opacity: 0.5;
 	margin-top: 0.25rem;
+}
+
+/* Attention Component */
+.attention-r {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.attention-r__rays {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 0;
+	height: 0;
+	pointer-events: none;
+	z-index: 0;
+}
+
+.attention-r__ray {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 6px;
+	height: 2px;
+	background: #ffeb3b;
+	border-radius: 1px;
+	transform-origin: left center;
+	opacity: 0;
+	animation: attention-pulse 1.3s ease-out;
+}
+
+@keyframes attention-pulse {
+	0% {
+		transform: rotate(var(--r)) translateX(18px) scaleX(0);
+		opacity: 0;
+	}
+	30% {
+		opacity: 1;
+		transform: rotate(var(--r)) translateX(18px) scaleX(1);
+	}
+	100% {
+		transform: rotate(var(--r)) translateX(28px) scaleX(0);
+		opacity: 0;
+	}
 }

@@ -5,6 +5,7 @@ import { ProBadge } from './ProBadge';
 import { HStack } from './Stack';
 import { useEffect, useState } from 'preact/hooks';
 import { DropdownMenu } from './Dropdown';
+import { Attention } from './Attention';
 
 const JS13K = props => {
 	const [daysLeft, setDaysLeft] = useState(0);
@@ -362,15 +363,17 @@ export const Footer = props => {
 					</div>
 
 					<div class="footer__center-absolute">
-						<Button
-							onClick={props.onFeedbackBtnClick}
-							class="mode-btn hint--top-left hint--rounded hide-on-mobile"
-							aria-label={i18n._(t`Feedback & Suggestions`)}
-						>
-							<svg viewBox="0 0 24 24">
-								<path d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M14,14H7V12H14M17,10H7V8H17" />
-							</svg>
-						</Button>
+						<Attention interval={7000}>
+							<Button
+								onClick={props.onFeedbackBtnClick}
+								class="mode-btn hint--top-left hint--rounded hide-on-mobile"
+								aria-label={i18n._(t`Feedback & Suggestions`)}
+							>
+								<svg viewBox="0 0 24 24">
+									<path d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M14,14H7V12H14M17,10H7V8H17" />
+								</svg>
+							</Button>
+						</Attention>
 					</div>
 				</div>
 			)}

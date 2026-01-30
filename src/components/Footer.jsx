@@ -366,7 +366,7 @@ export const Footer = props => {
 						<Attention interval={7000}>
 							<Button
 								onClick={props.onFeedbackBtnClick}
-								class="mode-btn hint--top-left hint--rounded hide-on-mobile"
+								class="mode-btn hint--top hint--rounded hide-on-mobile"
 								aria-label={i18n._(t`Feedback & Suggestions`)}
 							>
 								<svg viewBox="0 0 24 24">

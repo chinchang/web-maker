@@ -1135,7 +1135,7 @@ body:not(.light-version) .modal {
 	padding: 3em;
 	font-size: 1.1em;
 	line-height: 1.4;
-	max-width: 85vw;
+	max-width: 100ch;
 	margin: 4rem auto 2rem;
 	box-sizing: border-box;
 	/* overflow-y: auto; */

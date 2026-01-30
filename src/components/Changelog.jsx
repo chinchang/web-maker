@@ -33,7 +33,7 @@ function Notification({ version, isLatest, ...props }) {
 			<ul>{props.children}</ul>
 			{isLatest ? (
 				<div class="mt-2">
-					<p>
+					{/* <p>
 						<strong>🎉 New Product!</strong> If you like Web Maker, you'll
 						probably also like a new product I launched. It's the first ever
 						code-golfing game for CSS -&gt;{' '}
@@ -41,36 +41,15 @@ function Notification({ version, isLatest, ...props }) {
 							CSSBattle
 						</a>
 						.
-					</p>
-					{/*<p>
-						<strong>🚀 Announcement</strong>: Hi! I am Kushagra Gour (creator of
-						Web Maker) and I have launched a
-						<a
-							href="https://patreon.com/kushagra"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							{' '}
-							Patreon campaign
-						</a>
-						. If you love Web Maker, consider pledging to
-						<a
-							href="https://patreon.com/kushagra"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							{' '}
-							support me
-						</a>{' '}
-						:)
-						</p>*/}
+					</p> */}
+
 					<p>
 						<a
 							href="https://github.com/chinchang/web-maker/issues"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
-							Suggest features or report bugs.
+							Report Bugs
 						</a>
 					</p>
 					<p>
@@ -92,7 +71,6 @@ function Notification({ version, isLatest, ...props }) {
 							href="http://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline frontend playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="btn"
 						>
 							Share it
 						</a>
@@ -107,7 +85,14 @@ export function Changelog(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="6.4.0" {...props} isLatest={true}>
+			<Notification version="6.5.0" {...props} isLatest={true}>
+				<li>
+					<strong>Feedback Board</strong>: Introducing a new Feedback board
+					where everyone can submit suggestions and upvote what they like.
+				</li>
+			</Notification>
+
+			<Notification version="6.4.0" {...props}>
 				<li>
 					<strong>Assets inlining in "Save as HTML"</strong>: You now have an
 					option to inline all the external assets (images, audios,videos) in

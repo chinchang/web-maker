@@ -24,6 +24,12 @@ window.addEventListener('message', e => {
 		document.querySelector('iframe').src = e.data.url;
 	}
 
+	// Forward expression evaluation to inner iframe
+	if (e.data && e.data.exprToEval) {
+		const frame = document.querySelector('iframe');
+		frame.contentWindow.postMessage(e.data, '*');
+	}
+
 	// Recieving from preview iframe
 	if (e.data && e.data.logs) {
 		(window.opener || window.top).postMessage(e.data, '*');

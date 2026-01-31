@@ -619,10 +619,7 @@ export default class ContentWrap extends Component {
 		} else if (e.which === 13) {
 			this.onMessageFromConsole('> ' + e.target.value);
 
-			/* eslint-disable no-underscore-dangle */
-			this.frame.contentWindow._wmEvaluate(e.target.value);
-
-			/* eslint-enable no-underscore-dangle */
+			this.frame.contentWindow.postMessage({ exprToEval: e.target.value }, '*');
 
 			e.target.value = '';
 			trackEvent('fn', 'evalConsoleExpr');

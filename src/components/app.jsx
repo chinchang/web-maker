@@ -40,6 +40,7 @@ import '../db';
 import { Changelog } from './Changelog';
 import Settings from './Settings.jsx';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
+import { isLightTheme } from '../editorThemes';
 import { trackEvent } from '../analytics';
 import { deferred } from '../deferred';
 import { alertsService } from '../notifications';
@@ -1136,6 +1137,12 @@ export default class App extends Component {
 
 		document.body.classList[prefs.lightVersion ? 'add' : 'remove'](
 			'light-version'
+		);
+
+		// Toggle light theme based on editor theme
+		document.body.classList.toggle(
+			'light-theme',
+			isLightTheme(prefs.editorTheme)
 		);
 	}
 

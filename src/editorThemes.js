@@ -49,3 +49,21 @@ export const editorThemes = [
 	'yeti',
 	'zenburn'
 ];
+
+export const lightEditorThemes = new Set([
+	'3024-day',
+	'base16-light',
+	'duotone-light',
+	'eclipse',
+	'elegant',
+	'mdn-like',
+	'neat',
+	'neo',
+	'paraiso-light',
+	'solarized light',
+	'ttcn',
+	'xq-light',
+	'yeti'
+]);
+
+export const isLightTheme = theme => lightEditorThemes.has(theme);

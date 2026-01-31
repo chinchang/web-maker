@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { Inspector, chromeDark } from 'react-inspector';
+import { Inspector, chromeDark, chromeLight } from 'react-inspector';
 import { Trans, t, NumberFormat } from '@lingui/macro';
 import { I18n } from '@lingui/react';
 import { PureComponent } from 'preact/compat';
@@ -9,8 +9,10 @@ class LogRow extends Component {
 		return false;
 	}
 	render() {
+		const isLightTheme = document.body.classList.contains('light-theme');
+		const baseTheme = isLightTheme ? chromeLight : chromeDark;
 		const theme = {
-			...chromeDark,
+			...baseTheme,
 			...{
 				BASE_FONT_SIZE: '20px',
 				TREENODE_FONT_SIZE: '20px'

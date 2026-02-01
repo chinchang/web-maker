@@ -2153,15 +2153,22 @@ while the theme CSS file is loading */
 	color: inherit;
 }
 .tabs__tab--selected {
-	background-color: rgba(0, 0, 0, 0.2);
+	background-color: rgba(0, 0, 0, 0.1);
 }
 .tabs__tabpanel-wrap {
 	flex: 1;
 }
 .tabs__tabpanel {
 	padding: 2em;
-	background-color: rgba(0, 0, 0, 0.2);
+	background-color: rgba(0, 0, 0, 0.1);
 	border-radius: 5px;
+}
+
+/* when first tab is selected, we dont want radius on left-top corner of tab content wrap */
+.tabs__tablist:has(.tabs__tab--selected:first-child)
+	+ .tabs__tabpanel-wrap
+	.tabs__tabpanel {
+	border-top-left-radius: 0;
 }
 .tabs--horizontal {
 	flex-direction: column;

@@ -91,9 +91,16 @@ export function Changelog(props) {
 					is selected for the Editor.
 				</NotificationItem>
 				<NotificationItem type="bug">Console is back again!</NotificationItem>
+				<NotificationItem type="ui">
+					Editor theme can now be previewed when changing from Settings.
+				</NotificationItem>
 				<li>
 					New additional keyboard shortcut added to refresh preview manually:{' '}
 					<kbd class="kbd-shortcut__keys">Ctrl + Enter</kbd>.
+				</li>{' '}
+				<li>
+					Console can now to toggled with{' '}
+					<kbd class="kbd-shortcut__keys">Ctrl + Alt/Opt + C</kbd>.
 				</li>
 			</Notification>
 

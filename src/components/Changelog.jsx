@@ -85,7 +85,19 @@ export function Changelog(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="6.5.0" {...props} isLatest={true}>
+			<Notification version="6.5.1" {...props} isLatest={true}>
+				<NotificationItem type="ui">
+					The whole app interface now switches to Light theme when light theme
+					is selected for the Editor.
+				</NotificationItem>
+				<NotificationItem type="bug">Console is back again!</NotificationItem>
+				<li>
+					New additional keyboard shortcut added to refresh preview manually:{' '}
+					<kbd class="kbd-shortcut__keys">Ctrl + Enter</kbd>.
+				</li>
+			</Notification>
+
+			<Notification version="6.5.0" {...props}>
 				<li>
 					<strong>Feedback Board</strong>: Introducing a new Feedback board
 					where everyone can submit suggestions and upvote what they like.

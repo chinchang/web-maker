@@ -19,17 +19,13 @@ export function KeyboardShortcutsModal({ show, closeHandler }) {
 						<span class="kbd-shortcut__details">See keyboard shortcuts</span>
 					</p>*/}
 					<p>
-						<span class="kbd-shortcut__keys">Ctrl/⌘ + Shift + 5</span>
-						<span class="kbd-shortcut__details">
-							<Trans>Refresh preview</Trans>
-						</span>
-					</p>
-					<p>
+						<span class="kbd-shortcut__keys">Ctrl/⌘ + Shift + 5</span>/
 						<span class="kbd-shortcut__keys">Ctrl + Enter</span>
 						<span class="kbd-shortcut__details">
 							<Trans>Refresh preview</Trans>
 						</span>
 					</p>
+
 					<p>
 						<span class="kbd-shortcut__keys">Ctrl/⌘ + S</span>
 						<span class="kbd-shortcut__details">

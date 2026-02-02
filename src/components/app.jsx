@@ -688,11 +688,12 @@ export default class App extends Component {
 				this.saveItem();
 				trackEvent('ui', 'saveItemKeyboardShortcut');
 			}
-			// Ctrl/⌘ + Shift + 5
+			// Ctrl/⌘ + Shift + 5 or Ctrl + Enter
 			if (
-				(event.ctrlKey || event.metaKey) &&
-				event.shiftKey &&
-				event.keyCode === 53
+				((event.ctrlKey || event.metaKey) &&
+					event.shiftKey &&
+					event.keyCode === 53) ||
+				(event.ctrlKey && event.keyCode === 13)
 			) {
 				event.preventDefault();
 				this.contentWrap.setPreviewContent(true, true);

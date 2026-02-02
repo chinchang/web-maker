@@ -25,6 +25,12 @@ export function KeyboardShortcutsModal({ show, closeHandler }) {
 						</span>
 					</p>
 					<p>
+						<span class="kbd-shortcut__keys">Ctrl + Enter</span>
+						<span class="kbd-shortcut__details">
+							<Trans>Refresh preview</Trans>
+						</span>
+					</p>
+					<p>
 						<span class="kbd-shortcut__keys">Ctrl/⌘ + S</span>
 						<span class="kbd-shortcut__details">
 							<Trans>Save current creations</Trans>

@@ -3,6 +3,7 @@ import { editorThemes } from '../editorThemes';
 import Switch from './Switch';
 import Tabs, { TabPanel } from './Tabs';
 import { Divider } from './common';
+import { VStack } from './Stack';
 
 function CheckboxSetting({ label, onChange, pref }) {
 	return (
@@ -209,7 +210,7 @@ export default class Settings extends Component {
 								<Divider />
 								<label class="line">
 									Theme
-									<div>
+									<VStack gap="0.5rem" align="flex-end">
 										<select
 											value={prefs.editorTheme}
 											onChange={e => this.updateSetting(e, 'editorTheme')}
@@ -218,7 +219,13 @@ export default class Settings extends Component {
 												<option value={theme}>{theme}</option>
 											))}
 										</select>
-									</div>
+										<button
+											type="button"
+											class="btn btn--small ml-1 settings__preview-btn"
+										>
+											Hover/Focus to preview
+										</button>
+									</VStack>
 								</label>
 								<Divider />
 

@@ -1119,6 +1119,19 @@ body:not(.light-version) .modal {
 	backdrop-filter: none;
 }
 
+/* Theme preview button - hide modal when hovering/focusing */
+.modal--settings {
+	transition: opacity 0.15s ease;
+}
+.modal:has(.settings__preview-btn:hover),
+.modal:has(.settings__preview-btn:focus) {
+	opacity: 0;
+}
+body:has(.settings__preview-btn:hover) .modal-overlay,
+body:has(.settings__preview-btn:focus) .modal-overlay {
+	opacity: 0;
+}
+
 @keyframes anim-modal-overlay {
 	to {
 		opacity: 1;

@@ -32,6 +32,13 @@ import 'codemirror/keymap/vim.js';
 import 'code-blast-codemirror/code-blast.js';
 
 import emmet from '@emmetio/codemirror-plugin';
+
+// Add missing CSS logical properties to CodeMirror's CSS mode
+const cssSpec = CodeMirror.resolveMode('text/css');
+if (cssSpec && cssSpec.propertyKeywords) {
+	cssSpec.propertyKeywords['inline-size'] = true;
+	cssSpec.propertyKeywords['block-size'] = true;
+}
 import { prettify, loadCss } from '../utils';
 import { modes } from '../codeModes';
 import { deferred } from '../deferred';

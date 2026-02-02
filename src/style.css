@@ -1157,7 +1157,8 @@ body:not(.light-version) .modal {
 	padding: 3em;
 	font-size: 1.1em;
 	line-height: 1.4;
-	max-width: 100ch;
+	/* max-width should be max of 100ch or 95vw */
+	max-width: min(100ch, 95vw);
 	margin: 4rem auto 2rem;
 	box-sizing: border-box;
 	/* overflow-y: auto; */
@@ -2343,7 +2344,8 @@ while the theme CSS file is loading */
 }
 .pro-modal {
 	background: url('/assets/pro-panda-flying.png') no-repeat;
-	background-position: bottom right;
+	background-position: bottom center;
+	background-size: 10rem;
 }
 .plan-card {
 	background: rgb(255 255 255 / 10%);
@@ -2359,6 +2361,13 @@ while the theme CSS file is loading */
 		5px 10px 12.6px -2.5px hsl(var(--shadow-color) / 0.36);
 
 	box-shadow: var(--shadow-elevation-low);
+}
+.testimonial-card {
+	background: rgb(255 255 255 / 5%);
+	border-radius: 0.4rem;
+	padding: 1rem;
+	flex: 1 1 250px;
+	max-width: 300px;
 }
 .profile-modal__avatar-img.is-pro {
 	background: linear-gradient(45deg, var(--color-pro-1), var(--color-pro-2));

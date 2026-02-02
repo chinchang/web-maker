@@ -75,7 +75,7 @@ export function Pro({ user, onLoginClick, onBuyFromExtensionClick }) {
 		);
 	}
 	return (
-		<VStack gap={2} align="stretch">
+		<VStack gap={4} align="stretch">
 			{/* <Stack justify="center">
 				<Switch
 					labels={['Monthly', 'Annually']}
@@ -86,38 +86,78 @@ export function Pro({ user, onLoginClick, onBuyFromExtensionClick }) {
 					}}
 				/>
 			</Stack> */}
-			<Stack gap={2} align="stretch">
-				<Card
-					price="Free"
-					subTitle="&nbsp;"
-					name="Starter"
-					features={[
-						'Unlimited private creations',
-						'1 Public creation',
-						'2 Files mode creations'
-					]}
-				/>
-				<Card
-					bg="#674dad"
-					price={'Starting $6/mo'}
-					subTitle="Annual & One-time pricing available"
-					name="Pro"
-					action={upgradeActionEl}
-					features={[
-						'Unlimited private creations',
-						'Unlimited public creations',
-						'Unlimited files mode creations',
-						'Asset hosting',
-						'Priority support',
-						'No Ads'
-					]}
-				/>
-			</Stack>
-			<Stack justify="center">
-				<Text tag="p" appearance="secondary">
-					30 days refund policy if not satisfied.
+
+			<VStack gap={2} align="stretch">
+				<Stack gap={2} align="stretch" justify="center">
+					<Card
+						price="Free"
+						subTitle="&nbsp;"
+						name="FREE"
+						features={[
+							'Unlimited private creations',
+							'1 Public creation',
+							'2 Files mode creations'
+						]}
+					/>
+					<Card
+						bg="#674dad"
+						price={'Starting $6/mo'}
+						subTitle="Annual & One-time pricing available"
+						name="Pro"
+						action={upgradeActionEl}
+						features={[
+							'Unlimited private creations',
+							'Unlimited public creations',
+							'Unlimited files mode creations',
+							'Asset hosting',
+							'Priority support',
+							'No Ads'
+						]}
+					/>
+				</Stack>
+				<Stack justify="center">
+					<Text tag="p" appearance="secondary">
+						30 days refund policy if not satisfied.
+					</Text>
+				</Stack>
+			</VStack>
+			<VStack gap={2} align="stretch">
+				<Text
+					tag="h3"
+					size="5"
+					weight="600"
+					align="center"
+					appearance="primary"
+				>
+					What developers are saying
 				</Text>
-			</Stack>
+				<Stack gap={2} align="stretch" wrap="wrap" justify="center">
+					<Testimonial
+						quote="Web Maker is THE ONE that makes me love coding and website design. It's so fun to just experiment something too. Web Maker is offline, and more customizable. I love it so much!"
+						author="Ville Mononen"
+						role=""
+					/>
+					<Testimonial
+						quote="This is a great web app for developers that want to spin something real fast then move over to Code Pen. I've tried other online development tools and this is one that I keep coming back to, over and over again. :-)"
+						author="Ramiro Rodriguez"
+						role=""
+					/>
+					<Testimonial
+						quote="I 100% love this extension, it is the best editor I have ever seen for an extension."
+						author="Bethuel Kipsang"
+						role=""
+					/>
+				</Stack>
+				<HStack justify="center">
+					<a
+						href="https://chromewebstore.google.com/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh/reviews"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						And much more...
+					</a>
+				</HStack>
+			</VStack>
 		</VStack>
 	);
 }
@@ -151,6 +191,24 @@ const Card = ({ bg, name, price, subTitle, action, features }) => {
 						</HStack>
 					))}
 				</VStack>
+			</VStack>
+		</div>
+	);
+};
+
+const Testimonial = ({ quote, author, role }) => {
+	return (
+		<div class="testimonial-card">
+			<VStack gap={1} align="flex-start">
+				<Text size="2" style={{ fontStyle: 'italic' }}>
+					"{quote}"
+				</Text>
+				<HStack gap={0.5} align="center" justify="flex-end" fullWidth>
+					<Text weight="600" appearance="primary" style="italic">
+						{author}
+					</Text>
+					{role ? <Text appearance="secondary">· {role}</Text> : null}
+				</HStack>
 			</VStack>
 		</div>
 	);

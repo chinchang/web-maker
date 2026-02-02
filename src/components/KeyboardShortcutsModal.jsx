@@ -45,6 +45,12 @@ export function KeyboardShortcutsModal({ show, closeHandler }) {
 						</span>
 					</p>
 					<p>
+						<span class="kbd-shortcut__keys">Ctrl + Alt/Opt + C</span>
+						<span class="kbd-shortcut__details">
+							<Trans>Toggle console</Trans>
+						</span>
+					</p>
+					<p>
 						<span class="kbd-shortcut__keys">Esc</span>
 						<span class="kbd-shortcut__details">
 							<Trans>Close saved creations panel & modals</Trans>

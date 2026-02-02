@@ -748,6 +748,12 @@ export default class App extends Component {
 				});
 				trackEvent('ui', 'openCommandPaletteKeyboardShortcut', 'command');
 				event.preventDefault();
+			} else if (event.ctrlKey && event.altKey && event.keyCode === 67) {
+				// dont change keycode to key. ctrl+opt+C gives the weird c character
+				// Ctrl + Alt/Opt + C
+				event.preventDefault();
+				this.contentWrap.toggleConsole();
+				trackEvent('ui', 'toggleConsoleKeyboardShortcut');
 			}
 		});
 

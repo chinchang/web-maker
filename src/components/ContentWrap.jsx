@@ -925,6 +925,15 @@ export default class ContentWrap extends Component {
 						/>
 					)}
 
+					{/* Hidden iframe to register service worker for offline preview support */}
+					{!window.IS_EXTENSION && (
+						<iframe
+							src={`${PREVIEW_FRAME_HOST}/talk.html`}
+							style="display:none"
+							id="talkFrame"
+						/>
+					)}
+
 					<PreviewDimension ref={comp => (this.previewDimension = comp)} />
 
 					<Console

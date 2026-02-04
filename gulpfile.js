@@ -216,6 +216,9 @@ gulp.task('generate-preview-service-worker', function (callback) {
 			// Read the generated service worker
 			var swContent = fs.readFileSync(`${rootDir}/service-worker.js`, 'utf8');
 
+			// Remove index.html from precacheConfig - it's a placeholder that gets replaced by user's files
+			swContent = swContent.replace(/\["index\.html",[^\]]+\],?/g, '');
+
 			const pattern =
 				/self\.addEventListener\(\s*['"]fetch['"]\s*,\s*function\s*\(([^)]*)\)\s*\{([\s\S]*?)^\}\s*\);/m;
 

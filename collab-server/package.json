@@ -1,0 +1,15 @@
+{
+	"name": "webmaker-collab-server",
+	"version": "1.0.0",
+	"description": "WebSocket server for Web Maker real-time collaboration",
+	"main": "server.js",
+	"scripts": {
+		"start": "HOST=0.0.0.0 npx y-websocket"
+	},
+	"engines": {
+		"node": ">=18"
+	},
+	"dependencies": {
+		"y-websocket": "^3.0.0"
+	}
+}

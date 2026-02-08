@@ -4,6 +4,7 @@ import Modal from './Modal.jsx';
 import { Trans, t } from '@lingui/macro';
 import { I18n } from '@lingui/react';
 import { trackEvent } from '../analytics';
+import { HStack } from './Stack.jsx';
 
 /**
  * MultiplayerModal - Modal for managing multiplayer/collaborative editing sessions
@@ -75,7 +76,7 @@ export default function MultiplayerModal({
 			{({ i18n }) => (
 				<Modal show={show} closeHandler={closeHandler}>
 					<div class="multiplayer-modal">
-						<h1 class="multiplayer-modal__title">
+						<h1 class="multiplayer-modal__titl">
 							<svg
 								viewBox="0 0 24 24"
 								width="24"
@@ -87,7 +88,7 @@ export default function MultiplayerModal({
 									d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
 								/>
 							</svg>
-							<Trans>Multiplayer Mode</Trans>
+							<Trans>Collab Session</Trans>
 						</h1>
 
 						{!isInSession ? (
@@ -100,17 +101,14 @@ export default function MultiplayerModal({
 									</Trans>
 								</p>
 
-								<button
-									class="btn btn--primary multiplayer-modal__start-btn"
-									onClick={handleStartSession}
-								>
+								<button class="btn btn--primary" onClick={handleStartSession}>
 									<svg viewBox="0 0 24 24" width="18" height="18">
 										<path
 											fill="currentColor"
 											d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
 										/>
 									</svg>
-									<Trans>Start New Session</Trans>
+									<Trans>Start New Collab Session</Trans>
 								</button>
 							</div>
 						) : (
@@ -131,30 +129,43 @@ export default function MultiplayerModal({
 									<h3 class="multiplayer-modal__section-title">
 										<Trans>Share Link</Trans>
 									</h3>
-									<div class="multiplayer-modal__link-row">
+									<HStack gap="0.5rem">
 										<input
 											type="text"
 											class="multiplayer-modal__link-input"
-											value={multiplayerSession?.url || ''}
+											value={
+												multiplayerSession?.url?.replace(/https?:\/\//, '') ||
+												''
+											}
 											readOnly
 											onClick={e => e.target.select()}
 										/>
 										<button
-											class={`btn multiplayer-modal__copy-btn ${
+											class={`btn btn--dark btn--big  ${
 												copySuccess ? 'is-success' : ''
 											}`}
 											onClick={handleCopyLink}
 											title={i18n._(t`Copy link`)}
 										>
 											{copySuccess ? (
-												<svg viewBox="0 0 24 24" width="18" height="18">
+												<svg
+													viewBox="0 0 24 24"
+													width="18"
+													height="18"
+													style="margin-right:0"
+												>
 													<path
 														fill="currentColor"
 														d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
 													/>
 												</svg>
 											) : (
-												<svg viewBox="0 0 24 24" width="18" height="18">
+												<svg
+													viewBox="0 0 24 24"
+													width="18"
+													height="18"
+													style="margin-right:0"
+												>
 													<path
 														fill="currentColor"
 														d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
@@ -162,7 +173,8 @@ export default function MultiplayerModal({
 												</svg>
 											)}
 										</button>
-									</div>
+									</HStack>
+
 									<p class="multiplayer-modal__hint">
 										<Trans>
 											Share this link with others to let them join your session.
@@ -202,7 +214,7 @@ export default function MultiplayerModal({
 
 								<div class="multiplayer-modal__section multiplayer-modal__actions">
 									<button
-										class="btn btn--secondary multiplayer-modal__leave-btn"
+										class="btn btn--secondary btn--danger btn-icon"
 										onClick={handleLeaveSession}
 									>
 										<svg viewBox="0 0 24 24" width="18" height="18">

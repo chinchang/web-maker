@@ -497,7 +497,10 @@ a > svg {
 	outline-style: solid;
 	outline-offset: 1px;
 }
-
+.btn--danger {
+	color: #ff6b6b;
+	border-color: #ff6b6b;
+}
 .btn-icon > svg {
 	width: 20px;
 	height: 20px;
@@ -913,7 +916,7 @@ body > #demo-frame {
 	width: 20px;
 	height: 20px;
 }
-.btn--dark > svg:not(:last-child) {
+.btn--dark > svg {
 	margin-right: 4px;
 }
 
@@ -3042,14 +3045,6 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 	color: var(--color-text-secondary, #aaa);
 }
 
-.multiplayer-modal__start-btn {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	padding: 0.75rem 1.5rem;
-	font-size: 1rem;
-}
-
 .multiplayer-modal__status-row {
 	display: flex;
 	align-items: center;
@@ -3077,11 +3072,6 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 	background: #ff4444;
 }
 
-.multiplayer-modal__link-row {
-	display: flex;
-	gap: 0.5rem;
-}
-
 .multiplayer-modal__link-input {
 	flex: 1;
 	padding: 0.5rem;
@@ -3091,18 +3081,6 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 	color: var(--color-text, #fff);
 	font-family: monospace;
 	font-size: 0.85rem;
-}
-
-.multiplayer-modal__copy-btn {
-	padding: 0.5rem 0.75rem;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.multiplayer-modal__copy-btn.is-success {
-	background: limegreen;
-	color: #000;
 }
 
 .multiplayer-modal__hint {
@@ -3155,101 +3133,60 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 	border-top: 1px solid var(--color-border, #333);
 }
 
-.multiplayer-modal__leave-btn {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	color: #ff6b6b;
+/* Multiplayer Active Button State */
+.btn--multiplayer-active {
+	gap: 0.4rem;
 }
 
-/* Multiplayer Indicator in Header */
-.multiplayer-indicator {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	padding: 0.25rem 0.5rem;
-	background: rgba(255, 255, 255, 0.1);
-	border-radius: 20px;
-	cursor: pointer;
-	transition: background 0.2s;
-}
-
-.multiplayer-indicator:hover {
-	background: rgba(255, 255, 255, 0.15);
-}
-
-.multiplayer-indicator__status-dot {
+.multiplayer-status-dot {
 	width: 8px;
 	height: 8px;
 	border-radius: 50%;
 	background: gray;
+	flex-shrink: 0;
 }
 
-.multiplayer-indicator__status-dot[data-status='connected'] {
+.multiplayer-status-dot[data-status='connected'] {
 	background: limegreen;
 }
 
-.multiplayer-indicator__status-dot[data-status='connecting'] {
+.multiplayer-status-dot[data-status='connecting'] {
 	background: orange;
 	animation: pulse 1s infinite;
 }
 
-.multiplayer-indicator__status-dot[data-status='disconnected'] {
+.multiplayer-status-dot[data-status='disconnected'] {
 	background: #ff4444;
 }
 
-.multiplayer-indicator__avatars {
+.multiplayer-avatars {
 	display: flex;
-	margin-left: 0.25rem;
 }
 
-.multiplayer-indicator__avatar {
-	width: 22px;
-	height: 22px;
+.multiplayer-avatar {
+	width: 20px;
+	height: 20px;
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 0.7rem;
+	font-size: 0.65rem;
 	font-weight: 600;
 	color: #fff;
 	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 	border: 2px solid var(--color-bg, #1d1e22);
-	margin-left: -8px;
+	margin-left: -6px;
 }
 
-.multiplayer-indicator__avatar:first-child {
+.multiplayer-avatar:first-child {
 	margin-left: 0;
 }
 
-.multiplayer-indicator__avatar--more {
-	background: #666;
-	font-size: 0.65rem;
-}
-
-.multiplayer-indicator__count {
+.multiplayer-count {
 	font-size: 0.85rem;
 	font-weight: 500;
-	min-width: 1.5em;
+	min-width: 1em;
 	text-align: center;
-}
-
-.multiplayer-indicator__leave-btn {
-	background: transparent;
-	border: none;
-	padding: 0.25rem;
-	cursor: pointer;
-	color: var(--color-text-secondary, #888);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: 50%;
-	transition: all 0.2s;
-}
-
-.multiplayer-indicator__leave-btn:hover {
-	background: rgba(255, 100, 100, 0.2);
-	color: #ff6b6b;
 }
 
 /* Yjs Remote Cursor Styles for y-codemirror (CodeMirror 5) */

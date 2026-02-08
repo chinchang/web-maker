@@ -1973,7 +1973,7 @@ export default class App extends Component {
 							}
 							onMultiplayerBtnClick={this.openMultiplayerModal.bind(this)}
 							onMultiplayerModalOpen={this.openMultiplayerModal.bind(this)}
-							onMultiplayerLeave={this.leaveMultiplayerSession.bind(this)}
+							onProModalOpen={() => this.setState({ isProModalOpen: true })}
 						/>
 						{this.state.currentItem && this.state.currentItem.files ? (
 							<ContentWrapFiles

@@ -109,6 +109,7 @@ export function Pro({ user, onLoginClick, onBuyFromExtensionClick }) {
 							'Unlimited private creations',
 							'Unlimited public creations',
 							'Unlimited files mode creations',
+							'Host multi-user Collab session',
 							'Asset hosting',
 							'Priority support',
 							'No Ads'

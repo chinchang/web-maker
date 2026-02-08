@@ -4,6 +4,8 @@
 	"description": "A blazing fast & offline web playground",
 	"scripts": {
 		"start": "concurrently --kill-others \"gulp start-preview-server\" \"npm run -s dev\"",
+		"start:collab": "PORT=4444 npx y-websocket",
+		"start:all": "concurrently --kill-others \"npm run start\" \"npm run start:collab\"",
 		"build": "preact build --template src/index.ejs --prerender false --no-inline-css --sw false",
 		"dev": "preact watch --template src/index.ejs",
 		"serve-website": "cd packages/website; npm start",
@@ -40,6 +42,7 @@
 		"@babel/preset-react": "^7.25.9",
 		"@lingui/cli": "^2.8.3",
 		"@lingui/macro": "^2.8.3",
+		"@y/websocket-server": "^0.1.1",
 		"babel-core": "^7.0.0-bridge.0",
 		"babel-eslint": "^7.2.3",
 		"babel-minify": "^0.2.0",
@@ -85,10 +88,15 @@
 		"preact-router": "^3.2.1",
 		"prettier": "^3.0.2",
 		"react-inspector": "^6.0.2",
-		"split.js": "^1.5.11"
+		"split.js": "^1.5.11",
+		"y-codemirror": "^3.0.1",
+		"y-codemirror.next": "^0.3.5",
+		"y-monaco": "^0.1.6",
+		"y-websocket": "^3.0.0",
+		"yjs": "^13.6.29"
 	},
 	"engines": {
-		"node": "20"
+		"node": ">=20"
 	},
 	"jest": {
 		"verbose": true,

@@ -497,7 +497,10 @@ a > svg {
 	outline-style: solid;
 	outline-offset: 1px;
 }
-
+.btn--danger {
+	color: #ff6b6b;
+	border-color: #ff6b6b;
+}
 .btn-icon > svg {
 	width: 20px;
 	height: 20px;
@@ -913,7 +916,7 @@ body > #demo-frame {
 	width: 20px;
 	height: 20px;
 }
-.btn--dark > svg:not(:last-child) {
+.btn--dark > svg {
 	margin-right: 4px;
 }
 
@@ -3004,4 +3007,263 @@ body.light-theme ::-webkit-scrollbar-thumb {
 
 body.light-theme ::-webkit-scrollbar-thumb:hover {
 	background: #a1a1a1;
+}
+
+/* ============================================
+   Multiplayer / Collaborative Editing Styles
+   ============================================ */
+
+/* Multiplayer Modal */
+.multiplayer-modal {
+	min-width: 350px;
+	max-width: 450px;
+}
+
+.multiplayer-modal__title {
+	font-size: 1.5rem;
+	margin: 0 0 1rem;
+	display: flex;
+	align-items: center;
+}
+
+.multiplayer-modal__section {
+	margin-bottom: 1.5rem;
+}
+
+.multiplayer-modal__section-title {
+	font-size: 0.9rem;
+	font-weight: 600;
+	margin: 0 0 0.5rem;
+	color: var(--color-text-secondary, #888);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.multiplayer-modal__description {
+	margin: 0 0 1.5rem;
+	line-height: 1.6;
+	color: var(--color-text-secondary, #aaa);
+}
+
+.multiplayer-modal__status-row {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.multiplayer-modal__status-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: gray;
+}
+
+.multiplayer-modal__status-dot[data-status='connected'] {
+	background: limegreen;
+}
+
+.multiplayer-modal__status-dot[data-status='connecting'] {
+	background: orange;
+	animation: pulse 1s infinite;
+}
+
+.multiplayer-modal__status-dot[data-status='disconnected'],
+.multiplayer-modal__status-dot[data-status='error'] {
+	background: #ff4444;
+}
+
+.multiplayer-modal__link-input {
+	flex: 1;
+	padding: 0.5rem;
+	border: 1px solid var(--color-border, #444);
+	border-radius: 4px;
+	background: var(--color-bg-input, #2a2a2a);
+	color: var(--color-text, #fff);
+	font-family: monospace;
+	font-size: 0.85rem;
+}
+
+.multiplayer-modal__hint {
+	margin: 0.5rem 0 0;
+	font-size: 0.8rem;
+	color: var(--color-text-secondary, #888);
+}
+
+.multiplayer-modal__participants {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	max-height: 150px;
+	overflow-y: auto;
+}
+
+.multiplayer-modal__participant {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.5rem;
+	border-radius: 4px;
+	background: var(--color-bg-secondary, rgba(255, 255, 255, 0.05));
+}
+
+.multiplayer-modal__participant-avatar {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	font-size: 0.85rem;
+	color: #fff;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.multiplayer-modal__participant-name {
+	flex: 1;
+}
+
+.multiplayer-modal__you-label {
+	color: var(--color-text-secondary, #888);
+	font-size: 0.85em;
+}
+
+.multiplayer-modal__actions {
+	padding-top: 1rem;
+	border-top: 1px solid var(--color-border, #333);
+}
+
+/* Multiplayer Active Button State */
+.btn--multiplayer-active {
+	gap: 0.4rem;
+}
+
+.multiplayer-status-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: gray;
+	flex-shrink: 0;
+}
+
+.multiplayer-status-dot[data-status='connected'] {
+	background: limegreen;
+}
+
+.multiplayer-status-dot[data-status='connecting'] {
+	background: orange;
+	animation: pulse 1s infinite;
+}
+
+.multiplayer-status-dot[data-status='disconnected'] {
+	background: #ff4444;
+}
+
+.multiplayer-avatars {
+	display: flex;
+}
+
+.multiplayer-avatar {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.65rem;
+	font-weight: 600;
+	color: #fff;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+	border: 2px solid var(--color-bg, #1d1e22);
+	margin-left: -6px;
+}
+
+.multiplayer-avatar:first-child {
+	margin-left: 0;
+}
+
+.multiplayer-count {
+	font-size: 0.85rem;
+	font-weight: 500;
+	min-width: 1em;
+	text-align: center;
+}
+
+/* Yjs Remote Cursor Styles for y-codemirror (CodeMirror 5) */
+.remote-caret {
+	position: absolute;
+	border-left-style: solid;
+	border-left-width: 2px;
+	height: 1.2em;
+	z-index: 10;
+}
+
+.remote-caret > div {
+	position: absolute;
+	top: 0;
+	left: 2px;
+	font-size: 10px;
+	font-family: sans-serif;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 1.2em;
+	user-select: none;
+	color: white;
+	padding: 0 4px;
+	border-radius: 0 3px 3px 0;
+	white-space: nowrap;
+	z-index: 100;
+}
+
+/* Yjs Remote Selection Styles */
+.yRemoteSelection {
+	opacity: 0.3;
+}
+
+.yRemoteSelectionHead {
+	position: absolute;
+	border-left: 2px solid;
+	border-color: inherit;
+	height: 100%;
+}
+
+.yRemoteSelectionHead::after {
+	content: attr(data-username);
+	position: absolute;
+	top: -1.2em;
+	left: 0;
+	font-size: 10px;
+	padding: 1px 4px;
+	border-radius: 3px;
+	background: inherit;
+	color: #fff;
+	white-space: nowrap;
+	font-weight: 500;
+	opacity: 0.9;
+}
+
+/* CodeMirror remote cursor styling */
+.cm-ySelectionInfo {
+	position: absolute;
+	top: -1.2em;
+	left: 0;
+	font-size: 10px;
+	padding: 1px 4px;
+	border-radius: 3px;
+	color: #fff;
+	white-space: nowrap;
+	font-weight: 500;
+	opacity: 0.9;
+	z-index: 100;
+}
+
+/* Pulse animation for connecting state */
+@keyframes pulse {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.4;
+	}
 }

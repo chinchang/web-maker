@@ -73,7 +73,8 @@ export default class ContentWrap extends Component {
 			this.state.mainSplitSizes !== nextState.mainSplitSizes ||
 			this.props.currentLayoutMode !== nextProps.currentLayoutMode ||
 			this.props.currentItem !== nextProps.currentItem ||
-			this.props.prefs !== nextProps.prefs
+			this.props.prefs !== nextProps.prefs ||
+			this.props.multiplayerSession !== nextProps.multiplayerSession
 		);
 	}
 	componentDidUpdate() {
@@ -742,6 +743,10 @@ export default class ContentWrap extends Component {
 							onChange={this.onHtmlCodeChange.bind(this)}
 							ref={editor => (this.cm.html = editor)}
 							onFocus={this.editorFocusHandler.bind(this)}
+							yText={
+								this.props.multiplayerSession?.ydoc?.getText('html') || null
+							}
+							awareness={this.props.multiplayerSession?.awareness || null}
 						/>
 					</div>
 					<div
@@ -828,6 +833,10 @@ export default class ContentWrap extends Component {
 							onChange={this.onCssCodeChange.bind(this)}
 							ref={editor => (this.cm.css = editor)}
 							onFocus={this.editorFocusHandler.bind(this)}
+							yText={
+								this.props.multiplayerSession?.ydoc?.getText('css') || null
+							}
+							awareness={this.props.multiplayerSession?.awareness || null}
 						/>
 					</div>
 					<div
@@ -899,6 +908,8 @@ export default class ContentWrap extends Component {
 							onChange={this.onJsCodeChange.bind(this)}
 							ref={editor => (this.cm.js = editor)}
 							onFocus={this.editorFocusHandler.bind(this)}
+							yText={this.props.multiplayerSession?.ydoc?.getText('js') || null}
+							awareness={this.props.multiplayerSession?.awareness || null}
 						/>
 						{/* Inlet(scope.cm.js); */}
 					</div>

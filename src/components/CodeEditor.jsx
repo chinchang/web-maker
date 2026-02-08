@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import CodeMirror from '../CodeMirror';
+import { CodemirrorBinding } from 'y-codemirror';
 
 import 'codemirror/addon/edit/matchbrackets.js';
 import 'codemirror/addon/edit/matchtags.js';
@@ -67,11 +68,28 @@ window.MonacoEnvironment = {
 	}
 };
 
+// Store y-monaco module when loaded
+let MonacoBinding = null;
+
 export default class CodeEditor extends Component {
 	componentDidMount() {
 		this.initEditor();
 	}
+	componentWillUnmount() {
+		this.destroyYjsBinding();
+	}
 	shouldComponentUpdate(nextProps) {
+		// Handle Yjs binding changes (entering/leaving multiplayer)
+		if (nextProps.yText !== this.props.yText) {
+			this.editorReadyDeferred.promise.then(() => {
+				if (nextProps.yText && nextProps.awareness) {
+					this.setupYjsBinding(nextProps.yText, nextProps.awareness);
+				} else {
+					this.destroyYjsBinding();
+				}
+			});
+		}
+
 		if (nextProps.prefs !== this.props.prefs) {
 			const { prefs } = nextProps;
 
@@ -215,6 +233,50 @@ export default class CodeEditor extends Component {
 		this.editorReadyDeferred.promise.then(() => {
 			this.instance.focus();
 		});
+	}
+
+	/**
+	 * Sets up Yjs collaborative editing binding for the editor.
+	 * @param {Y.Text} yText - Yjs text type for syncing
+	 * @param {Object} awareness - Yjs awareness for cursor presence
+	 */
+	async setupYjsBinding(yText, awareness) {
+		// Destroy existing binding first
+		this.destroyYjsBinding();
+
+		if (!yText || !awareness) {
+			return;
+		}
+
+		await this.editorReadyDeferred.promise;
+
+		if (this.props.type === 'monaco') {
+			// Dynamically load y-monaco if not loaded
+			if (!MonacoBinding) {
+				const yMonacoModule = await import('y-monaco');
+				MonacoBinding = yMonacoModule.MonacoBinding;
+			}
+
+			this.yjsBinding = new MonacoBinding(
+				yText,
+				this.instance.getModel(),
+				new Set([this.instance]),
+				awareness
+			);
+		} else {
+			// CodeMirror 5 binding
+			this.yjsBinding = new CodemirrorBinding(yText, this.instance, awareness);
+		}
+	}
+
+	/**
+	 * Destroys the current Yjs binding if it exists.
+	 */
+	destroyYjsBinding() {
+		if (this.yjsBinding) {
+			this.yjsBinding.destroy();
+			this.yjsBinding = null;
+		}
 	}
 
 	/**
@@ -399,6 +461,11 @@ export default class CodeEditor extends Component {
 					});
 				}
 			});
+		}
+
+		// Set up Yjs binding if in multiplayer mode
+		if (this.props.yText && this.props.awareness) {
+			this.setupYjsBinding(this.props.yText, this.props.awareness);
 		}
 
 		// this.props.onCreation(this.instance);

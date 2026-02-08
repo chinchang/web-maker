@@ -3005,3 +3005,328 @@ body.light-theme ::-webkit-scrollbar-thumb {
 body.light-theme ::-webkit-scrollbar-thumb:hover {
 	background: #a1a1a1;
 }
+
+/* ============================================
+   Multiplayer / Collaborative Editing Styles
+   ============================================ */
+
+/* Multiplayer Modal */
+.multiplayer-modal {
+	min-width: 350px;
+	max-width: 450px;
+}
+
+.multiplayer-modal__title {
+	font-size: 1.5rem;
+	margin: 0 0 1rem;
+	display: flex;
+	align-items: center;
+}
+
+.multiplayer-modal__section {
+	margin-bottom: 1.5rem;
+}
+
+.multiplayer-modal__section-title {
+	font-size: 0.9rem;
+	font-weight: 600;
+	margin: 0 0 0.5rem;
+	color: var(--color-text-secondary, #888);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.multiplayer-modal__description {
+	margin: 0 0 1.5rem;
+	line-height: 1.6;
+	color: var(--color-text-secondary, #aaa);
+}
+
+.multiplayer-modal__start-btn {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.75rem 1.5rem;
+	font-size: 1rem;
+}
+
+.multiplayer-modal__status-row {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.multiplayer-modal__status-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: gray;
+}
+
+.multiplayer-modal__status-dot[data-status='connected'] {
+	background: limegreen;
+}
+
+.multiplayer-modal__status-dot[data-status='connecting'] {
+	background: orange;
+	animation: pulse 1s infinite;
+}
+
+.multiplayer-modal__status-dot[data-status='disconnected'],
+.multiplayer-modal__status-dot[data-status='error'] {
+	background: #ff4444;
+}
+
+.multiplayer-modal__link-row {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.multiplayer-modal__link-input {
+	flex: 1;
+	padding: 0.5rem;
+	border: 1px solid var(--color-border, #444);
+	border-radius: 4px;
+	background: var(--color-bg-input, #2a2a2a);
+	color: var(--color-text, #fff);
+	font-family: monospace;
+	font-size: 0.85rem;
+}
+
+.multiplayer-modal__copy-btn {
+	padding: 0.5rem 0.75rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.multiplayer-modal__copy-btn.is-success {
+	background: limegreen;
+	color: #000;
+}
+
+.multiplayer-modal__hint {
+	margin: 0.5rem 0 0;
+	font-size: 0.8rem;
+	color: var(--color-text-secondary, #888);
+}
+
+.multiplayer-modal__participants {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	max-height: 150px;
+	overflow-y: auto;
+}
+
+.multiplayer-modal__participant {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.5rem;
+	border-radius: 4px;
+	background: var(--color-bg-secondary, rgba(255, 255, 255, 0.05));
+}
+
+.multiplayer-modal__participant-avatar {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	font-size: 0.85rem;
+	color: #fff;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.multiplayer-modal__participant-name {
+	flex: 1;
+}
+
+.multiplayer-modal__you-label {
+	color: var(--color-text-secondary, #888);
+	font-size: 0.85em;
+}
+
+.multiplayer-modal__actions {
+	padding-top: 1rem;
+	border-top: 1px solid var(--color-border, #333);
+}
+
+.multiplayer-modal__leave-btn {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: #ff6b6b;
+}
+
+/* Multiplayer Indicator in Header */
+.multiplayer-indicator {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.25rem 0.5rem;
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 20px;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.multiplayer-indicator:hover {
+	background: rgba(255, 255, 255, 0.15);
+}
+
+.multiplayer-indicator__status-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: gray;
+}
+
+.multiplayer-indicator__status-dot[data-status='connected'] {
+	background: limegreen;
+}
+
+.multiplayer-indicator__status-dot[data-status='connecting'] {
+	background: orange;
+	animation: pulse 1s infinite;
+}
+
+.multiplayer-indicator__status-dot[data-status='disconnected'] {
+	background: #ff4444;
+}
+
+.multiplayer-indicator__avatars {
+	display: flex;
+	margin-left: 0.25rem;
+}
+
+.multiplayer-indicator__avatar {
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.7rem;
+	font-weight: 600;
+	color: #fff;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+	border: 2px solid var(--color-bg, #1d1e22);
+	margin-left: -8px;
+}
+
+.multiplayer-indicator__avatar:first-child {
+	margin-left: 0;
+}
+
+.multiplayer-indicator__avatar--more {
+	background: #666;
+	font-size: 0.65rem;
+}
+
+.multiplayer-indicator__count {
+	font-size: 0.85rem;
+	font-weight: 500;
+	min-width: 1.5em;
+	text-align: center;
+}
+
+.multiplayer-indicator__leave-btn {
+	background: transparent;
+	border: none;
+	padding: 0.25rem;
+	cursor: pointer;
+	color: var(--color-text-secondary, #888);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	transition: all 0.2s;
+}
+
+.multiplayer-indicator__leave-btn:hover {
+	background: rgba(255, 100, 100, 0.2);
+	color: #ff6b6b;
+}
+
+/* Yjs Remote Cursor Styles for y-codemirror (CodeMirror 5) */
+.remote-caret {
+	position: absolute;
+	border-left-style: solid;
+	border-left-width: 2px;
+	height: 1.2em;
+	z-index: 10;
+}
+
+.remote-caret > div {
+	position: absolute;
+	top: 0;
+	left: 2px;
+	font-size: 10px;
+	font-family: sans-serif;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 1.2em;
+	user-select: none;
+	color: white;
+	padding: 0 4px;
+	border-radius: 0 3px 3px 0;
+	white-space: nowrap;
+	z-index: 100;
+}
+
+/* Yjs Remote Selection Styles */
+.yRemoteSelection {
+	opacity: 0.3;
+}
+
+.yRemoteSelectionHead {
+	position: absolute;
+	border-left: 2px solid;
+	border-color: inherit;
+	height: 100%;
+}
+
+.yRemoteSelectionHead::after {
+	content: attr(data-username);
+	position: absolute;
+	top: -1.2em;
+	left: 0;
+	font-size: 10px;
+	padding: 1px 4px;
+	border-radius: 3px;
+	background: inherit;
+	color: #fff;
+	white-space: nowrap;
+	font-weight: 500;
+	opacity: 0.9;
+}
+
+/* CodeMirror remote cursor styling */
+.cm-ySelectionInfo {
+	position: absolute;
+	top: -1.2em;
+	left: 0;
+	font-size: 10px;
+	padding: 1px 4px;
+	border-radius: 3px;
+	color: #fff;
+	white-space: nowrap;
+	font-weight: 500;
+	opacity: 0.9;
+	z-index: 100;
+}
+
+/* Pulse animation for connecting state */
+@keyframes pulse {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.4;
+	}
+}

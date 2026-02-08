@@ -80,6 +80,16 @@ import { ProBadge } from './ProBadge.jsx';
 import { Text } from './Text.jsx';
 import { ProOnAppModal } from './ProOnAppModal.js';
 import { FeedbackBoard } from './FeedbackBoard.jsx';
+import MultiplayerModal from './MultiplayerModal.jsx';
+import {
+	createSession,
+	joinSession,
+	leaveSession,
+	getParticipants,
+	onParticipantsChange,
+	onConnectionStatusChange
+} from '../multiplayerService';
+import { getRoomIdFromUrl } from '../multiplayerUtils';
 
 if (module.hot) {
 	require('preact/debug');
@@ -172,7 +182,8 @@ export default class App extends Component {
 			isProModalOpen: false,
 			isFilesLimitModalOpen: false,
 			isProOnAppModalOpen: false,
-			isFeedbackModalOpen: false
+			isFeedbackModalOpen: false,
+			isMultiplayerModalOpen: false
 		};
 		this.state = {
 			isSavedItemPaneOpen: false,
@@ -185,7 +196,11 @@ export default class App extends Component {
 				css: window.codeCss
 			},
 			catalogs: {},
-			user: savedUser
+			user: savedUser,
+			// Multiplayer state
+			multiplayerSession: null,
+			multiplayerParticipants: [],
+			multiplayerConnectionStatus: 'disconnected'
 		};
 		this.defaultSettings = {
 			preserveLastCode: true,
@@ -793,7 +808,151 @@ export default class App extends Component {
 				commandPalleteHooks[eventName]
 			);
 		}
+
+		// Check for multiplayer room ID in URL
+		const roomId = getRoomIdFromUrl();
+		if (roomId) {
+			// Delay joining until editor is ready
+			setTimeout(() => this.joinMultiplayerSession(roomId), 1000);
+		}
 	}
+
+	// ============ Multiplayer Methods ============
+
+	/**
+	 * Opens the multiplayer modal
+	 */
+	openMultiplayerModal() {
+		this.setState({ isMultiplayerModalOpen: true });
+		trackEvent('ui', 'openMultiplayerModal');
+	}
+
+	/**
+	 * Starts a new multiplayer session as host
+	 */
+	async startMultiplayerSession() {
+		try {
+			const session = createSession({
+				html: this.state.currentItem.html || '',
+				css: this.state.currentItem.css || '',
+				js: this.state.currentItem.js || ''
+			});
+
+			// Set up listeners for participant and connection changes
+			this.multiplayerUnsubscribers = [];
+
+			this.multiplayerUnsubscribers.push(
+				onParticipantsChange(session.awareness, participants => {
+					this.setState({ multiplayerParticipants: participants });
+				})
+			);
+
+			this.multiplayerUnsubscribers.push(
+				onConnectionStatusChange(session.provider, status => {
+					this.setState({ multiplayerConnectionStatus: status });
+				})
+			);
+
+			this.setState({
+				multiplayerSession: session,
+				multiplayerConnectionStatus: 'connecting'
+			});
+
+			alertsService.add(
+				'Multiplayer session started! Share the link to invite others.'
+			);
+			trackEvent('fn', 'multiplayerSessionStarted');
+		} catch (error) {
+			console.error('Failed to start multiplayer session:', error);
+			alertsService.add(
+				'Failed to start multiplayer session. Please try again.'
+			);
+		}
+	}
+
+	/**
+	 * Joins an existing multiplayer session
+	 * @param {string} roomId - Room ID to join
+	 */
+	async joinMultiplayerSession(roomId) {
+		try {
+			this.setState({
+				multiplayerConnectionStatus: 'connecting'
+			});
+
+			const session = await joinSession(roomId);
+
+			// Set up listeners for participant and connection changes
+			this.multiplayerUnsubscribers = [];
+
+			this.multiplayerUnsubscribers.push(
+				onParticipantsChange(session.awareness, participants => {
+					this.setState({ multiplayerParticipants: participants });
+				})
+			);
+
+			this.multiplayerUnsubscribers.push(
+				onConnectionStatusChange(session.provider, status => {
+					this.setState({ multiplayerConnectionStatus: status });
+				})
+			);
+
+			this.setState({
+				multiplayerSession: session
+			});
+
+			alertsService.add('Joined multiplayer session!');
+			trackEvent('fn', 'multiplayerSessionJoined');
+		} catch (error) {
+			console.error('Failed to join multiplayer session:', error);
+			alertsService.add(
+				'Failed to join multiplayer session. The session may have ended.'
+			);
+			this.setState({
+				multiplayerConnectionStatus: 'disconnected'
+			});
+		}
+	}
+
+	/**
+	 * Leaves the current multiplayer session
+	 */
+	leaveMultiplayerSession() {
+		if (!this.state.multiplayerSession) return;
+
+		// Clean up listeners
+		if (this.multiplayerUnsubscribers) {
+			this.multiplayerUnsubscribers.forEach(unsub => unsub());
+			this.multiplayerUnsubscribers = [];
+		}
+
+		// Get final content and leave session
+		const finalContent = leaveSession(this.state.multiplayerSession);
+
+		// Update local state with the final content
+		if (finalContent) {
+			this.setState({
+				currentItem: {
+					...this.state.currentItem,
+					html: finalContent.html,
+					css: finalContent.css,
+					js: finalContent.js
+				}
+			});
+		}
+
+		this.setState({
+			multiplayerSession: null,
+			multiplayerParticipants: [],
+			multiplayerConnectionStatus: 'disconnected',
+			isMultiplayerModalOpen: false
+		});
+
+		alertsService.add('Left multiplayer session.');
+		trackEvent('fn', 'multiplayerSessionLeft');
+	}
+
+	// ============ End Multiplayer Methods ============
 
 	shouldComponentUpdate(nextProps, nextState) {
 		const { catalogs } = nextState;
@@ -1807,6 +1966,14 @@ export default class App extends Component {
 							onItemFork={() => {
 								this.forkItem(this.state.currentItem);
 							}}
+							multiplayerSession={this.state.multiplayerSession}
+							multiplayerParticipants={this.state.multiplayerParticipants}
+							multiplayerConnectionStatus={
+								this.state.multiplayerConnectionStatus
+							}
+							onMultiplayerBtnClick={this.openMultiplayerModal.bind(this)}
+							onMultiplayerModalOpen={this.openMultiplayerModal.bind(this)}
+							onMultiplayerLeave={this.leaveMultiplayerSession.bind(this)}
 						/>
 						{this.state.currentItem && this.state.currentItem.files ? (
 							<ContentWrapFiles
@@ -1837,6 +2004,7 @@ export default class App extends Component {
 								onEditorFocus={this.editorFocusHandler.bind(this)}
 								onSplitUpdate={this.splitUpdateHandler.bind(this)}
 								onPrettifyBtnClick={this.prettifyHandler.bind(this)}
+								multiplayerSession={this.state.multiplayerSession}
 							/>
 						)}
 
@@ -2058,6 +2226,17 @@ export default class App extends Component {
 						isOpen={this.state.isFeedbackModalOpen}
 						onClose={() => this.setState({ isFeedbackModalOpen: false })}
 						user={this.state.user}
+					/>
+					<MultiplayerModal
+						show={this.state.isMultiplayerModalOpen}
+						closeHandler={() =>
+							this.setState({ isMultiplayerModalOpen: false })
+						}
+						multiplayerSession={this.state.multiplayerSession}
+						participants={this.state.multiplayerParticipants}
+						connectionStatus={this.state.multiplayerConnectionStatus}
+						onStartSession={this.startMultiplayerSession.bind(this)}
+						onLeaveSession={this.leaveMultiplayerSession.bind(this)}
 					/>
 					<Modal
 						extraClasses=""

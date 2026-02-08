@@ -5,9 +5,9 @@ export const LocalStorageKeys = {
 };
 
 // Multiplayer collaboration server URL
-// For development, run: npm run start:collab
-// For production, update this to your deployed server URL
+// For development: npm run start:collab (runs on ws://localhost:4444)
+// For production: Deploy collab-server/ to Railway and update the URL below
 export const COLLAB_SERVER_URL =
 	window.location.hostname === 'localhost'
 		? 'ws://localhost:4444'
-		: 'wss://your-collab-server.com';
+		: 'wss://web-maker-backend-production.up.railway.app';

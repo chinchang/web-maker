@@ -85,7 +85,18 @@ export function Changelog(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="6.5.1" {...props} isLatest={true}>
+			<Notification version="6.6.0" {...props} isLatest={true}>
+				<li>
+					<strong>Collab Mode</strong>: If you are a PRO user, you can now
+					collaborate in real-time with others on your creations! Click the
+					"Collab" button in the header to start a session and share the link
+					with your friends. Be it pair-programming, interviews or just helping
+					out a friend, Web Maker's Collab gives you a nice multiplayer
+					experience.
+				</li>
+			</Notification>
+
+			<Notification version="6.5.1" {...props}>
 				<NotificationItem type="ui">
 					The whole app interface now switches to Light theme when light theme
 					is selected for the Editor.

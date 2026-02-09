@@ -94,6 +94,9 @@ export function Changelog(props) {
 					out a friend, Web Maker's Collab gives you a nice multiplayer
 					experience.
 				</li>
+				<NotificationItem type="bug">
+					Line-wrapping setting now works properly.
+				</NotificationItem>
 			</Notification>
 
 			<Notification version="6.5.1" {...props}>

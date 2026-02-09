@@ -1,0 +1,26 @@
+---
+permalink: /sitemap.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://webmaker.app/</loc>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://webmaker.app/create/</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  {%- for page in collections.all %}
+  {%- if page.url and page.url != '/' and not page.url.startsWith('/create') %}
+  <url>
+    <loc>https://webmaker.app{{ page.url | clean }}</loc>
+    <priority>{% if page.url.startsWith('/docs') %}0.8{% else %}0.5{% endif %}</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  {%- endif %}
+  {%- endfor %}
+</urlset>

@@ -1,26 +1,30 @@
 <!doctype html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<title>
-			{% if page.url == '/' %}Web Maker{% else %}{{ title }} - Web Maker{% endif
-			%}
+			{% if page.url == '/' %}Web Maker - Free Offline Code Editor & Frontend
+			Playground{% else %}{{ title }} - Web Maker{% endif %}
 		</title>
-		<meta property="og:title" content="Web Maker" />
+		<meta property="og:title" content="Web Maker - Free Offline Code Editor" />
 		<meta name="viewport" content="width=device-width" />
 		<meta
 			name="description"
-			content="A blazing fast & offline frontend playground"
+			content="Build, experiment, and prototype HTML, CSS, and JavaScript instantly in your browser. Works offline. Supports SCSS, TypeScript, Pug, and more. Free Chrome extension."
 		/>
 		<meta
 			property="og:description"
-			content="A blazing fast & offline frontend playground"
+			content="Build, experiment, and prototype HTML, CSS, and JavaScript instantly in your browser. Works offline. Free Chrome extension."
 		/>
 		<meta property="og:image" content="https://webmaker.app/images/ss1.png" />
+		<meta property="og:url" content="https://webmaker.app{{ page.url }}" />
+		<meta property="og:type" content="website" />
 		<link rel="image_src" href="/images/ss1.png?v4" />
 		<meta name="twitter:image" content="https://webmaker.app/images/ss1.png" />
 		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:site" content="@webmakerApp" />
+		<link rel="canonical" href="https://webmaker.app{{ page.url }}" />
 		<link rel="icon" href="/images/icon-128.png" />
 		<meta
 			name="google-site-verification"
@@ -165,7 +169,7 @@
 							color: #a7a1bd;
 							padding: 2em 1em;
 							margin-bottom: 2em;
-							min-height: 97vh;`
+							min-height: 97vh;
 						}
 						.hero a {
 							color: rgba(255,255,255,0.8);
@@ -519,6 +523,51 @@
 				animation-timeline: --root-scroll;
 			}
 		</style>
+
+		{% if page.url == '/' %}
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "Organization",
+				"name": "Web Maker",
+				"url": "https://webmaker.app",
+				"logo": "https://webmaker.app/images/icon-128.png",
+				"sameAs": [
+					"https://x.com/webmakerApp",
+					"https://github.com/chinchang/web-maker"
+				]
+			}
+		</script>
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "SoftwareApplication",
+				"name": "Web Maker",
+				"description": "A blazing fast & offline frontend playground for HTML, CSS, and JavaScript",
+				"applicationCategory": "DeveloperApplication",
+				"operatingSystem": "Web Browser, Chrome",
+				"url": "https://webmaker.app",
+				"offers": {
+					"@type": "Offer",
+					"price": "0",
+					"priceCurrency": "USD"
+				},
+				"aggregateRating": {
+					"@type": "AggregateRating",
+					"ratingValue": "4.8",
+					"ratingCount": "1000"
+				},
+				"featureList": [
+					"Offline support",
+					"Real-time collaboration",
+					"SCSS, TypeScript, Pug preprocessors",
+					"Multiple layouts",
+					"CodePen export",
+					"Screenshot capture"
+				]
+			}
+		</script>
+		{% endif %}
 	</head>
 
 	<body class="{% if page.url contains '/docs/' %}docs{% endif %}">
@@ -530,8 +579,11 @@
 				</svg>
 				<h1 class="homepage-title">Web Maker</h1>
 				<h2 style="margin-bottom: 0.4em">
-					A blazing fast & offline frontend playground in your browser
+					Free Offline Code Editor for HTML, CSS & JavaScript
 				</h2>
+				<p style="color: rgba(255, 255, 255, 0.7); margin: 0">
+					Build and prototype instantly in your browser. No setup required.
+				</p>
 				<div style="margin-top: 30px" id="cta" class="mb-2">
 					<a class="btn download-btn web-app-btn" href="/create/">
 						<span>Open Web App</span>

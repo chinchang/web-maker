@@ -2,7 +2,6 @@ import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { Trans, t } from '@lingui/macro';
 import { I18n } from '@lingui/react';
-import { ProBadge } from './ProBadge';
 
 /**
  * CollabButton - Button for starting/viewing multiplayer collaboration sessions
@@ -101,7 +100,6 @@ export function CollabButton({
 								/>
 							</svg>
 							<Trans>Collab</Trans>
-							{!user?.isPro && <ProBadge />}
 						</>
 					)}
 				</button>

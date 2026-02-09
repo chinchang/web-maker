@@ -113,7 +113,7 @@ export default class CodeEditor extends Component {
 
 				this.instance.setOption('keyMap', prefs.keymap);
 				this.instance.setOption('lineWrapping', prefs.lineWrap);
-				this.instance.setOption('lineWrapping', prefs.autoCloseTags);
+				this.instance.setOption('autoCloseTags', prefs.autoCloseTags);
 
 				this.instance.refresh();
 			}

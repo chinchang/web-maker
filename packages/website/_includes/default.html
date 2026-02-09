@@ -256,14 +256,19 @@
 						}
 
 						.site-footer__links  {
-				display: flex;
-				justify-content: center;
-				flex-wrap: wrap;
-				gap : 1rem;
+							display: flex;
+							justify-content: center;
+							flex-wrap: wrap;
+							gap : 1rem;
 						}
 						.site-footer ul {
 							list-style: none;
 							padding: 0 0.5em;/
+						}
+						.site-footer a {
+							display: flex;
+							align-items: center;
+							gap : 0rem;
 						}
 
 						a svg {
@@ -522,6 +527,64 @@
 				animation: hero-img-progress auto linear;
 				animation-timeline: --root-scroll;
 			}
+
+			/* Ticker */
+			.ticker {
+				position: absolute;
+				bottom: 2rem;
+				left: 0;
+				right: 0;
+				overflow: hidden;
+				padding: 0.75rem 0;
+				background: rgba(0, 0, 0, 0.3);
+				backdrop-filter: blur(10px);
+				border-top: 1px solid rgba(255, 255, 255, 0.1);
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			}
+
+			.ticker__track {
+				display: flex;
+				animation: ticker-scroll 20s linear infinite;
+				width: max-content;
+			}
+
+			.ticker__content {
+				display: flex;
+				align-items: center;
+				gap: 3rem;
+				padding-right: 3rem;
+				flex-shrink: 0;
+			}
+
+			.ticker__item {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				font-size: 0.9rem;
+				color: rgba(255, 255, 255, 0.9);
+				white-space: nowrap;
+				font-weight: 500;
+			}
+
+			.ticker__icon {
+				font-size: 1.1rem;
+			}
+
+			.ticker__divider {
+				width: 4px;
+				height: 4px;
+				background: rgba(255, 255, 255, 0.4);
+				border-radius: 50%;
+			}
+
+			@keyframes ticker-scroll {
+				0% {
+					transform: translateX(0);
+				}
+				100% {
+					transform: translateX(-50%);
+				}
+			}
 		</style>
 
 		{% if page.url == '/' %}
@@ -634,6 +697,58 @@
 					height=""
 					alt="Web Maker working screen"
 				/>
+			</div>
+			<div class="ticker">
+				<div class="ticker__track">
+					<div class="ticker__content">
+						<span class="ticker__item"
+							><span class="ticker__icon">&#11088;</span> 4.8 Star Rating</span
+						>
+						<span class="ticker__divider"></span>
+						<span class="ticker__item"
+							><span class="ticker__icon">&#128104;&#8205;&#128187;</span> Used
+							by 80K+ Developers</span
+						>
+						<span class="ticker__divider"></span>
+						<span class="ticker__item"
+							><span class="ticker__icon">&#128268;</span> Works 100%
+							Offline</span
+						>
+						<span class="ticker__divider"></span>
+						<span class="ticker__item"
+							><span class="ticker__icon">&#9889;</span> Blazing Fast</span
+						>
+						<span class="ticker__divider"></span>
+						<span class="ticker__item"
+							><span class="ticker__icon">&#128274;</span> Privacy First</span
+						>
+						<span class="ticker__divider"></span>
+					</div>
+					<div class="ticker__content">
+						<span class="ticker__item"
+							><span class="ticker__icon">&#11088;</span> 4.8 Star Rated</span
+						>
+						<span class="ticker__divider"></span>
+						<span class="ticker__item"
+							><span class="ticker__icon">&#128104;&#8205;&#128187;</span> Used
+							by 80K+ Developers</span
+						>
+						<span class="ticker__divider"></span>
+						<span class="ticker__item"
+							><span class="ticker__icon">&#128268;</span> Works 100%
+							Offline</span
+						>
+						<span class="ticker__divider"></span>
+						<span class="ticker__item"
+							><span class="ticker__icon">&#9889;</span> Blazing Fast</span
+						>
+						<span class="ticker__divider"></span>
+						<span class="ticker__item"
+							><span class="ticker__icon">&#128274;</span> Privacy First</span
+						>
+						<span class="ticker__divider"></span>
+					</div>
+				</div>
 			</div>
 		</div>
 		{% else %}

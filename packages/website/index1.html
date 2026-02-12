@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Web Maker - Brutalist Edition</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Playfair+Display:wght@900&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			:root {
+				--black: #0a0a0a;
+				--white: #f5f5f0;
+				--accent: #ff3d00;
+				--accent-alt: #00ff88;
+				--gray: #888;
+			}
+
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			::selection {
+				background: var(--accent);
+				color: var(--white);
+			}
+
+			html {
+				font-size: 16px;
+				scroll-behavior: smooth;
+			}
+
+			body {
+				font-family: 'JetBrains Mono', monospace;
+				background: var(--white);
+				color: var(--black);
+				overflow-x: hidden;
+				cursor: crosshair;
+			}
+
+			a {
+				color: inherit;
+				text-decoration: none;
+			}
+
+			/* HEADER */
+			.header {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				z-index: 1000;
+				padding: 1rem 2rem;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				mix-blend-mode: difference;
+				color: var(--white);
+			}
+
+			.logo {
+				font-size: 1.2rem;
+				font-weight: 800;
+				letter-spacing: -0.05em;
+			}
+
+			.nav {
+				display: flex;
+				gap: 2rem;
+				font-size: 0.75rem;
+				text-transform: uppercase;
+				letter-spacing: 0.2em;
+			}
+
+			.nav a {
+				position: relative;
+			}
+
+			.nav a::after {
+				content: '';
+				position: absolute;
+				bottom: -4px;
+				left: 0;
+				width: 0;
+				height: 2px;
+				background: currentColor;
+				transition: width 0.3s;
+			}
+
+			.nav a:hover::after {
+				width: 100%;
+			}
+
+			/* HERO */
+			.hero {
+				min-height: 100vh;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				background: var(--black);
+				color: var(--white);
+				position: relative;
+			}
+
+			.hero-left {
+				padding: 8rem 4rem 4rem;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				border-right: 1px solid rgba(255, 255, 255, 0.1);
+			}
+
+			.hero-tagline {
+				font-size: 0.7rem;
+				text-transform: uppercase;
+				letter-spacing: 0.3em;
+				color: var(--accent);
+				margin-bottom: 2rem;
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+
+			.hero-tagline::before {
+				content: '';
+				width: 40px;
+				height: 1px;
+				background: var(--accent);
+			}
+
+			.hero-title {
+				font-family: 'Playfair Display', serif;
+				font-size: clamp(4rem, 12vw, 10rem);
+				font-weight: 900;
+				line-height: 0.85;
+				letter-spacing: -0.04em;
+				margin-bottom: 3rem;
+			}
+
+			.hero-title span {
+				display: block;
+			}
+
+			.hero-title .stroke {
+				-webkit-text-stroke: 2px var(--white);
+				color: transparent;
+			}
+
+			.hero-desc {
+				font-size: 0.9rem;
+				line-height: 1.8;
+				max-width: 40ch;
+				color: var(--gray);
+			}
+
+			.hero-right {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.hero-code {
+				background: rgba(255, 255, 255, 0.03);
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				padding: 2rem;
+				font-size: 0.8rem;
+				line-height: 1.8;
+				color: var(--gray);
+				transform: rotate(-3deg);
+				max-width: 90%;
+			}
+
+			.hero-code .highlight {
+				color: var(--accent-alt);
+			}
+
+			.hero-code .comment {
+				color: #666;
+			}
+
+			.cta-group {
+				margin-top: 3rem;
+				display: flex;
+				gap: 1rem;
+				flex-wrap: wrap;
+			}
+
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				padding: 1rem 2rem;
+				font-family: inherit;
+				font-size: 0.75rem;
+				text-transform: uppercase;
+				letter-spacing: 0.15em;
+				border: 2px solid currentColor;
+				background: transparent;
+				color: inherit;
+				cursor: pointer;
+				transition: all 0.2s;
+			}
+
+			.btn:hover {
+				background: var(--white);
+				color: var(--black);
+			}
+
+			.btn--primary {
+				background: var(--accent);
+				border-color: var(--accent);
+				color: var(--white);
+			}
+
+			.btn--primary:hover {
+				background: var(--white);
+				border-color: var(--white);
+				color: var(--black);
+			}
+
+			/* MARQUEE */
+			.marquee {
+				background: var(--accent);
+				color: var(--white);
+				padding: 1rem 0;
+				overflow: hidden;
+				white-space: nowrap;
+			}
+
+			.marquee-content {
+				display: inline-flex;
+				animation: marquee 20s linear infinite;
+			}
+
+			.marquee-item {
+				font-size: 0.8rem;
+				text-transform: uppercase;
+				letter-spacing: 0.3em;
+				padding: 0 3rem;
+			}
+
+			@keyframes marquee {
+				from {
+					transform: translateX(0);
+				}
+				to {
+					transform: translateX(-50%);
+				}
+			}
+
+			/* FEATURES */
+			.features {
+				padding: 8rem 4rem;
+				background: var(--white);
+			}
+
+			.section-header {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 4rem;
+				margin-bottom: 6rem;
+				align-items: end;
+			}
+
+			.section-number {
+				font-size: 8rem;
+				font-weight: 800;
+				line-height: 1;
+				color: rgba(0, 0, 0, 0.05);
+				position: absolute;
+				top: -2rem;
+				left: -1rem;
+			}
+
+			.section-title {
+				font-family: 'Playfair Display', serif;
+				font-size: 4rem;
+				font-weight: 900;
+				line-height: 1;
+				position: relative;
+			}
+
+			.section-desc {
+				font-size: 0.9rem;
+				line-height: 1.8;
+				color: var(--gray);
+				max-width: 50ch;
+			}
+
+			.feature-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 1px;
+				background: var(--black);
+				border: 1px solid var(--black);
+			}
+
+			.feature-card {
+				background: var(--white);
+				padding: 3rem 2rem;
+				position: relative;
+				transition: background 0.3s;
+			}
+
+			.feature-card:hover {
+				background: var(--black);
+				color: var(--white);
+			}
+
+			.feature-card:hover .feature-icon {
+				color: var(--accent);
+			}
+
+			.feature-icon {
+				font-size: 2rem;
+				margin-bottom: 1.5rem;
+				display: block;
+			}
+
+			.feature-title {
+				font-size: 1rem;
+				font-weight: 700;
+				margin-bottom: 1rem;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+			}
+
+			.feature-desc {
+				font-size: 0.8rem;
+				line-height: 1.7;
+				color: var(--gray);
+			}
+
+			.feature-card:hover .feature-desc {
+				color: rgba(255, 255, 255, 0.6);
+			}
+
+			/* COMPARISON */
+			.comparison {
+				background: var(--black);
+				color: var(--white);
+				padding: 8rem 4rem;
+			}
+
+			.comparison .section-title {
+				margin-bottom: 4rem;
+			}
+
+			.comparison-grid {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				gap: 2rem;
+			}
+
+			.comparison-item {
+				border-left: 1px solid rgba(255, 255, 255, 0.2);
+				padding-left: 2rem;
+			}
+
+			.comparison-item h3 {
+				font-size: 0.8rem;
+				text-transform: uppercase;
+				letter-spacing: 0.2em;
+				color: var(--accent);
+				margin-bottom: 1rem;
+			}
+
+			.comparison-item p {
+				font-size: 0.85rem;
+				line-height: 1.7;
+				color: var(--gray);
+			}
+
+			/* TESTIMONIALS */
+			.testimonials {
+				padding: 8rem 4rem;
+				background: var(--white);
+			}
+
+			.testimonials .section-title {
+				margin-bottom: 4rem;
+			}
+
+			.testimonial-grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 2rem;
+			}
+
+			.testimonial {
+				border: 1px solid var(--black);
+				padding: 2.5rem;
+				position: relative;
+			}
+
+			.testimonial::before {
+				content: '"';
+				font-family: 'Playfair Display', serif;
+				font-size: 6rem;
+				position: absolute;
+				top: -1rem;
+				left: 1rem;
+				color: rgba(0, 0, 0, 0.05);
+				line-height: 1;
+			}
+
+			.testimonial-text {
+				font-size: 1rem;
+				line-height: 1.8;
+				margin-bottom: 2rem;
+			}
+
+			.testimonial-author {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+
+			.testimonial-avatar {
+				width: 48px;
+				height: 48px;
+				border-radius: 0;
+				filter: grayscale(100%);
+			}
+
+			.testimonial-name {
+				font-weight: 700;
+				font-size: 0.85rem;
+			}
+
+			.testimonial-handle {
+				font-size: 0.75rem;
+				color: var(--gray);
+			}
+
+			/* CTA */
+			.final-cta {
+				background: var(--accent);
+				color: var(--white);
+				padding: 8rem 4rem;
+				text-align: center;
+			}
+
+			.final-cta .section-title {
+				margin-bottom: 2rem;
+			}
+
+			.final-cta .btn {
+				border-color: var(--white);
+			}
+
+			.final-cta .btn:hover {
+				background: var(--white);
+				color: var(--accent);
+			}
+
+			/* FOOTER */
+			.footer {
+				background: var(--black);
+				color: var(--white);
+				padding: 4rem;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+
+			.footer-links {
+				display: flex;
+				gap: 2rem;
+				font-size: 0.75rem;
+				text-transform: uppercase;
+				letter-spacing: 0.2em;
+			}
+
+			.footer-links a:hover {
+				color: var(--accent);
+			}
+
+			.footer-copy {
+				font-size: 0.7rem;
+				color: var(--gray);
+			}
+
+			/* RESPONSIVE */
+			@media (max-width: 1024px) {
+				.hero {
+					grid-template-columns: 1fr;
+				}
+				.hero-right {
+					display: none;
+				}
+				.feature-grid {
+					grid-template-columns: 1fr;
+				}
+				.comparison-grid {
+					grid-template-columns: repeat(2, 1fr);
+				}
+				.section-header {
+					grid-template-columns: 1fr;
+					gap: 2rem;
+				}
+			}
+
+			@media (max-width: 768px) {
+				.hero-left {
+					padding: 6rem 2rem 4rem;
+				}
+				.features,
+				.comparison,
+				.testimonials,
+				.final-cta {
+					padding: 4rem 2rem;
+				}
+				.hero-title {
+					font-size: 3rem;
+				}
+				.section-title {
+					font-size: 2.5rem;
+				}
+				.comparison-grid,
+				.testimonial-grid {
+					grid-template-columns: 1fr;
+				}
+				.nav {
+					display: none;
+				}
+				.footer {
+					flex-direction: column;
+					gap: 2rem;
+					text-align: center;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<header class="header">
+			<div class="logo">WEB_MAKER</div>
+			<nav class="nav">
+				<a href="/docs">DOCS</a>
+				<a href="https://medium.com/web-maker/">BLOG</a>
+				<a href="https://github.com/chinchang/web-maker/">GITHUB</a>
+			</nav>
+		</header>
+
+		<section class="hero">
+			<div class="hero-left">
+				<div class="hero-tagline">OFFLINE-FIRST CODE EDITOR</div>
+				<h1 class="hero-title">
+					<span>CODE</span>
+					<span class="stroke">WITHOUT</span>
+					<span>LIMITS</span>
+				</h1>
+				<p class="hero-desc">
+					A brutally fast, offline-capable frontend playground. No server. No
+					latency. No excuses. Just you and your code.
+				</p>
+				<div class="cta-group">
+					<a href="/create/" class="btn btn--primary">OPEN WEB APP</a>
+					<a
+						href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh"
+						class="btn"
+						>CHROME EXTENSION</a
+					>
+				</div>
+			</div>
+			<div class="hero-right">
+				<pre
+					class="hero-code"
+				><span class="comment">// Your playground. Your rules.</span>
+
+<span class="highlight">const</span> webMaker = {
+  offline: <span class="highlight">true</span>,
+  preprocessors: [
+    'SCSS', 'TypeScript',
+    'Pug', 'Markdown'
+  ],
+  libraries: <span class="highlight">Infinity</span>,
+  realTimeCollab: <span class="highlight">true</span>,
+  privacy: '<span class="highlight">YOUR_DATA_STAYS_LOCAL</span>'
+};
+
+<span class="comment">// Just start coding.</span>
+webMaker.<span class="highlight">init()</span>;</pre>
+			</div>
+		</section>
+
+		<div class="marquee">
+			<div class="marquee-content">
+				<span class="marquee-item">OFFLINE-FIRST</span>
+				<span class="marquee-item">SCSS</span>
+				<span class="marquee-item">TYPESCRIPT</span>
+				<span class="marquee-item">REAL-TIME COLLAB</span>
+				<span class="marquee-item">PRIVACY-FOCUSED</span>
+				<span class="marquee-item">INSTANT PREVIEW</span>
+				<span class="marquee-item">CODEPEN EXPORT</span>
+				<span class="marquee-item">OFFLINE-FIRST</span>
+				<span class="marquee-item">SCSS</span>
+				<span class="marquee-item">TYPESCRIPT</span>
+				<span class="marquee-item">REAL-TIME COLLAB</span>
+				<span class="marquee-item">PRIVACY-FOCUSED</span>
+				<span class="marquee-item">INSTANT PREVIEW</span>
+				<span class="marquee-item">CODEPEN EXPORT</span>
+			</div>
+		</div>
+
+		<section class="features">
+			<div class="section-header">
+				<div>
+					<h2 class="section-title">RAW<br />POWER</h2>
+				</div>
+				<p class="section-desc">
+					Every feature exists for a reason. No bloat. No unnecessary
+					abstractions. Just the tools you need to build, experiment, and ship.
+				</p>
+			</div>
+			<div class="feature-grid">
+				<div class="feature-card">
+					<span class="feature-icon">[_]</span>
+					<h3 class="feature-title">OFFLINE</h3>
+					<p class="feature-desc">
+						Lives in your browser. Works on flights, trains, or in a bunker.
+						Zero network dependency.
+					</p>
+				</div>
+				<div class="feature-card">
+					<span class="feature-icon">{...}</span>
+					<h3 class="feature-title">PREPROCESSORS</h3>
+					<p class="feature-desc">
+						SCSS, TypeScript, Pug, Markdown, LESS, CoffeeScript. All compiled
+						client-side.
+					</p>
+				</div>
+				<div class="feature-card">
+					<span class="feature-icon">&lt;/&gt;</span>
+					<h3 class="feature-title">ANY LIBRARY</h3>
+					<p class="feature-desc">
+						React, Vue, jQuery, D3, Three.js. Drop in any library via CDN or the
+						built-in picker.
+					</p>
+				</div>
+				<div class="feature-card">
+					<span class="feature-icon">[=]</span>
+					<h3 class="feature-title">LAYOUTS</h3>
+					<p class="feature-desc">
+						Side-by-side, stacked, full preview. Your workspace, your
+						configuration.
+					</p>
+				</div>
+				<div class="feature-card">
+					<span class="feature-icon">~/</span>
+					<h3 class="feature-title">FILES MODE</h3>
+					<p class="feature-desc">
+						Full file-based environment. Folders, files, imports. Like VS Code
+						in your browser.
+					</p>
+				</div>
+				<div class="feature-card">
+					<span class="feature-icon">++</span>
+					<h3 class="feature-title">REAL-TIME</h3>
+					<p class="feature-desc">
+						Share a link. Code together. Like Google Docs for code.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="comparison">
+			<h2 class="section-title">WHY NOT<br />CODEPEN?</h2>
+			<div class="comparison-grid">
+				<div class="comparison-item">
+					<h3>100% OFFLINE</h3>
+					<p>
+						Unlike CodePen or JSFiddle, Web Maker works without internet. Your
+						code, your device, always available.
+					</p>
+				</div>
+				<div class="comparison-item">
+					<h3>PRIVACY FIRST</h3>
+					<p>
+						Your code never leaves your machine unless you want it to. No
+						account required.
+					</p>
+				</div>
+				<div class="comparison-item">
+					<h3>ZERO LATENCY</h3>
+					<p>
+						No network round-trips. No loading spinners. Instant compilation,
+						instant preview.
+					</p>
+				</div>
+				<div class="comparison-item">
+					<h3>REAL-TIME COLLAB</h3>
+					<p>
+						When you need to share, share instantly with live collaborative
+						editing.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="testimonials">
+			<h2 class="section-title">THEY<br />SAID IT</h2>
+			<div class="testimonial-grid">
+				<div class="testimonial">
+					<p class="testimonial-text">
+						If you're looking for a CodePen-like offline editor, and use Chrome,
+						check out Web-Maker by Kushagra Gour.
+					</p>
+					<div class="testimonial-author">
+						<img
+							src="/images/testimonials/cc.jpg"
+							alt="Chris Coyier"
+							class="testimonial-avatar"
+						/>
+						<div>
+							<div class="testimonial-name">Chris Coyier</div>
+							<div class="testimonial-handle">Creator of CodePen</div>
+						</div>
+					</div>
+				</div>
+				<div class="testimonial">
+					<p class="testimonial-text">
+						This is like having your own copy of Codepen that also works
+						offline.
+					</p>
+					<div class="testimonial-author">
+						<img
+							src="/images/testimonials/aa.jpg"
+							alt="Amit Agarwal"
+							class="testimonial-avatar"
+						/>
+						<div>
+							<div class="testimonial-name">Amit Agarwal</div>
+							<div class="testimonial-handle">@labnol</div>
+						</div>
+					</div>
+				</div>
+				<div class="testimonial">
+					<p class="testimonial-text">
+						Really enjoying using Web Maker - super fast offline web playground.
+					</p>
+					<div class="testimonial-author">
+						<img
+							src="/images/testimonials/rd.jpg"
+							alt="Ryan Davidson"
+							class="testimonial-avatar"
+						/>
+						<div>
+							<div class="testimonial-name">Ryan Davidson</div>
+							<div class="testimonial-handle">@Ryan_Random</div>
+						</div>
+					</div>
+				</div>
+				<div class="testimonial">
+					<p class="testimonial-text">
+						Meet Web Maker, an Offline, Browser-based CodePen Alternative.
+					</p>
+					<div class="testimonial-author">
+						<img
+							src="/images/testimonials/sitepoint.jpg"
+							alt="SitePoint"
+							class="testimonial-avatar"
+						/>
+						<div>
+							<div class="testimonial-name">SitePoint</div>
+							<div class="testimonial-handle">@sitepointdotcom</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="final-cta">
+			<h2 class="section-title">START<br />BUILDING</h2>
+			<p
+				style="
+					margin-bottom: 2rem;
+					max-width: 50ch;
+					margin-left: auto;
+					margin-right: auto;
+					opacity: 0.9;
+				"
+			>
+				No signup. No download. No waiting. Open your browser and code.
+			</p>
+			<a href="/create/" class="btn">LAUNCH WEB MAKER</a>
+		</section>
+
+		<footer class="footer">
+			<div class="footer-links">
+				<a href="/docs">DOCS</a>
+				<a href="https://medium.com/web-maker/">BLOG</a>
+				<a href="https://github.com/chinchang/web-maker/">GITHUB</a>
+				<a href="/privacy-policy">PRIVACY</a>
+			</div>
+			<div class="footer-copy">WEB MAKER / BUILT BY KUSHAGRA GOUR</div>
+		</footer>
+	</body>
+</html>

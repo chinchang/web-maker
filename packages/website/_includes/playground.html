@@ -1,0 +1,624 @@
+---
+layout: default.html
+---
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Sora:wght@300;400;600;700&display=swap"
+	rel="stylesheet"
+/>
+
+<article class="pg">
+	<header class="pg-hero">
+		<div class="pg-hero__grid"></div>
+		<div class="pg-hero__content">
+			<div class="pg-hero__badge" style="--badge-color: {{ accentColor }}">
+				{{ badgeText }}
+			</div>
+			<h1 class="pg-hero__title">{{ title }}</h1>
+			<p class="pg-hero__subtitle">{{ subtitle }}</p>
+			<div class="pg-hero__actions">
+				<a
+					href="/create/"
+					class="pg-btn pg-btn--primary"
+					style="--btn-color: {{ accentColor }}"
+				>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+					>
+						<polygon points="5 3 19 12 5 21 5 3" />
+					</svg>
+					<span>Try {{ shortName }} Editor</span>
+				</a>
+				<a href="#quick-reference" class="pg-btn pg-btn--ghost">
+					<span>Quick Reference</span>
+					<svg
+						width="16"
+						height="16"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+					>
+						<path d="M12 5v14M5 12l7 7 7-7" />
+					</svg>
+				</a>
+			</div>
+		</div>
+		<div class="pg-hero__preview">
+			<div class="pg-editor">
+				<div class="pg-editor__bar">
+					<div class="pg-editor__dots">
+						<span></span><span></span><span></span>
+					</div>
+					<div class="pg-editor__title">
+						{{ shortName | downcase }}.{{ fileExt }}
+					</div>
+				</div>
+				<pre class="pg-editor__code"><code>{{ sampleCode }}</code></pre>
+			</div>
+		</div>
+	</header>
+
+	<section class="pg-features">
+		<div class="pg-features__grid">
+			<div class="pg-feature" style="--delay: 0">
+				<div class="pg-feature__icon" style="--icon-color: {{ accentColor }}">
+					<svg
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+					>
+						<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+					</svg>
+				</div>
+				<h3 class="pg-feature__title">Instant Compilation</h3>
+				<p class="pg-feature__text">
+					Write {{ shortName }} code and see the compiled output in real-time.
+					No build setup required.
+				</p>
+			</div>
+			<div class="pg-feature" style="--delay: 1">
+				<div class="pg-feature__icon" style="--icon-color: {{ accentColor }}">
+					<svg
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+					>
+						<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+					</svg>
+				</div>
+				<h3 class="pg-feature__title">Works Offline</h3>
+				<p class="pg-feature__text">
+					Compile {{ shortName }} locally in your browser. Code anywhere, even
+					without internet.
+				</p>
+			</div>
+			<div class="pg-feature" style="--delay: 2">
+				<div class="pg-feature__icon" style="--icon-color: {{ accentColor }}">
+					<svg
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+					>
+						<rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+						<line x1="8" y1="21" x2="16" y2="21" />
+						<line x1="12" y1="17" x2="12" y2="21" />
+					</svg>
+				</div>
+				<h3 class="pg-feature__title">Full IDE Features</h3>
+				<p class="pg-feature__text">
+					Syntax highlighting, auto-completion, error detection, and Prettier
+					formatting built-in.
+				</p>
+			</div>
+			<div class="pg-feature" style="--delay: 3">
+				<div class="pg-feature__icon" style="--icon-color: {{ accentColor }}">
+					<svg
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+					>
+						<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+						<circle cx="9" cy="7" r="4" />
+						<path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+						<path d="M16 3.13a4 4 0 0 1 0 7.75" />
+					</svg>
+				</div>
+				<h3 class="pg-feature__title">Share & Collaborate</h3>
+				<p class="pg-feature__text">
+					Share your creations or collaborate in real-time with a simple link.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<div class="pg-content">{{ content }}</div>
+
+	<section class="pg-cta">
+		<div class="pg-cta__glow" style="--glow-color: {{ accentColor }}"></div>
+		<h2 class="pg-cta__title">Start writing {{ shortName }} now</h2>
+		<p class="pg-cta__text">Free. No signup. Works offline.</p>
+		<a
+			href="/create/"
+			class="pg-btn pg-btn--primary pg-btn--large"
+			style="--btn-color: {{ accentColor }}"
+		>
+			<span>Open {{ shortName }} Editor</span>
+			<svg
+				width="20"
+				height="20"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+			>
+				<path d="M5 12h14M12 5l7 7-7 7" />
+			</svg>
+		</a>
+	</section>
+</article>
+
+<style>
+	/* ===== BASE VARIABLES ===== */
+	.pg {
+		--font-display: 'Sora', -apple-system, sans-serif;
+		--font-mono: 'Fira Code', monospace;
+
+		--color-bg: #0c0c10;
+		--color-surface: #141418;
+		--color-surface-elevated: #1c1c22;
+		--color-border: rgba(255, 255, 255, 0.06);
+		--color-text: #f0f0f5;
+		--color-text-muted: #7a7a8c;
+
+		font-family: var(--font-display);
+		background: var(--color-bg);
+		color: var(--color-text);
+		min-height: 100vh;
+	}
+
+	/* ===== HERO SECTION ===== */
+	.pg-hero {
+		position: relative;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 3rem;
+		align-items: center;
+		padding: 4rem 3rem;
+		min-height: 80vh;
+		overflow: hidden;
+	}
+
+	.pg-hero__grid {
+		position: absolute;
+		inset: 0;
+		background-image: linear-gradient(
+				rgba(255, 255, 255, 0.02) 1px,
+				transparent 1px
+			),
+			linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+		background-size: 60px 60px;
+		-webkit-mask: radial-gradient(
+			ellipse 80% 80% at 50% 50%,
+			black,
+			transparent
+		);
+		mask: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+	}
+
+	.pg-hero__content {
+		position: relative;
+		z-index: 1;
+	}
+
+	.pg-hero__badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 1rem;
+		background: color-mix(in srgb, var(--badge-color) 15%, transparent);
+		border: 1px solid color-mix(in srgb, var(--badge-color) 30%, transparent);
+		border-radius: 100px;
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
+		font-weight: 500;
+		color: var(--badge-color);
+		margin-bottom: 1.5rem;
+		animation: slideIn 0.5s ease-out;
+	}
+
+	.pg-hero__title {
+		font-size: clamp(2.5rem, 5vw, 4rem);
+		font-weight: 700;
+		line-height: 1.1;
+		margin: 0 0 1rem;
+		letter-spacing: -0.02em;
+		animation: slideIn 0.5s ease-out 0.1s both;
+	}
+
+	.pg-hero__subtitle {
+		font-size: 1.2rem;
+		color: var(--color-text-muted);
+		line-height: 1.6;
+		margin: 0 0 2rem;
+		max-width: 500px;
+		animation: slideIn 0.5s ease-out 0.2s both;
+	}
+
+	.pg-hero__actions {
+		display: flex;
+		gap: 1rem;
+		flex-wrap: wrap;
+		animation: slideIn 0.5s ease-out 0.3s both;
+	}
+
+	.pg-hero__preview {
+		position: relative;
+		z-index: 1;
+		animation: floatIn 0.8s ease-out 0.2s both;
+	}
+
+	/* ===== EDITOR MOCKUP ===== */
+	.pg-editor {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow:
+			0 4px 6px rgba(0, 0, 0, 0.1),
+			0 20px 40px rgba(0, 0, 0, 0.3),
+			0 0 100px color-mix(in srgb, var(--badge-color, #ff6c00) 20%, transparent);
+	}
+
+	.pg-editor__bar {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		padding: 0.75rem 1rem;
+		background: var(--color-surface-elevated);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.pg-editor__dots {
+		display: flex;
+		gap: 6px;
+	}
+
+	.pg-editor__dots span {
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: var(--color-border);
+	}
+
+	.pg-editor__dots span:nth-child(1) {
+		background: #ff5f57;
+	}
+	.pg-editor__dots span:nth-child(2) {
+		background: #febc2e;
+	}
+	.pg-editor__dots span:nth-child(3) {
+		background: #28c840;
+	}
+
+	.pg-editor__title {
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
+		color: var(--color-text-muted);
+	}
+
+	.pg-editor__code {
+		margin: 0;
+		padding: 1.5rem;
+		font-family: var(--font-mono);
+		font-size: 0.9rem;
+		line-height: 1.6;
+		color: var(--color-text-muted);
+		overflow-x: auto;
+		white-space: pre;
+	}
+
+	/* ===== BUTTONS ===== */
+	.pg-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
+		padding: 0.9rem 1.5rem;
+		border-radius: 8px;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 0.95rem;
+		transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+		border: none;
+		cursor: pointer;
+	}
+
+	.pg-btn--primary {
+		background: var(--btn-color, #ff6c00);
+		color: white;
+		box-shadow: 0 4px 20px
+			color-mix(in srgb, var(--btn-color, #ff6c00) 40%, transparent);
+	}
+
+	.pg-btn--primary:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 30px
+			color-mix(in srgb, var(--btn-color, #ff6c00) 50%, transparent);
+	}
+
+	.pg-btn--ghost {
+		background: transparent;
+		color: var(--color-text-muted);
+		border: 1px solid var(--color-border);
+	}
+
+	.pg-btn--ghost:hover {
+		background: var(--color-surface);
+		color: var(--color-text);
+	}
+
+	.pg-btn--large {
+		padding: 1.1rem 2rem;
+		font-size: 1.05rem;
+	}
+
+	/* ===== FEATURES SECTION ===== */
+	.pg-features {
+		padding: 4rem 3rem;
+		background: var(--color-surface);
+		border-top: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.pg-features__grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 2rem;
+		max-width: 1100px;
+		margin: 0 auto;
+	}
+
+	.pg-feature {
+		padding: 1.5rem;
+		border-radius: 12px;
+		background: var(--color-bg);
+		border: 1px solid var(--color-border);
+		transition:
+			transform 0.3s,
+			box-shadow 0.3s;
+		animation: fadeInUp 0.5s ease-out calc(var(--delay) * 0.1s) both;
+	}
+
+	.pg-feature:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+	}
+
+	.pg-feature__icon {
+		width: 48px;
+		height: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 10px;
+		background: color-mix(in srgb, var(--icon-color) 15%, transparent);
+		color: var(--icon-color);
+		margin-bottom: 1rem;
+	}
+
+	.pg-feature__title {
+		font-size: 1.1rem;
+		font-weight: 600;
+		margin: 0 0 0.5rem;
+	}
+
+	.pg-feature__text {
+		font-size: 0.95rem;
+		color: var(--color-text-muted);
+		line-height: 1.6;
+		margin: 0;
+	}
+
+	/* ===== CONTENT SECTION ===== */
+	.pg-content {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 4rem 2rem;
+	}
+
+	.pg-content h2 {
+		font-size: 1.8rem;
+		font-weight: 700;
+		margin: 3rem 0 1rem;
+		letter-spacing: -0.01em;
+	}
+
+	.pg-content h2:first-child {
+		margin-top: 0;
+	}
+
+	.pg-content h3 {
+		font-size: 1.2rem;
+		font-weight: 600;
+		margin: 2rem 0 0.75rem;
+	}
+
+	.pg-content p {
+		color: var(--color-text-muted);
+		line-height: 1.7;
+		margin: 1rem 0;
+	}
+
+	.pg-content ul,
+	.pg-content ol {
+		color: var(--color-text-muted);
+		line-height: 1.8;
+		padding-left: 1.5rem;
+	}
+
+	.pg-content li {
+		margin: 0.5rem 0;
+	}
+
+	.pg-content code {
+		font-family: var(--font-mono);
+		font-size: 0.9em;
+		background: var(--color-surface);
+		padding: 0.2em 0.5em;
+		border-radius: 4px;
+		border: 1px solid var(--color-border);
+	}
+
+	.pg-content pre {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 8px;
+		padding: 1.5rem;
+		overflow-x: auto;
+		margin: 1.5rem 0;
+	}
+
+	.pg-content pre code {
+		background: none;
+		border: none;
+		padding: 0;
+	}
+
+	.pg-content strong {
+		color: var(--color-text);
+		font-weight: 600;
+	}
+
+	/* Quick reference section */
+	.pg-content #quick-reference + ul,
+	.pg-content .quick-ref {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 1rem;
+		list-style: none;
+		padding: 0;
+	}
+
+	.pg-content .quick-ref li,
+	.pg-content #quick-reference + ul li {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 8px;
+		padding: 1rem;
+	}
+
+	/* ===== CTA SECTION ===== */
+	.pg-cta {
+		position: relative;
+		text-align: center;
+		padding: 5rem 2rem;
+		overflow: hidden;
+	}
+
+	.pg-cta__glow {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 500px;
+		height: 300px;
+		background: radial-gradient(
+			ellipse,
+			color-mix(in srgb, var(--glow-color) 30%, transparent),
+			transparent 70%
+		);
+		pointer-events: none;
+	}
+
+	.pg-cta__title {
+		font-size: 2.5rem;
+		font-weight: 700;
+		margin: 0 0 0.5rem;
+		position: relative;
+	}
+
+	.pg-cta__text {
+		color: var(--color-text-muted);
+		font-size: 1.1rem;
+		margin: 0 0 2rem;
+		position: relative;
+	}
+
+	/* ===== ANIMATIONS ===== */
+	@keyframes slideIn {
+		from {
+			opacity: 0;
+			transform: translateX(-30px);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0);
+		}
+	}
+
+	@keyframes floatIn {
+		from {
+			opacity: 0;
+			transform: translateY(40px) rotateX(10deg);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) rotateX(0);
+		}
+	}
+
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* ===== RESPONSIVE ===== */
+	@media (max-width: 900px) {
+		.pg-hero {
+			grid-template-columns: 1fr;
+			padding: 3rem 1.5rem;
+			min-height: auto;
+		}
+
+		.pg-hero__preview {
+			order: -1;
+		}
+
+		.pg-features {
+			padding: 3rem 1.5rem;
+		}
+
+		.pg-content {
+			padding: 3rem 1.5rem;
+		}
+
+		.pg-cta__title {
+			font-size: 2rem;
+		}
+	}
+</style>

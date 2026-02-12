@@ -1,0 +1,469 @@
+---
+layout: default.html
+---
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@400;500;700&display=swap"
+	rel="stylesheet"
+/>
+
+<article class="uc">
+	<header class="uc-hero" style="--hero-accent: {{ accentColor }}">
+		<div class="uc-hero__bg"></div>
+		<div class="uc-hero__content">
+			<span class="uc-hero__eyebrow">{{ eyebrow }}</span>
+			<h1 class="uc-hero__title">{{ title }}</h1>
+			<p class="uc-hero__lead">{{ lead }}</p>
+			<a href="/create/" class="uc-hero__cta">
+				<span>Start Coding Free</span>
+				<svg
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+				>
+					<path d="M5 12h14M12 5l7 7-7 7" />
+				</svg>
+			</a>
+		</div>
+		<div class="uc-hero__icon">{{ heroIcon }}</div>
+	</header>
+
+	<section class="uc-benefits">
+		<h2 class="uc-benefits__title">Why Web Maker?</h2>
+		<div class="uc-benefits__grid">
+			{% for benefit in benefits %}
+			<div class="uc-benefit">
+				<div class="uc-benefit__number">
+					{{ forloop.index | prepend: '0' | slice: -2, 2 }}
+				</div>
+				<h3 class="uc-benefit__title">{{ benefit.title }}</h3>
+				<p class="uc-benefit__text">{{ benefit.text }}</p>
+			</div>
+			{% endfor %}
+		</div>
+	</section>
+
+	<div class="uc-content">{{ content }}</div>
+
+	<section class="uc-cta" style="--cta-accent: {{ accentColor }}">
+		<div class="uc-cta__inner">
+			<h2 class="uc-cta__title">{{ ctaTitle }}</h2>
+			<p class="uc-cta__text">{{ ctaText }}</p>
+			<div class="uc-cta__buttons">
+				<a href="/create/" class="uc-btn uc-btn--primary">
+					<span>Open Web Maker</span>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+					>
+						<path d="M5 12h14M12 5l7 7-7 7" />
+					</svg>
+				</a>
+				<a
+					href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh"
+					class="uc-btn uc-btn--secondary"
+				>
+					<span>Chrome Extension</span>
+				</a>
+			</div>
+		</div>
+	</section>
+</article>
+
+<style>
+	/* ===== BASE VARIABLES ===== */
+	.uc {
+		--font-display: 'Playfair Display', Georgia, serif;
+		--font-body: 'DM Sans', -apple-system, sans-serif;
+
+		--color-bg: #faf9f7;
+		--color-surface: #ffffff;
+		--color-text: #1a1a1a;
+		--color-text-muted: #666;
+		--color-border: #e8e6e3;
+
+		font-family: var(--font-body);
+		background: var(--color-bg);
+		color: var(--color-text);
+	}
+
+	/* ===== HERO SECTION ===== */
+	.uc-hero {
+		position: relative;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: center;
+		gap: 3rem;
+		padding: 5rem 4rem;
+		min-height: 70vh;
+		background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+		color: white;
+		overflow: hidden;
+	}
+
+	.uc-hero__bg {
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(
+				circle at 80% 20%,
+				var(--hero-accent, #ff6c00),
+				transparent 50%
+			),
+			radial-gradient(
+				circle at 20% 80%,
+				rgba(255, 255, 255, 0.05),
+				transparent 40%
+			);
+		opacity: 0.4;
+	}
+
+	.uc-hero__content {
+		position: relative;
+		z-index: 1;
+		max-width: 600px;
+	}
+
+	.uc-hero__eyebrow {
+		display: inline-block;
+		font-size: 0.85rem;
+		font-weight: 700;
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: var(--hero-accent, #ff6c00);
+		margin-bottom: 1rem;
+		animation: fadeInUp 0.6s ease-out;
+	}
+
+	.uc-hero__title {
+		font-family: var(--font-display);
+		font-size: clamp(2.5rem, 5vw, 4rem);
+		font-weight: 700;
+		line-height: 1.1;
+		margin: 0 0 1.5rem;
+		animation: fadeInUp 0.6s ease-out 0.1s both;
+	}
+
+	.uc-hero__lead {
+		font-size: 1.25rem;
+		line-height: 1.6;
+		opacity: 0.85;
+		margin: 0 0 2rem;
+		animation: fadeInUp 0.6s ease-out 0.2s both;
+	}
+
+	.uc-hero__cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 1rem 2rem;
+		background: var(--hero-accent, #ff6c00);
+		color: white;
+		text-decoration: none;
+		font-weight: 700;
+		font-size: 1rem;
+		border-radius: 8px;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		animation: fadeInUp 0.6s ease-out 0.3s both;
+	}
+
+	.uc-hero__cta:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+	}
+
+	.uc-hero__cta svg {
+		transition: transform 0.3s;
+	}
+
+	.uc-hero__cta:hover svg {
+		transform: translateX(4px);
+	}
+
+	.uc-hero__icon {
+		position: relative;
+		z-index: 1;
+		font-size: 12rem;
+		opacity: 0.15;
+		animation: floatIn 1s ease-out 0.2s both;
+	}
+
+	/* ===== BENEFITS SECTION ===== */
+	.uc-benefits {
+		padding: 5rem 3rem;
+		background: var(--color-surface);
+	}
+
+	.uc-benefits__title {
+		font-family: var(--font-display);
+		font-size: 2rem;
+		text-align: center;
+		margin: 0 0 3rem;
+	}
+
+	.uc-benefits__grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 2rem;
+		max-width: 1100px;
+		margin: 0 auto;
+	}
+
+	.uc-benefit {
+		padding: 2rem;
+		border: 1px solid var(--color-border);
+		border-radius: 12px;
+		transition:
+			transform 0.3s,
+			box-shadow 0.3s;
+	}
+
+	.uc-benefit:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+	}
+
+	.uc-benefit__number {
+		font-family: var(--font-display);
+		font-size: 3rem;
+		font-weight: 700;
+		color: var(--color-border);
+		line-height: 1;
+		margin-bottom: 1rem;
+	}
+
+	.uc-benefit__title {
+		font-size: 1.2rem;
+		font-weight: 700;
+		margin: 0 0 0.75rem;
+	}
+
+	.uc-benefit__text {
+		color: var(--color-text-muted);
+		line-height: 1.6;
+		margin: 0;
+	}
+
+	/* ===== CONTENT SECTION ===== */
+	.uc-content {
+		max-width: 750px;
+		margin: 0 auto;
+		padding: 4rem 2rem;
+	}
+
+	.uc-content h2 {
+		font-family: var(--font-display);
+		font-size: 2rem;
+		font-weight: 700;
+		margin: 3rem 0 1rem;
+	}
+
+	.uc-content h2:first-child {
+		margin-top: 0;
+	}
+
+	.uc-content h3 {
+		font-size: 1.3rem;
+		font-weight: 700;
+		margin: 2rem 0 0.75rem;
+	}
+
+	.uc-content p {
+		color: var(--color-text-muted);
+		line-height: 1.8;
+		margin: 1rem 0;
+		font-size: 1.05rem;
+	}
+
+	.uc-content ul,
+	.uc-content ol {
+		color: var(--color-text-muted);
+		line-height: 1.8;
+		padding-left: 1.5rem;
+	}
+
+	.uc-content li {
+		margin: 0.75rem 0;
+	}
+
+	.uc-content strong {
+		color: var(--color-text);
+		font-weight: 700;
+	}
+
+	.uc-content blockquote {
+		border-left: 4px solid #ff6c00;
+		margin: 2rem 0;
+		padding: 1rem 0 1rem 2rem;
+		font-family: var(--font-display);
+		font-style: italic;
+		font-size: 1.25rem;
+		color: var(--color-text);
+	}
+
+	/* Testimonial cards */
+	.uc-content .testimonial {
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 12px;
+		padding: 2rem;
+		margin: 2rem 0;
+	}
+
+	.uc-content .testimonial__quote {
+		font-family: var(--font-display);
+		font-style: italic;
+		font-size: 1.15rem;
+		line-height: 1.6;
+		margin: 0 0 1rem;
+	}
+
+	.uc-content .testimonial__author {
+		font-weight: 700;
+		color: var(--color-text);
+	}
+
+	/* ===== CTA SECTION ===== */
+	.uc-cta {
+		background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+		padding: 5rem 2rem;
+		text-align: center;
+		color: white;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.uc-cta::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 600px;
+		height: 400px;
+		background: radial-gradient(
+			ellipse,
+			var(--cta-accent, #ff6c00),
+			transparent 70%
+		);
+		opacity: 0.2;
+	}
+
+	.uc-cta__inner {
+		position: relative;
+		z-index: 1;
+		max-width: 600px;
+		margin: 0 auto;
+	}
+
+	.uc-cta__title {
+		font-family: var(--font-display);
+		font-size: 2.5rem;
+		margin: 0 0 1rem;
+	}
+
+	.uc-cta__text {
+		font-size: 1.1rem;
+		opacity: 0.8;
+		margin: 0 0 2rem;
+	}
+
+	.uc-cta__buttons {
+		display: flex;
+		gap: 1rem;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	.uc-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
+		padding: 1rem 2rem;
+		border-radius: 8px;
+		text-decoration: none;
+		font-weight: 700;
+		font-size: 1rem;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.uc-btn--primary {
+		background: #ff6c00;
+		color: white;
+	}
+
+	.uc-btn--primary:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 25px rgba(255, 108, 0, 0.4);
+	}
+
+	.uc-btn--secondary {
+		background: rgba(255, 255, 255, 0.1);
+		color: white;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+	}
+
+	.uc-btn--secondary:hover {
+		background: rgba(255, 255, 255, 0.2);
+	}
+
+	/* ===== ANIMATIONS ===== */
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(30px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes floatIn {
+		from {
+			opacity: 0;
+			transform: scale(0.8) rotate(-10deg);
+		}
+		to {
+			opacity: 0.15;
+			transform: scale(1) rotate(0deg);
+		}
+	}
+
+	/* ===== RESPONSIVE ===== */
+	@media (max-width: 900px) {
+		.uc-hero {
+			grid-template-columns: 1fr;
+			padding: 4rem 2rem;
+			min-height: auto;
+		}
+
+		.uc-hero__icon {
+			position: absolute;
+			right: -2rem;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+
+		.uc-benefits {
+			padding: 4rem 2rem;
+		}
+
+		.uc-cta__title {
+			font-size: 2rem;
+		}
+
+		.uc-btn {
+			width: 100%;
+			justify-content: center;
+		}
+	}
+</style>

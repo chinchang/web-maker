@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Web Maker - Art Deco Edition</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Tenor+Sans&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			:root {
+				--gold: #d4af37;
+				--gold-light: #f4e4bc;
+				--black: #0d0d0d;
+				--charcoal: #1a1a1a;
+				--cream: #f5f0e6;
+				--white: #fff;
+				--gray: #888;
+			}
+
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			::selection {
+				background: var(--gold);
+				color: var(--black);
+			}
+
+			html {
+				font-size: 16px;
+			}
+
+			body {
+				font-family: 'Tenor Sans', sans-serif;
+				background: var(--black);
+				color: var(--cream);
+				overflow-x: hidden;
+				line-height: 1.6;
+			}
+
+			a {
+				color: inherit;
+				text-decoration: none;
+			}
+
+			/* GEOMETRIC PATTERNS */
+			.geo-pattern {
+				position: fixed;
+				pointer-events: none;
+				z-index: -1;
+				opacity: 0.03;
+			}
+
+			.geo-pattern svg {
+				width: 100%;
+				height: 100%;
+			}
+
+			.geo-pattern.top-left {
+				top: 0;
+				left: 0;
+				width: 400px;
+				height: 400px;
+			}
+
+			.geo-pattern.bottom-right {
+				bottom: 0;
+				right: 0;
+				width: 500px;
+				height: 500px;
+			}
+
+			/* HEADER */
+			.header {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				z-index: 1000;
+				padding: 1.5rem 4rem;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				background: linear-gradient(to bottom, var(--black), transparent);
+			}
+
+			.logo {
+				font-family: 'Cinzel', serif;
+				font-size: 1.3rem;
+				letter-spacing: 0.3em;
+				color: var(--gold);
+			}
+
+			.nav {
+				display: flex;
+				gap: 3rem;
+				font-size: 0.7rem;
+				letter-spacing: 0.3em;
+				text-transform: uppercase;
+			}
+
+			.nav a {
+				color: var(--cream);
+				opacity: 0.6;
+				transition: all 0.3s;
+				position: relative;
+			}
+
+			.nav a:hover {
+				opacity: 1;
+				color: var(--gold);
+			}
+
+			.nav a::after {
+				content: '';
+				position: absolute;
+				bottom: -8px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 4px;
+				height: 4px;
+				background: var(--gold);
+				opacity: 0;
+				transition: opacity 0.3s;
+			}
+
+			.nav a:hover::after {
+				opacity: 1;
+			}
+
+			/* HERO */
+			.hero {
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+				padding: 8rem 2rem 4rem;
+				position: relative;
+			}
+
+			.hero-decoration {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				width: 600px;
+				height: 600px;
+				opacity: 0.05;
+				pointer-events: none;
+			}
+
+			.hero-ornament {
+				width: 120px;
+				height: 2px;
+				background: linear-gradient(
+					90deg,
+					transparent,
+					var(--gold),
+					transparent
+				);
+				margin: 0 auto 2rem;
+				position: relative;
+			}
+
+			.hero-ornament::before,
+			.hero-ornament::after {
+				content: '';
+				position: absolute;
+				top: 50%;
+				transform: translateY(-50%);
+				width: 8px;
+				height: 8px;
+				border: 1px solid var(--gold);
+				transform: translateY(-50%) rotate(45deg);
+			}
+
+			.hero-ornament::before {
+				left: -20px;
+			}
+
+			.hero-ornament::after {
+				right: -20px;
+			}
+
+			.hero-eyebrow {
+				font-size: 0.7rem;
+				letter-spacing: 0.5em;
+				text-transform: uppercase;
+				color: var(--gold);
+				margin-bottom: 2rem;
+			}
+
+			.hero-title {
+				font-family: 'Cinzel', serif;
+				font-size: clamp(3rem, 10vw, 7rem);
+				font-weight: 400;
+				line-height: 1;
+				margin-bottom: 0.5rem;
+				letter-spacing: 0.1em;
+			}
+
+			.hero-title .line2 {
+				display: block;
+				font-size: 0.5em;
+				letter-spacing: 0.5em;
+				margin-top: 0.5rem;
+				color: var(--gold);
+			}
+
+			.hero-divider {
+				width: 200px;
+				height: 1px;
+				background: linear-gradient(
+					90deg,
+					transparent,
+					var(--gold) 20%,
+					var(--gold) 80%,
+					transparent
+				);
+				margin: 2rem auto;
+				position: relative;
+			}
+
+			.hero-divider::before {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%) rotate(45deg);
+				width: 12px;
+				height: 12px;
+				border: 1px solid var(--gold);
+				background: var(--black);
+			}
+
+			.hero-subtitle {
+				font-size: 1rem;
+				color: var(--cream);
+				opacity: 0.7;
+				max-width: 50ch;
+				margin-bottom: 3rem;
+				line-height: 1.8;
+			}
+
+			.cta-group {
+				display: flex;
+				gap: 1.5rem;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+
+			.btn {
+				font-family: 'Cinzel', serif;
+				font-size: 0.75rem;
+				letter-spacing: 0.2em;
+				padding: 1.2rem 3rem;
+				border: 1px solid var(--gold);
+				background: transparent;
+				color: var(--gold);
+				cursor: pointer;
+				transition: all 0.4s;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.btn::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: var(--gold);
+				transform: scaleX(0);
+				transform-origin: right;
+				transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+				z-index: -1;
+			}
+
+			.btn:hover {
+				color: var(--black);
+			}
+
+			.btn:hover::before {
+				transform: scaleX(1);
+				transform-origin: left;
+			}
+
+			.btn--filled {
+				background: var(--gold);
+				color: var(--black);
+			}
+
+			.btn--filled::before {
+				background: var(--cream);
+			}
+
+			/* FEATURES */
+			.features {
+				padding: 8rem 4rem;
+				max-width: 1400px;
+				margin: 0 auto;
+			}
+
+			.section-header {
+				text-align: center;
+				margin-bottom: 5rem;
+			}
+
+			.section-ornament {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 1.5rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.section-ornament .line {
+				width: 60px;
+				height: 1px;
+				background: var(--gold);
+			}
+
+			.section-ornament .diamond {
+				width: 10px;
+				height: 10px;
+				border: 1px solid var(--gold);
+				transform: rotate(45deg);
+			}
+
+			.section-title {
+				font-family: 'Cinzel', serif;
+				font-size: 2.5rem;
+				font-weight: 400;
+				letter-spacing: 0.2em;
+				margin-bottom: 1rem;
+			}
+
+			.section-subtitle {
+				font-size: 0.9rem;
+				color: var(--cream);
+				opacity: 0.6;
+				max-width: 50ch;
+				margin: 0 auto;
+			}
+
+			.feature-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 2px;
+				background: var(--gold);
+				border: 1px solid var(--gold);
+			}
+
+			.feature-card {
+				background: var(--black);
+				padding: 3rem 2rem;
+				text-align: center;
+				transition: all 0.4s;
+			}
+
+			.feature-card:hover {
+				background: var(--charcoal);
+			}
+
+			.feature-icon {
+				width: 60px;
+				height: 60px;
+				margin: 0 auto 1.5rem;
+				position: relative;
+			}
+
+			.feature-icon::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				border: 1px solid var(--gold);
+				transform: rotate(45deg);
+			}
+
+			.feature-icon::after {
+				content: attr(data-icon);
+				position: absolute;
+				inset: 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 1.2rem;
+				color: var(--gold);
+			}
+
+			.feature-title {
+				font-family: 'Cinzel', serif;
+				font-size: 1rem;
+				letter-spacing: 0.15em;
+				margin-bottom: 1rem;
+				color: var(--gold);
+			}
+
+			.feature-desc {
+				font-size: 0.85rem;
+				color: var(--cream);
+				opacity: 0.6;
+				line-height: 1.7;
+			}
+
+			/* COMPARISON */
+			.comparison {
+				padding: 8rem 4rem;
+				background: linear-gradient(
+					180deg,
+					var(--black) 0%,
+					var(--charcoal) 50%,
+					var(--black) 100%
+				);
+			}
+
+			.comparison-inner {
+				max-width: 1000px;
+				margin: 0 auto;
+			}
+
+			.comparison-title {
+				font-family: 'Cinzel', serif;
+				font-size: 2rem;
+				text-align: center;
+				letter-spacing: 0.2em;
+				margin-bottom: 4rem;
+			}
+
+			.comparison-grid {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				gap: 3rem;
+			}
+
+			.comparison-item {
+				text-align: center;
+				padding: 2rem;
+				border: 1px solid rgba(212, 175, 55, 0.2);
+				position: relative;
+			}
+
+			.comparison-item::before {
+				content: '';
+				position: absolute;
+				top: -1px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 40px;
+				height: 1px;
+				background: var(--gold);
+			}
+
+			.comparison-icon {
+				font-size: 1.5rem;
+				color: var(--gold);
+				margin-bottom: 1rem;
+			}
+
+			.comparison-label {
+				font-size: 0.7rem;
+				letter-spacing: 0.2em;
+				text-transform: uppercase;
+				color: var(--gold);
+				margin-bottom: 0.75rem;
+			}
+
+			.comparison-value {
+				font-size: 0.85rem;
+				color: var(--cream);
+				opacity: 0.7;
+				line-height: 1.6;
+			}
+
+			/* TESTIMONIALS */
+			.testimonials {
+				padding: 8rem 4rem;
+				max-width: 1200px;
+				margin: 0 auto;
+			}
+
+			.testimonial-grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 2rem;
+			}
+
+			.testimonial {
+				border: 1px solid rgba(212, 175, 55, 0.2);
+				padding: 3rem;
+				position: relative;
+			}
+
+			.testimonial::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 30px;
+				height: 30px;
+				border-top: 1px solid var(--gold);
+				border-left: 1px solid var(--gold);
+			}
+
+			.testimonial::after {
+				content: '';
+				position: absolute;
+				bottom: 0;
+				right: 0;
+				width: 30px;
+				height: 30px;
+				border-bottom: 1px solid var(--gold);
+				border-right: 1px solid var(--gold);
+			}
+
+			.testimonial-quote {
+				font-family: 'Cinzel', serif;
+				font-size: 1.2rem;
+				font-style: italic;
+				line-height: 1.7;
+				margin-bottom: 2rem;
+				color: var(--cream);
+			}
+
+			.testimonial-author {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+
+			.testimonial-avatar {
+				width: 50px;
+				height: 50px;
+				border-radius: 0;
+				clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+			}
+
+			.testimonial-name {
+				font-family: 'Cinzel', serif;
+				font-size: 0.85rem;
+				letter-spacing: 0.1em;
+				color: var(--gold);
+			}
+
+			.testimonial-role {
+				font-size: 0.75rem;
+				opacity: 0.5;
+				margin-top: 0.25rem;
+			}
+
+			/* CTA */
+			.final-cta {
+				padding: 10rem 4rem;
+				text-align: center;
+				position: relative;
+			}
+
+			.final-cta::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 1px;
+				height: 100px;
+				background: linear-gradient(to bottom, transparent, var(--gold));
+			}
+
+			.final-cta .section-title {
+				margin-bottom: 1.5rem;
+			}
+
+			.final-cta p {
+				font-size: 1rem;
+				opacity: 0.6;
+				margin-bottom: 3rem;
+				max-width: 45ch;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			/* FOOTER */
+			.footer {
+				padding: 4rem;
+				border-top: 1px solid rgba(212, 175, 55, 0.2);
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				max-width: 1400px;
+				margin: 0 auto;
+			}
+
+			.footer-logo {
+				font-family: 'Cinzel', serif;
+				font-size: 1rem;
+				letter-spacing: 0.3em;
+				color: var(--gold);
+			}
+
+			.footer-links {
+				display: flex;
+				gap: 2.5rem;
+				font-size: 0.7rem;
+				letter-spacing: 0.2em;
+				text-transform: uppercase;
+			}
+
+			.footer-links a {
+				color: var(--cream);
+				opacity: 0.5;
+				transition: all 0.3s;
+			}
+
+			.footer-links a:hover {
+				opacity: 1;
+				color: var(--gold);
+			}
+
+			.footer-copy {
+				font-size: 0.7rem;
+				opacity: 0.4;
+				letter-spacing: 0.1em;
+			}
+
+			/* RESPONSIVE */
+			@media (max-width: 1024px) {
+				.comparison-grid {
+					grid-template-columns: repeat(2, 1fr);
+				}
+				.feature-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+
+			@media (max-width: 768px) {
+				.header {
+					padding: 1rem 1.5rem;
+				}
+				.nav {
+					display: none;
+				}
+				.hero {
+					padding: 6rem 1.5rem 4rem;
+				}
+				.hero-title {
+					letter-spacing: 0.05em;
+				}
+				.features,
+				.comparison,
+				.testimonials,
+				.final-cta {
+					padding: 4rem 1.5rem;
+				}
+				.comparison-grid {
+					grid-template-columns: 1fr;
+				}
+				.testimonial-grid {
+					grid-template-columns: 1fr;
+				}
+				.footer {
+					flex-direction: column;
+					gap: 2rem;
+					text-align: center;
+				}
+				.footer-links {
+					flex-wrap: wrap;
+					justify-content: center;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<svg class="geo-pattern top-left" viewBox="0 0 400 400">
+			<pattern
+				id="deco-pattern"
+				x="0"
+				y="0"
+				width="100"
+				height="100"
+				patternUnits="userSpaceOnUse"
+			>
+				<path
+					d="M50 0 L100 50 L50 100 L0 50 Z"
+					fill="none"
+					stroke="#d4af37"
+					stroke-width="0.5"
+				/>
+				<circle
+					cx="50"
+					cy="50"
+					r="20"
+					fill="none"
+					stroke="#d4af37"
+					stroke-width="0.5"
+				/>
+			</pattern>
+			<rect width="400" height="400" fill="url(#deco-pattern)" />
+		</svg>
+
+		<header class="header">
+			<div class="logo">WEB MAKER</div>
+			<nav class="nav">
+				<a href="/docs">Documentation</a>
+				<a href="https://medium.com/web-maker/">Journal</a>
+				<a href="https://github.com/chinchang/web-maker/">Source</a>
+			</nav>
+		</header>
+
+		<section class="hero">
+			<svg class="hero-decoration" viewBox="0 0 600 600">
+				<circle
+					cx="300"
+					cy="300"
+					r="200"
+					fill="none"
+					stroke="#d4af37"
+					stroke-width="0.5"
+				/>
+				<circle
+					cx="300"
+					cy="300"
+					r="250"
+					fill="none"
+					stroke="#d4af37"
+					stroke-width="0.5"
+				/>
+				<path
+					d="M300 50 L550 300 L300 550 L50 300 Z"
+					fill="none"
+					stroke="#d4af37"
+					stroke-width="0.5"
+				/>
+			</svg>
+			<div class="hero-ornament"></div>
+			<div class="hero-eyebrow">The Offline-First Code Editor</div>
+			<h1 class="hero-title">
+				WEB MAKER
+				<span class="line2">Code Without Limits</span>
+			</h1>
+			<div class="hero-divider"></div>
+			<p class="hero-subtitle">
+				A blazing fast, offline-capable frontend playground for HTML, CSS, and
+				JavaScript. Elegance meets functionality. No network required.
+			</p>
+			<div class="cta-group">
+				<a href="/create/" class="btn btn--filled">Open Web App</a>
+				<a
+					href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh"
+					class="btn"
+					>Chrome Extension</a
+				>
+			</div>
+		</section>
+
+		<section class="features">
+			<div class="section-header">
+				<div class="section-ornament">
+					<span class="line"></span>
+					<span class="diamond"></span>
+					<span class="line"></span>
+				</div>
+				<h2 class="section-title">CAPABILITIES</h2>
+				<p class="section-subtitle">
+					Every feature crafted with precision, designed for the discerning
+					developer
+				</p>
+			</div>
+			<div class="feature-grid">
+				<div class="feature-card">
+					<div class="feature-icon" data-icon="~"></div>
+					<h3 class="feature-title">OFFLINE MODE</h3>
+					<p class="feature-desc">
+						Lives entirely in your browser. No network dependency. Code
+						anywhere, anytime.
+					</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon" data-icon="{}"></div>
+					<h3 class="feature-title">PREPROCESSORS</h3>
+					<p class="feature-desc">
+						SCSS, TypeScript, Pug, Markdown, LESS, and more. All compiled
+						client-side.
+					</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon" data-icon="+"></div>
+					<h3 class="feature-title">ANY LIBRARY</h3>
+					<p class="feature-desc">
+						React, Vue, D3, Three.js. Add any library from the built-in picker
+						or CDN.
+					</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon" data-icon="="></div>
+					<h3 class="feature-title">FLEXIBLE LAYOUTS</h3>
+					<p class="feature-desc">
+						Side-by-side, stacked, or full preview. Your workspace, your
+						configuration.
+					</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon" data-icon="/"></div>
+					<h3 class="feature-title">FILES MODE</h3>
+					<p class="feature-desc">
+						Full file-based environment. Folders, imports, just like VS Code in
+						your browser.
+					</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon" data-icon="*"></div>
+					<h3 class="feature-title">COLLABORATION</h3>
+					<p class="feature-desc">
+						Share a link and code together in real-time. Perfect for pair
+						programming.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="comparison">
+			<div class="comparison-inner">
+				<h2 class="comparison-title">THE DISTINCTION</h2>
+				<div class="comparison-grid">
+					<div class="comparison-item">
+						<div class="comparison-icon">I</div>
+						<div class="comparison-label">Privacy</div>
+						<div class="comparison-value">
+							Your code stays on your device. No cloud storage required.
+						</div>
+					</div>
+					<div class="comparison-item">
+						<div class="comparison-icon">II</div>
+						<div class="comparison-label">Speed</div>
+						<div class="comparison-value">
+							Zero network latency. Instant compilation and preview.
+						</div>
+					</div>
+					<div class="comparison-item">
+						<div class="comparison-icon">III</div>
+						<div class="comparison-label">Freedom</div>
+						<div class="comparison-value">
+							No account required. No subscription. No limitations.
+						</div>
+					</div>
+					<div class="comparison-item">
+						<div class="comparison-icon">IV</div>
+						<div class="comparison-label">Availability</div>
+						<div class="comparison-value">
+							Works anywhere, anytime. Internet optional.
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="testimonials">
+			<div class="section-header">
+				<div class="section-ornament">
+					<span class="line"></span>
+					<span class="diamond"></span>
+					<span class="line"></span>
+				</div>
+				<h2 class="section-title">ACCLAIM</h2>
+				<p class="section-subtitle">Words from distinguished developers</p>
+			</div>
+			<div class="testimonial-grid">
+				<div class="testimonial">
+					<p class="testimonial-quote">
+						"If you're looking for a CodePen-like offline editor, and use
+						Chrome, check out Web-Maker by Kushagra Gour."
+					</p>
+					<div class="testimonial-author">
+						<img
+							src="/images/testimonials/cc.jpg"
+							alt="Chris Coyier"
+							class="testimonial-avatar"
+						/>
+						<div>
+							<div class="testimonial-name">CHRIS COYIER</div>
+							<div class="testimonial-role">Creator of CodePen</div>
+						</div>
+					</div>
+				</div>
+				<div class="testimonial">
+					<p class="testimonial-quote">
+						"This is like having your own copy of Codepen that also works
+						offline."
+					</p>
+					<div class="testimonial-author">
+						<img
+							src="/images/testimonials/aa.jpg"
+							alt="Amit Agarwal"
+							class="testimonial-avatar"
+						/>
+						<div>
+							<div class="testimonial-name">AMIT AGARWAL</div>
+							<div class="testimonial-role">@labnol</div>
+						</div>
+					</div>
+				</div>
+				<div class="testimonial">
+					<p class="testimonial-quote">
+						"Really enjoying using Web Maker - super fast offline web
+						playground."
+					</p>
+					<div class="testimonial-author">
+						<img
+							src="/images/testimonials/rd.jpg"
+							alt="Ryan Davidson"
+							class="testimonial-avatar"
+						/>
+						<div>
+							<div class="testimonial-name">RYAN DAVIDSON</div>
+							<div class="testimonial-role">@Ryan_Random</div>
+						</div>
+					</div>
+				</div>
+				<div class="testimonial">
+					<p class="testimonial-quote">
+						"Meet Web Maker, an Offline, Browser-based CodePen Alternative."
+					</p>
+					<div class="testimonial-author">
+						<img
+							src="/images/testimonials/sitepoint.jpg"
+							alt="SitePoint"
+							class="testimonial-avatar"
+						/>
+						<div>
+							<div class="testimonial-name">SITEPOINT</div>
+							<div class="testimonial-role">@sitepointdotcom</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="final-cta">
+			<div class="section-ornament">
+				<span class="line"></span>
+				<span class="diamond"></span>
+				<span class="line"></span>
+			</div>
+			<h2 class="section-title">BEGIN YOUR JOURNEY</h2>
+			<p>
+				No registration. No installation. Simply open your browser and let
+				inspiration flow.
+			</p>
+			<a href="/create/" class="btn btn--filled">Launch Web Maker</a>
+		</section>
+
+		<footer class="footer">
+			<div class="footer-logo">WEB MAKER</div>
+			<div class="footer-links">
+				<a href="/docs">Documentation</a>
+				<a href="https://medium.com/web-maker/">Journal</a>
+				<a href="https://github.com/chinchang/web-maker/">Source</a>
+				<a href="/privacy-policy">Privacy</a>
+			</div>
+			<div class="footer-copy">Crafted by Kushagra Gour</div>
+		</footer>
+	</body>
+</html>

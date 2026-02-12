@@ -1,0 +1,599 @@
+---
+layout: default.html
+---
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;800&display=swap"
+	rel="stylesheet"
+/>
+
+<article class="cmp">
+	<header class="cmp-hero">
+		<div class="cmp-hero__badge">Comparison Guide</div>
+		<h1 class="cmp-hero__title">{{ title }}</h1>
+		<p class="cmp-hero__subtitle">{{ subtitle }}</p>
+		<div class="cmp-hero__visual">
+			<div class="cmp-hero__card cmp-hero__card--wm">
+				<span class="cmp-hero__card-icon">W</span>
+				<span>Web Maker</span>
+			</div>
+			<div class="cmp-hero__vs">vs</div>
+			<div class="cmp-hero__card cmp-hero__card--other">
+				<span class="cmp-hero__card-icon">C</span>
+				<span>CodePen</span>
+			</div>
+		</div>
+	</header>
+
+	<div class="cmp-content">{{ content }}</div>
+
+	<section class="cmp-cta">
+		<div class="cmp-cta__glow"></div>
+		<h2 class="cmp-cta__title">Ready to try the difference?</h2>
+		<p class="cmp-cta__text">No signup. No download. Just code.</p>
+		<div class="cmp-cta__buttons">
+			<a href="/create/" class="cmp-btn cmp-btn--primary">
+				<span>Open Web Maker</span>
+				<svg
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+				>
+					<path d="M5 12h14M12 5l7 7-7 7" />
+				</svg>
+			</a>
+			<a
+				href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh"
+				class="cmp-btn cmp-btn--secondary"
+			>
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+					<path
+						d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-3.952 6.848a12.014 12.014 0 0 0 9.312-5.268A12.014 12.014 0 0 0 22.691 6.545h-7.418z"
+					/>
+				</svg>
+				<span>Chrome Extension</span>
+			</a>
+		</div>
+	</section>
+</article>
+
+<style>
+	/* ===== BASE VARIABLES ===== */
+	.cmp {
+		--font-display: 'DM Serif Display', Georgia, serif;
+		--font-body: 'Outfit', -apple-system, sans-serif;
+		--font-mono: 'JetBrains Mono', monospace;
+
+		--color-bg: #0a0a0f;
+		--color-surface: #12121a;
+		--color-surface-elevated: #1a1a25;
+		--color-border: rgba(255, 255, 255, 0.08);
+		--color-text: #e8e8ed;
+		--color-text-muted: #8888a0;
+		--color-accent: #ff6c00;
+		--color-accent-glow: rgba(255, 108, 0, 0.4);
+		--color-wm: #ff6c00;
+		--color-other: #47cf73;
+		--color-negative: #ff4757;
+		--color-partial: #ffa502;
+
+		font-family: var(--font-body);
+		background: var(--color-bg);
+		color: var(--color-text);
+		min-height: 100vh;
+		position: relative;
+	}
+
+	.cmp::before {
+		content: '';
+		position: fixed;
+		inset: 0;
+		background: radial-gradient(
+				ellipse 80% 50% at 50% -20%,
+				rgba(255, 108, 0, 0.15),
+				transparent
+			),
+			url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+		opacity: 0.03;
+		pointer-events: none;
+		z-index: 0;
+	}
+
+	/* ===== HERO SECTION ===== */
+	.cmp-hero {
+		position: relative;
+		padding: 4rem 2rem 3rem;
+		text-align: center;
+		border-bottom: 1px solid var(--color-border);
+		overflow: hidden;
+	}
+
+	.cmp-hero__badge {
+		display: inline-block;
+		padding: 0.4rem 1rem;
+		background: var(--color-surface-elevated);
+		border: 1px solid var(--color-border);
+		border-radius: 100px;
+		font-size: 0.75rem;
+		font-weight: 600;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+		margin-bottom: 1.5rem;
+		animation: fadeInDown 0.6s ease-out;
+	}
+
+	.cmp-hero__title {
+		font-family: var(--font-display);
+		font-size: clamp(2rem, 5vw, 3.5rem);
+		font-weight: 400;
+		line-height: 1.1;
+		margin: 0 auto 1rem;
+		max-width: 800px;
+		animation: fadeInUp 0.6s ease-out 0.1s both;
+	}
+
+	.cmp-hero__subtitle {
+		font-size: 1.1rem;
+		color: var(--color-text-muted);
+		max-width: 500px;
+		margin: 0 auto 2.5rem;
+		animation: fadeInUp 0.6s ease-out 0.2s both;
+	}
+
+	.cmp-hero__visual {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1.5rem;
+		animation: fadeInUp 0.6s ease-out 0.3s both;
+	}
+
+	.cmp-hero__card {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 1rem 1.5rem;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 12px;
+		font-family: var(--font-mono);
+		font-weight: 600;
+		font-size: 0.9rem;
+		transition:
+			transform 0.3s,
+			box-shadow 0.3s;
+	}
+
+	.cmp-hero__card:hover {
+		transform: translateY(-4px);
+	}
+
+	.cmp-hero__card--wm {
+		border-color: rgba(255, 108, 0, 0.3);
+		box-shadow: 0 0 30px rgba(255, 108, 0, 0.1);
+	}
+
+	.cmp-hero__card--wm:hover {
+		box-shadow: 0 8px 40px rgba(255, 108, 0, 0.2);
+	}
+
+	.cmp-hero__card--other {
+		border-color: rgba(71, 207, 115, 0.3);
+		box-shadow: 0 0 30px rgba(71, 207, 115, 0.1);
+	}
+
+	.cmp-hero__card-icon {
+		width: 32px;
+		height: 32px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 8px;
+		font-weight: 800;
+		font-size: 1rem;
+	}
+
+	.cmp-hero__card--wm .cmp-hero__card-icon {
+		background: linear-gradient(135deg, #ff6c00, #ff4600);
+		color: white;
+	}
+
+	.cmp-hero__card--other .cmp-hero__card-icon {
+		background: linear-gradient(135deg, #47cf73, #0ebeff);
+		color: white;
+	}
+
+	.cmp-hero__vs {
+		font-family: var(--font-display);
+		font-style: italic;
+		font-size: 1.5rem;
+		color: var(--color-text-muted);
+	}
+
+	/* ===== CONTENT SECTION ===== */
+	.cmp-content {
+		position: relative;
+		z-index: 1;
+		max-width: 900px;
+		margin: 0 auto;
+		padding: 3rem 2rem;
+	}
+
+	.cmp-content h2 {
+		font-family: var(--font-display);
+		font-size: 1.8rem;
+		font-weight: 400;
+		margin: 3rem 0 1.5rem;
+		padding-bottom: 0.75rem;
+		border-bottom: 2px solid var(--color-accent);
+		display: inline-block;
+	}
+
+	.cmp-content h2:first-child {
+		margin-top: 0;
+	}
+
+	.cmp-content h3 {
+		font-family: var(--font-body);
+		font-size: 1.2rem;
+		font-weight: 600;
+		margin: 2rem 0 1rem;
+		color: var(--color-text);
+	}
+
+	.cmp-content p {
+		color: var(--color-text-muted);
+		line-height: 1.7;
+		margin: 1rem 0;
+	}
+
+	.cmp-content strong {
+		color: var(--color-text);
+		font-weight: 600;
+	}
+
+	.cmp-content ul,
+	.cmp-content ol {
+		color: var(--color-text-muted);
+		line-height: 1.8;
+		padding-left: 1.5rem;
+	}
+
+	.cmp-content li {
+		margin: 0.5rem 0;
+	}
+
+	/* ===== COMPARISON TABLE ===== */
+	.cmp-content .comparison-table {
+		width: 100%;
+		border-collapse: separate;
+		border-spacing: 0;
+		margin: 2rem 0;
+		font-size: 0.95rem;
+		border-radius: 12px;
+		overflow: hidden;
+		border: 1px solid var(--color-border);
+		background: var(--color-surface);
+	}
+
+	.cmp-content .comparison-table th,
+	.cmp-content .comparison-table td {
+		padding: 1rem 1.25rem;
+		text-align: left;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.cmp-content .comparison-table th {
+		background: var(--color-surface-elevated);
+		font-family: var(--font-mono);
+		font-weight: 600;
+		font-size: 0.8rem;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: var(--color-text-muted);
+	}
+
+	.cmp-content .comparison-table th:nth-child(2) {
+		color: var(--color-wm);
+	}
+
+	.cmp-content .comparison-table th:nth-child(3) {
+		color: var(--color-other);
+	}
+
+	.cmp-content .comparison-table tr:last-child td {
+		border-bottom: none;
+	}
+
+	.cmp-content .comparison-table tr:hover td {
+		background: rgba(255, 255, 255, 0.02);
+	}
+
+	.cmp-content .comparison-table td:first-child {
+		font-weight: 500;
+		color: var(--color-text);
+	}
+
+	.cmp-content .check {
+		color: var(--color-other);
+		font-weight: 600;
+	}
+
+	.cmp-content .check::before {
+		content: '';
+		display: inline-block;
+		width: 18px;
+		height: 18px;
+		background: currentColor;
+		-webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E")
+			center/contain no-repeat;
+		mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E")
+			center/contain no-repeat;
+		vertical-align: middle;
+		margin-right: 0.5rem;
+	}
+
+	.cmp-content .cross {
+		color: var(--color-negative);
+		font-weight: 500;
+	}
+
+	.cmp-content .cross::before {
+		content: '';
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		background: currentColor;
+		-webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18 6L6 18M6 6l12 12'/%3E%3C/svg%3E")
+			center/contain no-repeat;
+		mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18 6L6 18M6 6l12 12'/%3E%3C/svg%3E")
+			center/contain no-repeat;
+		vertical-align: middle;
+		margin-right: 0.5rem;
+	}
+
+	.cmp-content .partial {
+		color: var(--color-partial);
+		font-weight: 500;
+	}
+
+	.cmp-content .partial::before {
+		content: '';
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		background: currentColor;
+		-webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='currentColor' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3C/svg%3E")
+			center/contain no-repeat;
+		mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='currentColor' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3C/svg%3E")
+			center/contain no-repeat;
+		vertical-align: middle;
+		margin-right: 0.5rem;
+	}
+
+	/* ===== PROS/CONS BOXES ===== */
+	.cmp-content .pros,
+	.cmp-content .cons {
+		padding: 1.5rem 2rem;
+		border-radius: 12px;
+		margin: 1.5rem 0;
+		border: 1px solid;
+	}
+
+	.cmp-content .pros {
+		background: rgba(71, 207, 115, 0.05);
+		border-color: rgba(71, 207, 115, 0.2);
+	}
+
+	.cmp-content .pros h3 {
+		color: var(--color-other);
+		margin-top: 0;
+	}
+
+	.cmp-content .cons {
+		background: rgba(255, 165, 2, 0.05);
+		border-color: rgba(255, 165, 2, 0.2);
+	}
+
+	.cmp-content .cons h3 {
+		color: var(--color-partial);
+		margin-top: 0;
+	}
+
+	/* ===== VERDICT BOX ===== */
+	.cmp-content .verdict-box {
+		background: linear-gradient(
+			135deg,
+			var(--color-surface),
+			var(--color-surface-elevated)
+		);
+		border: 1px solid var(--color-border);
+		border-left: 4px solid var(--color-accent);
+		border-radius: 12px;
+		padding: 2rem;
+		margin: 3rem 0;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.cmp-content .verdict-box::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 200px;
+		height: 200px;
+		background: radial-gradient(
+			circle,
+			var(--color-accent-glow),
+			transparent 70%
+		);
+		opacity: 0.3;
+		pointer-events: none;
+	}
+
+	.cmp-content .verdict-box h3 {
+		font-family: var(--font-display);
+		font-size: 1.5rem;
+		color: var(--color-accent);
+		margin: 0 0 1rem;
+	}
+
+	/* ===== CTA SECTION ===== */
+	.cmp-cta {
+		position: relative;
+		text-align: center;
+		padding: 4rem 2rem;
+		margin-top: 2rem;
+		background: var(--color-surface);
+		border-top: 1px solid var(--color-border);
+		overflow: hidden;
+	}
+
+	.cmp-cta__glow {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 600px;
+		height: 400px;
+		background: radial-gradient(
+			ellipse,
+			var(--color-accent-glow),
+			transparent 70%
+		);
+		opacity: 0.2;
+		pointer-events: none;
+	}
+
+	.cmp-cta__title {
+		font-family: var(--font-display);
+		font-size: 2.5rem;
+		margin: 0 0 0.5rem;
+		position: relative;
+	}
+
+	.cmp-cta__text {
+		color: var(--color-text-muted);
+		font-size: 1.1rem;
+		margin: 0 0 2rem;
+		position: relative;
+	}
+
+	.cmp-cta__buttons {
+		display: flex;
+		gap: 1rem;
+		justify-content: center;
+		flex-wrap: wrap;
+		position: relative;
+	}
+
+	.cmp-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 1rem 2rem;
+		border-radius: 10px;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 1rem;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.cmp-btn--primary {
+		background: linear-gradient(135deg, #ff6c00, #ff4600);
+		color: white;
+		box-shadow: 0 4px 20px rgba(255, 108, 0, 0.3);
+	}
+
+	.cmp-btn--primary:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 30px rgba(255, 108, 0, 0.4);
+	}
+
+	.cmp-btn--primary svg {
+		transition: transform 0.3s;
+	}
+
+	.cmp-btn--primary:hover svg {
+		transform: translateX(4px);
+	}
+
+	.cmp-btn--secondary {
+		background: var(--color-surface-elevated);
+		color: var(--color-text);
+		border: 1px solid var(--color-border);
+	}
+
+	.cmp-btn--secondary:hover {
+		background: var(--color-border);
+		transform: translateY(-2px);
+	}
+
+	/* ===== ANIMATIONS ===== */
+	@keyframes fadeInDown {
+		from {
+			opacity: 0;
+			transform: translateY(-20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* ===== RESPONSIVE ===== */
+	@media (max-width: 700px) {
+		.cmp-hero {
+			padding: 3rem 1.5rem 2rem;
+		}
+
+		.cmp-hero__visual {
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		.cmp-hero__vs {
+			transform: rotate(90deg);
+		}
+
+		.cmp-content {
+			padding: 2rem 1.5rem;
+		}
+
+		.cmp-content .comparison-table {
+			font-size: 0.85rem;
+		}
+
+		.cmp-content .comparison-table th,
+		.cmp-content .comparison-table td {
+			padding: 0.75rem 0.5rem;
+		}
+
+		.cmp-cta__title {
+			font-size: 1.8rem;
+		}
+
+		.cmp-btn {
+			width: 100%;
+			justify-content: center;
+		}
+	}
+</style>

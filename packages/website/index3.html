@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Web Maker - Flow State</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			:root {
+				--cream: #faf8f5;
+				--sage: #8fa68a;
+				--sage-dark: #6b8566;
+				--terracotta: #c17f59;
+				--clay: #d4a574;
+				--charcoal: #2d2d2d;
+				--mist: #e8e4df;
+				--lavender: #b8a9c9;
+				--ocean: #7fa5b5;
+			}
+
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			::selection {
+				background: var(--sage);
+				color: white;
+			}
+
+			html {
+				font-size: 18px;
+				scroll-behavior: smooth;
+			}
+
+			body {
+				font-family: 'DM Sans', sans-serif;
+				background: var(--cream);
+				color: var(--charcoal);
+				overflow-x: hidden;
+				line-height: 1.6;
+			}
+
+			a {
+				color: inherit;
+				text-decoration: none;
+			}
+
+			/* BLOBS */
+			.blob {
+				position: absolute;
+				border-radius: 50%;
+				filter: blur(60px);
+				opacity: 0.5;
+				z-index: -1;
+				animation: float 20s ease-in-out infinite;
+			}
+
+			.blob-1 {
+				width: 500px;
+				height: 500px;
+				background: var(--sage);
+				top: -100px;
+				right: -100px;
+				animation-delay: 0s;
+			}
+
+			.blob-2 {
+				width: 400px;
+				height: 400px;
+				background: var(--lavender);
+				top: 40%;
+				left: -150px;
+				animation-delay: -5s;
+			}
+
+			.blob-3 {
+				width: 350px;
+				height: 350px;
+				background: var(--ocean);
+				bottom: 10%;
+				right: 10%;
+				animation-delay: -10s;
+			}
+
+			@keyframes float {
+				0%,
+				100% {
+					transform: translate(0, 0) scale(1);
+				}
+				25% {
+					transform: translate(20px, -30px) scale(1.05);
+				}
+				50% {
+					transform: translate(-20px, 20px) scale(0.95);
+				}
+				75% {
+					transform: translate(30px, 10px) scale(1.02);
+				}
+			}
+
+			/* HEADER */
+			.header {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				z-index: 1000;
+				padding: 1.5rem 4rem;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				backdrop-filter: blur(20px);
+				background: rgba(250, 248, 245, 0.8);
+			}
+
+			.logo {
+				font-family: 'Cormorant Garamond', serif;
+				font-size: 1.5rem;
+				font-weight: 600;
+				letter-spacing: 0.05em;
+			}
+
+			.nav {
+				display: flex;
+				gap: 2.5rem;
+				font-size: 0.85rem;
+			}
+
+			.nav a {
+				position: relative;
+				color: var(--charcoal);
+				opacity: 0.7;
+				transition: opacity 0.3s;
+			}
+
+			.nav a:hover {
+				opacity: 1;
+			}
+
+			.nav a::after {
+				content: '';
+				position: absolute;
+				bottom: -4px;
+				left: 0;
+				width: 0;
+				height: 1px;
+				background: var(--sage-dark);
+				transition: width 0.3s ease;
+			}
+
+			.nav a:hover::after {
+				width: 100%;
+			}
+
+			/* HERO */
+			.hero {
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+				padding: 8rem 2rem 4rem;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.hero-eyebrow {
+				font-size: 0.75rem;
+				letter-spacing: 0.3em;
+				text-transform: uppercase;
+				color: var(--sage-dark);
+				margin-bottom: 1.5rem;
+				opacity: 0;
+				animation: fadeUp 1s ease forwards 0.2s;
+			}
+
+			.hero-title {
+				font-family: 'Cormorant Garamond', serif;
+				font-size: clamp(3rem, 10vw, 7rem);
+				font-weight: 400;
+				line-height: 1.1;
+				margin-bottom: 1.5rem;
+				max-width: 12ch;
+				opacity: 0;
+				animation: fadeUp 1s ease forwards 0.4s;
+			}
+
+			.hero-title em {
+				font-style: italic;
+				color: var(--sage-dark);
+			}
+
+			.hero-subtitle {
+				font-size: 1.1rem;
+				color: var(--charcoal);
+				opacity: 0.7;
+				max-width: 45ch;
+				margin-bottom: 2.5rem;
+				opacity: 0;
+				animation: fadeUp 1s ease forwards 0.6s;
+			}
+
+			@keyframes fadeUp {
+				from {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			.cta-group {
+				display: flex;
+				gap: 1rem;
+				flex-wrap: wrap;
+				justify-content: center;
+				opacity: 0;
+				animation: fadeUp 1s ease forwards 0.8s;
+			}
+
+			.btn {
+				font-family: inherit;
+				font-size: 0.9rem;
+				padding: 1rem 2.5rem;
+				border-radius: 100px;
+				border: none;
+				cursor: pointer;
+				transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+			}
+
+			.btn--primary {
+				background: var(--sage-dark);
+				color: white;
+			}
+
+			.btn--primary:hover {
+				background: var(--charcoal);
+				transform: translateY(-2px);
+				box-shadow: 0 10px 30px rgba(107, 133, 102, 0.3);
+			}
+
+			.btn--secondary {
+				background: transparent;
+				color: var(--charcoal);
+				border: 1.5px solid var(--mist);
+			}
+
+			.btn--secondary:hover {
+				border-color: var(--sage);
+				background: rgba(143, 166, 138, 0.1);
+			}
+
+			.hero-visual {
+				margin-top: 4rem;
+				position: relative;
+				opacity: 0;
+				animation: fadeUp 1s ease forwards 1s;
+			}
+
+			.hero-image {
+				width: min(90vw, 900px);
+				border-radius: 20px;
+				box-shadow:
+					0 30px 60px rgba(0, 0, 0, 0.1),
+					0 0 0 1px rgba(0, 0, 0, 0.05);
+			}
+
+			.floating-badge {
+				position: absolute;
+				background: white;
+				padding: 1rem 1.5rem;
+				border-radius: 16px;
+				box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+				font-size: 0.85rem;
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				animation: floatBadge 6s ease-in-out infinite;
+			}
+
+			.floating-badge.badge-1 {
+				top: 20%;
+				left: -40px;
+				animation-delay: 0s;
+			}
+
+			.floating-badge.badge-2 {
+				bottom: 30%;
+				right: -30px;
+				animation-delay: -2s;
+			}
+
+			@keyframes floatBadge {
+				0%,
+				100% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(-10px);
+				}
+			}
+
+			.badge-icon {
+				width: 36px;
+				height: 36px;
+				border-radius: 10px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 1.1rem;
+			}
+
+			.badge-icon.sage {
+				background: rgba(143, 166, 138, 0.2);
+			}
+			.badge-icon.lavender {
+				background: rgba(184, 169, 201, 0.2);
+			}
+
+			/* FEATURES */
+			.features {
+				padding: 8rem 4rem;
+				max-width: 1400px;
+				margin: 0 auto;
+			}
+
+			.section-header {
+				text-align: center;
+				margin-bottom: 5rem;
+			}
+
+			.section-eyebrow {
+				font-size: 0.75rem;
+				letter-spacing: 0.3em;
+				text-transform: uppercase;
+				color: var(--sage-dark);
+				margin-bottom: 1rem;
+			}
+
+			.section-title {
+				font-family: 'Cormorant Garamond', serif;
+				font-size: 3rem;
+				font-weight: 400;
+			}
+
+			.section-title em {
+				font-style: italic;
+			}
+
+			.feature-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 2rem;
+			}
+
+			.feature-card {
+				background: white;
+				border-radius: 24px;
+				padding: 2.5rem;
+				transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+				border: 1px solid var(--mist);
+			}
+
+			.feature-card:hover {
+				transform: translateY(-8px);
+				box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+			}
+
+			.feature-icon {
+				width: 56px;
+				height: 56px;
+				border-radius: 16px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 1.5rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.feature-icon.sage {
+				background: rgba(143, 166, 138, 0.15);
+			}
+			.feature-icon.lavender {
+				background: rgba(184, 169, 201, 0.15);
+			}
+			.feature-icon.ocean {
+				background: rgba(127, 165, 181, 0.15);
+			}
+			.feature-icon.terracotta {
+				background: rgba(193, 127, 89, 0.15);
+			}
+			.feature-icon.clay {
+				background: rgba(212, 165, 116, 0.15);
+			}
+
+			.feature-title {
+				font-family: 'Cormorant Garamond', serif;
+				font-size: 1.4rem;
+				font-weight: 600;
+				margin-bottom: 0.75rem;
+			}
+
+			.feature-desc {
+				font-size: 0.9rem;
+				color: var(--charcoal);
+				opacity: 0.7;
+				line-height: 1.7;
+			}
+
+			/* WHY SECTION */
+			.why-section {
+				padding: 8rem 4rem;
+				background: linear-gradient(
+					180deg,
+					var(--cream) 0%,
+					rgba(143, 166, 138, 0.08) 100%
+				);
+			}
+
+			.why-content {
+				max-width: 1200px;
+				margin: 0 auto;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 6rem;
+				align-items: center;
+			}
+
+			.why-text h2 {
+				font-family: 'Cormorant Garamond', serif;
+				font-size: 2.5rem;
+				font-weight: 400;
+				margin-bottom: 1.5rem;
+				line-height: 1.2;
+			}
+
+			.why-text p {
+				color: var(--charcoal);
+				opacity: 0.7;
+				margin-bottom: 2rem;
+				line-height: 1.8;
+			}
+
+			.why-list {
+				list-style: none;
+			}
+
+			.why-list li {
+				display: flex;
+				align-items: flex-start;
+				gap: 1rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.why-list-icon {
+				width: 28px;
+				height: 28px;
+				border-radius: 50%;
+				background: var(--sage);
+				color: white;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.8rem;
+				flex-shrink: 0;
+			}
+
+			.why-list-text strong {
+				display: block;
+				margin-bottom: 0.25rem;
+			}
+
+			.why-list-text span {
+				font-size: 0.9rem;
+				opacity: 0.7;
+			}
+
+			.why-visual {
+				position: relative;
+			}
+
+			.why-card {
+				background: white;
+				border-radius: 24px;
+				padding: 3rem;
+				box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+			}
+
+			.why-card h3 {
+				font-family: 'Cormorant Garamond', serif;
+				font-size: 1.8rem;
+				margin-bottom: 1rem;
+			}
+
+			.comparison-row {
+				display: flex;
+				justify-content: space-between;
+				padding: 1rem 0;
+				border-bottom: 1px solid var(--mist);
+				font-size: 0.9rem;
+			}
+
+			.comparison-row:last-child {
+				border-bottom: none;
+			}
+
+			.comparison-label {
+				opacity: 0.6;
+			}
+
+			.comparison-value {
+				font-weight: 500;
+				color: var(--sage-dark);
+			}
+
+			/* TESTIMONIALS */
+			.testimonials {
+				padding: 8rem 4rem;
+				max-width: 1200px;
+				margin: 0 auto;
+			}
+
+			.testimonial-grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 2rem;
+			}
+
+			.testimonial {
+				background: white;
+				border-radius: 24px;
+				padding: 2.5rem;
+				border: 1px solid var(--mist);
+				transition: all 0.4s;
+			}
+
+			.testimonial:hover {
+				box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+			}
+
+			.testimonial-quote {
+				font-family: 'Cormorant Garamond', serif;
+				font-size: 1.3rem;
+				font-style: italic;
+				line-height: 1.6;
+				margin-bottom: 2rem;
+				color: var(--charcoal);
+			}
+
+			.testimonial-author {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+			}
+
+			.testimonial-avatar {
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
+				object-fit: cover;
+			}
+
+			.testimonial-name {
+				font-weight: 600;
+				margin-bottom: 0.25rem;
+			}
+
+			.testimonial-role {
+				font-size: 0.8rem;
+				opacity: 0.6;
+			}
+
+			/* CTA */
+			.final-cta {
+				padding: 10rem 4rem;
+				text-align: center;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.final-cta::before {
+				content: '';
+				position: absolute;
+				width: 600px;
+				height: 600px;
+				background: radial-gradient(circle, var(--sage) 0%, transparent 70%);
+				opacity: 0.1;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				border-radius: 50%;
+			}
+
+			.final-cta h2 {
+				font-family: 'Cormorant Garamond', serif;
+				font-size: 3.5rem;
+				font-weight: 400;
+				margin-bottom: 1.5rem;
+				max-width: 15ch;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			.final-cta p {
+				opacity: 0.7;
+				margin-bottom: 2.5rem;
+				max-width: 45ch;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			/* FOOTER */
+			.footer {
+				padding: 4rem;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				border-top: 1px solid var(--mist);
+				max-width: 1400px;
+				margin: 0 auto;
+			}
+
+			.footer-links {
+				display: flex;
+				gap: 2rem;
+				font-size: 0.85rem;
+			}
+
+			.footer-links a {
+				opacity: 0.6;
+				transition: opacity 0.3s;
+			}
+
+			.footer-links a:hover {
+				opacity: 1;
+			}
+
+			.footer-copy {
+				font-size: 0.8rem;
+				opacity: 0.5;
+			}
+
+			/* RESPONSIVE */
+			@media (max-width: 1024px) {
+				.feature-grid {
+					grid-template-columns: repeat(2, 1fr);
+				}
+				.why-content {
+					grid-template-columns: 1fr;
+					gap: 3rem;
+				}
+			}
+
+			@media (max-width: 768px) {
+				.header {
+					padding: 1rem 1.5rem;
+				}
+				.nav {
+					display: none;
+				}
+				.hero {
+					padding: 6rem 1.5rem 3rem;
+				}
+				.features,
+				.why-section,
+				.testimonials,
+				.final-cta {
+					padding: 4rem 1.5rem;
+				}
+				.feature-grid,
+				.testimonial-grid {
+					grid-template-columns: 1fr;
+				}
+				.floating-badge {
+					display: none;
+				}
+				.footer {
+					flex-direction: column;
+					gap: 1.5rem;
+					text-align: center;
+				}
+				.blob {
+					display: none;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="blob blob-1"></div>
+		<div class="blob blob-2"></div>
+		<div class="blob blob-3"></div>
+
+		<header class="header">
+			<div class="logo">Web Maker</div>
+			<nav class="nav">
+				<a href="/docs">Documentation</a>
+				<a href="https://medium.com/web-maker/">Journal</a>
+				<a href="https://github.com/chinchang/web-maker/">Source</a>
+			</nav>
+		</header>
+
+		<section class="hero">
+			<div class="hero-eyebrow">Offline-First Code Playground</div>
+			<h1 class="hero-title">Find your <em>flow</em> state</h1>
+			<p class="hero-subtitle">
+				A serene, distraction-free environment for crafting HTML, CSS, and
+				JavaScript. Works offline. Feels like breathing.
+			</p>
+			<div class="cta-group">
+				<a href="/create/" class="btn btn--primary">Open Web App</a>
+				<a
+					href="https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh"
+					class="btn btn--secondary"
+					>Chrome Extension</a
+				>
+			</div>
+			<div class="hero-visual">
+				<img
+					src="/images/ss1.webp"
+					alt="Web Maker Interface"
+					class="hero-image"
+				/>
+				<div class="floating-badge badge-1">
+					<div class="badge-icon sage">~</div>
+					<span>Works Offline</span>
+				</div>
+				<div class="floating-badge badge-2">
+					<div class="badge-icon lavender">*</div>
+					<span>Real-time Collab</span>
+				</div>
+			</div>
+		</section>
+
+		<section class="features">
+			<div class="section-header">
+				<div class="section-eyebrow">Capabilities</div>
+				<h2 class="section-title">
+					Everything you need, <em>nothing you don't</em>
+				</h2>
+			</div>
+			<div class="feature-grid">
+				<div class="feature-card">
+					<div class="feature-icon sage">~</div>
+					<h3 class="feature-title">Offline by Nature</h3>
+					<p class="feature-desc">
+						Lives entirely in your browser. No internet required. Code on
+						flights, trains, or in quiet corners.
+					</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon lavender">{}</div>
+					<h3 class="feature-title">Preprocessor Harmony</h3>
+					<p class="feature-desc">
+						SCSS, TypeScript, Pug, Markdown, LESS, and more. All compiled
+						gracefully in the browser.
+					</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon ocean">+</div>
+					<h3 class="feature-title">Any Library</h3>
+					<p class="feature-desc">
+						React, Vue, D3, Three.js. Add any library from the built-in picker
+						or via CDN.
+					</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon terracotta">=</div>
+					<h3 class="feature-title">Flexible Layouts</h3>
+					<p class="feature-desc">
+						Side-by-side, stacked, or full preview. Arrange your workspace the
+						way your mind works.
+					</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon sage">/</div>
+					<h3 class="feature-title">Files Mode</h3>
+					<p class="feature-desc">
+						Work with a full file-based environment. Folders, imports, just like
+						VS Code.
+					</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon clay">*</div>
+					<h3 class="feature-title">Collaborate</h3>
+					<p class="feature-desc">
+						Share a link and code together in real-time. Perfect for teaching
+						and pair programming.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="why-section">
+			<div class="why-content">
+				<div class="why-text">
+					<h2>Why developers choose<br />Web Maker</h2>
+					<p>
+						Unlike cloud-based playgrounds, Web Maker respects your privacy and
+						your workflow. Your code stays on your device unless you choose to
+						share it.
+					</p>
+					<ul class="why-list">
+						<li>
+							<span class="why-list-icon">1</span>
+							<div class="why-list-text">
+								<strong>Complete Privacy</strong>
+								<span
+									>Your code never leaves your machine without permission</span
+								>
+							</div>
+						</li>
+						<li>
+							<span class="why-list-icon">2</span>
+							<div class="why-list-text">
+								<strong>Zero Latency</strong>
+								<span
+									>No network round-trips. Instant compilation and preview</span
+								>
+							</div>
+						</li>
+						<li>
+							<span class="why-list-icon">3</span>
+							<div class="why-list-text">
+								<strong>Always Available</strong>
+								<span>Works anywhere, anytime, with or without internet</span>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="why-visual">
+					<div class="why-card">
+						<h3>The Gentle Comparison</h3>
+						<div class="comparison-row">
+							<span class="comparison-label">Offline Support</span>
+							<span class="comparison-value">Full</span>
+						</div>
+						<div class="comparison-row">
+							<span class="comparison-label">Account Required</span>
+							<span class="comparison-value">No</span>
+						</div>
+						<div class="comparison-row">
+							<span class="comparison-label">Data Storage</span>
+							<span class="comparison-value">Local</span>
+						</div>
+						<div class="comparison-row">
+							<span class="comparison-label">Collaboration</span>
+							<span class="comparison-value">Real-time</span>
+						</div>
+						<div class="comparison-row">
+							<span class="comparison-label">Preprocessors</span>
+							<span class="comparison-value">8+</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="testimonials">
+			<div class="section-header">
+				<div class="section-eyebrow">Kind Words</div>
+				<h2 class="section-title">From the <em>community</em></h2>
+			</div>
+			<div class="testimonial-grid">
+				<div class="testimonial">
+					<p class="testimonial-quote">
+						"If you're looking for a CodePen-like offline editor, and use
+						Chrome, check out Web-Maker by Kushagra Gour."
+					</p>
+					<div class="testimonial-author">
+						<img
+							src="/images/testimonials/cc.jpg"
+							alt="Chris Coyier"
+							class="testimonial-avatar"
+						/>
+						<div>
+							<div class="testimonial-name">Chris Coyier</div>
+							<div class="testimonial-role">Creator of CodePen</div>
+						</div>
+					</div>
+				</div>
+				<div class="testimonial">
+					<p class="testimonial-quote">
+						"This is like having your own copy of Codepen that also works
+						offline."
+					</p>
+					<div class="testimonial-author">
+						<img
+							src="/images/testimonials/aa.jpg"
+							alt="Amit Agarwal"
+							class="testimonial-avatar"
+						/>
+						<div>
+							<div class="testimonial-name">Amit Agarwal</div>
+							<div class="testimonial-role">@labnol</div>
+						</div>
+					</div>
+				</div>
+				<div class="testimonial">
+					<p class="testimonial-quote">
+						"Really enjoying using Web Maker - super fast offline web
+						playground."
+					</p>
+					<div class="testimonial-author">
+						<img
+							src="/images/testimonials/rd.jpg"
+							alt="Ryan Davidson"
+							class="testimonial-avatar"
+						/>
+						<div>
+							<div class="testimonial-name">Ryan Davidson</div>
+							<div class="testimonial-role">@Ryan_Random</div>
+						</div>
+					</div>
+				</div>
+				<div class="testimonial">
+					<p class="testimonial-quote">
+						"Meet Web Maker, an Offline, Browser-based CodePen Alternative."
+					</p>
+					<div class="testimonial-author">
+						<img
+							src="/images/testimonials/sitepoint.jpg"
+							alt="SitePoint"
+							class="testimonial-avatar"
+						/>
+						<div>
+							<div class="testimonial-name">SitePoint</div>
+							<div class="testimonial-role">@sitepointdotcom</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="final-cta">
+			<h2>Begin your creative journey</h2>
+			<p>
+				No signup. No download. Just open your browser and let the ideas flow.
+			</p>
+			<a href="/create/" class="btn btn--primary">Start Creating</a>
+		</section>
+
+		<footer class="footer">
+			<div class="footer-links">
+				<a href="/docs">Documentation</a>
+				<a href="https://medium.com/web-maker/">Journal</a>
+				<a href="https://github.com/chinchang/web-maker/">Source</a>
+				<a href="/privacy-policy">Privacy</a>
+			</div>
+			<div class="footer-copy">Web Maker by Kushagra Gour</div>
+		</footer>
+	</body>
+</html>

@@ -242,12 +242,98 @@
 							display: flex;
 							align-items: center;
 							justify-content: space-between;
-							padding: 0.5rem 1rem;
+							padding: 1rem 2rem;
+							background: #1a1a1a;
+							border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+							margin: 1rem 1rem;
+							border-radius: 1rem;
+						}
+
+						.site-header__brand {
+							display: flex;
+							align-items: center;
+							gap: 0.75rem;
+							text-decoration: none;
+							color: white;
+							font-weight: 700;
+							font-size: 1.1rem;
+							letter-spacing: -0.02em;
+						}
+
+						.site-header__brand:hover {
+							color: #ff6c00;
 						}
 
 						.site-header__logo {
 							width: 50px;
 							height: 20px;
+						}
+
+						.site-header__nav {
+							display: flex;
+							align-items: center;
+							gap: 0.5rem;
+						}
+
+						.site-header__link {
+							color: rgba(255, 255, 255, 0.7);
+							text-decoration: none;
+							padding: 0.5rem 1rem;
+							font-size: 0.9rem;
+							font-weight: 500;
+							border-radius: 6px;
+							transition: all 0.2s ease;
+						}
+
+						.site-header__link:hover {
+							color: white;
+							background: rgba(255, 255, 255, 0.08);
+						}
+
+						.site-header__cta {
+							display: inline-flex;
+							align-items: center;
+							gap: 0.5rem;
+							padding: 0.6rem 1.25rem;
+							background: #ff6c00;
+							color: white;
+							text-decoration: none;
+							font-size: 0.9rem;
+							font-weight: 700;
+							border-radius: 6px;
+							margin-left: 0.5rem;
+							transition: all 0.2s ease;
+						}
+
+						.site-header__cta:hover {
+							background: #ff8533;
+							transform: translateY(-1px);
+							box-shadow: 0 4px 12px rgba(255, 108, 0, 0.3);
+						}
+
+						.site-header__cta svg {
+							width: 16px;
+							height: 16px;
+						}
+
+						@media (max-width: 600px) {
+							.site-header {
+								padding: 0.75rem 1rem;
+							}
+
+							.site-header__link {
+								padding: 0.5rem 0.6rem;
+								font-size: 0.85rem;
+							}
+
+							.site-header__cta {
+								padding: 0.5rem 0.9rem;
+								font-size: 0.85rem;
+							}
+
+							.site-header__cta span {
+								display: none;
+							}
 						}
 
 						.site-footer {
@@ -393,7 +479,7 @@
 							}
 
 							.site-header {
-								padding: 0.5rem 1rem;
+								padding: 1rem 3rem;
 							}
 
 							.logo {
@@ -753,33 +839,38 @@
 		</div>
 		{% else %}
 		<header class="site-header">
-			<div>
-				<h2 style="display: inline">
-					<a href="/" style="text-decoration: none">
-						<svg class="site-header__logo">
-							<use xlink:href="#logo"></use>
-						</svg>
-						Web Maker
-					</a>
-				</h2>
-			</div>
-			<div>
-				<nav>
-					<a href="/docs" class="">Docs</a>
-					<a href="https://medium.com/web-maker/" class="ml-1">Blog</a>
-					<a href="https://github.com/chinchang/web-maker/" class="ml-1"
-						>Github</a
+			<a href="/" class="site-header__brand">
+				<svg class="site-header__logo">
+					<use xlink:href="#logo"></use>
+				</svg>
+				Web Maker
+			</a>
+			<nav class="site-header__nav">
+				<a href="/docs" class="site-header__link">Docs</a>
+				<a
+					href="https://medium.com/web-maker/"
+					class="site-header__link"
+					rel="external"
+					>Blog</a
+				>
+				<a
+					href="https://github.com/chinchang/web-maker/"
+					class="site-header__link"
+					rel="external"
+					>GitHub</a
+				>
+				<a href="/create/" class="site-header__cta">
+					<span>Try Web Maker</span>
+					<svg
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2.5"
 					>
-					<a
-						class="hint--top-right ml-1"
-						data-hint="Share on Twitter"
-						href="https://twitter.com/share?url=https://webmaker.app&text=Web Maker - A blazing fast %26 offline frontend playground!&via=webmakerApp&related=webmakerApp"
-						target="_blank"
-						class="tweet-link"
-						>Share</a
-					>
-				</nav>
-			</div>
+						<path d="M5 12h14M12 5l7 7-7 7" />
+					</svg>
+				</a>
+			</nav>
 		</header>
 		{% endif %}
 

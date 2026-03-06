@@ -36,6 +36,7 @@ import {
 } from '../fileUtils';
 
 import { itemService } from '../itemService';
+import { collectionService } from '../collectionService';
 import '../db';
 import { Changelog } from './Changelog';
 import Settings from './Settings.jsx';
@@ -96,7 +97,7 @@ if (module.hot) {
 }
 
 const UNSAVED_WARNING_COUNT = 15;
-const version = '6.6.0';
+const version = '6.7.0';
 
 // Read forced settings as query parameters
 window.forcedSettings = {};
@@ -196,6 +197,8 @@ export default class App extends Component {
 				css: window.codeCss
 			},
 			catalogs: {},
+			collections: {},
+			activeCollectionId: null,
 			user: savedUser,
 			// Multiplayer state
 			multiplayerSession: null,
@@ -290,6 +293,9 @@ export default class App extends Component {
 						};
 						window.user = newUser;
 						this.setState({ user: newUser, prefs }, this.updateSetting);
+						if (customUser.collections) {
+							this.setState({ collections: customUser.collections });
+						}
 					}
 					persistAuthUserLocally(newUser);
 				});
@@ -560,6 +566,23 @@ export default class App extends Component {
 			}
 		});
 
+		// Remove from all collections
+		collectionService.removeItemFromAllCollections(item.id).then(() => {
+			this.setState(prevState => {
+				const collections = { ...prevState.collections };
+				Object.keys(collections).forEach(cId => {
+					const items = collections[cId].items;
+					if (Array.isArray(items) && items.includes(item.id)) {
+						collections[cId] = {
+							...collections[cId],
+							items: items.filter(id => id !== item.id)
+						};
+					}
+				});
+				return { collections };
+			});
+		});
+
 		// Remove from cached list
 		delete this.state.savedItems[item.id];
 		this.setState({
@@ -652,16 +675,113 @@ export default class App extends Component {
 		return items;
 	}
 
+	async fetchCollections() {
+		const collections = await collectionService.getAllCollections();
+		this.setState({ collections });
+		return collections;
+	}
+
+	createCollection(name) {
+		const id = generateRandomId();
+		const collection = {
+			id,
+			name,
+			items: [],
+			createdOn: Date.now()
+		};
+		collectionService.setCollection(id, collection).then(() => {
+			this.setState(prevState => ({
+				collections: { ...prevState.collections, [id]: collection }
+			}));
+			alertsService.add(`Collection "${name}" created.`);
+		});
+		trackEvent('fn', 'collectionCreated');
+	}
+
+	renameCollection(collectionId, newName) {
+		const collection = {
+			...this.state.collections[collectionId],
+			name: newName
+		};
+		collectionService.setCollection(collectionId, collection).then(() => {
+			this.setState(prevState => ({
+				collections: { ...prevState.collections, [collectionId]: collection }
+			}));
+		});
+		trackEvent('fn', 'collectionRenamed');
+	}
+
+	deleteCollection(collectionId) {
+		const name = this.state.collections[collectionId]?.name;
+		collectionService.removeCollection(collectionId).then(() => {
+			this.setState(prevState => {
+				const collections = { ...prevState.collections };
+				delete collections[collectionId];
+				return {
+					collections,
+					activeCollectionId:
+						prevState.activeCollectionId === collectionId
+							? null
+							: prevState.activeCollectionId
+				};
+			});
+			alertsService.add(`Collection "${name}" deleted.`);
+		});
+		trackEvent('fn', 'collectionDeleted');
+	}
+
+	addItemToCollection(collectionId, itemId) {
+		collectionService.addItemToCollection(collectionId, itemId).then(() => {
+			this.setState(prevState => {
+				const collections = { ...prevState.collections };
+				const col = collections[collectionId];
+				const items = col.items || [];
+				if (!items.includes(itemId)) {
+					collections[collectionId] = {
+						...col,
+						items: [...items, itemId]
+					};
+				}
+				return { collections };
+			});
+		});
+		trackEvent('fn', 'itemAddedToCollection');
+	}
+
+	removeItemFromCollection(collectionId, itemId) {
+		collectionService
+			.removeItemFromCollection(collectionId, itemId)
+			.then(() => {
+				this.setState(prevState => {
+					const collections = { ...prevState.collections };
+					collections[collectionId] = {
+						...collections[collectionId],
+						items: (collections[collectionId].items || []).filter(
+							id => id !== itemId
+						)
+					};
+					return { collections };
+				});
+			});
+		trackEvent('fn', 'itemRemovedFromCollection');
+	}
+
+	setActiveCollection(collectionId) {
+		this.setState({ activeCollectionId: collectionId });
+	}
+
 	openSavedItemsPane() {
 		this.setState({
 			isFetchingItems: true
 		});
-		this.fetchItems(true).then(items => {
-			this.setState({
-				isFetchingItems: false
-			});
-			this.populateItemsInSavedPane(items);
-		});
+		Promise.all([this.fetchItems(true), this.fetchCollections()]).then(
+			([items]) => {
+				this.setState({
+					isFetchingItems: false
+				});
+				this.populateItemsInSavedPane(items);
+			}
+		);
 	}
 	openAddLibrary() {
 		this.setState({ isAddLibraryModalOpen: true });
@@ -1460,26 +1580,31 @@ export default class App extends Component {
 	}
 	exportItems() {
 		handleDownloadsPermission().then(() => {
-			this.fetchItems().then(items => {
-				var d = new Date();
-				var fileName = [
-					'web-maker-export',
-					d.getFullYear(),
-					d.getMonth() + 1,
-					d.getDate(),
-					d.getHours(),
-					d.getMinutes(),
-					d.getSeconds()
-				].join('-');
-				fileName += '.json';
-				var blob = new Blob([JSON.stringify(items, false, 2)], {
-					type: 'application/json;charset=UTF-8'
-				});
+			Promise.all([this.fetchItems(), this.fetchCollections()]).then(
+				([items, collections]) => {
+					var d = new Date();
+					var fileName = [
+						'web-maker-export',
+						d.getFullYear(),
+						d.getMonth() + 1,
+						d.getDate(),
+						d.getHours(),
+						d.getMinutes(),
+						d.getSeconds()
+					].join('-');
+					fileName += '.json';
+					var blob = new Blob(
+						[JSON.stringify({ items, collections }, false, 2)],
+						{
+							type: 'application/json;charset=UTF-8'
+						}
+					);
 
-				downloadFile(fileName, blob);
+					downloadFile(fileName, blob);
 
-				trackEvent('fn', 'exportItems');
-			});
+					trackEvent('fn', 'exportItems');
+				}
+			);
 		});
 	}
 	exportBtnClickHandler(e) {
@@ -1514,7 +1639,21 @@ export default class App extends Component {
 		}
 	}
 
-	mergeImportedItems(items, isMergingToCloud = false) {
+	mergeImportedItems(
+		items,
+		isMergingToCloudOrCollections = false,
+		importedCollections = null
+	) {
+		let isMergingToCloud = false;
+		// Handle backwards compat: second arg used to be boolean isMergingToCloud
+		if (typeof isMergingToCloudOrCollections === 'boolean') {
+			isMergingToCloud = isMergingToCloudOrCollections;
+		} else if (
+			isMergingToCloudOrCollections &&
+			typeof isMergingToCloudOrCollections === 'object'
+		) {
+			importedCollections = isMergingToCloudOrCollections;
+		}
 		var existingItemIds = [];
 		var toMergeItems = {};
 		const d = deferred();
@@ -1562,6 +1701,20 @@ export default class App extends Component {
 		} else {
 			d.resolve();
 		}
+
+		// Import collections if provided
+		if (importedCollections && typeof importedCollections === 'object') {
+			const collectionIds = Object.keys(importedCollections);
+			if (collectionIds.length) {
+				collectionIds.forEach(cId => {
+					collectionService.setCollection(cId, importedCollections[cId]);
+				});
+				this.setState(prevState => ({
+					collections: { ...prevState.collections, ...importedCollections }
+				}));
+			}
+		}
+
 		this.closeSavedItemsPane();
 		return d.promise;
 	}
@@ -2054,6 +2207,16 @@ export default class App extends Component {
 						onItemFork={this.itemForkBtnClickHandler.bind(this)}
 						onExport={this.exportBtnClickHandler.bind(this)}
 						mergeImportedItems={this.mergeImportedItems.bind(this)}
+						collections={this.state.collections}
+						activeCollectionId={this.state.activeCollectionId}
+						onCollectionSelect={this.setActiveCollection.bind(this)}
+						onCollectionCreate={this.createCollection.bind(this)}
+						onCollectionRename={this.renameCollection.bind(this)}
+						onCollectionDelete={this.deleteCollection.bind(this)}
+						onAddItemToCollection={this.addItemToCollection.bind(this)}
+						onRemoveItemFromCollection={this.removeItemFromCollection.bind(
+							this
+						)}
 					/>
 					<Alerts />
 					<Modal

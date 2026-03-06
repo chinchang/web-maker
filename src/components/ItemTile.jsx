@@ -3,6 +3,7 @@ import { getHumanDate } from '../utils';
 import Modal from './Modal';
 import { HStack, Stack } from './Stack';
 import { Icon } from './Icons';
+import { DropdownMenu } from './Dropdown';
 
 export function ItemTile({
 	item,
@@ -12,8 +13,15 @@ export function ItemTile({
 	onToggleVisibilityBtnClick,
 	focusable,
 	inline,
-	hasOptions = true
+	hasOptions = true,
+	collections,
+	itemCollectionIds,
+	onAddToCollection,
+	onRemoveFromCollection
 }) {
+	const collectionList = collections ? Object.values(collections) : [];
+	const hasCollections = collectionList.length > 0;
+
 	return (
 		<div
 			role={focusable ? 'button' : null}
@@ -25,6 +33,42 @@ export function ItemTile({
 			onClick={onClick}
 		>
 			<div class="saved-item-tile__btns">
+				{hasCollections ? (
+					<span onClick={e => e.stopPropagation()}>
+						<DropdownMenu
+							position="bottom"
+							btnProps={{
+								className: 'saved-item-tile__btn hint--left',
+								'aria-label': 'Add to collection'
+							}}
+							btnContent={
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="currentColor"
+								>
+									<path d="M10 4H4c-1.11 0-2 .89-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2Z" />
+								</svg>
+							}
+							menuItems={collectionList
+								.sort((a, b) => a.name.localeCompare(b.name))
+								.map(col => {
+									const isInCollection =
+										itemCollectionIds && itemCollectionIds.includes(col.id);
+									return {
+										label: `${col.name}${isInCollection ? ' \u2713' : ''}`,
+										onClick: () => {
+											if (isInCollection) {
+												onRemoveFromCollection(col.id, item.id);
+											} else {
+												onAddToCollection(col.id, item.id);
+											}
+										}
+									};
+								})}
+						/>
+					</span>
+				) : null}
 				{onForkBtnClick ? (
 					<button
 						class="js-saved-item-tile__fork-btn  saved-item-tile__btn hint--left hint--medium"
@@ -107,6 +151,17 @@ export function ItemTile({
 							</Stack>
 						</div>
 					</HStack>
+					{itemCollectionIds && itemCollectionIds.length > 0 && collections && (
+						<div class="saved-item-tile__collections">
+							{itemCollectionIds.map(cId =>
+								collections[cId] ? (
+									<span key={cId} class="saved-item-tile__collection-tag">
+										{collections[cId].name}
+									</span>
+								) : null
+							)}
+						</div>
+					)}
 				</div>
 			)}
 		</div>

@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'preact/hooks';
 import { log } from '../utils';
 import { trackEvent } from '../analytics';
 import { ItemTile } from './ItemTile';
+import { CollectionChip } from './CollectionChip';
 import { Trans, t } from '@lingui/macro';
 import { I18n } from '@lingui/react';
 
@@ -14,21 +15,38 @@ export default function SavedItemPane({
 	onItemRemove,
 	onItemFork,
 	onExport,
-	mergeImportedItems
+	mergeImportedItems,
+	collections,
+	activeCollectionId,
+	onCollectionSelect,
+	onCollectionCreate,
+	onCollectionRename,
+	onCollectionDelete,
+	onAddItemToCollection,
+	onRemoveItemFromCollection
 }) {
 	const [items, setItems] = useState([]);
 	const [filteredItems, setFilteredItems] = useState([]);
+	const [isCreatingCollection, setIsCreatingCollection] = useState(false);
+	const [newCollectionName, setNewCollectionName] = useState('');
 	const searchInputRef = useRef();
 
 	useEffect(() => {
 		if (!itemsMap) return;
-		const newItems = Object.values(itemsMap);
+		let newItems = Object.values(itemsMap);
+
+		// Filter by active collection
+		if (activeCollectionId && collections && collections[activeCollectionId]) {
+			const collectionItemIds = collections[activeCollectionId].items || [];
+			newItems = newItems.filter(item => collectionItemIds.includes(item.id));
+		}
+
 		newItems.sort(function (a, b) {
 			return b.updatedOn - a.updatedOn;
 		});
 		setItems(newItems);
 		setFilteredItems(newItems);
-	}, [itemsMap]);
+	}, [itemsMap, activeCollectionId, collections]);
 
 	useEffect(() => {
 		// Opening
@@ -104,11 +122,24 @@ export default function SavedItemPane({
 
 		var reader = new FileReader();
 		reader.addEventListener('load', progressEvent => {
-			var items;
 			try {
-				items = JSON.parse(progressEvent.target.result);
-				log(items);
-				mergeImportedItems(items);
+				var parsed = JSON.parse(progressEvent.target.result);
+				log(parsed);
+				let importItems;
+				let importCollections = null;
+				if (Array.isArray(parsed)) {
+					// Old format: just an array of items
+					importItems = parsed;
+				} else if (parsed.items) {
+					// New format: { items, collections }
+					importItems = Array.isArray(parsed.items)
+						? parsed.items
+						: Object.values(parsed.items);
+					importCollections = parsed.collections || null;
+				} else {
+					importItems = parsed;
+				}
+				mergeImportedItems(importItems, importCollections);
 			} catch (exception) {
 				log(exception);
 				alert(
@@ -145,6 +176,29 @@ export default function SavedItemPane({
 		}
 		trackEvent('ui', 'searchInputType');
 	}
+
+	function handleCreateCollection(e) {
+		e.preventDefault();
+		if (newCollectionName.trim()) {
+			onCollectionCreate(newCollectionName.trim());
+			setNewCollectionName('');
+			setIsCreatingCollection(false);
+		}
+	}
+
+	function getItemCollectionIds(itemId) {
+		if (!collections) return [];
+		return Object.keys(collections).filter(
+			cId =>
+				Array.isArray(collections[cId].items) &&
+				collections[cId].items.includes(itemId)
+		);
+	}
+
+	const sortedCollections = Object.values(collections || {}).sort((a, b) =>
+		a.name.localeCompare(b.name)
+	);
+	const hasCollections = sortedCollections.length > 0;
 
 	return (
 		<I18n>
@@ -214,6 +268,56 @@ export default function SavedItemPane({
 						/>
 					</form>
 
+					{/* Collections bar */}
+					<div class="collections-bar">
+						<button
+							class={`collections-bar__chip ${!activeCollectionId ? 'collections-bar__chip--active' : ''}`}
+							onClick={() => onCollectionSelect(null)}
+						>
+							<Trans>All</Trans>
+						</button>
+						{sortedCollections.map(col => (
+							<CollectionChip
+								key={col.id}
+								collection={col}
+								isActive={activeCollectionId === col.id}
+								onSelect={() => onCollectionSelect(col.id)}
+								onRename={newName => onCollectionRename(col.id, newName)}
+								onDelete={() => onCollectionDelete(col.id)}
+							/>
+						))}
+						{isCreatingCollection ? (
+							<form
+								class="collections-bar__new-form"
+								onSubmit={handleCreateCollection}
+							>
+								<input
+									type="text"
+									class="collections-bar__new-input"
+									value={newCollectionName}
+									onInput={e => setNewCollectionName(e.target.value)}
+									placeholder={i18n._(t`Collection name`)}
+									ref={el => el && setTimeout(() => el.focus(), 50)}
+									onBlur={() => {
+										if (!newCollectionName.trim())
+											setIsCreatingCollection(false);
+									}}
+									onKeyDown={e => {
+										if (e.key === 'Escape') setIsCreatingCollection(false);
+									}}
+								/>
+							</form>
+						) : (
+							<button
+								class="collections-bar__add-btn hint--bottom hint--rounded"
+								onClick={() => setIsCreatingCollection(true)}
+								aria-label={i18n._(t`Add collection`)}
+							>
+								+
+							</button>
+						)}
+					</div>
+
 					<div id="js-saved-items-wrap" class="saved-items-pane__container">
 						{!filteredItems.length && items.length ? (
 							<div class="mt-1">
@@ -229,12 +333,20 @@ export default function SavedItemPane({
 								onToggleVisibilityBtnClick={e =>
 									itemVisibilityToggleHandler(item, e)
 								}
+								collections={collections}
+								itemCollectionIds={getItemCollectionIds(item.id)}
+								onAddToCollection={onAddItemToCollection}
+								onRemoveFromCollection={onRemoveItemFromCollection}
 							/>
 						))}
 						{!items.length ? (
 							<div class="tac">
 								<h2 class="opacity--30">
-									<Trans>Nothing saved here.</Trans>
+									{activeCollectionId ? (
+										<Trans>No items in this collection.</Trans>
+									) : (
+										<Trans>Nothing saved here.</Trans>
+									)}
 								</h2>
 								<img
 									style="max-width: 80%; opacity:0.4"

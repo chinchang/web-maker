@@ -1307,7 +1307,6 @@ body:not(.light-version) .modal-overlay {
 	/* transform: translateX(50px); */
 	/* will-change: opacity, transform; */
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-	/* animation: slide-left 0.35s ease forwards; */
 }
 .saved-item-tile + .saved-item-tile {
 	margin-top: 1rem;
@@ -1418,7 +1417,7 @@ body:not(.light-version) .modal-overlay {
 	font-size: 0.8rem;
 	font-weight: 700;
 	margin-left: 2px;
-	background: rgba(255, 255, 255, 0.1);
+	background: rgba(255, 255, 255, 0.15);
 	text-transform: uppercase;
 }
 .saved-item-tile__btn > svg {
@@ -1447,7 +1446,7 @@ body:not(.light-version) .modal-overlay {
 .saved-items-pane__container {
 	overflow-y: auto;
 	overflow-x: hidden;
-	max-height: calc(100vh - 190px);
+	height: calc(100vh - 190px);
 	margin-top: 1rem;
 	padding-inline: 1rem;
 	scroll-behavior: smooth;
@@ -1456,14 +1455,14 @@ body:not(.light-version) .modal-overlay {
 .saved-item-tile__collections {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 4px;
-	margin-top: 6px;
+	gap: 0.25rem;
+	margin-top: 0.375rem;
 	pointer-events: none;
 }
 
 .saved-item-tile__collection-tag {
 	display: inline-block;
-	padding: 1px 7px;
+	padding: 0.0625rem 0.4375rem;
 	border-radius: 1in;
 	font-size: 0.7rem;
 	background: rgba(255, 255, 255, 0.1);
@@ -1475,23 +1474,23 @@ body:not(.light-version) .modal-overlay {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	gap: 6px;
+	gap: 0.375rem;
 	margin-top: 0.75rem;
 	padding-bottom: 0.75rem;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	border-bottom: 0.0625rem solid rgba(255, 255, 255, 0.1);
 }
 
 .collections-bar__chip {
 	display: inline-flex;
 	align-items: center;
-	gap: 4px;
-	padding: 4px 10px;
+	gap: 0.25rem;
+	padding: 0.25rem 0.625rem;
 	border-radius: 1in;
 	font-size: 0.8rem;
 	font-weight: 600;
 	background: rgba(255, 255, 255, 0.08);
 	color: inherit;
-	border: 1px solid rgba(255, 255, 255, 0.1);
+	border: 0.0625rem solid rgba(255, 255, 255, 0.1);
 	cursor: pointer;
 	transition: 0.15s ease;
 	white-space: nowrap;
@@ -1518,14 +1517,14 @@ body:not(.light-version) .modal-overlay {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 26px;
-	height: 26px;
+	width: 1.625rem;
+	height: 1.625rem;
 	border-radius: 50%;
 	font-size: 1rem;
 	font-weight: 700;
 	background: rgba(255, 255, 255, 0.06);
 	color: inherit;
-	border: 1px dashed rgba(255, 255, 255, 0.2);
+	border: 0.0625rem dashed rgba(255, 255, 255, 0.2);
 	cursor: pointer;
 	transition: 0.15s ease;
 }
@@ -1542,14 +1541,14 @@ body:not(.light-version) .modal-overlay {
 
 .collections-bar__new-input,
 .collections-bar__edit-input {
-	padding: 4px 8px;
+	padding: 0.25rem 0.5rem;
 	border-radius: 1in;
 	font-size: 0.8rem;
 	background: rgba(0, 0, 0, 0.2);
 	color: inherit;
-	border: 1px solid var(--color-button);
+	border: 0.0625rem solid var(--color-button);
 	outline: none;
-	width: 120px;
+	width: 7.5rem;
 }
 
 .notifications-btn {

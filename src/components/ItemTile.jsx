@@ -56,7 +56,7 @@ export function ItemTile({
 									const isInCollection =
 										itemCollectionIds && itemCollectionIds.includes(col.id);
 									return {
-										label: `${isInCollection ? '\u2713 ' : ''}${col.name}`,
+										label: `${col.name}${isInCollection ? ' \u2713' : ''}`,
 										onClick: () => {
 											if (isInCollection) {
 												onRemoveFromCollection(col.id, item.id);

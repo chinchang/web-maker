@@ -309,10 +309,9 @@ export default function SavedItemPane({
 							</form>
 						) : (
 							<button
-								class="collections-bar__add-btn"
+								class="collections-bar__add-btn hint--bottom hint--rounded"
 								onClick={() => setIsCreatingCollection(true)}
-								aria-label={i18n._(t`Create new collection`)}
-								title={i18n._(t`Create new collection`)}
+								aria-label={i18n._(t`Add collection`)}
 							>
 								+
 							</button>

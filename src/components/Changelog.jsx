@@ -85,7 +85,17 @@ export function Changelog(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="6.6.0" {...props} isLatest={true}>
+			<Notification version="6.7.0" {...props} isLatest={true}>
+				<li>
+					<strong>Collections</strong>: Organize your saved creations into
+					collections! Create named collections from the "My Library" panel,
+					assign creations to one or more collections, and filter by collection
+					to quickly find what you need. Double-click a collection to rename it,
+					right-click to delete.
+				</li>
+			</Notification>
+
+			<Notification version="6.6.0" {...props}>
 				<li>
 					<strong>Collab Mode</strong>: If you are a PRO user, you can now
 					collaborate in real-time with others on your creations! Click the

@@ -1,6 +1,12 @@
 import { deferred } from './deferred';
 import { log } from './utils';
-import { doc, updateDoc, deleteField } from 'firebase/firestore';
+import {
+	doc,
+	updateDoc,
+	deleteField,
+	arrayUnion,
+	arrayRemove
+} from 'firebase/firestore';
 
 export const collectionService = {
 	async getAllCollections() {
@@ -58,8 +64,10 @@ export const collectionService = {
 			db.local.get({ collections: {} }, result => {
 				if (result.collections[collectionId]) {
 					result.collections[collectionId].items =
-						result.collections[collectionId].items || {};
-					result.collections[collectionId].items[itemId] = true;
+						result.collections[collectionId].items || [];
+					if (!result.collections[collectionId].items.includes(itemId)) {
+						result.collections[collectionId].items.push(itemId);
+					}
 				}
 				db.local.set({ collections: result.collections }, d.resolve);
 			});
@@ -67,9 +75,13 @@ export const collectionService = {
 		}
 		const remoteDb = window.db.getDb();
 		return updateDoc(doc(remoteDb, `users/${window.user.uid}`), {
-			[`collections.${collectionId}.items.${itemId}`]: true
+			[`collections.${collectionId}.items`]: arrayUnion(itemId)
 		}).then(() => {
-			window.user.collections[collectionId].items[itemId] = true;
+			const col = window.user.collections[collectionId];
+			col.items = col.items || [];
+			if (!col.items.includes(itemId)) {
+				col.items.push(itemId);
+			}
 			log(`Item ${itemId} added to collection ${collectionId}`);
 		});
 	},
@@ -80,9 +92,11 @@ export const collectionService = {
 			db.local.get({ collections: {} }, result => {
 				if (
 					result.collections[collectionId] &&
-					result.collections[collectionId].items
+					Array.isArray(result.collections[collectionId].items)
 				) {
-					delete result.collections[collectionId].items[itemId];
+					result.collections[collectionId].items = result.collections[
+						collectionId
+					].items.filter(id => id !== itemId);
 				}
 				db.local.set({ collections: result.collections }, d.resolve);
 			});
@@ -90,9 +104,12 @@ export const collectionService = {
 		}
 		const remoteDb = window.db.getDb();
 		return updateDoc(doc(remoteDb, `users/${window.user.uid}`), {
-			[`collections.${collectionId}.items.${itemId}`]: deleteField()
+			[`collections.${collectionId}.items`]: arrayRemove(itemId)
 		}).then(() => {
-			delete window.user.collections[collectionId].items[itemId];
+			const col = window.user.collections[collectionId];
+			if (Array.isArray(col.items)) {
+				col.items = col.items.filter(id => id !== itemId);
+			}
 			log(`Item ${itemId} removed from collection ${collectionId}`);
 		});
 	},
@@ -102,11 +119,10 @@ export const collectionService = {
 			const d = deferred();
 			db.local.get({ collections: {} }, result => {
 				Object.keys(result.collections).forEach(cId => {
-					if (
-						result.collections[cId].items &&
-						result.collections[cId].items[itemId]
-					) {
-						delete result.collections[cId].items[itemId];
+					if (Array.isArray(result.collections[cId].items)) {
+						result.collections[cId].items = result.collections[
+							cId
+						].items.filter(id => id !== itemId);
 					}
 				});
 				db.local.set({ collections: result.collections }, d.resolve);
@@ -117,9 +133,14 @@ export const collectionService = {
 		const updates = {};
 		const collections = window.user.collections || {};
 		Object.keys(collections).forEach(cId => {
-			if (collections[cId].items && collections[cId].items[itemId]) {
-				updates[`collections.${cId}.items.${itemId}`] = deleteField();
-				delete window.user.collections[cId].items[itemId];
+			if (
+				Array.isArray(collections[cId].items) &&
+				collections[cId].items.includes(itemId)
+			) {
+				updates[`collections.${cId}.items`] = arrayRemove(itemId);
+				collections[cId].items = collections[cId].items.filter(
+					id => id !== itemId
+				);
 			}
 		});
 		if (Object.keys(updates).length === 0) return Promise.resolve();

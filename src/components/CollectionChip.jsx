@@ -56,7 +56,7 @@ export function CollectionChip({
 		);
 	}
 
-	const itemCount = Object.keys(collection.items || {}).length;
+	const itemCount = (collection.items || []).length;
 
 	function handleKeyDown(e) {
 		if (e.key === 'Delete' || e.key === 'Backspace') {

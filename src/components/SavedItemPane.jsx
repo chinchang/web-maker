@@ -37,8 +37,8 @@ export default function SavedItemPane({
 
 		// Filter by active collection
 		if (activeCollectionId && collections && collections[activeCollectionId]) {
-			const collectionItemIds = collections[activeCollectionId].items || {};
-			newItems = newItems.filter(item => collectionItemIds[item.id]);
+			const collectionItemIds = collections[activeCollectionId].items || [];
+			newItems = newItems.filter(item => collectionItemIds.includes(item.id));
 		}
 
 		newItems.sort(function (a, b) {
@@ -189,7 +189,9 @@ export default function SavedItemPane({
 	function getItemCollectionIds(itemId) {
 		if (!collections) return [];
 		return Object.keys(collections).filter(
-			cId => collections[cId].items && collections[cId].items[itemId]
+			cId =>
+				Array.isArray(collections[cId].items) &&
+				collections[cId].items.includes(itemId)
 		);
 	}
 

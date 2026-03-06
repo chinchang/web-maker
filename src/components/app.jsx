@@ -571,12 +571,12 @@ export default class App extends Component {
 			this.setState(prevState => {
 				const collections = { ...prevState.collections };
 				Object.keys(collections).forEach(cId => {
-					if (collections[cId].items && collections[cId].items[item.id]) {
+					const items = collections[cId].items;
+					if (Array.isArray(items) && items.includes(item.id)) {
 						collections[cId] = {
 							...collections[cId],
-							items: { ...collections[cId].items }
+							items: items.filter(id => id !== item.id)
 						};
-						delete collections[cId].items[item.id];
 					}
 				});
 				return { collections };
@@ -686,7 +686,7 @@ export default class App extends Component {
 		const collection = {
 			id,
 			name,
-			items: {},
+			items: [],
 			createdOn: Date.now()
 		};
 		collectionService.setCollection(id, collection).then(() => {
@@ -734,10 +734,14 @@ export default class App extends Component {
 		collectionService.addItemToCollection(collectionId, itemId).then(() => {
 			this.setState(prevState => {
 				const collections = { ...prevState.collections };
-				collections[collectionId] = {
-					...collections[collectionId],
-					items: { ...collections[collectionId].items, [itemId]: true }
-				};
+				const col = collections[collectionId];
+				const items = col.items || [];
+				if (!items.includes(itemId)) {
+					collections[collectionId] = {
+						...col,
+						items: [...items, itemId]
+					};
+				}
 				return { collections };
 			});
 		});
@@ -750,11 +754,11 @@ export default class App extends Component {
 			.then(() => {
 				this.setState(prevState => {
 					const collections = { ...prevState.collections };
-					const items = { ...collections[collectionId].items };
-					delete items[itemId];
 					collections[collectionId] = {
 						...collections[collectionId],
-						items
+						items: (collections[collectionId].items || []).filter(
+							id => id !== itemId
+						)
 					};
 					return { collections };
 				});

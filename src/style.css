@@ -1447,10 +1447,109 @@ body:not(.light-version) .modal-overlay {
 .saved-items-pane__container {
 	overflow-y: auto;
 	overflow-x: hidden;
-	max-height: calc(100vh - 130px);
+	max-height: calc(100vh - 190px);
 	margin-top: 1rem;
 	padding-inline: 1rem;
 	scroll-behavior: smooth;
+}
+
+.saved-item-tile__collections {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-top: 6px;
+	pointer-events: none;
+}
+
+.saved-item-tile__collection-tag {
+	display: inline-block;
+	padding: 1px 7px;
+	border-radius: 1in;
+	font-size: 0.7rem;
+	background: rgba(255, 255, 255, 0.1);
+	opacity: 0.7;
+}
+
+/* Collections bar */
+.collections-bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	margin-top: 0.75rem;
+	padding-bottom: 0.75rem;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.collections-bar__chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 10px;
+	border-radius: 1in;
+	font-size: 0.8rem;
+	font-weight: 600;
+	background: rgba(255, 255, 255, 0.08);
+	color: inherit;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	cursor: pointer;
+	transition: 0.15s ease;
+	white-space: nowrap;
+}
+
+.collections-bar__chip:hover {
+	background: rgba(255, 255, 255, 0.15);
+}
+
+.collections-bar__chip--active {
+	background: var(--color-button);
+	color: #111;
+	border-color: var(--color-button);
+}
+
+.collections-bar__chip-count {
+	font-size: 0.7rem;
+	opacity: 0.7;
+	min-width: 1em;
+	text-align: center;
+}
+
+.collections-bar__add-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	border-radius: 50%;
+	font-size: 1rem;
+	font-weight: 700;
+	background: rgba(255, 255, 255, 0.06);
+	color: inherit;
+	border: 1px dashed rgba(255, 255, 255, 0.2);
+	cursor: pointer;
+	transition: 0.15s ease;
+}
+
+.collections-bar__add-btn:hover {
+	background: rgba(255, 255, 255, 0.12);
+	border-color: rgba(255, 255, 255, 0.4);
+}
+
+.collections-bar__new-form,
+.collections-bar__edit-form {
+	display: inline-flex;
+}
+
+.collections-bar__new-input,
+.collections-bar__edit-input {
+	padding: 4px 8px;
+	border-radius: 1in;
+	font-size: 0.8rem;
+	background: rgba(0, 0, 0, 0.2);
+	color: inherit;
+	border: 1px solid var(--color-button);
+	outline: none;
+	width: 120px;
 }
 
 .notifications-btn {
@@ -2862,6 +2961,43 @@ body.light-theme .saved-item-tile {
 
 body.light-theme .saved-item-tile:hover {
 	background-color: #f3f4f6;
+}
+
+body.light-theme .saved-item-tile__collection-tag {
+	background: #e5e7eb;
+}
+
+body.light-theme .collections-bar {
+	border-bottom-color: #e5e7eb;
+}
+
+body.light-theme .collections-bar__chip {
+	background: #f3f4f6;
+	border-color: #d1d5db;
+	color: #374151;
+}
+
+body.light-theme .collections-bar__chip:hover {
+	background: #e5e7eb;
+}
+
+body.light-theme .collections-bar__chip--active {
+	background: var(--color-button);
+	color: #fff;
+	border-color: var(--color-button);
+}
+
+body.light-theme .collections-bar__add-btn {
+	background: #f9fafb;
+	border-color: #d1d5db;
+	color: #6b7280;
+}
+
+body.light-theme .collections-bar__new-input,
+body.light-theme .collections-bar__edit-input {
+	background: #fff;
+	color: #374151;
+	border-color: var(--color-button);
 }
 
 /* Modal and Popup */

@@ -729,11 +729,15 @@ body:not(.light-version).overlay-visible .main-container {
 .is-minimized .code-wrap__header .caret {
 	opacity: 0;
 }
+.is-minimized
+	.code-wrap__header-right-options
+	.code-wrap__header-btn:not(.code-wrap__hide-btn) {
+	display: none;
+}
 
 .code-wrap__header-btn {
 	display: inline-block;
 	vertical-align: top;
-	margin-left: 8px;
 }
 
 .code-wrap__header-btn,
@@ -747,6 +751,7 @@ body:not(.light-version).overlay-visible .main-container {
 	/* bring over mode select boxes */
 	z-index: 1;
 	display: flex;
+	gap: 8px;
 	align-items: center;
 }
 
@@ -758,6 +763,15 @@ body:not(.light-version).overlay-visible .main-container {
 .is-maximized .code-wrap__collapse-btn:before {
 	/* minimize icon */
 	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.35)" d="M19.5,3.09L15,7.59V4H13V11H20V9H16.41L20.91,4.5L19.5,3.09M4,13V15H7.59L3.09,19.5L4.5,20.91L9,16.41V20H11V13H4Z" /></svg>');
+}
+
+.code-wrap__hide-btn:before {
+	/* minimize dash icon */
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.35)" d="M19,13H5V11H19V13Z" /></svg>');
+}
+.is-minimized .code-wrap__hide-btn:before {
+	/* restore/plus icon */
+	content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.35)" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" /></svg>');
 }
 
 @keyframes pop-in {
@@ -781,11 +795,9 @@ body:not(.light-version).overlay-visible .main-container {
 	font-size: var(--code-font-size);
 }
 
-/* TODO: Check why? */
-
-.layout-2 .is-minimized .Codemirror,
-.layout-5 .is-minimized .Codemirror {
-	height: calc(100%);
+/* so that we dont see white areas after minimizing */
+.is-minimized .CodeMirror {
+	opacity: 0;
 }
 
 .CodeMirror pre {

@@ -413,6 +413,34 @@ export default class ContentWrap extends Component {
 		this.toggleCodeWrapCollapse(codeWrapParent);
 		trackEvent('ui', 'paneCollapseBtnClick', codeWrapParent.dataset.type);
 	}
+	hideCodeWrap(codeWrapEl) {
+		const id = parseInt(codeWrapEl.dataset.codeWrapId, 10);
+
+		if (codeWrapEl.classList.contains('is-minimized')) {
+			codeWrapEl.classList.remove('is-minimized');
+			this.codeSplitInstance.setSizes([33.3, 33.3, 33.3]);
+		} else {
+			const otherIndices = [0, 1, 2].filter(i => i !== id);
+			var arr = [
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`,
+				`${minCodeWrapSize}px`
+			];
+			// Give remaining space equally to the other two panes
+			for (const i of otherIndices) {
+				arr[i] = `calc(50% - ${minCodeWrapSize / 2}px)`;
+			}
+			this.codeSplitInstance.setSizes(arr);
+		}
+		this.updateCodeWrapCollapseStates();
+		this.updateSplits();
+	}
+	hidePaneBtnHandler(e) {
+		var codeWrapParent =
+			e.currentTarget.parentElement.parentElement.parentElement;
+		this.hideCodeWrap(codeWrapParent);
+		trackEvent('ui', 'paneHideBtnClick', codeWrapParent.dataset.type);
+	}
 	codeWrapHeaderDblClickHandler(e) {
 		if (!e.target.classList.contains('js-code-wrap__header')) {
 			return;
@@ -715,8 +743,13 @@ export default class ContentWrap extends Component {
 									</a>
 								) : null}
 								<a
+									class="code-wrap__header-btn  code-wrap__hide-btn"
+									title="Minimise pane"
+									onClick={this.hidePaneBtnHandler.bind(this)}
+								/>
+								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
-									title="Toggle code pane"
+									title="Maximize pane"
 									onClick={this.collapseBtnHandler.bind(this)}
 								/>
 							</div>
@@ -804,8 +837,13 @@ export default class ContentWrap extends Component {
 									</svg>
 								</a>
 								<a
+									class="code-wrap__header-btn  code-wrap__hide-btn"
+									title="Minimise pane"
+									onClick={this.hidePaneBtnHandler.bind(this)}
+								/>
+								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
-									title="Toggle code pane"
+									title="Maximize pane"
 									onClick={this.collapseBtnHandler.bind(this)}
 								/>
 							</div>
@@ -879,8 +917,13 @@ export default class ContentWrap extends Component {
 									</svg>
 								</a>
 								<a
+									class="code-wrap__header-btn  code-wrap__hide-btn"
+									title="Minimise pane"
+									onClick={this.hidePaneBtnHandler.bind(this)}
+								/>
+								<a
 									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
-									title="Toggle code pane"
+									title="Maximize pane"
 									onClick={this.collapseBtnHandler.bind(this)}
 								/>
 							</div>

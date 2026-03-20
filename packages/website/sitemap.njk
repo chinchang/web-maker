@@ -15,7 +15,7 @@ eleventyExcludeFromCollections: true
     <changefreq>weekly</changefreq>
   </url>
   {%- for page in collections.all %}
-  {%- if page.url and page.url != '/' and not page.url.startsWith('/create') %}
+  {%- if page.url and page.url != '/' and not page.url.startsWith('/create') and not page.url.startsWith('/index') %}
   <url>
     <loc>https://webmaker.app{{ page.url }}</loc>
     <priority>{% if page.url.startsWith('/docs') %}0.8{% else %}0.5{% endif %}</priority>

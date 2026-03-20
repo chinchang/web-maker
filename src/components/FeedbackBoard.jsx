@@ -189,6 +189,7 @@ export const FeedbackBoard = ({ isOpen, onClose, user }) => {
 								.map(item => (
 									<div
 										key={item.id}
+										data-f-id={item.id}
 										class={`feedback-item ${item.status === 'done' ? 'feedback-item--done' : ''}`}
 									>
 										<button

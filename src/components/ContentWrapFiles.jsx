@@ -1,4 +1,6 @@
 import { h, Component } from 'preact';
+import { t } from '@lingui/macro';
+import { I18n } from '@lingui/react';
 import CodeEditor from './CodeEditor';
 import { modes, HtmlModes } from '../codeModes';
 import {
@@ -260,7 +262,7 @@ export default class ContentWrapFiles extends Component {
 						? chrome.runtime.getURL('lib/screenlog.js')
 						: `${location.origin}${
 								window.DEBUG ? '' : BASE_PATH
-						  }/lib/screenlog.js`) +
+							}/lib/screenlog.js`) +
 					'"></script>' +
 					obj[file.path];
 			}
@@ -582,100 +584,108 @@ export default class ContentWrapFiles extends Component {
 	}
 	render() {
 		return (
-			<SplitPane
-				class="content-wrap  flex  flex-grow"
-				sizes={this.state.mainSplitSizes}
-				minSize={150}
-				style=""
-				direction={
-					this.props.currentLayoutMode === 2 ? 'vertical' : 'horizontal'
-				}
-				onDrag={this.mainSplitDragHandler.bind(this)}
-				onDragEnd={this.mainSplitDragEndHandler.bind(this)}
-			>
-				<div id="js-sidebar">
-					<SidePane
-						files={this.props.currentItem.files || []}
-						selectedFile={this.state.selectedFile}
-						onFileSelect={this.fileSelectHandler.bind(this)}
-						onAddFile={this.props.onAddFile}
-						onRemoveFile={this.props.onRemoveFile}
-						onRenameFile={this.props.onRenameFile}
-						onFileDrop={this.props.onFileDrop}
-					/>
-				</div>
-				<div class="code-side" id="js-code-side">
-					<div
-						data-code-wrap-id="0"
-						id="htmlCodeEl"
-						data-type="html"
-						class="code-wrap"
-						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
+			<I18n>
+				{({ i18n }) => (
+					<SplitPane
+						class="content-wrap  flex  flex-grow"
+						sizes={this.state.mainSplitSizes}
+						minSize={150}
+						style=""
+						direction={
+							this.props.currentLayoutMode === 2 ? 'vertical' : 'horizontal'
+						}
+						onDrag={this.mainSplitDragHandler.bind(this)}
+						onDragEnd={this.mainSplitDragEndHandler.bind(this)}
 					>
-						<div class="js-code-wrap__header  code-wrap__header">
-							<div class="flex flex-v-center">
-								<FileIcon file={this.state.selectedFile} />
-								{this.state.selectedFile ? this.state.selectedFile.name : ''}
-							</div>
-							<div class="code-wrap__header-right-options">
-								<button
-									class="btn btn--dark"
-									aria-label="Format code"
-									title="Format Code"
-									onClick={this.prettifyBtnClickHandler.bind(this)}
-								>
-									<svg>
-										<use xlinkHref="#code-brace-icon" />
-									</svg>
-								</button>
-								<a
-									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
-									title="Toggle code pane"
+						<div id="js-sidebar">
+							<SidePane
+								files={this.props.currentItem.files || []}
+								selectedFile={this.state.selectedFile}
+								onFileSelect={this.fileSelectHandler.bind(this)}
+								onAddFile={this.props.onAddFile}
+								onRemoveFile={this.props.onRemoveFile}
+								onRenameFile={this.props.onRenameFile}
+								onFileDrop={this.props.onFileDrop}
+							/>
+						</div>
+						<div class="code-side" id="js-code-side">
+							<div
+								data-code-wrap-id="0"
+								id="htmlCodeEl"
+								data-type="html"
+								class="code-wrap"
+								onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
+							>
+								<div class="js-code-wrap__header  code-wrap__header">
+									<div class="flex flex-v-center">
+										<FileIcon file={this.state.selectedFile} />
+										{this.state.selectedFile
+											? this.state.selectedFile.name
+											: ''}
+									</div>
+									<div class="code-wrap__header-right-options">
+										<button
+											class="btn btn--dark"
+											aria-label={i18n._(t`Format code`)}
+											title={i18n._(t`Format Code`)}
+											onClick={this.prettifyBtnClickHandler.bind(this)}
+										>
+											<svg>
+												<use xlinkHref="#code-brace-icon" />
+											</svg>
+										</button>
+										<a
+											class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
+											title={i18n._(t`Toggle code pane`)}
+										/>
+									</div>
+								</div>
+								<CodeEditor
+									type={
+										window.forcedSettings.isMonacoEditorOn === true ||
+										(this.props.prefs.isMonacoEditorOn &&
+											window.forcedSettings.isMonacoEditorOn !== false)
+											? 'monaco'
+											: 'codemirror'
+									}
+									value={
+										this.state.selectedFile
+											? this.state.selectedFile.content
+											: ''
+									}
+									options={this.state.editorOptions}
+									prefs={this.props.prefs}
+									onChange={this.onHtmlCodeChange.bind(this)}
+									ref={editor => (this.editor = editor)}
+									onFocus={this.editorFocusHandler.bind(this)}
 								/>
 							</div>
 						</div>
-						<CodeEditor
-							type={
-								window.forcedSettings.isMonacoEditorOn === true ||
-								(this.props.prefs.isMonacoEditorOn &&
-									window.forcedSettings.isMonacoEditorOn !== false)
-									? 'monaco'
-									: 'codemirror'
-							}
-							value={
-								this.state.selectedFile ? this.state.selectedFile.content : ''
-							}
-							options={this.state.editorOptions}
-							prefs={this.props.prefs}
-							onChange={this.onHtmlCodeChange.bind(this)}
-							ref={editor => (this.editor = editor)}
-							onFocus={this.editorFocusHandler.bind(this)}
-						/>
-					</div>
-				</div>
-				<div class="demo-side" id="js-demo-side" style="">
-					<iframe
-						ref={el => (this.frame = el)}
-						src={`${PREVIEW_FRAME_HOST}/index.html`}
-						frameborder="0"
-						id="demo-frame"
-						allowfullscreen
-					/>
+						<div class="demo-side" id="js-demo-side" style="">
+							<iframe
+								ref={el => (this.frame = el)}
+								src={`${PREVIEW_FRAME_HOST}/index.html`}
+								frameborder="0"
+								id="demo-frame"
+								allowfullscreen
+							/>
 
-					<iframe src={`${PREVIEW_FRAME_HOST}/talk.html`} id="talkFrame" />
+							<iframe src={`${PREVIEW_FRAME_HOST}/talk.html`} id="talkFrame" />
 
-					<PreviewDimension ref={comp => (this.previewDimension = comp)} />
+							<PreviewDimension ref={comp => (this.previewDimension = comp)} />
 
-					<Console
-						logs={this.state.logs}
-						isConsoleOpen={this.state.isConsoleOpen}
-						onConsoleHeaderDblClick={this.consoleHeaderDblClickHandler}
-						onClearConsoleBtnClick={this.clearConsoleBtnClickHandler}
-						toggleConsole={this.toggleConsole}
-						onEvalInputKeyup={this.evalConsoleExpr}
-					/>
-				</div>
-			</SplitPane>
+							<Console
+								logs={this.state.logs}
+								isConsoleOpen={this.state.isConsoleOpen}
+								onConsoleHeaderDblClick={this.consoleHeaderDblClickHandler}
+								onClearConsoleBtnClick={this.clearConsoleBtnClickHandler}
+								toggleConsole={this.toggleConsole}
+								onEvalInputKeyup={this.evalConsoleExpr}
+							/>
+						</div>
+					</SplitPane>
+				)}
+			</I18n>
 		);
 	}
 }

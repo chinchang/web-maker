@@ -1,4 +1,6 @@
 import { h, Component } from 'preact';
+import { t } from '@lingui/macro';
+import { I18n } from '@lingui/react';
 import CodeEditor from './CodeEditor.jsx';
 import { computeHtml, computeCss, computeJs } from '../computes';
 import { modes, HtmlModes, CssModes, JsModes } from '../codeModes';
@@ -676,340 +678,359 @@ export default class ContentWrap extends Component {
 		// log('contentwrap update');
 
 		return (
-			<SplitPane
-				class="content-wrap  flex  flex-grow"
-				sizes={this.state.mainSplitSizes}
-				minSize={150}
-				style=""
-				direction={
-					this.props.currentLayoutMode === 2 ? 'vertical' : 'horizontal'
-				}
-				onDrag={this.mainSplitDragHandler.bind(this)}
-				onDragEnd={this.mainSplitDragEndHandler.bind(this)}
-			>
-				<SplitPane
-					class="code-side"
-					id="js-code-side"
-					sizes={this.state.codeSplitSizes}
-					minSize={minCodeWrapSize}
-					direction={
-						this.props.currentLayoutMode === 2 ||
-						this.props.currentLayoutMode === 5
-							? 'horizontal'
-							: 'vertical'
-					}
-					onDragStart={this.codeSplitDragStart.bind(this)}
-					onDragEnd={this.codeSplitDragEnd.bind(this)}
-					onSplit={splitInstance => (this.codeSplitInstance = splitInstance)}
-				>
-					<div
-						data-code-wrap-id="0"
-						id="htmlCodeEl"
-						data-type="html"
-						class="code-wrap"
-						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
-					>
-						<div
-							class="js-code-wrap__header  code-wrap__header"
-							title="Double click to toggle code pane"
-							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
-						>
-							<label class="btn-group" dropdow title="Click to change">
-								<span class="code-wrap__header-label">
-									{modes[this.props.currentItem.htmlMode || 'html'].label}
-								</span>
-								<span class="caret" />
-								<select
-									data-type="html"
-									class="js-mode-select  hidden-select"
-									onChange={this.codeModeChangeHandler.bind(this)}
-									value={this.props.currentItem.htmlMode}
-								>
-									<option value="html">HTML</option>
-									<option value="markdown">Markdown</option>
-									<option value="jade">Pug</option>
-								</select>
-							</label>
-							<div class="code-wrap__header-right-options">
-								{this.props.currentItem.htmlMode === HtmlModes.HTML ? (
-									<a
-										class="code-wrap__header-btn"
-										title="Format code"
-										onClick={this.prettifyBtnClickHandler.bind(this, 'html')}
-									>
-										<svg>
-											<use xlinkHref="#code-brace-icon" />
-										</svg>
-									</a>
-								) : null}
-								<a
-									class="code-wrap__header-btn  code-wrap__hide-btn"
-									title="Minimise pane"
-									onClick={this.hidePaneBtnHandler.bind(this)}
-								/>
-								<a
-									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
-									title="Maximize pane"
-									onClick={this.collapseBtnHandler.bind(this)}
-								/>
-							</div>
-						</div>
-						<CodeEditor
-							type={
-								window.forcedSettings.isMonacoEditorOn === true ||
-								(this.props.prefs.isMonacoEditorOn &&
-									window.forcedSettings.isMonacoEditorOn !== false)
-									? 'monaco'
-									: 'codemirror'
-							}
-							options={{
-								mode: 'htmlmixed',
-								profile: 'xhtml',
-								gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-								noAutocomplete: true,
-								matchTags: { bothTags: true },
-								prettier: true,
-								prettierParser: 'html',
-								emmet: true
-							}}
-							prefs={this.props.prefs}
-							onChange={this.onHtmlCodeChange.bind(this)}
-							ref={editor => (this.cm.html = editor)}
-							onFocus={this.editorFocusHandler.bind(this)}
-							yText={
-								this.props.multiplayerSession?.ydoc?.getText('html') || null
-							}
-							awareness={this.props.multiplayerSession?.awareness || null}
-						/>
-					</div>
-					<div
-						data-code-wrap-id="1"
-						id="cssCodeEl"
-						data-type="css"
-						class="code-wrap"
-						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
-					>
-						<div
-							class="js-code-wrap__header  code-wrap__header"
-							title="Double click to toggle code pane"
-							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
-						>
-							<label class="btn-group" title="Click to change">
-								<span class="code-wrap__header-label">
-									{modes[this.props.currentItem.cssMode || 'css'].label}
-								</span>
-								<span class="caret" />
-								<select
-									data-type="css"
-									class="js-mode-select  hidden-select"
-									onChange={this.codeModeChangeHandler.bind(this)}
-									value={this.props.currentItem.cssMode}
-								>
-									<option value="css">CSS</option>
-									<option value="scss">SCSS</option>
-									<option value="sass">SASS</option>
-									<option value="less">LESS</option>
-									<option value="stylus">Stylus</option>
-									<option value="acss">Atomic CSS</option>
-								</select>
-							</label>
-							<div class="code-wrap__header-right-options">
-								{modes[this.props.currentItem.cssMode || 'css'].hasSettings && (
-									<a
-										href="#"
-										id="cssSettingsBtn"
-										title="Atomic CSS configuration"
-										onClick={this.cssSettingsBtnClickHandler.bind(this)}
-										class="code-wrap__header-btn"
-									>
-										<svg>
-											<use xlinkHref="#settings-icon" />
-										</svg>
-									</a>
-								)}
-								<a
-									class="code-wrap__header-btn "
-									title="Format code"
-									onClick={this.prettifyBtnClickHandler.bind(this, 'css')}
-								>
-									<svg>
-										<use xlinkHref="#code-brace-icon" />
-									</svg>
-								</a>
-								<a
-									class="code-wrap__header-btn  code-wrap__hide-btn"
-									title="Minimise pane"
-									onClick={this.hidePaneBtnHandler.bind(this)}
-								/>
-								<a
-									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
-									title="Maximize pane"
-									onClick={this.collapseBtnHandler.bind(this)}
-								/>
-							</div>
-						</div>
-						<CodeEditor
-							type={
-								window.forcedSettings.isMonacoEditorOn === true ||
-								(this.props.prefs.isMonacoEditorOn &&
-									window.forcedSettings.isMonacoEditorOn !== false)
-									? 'monaco'
-									: 'codemirror'
-							}
-							options={{
-								mode: 'css',
-								gutters: [
-									'error-gutter',
-									'CodeMirror-linenumbers',
-									'CodeMirror-foldgutter'
-								],
-								emmet: true,
-								prettier: true,
-								prettierParser: 'css'
-							}}
-							prefs={this.props.prefs}
-							onChange={this.onCssCodeChange.bind(this)}
-							ref={editor => (this.cm.css = editor)}
-							onFocus={this.editorFocusHandler.bind(this)}
-							yText={
-								this.props.multiplayerSession?.ydoc?.getText('css') || null
-							}
-							awareness={this.props.multiplayerSession?.awareness || null}
-						/>
-					</div>
-					<div
-						data-code-wrap-id="2"
-						id="jsCodeEl"
-						data-type="js"
-						class="code-wrap"
-						onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
-					>
-						<div
-							class="js-code-wrap__header  code-wrap__header"
-							title="Double click to toggle code pane"
-							onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
-						>
-							<label class="btn-group" title="Click to change">
-								<span class="code-wrap__header-label">
-									{modes[this.props.currentItem.jsMode || 'js'].label}
-								</span>
-								<span class="caret" />
-								<select
-									data-type="js"
-									class="js-mode-select  hidden-select"
-									onChange={this.codeModeChangeHandler.bind(this)}
-									value={this.props.currentItem.jsMode}
-								>
-									<option value="js">JS</option>
-									<option value="coffee">CoffeeScript</option>
-									<option value="es6">ES6 (Babel)</option>
-									<option value="typescript">TypeScript</option>
-								</select>
-							</label>
-							<div class="code-wrap__header-right-options">
-								<a
-									class="code-wrap__header-btn "
-									title="Format code"
-									onClick={this.prettifyBtnClickHandler.bind(this, 'js')}
-								>
-									<svg>
-										<use xlinkHref="#code-brace-icon" />
-									</svg>
-								</a>
-								<a
-									class="code-wrap__header-btn  code-wrap__hide-btn"
-									title="Minimise pane"
-									onClick={this.hidePaneBtnHandler.bind(this)}
-								/>
-								<a
-									class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
-									title="Maximize pane"
-									onClick={this.collapseBtnHandler.bind(this)}
-								/>
-							</div>
-						</div>
-						<CodeEditor
-							type={
-								window.forcedSettings.isMonacoEditorOn === true ||
-								(this.props.prefs.isMonacoEditorOn &&
-									window.forcedSettings.isMonacoEditorOn !== false)
-									? 'monaco'
-									: 'codemirror'
-							}
-							options={{
-								mode: 'javascript',
-								gutters: [
-									'error-gutter',
-									'CodeMirror-linenumbers',
-									'CodeMirror-foldgutter'
-								],
-								prettier: true,
-								prettierParser: 'js'
-							}}
-							prefs={this.props.prefs}
-							autoComplete={this.props.prefs.autoComplete}
-							onChange={this.onJsCodeChange.bind(this)}
-							ref={editor => (this.cm.js = editor)}
-							onFocus={this.editorFocusHandler.bind(this)}
-							yText={this.props.multiplayerSession?.ydoc?.getText('js') || null}
-							awareness={this.props.multiplayerSession?.awareness || null}
-						/>
-						{/* Inlet(scope.cm.js); */}
-					</div>
-				</SplitPane>
-				<div class="demo-side" id="js-demo-side" style="">
-					{window.IS_EXTENSION ? (
-						<iframe
-							ref={el => (this.frame = el)}
-							frameborder="0"
-							id="demo-frame"
-							src="./indexpm.html"
-							allowfullscreen="true"
-						/>
-					) : (
-						<iframe
-							src={`${PREVIEW_FRAME_HOST}/preview.htm`}
-							ref={el => (this.frame = el)}
-							frameborder="0"
-							id="demo-frame"
-							sandbox="allow-same-origin allow-downloads allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-scripts allow-top-navigation-by-user-activation"
-							allow="accelerometer; camera; encrypted-media; display-capture; geolocation; gyroscope; microphone; midi; clipboard-read; clipboard-write; web-share"
-							allowpaymentrequest="true"
-							allowfullscreen="true"
-						/>
-					)}
-
-					{/* Hidden iframe to register service worker for offline preview support */}
-					{!window.IS_EXTENSION && (
-						<iframe
-							src={`${PREVIEW_FRAME_HOST}/talk.html`}
-							style="display:none"
-							id="talkFrame"
-						/>
-					)}
-
-					<PreviewDimension ref={comp => (this.previewDimension = comp)} />
-
-					<Console
-						logs={this.state.logs}
-						isConsoleOpen={this.state.isConsoleOpen}
-						onConsoleHeaderDblClick={this.consoleHeaderDblClickHandler}
-						onClearConsoleBtnClick={this.clearConsoleBtnClickHandler}
-						toggleConsole={this.toggleConsole}
-						onEvalInputKeyup={this.evalConsoleExpr}
-					/>
-
-					<CssSettingsModal
-						show={this.state.isCssSettingsModalOpen}
-						closeHandler={() =>
-							this.setState({ isCssSettingsModalOpen: false })
+			<I18n>
+				{({ i18n }) => (
+					<SplitPane
+						class="content-wrap  flex  flex-grow"
+						sizes={this.state.mainSplitSizes}
+						minSize={150}
+						style=""
+						direction={
+							this.props.currentLayoutMode === 2 ? 'vertical' : 'horizontal'
 						}
-						onChange={this.cssSettingsChangeHandler.bind(this)}
-						settings={this.props.currentItem.cssSettings}
-						editorTheme={this.props.prefs.editorTheme}
-					/>
-				</div>
-			</SplitPane>
+						onDrag={this.mainSplitDragHandler.bind(this)}
+						onDragEnd={this.mainSplitDragEndHandler.bind(this)}
+					>
+						<SplitPane
+							class="code-side"
+							id="js-code-side"
+							sizes={this.state.codeSplitSizes}
+							minSize={minCodeWrapSize}
+							direction={
+								this.props.currentLayoutMode === 2 ||
+								this.props.currentLayoutMode === 5
+									? 'horizontal'
+									: 'vertical'
+							}
+							onDragStart={this.codeSplitDragStart.bind(this)}
+							onDragEnd={this.codeSplitDragEnd.bind(this)}
+							onSplit={splitInstance =>
+								(this.codeSplitInstance = splitInstance)
+							}
+						>
+							<div
+								data-code-wrap-id="0"
+								id="htmlCodeEl"
+								data-type="html"
+								class="code-wrap"
+								onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
+							>
+								<div
+									class="js-code-wrap__header  code-wrap__header"
+									title={i18n._(t`Double click to toggle code pane`)}
+									onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
+								>
+									<label
+										class="btn-group"
+										dropdow
+										title={i18n._(t`Click to change`)}
+									>
+										<span class="code-wrap__header-label">
+											{modes[this.props.currentItem.htmlMode || 'html'].label}
+										</span>
+										<span class="caret" />
+										<select
+											data-type="html"
+											class="js-mode-select  hidden-select"
+											onChange={this.codeModeChangeHandler.bind(this)}
+											value={this.props.currentItem.htmlMode}
+										>
+											<option value="html">HTML</option>
+											<option value="markdown">Markdown</option>
+											<option value="jade">Pug</option>
+										</select>
+									</label>
+									<div class="code-wrap__header-right-options">
+										{this.props.currentItem.htmlMode === HtmlModes.HTML ? (
+											<a
+												class="code-wrap__header-btn"
+												title={i18n._(t`Format code`)}
+												onClick={this.prettifyBtnClickHandler.bind(
+													this,
+													'html'
+												)}
+											>
+												<svg>
+													<use xlinkHref="#code-brace-icon" />
+												</svg>
+											</a>
+										) : null}
+										<a
+											class="code-wrap__header-btn  code-wrap__hide-btn"
+											title={i18n._(t`Minimise pane`)}
+											onClick={this.hidePaneBtnHandler.bind(this)}
+										/>
+										<a
+											class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
+											title={i18n._(t`Maximize pane`)}
+											onClick={this.collapseBtnHandler.bind(this)}
+										/>
+									</div>
+								</div>
+								<CodeEditor
+									type={
+										window.forcedSettings.isMonacoEditorOn === true ||
+										(this.props.prefs.isMonacoEditorOn &&
+											window.forcedSettings.isMonacoEditorOn !== false)
+											? 'monaco'
+											: 'codemirror'
+									}
+									options={{
+										mode: 'htmlmixed',
+										profile: 'xhtml',
+										gutters: [
+											'CodeMirror-linenumbers',
+											'CodeMirror-foldgutter'
+										],
+										noAutocomplete: true,
+										matchTags: { bothTags: true },
+										prettier: true,
+										prettierParser: 'html',
+										emmet: true
+									}}
+									prefs={this.props.prefs}
+									onChange={this.onHtmlCodeChange.bind(this)}
+									ref={editor => (this.cm.html = editor)}
+									onFocus={this.editorFocusHandler.bind(this)}
+									yText={
+										this.props.multiplayerSession?.ydoc?.getText('html') || null
+									}
+									awareness={this.props.multiplayerSession?.awareness || null}
+								/>
+							</div>
+							<div
+								data-code-wrap-id="1"
+								id="cssCodeEl"
+								data-type="css"
+								class="code-wrap"
+								onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
+							>
+								<div
+									class="js-code-wrap__header  code-wrap__header"
+									title={i18n._(t`Double click to toggle code pane`)}
+									onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
+								>
+									<label class="btn-group" title={i18n._(t`Click to change`)}>
+										<span class="code-wrap__header-label">
+											{modes[this.props.currentItem.cssMode || 'css'].label}
+										</span>
+										<span class="caret" />
+										<select
+											data-type="css"
+											class="js-mode-select  hidden-select"
+											onChange={this.codeModeChangeHandler.bind(this)}
+											value={this.props.currentItem.cssMode}
+										>
+											<option value="css">CSS</option>
+											<option value="scss">SCSS</option>
+											<option value="sass">SASS</option>
+											<option value="less">LESS</option>
+											<option value="stylus">Stylus</option>
+											<option value="acss">Atomic CSS</option>
+										</select>
+									</label>
+									<div class="code-wrap__header-right-options">
+										{modes[this.props.currentItem.cssMode || 'css']
+											.hasSettings && (
+											<a
+												href="#"
+												id="cssSettingsBtn"
+												title={i18n._(t`Atomic CSS configuration`)}
+												onClick={this.cssSettingsBtnClickHandler.bind(this)}
+												class="code-wrap__header-btn"
+											>
+												<svg>
+													<use xlinkHref="#settings-icon" />
+												</svg>
+											</a>
+										)}
+										<a
+											class="code-wrap__header-btn "
+											title={i18n._(t`Format code`)}
+											onClick={this.prettifyBtnClickHandler.bind(this, 'css')}
+										>
+											<svg>
+												<use xlinkHref="#code-brace-icon" />
+											</svg>
+										</a>
+										<a
+											class="code-wrap__header-btn  code-wrap__hide-btn"
+											title={i18n._(t`Minimise pane`)}
+											onClick={this.hidePaneBtnHandler.bind(this)}
+										/>
+										<a
+											class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
+											title={i18n._(t`Maximize pane`)}
+											onClick={this.collapseBtnHandler.bind(this)}
+										/>
+									</div>
+								</div>
+								<CodeEditor
+									type={
+										window.forcedSettings.isMonacoEditorOn === true ||
+										(this.props.prefs.isMonacoEditorOn &&
+											window.forcedSettings.isMonacoEditorOn !== false)
+											? 'monaco'
+											: 'codemirror'
+									}
+									options={{
+										mode: 'css',
+										gutters: [
+											'error-gutter',
+											'CodeMirror-linenumbers',
+											'CodeMirror-foldgutter'
+										],
+										emmet: true,
+										prettier: true,
+										prettierParser: 'css'
+									}}
+									prefs={this.props.prefs}
+									onChange={this.onCssCodeChange.bind(this)}
+									ref={editor => (this.cm.css = editor)}
+									onFocus={this.editorFocusHandler.bind(this)}
+									yText={
+										this.props.multiplayerSession?.ydoc?.getText('css') || null
+									}
+									awareness={this.props.multiplayerSession?.awareness || null}
+								/>
+							</div>
+							<div
+								data-code-wrap-id="2"
+								id="jsCodeEl"
+								data-type="js"
+								class="code-wrap"
+								onTransitionEnd={this.updateCodeWrapCollapseStates.bind(this)}
+							>
+								<div
+									class="js-code-wrap__header  code-wrap__header"
+									title={i18n._(t`Double click to toggle code pane`)}
+									onDblClick={this.codeWrapHeaderDblClickHandler.bind(this)}
+								>
+									<label class="btn-group" title={i18n._(t`Click to change`)}>
+										<span class="code-wrap__header-label">
+											{modes[this.props.currentItem.jsMode || 'js'].label}
+										</span>
+										<span class="caret" />
+										<select
+											data-type="js"
+											class="js-mode-select  hidden-select"
+											onChange={this.codeModeChangeHandler.bind(this)}
+											value={this.props.currentItem.jsMode}
+										>
+											<option value="js">JS</option>
+											<option value="coffee">CoffeeScript</option>
+											<option value="es6">ES6 (Babel)</option>
+											<option value="typescript">TypeScript</option>
+										</select>
+									</label>
+									<div class="code-wrap__header-right-options">
+										<a
+											class="code-wrap__header-btn "
+											title={i18n._(t`Format code`)}
+											onClick={this.prettifyBtnClickHandler.bind(this, 'js')}
+										>
+											<svg>
+												<use xlinkHref="#code-brace-icon" />
+											</svg>
+										</a>
+										<a
+											class="code-wrap__header-btn  code-wrap__hide-btn"
+											title={i18n._(t`Minimise pane`)}
+											onClick={this.hidePaneBtnHandler.bind(this)}
+										/>
+										<a
+											class="js-code-collapse-btn  code-wrap__header-btn  code-wrap__collapse-btn"
+											title={i18n._(t`Maximize pane`)}
+											onClick={this.collapseBtnHandler.bind(this)}
+										/>
+									</div>
+								</div>
+								<CodeEditor
+									type={
+										window.forcedSettings.isMonacoEditorOn === true ||
+										(this.props.prefs.isMonacoEditorOn &&
+											window.forcedSettings.isMonacoEditorOn !== false)
+											? 'monaco'
+											: 'codemirror'
+									}
+									options={{
+										mode: 'javascript',
+										gutters: [
+											'error-gutter',
+											'CodeMirror-linenumbers',
+											'CodeMirror-foldgutter'
+										],
+										prettier: true,
+										prettierParser: 'js'
+									}}
+									prefs={this.props.prefs}
+									autoComplete={this.props.prefs.autoComplete}
+									onChange={this.onJsCodeChange.bind(this)}
+									ref={editor => (this.cm.js = editor)}
+									onFocus={this.editorFocusHandler.bind(this)}
+									yText={
+										this.props.multiplayerSession?.ydoc?.getText('js') || null
+									}
+									awareness={this.props.multiplayerSession?.awareness || null}
+								/>
+								{/* Inlet(scope.cm.js); */}
+							</div>
+						</SplitPane>
+						<div class="demo-side" id="js-demo-side" style="">
+							{window.IS_EXTENSION ? (
+								<iframe
+									ref={el => (this.frame = el)}
+									frameborder="0"
+									id="demo-frame"
+									src="./indexpm.html"
+									allowfullscreen="true"
+								/>
+							) : (
+								<iframe
+									src={`${PREVIEW_FRAME_HOST}/preview.htm`}
+									ref={el => (this.frame = el)}
+									frameborder="0"
+									id="demo-frame"
+									sandbox="allow-same-origin allow-downloads allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-scripts allow-top-navigation-by-user-activation"
+									allow="accelerometer; camera; encrypted-media; display-capture; geolocation; gyroscope; microphone; midi; clipboard-read; clipboard-write; web-share"
+									allowpaymentrequest="true"
+									allowfullscreen="true"
+								/>
+							)}
+
+							{/* Hidden iframe to register service worker for offline preview support */}
+							{!window.IS_EXTENSION && (
+								<iframe
+									src={`${PREVIEW_FRAME_HOST}/talk.html`}
+									style="display:none"
+									id="talkFrame"
+								/>
+							)}
+
+							<PreviewDimension ref={comp => (this.previewDimension = comp)} />
+
+							<Console
+								logs={this.state.logs}
+								isConsoleOpen={this.state.isConsoleOpen}
+								onConsoleHeaderDblClick={this.consoleHeaderDblClickHandler}
+								onClearConsoleBtnClick={this.clearConsoleBtnClickHandler}
+								toggleConsole={this.toggleConsole}
+								onEvalInputKeyup={this.evalConsoleExpr}
+							/>
+
+							<CssSettingsModal
+								show={this.state.isCssSettingsModalOpen}
+								closeHandler={() =>
+									this.setState({ isCssSettingsModalOpen: false })
+								}
+								onChange={this.cssSettingsChangeHandler.bind(this)}
+								settings={this.props.currentItem.cssSettings}
+								editorTheme={this.props.prefs.editorTheme}
+							/>
+						</div>
+					</SplitPane>
+				)}
+			</I18n>
 		);
 	}
 }

@@ -1,4 +1,6 @@
 import { h, Component } from 'preact';
+import { Trans, t } from '@lingui/macro';
+import { I18n } from '@lingui/react';
 import { editorThemes } from '../editorThemes';
 import Switch from './Switch';
 import Tabs, { TabPanel } from './Tabs';
@@ -29,388 +31,436 @@ export default class Settings extends Component {
 	render() {
 		const { prefs } = this.props;
 		return (
-			<div>
-				<h1>Settings</h1>
+			<I18n>
+				{({ i18n }) => (
+					<div>
+						<h1>
+							<Trans>Settings</Trans>
+						</h1>
 
-				<Tabs>
-					<TabPanel label="General">
-						<CheckboxSetting
-							label="Preserve last written code"
-							pref={prefs.preserveLastCode}
-							onChange={e => this.updateSetting(e, 'preserveLastCode')}
-						/>
-						<HelpText>Loads the last open creation when app starts</HelpText>
-						<Divider />
-						<CheckboxSetting
-							label="Fast/light-weight version"
-							pref={prefs.lightVersion}
-							onChange={e => this.updateSetting(e, 'lightVersion')}
-						/>
-						<HelpText>
-							Switch to lighter version for better performance. Removes things
-							like blur etc.
-						</HelpText>
-						<Divider />
-						<CheckboxSetting
-							label="Auto-preview"
-							pref={prefs.autoPreview}
-							onChange={e => this.updateSetting(e, 'autoPreview')}
-						/>
-						<HelpText>
-							Refreshes the preview as you code. Otherwise use the 'Run' button
-						</HelpText>
-						<Divider />
-						<CheckboxSetting
-							label="Auto-save"
-							pref={prefs.autoSave}
-							onChange={e => this.updateSetting(e, 'autoSave')}
-						/>
-						<HelpText>
-							Auto-save keeps saving your code at regular intervals after you
-							hit save manually the first time
-						</HelpText>
-						<Divider />
-						<CheckboxSetting
-							label="Refresh preview on resize"
-							pref={prefs.refreshOnResize}
-							onChange={e => this.updateSetting(e, 'refreshOnResize')}
-						/>
-						<HelpText>
-							Preview will refresh when you resize the preview pane
-						</HelpText>
-						<div class="show-when-extension">
-							<Divider />
-							<CheckboxSetting
-								label="Replace new tab page"
-								pref={prefs.replaceNewTab}
-								onChange={e => this.updateSetting(e, 'replaceNewTab')}
-								showWhenExtension
-							/>
-							<HelpText>
-								Turning this on will start showing Web Maker in every new tab
-								you open
-							</HelpText>
-						</div>
-						<Divider />
-						<CheckboxSetting
-							label="Preserve console logs"
-							pref={prefs.preserveConsoleLogs}
-							onChange={e => this.updateSetting(e, 'preserveConsoleLogs')}
-						/>
-						<HelpText>
-							Preserves the console logs across your preview refreshes
-						</HelpText>
-					</TabPanel>
-					<TabPanel label="Indentation">
-						<div class="line">
-							<div>
-								<label>
-									<input
-										type="radio"
-										name="indentation"
-										value="spaces"
-										checked={prefs.indentWith === 'spaces'}
-										onChange={e => this.updateSetting(e, 'indentWith')}
-									/>{' '}
-									Spaces
-								</label>
-								<label class="ml-1">
-									<input
-										type="radio"
-										name="indentation"
-										value="tabs"
-										checked={prefs.indentWith === 'tabs'}
-										onChange={e => this.updateSetting(e, 'indentWith')}
-									/>{' '}
-									Tabs
-								</label>
-							</div>
-						</div>
-
-						<Divider />
-
-						<label class="line" title="">
-							Indentation Size
-							<div>
-								<input
-									type="range"
-									class="va-m ml-1"
-									value={prefs.indentSize}
-									min="1"
-									max="7"
-									list="indentationSizeList"
-									onChange={e => this.updateSetting(e, 'indentSize')}
-								/>
-								<span id="indentationSizeValueEl">{prefs.indentSize}</span>
-								<datalist id="indentationSizeList">
-									<option>1</option>
-									<option>2</option>
-									<option>3</option>
-									<option>4</option>
-									<option>5</option>
-									<option>6</option>
-									<option>7</option>
-								</datalist>
-							</div>
-						</label>
-					</TabPanel>
-					<TabPanel label="Editor">
-						<div>
-							<div>
+						<Tabs>
+							<TabPanel label={i18n._(t`General`)}>
 								<CheckboxSetting
-									title="Use experimental Monaco editor"
-									label="Use Monaco Editor"
-									pref={prefs.isMonacoEditorOn}
-									onChange={e => this.updateSetting(e, 'isMonacoEditorOn')}
+									label={i18n._(t`Preserve last written code`)}
+									pref={prefs.preserveLastCode}
+									onChange={e => this.updateSetting(e, 'preserveLastCode')}
 								/>
 								<HelpText>
-									(Experimental) Switches from CodeMirror to Monaco. Many other
-									settings might not be available in Monaco.
+									<Trans>Loads the last open creation when app starts</Trans>
 								</HelpText>
 								<Divider />
-								<div class="line">
-									<span>Default Preprocessors</span>
-									<div class="flex fxw-w">
-										<select
-											aria-label="Default HTML preprocessor"
-											style="flex:1;margin-left:20px"
-											value={prefs.htmlMode}
-											onChange={e => this.updateSetting(e, 'htmlMode')}
-										>
-											<option value="html">HTML</option>
-											<option value="markdown">Markdown</option>
-											<option value="jade">Pug</option>
-										</select>
-										<select
-											aria-label="Default CSS preprocessor"
-											style="flex:1;margin-left:20px"
-											value={prefs.cssMode}
-											onChange={e => this.updateSetting(e, 'cssMode')}
-										>
-											<option value="css">CSS</option>
-											<option value="scss">SCSS</option>
-											<option value="sass">SASS</option>
-											<option value="less">LESS</option>
-											<option value="stylus">Stylus</option>
-											<option value="acss">Atomic CSS</option>
-										</select>
-										<select
-											aria-label="Default JavaScript preprocessor"
-											style="flex:1;margin-left:20px"
-											value={prefs.jsMode}
-											onChange={e => this.updateSetting(e, 'jsMode')}
-										>
-											<option value="js">JS</option>
-											<option value="coffee">CoffeeScript</option>
-											<option value="es6">ES6 (Babel)</option>
-											<option value="typescript">TypeScript</option>
-										</select>
-									</div>
+								<CheckboxSetting
+									label={i18n._(t`Fast/light-weight version`)}
+									pref={prefs.lightVersion}
+									onChange={e => this.updateSetting(e, 'lightVersion')}
+								/>
+								<HelpText>
+									<Trans>
+										Switch to lighter version for better performance. Removes
+										things like blur etc.
+									</Trans>
+								</HelpText>
+								<Divider />
+								<CheckboxSetting
+									label={i18n._(t`Auto-preview`)}
+									pref={prefs.autoPreview}
+									onChange={e => this.updateSetting(e, 'autoPreview')}
+								/>
+								<HelpText>
+									<Trans>
+										Refreshes the preview as you code. Otherwise use the 'Run'
+										button
+									</Trans>
+								</HelpText>
+								<Divider />
+								<CheckboxSetting
+									label={i18n._(t`Auto-save`)}
+									pref={prefs.autoSave}
+									onChange={e => this.updateSetting(e, 'autoSave')}
+								/>
+								<HelpText>
+									<Trans>
+										Auto-save keeps saving your code at regular intervals after
+										you hit save manually the first time
+									</Trans>
+								</HelpText>
+								<Divider />
+								<CheckboxSetting
+									label={i18n._(t`Refresh preview on resize`)}
+									pref={prefs.refreshOnResize}
+									onChange={e => this.updateSetting(e, 'refreshOnResize')}
+								/>
+								<HelpText>
+									<Trans>
+										Preview will refresh when you resize the preview pane
+									</Trans>
+								</HelpText>
+								<div class="show-when-extension">
+									<Divider />
+									<CheckboxSetting
+										label={i18n._(t`Replace new tab page`)}
+										pref={prefs.replaceNewTab}
+										onChange={e => this.updateSetting(e, 'replaceNewTab')}
+										showWhenExtension
+									/>
+									<HelpText>
+										<Trans>
+											Turning this on will start showing Web Maker in every new
+											tab you open
+										</Trans>
+									</HelpText>
 								</div>
 								<Divider />
-								<label class="line">
-									Theme
-									<VStack gap="0.5rem" align="flex-end">
-										<select
-											value={prefs.editorTheme}
-											onChange={e => this.updateSetting(e, 'editorTheme')}
-										>
-											{editorThemes.map(theme => (
-												<option value={theme}>{theme}</option>
-											))}
-										</select>
-										<button
-											type="button"
-											class="btn btn--small ml-1 settings__preview-btn"
-										>
-											Hover/Focus to preview
-										</button>
-									</VStack>
-								</label>
+								<CheckboxSetting
+									label={i18n._(t`Preserve console logs`)}
+									pref={prefs.preserveConsoleLogs}
+									onChange={e => this.updateSetting(e, 'preserveConsoleLogs')}
+								/>
+								<HelpText>
+									<Trans>
+										Preserves the console logs across your preview refreshes
+									</Trans>
+								</HelpText>
+
 								<Divider />
 
-								<label class="line">
-									Font
+								<div>
+									<label class="line">
+										<Trans>Language</Trans>
+										<select
+											value={prefs.lang}
+											onChange={e => this.updateSetting(e, 'lang')}
+										>
+											<option value="en">English</option>
+											<option value="ja">日本語</option>
+											<option value="hi">हिंदी</option>
+											<option value="es">Español (España)</option>
+											<option value="de">Deutsch</option>
+											<option value="fr">Français</option>
+											<option value="nl">Dutch</option>
+											<option value="zh-Hans">中文(简体)</option>
+										</select>
+									</label>
+								</div>
+							</TabPanel>
+							<TabPanel label={i18n._(t`Indentation`)}>
+								<div class="line">
 									<div>
-										<select
-											value={prefs.editorFont}
-											onChange={e => this.updateSetting(e, 'editorFont')}
-										>
-											<option value="FiraCode">Fira Code</option>
-											<option value="Inconsolata">Inconsolata</option>
-											<option value="Monoid">Monoid</option>
-											<option value="FixedSys">FixedSys</option>
-											<option disabled="disabled">----</option>
-											<option value="other">Other font from system</option>
-										</select>
-										{prefs.editorFont === 'other' && (
+										<label>
 											<input
-												style="margin-left:20px"
-												id="customEditorFontInput"
-												type="text"
-												value={prefs.editorCustomFont}
-												placeholder="Custom font name here"
-												onChange={e =>
-													this.updateSetting(e, 'editorCustomFont')
-												}
-											/>
-										)}
+												type="radio"
+												name="indentation"
+												value="spaces"
+												checked={prefs.indentWith === 'spaces'}
+												onChange={e => this.updateSetting(e, 'indentWith')}
+											/>{' '}
+											<Trans>Spaces</Trans>
+										</label>
+										<label class="ml-1">
+											<input
+												type="radio"
+												name="indentation"
+												value="tabs"
+												checked={prefs.indentWith === 'tabs'}
+												onChange={e => this.updateSetting(e, 'indentWith')}
+											/>{' '}
+											<Trans>Tabs</Trans>
+										</label>
 									</div>
-								</label>
+								</div>
+
 								<Divider />
 
-								<label class="line">
-									Font Size
+								<label class="line" title="">
+									<Trans>Indentation Size</Trans>
 									<div>
 										<input
-											style="width:70px"
-											type="number"
-											value={prefs.fontSize}
-											onChange={e => this.updateSetting(e, 'fontSize')}
-										/>{' '}
-										px
+											type="range"
+											class="va-m ml-1"
+											value={prefs.indentSize}
+											min="1"
+											max="7"
+											list="indentationSizeList"
+											onChange={e => this.updateSetting(e, 'indentSize')}
+										/>
+										<span id="indentationSizeValueEl">{prefs.indentSize}</span>
+										<datalist id="indentationSizeList">
+											<option>1</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+											<option>5</option>
+											<option>6</option>
+											<option>7</option>
+										</datalist>
 									</div>
 								</label>
-								<Divider />
-
-								<div class="line">
-									Key bindings
+							</TabPanel>
+							<TabPanel label={i18n._(t`Editor`)}>
+								<div>
 									<div>
-										<label class="ml-1">
-											<input
-												type="radio"
-												name="keymap"
-												value="sublime"
-												checked={prefs.keymap === 'sublime'}
-												onChange={e => this.updateSetting(e, 'keymap')}
-											/>{' '}
-											Sublime
+										<CheckboxSetting
+											title={i18n._(t`Use experimental Monaco editor`)}
+											label={i18n._(t`Use Monaco Editor`)}
+											pref={prefs.isMonacoEditorOn}
+											onChange={e => this.updateSetting(e, 'isMonacoEditorOn')}
+										/>
+										<HelpText>
+											<Trans>
+												(Experimental) Switches from CodeMirror to Monaco. Many
+												other settings might not be available in Monaco.
+											</Trans>
+										</HelpText>
+										<Divider />
+										<div class="line">
+											<span>
+												<Trans>Default Preprocessors</Trans>
+											</span>
+											<div class="flex fxw-w">
+												<select
+													aria-label={i18n._(t`Default HTML preprocessor`)}
+													style="flex:1;margin-left:20px"
+													value={prefs.htmlMode}
+													onChange={e => this.updateSetting(e, 'htmlMode')}
+												>
+													<option value="html">HTML</option>
+													<option value="markdown">Markdown</option>
+													<option value="jade">Pug</option>
+												</select>
+												<select
+													aria-label={i18n._(t`Default CSS preprocessor`)}
+													style="flex:1;margin-left:20px"
+													value={prefs.cssMode}
+													onChange={e => this.updateSetting(e, 'cssMode')}
+												>
+													<option value="css">CSS</option>
+													<option value="scss">SCSS</option>
+													<option value="sass">SASS</option>
+													<option value="less">LESS</option>
+													<option value="stylus">Stylus</option>
+													<option value="acss">Atomic CSS</option>
+												</select>
+												<select
+													aria-label={i18n._(
+														t`Default JavaScript preprocessor`
+													)}
+													style="flex:1;margin-left:20px"
+													value={prefs.jsMode}
+													onChange={e => this.updateSetting(e, 'jsMode')}
+												>
+													<option value="js">JS</option>
+													<option value="coffee">CoffeeScript</option>
+													<option value="es6">ES6 (Babel)</option>
+													<option value="typescript">TypeScript</option>
+												</select>
+											</div>
+										</div>
+										<Divider />
+										<label class="line">
+											<Trans>Theme</Trans>
+											<VStack gap="0.5rem" align="flex-end">
+												<select
+													value={prefs.editorTheme}
+													onChange={e => this.updateSetting(e, 'editorTheme')}
+												>
+													{editorThemes.map(theme => (
+														<option value={theme}>{theme}</option>
+													))}
+												</select>
+												<button
+													type="button"
+													class="btn btn--small ml-1 settings__preview-btn"
+												>
+													<Trans>Hover/Focus to preview</Trans>
+												</button>
+											</VStack>
 										</label>
-										<label class="ml-1">
-											<input
-												type="radio"
-												name="keymap"
-												value="vim"
-												checked={prefs.keymap === 'vim'}
-												onChange={e => this.updateSetting(e, 'keymap')}
-											/>{' '}
-											Vim
+										<Divider />
+
+										<label class="line">
+											<Trans>Font</Trans>
+											<div>
+												<select
+													value={prefs.editorFont}
+													onChange={e => this.updateSetting(e, 'editorFont')}
+												>
+													<option value="FiraCode">Fira Code</option>
+													<option value="Inconsolata">Inconsolata</option>
+													<option value="Monoid">Monoid</option>
+													<option value="FixedSys">FixedSys</option>
+													<option disabled="disabled">----</option>
+													<option value="other">
+														{i18n._(t`Other font from system`)}
+													</option>
+												</select>
+												{prefs.editorFont === 'other' && (
+													<input
+														style="margin-left:20px"
+														id="customEditorFontInput"
+														type="text"
+														value={prefs.editorCustomFont}
+														placeholder={i18n._(t`Custom font name here`)}
+														onChange={e =>
+															this.updateSetting(e, 'editorCustomFont')
+														}
+													/>
+												)}
+											</div>
 										</label>
+										<Divider />
+
+										<label class="line">
+											<Trans>Font Size</Trans>
+											<div>
+												<input
+													style="width:70px"
+													type="number"
+													value={prefs.fontSize}
+													onChange={e => this.updateSetting(e, 'fontSize')}
+												/>{' '}
+												px
+											</div>
+										</label>
+										<Divider />
+
+										<div class="line">
+											<Trans>Key bindings</Trans>
+											<div>
+												<label class="ml-1">
+													<input
+														type="radio"
+														name="keymap"
+														value="sublime"
+														checked={prefs.keymap === 'sublime'}
+														onChange={e => this.updateSetting(e, 'keymap')}
+													/>{' '}
+													Sublime
+												</label>
+												<label class="ml-1">
+													<input
+														type="radio"
+														name="keymap"
+														value="vim"
+														checked={prefs.keymap === 'vim'}
+														onChange={e => this.updateSetting(e, 'keymap')}
+													/>{' '}
+													Vim
+												</label>
+											</div>
+										</div>
+									</div>
+									<Divider />
+
+									<div class="flex-grow">
+										<CheckboxSetting
+											title={i18n._(
+												t`Toggle wrapping of long sentences onto new line`
+											)}
+											label={i18n._(t`Line wrap`)}
+											pref={prefs.lineWrap}
+											onChange={e => this.updateSetting(e, 'lineWrap')}
+										/>
+										<Divider />
+										<CheckboxSetting
+											title={i18n._(
+												t`Add the closing tag automatically on seeing an opening tag in HTML`
+											)}
+											label={i18n._(t`Auto-close tags`)}
+											pref={prefs.autoCloseTags}
+											onChange={e => this.updateSetting(e, 'autoCloseTags')}
+										/>
+										<Divider />
+										<CheckboxSetting
+											title={i18n._(
+												t`Turns on the auto-completion suggestions as you type`
+											)}
+											label={i18n._(t`Auto-complete suggestions`)}
+											pref={prefs.autoComplete}
+											onChange={e => this.updateSetting(e, 'autoComplete')}
+										/>
 									</div>
 								</div>
-							</div>
-							<Divider />
-
-							<div class="flex-grow">
+							</TabPanel>
+							<TabPanel label={i18n._(t`Fun`)}>
 								<CheckboxSetting
-									title="Toggle wrapping of long sentences onto new line"
-									label="Line wrap"
-									pref={prefs.lineWrap}
-									onChange={e => this.updateSetting(e, 'lineWrap')}
+									label={i18n._(t`Code blast!`)}
+									pref={prefs.isCodeBlastOn}
+									onChange={e => this.updateSetting(e, 'isCodeBlastOn')}
 								/>
+								<HelpText>
+									<Trans>Enjoy wonderful particle blasts while you type</Trans>
+								</HelpText>
 								<Divider />
 								<CheckboxSetting
-									title="Add the closing tag automatically on seeing an opening tag in HTML"
-									label="Auto-close tags"
-									pref={prefs.autoCloseTags}
-									onChange={e => this.updateSetting(e, 'autoCloseTags')}
+									label={i18n._(t`Js13kGames Mode`)}
+									pref={prefs.isJs13kModeOn}
+									onChange={e => this.updateSetting(e, 'isJs13kModeOn')}
 								/>
+								<HelpText>
+									<Trans>
+										Make the app ready to build some games for{' '}
+										<a
+											href="https://js13kgames.com/"
+											target="_blank"
+											rel="noopener"
+										>
+											Js13kGames
+										</a>
+										.
+									</Trans>
+								</HelpText>
+							</TabPanel>
+							<TabPanel label={i18n._(t`Advanced`)}>
+								<div>
+									<label class="line">
+										<Trans>Preview refresh wait time</Trans>
+										<div>
+											<input
+												type="number"
+												style="width:120px"
+												value={prefs.previewDelay}
+												onChange={e => this.updateSetting(e, 'previewDelay')}
+											/>{' '}
+											ms
+										</div>
+									</label>
+									<HelpText>
+										<Trans>
+											Once you stop typing, the preview waits for this much time
+											before getting updated. Too low value might choke your
+											browser!
+										</Trans>
+									</HelpText>
+								</div>
 								<Divider />
-								<CheckboxSetting
-									title="Turns on the auto-completion suggestions as you type"
-									label="Auto-complete suggestions"
-									pref={prefs.autoComplete}
-									onChange={e => this.updateSetting(e, 'autoComplete')}
-								/>
-							</div>
-						</div>
-					</TabPanel>
-					<TabPanel label="Fun">
-						<CheckboxSetting
-							label="Code blast!"
-							pref={prefs.isCodeBlastOn}
-							onChange={e => this.updateSetting(e, 'isCodeBlastOn')}
-						/>
-						<HelpText>Enjoy wonderful particle blasts while you type</HelpText>
-						<Divider />
-						<CheckboxSetting
-							label="Js13kGames Mode"
-							pref={prefs.isJs13kModeOn}
-							onChange={e => this.updateSetting(e, 'isJs13kModeOn')}
-						/>
-						<HelpText>
-							Make the app ready to build some games for{' '}
-							<a href="https://js13kgames.com/" target="_blank" rel="noopener">
-								Js13kGames
-							</a>
-							.
-						</HelpText>
-					</TabPanel>
-					<TabPanel label="Advanced">
-						<div>
-							<label class="line">
-								Preview refresh wait time
 								<div>
-									<input
-										type="number"
-										style="width:120px"
-										value={prefs.previewDelay}
-										onChange={e => this.updateSetting(e, 'previewDelay')}
-									/>{' '}
-									ms
+									<label class="line">
+										<Trans>Maximum time allowed in a loop iteration</Trans>
+										<div>
+											<input
+												type="number"
+												style="width:120px"
+												value={prefs.infiniteLoopTimeout}
+												onChange={e =>
+													this.updateSetting(e, 'infiniteLoopTimeout')
+												}
+											/>{' '}
+											ms
+										</div>
+									</label>
+									<HelpText>
+										<Trans>
+											If any loop iteration takes more than the defined time, it
+											is detected as a potential infinite loop and further
+											iterations are stopped.
+										</Trans>
+									</HelpText>
 								</div>
-							</label>
-							<HelpText>
-								Once you stop typing, the preview waits for this much time
-								before getting updated. Too low value might choke your browser!
-							</HelpText>
-						</div>
-						<Divider />
-						<div>
-							<label class="line">
-								Maximum time allowed in a loop iteration
-								<div>
-									<input
-										type="number"
-										style="width:120px"
-										value={prefs.infiniteLoopTimeout}
-										onChange={e => this.updateSetting(e, 'infiniteLoopTimeout')}
-									/>{' '}
-									ms
-								</div>
-							</label>
-							<HelpText>
-								If any loop iteration takes more than the defined time, it is
-								detected as a potential infinite loop and further iterations are
-								stopped.
-							</HelpText>
-						</div>
-
-						<Divider />
-
-						<div>
-							<label class="line">
-								Language
-								<select
-									value={prefs.lang}
-									onChange={e => this.updateSetting(e, 'lang')}
-								>
-									<option value="en">English</option>
-									<option value="ja">日本語</option>
-									<option value="hi">हिंदी</option>
-									<option value="es">Español (España)</option>
-									<option value="sa" disabled="disabled">
-										Sanskrit (Coming soon)
-									</option>
-									<option value="zh-Hans" disabled="disabled">
-										中文(简体) (coming soon)
-									</option>
-								</select>
-							</label>
-						</div>
-					</TabPanel>
-				</Tabs>
-			</div>
+							</TabPanel>
+						</Tabs>
+					</div>
+				)}
+			</I18n>
 		);
 	}
 }

@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import { Trans } from '@lingui/macro';
 import { trackEvent } from '../analytics';
 import { authh } from '../auth';
 
@@ -23,7 +24,9 @@ export default class Login extends Component {
 	render() {
 		return (
 			<div>
-				<h2>Login / Signup</h2>
+				<h2>
+					<Trans>Login / Signup</Trans>
+				</h2>
 
 				<div>
 					<p>
@@ -37,7 +40,7 @@ export default class Login extends Component {
 							<svg>
 								<use xlinkHref="#github-icon" />
 							</svg>
-							Login with Github
+							<Trans>Login with Github</Trans>
 						</button>
 					</p>
 					<p>
@@ -51,11 +54,13 @@ export default class Login extends Component {
 							<svg>
 								<use xlinkHref="#google-icon" />
 							</svg>
-							Login with Google
+							<Trans>Login with Google</Trans>
 						</button>
 					</p>
 
-					<p>Join a community of 70,000+ Developers</p>
+					<p>
+						<Trans>Join a community of 70,000+ Developers</Trans>
+					</p>
 				</div>
 			</div>
 		);

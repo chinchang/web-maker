@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import { Trans } from '@lingui/macro';
 import Modal from './Modal';
 import { ItemTile } from './ItemTile';
 import templates from '../templateList';
@@ -82,8 +83,10 @@ export class CreateNewModal extends Component {
 					</g>
 				</svg>
 				<p class="mb-0">
-					3 separate panes to write HTML, CSS and JavaScript. Good for quickly
-					testing something.
+					<Trans>
+						3 separate panes to write HTML, CSS and JavaScript. Good for quickly
+						testing something.
+					</Trans>
 				</p>
 			</div>
 		);
@@ -140,15 +143,20 @@ export class CreateNewModal extends Component {
 					</g>
 				</svg>
 				<p class="mb-0">
-					Manage your code in files. Just like you would have files on your
-					local machine. <BetaTag />
+					<Trans>
+						Manage your code in files. Just like you would have files on your
+						local machine.
+					</Trans>{' '}
+					<BetaTag />
 				</p>
 			</div>
 		);
 
 		return (
 			<Modal show={show} closeHandler={closeHandler}>
-				<h1 class="mt-0">Create New</h1>
+				<h1 class="mt-0">
+					<Trans>Create New</Trans>
+				</h1>
 				<Tabs horizontal onChange={this.modeChangeHandler}>
 					<TabPanel label={option1}>
 						<div class="templates-container">
@@ -161,7 +169,7 @@ export class CreateNewModal extends Component {
 								}}
 								data-testid="startBlankButton"
 							>
-								Start Blank
+								<Trans>Start Blank</Trans>
 							</button>
 							{templates.map(template => {
 								return (
@@ -186,7 +194,7 @@ export class CreateNewModal extends Component {
 									onBlankFileTemplateSelect();
 								}}
 							>
-								Start Blank in File Mode
+								<Trans>Start Blank in File Mode</Trans>
 							</button>
 							{templates.map(template => {
 								if (template.isFileModeSupported) {
@@ -204,13 +212,17 @@ export class CreateNewModal extends Component {
 						</div>
 						{!window.user?.isPro && (
 							<p>
-								2 files mode creations available in Free plan. To create
-								unlimited files mode creations, upgrade to <ProBadge />.
+								<Trans>
+									2 files mode creations available in Free plan. To create
+									unlimited files mode creations, upgrade to <ProBadge />.
+								</Trans>
 							</p>
 						)}
 						<div class="show-when-extension">
-							Files modes is currently only available in Web app.{' '}
-							<a href="https://webmaker.app/create/">Try the Web app now</a>.
+							<Trans>
+								Files modes is currently only available in Web app.{' '}
+								<a href="https://webmaker.app/create/">Try the Web app now</a>.
+							</Trans>
 						</div>
 					</TabPanel>
 				</Tabs>

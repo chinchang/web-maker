@@ -42,7 +42,7 @@ export function MainHeader({
 					<input
 						type="text"
 						id="titleInput"
-						title="Click to edit"
+						title={i18n._(t`Click to edit`)}
 						class="item-title-input"
 						value={currentItem.title}
 						onBlur={titleInputBlurHandler}

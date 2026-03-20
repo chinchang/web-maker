@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { Trans } from '@lingui/macro';
 import Modal from './Modal.jsx';
 import { Stack } from './Stack.jsx';
 
@@ -9,7 +10,9 @@ export function OnboardingModal(props) {
 				<svg width="83" height="32" aria-hidden="true">
 					<use xlinkHref="#logo" />
 				</svg>
-				<h1>Welcome to Web Maker</h1>
+				<h1>
+					<Trans>Welcome to Web Maker</Trans>
+				</h1>
 			</Stack>
 
 			<div
@@ -23,10 +26,13 @@ export function OnboardingModal(props) {
 						</svg>
 
 						<p>
-							Open Web Maker anytime by visiting{' '}
-							<a>https://webmaker.app/create/</a> - Even when you are offline!
-							It just works! 😱 <strong>Drag the following bookmarklet</strong>{' '}
-							on your bookmark bar to create a quick access shortcut:
+							<Trans>
+								Open Web Maker anytime by visiting{' '}
+								<a>https://webmaker.app/create/</a> - Even when you are offline!
+								It just works! 😱{' '}
+								<strong>Drag the following bookmarklet</strong> on your bookmark
+								bar to create a quick access shortcut:
+							</Trans>
 							<a class="ml-1 bookmarklet" href="https://webmaker.app/create/">
 								<svg width="20" height="20" aria-hidden="true">
 									<use xlinkHref="#logo" />
@@ -43,11 +49,13 @@ export function OnboardingModal(props) {
 						</svg>
 
 						<p>
-							Open Web Maker anytime by clicking the
-							<svg class="relative" style="top:5px;" width="40" height="30">
-								<use xlinkHref="#logo" />
-							</svg>{' '}
-							button in top-right side of your browser.
+							<Trans>
+								Open Web Maker anytime by clicking the
+								<svg class="relative" style="top:5px;" width="40" height="30">
+									<use xlinkHref="#logo" />
+								</svg>{' '}
+								button in top-right side of your browser.
+							</Trans>
 						</p>
 					</Stack>
 				</div>
@@ -59,14 +67,16 @@ export function OnboardingModal(props) {
 						</svg>
 
 						<p>
-							Configure and customize settings by clicking the gear icon (
-							<svg
-								style="width:18px;height:18px;position:relative;top:3px;fill:#888"
-								viewBox="0 0 24 24"
-							>
-								<use xlinkHref="#settings-icon" />
-							</svg>
-							) in bottom right of the app.
+							<Trans>
+								Configure and customize settings by clicking the gear icon (
+								<svg
+									style="width:18px;height:18px;position:relative;top:3px;fill:#888"
+									viewBox="0 0 24 24"
+								>
+									<use xlinkHref="#settings-icon" />
+								</svg>
+								) in bottom right of the app.
+							</Trans>
 						</p>
 					</Stack>
 				</div>
@@ -77,36 +87,40 @@ export function OnboardingModal(props) {
 						</svg>
 
 						<p>
-							Follow{' '}
-							<a
-								href="https://twitter.com/intent/follow?screen_name=webmakerApp"
-								targe="_blank"
-								rel="noopener noreferrer"
-							>
-								@webmakerApp
-							</a>{' '}
-							to know about the new upcoming features!
+							<Trans>
+								Follow{' '}
+								<a
+									href="https://twitter.com/intent/follow?screen_name=webmakerApp"
+									targe="_blank"
+									rel="noopener noreferrer"
+								>
+									@webmakerApp
+								</a>{' '}
+								to know about the new upcoming features!
+							</Trans>
 						</p>
 					</Stack>
 				</div>
 			</div>
 
 			<p class="tac show-when-app">
-				If you are an existing Chrome extension user, you can import your
-				creations from there to here.{' '}
-				<a
-					href="https://medium.com/web-maker/importing-exporting-your-creations-d92e7de5c3dc"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					Learn how to export/import
-				</a>
-				.
+				<Trans>
+					If you are an existing Chrome extension user, you can import your
+					creations from there to here.{' '}
+					<a
+						href="https://medium.com/web-maker/importing-exporting-your-creations-d92e7de5c3dc"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						Learn how to export/import
+					</a>
+					.
+				</Trans>
 			</p>
 
 			<Stack justify="center">
 				<button class="btn btn--primary" onClick={props.closeHandler}>
-					Lets start!
+					<Trans>Lets start!</Trans>
 				</button>
 			</Stack>
 		</Modal>

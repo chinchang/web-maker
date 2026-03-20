@@ -9,7 +9,8 @@ import {
 import { storage } from '../firebaseInit';
 import { HStack, Stack, VStack } from './Stack';
 import { copyToClipboard } from '../utils';
-import { Trans } from '@lingui/macro';
+import { Trans, t } from '@lingui/macro';
+import { I18n } from '@lingui/react';
 import { ProBadge } from './ProBadge';
 import { LoaderWithText } from './Loader';
 import { Text } from './Text';
@@ -211,161 +212,185 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 	if (!window.user?.isPro) {
 		return (
 			<VStack align="stretch" gap={2}>
-				<p>Assets feature is available in PRO plan.</p>
+				<p>
+					<Trans>Assets feature is available in PRO plan.</Trans>
+				</p>
 				<button
 					class="btn  btn--pro"
 					onClick={window.user ? onProBtnClick : onLoginBtnClick}
 				>
 					<HStack gap={1} fullWidth justify="center">
-						{window.user ? <>Upgrade to PRO</> : <>Login & upgrade to PRO</>}
+						{window.user ? (
+							<>
+								<Trans>Upgrade to PRO</Trans>
+							</>
+						) : (
+							<>
+								<Trans>Login & upgrade to PRO</Trans>
+							</>
+						)}
 					</HStack>
 				</button>
 			</VStack>
 		);
 	}
 	return (
-		<div
-			onDragEnter={handleDragDropEvent}
-			onDragLeave={handleDragDropEvent}
-			onDragOver={handleDragDropEvent}
-			onDrop={handleDrop}
-		>
-			<HStack gap={1} align="center">
-				<h1>
-					<Trans>Assets</Trans>
-				</h1>
-				<ProBadge />
-			</HStack>
-
-			<div
-				class="asset-manager__upload-box"
-				style={{
-					background: isDropTarget ? '#19a61940' : 'transparent',
-					borderColor: isDropTarget ? 'limegreen' : null
-				}}
-			>
-				{isUploading ? <div class="asset-manager__progress-bar"></div> : null}
-
-				<div style={{ visibility: isUploading ? 'hidden' : 'visible' }}>
-					<VStack gap={1} align="stretch">
-						<label style="background: #00000001">
-							<Text tag="p" align="center">
-								Drop files or click here to upload
-							</Text>
-							<Text tag="p" appearance="secondary" align="center">
-								File should be max 300KB in size
-							</Text>
-							<input
-								type="file"
-								onChange={handleFileUpload}
-								style={{ marginTop: 'auto', display: 'none' }}
-							/>
-						</label>
-					</VStack>
-				</div>
-			</div>
-			{isFetchingFiles && <LoaderWithText>Fetching files...</LoaderWithText>}
-
-			{!isFetchingFiles && !files.length ? (
-				<Stack justify="center">
-					<Text align="center" appearance="secondary">
-						No files uploaded yet
-					</Text>
-				</Stack>
-			) : null}
-
-			<VStack align="stretch" gap={1}>
-				{files.length ? (
-					<Stack gap={1}>
-						<input
-							type="text"
-							placeholder="Search files"
-							value={searchTerm}
-							onChange={handleSearchChange}
-							style={{ width: '100%' }}
-						/>
-						<button
-							class={`btn btn--dark ${
-								listType === 'list' ? 'btn--active' : ''
-							}  hint--rounded hint--top-left`}
-							onClick={() => setListType('list')}
-							aria-label="List view"
-						>
-							<Icon name="view-list" />
-						</button>
-						<button
-							class={`btn btn--dark ${
-								listType === 'grid' ? 'btn--active' : ''
-							}  hint--rounded hint--top-left`}
-							onClick={() => setListType('grid')}
-							aria-label="Grid view"
-						>
-							<Icon name="view-grid" />
-						</button>
-					</Stack>
-				) : null}
+		<I18n>
+			{({ i18n }) => (
 				<div
-					class={`asset-manager__file-container ${
-						listType === 'grid' ? 'asset-manager__file-container--grid' : ''
-					}`}
+					onDragEnter={handleDragDropEvent}
+					onDragLeave={handleDragDropEvent}
+					onDragOver={handleDragDropEvent}
+					onDrop={handleDrop}
 				>
-					{filteredFiles.map((file, index) => (
+					<HStack gap={1} align="center">
+						<h1>
+							<Trans>Assets</Trans>
+						</h1>
+						<ProBadge />
+					</HStack>
+
+					<div
+						class="asset-manager__upload-box"
+						style={{
+							background: isDropTarget ? '#19a61940' : 'transparent',
+							borderColor: isDropTarget ? 'limegreen' : null
+						}}
+					>
+						{isUploading ? (
+							<div class="asset-manager__progress-bar"></div>
+						) : null}
+
+						<div style={{ visibility: isUploading ? 'hidden' : 'visible' }}>
+							<VStack gap={1} align="stretch">
+								<label style="background: #00000001">
+									<Text tag="p" align="center">
+										<Trans>Drop files or click here to upload</Trans>
+									</Text>
+									<Text tag="p" appearance="secondary" align="center">
+										<Trans>File should be max 300KB in size</Trans>
+									</Text>
+									<input
+										type="file"
+										onChange={handleFileUpload}
+										style={{ marginTop: 'auto', display: 'none' }}
+									/>
+								</label>
+							</VStack>
+						</div>
+					</div>
+					{isFetchingFiles && (
+						<LoaderWithText>
+							<Trans>Fetching files...</Trans>
+						</LoaderWithText>
+					)}
+
+					{!isFetchingFiles && !files.length ? (
+						<Stack justify="center">
+							<Text align="center" appearance="secondary">
+								<Trans>No files uploaded yet</Trans>
+							</Text>
+						</Stack>
+					) : null}
+
+					<VStack align="stretch" gap={1}>
+						{files.length ? (
+							<Stack gap={1}>
+								<input
+									type="text"
+									placeholder={i18n._(t`Search files`)}
+									value={searchTerm}
+									onChange={handleSearchChange}
+									style={{ width: '100%' }}
+								/>
+								<button
+									class={`btn btn--dark ${
+										listType === 'list' ? 'btn--active' : ''
+									}  hint--rounded hint--top-left`}
+									onClick={() => setListType('list')}
+									aria-label={i18n._(t`List view`)}
+								>
+									<Icon name="view-list" />
+								</button>
+								<button
+									class={`btn btn--dark ${
+										listType === 'grid' ? 'btn--active' : ''
+									}  hint--rounded hint--top-left`}
+									onClick={() => setListType('grid')}
+									aria-label={i18n._(t`Grid view`)}
+								>
+									<Icon name="view-grid" />
+								</button>
+							</Stack>
+						) : null}
 						<div
-							key={index}
-							class={`asset-manager__file ${
-								listType === 'grid' ? 'asset-manager__file--grid' : ''
+							class={`asset-manager__file-container ${
+								listType === 'grid' ? 'asset-manager__file-container--grid' : ''
 							}`}
 						>
-							{/* <a href={file.url} target="_blank" rel="noopener noreferrer"> */}
-							{file.ext === 'image' ? (
-								<img src={file.url} class="asset-manager__file-image" />
-							) : (
+							{filteredFiles.map((file, index) => (
 								<div
-									style={{
-										position: 'relative',
-										display: 'flex'
-									}}
-									class="asset-manager__file-image"
+									key={index}
+									class={`asset-manager__file ${
+										listType === 'grid' ? 'asset-manager__file--grid' : ''
+									}`}
 								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										fill="#ffffff33"
-										viewBox="0 0 24 24"
-									>
-										<path d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
-									</svg>
-									<span className="asset-manager__file-ext">{file.ext}</span>
+									{/* <a href={file.url} target="_blank" rel="noopener noreferrer"> */}
+									{file.ext === 'image' ? (
+										<img src={file.url} class="asset-manager__file-image" />
+									) : (
+										<div
+											style={{
+												position: 'relative',
+												display: 'flex'
+											}}
+											class="asset-manager__file-image"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												fill="#ffffff33"
+												viewBox="0 0 24 24"
+											>
+												<path d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
+											</svg>
+											<span className="asset-manager__file-ext">
+												{file.ext}
+											</span>
+										</div>
+									)}
+									<div class="asset-manager__file-actions">
+										<Stack gap={1} fullWidth justify="center">
+											<button
+												class={`btn btn--dark ${
+													listType === 'list' ? 'btn--active' : ''
+												}  hint--rounded hint--top hint--medium`}
+												onClick={() => copyFileUrl(file.url)}
+												aria-label={i18n._(
+													t`Copy URL (or keep clicking to copy other formats)`
+												)}
+											>
+												<Icon name="copy" />
+											</button>
+											<button
+												class={`btn btn--dark ${
+													listType === 'list' ? 'btn--active' : ''
+												}  hint--rounded hint--top-left`}
+												onClick={() => removeFileHandler(index)}
+												aria-label={i18n._(t`Delete`)}
+											>
+												<Icon name="trash" />
+											</button>
+										</Stack>
+									</div>
+									<span class="asset-manager__file-name">{file.name}</span>
+									{/* </a> */}
 								</div>
-							)}
-							<div class="asset-manager__file-actions">
-								<Stack gap={1} fullWidth justify="center">
-									<button
-										class={`btn btn--dark ${
-											listType === 'list' ? 'btn--active' : ''
-										}  hint--rounded hint--top hint--medium`}
-										onClick={() => copyFileUrl(file.url)}
-										aria-label="Copy URL (or keep clicking to copy other formats)"
-									>
-										<Icon name="copy" />
-									</button>
-									<button
-										class={`btn btn--dark ${
-											listType === 'list' ? 'btn--active' : ''
-										}  hint--rounded hint--top-left`}
-										onClick={() => removeFileHandler(index)}
-										aria-label="Delete"
-									>
-										<Icon name="trash" />
-									</button>
-								</Stack>
-							</div>
-							<span class="asset-manager__file-name">{file.name}</span>
-							{/* </a> */}
+							))}
 						</div>
-					))}
+					</VStack>
 				</div>
-			</VStack>
-		</div>
+			)}
+		</I18n>
 	);
 };
 

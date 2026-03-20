@@ -85,7 +85,25 @@ export function Changelog(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="6.7.0" {...props} isLatest={true}>
+			<Notification version="6.8.0" {...props} isLatest={true}>
+				<li>
+					<strong>New Languages</strong>: Local language support added for
+					Chinese, French, German and Dutch.
+				</li>
+				<li>
+					Language settings has been moved to the "General" tab in Settings.
+				</li>
+				<li>
+					<strong>Minimize Panes</strong>: Code panes now have a minimize button
+					to minimize any pane whenever required.
+				</li>
+				<li>
+					Feedback can now be sorted either by "most votes" or "most recent" in
+					the feedback board.
+				</li>
+			</Notification>
+
+			<Notification version="6.7.0" {...props}>
 				<li>
 					<strong>Collections</strong>: Organize your saved creations into
 					collections! Create named collections from the "My Library" panel,

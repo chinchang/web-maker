@@ -2703,6 +2703,20 @@ while the theme CSS file is loading */
 	margin-top: 0;
 }
 
+.feedback-board__sort {
+	display: flex;
+	gap: 1.5rem;
+	margin-bottom: 1rem;
+}
+
+.feedback-board__sort-option {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	cursor: pointer;
+	font-size: 0.9rem;
+}
+
 .feedback-board__form {
 	display: flex;
 	gap: 0.5rem;
@@ -2783,6 +2797,20 @@ while the theme CSS file is loading */
 	font-size: 0.8rem;
 	opacity: 0.5;
 	margin-top: 0.25rem;
+}
+
+.feedback-item--done {
+	padding-top: 0.4rem;
+	padding-bottom: 0.4rem;
+	opacity: 0.6;
+}
+
+.feedback-item__vote-btn--static {
+	pointer-events: none;
+}
+
+.feedback-item__vote-btn--static .feedback-item__vote-icon {
+	transform: none;
 }
 
 /* Attention Component */

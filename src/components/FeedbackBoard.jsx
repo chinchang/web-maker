@@ -22,6 +22,7 @@ export const FeedbackBoard = ({ isOpen, onClose, user }) => {
 	const [feedbackList, setFeedbackList] = useState([]);
 	const [newFeedback, setNewFeedback] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [sortBy, setSortBy] = useState('upvotes');
 
 	useEffect(() => {
 		if (!isOpen) return;
@@ -125,6 +126,29 @@ export const FeedbackBoard = ({ isOpen, onClose, user }) => {
 							</Trans>
 						</p>
 
+						<div class="feedback-board__sort">
+							<label class="feedback-board__sort-option">
+								<input
+									type="radio"
+									name="sort"
+									value="upvotes"
+									checked={sortBy === 'upvotes'}
+									onChange={() => setSortBy('upvotes')}
+								/>
+								<Trans>Most upvoted first</Trans>
+							</label>
+							<label class="feedback-board__sort-option">
+								<input
+									type="radio"
+									name="sort"
+									value="recent"
+									checked={sortBy === 'recent'}
+									onChange={() => setSortBy('recent')}
+								/>
+								<Trans>Most recent first</Trans>
+							</label>
+						</div>
+
 						<form onSubmit={handleSubmit} class="feedback-board__form">
 							<input
 								type="text"
@@ -153,47 +177,82 @@ export const FeedbackBoard = ({ isOpen, onClose, user }) => {
 									<Trans>No feedback yet. Be the first!</Trans>
 								</div>
 							)}
-							{feedbackList.map(item => (
-								<div key={item.id} class="feedback-item">
-									<button
-										class={`feedback-item__vote-btn ${
-											item.upvotedBy?.includes(user?.uid)
-												? 'feedback-item__vote-btn--active'
-												: ''
-										}`}
-										onClick={() => handleUpvote(item)}
+							{[...feedbackList]
+								.sort((a, b) => {
+									if (sortBy === 'recent') {
+										return (
+											(b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+										);
+									}
+									return (b.upvotes || 0) - (a.upvotes || 0);
+								})
+								.map(item => (
+									<div
+										key={item.id}
+										class={`feedback-item ${item.status === 'done' ? 'feedback-item--done' : ''}`}
 									>
-										<div class="feedback-item__vote-icon">
-											<svg
-												viewBox="0 0 24 24"
-												width="18"
-												height="18"
-												fill="currentColor"
-											>
-												<path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z" />
-											</svg>
-										</div>
-										<div class="feedback-item__vote-count">
-											{item.upvotes || 0}
-										</div>
-									</button>
-									<div class="feedback-item__text">
-										<div>{item.text}</div>
-										<div class="feedback-item__date">
-											<Trans>Submitted on:</Trans>{' '}
-											{item.createdAt?.seconds
-												? new Date(
-														item.createdAt.seconds * 1000
-													).toLocaleDateString('en-GB', {
-														day: 'numeric',
-														month: 'short',
-														year: 'numeric'
-													})
-												: ''}
+										<button
+											class={`feedback-item__vote-btn ${
+												item.status === 'done'
+													? 'feedback-item__vote-btn--static'
+													: item.upvotedBy?.includes(user?.uid)
+														? 'feedback-item__vote-btn--active'
+														: ''
+											}`}
+											onClick={() => handleUpvote(item)}
+										>
+											{item.status === 'done' ? (
+												<div class="feedback-item__vote-icon">
+													<svg
+														viewBox="0 0 24 24"
+														width="18"
+														height="18"
+														fill="none"
+														stroke="currentColor"
+														stroke-width="3"
+														stroke-linecap="round"
+														stroke-linejoin="round"
+													>
+														<path d="M5 13l4 4L19 7" />
+													</svg>
+												</div>
+											) : (
+												<>
+													<div class="feedback-item__vote-icon">
+														<svg
+															viewBox="0 0 24 24"
+															width="18"
+															height="18"
+															fill="currentColor"
+														>
+															<path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z" />
+														</svg>
+													</div>
+													<div class="feedback-item__vote-count">
+														{item.upvotes || 0}
+													</div>
+												</>
+											)}
+										</button>
+										<div class="feedback-item__text">
+											<div>{item.text}</div>
+											{item.status !== 'done' && (
+												<div class="feedback-item__date">
+													<Trans>Submitted on:</Trans>{' '}
+													{item.createdAt?.seconds
+														? new Date(
+																item.createdAt.seconds * 1000
+															).toLocaleDateString('en-GB', {
+																day: 'numeric',
+																month: 'short',
+																year: 'numeric'
+															})
+														: ''}
+												</div>
+											)}
 										</div>
 									</div>
-								</div>
-							))}
+								))}
 						</div>
 					</div>
 				</Modal>

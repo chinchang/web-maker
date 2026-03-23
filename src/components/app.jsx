@@ -889,6 +889,19 @@ export default class App extends Component {
 				event.preventDefault();
 				this.contentWrap.toggleConsole();
 				trackEvent('ui', 'toggleConsoleKeyboardShortcut');
+			} else if (
+				(event.ctrlKey || event.metaKey) &&
+				event.altKey &&
+				(event.keyCode === 49 || event.keyCode === 50 || event.keyCode === 51)
+			) {
+				// Ctrl/⌘ + Alt/Opt + 1/2/3 - Focus HTML/CSS/JS pane
+				event.preventDefault();
+				const paneMap = { 49: 'html', 50: 'css', 51: 'js' };
+				const pane = paneMap[event.keyCode];
+				if (this.contentWrap?.cm?.[pane]) {
+					this.contentWrap.cm[pane].focus();
+				}
+				trackEvent('ui', 'focusPaneKeyboardShortcut', pane);
 			}
 		});
 

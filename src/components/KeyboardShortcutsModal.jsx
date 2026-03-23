@@ -51,6 +51,24 @@ export function KeyboardShortcutsModal({ show, closeHandler }) {
 						</span>
 					</p>
 					<p>
+						<span class="kbd-shortcut__keys">Ctrl/⌘ + Alt/Opt + 1</span>
+						<span class="kbd-shortcut__details">
+							<Trans>Focus HTML pane</Trans>
+						</span>
+					</p>
+					<p>
+						<span class="kbd-shortcut__keys">Ctrl/⌘ + Alt/Opt + 2</span>
+						<span class="kbd-shortcut__details">
+							<Trans>Focus CSS pane</Trans>
+						</span>
+					</p>
+					<p>
+						<span class="kbd-shortcut__keys">Ctrl/⌘ + Alt/Opt + 3</span>
+						<span class="kbd-shortcut__details">
+							<Trans>Focus JS pane</Trans>
+						</span>
+					</p>
+					<p>
 						<span class="kbd-shortcut__keys">Esc</span>
 						<span class="kbd-shortcut__details">
 							<Trans>Close saved creations panel & modals</Trans>

@@ -892,20 +892,29 @@ export default class App extends Component {
 			} else if (
 				(event.ctrlKey || event.metaKey) &&
 				event.altKey &&
-				(event.keyCode === 49 || event.keyCode === 50 || event.keyCode === 51)
+				(event.keyCode === 48 ||
+					event.keyCode === 49 ||
+					event.keyCode === 50 ||
+					event.keyCode === 51)
 			) {
-				// Ctrl/⌘ + Alt/Opt + 1/2/3 - Focus HTML/CSS/JS pane
 				event.preventDefault();
-				const paneMap = { 49: 'html', 50: 'css', 51: 'js' };
-				const pane = paneMap[event.keyCode];
-				if (this.state.currentLayoutMode === 6) {
-					this.contentWrap.setState({ activeCodeTab: pane }, () => {
-						this.contentWrap.cm[pane]?.focus();
-					});
-				} else if (this.contentWrap?.cm?.[pane]) {
-					this.contentWrap.cm[pane].focus();
+				if (event.keyCode === 48) {
+					// Ctrl/⌘ + Alt/Opt + 0 - Focus preview frame
+					this.contentWrap.frame?.focus();
+					trackEvent('ui', 'focusPaneKeyboardShortcut', 'preview');
+				} else {
+					// Ctrl/⌘ + Alt/Opt + 1/2/3 - Focus HTML/CSS/JS pane
+					const paneMap = { 49: 'html', 50: 'css', 51: 'js' };
+					const pane = paneMap[event.keyCode];
+					if (this.state.currentLayoutMode === 6) {
+						this.contentWrap.setState({ activeCodeTab: pane }, () => {
+							this.contentWrap.cm[pane]?.focus();
+						});
+					} else if (this.contentWrap?.cm?.[pane]) {
+						this.contentWrap.cm[pane].focus();
+					}
+					trackEvent('ui', 'focusPaneKeyboardShortcut', pane);
 				}
-				trackEvent('ui', 'focusPaneKeyboardShortcut', pane);
 			}
 		});
 

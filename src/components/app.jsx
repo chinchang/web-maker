@@ -898,7 +898,11 @@ export default class App extends Component {
 				event.preventDefault();
 				const paneMap = { 49: 'html', 50: 'css', 51: 'js' };
 				const pane = paneMap[event.keyCode];
-				if (this.contentWrap?.cm?.[pane]) {
+				if (this.state.currentLayoutMode === 6) {
+					this.contentWrap.setState({ activeCodeTab: pane }, () => {
+						this.contentWrap.cm[pane]?.focus();
+					});
+				} else if (this.contentWrap?.cm?.[pane]) {
 					this.contentWrap.cm[pane].focus();
 				}
 				trackEvent('ui', 'focusPaneKeyboardShortcut', pane);
@@ -1148,8 +1152,8 @@ export default class App extends Component {
 			return;
 		}
 		// Remove all layout classes
-		[1, 2, 3, 4, 5].forEach(layoutNumber => {
-			window[`layoutBtn${layoutNumber}`].classList.remove('selected');
+		[1, 2, 3, 4, 5, 6].forEach(layoutNumber => {
+			window[`layoutBtn${layoutNumber}`]?.classList.remove('selected');
 			document.body.classList.remove(`layout-${layoutNumber}`);
 		});
 		$('#layoutBtn' + mode).classList.add('selected');
@@ -1176,7 +1180,11 @@ export default class App extends Component {
 		var sizes;
 		const currentLayoutMode = this.state.currentLayoutMode;
 		var dimensionProperty =
-			currentLayoutMode === 2 || currentLayoutMode === 5 ? 'width' : 'height';
+			currentLayoutMode === 2 ||
+			currentLayoutMode === 5 ||
+			currentLayoutMode === 6
+				? 'width'
+				: 'height';
 		try {
 			sizes = [
 				htmlCodeEl.style[dimensionProperty],

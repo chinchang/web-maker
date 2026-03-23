@@ -315,6 +315,19 @@ export const Footer = props => {
 							</svg>
 						</button>
 						<button
+							onClick={() => layoutBtnClickhandler(6)}
+							id="layoutBtn6"
+							class="mode-btn hide-on-mobile hide-in-file-mode"
+							aria-label={i18n._(t`Switch to tabbed layout`)}
+						>
+							<svg viewBox="0 0 100 100">
+								<rect x="0" y="0" width="30" height="20" />
+								<rect x="35" y="0" width="30" height="20" />
+								<rect x="70" y="0" width="30" height="20" />
+								<rect x="0" y="25" width="100" height="75" />
+							</svg>
+						</button>
+						<button
 							onClick={() => layoutBtnClickhandler(4)}
 							id="layoutBtn4"
 							class="mode-btn hint--top-left hint--rounded hide-on-mobile"

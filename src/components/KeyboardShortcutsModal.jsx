@@ -51,6 +51,12 @@ export function KeyboardShortcutsModal({ show, closeHandler }) {
 						</span>
 					</p>
 					<p>
+						<span class="kbd-shortcut__keys">Ctrl/⌘ + Alt/Opt + 0</span>
+						<span class="kbd-shortcut__details">
+							<Trans>Focus preview</Trans>
+						</span>
+					</p>
+					<p>
 						<span class="kbd-shortcut__keys">Ctrl/⌘ + Alt/Opt + 1</span>
 						<span class="kbd-shortcut__details">
 							<Trans>Focus HTML pane</Trans>

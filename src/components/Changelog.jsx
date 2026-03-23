@@ -85,7 +85,20 @@ export function Changelog(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="6.8.0" {...props} isLatest={true}>
+			<Notification version="6.9.0" {...props} isLatest={true}>
+				<li>
+					<strong>Tabbed Layout</strong>: New layout option where the 3 code
+					panes show as tabs instead of side-by-side, giving you more vertical
+					space for each editor.
+				</li>
+				<li>
+					<strong>Keyboard Shortcuts</strong>: Use Ctrl/⌘ + Alt/Opt + 1/2/3 to
+					quickly switch focus between HTML, CSS and JS panes. Use Ctrl/⌘ +
+					Alt/Opt + 0 to focus the preview.
+				</li>
+			</Notification>
+
+			<Notification version="6.8.0" {...props}>
 				<li>
 					<strong>New Languages</strong>: Local language support added for
 					Chinese, French, German and Dutch.

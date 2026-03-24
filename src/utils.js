@@ -421,15 +421,6 @@ export function getCompleteHtml(html, css, js, item, isForExport) {
 
 	contents += '\n' + externalJs;
 
-	if (item.jsMode === JsModes.ES6) {
-		contents +=
-			'<script src="' +
-			(chrome.extension
-				? chrome.runtime.getURL('lib/transpilers/babel-polyfill.min.js')
-				: `${location.origin}${BASE_PATH}/lib/transpilers/babel-polyfill.min.js`) +
-			'"></script>';
-	}
-
 	if (js) {
 		if (typeof js === 'string') {
 			const importRegex =

@@ -260,7 +260,7 @@ export function computeJs(
 			};
 		} finally {
 			code = Babel.transform(code, {
-				presets: ['latest', 'stage-2', 'react']
+				presets: ['env', 'react']
 			}).code;
 			if (shouldPreventInfiniteLoops !== false) {
 				code = errors

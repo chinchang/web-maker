@@ -179,14 +179,13 @@ const LocalAssets = ({ i18n }) => {
 				>
 					<label style="background: #00000001">
 						<Text tag="p" align="center">
-							<Trans>Drop images or click here to add</Trans>
+							<Trans>Drop files or click here to add</Trans>
 						</Text>
 						<Text tag="p" appearance="secondary" align="center">
 							<Trans>Max 5MB per file</Trans>
 						</Text>
 						<input
 							type="file"
-							accept="image/*"
 							onChange={handleLocalInputChange}
 							style={{ display: 'none' }}
 						/>

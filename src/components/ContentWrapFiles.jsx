@@ -27,6 +27,7 @@ import { SWITCH_FILE_EVENT } from '../commands';
 import { commandPaletteService } from '../commandPaletteService';
 import { PreviewDimension } from './PreviewDimension';
 import { FileIcon } from './FileIcon';
+import { getAllAssets, LOCAL_ASSET_PREFIX } from '../localAssetService.js';
 
 const minCodeWrapSize = 33;
 const PREVIEW_FRAME_HOST = window.DEBUG
@@ -266,6 +267,16 @@ export default class ContentWrapFiles extends Component {
 					'"></script>' +
 					obj[file.path];
 			}
+		});
+
+		// Push local assets to SW cache
+		getAllAssets().then(assets => {
+			if (!assets.length) return;
+			const assetObj = {};
+			assets.forEach(asset => {
+				assetObj[LOCAL_ASSET_PREFIX + asset.name] = asset.blob;
+			});
+			window.talkFrame.contentWindow.postMessage(assetObj, '*');
 		});
 
 		// navigator.serviceWorker.controller.postMessage(obj);

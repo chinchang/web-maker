@@ -18,6 +18,7 @@ import CssSettingsModal from './CssSettingsModal';
 import { PreviewDimension } from './PreviewDimension.jsx';
 import Modal from './Modal.jsx';
 import { LocalStorageKeys } from '../constants.js';
+import { getAllAssets, LOCAL_ASSET_PREFIX } from '../localAssetService.js';
 const minCodeWrapSize = 33;
 
 /* global htmlCodeEl
@@ -142,7 +143,24 @@ export default class ContentWrap extends Component {
 		}, this.props.prefs.previewDelay);
 	}
 
+	pushLocalAssetsToSW() {
+		if (window.IS_EXTENSION) return;
+		const talkFrame = document.getElementById('talkFrame');
+		if (!talkFrame || !talkFrame.contentWindow) return;
+
+		getAllAssets().then(assets => {
+			if (!assets.length) return;
+			const assetObj = {};
+			assets.forEach(asset => {
+				assetObj[LOCAL_ASSET_PREFIX + asset.name] = asset.blob;
+			});
+			talkFrame.contentWindow.postMessage(assetObj, '*');
+		});
+	}
+
 	createPreviewFile(html, css, js) {
+		this.pushLocalAssetsToSW();
+
 		const versionMatch = navigator.userAgent.match(/Chrome\/(\d+)/);
 
 		const shouldInlineJs = true;

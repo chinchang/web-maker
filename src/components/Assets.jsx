@@ -15,6 +15,13 @@ import { ProBadge } from './ProBadge';
 import { LoaderWithText } from './Loader';
 import { Text } from './Text';
 import { Icon } from './Icons';
+import Tabs, { TabPanel } from './Tabs';
+import {
+	getAllAssets,
+	addAsset,
+	removeAsset,
+	LOCAL_ASSET_PREFIX
+} from '../localAssetService';
 
 function getFileType(url) {
 	// get extension from a url using URL API
@@ -24,6 +31,221 @@ function getFileType(url) {
 	}
 	return ext;
 }
+
+function getFileExtType(name) {
+	const ext = name.split('.').pop().toLowerCase();
+	if (['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(ext)) {
+		return 'image';
+	}
+	return ext;
+}
+
+const LocalAssets = ({ i18n }) => {
+	const [localFiles, setLocalFiles] = useState([]);
+	const [isDropTarget, setIsDropTarget] = useState(false);
+	const [lastCopiedFile, setLastCopiedFile] = useState({
+		name: '',
+		count: 0
+	});
+
+	useEffect(() => {
+		loadLocalAssets();
+	}, []);
+
+	const loadLocalAssets = async () => {
+		try {
+			const assets = await getAllAssets();
+			setLocalFiles(
+				assets.map(a => ({
+					name: a.name,
+					type: a.type,
+					ext: getFileExtType(a.name),
+					thumbUrl: URL.createObjectURL(a.blob)
+				}))
+			);
+		} catch (e) {
+			console.error('Error loading local assets:', e);
+		}
+	};
+
+	const handleLocalFileUpload = async file => {
+		try {
+			await addAsset(file);
+			alertsService.add('Local asset added');
+			loadLocalAssets();
+		} catch (e) {
+			alert(e.message);
+		}
+	};
+
+	const handleLocalInputChange = e => {
+		const file = e.target.files[0];
+		if (file) handleLocalFileUpload(file);
+		e.target.value = '';
+	};
+
+	const handleDragDropEvent = e => {
+		if (e.type === 'dragover') {
+			e.preventDefault();
+		} else if (e.type === 'dragleave') {
+			e.preventDefault();
+			if (e.currentTarget.contains(e.target)) return;
+			setIsDropTarget(false);
+		} else if (e.type === 'dragenter') {
+			setIsDropTarget(true);
+		}
+	};
+
+	const handleDrop = e => {
+		e.preventDefault();
+		setIsDropTarget(false);
+		if (e.dataTransfer.items) {
+			const file = e.dataTransfer.items[0].getAsFile();
+			if (file) handleLocalFileUpload(file);
+		}
+	};
+
+	const copyLocalUrl = name => {
+		const url = `${LOCAL_ASSET_PREFIX}${name}`;
+		let copyContent = url;
+		if (lastCopiedFile.name === name) {
+			lastCopiedFile.count = (lastCopiedFile.count + 1) % 3;
+		} else {
+			lastCopiedFile.count = 0;
+			lastCopiedFile.name = name;
+		}
+
+		switch (lastCopiedFile.count) {
+			case 0:
+				copyContent = url;
+				break;
+			case 1:
+				copyContent = `<img src="${url}" />`;
+				break;
+			case 2:
+				copyContent = `url("${url}")`;
+				break;
+		}
+		setLastCopiedFile({ ...lastCopiedFile });
+
+		copyToClipboard(copyContent).then(() => {
+			switch (lastCopiedFile.count) {
+				case 0:
+					alertsService.add('Asset path copied');
+					break;
+				case 1:
+					alertsService.add('Asset path copied as <IMG> tag');
+					break;
+				case 2:
+					alertsService.add('Asset path copied as CSS image URL');
+					break;
+			}
+		});
+	};
+
+	const removeLocalFile = async name => {
+		const answer = confirm(`Are you sure you want to delete "${name}"?`);
+		if (!answer) return;
+		try {
+			await removeAsset(name);
+			alertsService.add('Local asset deleted');
+			loadLocalAssets();
+		} catch (e) {
+			console.error('Error removing local asset:', e);
+		}
+	};
+
+	return (
+		<div
+			onDragEnter={handleDragDropEvent}
+			onDragLeave={handleDragDropEvent}
+			onDragOver={handleDragDropEvent}
+			onDrop={handleDrop}
+		>
+			<VStack gap={2} fullWidth align="flex-start">
+				<Text tag="p" appearance="secondary" style={{ marginTop: 0 }}>
+					<Trans>
+						Add images locally, usable only on this browser. Won't work for
+						others if you share this publicly.
+					</Trans>
+				</Text>
+
+				<div
+					class="asset-manager__upload-box"
+					style={{
+						background: isDropTarget ? '#19a61940' : 'transparent',
+						borderColor: isDropTarget ? 'limegreen' : null
+					}}
+				>
+					<label style="background: #00000001">
+						<Text tag="p" align="center">
+							<Trans>Drop images or click here to add</Trans>
+						</Text>
+						<Text tag="p" appearance="secondary" align="center">
+							<Trans>Max 5MB per file</Trans>
+						</Text>
+						<input
+							type="file"
+							accept="image/*"
+							onChange={handleLocalInputChange}
+							style={{ display: 'none' }}
+						/>
+					</label>
+				</div>
+
+				{localFiles.length > 0 && (
+					<div class="asset-manager__file-container asset-manager__file-container--grid">
+						{localFiles.map(file => (
+							<div
+								key={file.name}
+								class="asset-manager__file asset-manager__file--grid"
+							>
+								{file.ext === 'image' ? (
+									<img src={file.thumbUrl} class="asset-manager__file-image" />
+								) : (
+									<div
+										style={{ position: 'relative', display: 'flex' }}
+										class="asset-manager__file-image"
+									>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="#ffffff33"
+											viewBox="0 0 24 24"
+										>
+											<path d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
+										</svg>
+										<span className="asset-manager__file-ext">{file.ext}</span>
+									</div>
+								)}
+								<div class="asset-manager__file-actions">
+									<Stack gap={1} fullWidth justify="center">
+										<button
+											class="btn btn--dark hint--rounded hint--top hint--medium"
+											onClick={() => copyLocalUrl(file.name)}
+											aria-label={i18n._(
+												t`Copy path (or keep clicking to copy other formats)`
+											)}
+										>
+											<Icon name="copy" />
+										</button>
+										<button
+											class="btn btn--dark hint--rounded hint--top-left"
+											onClick={() => removeLocalFile(file.name)}
+											aria-label={i18n._(t`Delete`)}
+										>
+											<Icon name="trash" />
+										</button>
+									</Stack>
+								</div>
+								<span class="asset-manager__file-name">{file.name}</span>
+							</div>
+						))}
+					</div>
+				)}
+			</VStack>
+		</div>
+	);
+};
 
 const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 	const [files, setFiles] = useState([]);
@@ -209,185 +431,202 @@ const Assets = ({ onProBtnClick, onLoginBtnClick }) => {
 			});
 	};
 
-	if (!window.user?.isPro) {
-		return (
-			<VStack align="stretch" gap={2}>
-				<p>
-					<Trans>Assets feature is available in PRO plan.</Trans>
-				</p>
-				<button
-					class="btn  btn--pro"
-					onClick={window.user ? onProBtnClick : onLoginBtnClick}
-				>
-					<HStack gap={1} fullWidth justify="center">
-						{window.user ? (
-							<>
-								<Trans>Upgrade to PRO</Trans>
-							</>
-						) : (
-							<>
-								<Trans>Login & upgrade to PRO</Trans>
-							</>
-						)}
-					</HStack>
-				</button>
-			</VStack>
-		);
-	}
 	return (
 		<I18n>
 			{({ i18n }) => (
-				<div
-					onDragEnter={handleDragDropEvent}
-					onDragLeave={handleDragDropEvent}
-					onDragOver={handleDragDropEvent}
-					onDrop={handleDrop}
-				>
-					<HStack gap={1} align="center">
-						<h1>
-							<Trans>Assets</Trans>
-						</h1>
-						<ProBadge />
-					</HStack>
+				<div>
+					<h1>
+						<Trans>Assets</Trans>
+					</h1>
 
-					<div
-						class="asset-manager__upload-box"
-						style={{
-							background: isDropTarget ? '#19a61940' : 'transparent',
-							borderColor: isDropTarget ? 'limegreen' : null
-						}}
-					>
-						{isUploading ? (
-							<div class="asset-manager__progress-bar"></div>
-						) : null}
-
-						<div style={{ visibility: isUploading ? 'hidden' : 'visible' }}>
-							<VStack gap={1} align="stretch">
-								<label style="background: #00000001">
-									<Text tag="p" align="center">
-										<Trans>Drop files or click here to upload</Trans>
-									</Text>
-									<Text tag="p" appearance="secondary" align="center">
-										<Trans>File should be max 300KB in size</Trans>
-									</Text>
-									<input
-										type="file"
-										onChange={handleFileUpload}
-										style={{ marginTop: 'auto', display: 'none' }}
-									/>
-								</label>
-							</VStack>
-						</div>
-					</div>
-					{isFetchingFiles && (
-						<LoaderWithText>
-							<Trans>Fetching files...</Trans>
-						</LoaderWithText>
-					)}
-
-					{!isFetchingFiles && !files.length ? (
-						<Stack justify="center">
-							<Text align="center" appearance="secondary">
-								<Trans>No files uploaded yet</Trans>
-							</Text>
-						</Stack>
-					) : null}
-
-					<VStack align="stretch" gap={1}>
-						{files.length ? (
-							<Stack gap={1}>
-								<input
-									type="text"
-									placeholder={i18n._(t`Search files`)}
-									value={searchTerm}
-									onChange={handleSearchChange}
-									style={{ width: '100%' }}
-								/>
-								<button
-									class={`btn btn--dark ${
-										listType === 'list' ? 'btn--active' : ''
-									}  hint--rounded hint--top-left`}
-									onClick={() => setListType('list')}
-									aria-label={i18n._(t`List view`)}
-								>
-									<Icon name="view-list" />
-								</button>
-								<button
-									class={`btn btn--dark ${
-										listType === 'grid' ? 'btn--active' : ''
-									}  hint--rounded hint--top-left`}
-									onClick={() => setListType('grid')}
-									aria-label={i18n._(t`Grid view`)}
-								>
-									<Icon name="view-grid" />
-								</button>
-							</Stack>
-						) : null}
-						<div
-							class={`asset-manager__file-container ${
-								listType === 'grid' ? 'asset-manager__file-container--grid' : ''
-							}`}
-						>
-							{filteredFiles.map((file, index) => (
+					<Tabs>
+						<TabPanel label={i18n._(t`Local`)}>
+							<LocalAssets i18n={i18n} />
+						</TabPanel>
+						<TabPanel label={i18n._(t`Cloud`)}>
+							{!window.user?.isPro ? (
+								<VStack align="stretch" gap={2}>
+									<p>
+										<Trans>
+											Upload assets to the cloud for use across devices.
+										</Trans>
+									</p>
+									<button
+										class="btn  btn--pro"
+										onClick={window.user ? onProBtnClick : onLoginBtnClick}
+									>
+										<HStack gap={1} fullWidth justify="center">
+											{window.user ? (
+												<Trans>Upgrade to PRO</Trans>
+											) : (
+												<Trans>Login & upgrade to PRO</Trans>
+											)}
+										</HStack>
+									</button>
+								</VStack>
+							) : (
 								<div
-									key={index}
-									class={`asset-manager__file ${
-										listType === 'grid' ? 'asset-manager__file--grid' : ''
-									}`}
+									onDragEnter={handleDragDropEvent}
+									onDragLeave={handleDragDropEvent}
+									onDragOver={handleDragDropEvent}
+									onDrop={handleDrop}
 								>
-									{/* <a href={file.url} target="_blank" rel="noopener noreferrer"> */}
-									{file.ext === 'image' ? (
-										<img src={file.url} class="asset-manager__file-image" />
-									) : (
+									<div
+										class="asset-manager__upload-box"
+										style={{
+											background: isDropTarget ? '#19a61940' : 'transparent',
+											borderColor: isDropTarget ? 'limegreen' : null
+										}}
+									>
+										{isUploading ? (
+											<div class="asset-manager__progress-bar"></div>
+										) : null}
+
 										<div
 											style={{
-												position: 'relative',
-												display: 'flex'
+												visibility: isUploading ? 'hidden' : 'visible'
 											}}
-											class="asset-manager__file-image"
 										>
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												fill="#ffffff33"
-												viewBox="0 0 24 24"
-											>
-												<path d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
-											</svg>
-											<span className="asset-manager__file-ext">
-												{file.ext}
-											</span>
+											<VStack gap={1} align="stretch">
+												<label style="background: #00000001">
+													<Text tag="p" align="center">
+														<Trans>Drop files or click here to upload</Trans>
+													</Text>
+													<Text tag="p" appearance="secondary" align="center">
+														<Trans>File should be max 300KB in size</Trans>
+													</Text>
+													<input
+														type="file"
+														onChange={handleFileUpload}
+														style={{
+															marginTop: 'auto',
+															display: 'none'
+														}}
+													/>
+												</label>
+											</VStack>
 										</div>
-									)}
-									<div class="asset-manager__file-actions">
-										<Stack gap={1} fullWidth justify="center">
-											<button
-												class={`btn btn--dark ${
-													listType === 'list' ? 'btn--active' : ''
-												}  hint--rounded hint--top hint--medium`}
-												onClick={() => copyFileUrl(file.url)}
-												aria-label={i18n._(
-													t`Copy URL (or keep clicking to copy other formats)`
-												)}
-											>
-												<Icon name="copy" />
-											</button>
-											<button
-												class={`btn btn--dark ${
-													listType === 'list' ? 'btn--active' : ''
-												}  hint--rounded hint--top-left`}
-												onClick={() => removeFileHandler(index)}
-												aria-label={i18n._(t`Delete`)}
-											>
-												<Icon name="trash" />
-											</button>
-										</Stack>
 									</div>
-									<span class="asset-manager__file-name">{file.name}</span>
-									{/* </a> */}
+									{isFetchingFiles && (
+										<LoaderWithText>
+											<Trans>Fetching files...</Trans>
+										</LoaderWithText>
+									)}
+
+									{!isFetchingFiles && !files.length ? (
+										<Stack justify="center">
+											<Text align="center" appearance="secondary">
+												<Trans>No files uploaded yet</Trans>
+											</Text>
+										</Stack>
+									) : null}
+
+									<VStack align="stretch" gap={1}>
+										{files.length ? (
+											<Stack gap={1}>
+												<input
+													type="text"
+													placeholder={i18n._(t`Search files`)}
+													value={searchTerm}
+													onChange={handleSearchChange}
+													style={{ width: '100%' }}
+												/>
+												<button
+													class={`btn btn--dark ${
+														listType === 'list' ? 'btn--active' : ''
+													}  hint--rounded hint--top-left`}
+													onClick={() => setListType('list')}
+													aria-label={i18n._(t`List view`)}
+												>
+													<Icon name="view-list" />
+												</button>
+												<button
+													class={`btn btn--dark ${
+														listType === 'grid' ? 'btn--active' : ''
+													}  hint--rounded hint--top-left`}
+													onClick={() => setListType('grid')}
+													aria-label={i18n._(t`Grid view`)}
+												>
+													<Icon name="view-grid" />
+												</button>
+											</Stack>
+										) : null}
+										<div
+											class={`asset-manager__file-container ${
+												listType === 'grid'
+													? 'asset-manager__file-container--grid'
+													: ''
+											}`}
+										>
+											{filteredFiles.map((file, index) => (
+												<div
+													key={index}
+													class={`asset-manager__file ${
+														listType === 'grid'
+															? 'asset-manager__file--grid'
+															: ''
+													}`}
+												>
+													{file.ext === 'image' ? (
+														<img
+															src={file.url}
+															class="asset-manager__file-image"
+														/>
+													) : (
+														<div
+															style={{
+																position: 'relative',
+																display: 'flex'
+															}}
+															class="asset-manager__file-image"
+														>
+															<svg
+																xmlns="http://www.w3.org/2000/svg"
+																fill="#ffffff33"
+																viewBox="0 0 24 24"
+															>
+																<path d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6Z" />
+															</svg>
+															<span className="asset-manager__file-ext">
+																{file.ext}
+															</span>
+														</div>
+													)}
+													<div class="asset-manager__file-actions">
+														<Stack gap={1} fullWidth justify="center">
+															<button
+																class={`btn btn--dark ${
+																	listType === 'list' ? 'btn--active' : ''
+																}  hint--rounded hint--top hint--medium`}
+																onClick={() => copyFileUrl(file.url)}
+																aria-label={i18n._(
+																	t`Copy URL (or keep clicking to copy other formats)`
+																)}
+															>
+																<Icon name="copy" />
+															</button>
+															<button
+																class={`btn btn--dark ${
+																	listType === 'list' ? 'btn--active' : ''
+																}  hint--rounded hint--top-left`}
+																onClick={() => removeFileHandler(index)}
+																aria-label={i18n._(t`Delete`)}
+															>
+																<Icon name="trash" />
+															</button>
+														</Stack>
+													</div>
+													<span class="asset-manager__file-name">
+														{file.name}
+													</span>
+												</div>
+											))}
+										</div>
+									</VStack>
 								</div>
-							))}
-						</div>
-					</VStack>
+							)}
+						</TabPanel>
+					</Tabs>
 				</div>
 			)}
 		</I18n>

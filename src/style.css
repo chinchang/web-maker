@@ -55,6 +55,11 @@ body.light-theme {
 	--color-pro-2: #6366f1;
 }
 
+*,
+*::after,
+*::before {
+	box-sizing: border-box;
+}
 html {
 	font-size: 1em;
 }
@@ -2352,6 +2357,7 @@ while the theme CSS file is loading */
 	z-index: 1;
 }
 .tabs {
+	--tab-panel-bg: rgba(0, 0, 0, 0.4);
 	display: flex;
 }
 .tabs__tablist {
@@ -2368,14 +2374,15 @@ while the theme CSS file is loading */
 	color: inherit;
 }
 .tabs__tab--selected {
-	background-color: rgba(0, 0, 0, 0.1);
+	background-color: var(--tab-panel-bg);
+	border-radius: 0.5rem 0 0 0.5rem;
 }
 .tabs__tabpanel-wrap {
 	flex: 1;
 }
 .tabs__tabpanel {
 	padding: 2em;
-	background-color: rgba(0, 0, 0, 0.1);
+	background-color: var(--tab-panel-bg);
 	border-radius: 5px;
 }
 
@@ -2394,6 +2401,7 @@ while the theme CSS file is loading */
 }
 
 .asset-manager__upload-box {
+	width: 100%;
 	padding: 1rem 2rem;
 	border: 3px dashed rgb(255 255 255 / 10%);
 	border-radius: 1rem;

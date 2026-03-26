@@ -16,8 +16,10 @@ or
 
 - Supports Preprocessors: HTML (Pug & Markdown), CSS (SCSS, LESS & Stylus, Atomic CSS) & JavaScript (ES6, TypeScript & CoffeeScript)
 - Works offline
-- Quick creation & good-old files mode
+- Quick creation (3-panemode) & good-old Files mode
 - Inbuilt Console
+- Multi-player collab mode
+- Asset hosting (Local and Cloud storage)
 - Save and load your creations
 - Auto-save feature
 - Code auto-completion
@@ -56,4 +58,4 @@ Deployed on the superfast [Netlify](https://www.netlify.com/) platform.
 
 MIT Licensed
 
-Copyright (c) 2016-2022 Kushagra Gour, [webmaker.app](https://webmaker.app)
+Copyright (c) 2016-2026 Kushagra Gour, [webmaker.app](https://webmaker.app)

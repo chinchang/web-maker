@@ -18,6 +18,11 @@ import CssSettingsModal from './CssSettingsModal';
 import { PreviewDimension } from './PreviewDimension.jsx';
 import Modal from './Modal.jsx';
 import { LocalStorageKeys } from '../constants.js';
+import {
+	getAllAssets,
+	LOCAL_ASSET_PREFIX,
+	replaceLocalAssetsWithDataUrls
+} from '../localAssetService.js';
 const minCodeWrapSize = 33;
 
 /* global htmlCodeEl
@@ -142,7 +147,24 @@ export default class ContentWrap extends Component {
 		}, this.props.prefs.previewDelay);
 	}
 
-	createPreviewFile(html, css, js) {
+	pushLocalAssetsToSW() {
+		if (window.IS_EXTENSION) return;
+		const talkFrame = document.getElementById('talkFrame');
+		if (!talkFrame || !talkFrame.contentWindow) return;
+
+		getAllAssets().then(assets => {
+			if (!assets.length) return;
+			const assetObj = {};
+			assets.forEach(asset => {
+				assetObj[LOCAL_ASSET_PREFIX + asset.name] = asset.blob;
+			});
+			talkFrame.contentWindow.postMessage(assetObj, '*');
+		});
+	}
+
+	async createPreviewFile(html, css, js) {
+		this.pushLocalAssetsToSW();
+
 		const versionMatch = navigator.userAgent.match(/Chrome\/(\d+)/);
 
 		const shouldInlineJs = true;
@@ -152,6 +174,13 @@ export default class ContentWrap extends Component {
 			shouldInlineJs ? js : null,
 			this.props.currentItem
 		);
+
+		// In extension mode, replace /local/ URLs with data URLs
+		// since there's no service worker to serve them
+		if (window.IS_EXTENSION) {
+			contents = await replaceLocalAssetsWithDataUrls(contents);
+		}
+
 		var blob = new Blob([contents], { type: 'text/plain;charset=UTF-8' });
 		var blobjs = new Blob([js], { type: 'text/plain;charset=UTF-8' });
 

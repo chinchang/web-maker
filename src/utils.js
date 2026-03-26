@@ -3,6 +3,7 @@ import { computeHtml, computeCss, computeJs } from './computes';
 import { modes, HtmlModes, CssModes, JsModes } from './codeModes';
 import { deferred } from './deferred';
 import { getExtensionFromFileName } from './fileUtils';
+import { getAllAssets, LOCAL_ASSET_PREFIX } from './localAssetService';
 import confetti from 'canvas-confetti';
 const esprima = require('esprima-next');
 
@@ -482,20 +483,35 @@ export function saveAsHtml(item, { inlineAssets }) {
 }
 
 export async function inlineAssetsInHtml(html) {
-	const encodeFileToBase64 = async url => {
-		const response = await fetch(url);
-		const blob = await response.blob();
-		const reader = new FileReader();
+	// Pre-load local assets into a map for quick lookup
+	let localAssetMap = {};
+	try {
+		const assets = await getAllAssets();
+		assets.forEach(a => {
+			localAssetMap[LOCAL_ASSET_PREFIX + a.name] = a.blob;
+		});
+	} catch (e) {
+		console.error('Error loading local assets for inlining:', e);
+	}
 
+	const blobToDataUrl = blob => {
 		return new Promise((resolve, reject) => {
-			reader.onloadend = () => {
-				const base64String = reader.result.split(',')[1];
-				const mimeType = blob.type;
-				resolve(`data:${mimeType};base64,${base64String}`);
-			};
+			const reader = new FileReader();
+			reader.onloadend = () => resolve(reader.result);
 			reader.onerror = reject;
 			reader.readAsDataURL(blob);
 		});
+	};
+
+	const encodeFileToBase64 = async url => {
+		// Check if this is a local asset
+		if (localAssetMap[url]) {
+			return blobToDataUrl(localAssetMap[url]);
+		}
+
+		const response = await fetch(url);
+		const blob = await response.blob();
+		return blobToDataUrl(blob);
 	};
 
 	const inlineAssets = async htmlContent => {

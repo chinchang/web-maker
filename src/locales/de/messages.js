@@ -21,6 +21,8 @@
 		'Add Library': 'Bibliothek hinzuf\xFCgen',
 		'Add a JS/CSS library': 'JS/CSS-Bibliothek hinzuf\xFCgen',
 		'Add collection': 'Sammlung hinzuf\xFCgen',
+		"Add files locally, usable only on this browser. Won't work for others if you share this publicly.":
+			'F\xFCge Dateien lokal hinzu, die nur in diesem Browser verwendet werden k\xF6nnen. Funktioniert nicht f\xFCr andere, wenn du dies \xF6ffentlich teilst.',
 		'Add library': 'Bibliothek hinzuf\xFCgen',
 		'Add the closing tag automatically on seeing an opening tag in HTML':
 			'F\xFCgen Sie das schlie\xDFende Tag automatisch hinzu, wenn Sie ein \xF6ffnendes Tag in HTML sehen',
@@ -46,6 +48,7 @@
 			'Gespeicherten Kreationen-Bereich schlie\xDFen',
 		'Close saved creations panel & modals':
 			'Gespeichertes Kreationen-Panel & Modale schlie\xDFen',
+		Cloud: 'Cloud',
 		'Code blast!': 'Code-Explosion!',
 		Collab: 'Collab',
 		'Collab Session': 'Collab-Sitzung',
@@ -55,6 +58,7 @@
 		'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.':
 			'Konfigurieren und anpassen der Einstellungen, indem Sie auf das Zahnrad-Symbol (<0><1/></0>) in der unteren rechten Ecke der App klicken.',
 		Console: 'Konsole',
+		'Contact the Developer': 'Kontaktiere den Entwickler',
 		'Copy URL (or keep clicking to copy other formats)':
 			'URL kopieren (oder weiter klicken, um andere Formate zu kopieren)',
 		'Copy link': 'Link kopieren',
@@ -73,6 +77,8 @@
 		'Double click to toggle console':
 			'Doppelklicken, um die Konsole umzuschalten',
 		'Download game as zip': 'Spiel als Zip herunterladen',
+		'Drop files or click here to add':
+			'Ziehe Dateien hierher oder klicke hier, um hinzuzuf\xFCgen',
 		'Drop files or click here to upload':
 			'Dateien hier ablegen oder klicken, um hochzuladen',
 		'Edit on CodePen': 'Bearbeiten auf CodePen',
@@ -92,6 +98,10 @@
 			'Dateimodi sind derzeit nur in der Webanwendung verf\xFCgbar. <0>Probiere jetzt die Webanwendung aus</0>.',
 		Find: 'Finden',
 		'Find & replace': 'Suchen & Ersetzen',
+		'Focus CSS pane': 'Fokussiere das CSS-Fenster',
+		'Focus HTML pane': 'Fokussiere das HTML-Fenster',
+		'Focus JS pane': 'Fokussiere das JS-Fenster',
+		'Focus preview': 'Fokussiere die Vorschau',
 		'Follow <0>@webmakerApp</0> to know about the new upcoming features!':
 			'Folge <0>@webmakerApp</0>, um \xFCber die neuen kommenden Funktionen informiert zu werden!',
 		Font: 'Schriftart',
@@ -133,6 +143,7 @@
 		'Keyboard shortcuts': 'Tastenk\xFCrzel',
 		Language: 'Sprache',
 		'Leave Session': 'Sitzung verlassen',
+		'Leave a Review': 'Hinterlasse eine Bewertung',
 		'Lets start!': 'Lass uns anfangen!',
 		License: 'Lizenz',
 		'Like this app? Please <0>rate it here</0>.':
@@ -141,11 +152,14 @@
 		'List view': 'Listenansicht',
 		'Loads the last open creation when app starts':
 			'L\xE4dt die letzte offene Kreation, wenn die App startet',
+		Local: 'Lokal',
 		'Login & upgrade to PRO': 'Einloggen & auf PRO upgraden',
 		'Login / Signup': 'Einloggen / Registrieren',
 		'Login with Github': 'Einloggen mit Github',
 		'Login with Google': 'Einloggen mit Google',
 		'Login/Signup': 'Einloggen/Registrieren',
+		'Made with <0>\u2764\uFE0F</0>& <1>\uD83D\uDE4C</1> by <2>Kushagra Gour</2>':
+			'Hergestellt mit <0>\u2764\uFE0F</0>& <1>\uD83D\uDE4C</1> von <2>Kushagra Gour</2>',
 		'Made with <0>\uD83D\uDC96</0>& <1>\uD83D\uDE4C</1> by <2>Kushagra Gour</2>':
 			'Hergestellt mit <0>\uD83D\uDC96</0>& <1>\uD83D\uDE4C</1> von <2>Kushagra Gour</2>',
 		'Mail me': 'Schreib mir',
@@ -157,6 +171,8 @@
 		'Manage your PRO subscription': 'Verwalte dein PRO-Abonnement',
 		'Manage your code in files. Just like you would have files on your local machine.':
 			'Verwalte deinen Code in Dateien. So wie du Dateien auf deinem lokalen Computer h\xE4ttest.',
+		'Max 300KB per file': 'Max 300KB pro Datei',
+		'Max 5MB per file': 'Max 5MB pro Datei',
 		'Maximize pane': 'Pane maximieren',
 		'Maximum time allowed in a loop iteration':
 			'Maximale Zeit, die in einer Schleifeniteration erlaubt ist',
@@ -197,6 +213,7 @@
 			'Die Vorschau wird aktualisiert, wenn Sie den Vorschau-Bereich \xE4ndern',
 		'Put each library in new line': 'Jede Bibliothek in eine neue Zeile setzen',
 		'Read more': 'Mehr lesen',
+		'Read the documentation': 'Lies die Dokumentation',
 		'Read the documentation.': 'Lesen Sie die Dokumentation.',
 		'Realign code': 'Code neu ausrichten',
 		'Refresh preview': 'Vorschau aktualisieren',
@@ -205,6 +222,7 @@
 		"Refreshes the preview as you code. Otherwise use the 'Run' button":
 			"Aktualisiert die Vorschau, w\xE4hrend Sie codieren. Andernfalls verwenden Sie die Schaltfl\xE4che 'Ausf\xFChren'",
 		'Replace new tab page': 'Ersetze die neue Tab-Seite',
+		'Report a Bug': 'Melde einen Fehler',
 		'Report a bug': 'Einen Fehler melden',
 		'Review Web Maker': 'Bewerte Web Maker',
 		Run: 'Ausf\xFChren',
@@ -255,6 +273,7 @@
 			'Wechsle zu einem Layout mit Vorschau rechts',
 		'Switch to lighter version for better performance. Removes things like blur etc.':
 			'Wechsle zu einer leichteren Version f\xFCr bessere Leistung. Entfernt Dinge wie Unsch\xE4rfe usw.',
+		'Switch to tabbed layout': 'Wechsle zum Registerkartenlayout',
 		Tabs: 'Tabs',
 		'Take screenshot of preview': 'Screenshot der Vorschau machen',
 		Theme: 'Thema',
@@ -275,6 +294,8 @@
 		'Upgrade to PRO and get some advanced superpowers!':
 			'Upgrade auf PRO und erhalte einige fortgeschrittene Superkr\xE4fte!',
 		'Upload Image': 'Bild hochladen',
+		'Upload assets to the cloud for use across devices.':
+			'Lade Assets in die Cloud hoch, um sie ger\xE4te\xFCbergreifend zu verwenden.',
 		'Upload/Use assets': 'Assets hochladen/benutzen',
 		'Use Monaco Editor': 'Verwende den Monaco Editor',
 		'Use experimental Monaco editor':

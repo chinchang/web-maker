@@ -27,6 +27,7 @@ import { SWITCH_FILE_EVENT } from '../commands';
 import { commandPaletteService } from '../commandPaletteService';
 import { PreviewDimension } from './PreviewDimension';
 import { FileIcon } from './FileIcon';
+import { getAllAssets, LOCAL_ASSET_PREFIX } from '../localAssetService.js';
 
 const minCodeWrapSize = 33;
 const PREVIEW_FRAME_HOST = window.DEBUG
@@ -268,6 +269,16 @@ export default class ContentWrapFiles extends Component {
 			}
 		});
 
+		// Push local assets to SW cache
+		getAllAssets().then(assets => {
+			if (!assets.length) return;
+			const assetObj = {};
+			assets.forEach(asset => {
+				assetObj[LOCAL_ASSET_PREFIX + asset.name] = asset.blob;
+			});
+			window.talkFrame.contentWindow.postMessage(assetObj, '*');
+		});
+
 		// navigator.serviceWorker.controller.postMessage(obj);
 		window.talkFrame.contentWindow.postMessage(obj, '*');
 
@@ -409,7 +420,7 @@ export default class ContentWrapFiles extends Component {
 	getMainSplitSizesToApply() {
 		var mainSplitSizes;
 		const sidebarWidth = 200;
-		const { currentItem, currentLayoutMode } = this.props;
+		const { currentItem } = this.props;
 		if (currentItem && currentItem.mainSizes) {
 			mainSplitSizes = currentItem.mainSizes;
 		} else {
@@ -591,9 +602,7 @@ export default class ContentWrapFiles extends Component {
 						sizes={this.state.mainSplitSizes}
 						minSize={150}
 						style=""
-						direction={
-							this.props.currentLayoutMode === 2 ? 'vertical' : 'horizontal'
-						}
+						direction={'horizontal'}
 						onDrag={this.mainSplitDragHandler.bind(this)}
 						onDragEnd={this.mainSplitDragEndHandler.bind(this)}
 					>

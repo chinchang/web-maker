@@ -68,7 +68,7 @@ function Notification({ version, isLatest, ...props }) {
 						&nbsp;
 						<a
 							class="btn"
-							href="http://twitter.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline frontend playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
+							href="http://x.com/share?url=https://webmaker.app/&text=Web Maker - A blazing fast %26 offline frontend playground! via @webmakerApp&related=webmakerApp&hashtags=web,editor,chrome,extension"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
@@ -499,11 +499,7 @@ export function Changelog(props) {
 
 				<li>
 					<strong>🔥 Web Maker 4.0 is coming!</strong> Follow{' '}
-					<a
-						href="https://twitter.com/webmakerApp"
-						target="_blank"
-						rel="noopener"
-					>
+					<a href="https://x.com/webmakerApp" target="_blank" rel="noopener">
 						Web Maker on Twitter
 					</a>{' '}
 					to keep up with all the exciting updates.

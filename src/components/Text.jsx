@@ -56,6 +56,7 @@ export const Text = forwardRef(
 			textAlign: align,
 			lineHeight: lineHeight,
 			fontStyle: style === 'italic' ? 'italic' : 'normal',
+			margin: 0,
 			...appearanceStyles[appearance]
 		};
 

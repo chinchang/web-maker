@@ -32,6 +32,8 @@
 		'Add Library': 'Add Library',
 		'Add a JS/CSS library': 'Add a JS/CSS library',
 		'Add collection': 'Add collection',
+		"Add files locally, usable only on this browser. Won't work for others if you share this publicly.":
+			"Add files locally, usable only on this browser. Won't work for others if you share this publicly.",
 		'Add library': 'Add library',
 		'Add the closing tag automatically on seeing an opening tag in HTML':
 			'Add the closing tag automatically on seeing an opening tag in HTML',
@@ -57,6 +59,7 @@
 		'Close saved creations pane': 'Close saved creations pane',
 		'Close saved creations panel & modals':
 			'Close saved creations panel & modals',
+		Cloud: 'Cloud',
 		'Code blast!': 'Code blast!',
 		Collab: 'Collab',
 		'Collab Session': 'Collab Session',
@@ -65,6 +68,7 @@
 		'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.':
 			'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.',
 		Console: 'Console',
+		'Contact the Developer': 'Contact the Developer',
 		'Copy URL (or keep clicking to copy other formats)':
 			'Copy URL (or keep clicking to copy other formats)',
 		'Copy link': 'Copy link',
@@ -83,6 +87,7 @@
 		'Double click to toggle code pane': 'Double click to toggle code pane',
 		'Double click to toggle console': 'Double click to toggle console',
 		'Download game as zip': 'Download game as zip',
+		'Drop files or click here to add': 'Drop files or click here to add',
 		'Drop files or click here to upload': 'Drop files or click here to upload',
 		'Edit on CodePen': 'Edit on CodePen',
 		Editor: 'Editor',
@@ -100,6 +105,10 @@
 			'Files modes is currently only available in Web app. <0>Try the Web app now</0>.',
 		Find: 'Find',
 		'Find & replace': 'Find & replace',
+		'Focus CSS pane': 'Focus CSS pane',
+		'Focus HTML pane': 'Focus HTML pane',
+		'Focus JS pane': 'Focus JS pane',
+		'Focus preview': 'Focus preview',
 		'Follow <0>@webmakerApp</0> to know about the new upcoming features!':
 			'Follow <0>@webmakerApp</0> to know about the new upcoming features!',
 		Font: 'Font',
@@ -141,6 +150,7 @@
 		'Keyboard shortcuts': 'Keyboard shortcuts',
 		Language: 'Language',
 		'Leave Session': 'Leave Session',
+		'Leave a Review': 'Leave a Review',
 		'Lets start!': 'Lets start!',
 		License: 'License',
 		'Like this app? Please <0>rate it here</0>.':
@@ -151,12 +161,15 @@
 		'List view': 'List view',
 		'Loads the last open creation when app starts':
 			'Loads the last open creation when app starts',
+		Local: 'Local',
 		Login: 'Login',
 		'Login & upgrade to PRO': 'Login & upgrade to PRO',
 		'Login / Signup': 'Login / Signup',
 		'Login with Github': 'Login with Github',
 		'Login with Google': 'Login with Google',
 		'Login/Signup': 'Login/Signup',
+		'Made with <0>\u2764\uFE0F</0>& <1>\uD83D\uDE4C</1> by <2>Kushagra Gour</2>':
+			'Made with <0>\u2764\uFE0F</0>& <1>\uD83D\uDE4C</1> by <2>Kushagra Gour</2>',
 		'Made with <0>\uD83D\uDC96</0>& <1> \uD83D\uDE4C</1> by <2>Kushagra Gour</2>':
 			'Made with <0>\uD83D\uDC96</0>& <1> \uD83D\uDE4C</1> by <2>Kushagra Gour</2>',
 		'Made with <0>\uD83D\uDC96</0>& <1>\uD83D\uDE4C</1> by <2>Kushagra Gour</2>':
@@ -169,6 +182,8 @@
 		'Manage your PRO subscription': 'Manage your PRO subscription',
 		'Manage your code in files. Just like you would have files on your local machine.':
 			'Manage your code in files. Just like you would have files on your local machine.',
+		'Max 300KB per file': 'Max 300KB per file',
+		'Max 5MB per file': 'Max 5MB per file',
 		'Maximize pane': 'Maximize pane',
 		'Maximum time allowed in a loop iteration':
 			'Maximum time allowed in a loop iteration',
@@ -213,6 +228,7 @@
 			'Preview will refresh when you resize the preview pane',
 		'Put each library in new line': 'Put each library in new line',
 		'Read more': 'Read more',
+		'Read the documentation': 'Read the documentation',
 		'Read the documentation.': 'Read the documentation.',
 		'Realign code': 'Realign code',
 		'Refresh preview': 'Refresh preview',
@@ -220,6 +236,7 @@
 		"Refreshes the preview as you code. Otherwise use the 'Run' button":
 			"Refreshes the preview as you code. Otherwise use the 'Run' button",
 		'Replace new tab page': 'Replace new tab page',
+		'Report a Bug': 'Report a Bug',
 		'Report a bug': 'Report a bug',
 		'Review Web Maker': 'Review Web Maker',
 		Run: 'Run',
@@ -277,6 +294,7 @@
 			'Switch to layout with preview on right',
 		'Switch to lighter version for better performance. Removes things like blur etc.':
 			'Switch to lighter version for better performance. Removes things like blur etc.',
+		'Switch to tabbed layout': 'Switch to tabbed layout',
 		Tabs: 'Tabs',
 		'Take screenshot of preview': 'Take screenshot of preview',
 		Theme: 'Theme',
@@ -297,6 +315,8 @@
 		'Upgrade to PRO and get some advanced superpowers!':
 			'Upgrade to PRO and get some advanced superpowers!',
 		'Upload Image': 'Upload Image',
+		'Upload assets to the cloud for use across devices.':
+			'Upload assets to the cloud for use across devices.',
 		'Upload/Use assets': 'Upload/Use assets',
 		'Use Monaco Editor': 'Use Monaco Editor',
 		'Use experimental Monaco editor': 'Use experimental Monaco editor',

@@ -20,6 +20,8 @@
 		'Add Library': '\u6DFB\u52A0\u5E93',
 		'Add a JS/CSS library': '\u6DFB\u52A0 JS/CSS \u5E93',
 		'Add collection': '\u6DFB\u52A0\u96C6\u5408',
+		"Add files locally, usable only on this browser. Won't work for others if you share this publicly.":
+			'\u672C\u5730\u6DFB\u52A0\u6587\u4EF6\uFF0C\u4EC5\u5728\u6B64\u6D4F\u89C8\u5668\u4E2D\u53EF\u7528\u3002\u5982\u679C\u60A8\u516C\u5F00\u5206\u4EAB\uFF0C\u5C06\u65E0\u6CD5\u5728\u5176\u4ED6\u6D4F\u89C8\u5668\u4E2D\u4F7F\u7528\u3002',
 		'Add library': '\u6DFB\u52A0\u5E93',
 		'Add the closing tag automatically on seeing an opening tag in HTML':
 			'\u5728 HTML \u4E2D\u770B\u5230\u5F00\u6807\u7B7E\u65F6\u81EA\u52A8\u6DFB\u52A0\u95ED\u5408\u6807\u7B7E',
@@ -47,6 +49,7 @@
 			'\u5173\u95ED\u5DF2\u4FDD\u5B58\u521B\u4F5C\u7A97\u683C',
 		'Close saved creations panel & modals':
 			'\u5173\u95ED\u5DF2\u4FDD\u5B58\u521B\u4F5C\u9762\u677F\u548C\u6A21\u6001\u6846',
+		Cloud: '\u4E91',
 		'Code blast!': '\u4EE3\u7801\u7206\u53D1\uFF01',
 		Collab: '\u534F\u4F5C',
 		'Collab Session': '\u534F\u4F5C\u4F1A\u8BAE',
@@ -56,6 +59,7 @@
 		'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.':
 			'\u901A\u8FC7\u70B9\u51FB\u5E94\u7528\u53F3\u4E0B\u89D2\u7684\u9F7F\u8F6E\u56FE\u6807 (<0><1/></0>) \u6765\u914D\u7F6E\u548C\u81EA\u5B9A\u4E49\u8BBE\u7F6E\u3002',
 		Console: '\u63A7\u5236\u53F0',
+		'Contact the Developer': '\u8054\u7CFB\u5F00\u53D1\u8005',
 		'Copy URL (or keep clicking to copy other formats)':
 			'\u590D\u5236 URL\uFF08\u6216\u7EE7\u7EED\u70B9\u51FB\u4EE5\u590D\u5236\u5176\u4ED6\u683C\u5F0F\uFF09',
 		'Copy link': '\u590D\u5236\u94FE\u63A5',
@@ -78,6 +82,8 @@
 		'Double click to toggle console':
 			'\u53CC\u51FB\u5207\u6362\u63A7\u5236\u53F0',
 		'Download game as zip': '\u4E0B\u8F7D\u6E38\u620F\u4E3A zip',
+		'Drop files or click here to add':
+			'\u62D6\u653E\u6587\u4EF6\u6216\u70B9\u51FB\u8FD9\u91CC\u6DFB\u52A0',
 		'Drop files or click here to upload':
 			'\u62D6\u653E\u6587\u4EF6\u6216\u70B9\u51FB\u6B64\u5904\u4E0A\u4F20',
 		'Edit on CodePen': '\u5728 CodePen \u4E0A\u7F16\u8F91',
@@ -97,6 +103,10 @@
 			'\u6587\u4EF6\u6A21\u5F0F\u76EE\u524D\u4EC5\u5728Web\u5E94\u7528\u7A0B\u5E8F\u4E2D\u53EF\u7528\u3002<0>\u7ACB\u5373\u5C1D\u8BD5Web\u5E94\u7528\u7A0B\u5E8F</0>\u3002',
 		Find: '\u67E5\u627E',
 		'Find & replace': '\u67E5\u627E\u548C\u66FF\u6362',
+		'Focus CSS pane': '\u805A\u7126 CSS \u9762\u677F',
+		'Focus HTML pane': '\u805A\u7126 HTML \u9762\u677F',
+		'Focus JS pane': '\u805A\u7126 JS \u9762\u677F',
+		'Focus preview': '\u805A\u7126\u9884\u89C8',
 		'Follow <0>@webmakerApp</0> to know about the new upcoming features!':
 			'\u5173\u6CE8 <0>@webmakerApp</0> \u4EE5\u4E86\u89E3\u5373\u5C06\u63A8\u51FA\u7684\u65B0\u529F\u80FD\uFF01',
 		Font: '\u5B57\u4F53',
@@ -138,6 +148,7 @@
 		'Keyboard shortcuts': '\u952E\u76D8\u5FEB\u6377\u952E',
 		Language: '\u8BED\u8A00',
 		'Leave Session': '\u79BB\u5F00\u4F1A\u8BDD',
+		'Leave a Review': '\u7559\u4E0B\u8BC4\u4EF7',
 		'Lets start!': '\u8BA9\u6211\u4EEC\u5F00\u59CB\u5427\uFF01',
 		License: '\u8BB8\u53EF\u8BC1',
 		'Like this app? Please <0>rate it here</0>.':
@@ -148,12 +159,15 @@
 		'List view': '\u5217\u8868\u89C6\u56FE',
 		'Loads the last open creation when app starts':
 			'\u5E94\u7528\u542F\u52A8\u65F6\u52A0\u8F7D\u6700\u540E\u6253\u5F00\u7684\u521B\u4F5C',
+		Local: '\u672C\u5730',
 		Login: 'Login',
 		'Login & upgrade to PRO': '\u767B\u5F55\u5E76\u5347\u7EA7\u5230 PRO',
 		'Login / Signup': '\u767B\u5F55 / \u6CE8\u518C',
 		'Login with Github': '\u4F7F\u7528 Github \u767B\u5F55',
 		'Login with Google': '\u4F7F\u7528 Google \u767B\u5F55',
 		'Login/Signup': '\u767B\u5F55/\u6CE8\u518C',
+		'Made with <0>\u2764\uFE0F</0>& <1>\uD83D\uDE4C</1> by <2>Kushagra Gour</2>':
+			'\u7531 <2>Kushagra Gour</2> \u5236\u4F5C\uFF0C\u5E26\u7740 <0>\u2764\uFE0F</0> \u548C <1>\uD83D\uDE4C</1>',
 		'Made with <0>\uD83D\uDC96</0>& <1> \uD83D\uDE4C</1> by <2>Kushagra Gour</2>':
 			'Made with <0>\uD83D\uDC96</0>& <1> \uD83D\uDE4C</1> by <2>Kushagra Gour</2>',
 		'Made with <0>\uD83D\uDC96</0>& <1>\uD83D\uDE4C</1> by <2>Kushagra Gour</2>':
@@ -167,6 +181,8 @@
 		'Manage your PRO subscription': '\u7BA1\u7406\u60A8\u7684 PRO \u8BA2\u9605',
 		'Manage your code in files. Just like you would have files on your local machine.':
 			'\u5728\u6587\u4EF6\u4E2D\u7BA1\u7406\u60A8\u7684\u4EE3\u7801\u3002\u5C31\u50CF\u60A8\u5728\u672C\u5730\u8BA1\u7B97\u673A\u4E0A\u62E5\u6709\u6587\u4EF6\u4E00\u6837\u3002',
+		'Max 300KB per file': '\u6BCF\u4E2A\u6587\u4EF6\u6700\u5927 300KB',
+		'Max 5MB per file': '\u6BCF\u4E2A\u6587\u4EF6\u6700\u5927 5MB',
 		'Maximize pane': '\u6700\u5927\u5316\u9762\u677F',
 		'Maximum time allowed in a loop iteration':
 			'\u5FAA\u73AF\u8FED\u4EE3\u4E2D\u5141\u8BB8\u7684\u6700\u5927\u65F6\u95F4',
@@ -221,6 +237,7 @@
 		'Put each library in new line':
 			'\u5C06\u6BCF\u4E2A\u5E93\u653E\u5728\u65B0\u884C\u4E2D',
 		'Read more': '\u9605\u8BFB\u66F4\u591A',
+		'Read the documentation': '\u9605\u8BFB\u6587\u6863',
 		'Read the documentation.': '\u9605\u8BFB\u6587\u6863\u3002',
 		'Realign code': '\u91CD\u65B0\u5BF9\u9F50\u4EE3\u7801',
 		'Refresh preview': '\u5237\u65B0\u9884\u89C8',
@@ -229,6 +246,7 @@
 		"Refreshes the preview as you code. Otherwise use the 'Run' button":
 			'\u5728\u60A8\u7F16\u7801\u65F6\u5237\u65B0\u9884\u89C8\u3002\u5426\u5219\u8BF7\u4F7F\u7528\u201C\u8FD0\u884C\u201D\u6309\u94AE',
 		'Replace new tab page': '\u66FF\u6362\u65B0\u6807\u7B7E\u9875',
+		'Report a Bug': '\u62A5\u544A\u9519\u8BEF',
 		'Report a bug': '\u62A5\u544A\u4E00\u4E2A\u9519\u8BEF',
 		'Review Web Maker': '\u8BC4\u4EF7 Web Maker',
 		Run: '\u8FD0\u884C',
@@ -292,6 +310,8 @@
 			'\u5207\u6362\u5230\u53F3\u4FA7\u9884\u89C8\u7684\u5E03\u5C40',
 		'Switch to lighter version for better performance. Removes things like blur etc.':
 			'\u5207\u6362\u5230\u66F4\u8F7B\u7684\u7248\u672C\u4EE5\u83B7\u5F97\u66F4\u597D\u7684\u6027\u80FD\u3002\u79FB\u9664\u6A21\u7CCA\u7B49\u6548\u679C\u3002',
+		'Switch to tabbed layout':
+			'\u5207\u6362\u5230\u6807\u7B7E\u5F0F\u5E03\u5C40',
 		Tabs: '\u6807\u7B7E',
 		'Take screenshot of preview':
 			'\u622A\u53D6\u9884\u89C8\u7684\u5C4F\u5E55\u622A\u56FE',
@@ -314,6 +334,8 @@
 		'Upgrade to PRO and get some advanced superpowers!':
 			'\u5347\u7EA7\u5230 PRO \u5E76\u83B7\u5F97\u4E00\u4E9B\u9AD8\u7EA7\u8D85\u80FD\u529B\uFF01',
 		'Upload Image': '\u4E0A\u4F20\u56FE\u7247',
+		'Upload assets to the cloud for use across devices.':
+			'\u5C06\u8D44\u4EA7\u4E0A\u4F20\u5230\u4E91\u7AEF\uFF0C\u4EE5\u4FBF\u5728\u4E0D\u540C\u8BBE\u5907\u4E0A\u4F7F\u7528\u3002',
 		'Upload/Use assets': '\u4E0A\u4F20/\u4F7F\u7528\u8D44\u6E90',
 		'Use Monaco Editor': '\u4F7F\u7528 Monaco \u7F16\u8F91\u5668',
 		'Use experimental Monaco editor':

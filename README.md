@@ -31,7 +31,7 @@ or
 - Save as HTML file
 - Edit in CodePen
 
-Follow [@webmakerApp](https://twitter.com/intent/follow?screen_name=webmakerApp) for updates or tweet out feature requests and suggestions.
+Follow [@webmakerApp](https://x.com/intent/follow?screen_name=webmakerApp) for updates or tweet out feature requests and suggestions.
 
 ## Support Web Maker
 
@@ -41,7 +41,7 @@ Hi! I am Kushagra Gour. Web Maker is a free and open-source project. To keep mys
 
 Support with $ETH - 0x39989c0E53cfdcF6792e09d7573c65E911e774bA
 
-If not that, you can support by simply sharing about how much you love 💖 [@webmakerapp](https://twitter.com/webmakerApp).
+If not that, you can support by simply sharing about how much you love 💖 [@webmakerapp](https://x.com/webmakerApp).
 
 ## Sponsors
 

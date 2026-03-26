@@ -96,7 +96,8 @@ export function Pro({ user, onLoginClick, onBuyFromExtensionClick }) {
 						features={[
 							'Unlimited private creations',
 							'1 Public creation',
-							'2 Files mode creations'
+							'2 Files mode creations',
+							'Local asset hosting'
 						]}
 					/>
 					<Card
@@ -109,8 +110,8 @@ export function Pro({ user, onLoginClick, onBuyFromExtensionClick }) {
 							'Unlimited private creations',
 							'Unlimited public creations',
 							'Unlimited files mode creations',
+							'Local + Cloud asset hosting',
 							'Host multi-user Collab session',
-							'Asset hosting',
 							'Priority support',
 							'No Ads'
 						]}

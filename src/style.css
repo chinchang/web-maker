@@ -2409,6 +2409,12 @@ while the theme CSS file is loading */
 	margin-bottom: 1rem;
 	transition: 0.3s ease;
 	position: relative;
+	cursor: pointer;
+}
+
+.asset-manager__upload-box:hover {
+	border-color: rgb(255 255 255 / 25%);
+	background: rgb(255 255 255 / 3%);
 }
 
 @keyframes move {
@@ -2444,21 +2450,19 @@ while the theme CSS file is loading */
 	overflow: hidden;
 }
 .asset-manager__file {
-	/* list-style: none; */
-	/* padding: 0; */
-	/* margin: 0; */
 	display: flex;
 	background: none;
 	gap: 0.5rem;
-	padding: 0.2rem;
+	padding: 0.5rem;
 	border-radius: 0.4rem;
 	color: inherit;
 	border: 0;
 	transition: 0.3s ease;
-	/* align-items: center; */
+	border: 1px solid rgb(255 255 255 / 0%);
 }
 .asset-manager__file:hover {
 	background: rgb(255 255 255 / 5%);
+	border-color: rgb(255 255 255 / 10%);
 }
 .asset-manager__file--grid {
 	display: flex;
@@ -2485,6 +2489,7 @@ while the theme CSS file is loading */
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
+	font-size: 1rem;
 }
 .asset-manager__file-image {
 	height: 1.5rem;
@@ -2504,28 +2509,39 @@ while the theme CSS file is loading */
 	letter-spacing: -1px;
 	font-weight: 800;
 	display: none;
+	font-size: 0.7rem;
+	opacity: 0.6;
 }
+
 .asset-manager__file--grid .asset-manager__file-ext {
 	display: block;
 }
+
+/* Hover action buttons */
 .asset-manager__file-actions {
 	position: absolute;
 	bottom: 0;
 	right: 0;
 	opacity: 0;
-	padding: 0.5rem 0;
+	padding: 0.4rem 0;
 	visibility: hidden;
-	transform: translateY(-0.5rem);
-	transition: 0.3s ease;
-	background-color: rgb(255 255 255 / 15%);
-	backdrop-filter: blur(5px);
+	transform: translateY(4px);
+	transition:
+		opacity 0.15s ease,
+		transform 0.15s ease,
+		visibility 0.15s ease;
+	background: rgb(0 0 0 / 50%);
+	backdrop-filter: blur(8px);
+	border-radius: 0.35rem;
 }
+
 .asset-manager__file--grid .asset-manager__file-actions {
 	left: 0;
 	bottom: 1.5em;
 }
+
 .asset-manager__file:hover .asset-manager__file-actions {
-	transform: translateY(0rem);
+	transform: translateY(0);
 	opacity: 1;
 	visibility: visible;
 }

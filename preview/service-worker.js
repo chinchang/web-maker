@@ -6,7 +6,7 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', function (event) {
-	console.log('fetch event', event.request.url, event.request);
+	// console.log('fetch event', event.request.url, event.request);
 	event.respondWith(
 		caches.open(CACHE_NAME).then(function (cache) {
 			return cache
@@ -65,7 +65,6 @@ self.addEventListener('message', function (e) {
 				var contentType = getContentType(url);
 				var response;
 				if (value instanceof Blob || value instanceof ArrayBuffer) {
-					console.log('Put in cache', url);
 					response = new Response(value, {
 						headers: { 'Content-Type': contentType }
 					});

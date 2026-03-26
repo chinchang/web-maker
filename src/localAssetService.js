@@ -82,3 +82,27 @@ export async function removeAsset(name) {
 }
 
 export const LOCAL_ASSET_PREFIX = '/local/';
+
+function blobToDataUrl(blob) {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onloadend = () => resolve(reader.result);
+		reader.onerror = reject;
+		reader.readAsDataURL(blob);
+	});
+}
+
+export async function replaceLocalAssetsWithDataUrls(html) {
+	const assets = await getAllAssets();
+	if (!assets.length) return html;
+
+	let result = html;
+	for (const asset of assets) {
+		const localUrl = LOCAL_ASSET_PREFIX + asset.name;
+		if (result.includes(localUrl)) {
+			const dataUrl = await blobToDataUrl(asset.blob);
+			result = result.split(localUrl).join(dataUrl);
+		}
+	}
+	return result;
+}

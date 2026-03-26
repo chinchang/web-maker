@@ -90,7 +90,7 @@ export function OnboardingModal(props) {
 							<Trans>
 								Follow{' '}
 								<a
-									href="https://twitter.com/intent/follow?screen_name=webmakerApp"
+									href="https://x.com/intent/follow?screen_name=webmakerApp"
 									targe="_blank"
 									rel="noopener noreferrer"
 								>

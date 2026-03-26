@@ -1082,8 +1082,8 @@ body > #demo-frame {
 }
 
 .footer__right {
-	font-size: 0;
-	line-height: 0;
+	display: flex;
+	align-items: center;
 }
 
 .footer__separator {
@@ -1097,7 +1097,7 @@ body > #demo-frame {
 	background: transparent;
 	border: 0;
 	padding: 0;
-	display: inline-block;
+	display: inline-flex;
 }
 .mode-btn:not(:first-child) {
 	margin-left: 10px;
@@ -2724,7 +2724,7 @@ while the theme CSS file is loading */
 /* DROPDOWN */
 .dropdown {
 	position: relative;
-	display: inline-block;
+	display: inline-flex;
 }
 
 .dropdown-menu {

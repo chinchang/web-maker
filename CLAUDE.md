@@ -13,13 +13,14 @@ Web-Maker is a blazing fast offline web playground that supports multiple prepro
 - `npm run dev` - Start development server with hot reload
 - `npm run build` - Production build using Preact CLI
 - `npm start` - Start dev server with preview server (combines dev + gulp start-preview-server)
+- `npm run start:all` - Start dev server + preview server + collab server
 
 ### Testing & Quality
 
-- `npm test` - Run Jest tests
+- `npm test` - Run Jest tests (uses `tests/` directory with mocks in `tests/__mocks__/`)
 - `npm run lint` - Run ESLint on src directory
 - `npm run cypress` - Run end-to-end tests with Cypress
-- `npm run cypress:open` - Open Cypress test runner
+- `npm run cypress:open` - Open Cypress test runner interactively
 
 ### Build Distribution
 
@@ -29,15 +30,15 @@ Web-Maker is a blazing fast offline web playground that supports multiple prepro
 
 ### Internationalization
 
-- `npm run extract` - Extract translatable strings
-- `npm run compile` - Compile translations
+- `npm run extract` - Extract translatable strings from source
+- `npm run compile` - Compile translations for runtime use
 - `npm run add-locale` - Add new locale
 
 ## Architecture Overview
 
 ### Core Structure
 
-- **src/components/app.jsx** - Main application component managing global state, modals, and user interactions
+- **src/components/app.jsx** - Main application component managing global state, modals, and user interactions. State flows down through props (no state management library).
 - **src/components/ContentWrap.jsx** - 3-pane editor layout (HTML/CSS/JS)
 - **src/components/ContentWrapFiles.jsx** - File-based project mode with sidebar navigation
 - **src/components/MainHeader.jsx** - Top toolbar with actions and controls
@@ -47,7 +48,7 @@ Web-Maker is a blazing fast offline web playground that supports multiple prepro
 - **src/itemService.js** - Handles creation storage/retrieval (local & cloud)
 - **src/firebaseInit.js** + **src/auth.js** - Firebase authentication and user management
 - **src/db.js** - Database abstraction layer for settings and local storage
-- **src/analytics.js** - Event tracking
+- **src/analytics.js** - Event tracking via GA; web app and extension use different GA configs
 - **src/notifications.js** - Alert system service
 
 ### Editor Infrastructure
@@ -55,50 +56,61 @@ Web-Maker is a blazing fast offline web playground that supports multiple prepro
 - **src/computes.js** - Code preprocessing (HTML/CSS/JS transformations)
 - **src/codeModes.js** - Defines supported preprocessors (Pug, SCSS, TypeScript, etc.)
 - **src/fileUtils.js** - File system operations for file-based projects
-- **src/utils.js** - Core utilities including HTML generation and preview handling
+- **src/utils.js** - Core utilities including HTML generation, preview handling, and `window.IS_EXTENSION` flag
 
 ### Build System
 
-- **gulpfile.js** - Complex build pipeline that packages for both web app and Chrome extension
-- **preact.config.js** - Preact CLI configuration with webpack customizations
-- Supports both traditional 3-pane mode and file-based project mode
+- **gulpfile.js** - Build pipeline that packages for both web app and Chrome extension
+- **preact.config.js** - Preact CLI configuration with webpack customizations (disables HTML minification, sets relative paths for prod)
 
 ### Preview System
 
-Sophisticated preview system that:
+The app communicates with the preview iframe via `postMessage`:
 
-- Generates complete HTML documents from separated HTML/CSS/JS
-- Supports preprocessor compilation
-- Handles external library injection
-- Includes service worker for offline file serving in file mode
+- Main app sends code to iframe: `frame.contentWindow.postMessage(obj, '*')`
+- Preview iframe sends console logs back: `mainWindow.postMessage({ logs }, '*')`
+- Preview frame runs on localhost:7888 (dev) or wbmakr.com (prod)
+- `src/lib/screenlog.js` handles console interception inside the preview
+- `src/detached-window.js` manages the detached preview window mode
 
 ### Extension Integration
 
-The Chrome extension shares the same codebase but includes additional files:
+The Chrome extension shares the same codebase. Key differences are handled via `window.IS_EXTENSION` (set in `src/utils.js`), which adds `is-extension` or `is-app` CSS class to body. Extension-specific files:
 
-- **src/manifest.json** - Extension manifest
-- **src/eventPage.js** - Background script
+- **src/manifest.json** - MV3 extension manifest
+- **src/eventPage.js** - Background service worker
 - **src/options.js** - Extension options page
 
-## Development Notes
+## Coding Patterns
 
-### Running Tests
+### Styling
 
-- Jest tests are in `tests/` directory with mocks in `tests/__mocks__/`
-- Cypress e2e tests cover core user workflows
-- Tests use browser mocks for extension APIs
+All styles live in **one file: `src/style.css`**. No CSS modules or component-scoped CSS.
 
-### File Mode vs 3-Pane Mode
+- Use BEM-like naming (e.g., `.help-modal__title`, `.console__log`)
+- Use CSS custom properties for theming: `:root` for dark theme, `body.light-theme` for light overrides
+- When adding light theme support, add `body.light-theme .your-class` overrides
 
-The application supports two distinct modes:
+### Layout Components
+
+Use `Stack`, `VStack`, `HStack` from `src/components/Stack.jsx` for flex layouts instead of writing custom CSS. They accept `gap` (index into predefined scale or raw value), `align`, `justify`, `wrap`, `fullWidth`, `fullHeight` props.
+
+### i18n
+
+All user-facing strings must be wrapped for translation using `@lingui/macro`:
+
+- JSX content: `<Trans>Hello world</Trans>`
+- Attribute strings: Use `<I18n>{({ i18n }) => <div title={i18n._(t`tooltip`)} />}</I18n>`
+- Config: `.linguirc.json` and `.babelrc` (includes `macros` plugin)
+- Locale files: `src/locales/{lang}/messages.js`
+
+### Cypress Tests
+
+- Tests in `cypress/integration/*.test.js`
+- Custom `cy.init()` command visits app and closes the welcome modal
+- Use `data-testid` attributes for element selection
+
+## File Mode vs 3-Pane Mode
 
 - **3-Pane Mode**: Traditional HTML/CSS/JS editors side-by-side
-- **File Mode**: Full file system with folder structure, currently limited to 2 projects for free users
-
-### Code Generation
-
-When working on the preview system or file handling, note that the app dynamically generates complete HTML documents and handles virtual file systems for the preview iframe.
-
-### State Management
-
-The main App component manages extensive global state including user authentication, current project, preferences, and modal states. Most state flows down through props rather than using a dedicated state management library.
+- **File Mode**: Full file system with folder structure, limited to 2 projects for free users, unlimited for PRO

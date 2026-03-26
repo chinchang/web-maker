@@ -61,19 +61,12 @@ self.addEventListener('message', function (e) {
 	caches.open(CACHE_NAME).then(function (cache) {
 		for (const url in e.data) {
 			if (Object.prototype.hasOwnProperty.call(e.data, url)) {
-				var value = e.data[url];
-				var contentType = getContentType(url);
-				var response;
-				if (value instanceof Blob || value instanceof ArrayBuffer) {
-					response = new Response(value, {
-						headers: { 'Content-Type': contentType }
-					});
-				} else {
-					response = new Response(value, {
-						headers: { 'Content-Type': contentType }
-					});
-				}
-				cache.put(url, response);
+				cache.put(
+					url,
+					new Response(e.data[url], {
+						headers: { 'Content-Type': getContentType(url) }
+					})
+				);
 			}
 		}
 	});

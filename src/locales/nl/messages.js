@@ -21,6 +21,8 @@
 		'Add Library': 'Bibliotheek toevoegen',
 		'Add a JS/CSS library': 'Voeg een JS/CSS-bibliotheek toe',
 		'Add collection': 'Verzameling toevoegen',
+		"Add files locally, usable only on this browser. Won't work for others if you share this publicly.":
+			'Voeg bestanden lokaal toe, alleen bruikbaar op deze browser. Werkt niet voor anderen als je dit openbaar deelt.',
 		'Add library': 'Bibliotheek toevoegen',
 		'Add the closing tag automatically on seeing an opening tag in HTML':
 			'Voeg automatisch de sluit-tag toe bij het zien van een openingstag in HTML',
@@ -45,6 +47,7 @@
 		'Close saved creations pane': 'Sluit het paneel met opgeslagen creaties',
 		'Close saved creations panel & modals':
 			'Sluit het paneel met opgeslagen creaties en modals',
+		Cloud: 'Cloud',
 		'Code blast!': 'Code explosie!',
 		Collab: 'Samenwerken',
 		'Collab Session': 'Samenwerkingssessie',
@@ -54,6 +57,7 @@
 		'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.':
 			'Configureer en pas instellingen aan door op het tandwielpictogram (<0><1/></0>) rechtsonder in de app te klikken.',
 		Console: 'Console',
+		'Contact the Developer': 'Neem contact op met de ontwikkelaar',
 		'Copy URL (or keep clicking to copy other formats)':
 			'Kopieer URL (of blijf klikken om andere formaten te kopi\xEBren)',
 		'Copy link': 'Kopieer link',
@@ -71,6 +75,8 @@
 			'Dubbelklik om het codepaneel te schakelen',
 		'Double click to toggle console': 'Dubbelklik om de console te schakelen',
 		'Download game as zip': 'Download spel als zip',
+		'Drop files or click here to add':
+			'Sleep bestanden hierheen of klik hier om toe te voegen',
 		'Drop files or click here to upload':
 			'Sleep bestanden of klik hier om te uploaden',
 		'Edit on CodePen': 'Bewerken op CodePen',
@@ -89,6 +95,10 @@
 			'Bestandmodi zijn momenteel alleen beschikbaar in de webapp. <0>Probeer de webapp nu</0>.',
 		Find: 'Zoeken',
 		'Find & replace': 'Zoeken & vervangen',
+		'Focus CSS pane': 'Focus CSS-paneel',
+		'Focus HTML pane': 'Focus HTML-paneel',
+		'Focus JS pane': 'Focus JS-paneel',
+		'Focus preview': 'Focus preview',
 		'Follow <0>@webmakerApp</0> to know about the new upcoming features!':
 			'Volg <0>@webmakerApp</0> om op de hoogte te blijven van de nieuwe aankomende functies!',
 		Font: 'Lettertype',
@@ -130,6 +140,7 @@
 		'Keyboard shortcuts': 'Toetsenbord sneltoetsen',
 		Language: 'Taal',
 		'Leave Session': 'Verlaat sessie',
+		'Leave a Review': 'Laat een beoordeling achter',
 		'Lets start!': 'Laten we beginnen!',
 		License: 'Licentie',
 		'Like this app? Please <0>rate it here</0>.':
@@ -138,11 +149,14 @@
 		'List view': 'Lijstweergave',
 		'Loads the last open creation when app starts':
 			'Laadt de laatste open creatie wanneer de app start',
+		Local: 'Lokaal',
 		'Login & upgrade to PRO': 'Inloggen & upgraden naar PRO',
 		'Login / Signup': 'Inloggen / Aanmelden',
 		'Login with Github': 'Inloggen met Github',
 		'Login with Google': 'Inloggen met Google',
 		'Login/Signup': 'Inloggen/Aanmelden',
+		'Made with <0>\u2764\uFE0F</0>& <1>\uD83D\uDE4C</1> by <2>Kushagra Gour</2>':
+			'Gemaakt met <0>\u2764\uFE0F</0>& <1>\uD83D\uDE4C</1> door <2>Kushagra Gour</2>',
 		'Made with <0>\uD83D\uDC96</0>& <1>\uD83D\uDE4C</1> by <2>Kushagra Gour</2>':
 			'Gemaakt met <0>\uD83D\uDC96</0>& <1>\uD83D\uDE4C</1> door <2>Kushagra Gour</2>',
 		'Mail me': 'Mail me',
@@ -154,6 +168,8 @@
 		'Manage your PRO subscription': 'Beheer je PRO-abonnement',
 		'Manage your code in files. Just like you would have files on your local machine.':
 			'Beheer je code in bestanden. Net zoals je bestanden op je lokale machine zou hebben.',
+		'Max 300KB per file': 'Max 300KB per bestand',
+		'Max 5MB per file': 'Max 5MB per bestand',
 		'Maximize pane': 'Maximaliseer paneel',
 		'Maximum time allowed in a loop iteration':
 			'Maximale tijd toegestaan in een lusiteratie',
@@ -194,6 +210,7 @@
 		'Put each library in new line':
 			'Plaats elke bibliotheek op een nieuwe regel',
 		'Read more': 'Lees meer',
+		'Read the documentation': 'Lees de documentatie',
 		'Read the documentation.': 'Lees de documentatie.',
 		'Realign code': 'Code opnieuw uitlijnen',
 		'Refresh preview': 'Preview vernieuwen',
@@ -202,6 +219,7 @@
 		"Refreshes the preview as you code. Otherwise use the 'Run' button":
 			"Vernieuwt de preview terwijl je codeert. Gebruik anders de 'Run' knop",
 		'Replace new tab page': 'Vervang nieuwe tabblad pagina',
+		'Report a Bug': 'Rapporteer een bug',
 		'Report a bug': 'Meld een bug',
 		'Review Web Maker': 'Beoordeel Web Maker',
 		Run: 'Uitvoeren',
@@ -252,6 +270,7 @@
 			'Overschakelen naar lay-out met voorbeeld aan de rechterkant',
 		'Switch to lighter version for better performance. Removes things like blur etc.':
 			'Overschakelen naar lichtere versie voor betere prestaties. Verwijdert dingen zoals vervaging etc.',
+		'Switch to tabbed layout': 'Schakel over naar tabbladindeling',
 		Tabs: 'Tabs',
 		'Take screenshot of preview': 'Neem screenshot van voorbeeld',
 		Theme: 'Thema',
@@ -272,6 +291,8 @@
 		'Upgrade to PRO and get some advanced superpowers!':
 			'Upgrade naar PRO en krijg enkele geavanceerde superkrachten!',
 		'Upload Image': 'Afbeelding uploaden',
+		'Upload assets to the cloud for use across devices.':
+			'Upload middelen naar de cloud voor gebruik op verschillende apparaten.',
 		'Upload/Use assets': 'Upload/Gebruik middelen',
 		'Use Monaco Editor': 'Gebruik Monaco Editor',
 		'Use experimental Monaco editor': 'Gebruik experimentele Monaco editor',

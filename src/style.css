@@ -2377,6 +2377,9 @@ while the theme CSS file is loading */
 	background-color: var(--tab-panel-bg);
 	border-radius: 0.5rem 0 0 0.5rem;
 }
+.light-theme .tabs {
+	--tab-panel-bg: rgba(0, 0, 0, 0.09);
+}
 .tabs__tabpanel-wrap {
 	flex: 1;
 }
@@ -2414,9 +2417,14 @@ while the theme CSS file is loading */
 
 .asset-manager__upload-box:hover {
 	border-color: rgb(255 255 255 / 25%);
-	background: rgb(255 255 255 / 3%);
 }
 
+.light-theme .asset-manager__upload-box {
+	border-color: rgb(0 0 0 / 10%);
+}
+.light-theme .asset-manager__upload-box:hover {
+	border-color: rgb(0 0 0 / 25%);
+}
 @keyframes move {
 	0% {
 		background-position: 0 0;
@@ -2475,8 +2483,7 @@ while the theme CSS file is loading */
 }
 .asset-manager__file-container--grid {
 	display: grid;
-	grid-template-columns: repeat(7, minmax(90px, 1fr));
-	max-width: 50rem;
+	grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
 }
 
 .asset-manager__file {

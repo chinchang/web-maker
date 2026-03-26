@@ -420,7 +420,7 @@ export default class ContentWrapFiles extends Component {
 	getMainSplitSizesToApply() {
 		var mainSplitSizes;
 		const sidebarWidth = 200;
-		const { currentItem, currentLayoutMode } = this.props;
+		const { currentItem } = this.props;
 		if (currentItem && currentItem.mainSizes) {
 			mainSplitSizes = currentItem.mainSizes;
 		} else {
@@ -602,9 +602,7 @@ export default class ContentWrapFiles extends Component {
 						sizes={this.state.mainSplitSizes}
 						minSize={150}
 						style=""
-						direction={
-							this.props.currentLayoutMode === 2 ? 'vertical' : 'horizontal'
-						}
+						direction={'horizontal'}
 						onDrag={this.mainSplitDragHandler.bind(this)}
 						onDragEnd={this.mainSplitDragEndHandler.bind(this)}
 					>

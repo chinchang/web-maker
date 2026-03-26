@@ -1153,7 +1153,13 @@ export default class App extends Component {
 		/* eslint-disable no-param-reassign */
 		mode = window.innerWidth < 600 ? 2 : mode;
 
-		if (this.state.currentLayoutMode === mode) {
+		// If layout is already applied, just return. Check in DOM as well because
+		// when we come back to 3-pane mode from files mode, state might be same
+		// but DOM class is missing
+		if (
+			this.state.currentLayoutMode === mode &&
+			document.body.classList.contains('layout-' + mode)
+		) {
 			this.contentWrap.resetSplitting();
 			// mainSplitInstance.setSizes(getMainSplitSizesToApply());
 			// codeSplitInstance.setSizes(currentItem.sizes || [33.33, 33.33, 33.33]);
@@ -1165,9 +1171,11 @@ export default class App extends Component {
 			window[`layoutBtn${layoutNumber}`]?.classList.remove('selected');
 			document.body.classList.remove(`layout-${layoutNumber}`);
 		});
-		$('#layoutBtn' + mode).classList.add('selected');
-		document.body.classList.add('layout-' + mode);
-
+		// if not files mode
+		if (!this.state.currentItem?.files) {
+			$('#layoutBtn' + mode).classList.add('selected');
+			document.body.classList.add('layout-' + mode);
+		}
 		this.setState({ currentLayoutMode: mode }, async () => {
 			this.contentWrap.resetSplitting();
 			await this.contentWrap.handleAllModeRequirements();

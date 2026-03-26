@@ -2366,7 +2366,7 @@ while the theme CSS file is loading */
 }
 .tabs__tab {
 	display: block;
-	padding: 10px;
+	padding: 1rem;
 	background: transparent;
 	border: 0;
 	text-align: left;

@@ -85,7 +85,20 @@ export function Changelog(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="6.9.0" {...props} isLatest={true}>
+			<Notification version="7.0.0" {...props} isLatest={true}>
+				<li>
+					<strong>Local Assets</strong>: Add images, scripts, and other files
+					from your machine and use them in your creations. Available to all
+					users, no PRO required. Access from the "Local" tab in the Assets
+					panel.
+				</li>
+				<li>
+					<strong>Babel Updated</strong>: ES6 (Babel) mode now uses Babel 7 with
+					modern JavaScript support.
+				</li>
+			</Notification>
+
+			<Notification version="6.9.0" {...props}>
 				<li>
 					<strong>Tabbed Layout</strong>: New layout option where the 3 code
 					panes show as tabs instead of side-by-side, giving you more vertical

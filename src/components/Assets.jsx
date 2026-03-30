@@ -22,6 +22,7 @@ import {
 	removeAsset,
 	LOCAL_ASSET_PREFIX
 } from '../localAssetService';
+import { trackEvent } from '../analytics';
 
 function getFileExtType(name) {
 	const ext = name.split('.').pop().toLowerCase();
@@ -111,6 +112,7 @@ function useCopyUrl() {
 					'URL copied as CSS image URL'
 				];
 				alertsService.add(msgs[lastCopied.count]);
+				trackEvent('ui', 'assetUrlCopied');
 			});
 		},
 		[lastCopied]
@@ -282,6 +284,7 @@ const LocalAssets = ({ i18n }) => {
 		try {
 			await addAsset(file);
 			alertsService.add('Local asset added');
+			trackEvent('ui', 'localAssetAdded');
 			loadLocalAssets();
 		} catch (e) {
 			alert(e.message);
@@ -304,6 +307,7 @@ const LocalAssets = ({ i18n }) => {
 		try {
 			await removeAsset(file.name);
 			alertsService.add('Local asset deleted');
+			trackEvent('ui', 'localAssetDeleted');
 			loadLocalAssets();
 		} catch (e) {
 			console.error('Error removing local asset:', e);

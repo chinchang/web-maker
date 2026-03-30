@@ -822,7 +822,7 @@ body:not(.light-version).overlay-visible .main-container {
 .is-minimized .code-wrap__header .caret {
 	opacity: 0;
 }
-.is-minimized
+.code-wrap.is-minimized
 	.code-wrap__header-right-options
 	.code-wrap__header-btn:not(.code-wrap__hide-btn) {
 	display: none;

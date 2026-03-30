@@ -115,7 +115,7 @@ export class Console extends PureComponent {
 										</svg>
 									</a>
 									<a
-										class="code-wrap__header-btn  code-wrap__collapse-btn"
+										class="code-wrap__header-btn  code-wrap__hide-btn"
 										title={i18n._(t`Toggle console`)}
 										onClick={toggleConsole}
 										data-testid="toggleConsole"

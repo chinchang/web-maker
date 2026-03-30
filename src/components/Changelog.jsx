@@ -85,7 +85,14 @@ export function Changelog(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="7.0.0" {...props} isLatest={true}>
+			<Notification version="7.0.1" {...props} isLatest={true}>
+				<NotificationItem type="bug">
+					Console open/close button now shows correctly and toggles between
+					minimize and maximize icons.
+				</NotificationItem>
+			</Notification>
+
+			<Notification version="7.0.0" {...props}>
 				<li>
 					<strong>Local Assets</strong>: Add images, scripts, and other files
 					from your machine and use them in your creations. Available to all

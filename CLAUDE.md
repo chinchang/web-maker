@@ -104,6 +104,10 @@ All user-facing strings must be wrapped for translation using `@lingui/macro`:
 - Config: `.linguirc.json` and `.babelrc` (includes `macros` plugin)
 - Locale files: `src/locales/{lang}/messages.js`
 
+### Changelog
+
+The changelog is in `src/components/Changelog.jsx`. Each version is a `<Notification>` component with `version` prop. The latest version should have `isLatest={true}`. Individual items use `<NotificationItem type="bug|ui|a11y">` or plain `<li>` with `<strong>` for feature names.
+
 ### Cypress Tests
 
 - Tests in `cypress/integration/*.test.js`

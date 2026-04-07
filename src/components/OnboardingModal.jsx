@@ -2,6 +2,8 @@ import { h } from 'preact';
 import { Trans } from '@lingui/macro';
 import Modal from './Modal.jsx';
 import { Stack } from './Stack.jsx';
+import { ProBadge } from './ProBadge';
+import { trackEvent } from '../analytics';
 
 export function OnboardingModal(props) {
 	return (
@@ -118,10 +120,32 @@ export function OnboardingModal(props) {
 				</Trans>
 			</p>
 
-			<Stack justify="center">
+			<div class="tac pro-upsell-banner">
+				<p class="mb-0">
+					<Trans>
+						Need more power? <ProBadge /> unlocks unlimited public creations,
+						unlimited Files mode projects, cloud asset hosting, and real-time
+						multiplayer collab sessions.
+					</Trans>
+				</p>
+			</div>
+
+			<Stack classes="mt-2" justify="center" gap={1}>
 				<button class="btn btn--primary" onClick={props.closeHandler}>
 					<Trans>Lets start!</Trans>
 				</button>
+				{props.onProClick && (
+					<button
+						type="button"
+						class="btn btn--pro"
+						onClick={() => {
+							trackEvent('ui', 'onboardingProClick');
+							props.onProClick();
+						}}
+					>
+						<Trans>See PRO</Trans>
+					</button>
+				)}
 			</Stack>
 		</Modal>
 	);

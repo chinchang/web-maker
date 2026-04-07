@@ -7,6 +7,7 @@ import { BetaTag } from './common';
 import { trackEvent } from '../analytics';
 import Tabs, { TabPanel } from './Tabs';
 import { ProBadge } from './ProBadge';
+import { HStack } from './Stack';
 
 export class CreateNewModal extends Component {
 	constructor(props) {
@@ -30,7 +31,8 @@ export class CreateNewModal extends Component {
 			onBlankTemplateSelect,
 			onBlankFileTemplateSelect,
 			onImportGithubRepoSelect,
-			onTemplateSelect
+			onTemplateSelect,
+			onProModalOpen
 		} = this.props;
 		const option1 = (
 			<div style="flex:1;" class="tac">
@@ -211,12 +213,29 @@ export class CreateNewModal extends Component {
 							})}
 						</div>
 						{!window.user?.isPro && (
-							<p>
-								<Trans>
-									2 files mode creations available in Free plan. To create
-									unlimited files mode creations, upgrade to <ProBadge />.
-								</Trans>
-							</p>
+							<div
+								class="mt-2 pro-upsell-banner"
+								style="padding:1rem;border-radius:6px;border:1px solid rgba(103,77,173,0.4);display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap;"
+							>
+								<p class="mt-0 mb-0">
+									<Trans>
+										Free plan includes 2 Files mode creations. Upgrade to{' '}
+										<ProBadge /> for unlimited Files mode, cloud assets & more
+									</Trans>
+								</p>
+								{onProModalOpen && (
+									<button
+										type="button"
+										class="btn btn--pro"
+										onClick={() => {
+											trackEvent('ui', 'createNewFilesUpgradeClick');
+											onProModalOpen();
+										}}
+									>
+										<Trans>Upgrade to PRO</Trans>
+									</button>
+								)}
+							</div>
 						)}
 						<div class="show-when-extension">
 							<Trans>

@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import { ProBadge } from './ProBadge';
 import { HStack, Stack, VStack } from './Stack';
-import Switch from './Switch';
 import { alertsService } from '../notifications';
 import { A, Button } from './common';
 import { useCheckout } from '../hooks/useCheckout';
@@ -17,7 +16,6 @@ const checkoutIds = {
 };
 export function Pro({ user, onLoginClick, onBuyFromExtensionClick }) {
 	const hasCheckoutLoaded = useCheckout();
-	const [isAnnual, setIsAnnual] = useState(true);
 
 	useEffect(() => {
 		if (hasCheckoutLoaded) {
@@ -76,21 +74,11 @@ export function Pro({ user, onLoginClick, onBuyFromExtensionClick }) {
 	}
 	return (
 		<VStack gap={4} align="stretch">
-			{/* <Stack justify="center">
-				<Switch
-					labels={['Monthly', 'Annually']}
-					checked={isAnnual}
-					showBothLabels={true}
-					onChange={e => {
-						setIsAnnual(e.target.checked);
-					}}
-				/>
-			</Stack> */}
-
 			<VStack gap={2} align="stretch">
 				<Stack gap={2} align="stretch" justify="center">
 					<Card
-						price="Free"
+						price="$0"
+						priceSuffix="forever"
 						subTitle="&nbsp;"
 						name="FREE"
 						features={[
@@ -102,8 +90,10 @@ export function Pro({ user, onLoginClick, onBuyFromExtensionClick }) {
 					/>
 					<Card
 						bg="#674dad"
-						price={'Starting $6/mo'}
-						subTitle="Annual & One-time pricing available"
+						highlight
+						price="$4"
+						priceSuffix="/month"
+						subTitle="Annual & one-time pricing available"
 						name="Pro"
 						action={upgradeActionEl}
 						features={[
@@ -164,20 +154,39 @@ export function Pro({ user, onLoginClick, onBuyFromExtensionClick }) {
 	);
 }
 
-const Card = ({ bg, name, price, subTitle, action, features }) => {
+const Card = ({
+	bg,
+	name,
+	price,
+	priceSuffix,
+	subTitle,
+	action,
+	features,
+	highlight
+}) => {
 	return (
-		<div class="plan-card" style={{ background: bg }}>
+		<div
+			class={`plan-card${highlight ? ' plan-card--highlight' : ''}`}
+			style={{ background: bg }}
+		>
 			<VStack gap={2} align="stretch" justify="flex-start">
 				<VStack gap={0} align="stretch" justify="flex-start">
 					<Text transform="uppercase" weight="600">
 						{name}
 					</Text>
-					{/* <Text size="5" weight="800" appearance="primary">
-						{price}
-					</Text>
-					<Text size="1" weight="400">
+					<HStack gap={0.5} align="baseline">
+						<Text size="5" weight="800" appearance="primary">
+							{price}
+						</Text>
+						{priceSuffix ? (
+							<Text size="1" weight="400" appearance="secondary">
+								{priceSuffix}
+							</Text>
+						) : null}
+					</HStack>
+					<Text size="1" weight="400" appearance="secondary">
 						{subTitle}
-					</Text> */}
+					</Text>
 				</VStack>
 				{action}
 				{!action && (

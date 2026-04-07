@@ -76,7 +76,7 @@ import { Assets } from './Assets.jsx';
 import { LocalStorageKeys } from '../constants.js';
 import { Share } from './Share.jsx';
 import { Pro } from './Pro.jsx';
-import { VStack } from './Stack.jsx';
+import { HStack, VStack } from './Stack.jsx';
 import { ProBadge } from './ProBadge.jsx';
 import { Text } from './Text.jsx';
 import { ProOnAppModal } from './ProOnAppModal.js';
@@ -289,7 +289,8 @@ export default class App extends Component {
 						newUser = {
 							...newUser,
 							isPro: false,
-							...customUser
+							...customUser,
+							isPro: false
 						};
 						window.user = newUser;
 						this.setState({ user: newUser, prefs }, this.updateSetting);
@@ -2402,6 +2403,12 @@ export default class App extends Component {
 					<OnboardingModal
 						show={this.state.isOnboardModalOpen}
 						closeHandler={() => this.setState({ isOnboardModalOpen: false })}
+						onProClick={() =>
+							this.setState({
+								isOnboardModalOpen: false,
+								isProModalOpen: true
+							})
+						}
 					/>
 					<Js13KModal
 						show={this.state.isJs13KModalOpen}
@@ -2418,6 +2425,12 @@ export default class App extends Component {
 						onImportGithubRepoSelect={this.importGithubRepoSelectHandler.bind(
 							this
 						)}
+						onProModalOpen={() =>
+							this.setState({
+								isCreateNewModalOpen: false,
+								isProModalOpen: true
+							})
+						}
 					/>
 					<ProOnAppModal
 						show={this.state.isProOnAppModalOpen}
@@ -2445,14 +2458,38 @@ export default class App extends Component {
 						closeHandler={() => this.setState({ isFilesLimitModalOpen: false })}
 					>
 						<VStack align="stretch" gap={2}>
-							<Text tag="p">
-								You have used your quota of 2 'Files mode' creations in Free
-								plan.
+							<Text tag="h2" size="4" weight="700">
+								Free plan limit reached
 							</Text>
 							<Text tag="p">
-								You can choose to delete old ones to free quota or upgrade to{' '}
-								<ProBadge />.{' '}
+								You have used your quota of 2 'Files mode' creations in the Free
+								plan. Upgrade to <ProBadge /> for unlimited Files mode
+								creations, cloud assets, multiplayer collab and more.
 							</Text>
+							<HStack gap={1} justify="flex-end">
+								<button
+									type="button"
+									className="btn"
+									onClick={() =>
+										this.setState({ isFilesLimitModalOpen: false })
+									}
+								>
+									Not now
+								</button>
+								<button
+									type="button"
+									className="btn btn--pro"
+									onClick={() => {
+										trackEvent('ui', 'filesLimitUpgradeClick');
+										this.setState({
+											isFilesLimitModalOpen: false,
+											isProModalOpen: true
+										});
+									}}
+								>
+									Upgrade to PRO
+								</button>
+							</HStack>
 						</VStack>
 					</Modal>
 					<CommandPalette

@@ -2606,6 +2606,18 @@ while the theme CSS file is loading */
 		5px 10px 12.6px -2.5px hsl(var(--shadow-color) / 0.36);
 
 	box-shadow: var(--shadow-elevation-low);
+	min-width: 14rem;
+}
+.pro-upsell-banner {
+	padding: 1rem;
+	border-radius: 6px;
+	border: 1px solid rgba(103, 77, 173, 0.4);
+}
+.plan-card--highlight {
+	box-shadow:
+		var(--shadow-elevation-medium),
+		0 0 0 2px rgb(255 255 255 / 15%);
+	transform: translateY(-2px);
 }
 .testimonial-card {
 	background: rgb(255 255 255 / 5%);

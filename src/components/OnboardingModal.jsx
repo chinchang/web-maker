@@ -29,7 +29,11 @@ export function OnboardingModal(props) {
 								startOffset="50%"
 								text-anchor="middle"
 							>
-								WEB MAKER
+								{'WEB MAKER'.split('').map(ch => (
+									<tspan class="om__arc-letter">
+										{ch === ' ' ? '\u00A0' : ch}
+									</tspan>
+								))}
 							</textPath>
 						</text>
 					</svg>

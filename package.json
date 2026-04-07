@@ -95,6 +95,9 @@
 		"y-websocket": "^3.0.0",
 		"yjs": "^13.6.29"
 	},
+	"overrides": {
+		"@y/protocols": "1.0.6-3"
+	},
 	"engines": {
 		"node": ">=20"
 	},

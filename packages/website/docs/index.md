@@ -14,6 +14,7 @@ title: 'Documentation'
 - [Layouts](/docs/layouts)
 - [Keyboard Shortcuts](/docs/keyboard-shortcuts)
 - [Settings](/docs/settings)
+- [URL Parameters](/docs/url-parameters)
 - [From the Developer](/docs/from-the-developer)
 - [Pre-processors](/docs/preprocessors)
 - [Pro](/docs/pro)

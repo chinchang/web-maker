@@ -1,152 +1,181 @@
 import { h } from 'preact';
 import { Trans } from '@lingui/macro';
 import Modal from './Modal.jsx';
-import { Stack } from './Stack.jsx';
+import { HStack, VStack } from './Stack.jsx';
 import { ProBadge } from './ProBadge';
 import { trackEvent } from '../analytics';
+
+function StepNumber({ n }) {
+	return <span class="om-step__num">{n}</span>;
+}
 
 export function OnboardingModal(props) {
 	return (
 		<Modal show={props.show} closeHandler={props.closeHandler}>
-			<Stack gap={3} justify="center" align="center">
-				<svg width="83" height="32" aria-hidden="true">
-					<use xlinkHref="#logo" />
-				</svg>
-				<h1>
-					<Trans>Welcome to Web Maker</Trans>
-				</h1>
-			</Stack>
+			<VStack classes="om" gap={3} align="stretch">
+				<VStack classes="om__header" gap={1} align="center">
+					<span class="om__eyebrow">Welcome to</span>
+					<svg class="om__arc" viewBox="0 0 520 200" aria-label="Web Maker">
+						<defs>
+							<path
+								id="om-arc-path"
+								d="M 40,180 A 380,380 0 0 1 480,180"
+								fill="none"
+							/>
+						</defs>
+						<text class="om__arc-text">
+							<textPath
+								href="#om-arc-path"
+								startOffset="50%"
+								text-anchor="middle"
+							>
+								WEB MAKER
+							</textPath>
+						</text>
+					</svg>
+					<p class="om__subtitle">
+						<Trans>
+							A blazing-fast, offline code editor for the web. Three things to
+							know before you start.
+						</Trans>
+					</p>
+				</VStack>
 
-			<div
-				class="flex--desk"
-				style="margin-top:40px; display:grid; grid-template-columns:1fr 1fr"
-			>
-				<div class="onboard-step onboard-step--full-width show-when-app hide-on-mobile">
-					<Stack gap={1} align="center">
-						<svg class="onboard-step__icon" viewBox="0 0 24 24">
-							<path d="M13.64,21.97C13.14,22.21 12.54,22 12.31,21.5L10.13,16.76L7.62,18.78C7.45,18.92 7.24,19 7,19A1,1 0 0,1 6,18V3A1,1 0 0,1 7,2C7.24,2 7.47,2.09 7.64,2.23L7.65,2.22L19.14,11.86C19.57,12.22 19.62,12.85 19.27,13.27C19.12,13.45 18.91,13.57 18.7,13.61L15.54,14.23L17.74,18.96C18,19.46 17.76,20.05 17.26,20.28L13.64,21.97Z" />
-						</svg>
-
-						<p>
-							<Trans>
-								Open Web Maker anytime by visiting{' '}
-								<a>https://webmaker.app/create/</a> - Even when you are offline!
-								It just works! 😱{' '}
-								<strong>Drag the following bookmarklet</strong> on your bookmark
-								bar to create a quick access shortcut:
-							</Trans>
-							<a class="ml-1 bookmarklet" href="https://webmaker.app/create/">
-								<svg width="20" height="20" aria-hidden="true">
+				<VStack classes="om__steps" gap={1} align="stretch">
+					<HStack
+						classes="om-step show-when-app hide-on-mobile"
+						gap={2}
+						align="flex-start"
+					>
+						<StepNumber n="01" />
+						<VStack gap={1} align="flex-start">
+							<span class="om-step__label">
+								<Trans>Open anywhere, even offline</Trans>
+							</span>
+							<p class="om-step__body">
+								<Trans>
+									Visit <a>https://webmaker.app/create/</a> any time — it works
+									offline. Drag the bookmarklet onto your bookmark bar for
+									one-click access:
+								</Trans>
+							</p>
+							<a class="bookmarklet" href="https://webmaker.app/create/">
+								<svg width="16" height="16" aria-hidden="true">
 									<use xlinkHref="#logo" />
 								</svg>
 								Web Maker
 							</a>
-						</p>
-					</Stack>
-				</div>
-				<div class="onboard-step onboard-step--full-width show-when-extension">
-					<Stack gap={1} align="center">
-						<svg class="onboard-step__icon" viewBox="0 0 24 24">
-							<path d="M13.64,21.97C13.14,22.21 12.54,22 12.31,21.5L10.13,16.76L7.62,18.78C7.45,18.92 7.24,19 7,19A1,1 0 0,1 6,18V3A1,1 0 0,1 7,2C7.24,2 7.47,2.09 7.64,2.23L7.65,2.22L19.14,11.86C19.57,12.22 19.62,12.85 19.27,13.27C19.12,13.45 18.91,13.57 18.7,13.61L15.54,14.23L17.74,18.96C18,19.46 17.76,20.05 17.26,20.28L13.64,21.97Z" />
-						</svg>
+						</VStack>
+					</HStack>
 
-						<p>
-							<Trans>
-								Open Web Maker anytime by clicking the
-								<svg class="relative" style="top:5px;" width="40" height="30">
-									<use xlinkHref="#logo" />
-								</svg>{' '}
-								button in top-right side of your browser.
-							</Trans>
-						</p>
-					</Stack>
-				</div>
-
-				<div class="onboard-step">
-					<Stack gap={1} align="center">
-						<svg class="onboard-step__icon" viewBox="0 0 24 24">
-							<use xlinkHref="#settings-icon" />
-						</svg>
-
-						<p>
-							<Trans>
-								Configure and customize settings by clicking the gear icon (
-								<svg
-									style="width:18px;height:18px;position:relative;top:3px;fill:#888"
-									viewBox="0 0 24 24"
-								>
-									<use xlinkHref="#settings-icon" />
-								</svg>
-								) in bottom right of the app.
-							</Trans>
-						</p>
-					</Stack>
-				</div>
-				<div class="onboard-step">
-					<Stack gap={1} align="center">
-						<svg class="onboard-step__icon" style="stroke-width:0.3px;">
-							<use xlinkHref="#twitter-icon" />
-						</svg>
-
-						<p>
-							<Trans>
-								Follow{' '}
-								<a
-									href="https://x.com/intent/follow?screen_name=webmakerApp"
-									targe="_blank"
-									rel="noopener noreferrer"
-								>
-									@webmakerApp
-								</a>{' '}
-								to know about the new upcoming features!
-							</Trans>
-						</p>
-					</Stack>
-				</div>
-			</div>
-
-			<p class="tac show-when-app">
-				<Trans>
-					If you are an existing Chrome extension user, you can import your
-					creations from there to here.{' '}
-					<a
-						href="https://medium.com/web-maker/importing-exporting-your-creations-d92e7de5c3dc"
-						target="_blank"
-						rel="noopener noreferrer"
+					<HStack
+						classes="om-step show-when-extension"
+						gap={2}
+						align="flex-start"
 					>
-						Learn how to export/import
-					</a>
-					.
-				</Trans>
-			</p>
+						<StepNumber n="01" />
+						<VStack gap={1} align="flex-start">
+							<span class="om-step__label">
+								<Trans>Open from your toolbar</Trans>
+							</span>
+							<p class="om-step__body">
+								<Trans>
+									Click the Web Maker icon in the top-right of your browser any
+									time you want to start tinkering.
+								</Trans>
+							</p>
+						</VStack>
+					</HStack>
 
-			<div class="tac pro-upsell-banner">
-				<p class="mb-0">
+					<HStack classes="om-step" gap={2} align="flex-start">
+						<StepNumber n="02" />
+						<VStack gap={1} align="flex-start">
+							<span class="om-step__label">
+								<Trans>Make it yours</Trans>
+							</span>
+							<p class="om-step__body">
+								<Trans>
+									Customize editor, theme, key bindings and more from the
+									settings gear in the bottom-right corner.
+								</Trans>
+							</p>
+						</VStack>
+					</HStack>
+
+					<HStack classes="om-step" gap={2} align="flex-start">
+						<StepNumber n="03" />
+						<VStack gap={1} align="flex-start">
+							<span class="om-step__label">
+								<Trans>Stay in the loop</Trans>
+							</span>
+							<p class="om-step__body">
+								<Trans>
+									Follow{' '}
+									<a
+										href="https://x.com/intent/follow?screen_name=webmakerApp"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										@webmakerApp
+									</a>{' '}
+									for new features and release notes.
+								</Trans>
+							</p>
+						</VStack>
+					</HStack>
+				</VStack>
+
+				<p class="om__import-note show-when-app">
 					<Trans>
-						Need more power? <ProBadge /> unlocks unlimited public creations,
-						unlimited Files mode projects, cloud asset hosting, and real-time
-						multiplayer collab sessions.
+						Coming from the Chrome extension?{' '}
+						<a
+							href="https://medium.com/web-maker/importing-exporting-your-creations-d92e7de5c3dc"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Learn how to import your creations
+						</a>
+						.
 					</Trans>
 				</p>
-			</div>
 
-			<Stack classes="mt-2" justify="center" gap={1}>
-				<button class="btn btn--primary" onClick={props.closeHandler}>
-					<Trans>Lets start!</Trans>
-				</button>
-				{props.onProClick && (
+				<VStack classes="om-pro" gap={1} align="flex-start">
+					<HStack gap={1} align="center">
+						<ProBadge />
+						<span class="om-pro__title">
+							<Trans>Want more super-powers?</Trans>
+						</span>
+					</HStack>
+					<p class="om-pro__body">
+						<Trans>
+							PRO unlocks unlimited public creations, unlimited Files mode
+							projects, cloud asset hosting and real-time multiplayer collab.
+						</Trans>
+					</p>
+				</VStack>
+
+				<HStack classes="om__actions" gap={1} justify="flex-end" align="center">
+					{props.onProClick && (
+						<button
+							type="button"
+							class="btn om__btn-secondary"
+							onClick={() => {
+								trackEvent('ui', 'onboardingProClick');
+								props.onProClick();
+							}}
+						>
+							<Trans>See PRO</Trans>
+						</button>
+					)}
 					<button
 						type="button"
-						class="btn btn--pro"
-						onClick={() => {
-							trackEvent('ui', 'onboardingProClick');
-							props.onProClick();
-						}}
+						class="btn btn--primary om__btn-primary"
+						onClick={props.closeHandler}
 					>
-						<Trans>See PRO</Trans>
+						<Trans>Let's start</Trans>
 					</button>
-				)}
-			</Stack>
+				</HStack>
+			</VStack>
 		</Modal>
 	);
 }

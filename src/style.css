@@ -6,6 +6,7 @@
 	--color-overlay: rgb(0 0 0 / 40%);
 	--color-close-btn: #d12b4a;
 	--code-font-size: 16px;
+	--color-accent: #e3ba26;
 	--color-button: #e3ba26;
 	--color-focus-outline: #d3a447;
 	--color-form-control-bg: #2c214b;
@@ -2062,7 +2063,7 @@ body.is-logged-in .hide-on-login,
 body:not(.is-logged-in) .hide-on-logout,
 body:not(.is-extension) .show-when-extension,
 body:not(.is-app) .show-when-app {
-	display: none;
+	display: none !important;
 }
 
 .onboard-selection {
@@ -2613,6 +2614,175 @@ while the theme CSS file is loading */
 	border-radius: 6px;
 	border: 1px solid rgba(103, 77, 173, 0.4);
 }
+
+/* ========= Onboarding Modal ========= */
+.om {
+	max-width: 540px;
+	margin: 0 auto;
+}
+.om__header {
+	padding-bottom: 1.25rem;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	text-align: center;
+}
+body.light-version .om__header {
+	border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+.om__arc {
+	display: block;
+	width: 100%;
+	max-width: 480px;
+	height: auto;
+	margin: -4rem auto -3rem;
+	overflow: visible;
+}
+.om__arc-text {
+	font-size: 60px;
+	font-weight: 900;
+	letter-spacing: 0.04em;
+	fill: var(--color-accent);
+	text-transform: uppercase;
+}
+.om__eyebrow {
+	font-family: 'SF Mono', 'Menlo', 'Consolas', ui-monospace, monospace;
+	font-size: 0.7rem;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	/* color: var(--color-pro-1, #1fffb3); */
+	opacity: 0.85;
+}
+.om__logo {
+	fill: var(--color-heading);
+	flex-shrink: 0;
+}
+.om__title {
+	margin: 0;
+	font-size: 1.85rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	line-height: 1.1;
+	color: var(--color-heading);
+}
+.om__subtitle {
+	margin: 0.25rem 0 0;
+	font-size: 0.95rem;
+	line-height: 1.5;
+	color: var(--color-text-light);
+	max-width: 44ch;
+	text-align: center;
+}
+.om__steps {
+	padding: 0.25rem 0;
+}
+.om-step {
+	padding: 0.85rem 0.25rem;
+	border-bottom: 1px dashed rgba(255, 255, 255, 0.07);
+}
+body.light-version .om-step {
+	border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+.om-step:last-child {
+	border-bottom: none;
+}
+.om-step__num {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.1rem;
+	height: 2.1rem;
+	padding: 0 0.4rem;
+	border-radius: 999px;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	background: rgba(255, 255, 255, 0.04);
+	font-family: 'SF Mono', 'Menlo', 'Consolas', ui-monospace, monospace;
+	font-size: 0.78rem;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	color: var(--color-text);
+	flex-shrink: 0;
+	margin-top: 0.15rem;
+}
+body.light-version .om-step__num {
+	border-color: rgba(0, 0, 0, 0.12);
+	background: rgba(0, 0, 0, 0.03);
+}
+.om-step__label {
+	font-size: 0.95rem;
+	font-weight: 600;
+	color: var(--color-heading);
+	letter-spacing: -0.005em;
+}
+.om-step__body {
+	margin: 0;
+	font-size: 0.88rem;
+	line-height: 1.55;
+	color: var(--color-text-light);
+}
+.om-step__body a {
+	color: var(--color-text);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+	text-decoration: none;
+}
+.om-step__body a:hover {
+	border-bottom-color: var(--color-pro-1, #1fffb3);
+}
+.om__import-note {
+	margin: 0;
+	font-size: 0.8rem;
+	color: var(--color-text-lightest-final);
+	text-align: center;
+}
+.om__import-note a {
+	color: var(--color-text-light);
+}
+.om-pro {
+	padding: 1rem 1.1rem;
+	border-radius: 0.6rem;
+	background: linear-gradient(
+		135deg,
+		rgba(31, 255, 179, 0.06),
+		rgba(242, 255, 0, 0.04)
+	);
+	border: 1px solid rgba(31, 255, 179, 0.22);
+}
+.om-pro__title {
+	font-size: 0.95rem;
+	font-weight: 600;
+	color: var(--color-heading);
+}
+.om-pro__body {
+	margin: 0;
+	font-size: 0.85rem;
+	line-height: 1.55;
+	color: var(--color-text-light);
+}
+.om__actions {
+	padding-top: 1rem;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+body.light-version .om__actions {
+	border-top-color: rgba(0, 0, 0, 0.08);
+}
+.om__btn-secondary {
+	background: transparent;
+	border-color: rgba(255, 255, 255, 0.18);
+	color: var(--color-text);
+}
+body.light-version .om__btn-secondary {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+.om__btn-primary {
+	min-width: 7rem;
+}
+@media (max-width: 600px) {
+	.om__title {
+		font-size: 1.5rem;
+	}
+	.om-step {
+		padding: 0.7rem 0.1rem;
+	}
+}
+/* ========= /Onboarding Modal ========= */
 .plan-card--highlight {
 	box-shadow:
 		var(--shadow-elevation-medium),

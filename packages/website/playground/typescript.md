@@ -26,6 +26,7 @@ sampleCode: |
 
   console.log(greetUser(user));
 layout: playground.html
+createUrl: '/create/?jsMode=typescript&js=interface%20User%20%7B%20name%3A%20string%20%7D%0Aconst%20u%3A%20User%20%3D%20%7B%20name%3A%20%27Alice%27%20%7D%3B%0Aconsole.log(%60Hello%2C%20%24%7Bu.name%7D%60)%3B'
 description: 'Free online TypeScript compiler and playground. Write TypeScript code and compile to JavaScript instantly. Works offline. Perfect for learning and prototyping.'
 ---
 

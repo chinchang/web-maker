@@ -33,7 +33,7 @@ description: 'Compare Web Maker and CodePen side-by-side. Discover which online 
 </tr>
 <tr>
 <td><strong>Real-time Collaboration</strong></td>
-<td><span class="check">Yes</span></td>
+<td><span class="partial">Pro only</span></td>
 <td><span class="partial">Pro only</span></td>
 </tr>
 <tr>
@@ -89,7 +89,7 @@ description: 'Compare Web Maker and CodePen side-by-side. Discover which online 
 <li><strong>Offline coding</strong> - Code on flights, trains, or areas with poor connectivity</li>
 <li><strong>Privacy</strong> - Your code never leaves your device unless you choose to sync</li>
 <li><strong>Speed</strong> - Instant loading with no network latency</li>
-<li><strong>Free collaboration</strong> - Share and code together without a paid subscription</li>
+<li><strong>Affordable collaboration</strong> - Real-time collab on Web Maker Pro at $6/month vs CodePen Pro at $12/month</li>
 <li><strong>Quick prototyping</strong> - Jump straight into coding without signing up</li>
 <li><strong>Teaching/Interviews</strong> - Works reliably in any environment</li>
 </ul>
@@ -146,9 +146,11 @@ Both editors support popular preprocessors, but Web Maker includes them built-in
 
 ### Real-time Collaboration
 
-**Web Maker** includes free real-time collaboration. Share a link and code together instantly - perfect for pair programming, teaching, or technical interviews.
+**Web Maker** includes real-time collaboration on its Pro plan ($6/month). Built on Yjs CRDTs for conflict-free multi-user editing. Share a link and code together instantly — perfect for pair programming, teaching, or technical interviews.
 
 **CodePen** restricts real-time collaboration (Collab Mode) to Pro subscribers at $12/month.
+
+Both products gate collab behind a paid plan, but Web Maker Pro is half the price.
 
 ### Privacy & Data
 
@@ -179,7 +181,7 @@ Web Maker's local-first architecture means near-instant loading and preview upda
 
 <div class="verdict-box">
 <h3>The Verdict</h3>
-<p><strong>Choose Web Maker</strong> if you value offline access, privacy, speed, and free collaboration. It's the better choice for learning, prototyping, teaching, and professional development work.</p>
+<p><strong>Choose Web Maker</strong> if you value offline access, privacy, speed, and affordable collaboration. It's the better choice for learning, prototyping, teaching, and professional development work.</p>
 <p><strong>Choose CodePen</strong> if you want to be part of a community, showcase your work publicly, embed demos in blog posts, or discover inspiring creations from other developers.</p>
 <p>The good news? You can use both! Many developers use Web Maker for daily development and prototyping, then export to CodePen when they want to share publicly.</p>
 </div>

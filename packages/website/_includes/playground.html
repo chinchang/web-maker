@@ -20,7 +20,7 @@ layout: default.html
 			<p class="pg-hero__subtitle">{{ subtitle }}</p>
 			<div class="pg-hero__actions">
 				<a
-					href="/create/"
+					href="{{ createUrl | default: '/create/' }}"
 					class="pg-btn pg-btn--primary"
 					style="--btn-color: {{ accentColor }}"
 				>
@@ -158,7 +158,7 @@ layout: default.html
 		<h2 class="pg-cta__title">Start writing {{ shortName }} now</h2>
 		<p class="pg-cta__text">Free. No signup. Works offline.</p>
 		<a
-			href="/create/"
+			href="{{ createUrl | default: '/create/' }}"
 			class="pg-btn pg-btn--primary pg-btn--large"
 			style="--btn-color: {{ accentColor }}"
 		>

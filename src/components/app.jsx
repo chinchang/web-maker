@@ -103,7 +103,11 @@ const version = '7.0.1';
 window.forcedSettings = {};
 window.codeHtml = '';
 window.codeCss = '';
+window.codeJs = '';
 window.codeLayout = null;
+window.forcedHtmlMode = null;
+window.forcedCssMode = null;
+window.forcedJsMode = null;
 if (location.search) {
 	let match = location.search.replace(/^\?/, '').match(/settings=([^=]*)/);
 	if (match) {
@@ -119,6 +123,7 @@ if (location.search) {
 	const params = new URLSearchParams(location.search);
 	window.codeHtml = params.get('html') || '';
 	window.codeCss = params.get('css') || '';
+	window.codeJs = params.get('js') || '';
 	window.codeLayout = (() => {
 		const layout = params.get('layout');
 		if (!layout) return null;
@@ -131,6 +136,25 @@ if (location.search) {
 		}
 		return null;
 	})();
+
+	// Allow pre-selecting preprocessor modes via URL params, e.g.
+	// ?cssMode=scss&jsMode=typescript&htmlMode=jade
+	// Used by SEO landing pages (SCSS playground, TS playground, Pug, etc.)
+	const validHtmlModes = Object.values(HtmlModes);
+	const validCssModes = Object.values(CssModes);
+	const validJsModes = Object.values(JsModes);
+	const htmlModeParam = params.get('htmlMode');
+	const cssModeParam = params.get('cssMode');
+	const jsModeParam = params.get('jsMode');
+	if (htmlModeParam && validHtmlModes.indexOf(htmlModeParam) !== -1) {
+		window.forcedHtmlMode = htmlModeParam;
+	}
+	if (cssModeParam && validCssModes.indexOf(cssModeParam) !== -1) {
+		window.forcedCssMode = cssModeParam;
+	}
+	if (jsModeParam && validJsModes.indexOf(jsModeParam) !== -1) {
+		window.forcedJsMode = jsModeParam;
+	}
 }
 
 function customRoute(path) {
@@ -194,7 +218,8 @@ export default class App extends Component {
 				title: '',
 				externalLibs: { js: '', css: '' },
 				html: window.codeHtml,
-				css: window.codeCss
+				css: window.codeCss,
+				js: window.codeJs
 			},
 			catalogs: {},
 			collections: {},
@@ -342,10 +367,11 @@ export default class App extends Component {
 
 		// Get synced `preserveLastCode` setting to get back last code (or not).
 		db.getSettings(this.defaultSettings).then(result => {
-			if (window.codeHtml || window.codeCss) {
+			if (window.codeHtml || window.codeCss || window.codeJs) {
 				log('Load item from query params', lastCode);
 				this.prettifyHandler('html');
 				this.prettifyHandler('css');
+				this.prettifyHandler('js');
 				this.setCurrentItem(this.state.currentItem).then(() => {
 					this.refreshEditor();
 				});
@@ -597,9 +623,20 @@ export default class App extends Component {
 		// TODO: remove later
 		if (!item.files) {
 			item.htmlMode =
-				item.htmlMode || this.state.prefs.htmlMode || HtmlModes.HTML;
-			item.cssMode = item.cssMode || this.state.prefs.cssMode || CssModes.CSS;
-			item.jsMode = item.jsMode || this.state.prefs.jsMode || JsModes.JS;
+				window.forcedHtmlMode ||
+				item.htmlMode ||
+				this.state.prefs.htmlMode ||
+				HtmlModes.HTML;
+			item.cssMode =
+				window.forcedCssMode ||
+				item.cssMode ||
+				this.state.prefs.cssMode ||
+				CssModes.CSS;
+			item.jsMode =
+				window.forcedJsMode ||
+				item.jsMode ||
+				this.state.prefs.jsMode ||
+				JsModes.JS;
 		}
 
 		this.setState({ currentItem: item }, () => {

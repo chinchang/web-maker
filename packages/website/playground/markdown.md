@@ -24,6 +24,7 @@ sampleCode: |
 
   [Learn more](https://webmaker.app)
 layout: playground.html
+createUrl: '/create/?htmlMode=markdown&html=%23%20Hello%20Markdown%0A%0AThis%20is%20**bold**%20and%20*italic*.%0A%0A-%20Item%20one%0A-%20Item%20two'
 description: 'Free online Markdown editor with live preview. Write Markdown and see it render to HTML instantly. Works completely offline. Perfect for documentation and notes.'
 ---
 
@@ -151,7 +152,6 @@ Renders as:
 
 ```markdown
 ---
-
 ---
 
 ---

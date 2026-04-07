@@ -24,6 +24,7 @@ sampleCode: |
     }
   }
 layout: playground.html
+createUrl: '/create/?cssMode=scss&html=%3Cdiv%20class%3D%22card%22%3E%3Ch2%3EHello%20SCSS%3C%2Fh2%3E%3C%2Fdiv%3E&css=%24c%3A%20%23ff6c00%3B%0A.card%20%7B%0A%20%20padding%3A%201rem%3B%0A%20%20background%3A%20%24c%3B%0A%20%20h2%20%7B%20color%3A%20white%3B%20%7D%0A%7D'
 description: 'Free online SCSS compiler and editor. Write SCSS/Sass code and see it compile to CSS in real-time. Works completely offline. No installation needed.'
 ---
 

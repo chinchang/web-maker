@@ -18,6 +18,8 @@
 			'2 bestanden modus creaties beschikbaar in het Gratis plan. Om onbeperkte bestanden modus creaties te maken, upgrade naar <0/>.',
 		'3 separate panes to write HTML, CSS and JavaScript. Good for quickly testing something.':
 			'3 aparte panelen om HTML, CSS en JavaScript te schrijven. Goed voor het snel testen van iets.',
+		'A blazing-fast, offline code editor for the web. Three things to know before you start.':
+			'Een razendsnelle, offline code-editor voor het web. Drie dingen om te weten voordat je begint.',
 		'Add Library': 'Bibliotheek toevoegen',
 		'Add a JS/CSS library': 'Voeg een JS/CSS-bibliotheek toe',
 		'Add collection': 'Verzameling toevoegen',
@@ -42,6 +44,8 @@
 		'Clear console (CTRL + L)': 'Console wissen (CTRL + L)',
 		'Clear console (works when console input is focused)':
 			'Console wissen (werkt wanneer console-invoer is gefocust)',
+		'Click the Web Maker icon in the top-right of your browser any time you want to start tinkering.':
+			'Klik op het Web Maker-pictogram in de rechterbovenhoek van je browser wanneer je wilt beginnen met experimenteren.',
 		'Click to change': 'Klik om te wijzigen',
 		'Click to edit': 'Klik om te bewerken',
 		'Close saved creations pane': 'Sluit het paneel met opgeslagen creaties',
@@ -54,6 +58,8 @@
 		'Collaboration unavailable offline':
 			'Samenwerking offline niet beschikbaar',
 		'Collection name': 'Collectienaam',
+		'Coming from the Chrome extension? <0>Learn how to import your creations</0>.':
+			'Kom je van de Chrome-extensie? <0>Leer hoe je je creaties kunt importeren</0>.',
 		'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.':
 			'Configureer en pas instellingen aan door op het tandwielpictogram (<0><1/></0>) rechtsonder in de app te klikken.',
 		Console: 'Console',
@@ -63,6 +69,8 @@
 		'Copy link': 'Kopieer link',
 		'Create New': 'Nieuwe maken',
 		'Custom font name here': 'Aangepaste lettertype naam hier',
+		'Customize editor, theme, key bindings and more from the settings gear in the bottom-right corner.':
+			'Pas de editor, het thema, de sneltoetsen en meer aan via het instellingenwiel in de rechterbenedenhoek.',
 		'Default CSS preprocessor': 'Standaard CSS-preprocessor',
 		'Default HTML preprocessor': 'Standaard HTML-preprocessor',
 		'Default JavaScript preprocessor': 'Standaard JavaScript-preprocessor',
@@ -99,6 +107,8 @@
 		'Focus HTML pane': 'Focus HTML-paneel',
 		'Focus JS pane': 'Focus JS-paneel',
 		'Focus preview': 'Focus preview',
+		'Follow <0>@webmakerApp</0> for new features and release notes.':
+			'Volg <0>@webmakerApp</0> voor nieuwe functies en release-opmerkingen.',
 		'Follow <0>@webmakerApp</0> to know about the new upcoming features!':
 			'Volg <0>@webmakerApp</0> om op de hoogte te blijven van de nieuwe aankomende functies!',
 		Font: 'Lettertype',
@@ -107,6 +117,8 @@
 		'Fork this creation': 'Fork deze creatie',
 		'Format Code': 'Code formatteren',
 		'Format code': 'Code formatteren',
+		'Free plan includes 2 Files mode creations. Upgrade to <0/> for unlimited Files mode, cloud assets & more':
+			'Gratis plan omvat 2 creaties in de Bestandenmodus. Upgrade naar <0/> voor onbeperkte Bestandenmodus, cloud-assets en meer',
 		Fun: 'Plezier',
 		General: 'Algemeen',
 		Get: 'Krijg',
@@ -141,6 +153,7 @@
 		Language: 'Taal',
 		'Leave Session': 'Verlaat sessie',
 		'Leave a Review': 'Laat een beoordeling achter',
+		"Let's start": 'Laten we beginnen',
 		'Lets start!': 'Laten we beginnen!',
 		License: 'Licentie',
 		'Like this app? Please <0>rate it here</0>.':
@@ -162,6 +175,7 @@
 		'Mail me': 'Mail me',
 		'Make a monthly pledge on Patreon':
 			'Doe een maandelijkse belofte op Patreon',
+		'Make it yours': 'Maak het van jou',
 		'Make the app ready to build some games for <0>Js13kGames</0>.':
 			'Maak de app klaar om wat spellen voor <0>Js13kGames</0> te bouwen.',
 		Manage: 'Beheren',
@@ -195,9 +209,13 @@
 			'Open Web Maker op elk moment door te bezoeken <0>https://webmaker.app/create/</0> - Zelfs wanneer je offline bent! Het werkt gewoon! \uD83D\uDE31 <1>Sleep de volgende bookmarklet</1> naar je bladwijzerbalk om een snelkoppeling te maken:',
 		'Open a saved creation (Ctrl/\u2318 + O)':
 			'Open een opgeslagen creatie (Ctrl/\u2318 + O)',
+		'Open anywhere, even offline': 'Open overal, zelfs offline',
+		'Open from your toolbar': 'Open vanuit je werkbalk',
 		'Open list of saved creations': 'Open lijst van opgeslagen creaties',
 		'Or, make a one time donation': 'Of, doe een eenmalige donatie',
 		'Other font from system': 'Andere lettertype van systeem',
+		'PRO unlocks unlimited public creations, unlimited Files mode projects, cloud asset hosting and real-time multiplayer collab.':
+			'PRO ontgrendelt onbeperkte openbare creaties, onbeperkte projecten in de Bestandenmodus, cloud asset hosting en realtime multiplayer samenwerking.',
 		Participants: 'Deelnemers',
 		'Powered by cdnjs': 'Aangedreven door cdnjs',
 		'Preserve console logs': 'Console logs behouden',
@@ -233,6 +251,7 @@
 		'Save current creations': 'Huidige creaties opslaan',
 		'Search files': 'Zoek bestanden',
 		'Search your creations here...': 'Zoek hier je creaties...',
+		'See PRO': 'Bekijk PRO',
 		'See awesome libraries used':
 			'Bekijk geweldige bibliotheken die zijn gebruikt',
 		'See changelog': 'Bekijk changelog',
@@ -256,6 +275,7 @@
 		'Start a new creation': 'Begin een nieuwe creatie',
 		'Start multiplayer collaboration session':
 			'Start multiplayer samenwerking sessie',
+		'Stay in the loop': 'Blijf op de hoogte',
 		Submit: 'Indienen',
 		'Submitted on:': 'Ingediend op:',
 		'Submitting...': 'Indienen...',
@@ -296,8 +316,11 @@
 		'Upload/Use assets': 'Upload/Gebruik middelen',
 		'Use Monaco Editor': 'Gebruik Monaco Editor',
 		'Use experimental Monaco editor': 'Gebruik experimentele Monaco editor',
+		'Visit <0>https://webmaker.app/create/</0> any time \u2014 it works offline. Drag the bookmarklet onto your bookmark bar for one-click access:':
+			'Bezoek <0>https://webmaker.app/create/</0> op elk moment \u2014 het werkt offline. Sleep de bookmarklet naar je bladwijzerbalk voor \xE9\xE9n-klik toegang:',
 		'Vote for features you want to see or suggest new ones.':
 			'Stem op functies die je wilt zien of stel nieuwe voor.',
+		'Want more super-powers?': 'Wil je meer superkrachten?',
 		'Welcome to Web Maker': 'Welkom bij Web Maker',
 		'Yes, please import': 'Ja, graag importeren',
 		'You have <0>{oldSavedCreationsCount}</0> creations saved in your local machine. Do you want to import those creations in your account so they are more secure and accessible anywhere?':

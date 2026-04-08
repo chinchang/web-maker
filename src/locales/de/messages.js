@@ -18,6 +18,8 @@
 			'2 Dateimodi-Kreationen sind im kostenlosen Plan verf\xFCgbar. Um unbegrenzte Dateimodi-Kreationen zu erstellen, upgraden Sie auf <0/>.',
 		'3 separate panes to write HTML, CSS and JavaScript. Good for quickly testing something.':
 			'3 separate panes zum Schreiben von HTML, CSS und JavaScript. Gut, um schnell etwas zu testen.',
+		'A blazing-fast, offline code editor for the web. Three things to know before you start.':
+			'Ein blitzschneller, offline Code-Editor f\xFCr das Web. Drei Dinge, die du wissen solltest, bevor du anf\xE4ngst.',
 		'Add Library': 'Bibliothek hinzuf\xFCgen',
 		'Add a JS/CSS library': 'JS/CSS-Bibliothek hinzuf\xFCgen',
 		'Add collection': 'Sammlung hinzuf\xFCgen',
@@ -42,6 +44,8 @@
 		'Clear console (CTRL + L)': 'Konsole leeren (STRG + L)',
 		'Clear console (works when console input is focused)':
 			'Konsole leeren (funktioniert, wenn der Konsoleneingang fokussiert ist)',
+		'Click the Web Maker icon in the top-right of your browser any time you want to start tinkering.':
+			'Klicke auf das Web Maker-Symbol in der oberen rechten Ecke deines Browsers, wann immer du mit dem T\xFCfteln beginnen m\xF6chtest.',
 		'Click to change': 'Klicken Sie, um zu \xE4ndern',
 		'Click to edit': 'Klicken Sie, um zu bearbeiten',
 		'Close saved creations pane':
@@ -55,6 +59,8 @@
 		'Collaboration unavailable offline':
 			'Zusammenarbeit offline nicht verf\xFCgbar',
 		'Collection name': 'Sammlungsname',
+		'Coming from the Chrome extension? <0>Learn how to import your creations</0>.':
+			'Kommst du von der Chrome-Erweiterung? <0>Erfahre, wie du deine Kreationen importierst</0>.',
 		'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.':
 			'Konfigurieren und anpassen der Einstellungen, indem Sie auf das Zahnrad-Symbol (<0><1/></0>) in der unteren rechten Ecke der App klicken.',
 		Console: 'Konsole',
@@ -64,6 +70,8 @@
 		'Copy link': 'Link kopieren',
 		'Create New': 'Neu erstellen',
 		'Custom font name here': 'Benutzerdefinierter Schriftartname hier',
+		'Customize editor, theme, key bindings and more from the settings gear in the bottom-right corner.':
+			'Passe den Editor, das Thema, die Tastenkombinationen und mehr \xFCber das Einstellungssymbol in der unteren rechten Ecke an.',
 		'Default CSS preprocessor': 'Standard CSS-Pr\xE4prozessor',
 		'Default HTML preprocessor': 'Standard HTML-Pr\xE4prozessor',
 		'Default JavaScript preprocessor': 'Standard JavaScript-Pr\xE4prozessor',
@@ -102,6 +110,8 @@
 		'Focus HTML pane': 'Fokussiere das HTML-Fenster',
 		'Focus JS pane': 'Fokussiere das JS-Fenster',
 		'Focus preview': 'Fokussiere die Vorschau',
+		'Follow <0>@webmakerApp</0> for new features and release notes.':
+			'Folge <0>@webmakerApp</0> f\xFCr neue Funktionen und Versionshinweise.',
 		'Follow <0>@webmakerApp</0> to know about the new upcoming features!':
 			'Folge <0>@webmakerApp</0>, um \xFCber die neuen kommenden Funktionen informiert zu werden!',
 		Font: 'Schriftart',
@@ -110,6 +120,8 @@
 		'Fork this creation': 'Fork diese Kreation',
 		'Format Code': 'Code formatieren',
 		'Format code': 'Code formatieren',
+		'Free plan includes 2 Files mode creations. Upgrade to <0/> for unlimited Files mode, cloud assets & more':
+			'Der kostenlose Plan umfasst 2 Kreationen im Dateimodus. Upgrade auf <0/> f\xFCr unbegrenzten Dateimodus, Cloud-Assets und mehr',
 		Fun: 'Spa\xDF',
 		General: 'Allgemein',
 		Get: 'Holen',
@@ -144,6 +156,7 @@
 		Language: 'Sprache',
 		'Leave Session': 'Sitzung verlassen',
 		'Leave a Review': 'Hinterlasse eine Bewertung',
+		"Let's start": 'Lass uns anfangen',
 		'Lets start!': 'Lass uns anfangen!',
 		License: 'Lizenz',
 		'Like this app? Please <0>rate it here</0>.':
@@ -165,6 +178,7 @@
 		'Mail me': 'Schreib mir',
 		'Make a monthly pledge on Patreon':
 			'Mach ein monatliches Versprechen auf Patreon',
+		'Make it yours': 'Mach es zu deinem',
 		'Make the app ready to build some games for <0>Js13kGames</0>.':
 			'Mach die App bereit, um einige Spiele f\xFCr <0>Js13kGames</0> zu erstellen.',
 		Manage: 'Verwalten',
@@ -198,10 +212,14 @@
 			'\xD6ffnen Sie Web Maker jederzeit, indem Sie <0>https://webmaker.app/create/</0> besuchen - Auch wenn Sie offline sind! Es funktioniert einfach! \uD83D\uDE31 <1>Ziehen Sie das folgende Bookmarklet</1> auf Ihre Lesezeichenleiste, um eine Schnellzugriffsverkn\xFCpfung zu erstellen:',
 		'Open a saved creation (Ctrl/\u2318 + O)':
 			'\xD6ffnen Sie eine gespeicherte Kreation (Ctrl/\u2318 + O)',
+		'Open anywhere, even offline': '\xDCberall \xF6ffnen, sogar offline',
+		'Open from your toolbar': 'Von deiner Symbolleiste \xF6ffnen',
 		'Open list of saved creations':
 			'Liste der gespeicherten Kreationen \xF6ffnen',
 		'Or, make a one time donation': 'Oder, machen Sie eine einmalige Spende',
 		'Other font from system': 'Andere Schriftart vom System',
+		'PRO unlocks unlimited public creations, unlimited Files mode projects, cloud asset hosting and real-time multiplayer collab.':
+			'PRO schaltet unbegrenzte \xF6ffentliche Kreationen, unbegrenzte Projekte im Dateimodus, Cloud-Asset-Hosting und Echtzeit-Multiplayer-Zusammenarbeit frei.',
 		Participants: 'Teilnehmer',
 		'Powered by cdnjs': 'Betrieben von cdnjs',
 		'Preserve console logs': 'Konsoleprotokolle beibehalten',
@@ -236,6 +254,7 @@
 		'Save current creations': 'Aktuelle Kreationen speichern',
 		'Search files': 'Dateien suchen',
 		'Search your creations here...': 'Suche deine Kreationen hier...',
+		'See PRO': 'Sieh dir PRO an',
 		'See awesome libraries used':
 			'Sieh dir die gro\xDFartigen verwendeten Bibliotheken an',
 		'See changelog': '\xC4nderungsprotokoll ansehen',
@@ -259,6 +278,7 @@
 		'Start a new creation': 'Eine neue Kreation starten',
 		'Start multiplayer collaboration session':
 			'Starte die Multiplayer-Zusammenarbeitssitzung',
+		'Stay in the loop': 'Bleib auf dem Laufenden',
 		Submit: 'Einreichen',
 		'Submitted on:': 'Eingereicht am:',
 		'Submitting...': 'Wird eingereicht...',
@@ -300,8 +320,11 @@
 		'Use Monaco Editor': 'Verwende den Monaco Editor',
 		'Use experimental Monaco editor':
 			'Verwende den experimentellen Monaco Editor',
+		'Visit <0>https://webmaker.app/create/</0> any time \u2014 it works offline. Drag the bookmarklet onto your bookmark bar for one-click access:':
+			'Besuche <0>https://webmaker.app/create/</0> jederzeit \u2014 es funktioniert offline. Ziehe das Lesezeichen auf deine Lesezeichenleiste f\xFCr den Zugriff mit einem Klick:',
 		'Vote for features you want to see or suggest new ones.':
 			'Stimme f\xFCr Funktionen ab, die du sehen m\xF6chtest, oder schlage neue vor.',
+		'Want more super-powers?': 'Willst du mehr Superkr\xE4fte?',
 		'Welcome to Web Maker': 'Willkommen bei Web Maker',
 		'Yes, please import': 'Ja, bitte importieren',
 		'You have <0>{oldSavedCreationsCount}</0> creations saved in your local machine. Do you want to import those creations in your account so they are more secure and accessible anywhere?':

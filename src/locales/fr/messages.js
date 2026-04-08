@@ -16,6 +16,8 @@
 			'2 cr\xE9ations de mode fichiers disponibles dans le plan gratuit. Pour cr\xE9er des cr\xE9ations de mode fichiers illimit\xE9es, passez \xE0 <0/>.',
 		'3 separate panes to write HTML, CSS and JavaScript. Good for quickly testing something.':
 			'3 panneaux s\xE9par\xE9s pour \xE9crire HTML, CSS et JavaScript. Bon pour tester rapidement quelque chose.',
+		'A blazing-fast, offline code editor for the web. Three things to know before you start.':
+			'Un \xE9diteur de code hors ligne ultra-rapide pour le web. Trois choses \xE0 savoir avant de commencer.',
 		'Add Library': 'Ajouter une biblioth\xE8que',
 		'Add a JS/CSS library': 'Ajouter une biblioth\xE8que JS/CSS',
 		'Add collection': 'Ajouter une collection',
@@ -41,6 +43,8 @@
 		'Clear console (CTRL + L)': 'Effacer la console (CTRL + L)',
 		'Clear console (works when console input is focused)':
 			"Effacer la console (fonctionne lorsque l'entr\xE9e de la console est focalis\xE9e)",
+		'Click the Web Maker icon in the top-right of your browser any time you want to start tinkering.':
+			"Cliquez sur l'ic\xF4ne Web Maker en haut \xE0 droite de votre navigateur chaque fois que vous souhaitez commencer \xE0 exp\xE9rimenter.",
 		'Click to change': 'Cliquez pour changer',
 		'Click to edit': 'Cliquez pour \xE9diter',
 		'Close saved creations pane':
@@ -54,6 +58,8 @@
 		'Collaboration unavailable offline':
 			'Collaboration indisponible hors ligne',
 		'Collection name': 'Nom de la collection',
+		'Coming from the Chrome extension? <0>Learn how to import your creations</0>.':
+			"Vous venez de l'extension Chrome ? <0>D\xE9couvrez comment importer vos cr\xE9ations</0>.",
 		'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.':
 			"Configurez et personnalisez les param\xE8tres en cliquant sur l'ic\xF4ne d'engrenage (<0><1/></0>) en bas \xE0 droite de l'application.",
 		Console: 'Console',
@@ -63,6 +69,8 @@
 		'Copy link': 'Copier le lien',
 		'Create New': 'Cr\xE9er Nouveau',
 		'Custom font name here': 'Nom de la police personnalis\xE9e ici',
+		'Customize editor, theme, key bindings and more from the settings gear in the bottom-right corner.':
+			"Personnalisez l'\xE9diteur, le th\xE8me, les raccourcis clavier et plus depuis l'ic\xF4ne des param\xE8tres en bas \xE0 droite.",
 		'Default CSS preprocessor': 'Pr\xE9processeur CSS par d\xE9faut',
 		'Default HTML preprocessor': 'Pr\xE9processeur HTML par d\xE9faut',
 		'Default JavaScript preprocessor':
@@ -101,6 +109,8 @@
 		'Focus HTML pane': 'Concentrez-vous sur le panneau HTML',
 		'Focus JS pane': 'Concentrez-vous sur le panneau JS',
 		'Focus preview': "Concentrez-vous sur l'aper\xE7u",
+		'Follow <0>@webmakerApp</0> for new features and release notes.':
+			'Suivez <0>@webmakerApp</0> pour de nouvelles fonctionnalit\xE9s et des notes de version.',
 		'Follow <0>@webmakerApp</0> to know about the new upcoming features!':
 			'Suivez <0>@webmakerApp</0> pour conna\xEEtre les nouvelles fonctionnalit\xE9s \xE0 venir !',
 		Font: 'Police',
@@ -109,6 +119,8 @@
 		'Fork this creation': 'Forker cette cr\xE9ation',
 		'Format Code': 'Format de code',
 		'Format code': 'Format de code',
+		'Free plan includes 2 Files mode creations. Upgrade to <0/> for unlimited Files mode, cloud assets & more':
+			"Le plan gratuit inclut 2 cr\xE9ations en mode Fichiers. Passez \xE0 <0/> pour un nombre illimit\xE9 de projets en mode Fichiers, d'actifs cloud et plus.",
 		Fun: 'Amusant',
 		General: 'G\xE9n\xE9ral',
 		Get: 'Obtenir',
@@ -143,6 +155,7 @@
 		Language: 'Langue',
 		'Leave Session': 'Quitter la session',
 		'Leave a Review': 'Laissez un avis',
+		"Let's start": 'Commen\xE7ons',
 		'Lets start!': 'Commen\xE7ons !',
 		License: 'Licence',
 		'Like this app? Please <0>rate it here</0>.':
@@ -163,6 +176,7 @@
 			'Fait avec <0>\uD83D\uDC96</0>& <1>\uD83D\uDE4C</1> par <2>Kushagra Gour</2>',
 		'Mail me': '\xC9cris-moi',
 		'Make a monthly pledge on Patreon': 'Faites un don mensuel sur Patreon',
+		'Make it yours': 'Faites-le v\xF4tre',
 		'Make the app ready to build some games for <0>Js13kGames</0>.':
 			"Pr\xE9parez l'application \xE0 cr\xE9er des jeux pour <0>Js13kGames</0>.",
 		Manage: 'G\xE9rer',
@@ -198,10 +212,14 @@
 			"Ouvrez Web Maker \xE0 tout moment en visitant <0>https://webmaker.app/create/</0> - M\xEAme lorsque vous \xEAtes hors ligne ! \xC7a fonctionne ! \uD83D\uDE31 <1>Faites glisser le bookmarklet suivant</1> sur votre barre de favoris pour cr\xE9er un raccourci d'acc\xE8s rapide :",
 		'Open a saved creation (Ctrl/\u2318 + O)':
 			'Ouvrir une cr\xE9ation enregistr\xE9e (Ctrl/\u2318 + O)',
+		'Open anywhere, even offline': 'Ouvrez partout, m\xEAme hors ligne',
+		'Open from your toolbar': "Ouvrez depuis votre barre d'outils",
 		'Open list of saved creations':
 			'Ouvrir la liste des cr\xE9ations enregistr\xE9es',
 		'Or, make a one time donation': 'Ou, faites un don unique',
 		'Other font from system': 'Autre police du syst\xE8me',
+		'PRO unlocks unlimited public creations, unlimited Files mode projects, cloud asset hosting and real-time multiplayer collab.':
+			"Le PRO d\xE9bloque des cr\xE9ations publiques illimit\xE9es, des projets en mode Fichiers illimit\xE9s, l'h\xE9bergement d'actifs cloud et la collaboration multijoueur en temps r\xE9el.",
 		Participants: 'Participants',
 		'Powered by cdnjs': 'Propuls\xE9 par cdnjs',
 		'Preserve console logs': 'Conserver les journaux de la console',
@@ -238,6 +256,7 @@
 		'Save current creations': 'Enregistrer les cr\xE9ations actuelles',
 		'Search files': 'Rechercher des fichiers',
 		'Search your creations here...': 'Recherchez vos cr\xE9ations ici...',
+		'See PRO': 'Voir PRO',
 		'See awesome libraries used':
 			'Voir les biblioth\xE8ques g\xE9niales utilis\xE9es',
 		'See changelog': 'Voir le changelog',
@@ -263,6 +282,7 @@
 		'Start a new creation': 'D\xE9marrer une nouvelle cr\xE9ation',
 		'Start multiplayer collaboration session':
 			'D\xE9marrer une session de collaboration multijoueur',
+		'Stay in the loop': 'Restez inform\xE9',
 		Submit: 'Soumettre',
 		'Submitted on:': 'Soumis le :',
 		'Submitting...': 'Soumission en cours...',
@@ -306,8 +326,11 @@
 		'Use Monaco Editor': "Utiliser l'\xE9diteur Monaco",
 		'Use experimental Monaco editor':
 			"Utiliser l'\xE9diteur Monaco exp\xE9rimental",
+		'Visit <0>https://webmaker.app/create/</0> any time \u2014 it works offline. Drag the bookmarklet onto your bookmark bar for one-click access:':
+			'Visitez <0>https://webmaker.app/create/</0> \xE0 tout moment \u2014 cela fonctionne hors ligne. Faites glisser le bookmarklet sur votre barre de favoris pour un acc\xE8s en un clic :',
 		'Vote for features you want to see or suggest new ones.':
 			'Votez pour les fonctionnalit\xE9s que vous souhaitez voir ou sugg\xE9rez-en de nouvelles.',
+		'Want more super-powers?': 'Vous voulez plus de super-pouvoirs ?',
 		'Welcome to Web Maker': 'Bienvenue sur Web Maker',
 		'Yes, please import': 'Oui, veuillez importer',
 		'You have <0>{oldSavedCreationsCount}</0> creations saved in your local machine. Do you want to import those creations in your account so they are more secure and accessible anywhere?':

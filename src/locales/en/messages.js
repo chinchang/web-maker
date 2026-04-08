@@ -29,6 +29,8 @@
 			'2 files mode creations available in Free plan. To create unlimited files mode creations, upgrade to <0/>.',
 		'3 separate panes to write HTML, CSS and JavaScript. Good for quickly testing something.':
 			'3 separate panes to write HTML, CSS and JavaScript. Good for quickly testing something.',
+		'A blazing-fast, offline code editor for the web. Three things to know before you start.':
+			'A blazing-fast, offline code editor for the web. Three things to know before you start.',
 		'Add Library': 'Add Library',
 		'Add a JS/CSS library': 'Add a JS/CSS library',
 		'Add collection': 'Add collection',
@@ -54,6 +56,8 @@
 		'Clear console (CTRL + L)': 'Clear console (CTRL + L)',
 		'Clear console (works when console input is focused)':
 			'Clear console (works when console input is focused)',
+		'Click the Web Maker icon in the top-right of your browser any time you want to start tinkering.':
+			'Click the Web Maker icon in the top-right of your browser any time you want to start tinkering.',
 		'Click to change': 'Click to change',
 		'Click to edit': 'Click to edit',
 		'Close saved creations pane': 'Close saved creations pane',
@@ -65,6 +69,8 @@
 		'Collab Session': 'Collab Session',
 		'Collaboration unavailable offline': 'Collaboration unavailable offline',
 		'Collection name': 'Collection name',
+		'Coming from the Chrome extension? <0>Learn how to import your creations</0>.':
+			'Coming from the Chrome extension? <0>Learn how to import your creations</0>.',
 		'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.':
 			'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.',
 		Console: 'Console',
@@ -74,6 +80,8 @@
 		'Copy link': 'Copy link',
 		'Create New': 'Create New',
 		'Custom font name here': 'Custom font name here',
+		'Customize editor, theme, key bindings and more from the settings gear in the bottom-right corner.':
+			'Customize editor, theme, key bindings and more from the settings gear in the bottom-right corner.',
 		'Default CSS preprocessor': 'Default CSS preprocessor',
 		'Default HTML preprocessor': 'Default HTML preprocessor',
 		'Default JavaScript preprocessor': 'Default JavaScript preprocessor',
@@ -109,6 +117,8 @@
 		'Focus HTML pane': 'Focus HTML pane',
 		'Focus JS pane': 'Focus JS pane',
 		'Focus preview': 'Focus preview',
+		'Follow <0>@webmakerApp</0> for new features and release notes.':
+			'Follow <0>@webmakerApp</0> for new features and release notes.',
 		'Follow <0>@webmakerApp</0> to know about the new upcoming features!':
 			'Follow <0>@webmakerApp</0> to know about the new upcoming features!',
 		Font: 'Font',
@@ -117,6 +127,8 @@
 		'Fork this creation': 'Fork this creation',
 		'Format Code': 'Format Code',
 		'Format code': 'Format code',
+		'Free plan includes 2 Files mode creations. Upgrade to <0/> for unlimited Files mode, cloud assets & more':
+			'Free plan includes 2 Files mode creations. Upgrade to <0/> for unlimited Files mode, cloud assets & more',
 		Fun: 'Fun',
 		General: 'General',
 		Get: 'Get',
@@ -151,6 +163,7 @@
 		Language: 'Language',
 		'Leave Session': 'Leave Session',
 		'Leave a Review': 'Leave a Review',
+		"Let's start": "Let's start",
 		'Lets start!': 'Lets start!',
 		License: 'License',
 		'Like this app? Please <0>rate it here</0>.':
@@ -176,6 +189,7 @@
 			'Made with <0>\uD83D\uDC96</0>& <1>\uD83D\uDE4C</1> by <2>Kushagra Gour</2>',
 		'Mail me': 'Mail me',
 		'Make a monthly pledge on Patreon': 'Make a monthly pledge on Patreon',
+		'Make it yours': 'Make it yours',
 		'Make the app ready to build some games for <0>Js13kGames</0>.':
 			'Make the app ready to build some games for <0>Js13kGames</0>.',
 		Manage: 'Manage',
@@ -214,9 +228,13 @@
 			'Open Web Maker anytime by visiting <0>https://webmaker.app/create/</0> - Even when you are offline! It just works! \uD83D\uDE31 <1>Drag the following bookmarklet</1> on your bookmark bar to create a quick access shortcut:',
 		'Open a saved creation (Ctrl/\u2318 + O)':
 			'Open a saved creation (Ctrl/\u2318 + O)',
+		'Open anywhere, even offline': 'Open anywhere, even offline',
+		'Open from your toolbar': 'Open from your toolbar',
 		'Open list of saved creations': 'Open list of saved creations',
 		'Or, make a one time donation': 'Or, make a one time donation',
 		'Other font from system': 'Other font from system',
+		'PRO unlocks unlimited public creations, unlimited Files mode projects, cloud asset hosting and real-time multiplayer collab.':
+			'PRO unlocks unlimited public creations, unlimited Files mode projects, cloud asset hosting and real-time multiplayer collab.',
 		Participants: 'Participants',
 		'Powered by cdnjs': 'Powered by cdnjs',
 		'Preserve console logs': 'Preserve console logs',
@@ -251,6 +269,7 @@
 		'Search files': 'Search files',
 		'Search your creations here...': 'Search your creations here...',
 		'See Changelog': 'See Changelog',
+		'See PRO': 'See PRO',
 		'See awesome libraries used': 'See awesome libraries used',
 		'See changelog': 'See changelog',
 		'See profile or Logout': 'See profile or Logout',
@@ -274,6 +293,7 @@
 		'Start a new creation': 'Start a new creation',
 		'Start multiplayer collaboration session':
 			'Start multiplayer collaboration session',
+		'Stay in the loop': 'Stay in the loop',
 		Submit: 'Submit',
 		'Submitted on:': 'Submitted on:',
 		'Submitting...': 'Submitting...',
@@ -320,8 +340,11 @@
 		'Upload/Use assets': 'Upload/Use assets',
 		'Use Monaco Editor': 'Use Monaco Editor',
 		'Use experimental Monaco editor': 'Use experimental Monaco editor',
+		'Visit <0>https://webmaker.app/create/</0> any time \u2014 it works offline. Drag the bookmarklet onto your bookmark bar for one-click access:':
+			'Visit <0>https://webmaker.app/create/</0> any time \u2014 it works offline. Drag the bookmarklet onto your bookmark bar for one-click access:',
 		'Vote for features you want to see or suggest new ones.':
 			'Vote for features you want to see or suggest new ones.',
+		'Want more super-powers?': 'Want more super-powers?',
 		'Welcome to Web Maker': 'Welcome to Web Maker',
 		'Yes, please import': 'Yes, please import',
 		'You have <0>{oldSavedCreationsCount}</0> creations saved in your local machine. Do you want to import those creations in your account so they are more secure and accessible anywhere?':

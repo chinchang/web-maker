@@ -14,12 +14,16 @@ msgid "(Experimental) Switches from CodeMirror to Monaco. Many other settings mi
 msgstr "(Experimental) Cambia de CodeMirror a Monaco. Muchas otras configuraciones pueden no estar disponibles en Monaco."
 
 #: src/components/CreateNewModal.jsx:215
-msgid "2 files mode creations available in Free plan. To create unlimited files mode creations, upgrade to <0/>."
-msgstr "2 creaciones en modo de archivos disponibles en el plan gratuito. Para crear creaciones en modo de archivos ilimitadas, actualiza a <0/>."
+#~ msgid "2 files mode creations available in Free plan. To create unlimited files mode creations, upgrade to <0/>."
+#~ msgstr "2 creaciones en modo de archivos disponibles en el plan gratuito. Para crear creaciones en modo de archivos ilimitadas, actualiza a <0/>."
 
-#: src/components/CreateNewModal.jsx:86
+#: src/components/CreateNewModal.jsx:88
 msgid "3 separate panes to write HTML, CSS and JavaScript. Good for quickly testing something."
 msgstr "3 paneles separados para escribir HTML, CSS y JavaScript. Bueno para probar algo rápidamente."
+
+#: src/components/OnboardingModal.jsx:41
+msgid "A blazing-fast, offline code editor for the web. Three things to know before you start."
+msgstr "Un editor de código ultrarrápido y offline para la web. Tres cosas que debes saber antes de empezar."
 
 #: src/components/AddLibrary.jsx:72
 msgid "Add Library"
@@ -33,7 +37,7 @@ msgstr "Añadir una librería JS/CSS"
 msgid "Add collection"
 msgstr "Agregar colección"
 
-#: src/components/Assets.jsx:323
+#: src/components/Assets.jsx:327
 msgid "Add files locally, usable only on this browser. Won't work for others if you share this publicly."
 msgstr "Agregar archivos localmente, utilizables solo en este navegador. No funcionará para otros si lo compartes públicamente."
 
@@ -53,7 +57,7 @@ msgstr "Avanzado"
 msgid "All"
 msgstr "Todo"
 
-#: src/components/Assets.jsx:523
+#: src/components/Assets.jsx:527
 #: src/components/MainHeader.jsx:71
 msgid "Assets"
 msgstr "Recursos"
@@ -102,6 +106,10 @@ msgstr "Borrar consola (CTRL + L)"
 msgid "Clear console (works when console input is focused)"
 msgstr "Borrar consola (funciona cuando la entrada de la consola está enfocada)"
 
+#: src/components/OnboardingModal.jsx:86
+msgid "Click the Web Maker icon in the top-right of your browser any time you want to start tinkering."
+msgstr "Haz clic en el icono de Web Maker en la esquina superior derecha de tu navegador cada vez que quieras empezar a experimentar."
+
 #: src/components/ContentWrap.jsx:801
 #: src/components/ContentWrap.jsx:889
 #: src/components/ContentWrap.jsx:986
@@ -120,7 +128,7 @@ msgstr "Cerrar el panel creaciones guardadas"
 msgid "Close saved creations panel & modals"
 msgstr "Cerrar el panel de creaciones guardadas y modales"
 
-#: src/components/Assets.jsx:533
+#: src/components/Assets.jsx:537
 msgid "Cloud"
 msgstr "Nube"
 
@@ -144,9 +152,13 @@ msgstr "Colaboración no disponible sin conexión"
 msgid "Collection name"
 msgstr "Nombre de la colección"
 
+#: src/components/OnboardingModal.jsx:133
+msgid "Coming from the Chrome extension? <0>Learn how to import your creations</0>."
+msgstr "¿Vienes de la extensión de Chrome? <0>Aprende cómo importar tus creaciones</0>."
+
 #: src/components/OnboardingModal.jsx:70
-msgid "Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app."
-msgstr "Configura y personaliza la configuración haciendo clic en el ícono de engranaje (<0><1/></0>) en la esquina inferior derecha de la aplicación."
+#~ msgid "Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app."
+#~ msgstr "Configura y personaliza la configuración haciendo clic en el ícono de engranaje (<0><1/></0>) en la esquina inferior derecha de la aplicación."
 
 #: src/components/Console.jsx:102
 msgid "Console"
@@ -156,7 +168,7 @@ msgstr "Consola"
 msgid "Contact the Developer"
 msgstr "Contacta al desarrollador"
 
-#: src/components/Assets.jsx:197
+#: src/components/Assets.jsx:199
 msgid "Copy URL (or keep clicking to copy other formats)"
 msgstr "Copiar URL (o sigue haciendo clic para copiar otros formatos)"
 
@@ -164,13 +176,17 @@ msgstr "Copiar URL (o sigue haciendo clic para copiar otros formatos)"
 msgid "Copy link"
 msgstr "Copiar enlace"
 
-#: src/components/CreateNewModal.jsx:158
+#: src/components/CreateNewModal.jsx:160
 msgid "Create New"
 msgstr "Crear nuevo"
 
 #: src/components/Settings.jsx:302
 msgid "Custom font name here"
 msgstr "Nombre de fuente personalizada aquí"
+
+#: src/components/OnboardingModal.jsx:101
+msgid "Customize editor, theme, key bindings and more from the settings gear in the bottom-right corner."
+msgstr "Personaliza el editor, el tema, los atajos de teclado y más desde el engranaje de configuración en la esquina inferior derecha."
 
 #: src/components/Settings.jsx:231
 msgid "Default CSS preprocessor"
@@ -188,7 +204,7 @@ msgstr "Preprocesador JavaScript predeterminado"
 msgid "Default Preprocessors"
 msgstr "Preprocesadores predeterminados"
 
-#: src/components/Assets.jsx:205
+#: src/components/Assets.jsx:207
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -222,11 +238,11 @@ msgstr "Haga doble clic para alternar la consola"
 msgid "Download game as zip"
 msgstr "Descargar juego como zip"
 
-#: src/components/Assets.jsx:332
+#: src/components/Assets.jsx:336
 msgid "Drop files or click here to add"
 msgstr "Suelta archivos o haz clic aquí para agregar"
 
-#: src/components/Assets.jsx:475
+#: src/components/Assets.jsx:479
 msgid "Drop files or click here to upload"
 msgstr "Suelta archivos o haz clic aquí para subir"
 
@@ -264,7 +280,7 @@ msgstr "Versión rápida/ligera"
 msgid "Feedback & Suggestions"
 msgstr "Comentarios y Sugerencias"
 
-#: src/components/Assets.jsx:481
+#: src/components/Assets.jsx:485
 msgid "Fetching files..."
 msgstr "Cargando archivos..."
 
@@ -272,7 +288,7 @@ msgstr "Cargando archivos..."
 #~ msgid "File should be max 300KB in size"
 #~ msgstr "El archivo debe tener un tamaño máximo de 300KB"
 
-#: src/components/CreateNewModal.jsx:222
+#: src/components/CreateNewModal.jsx:241
 msgid "Files modes is currently only available in Web app. <0>Try the Web app now</0>."
 msgstr "Los modos de archivos actualmente solo están disponibles en la aplicación web. <0>Prueba la aplicación web ahora</0>."
 
@@ -300,9 +316,13 @@ msgstr "Enfocar panel de JS"
 msgid "Focus preview"
 msgstr "Enfocar vista previa"
 
+#: src/components/OnboardingModal.jsx:116
+msgid "Follow <0>@webmakerApp</0> for new features and release notes."
+msgstr "Sigue a <0>@webmakerApp</0> para nuevas funciones y notas de lanzamiento."
+
 #: src/components/OnboardingModal.jsx:90
-msgid "Follow <0>@webmakerApp</0> to know about the new upcoming features!"
-msgstr "¡Sigue a <0>@webmakerApp</0> para conocer las nuevas funciones que se avecinan!"
+#~ msgid "Follow <0>@webmakerApp</0> to know about the new upcoming features!"
+#~ msgstr "¡Sigue a <0>@webmakerApp</0> para conocer las nuevas funciones que se avecinan!"
 
 #: src/components/Settings.jsx:281
 msgid "Font"
@@ -332,6 +352,10 @@ msgstr "Formatear código"
 msgid "Format code"
 msgstr "Formatear código"
 
+#: src/components/CreateNewModal.jsx:221
+msgid "Free plan includes 2 Files mode creations. Upgrade to <0/> for unlimited Files mode, cloud assets & more"
+msgstr "El plan gratuito incluye 2 creaciones en modo Archivos. Actualiza a <0/> para tener modo Archivos ilimitado, activos en la nube y más"
+
 #: src/components/Settings.jsx:384
 msgid "Fun"
 msgstr "Diversión"
@@ -348,7 +372,7 @@ msgstr "Obtener"
 msgid "Global"
 msgstr "Global"
 
-#: src/components/Assets.jsx:246
+#: src/components/Assets.jsx:248
 msgid "Grid view"
 msgstr "Vista de cuadrícula"
 
@@ -374,8 +398,8 @@ msgid "If any loop iteration takes more than the defined time, it is detected as
 msgstr "Si alguna iteración de bucle toma más tiempo del definido, se detecta como un posible bucle infinito y se detienen las iteraciones posteriores."
 
 #: src/components/OnboardingModal.jsx:107
-msgid "If you are an existing Chrome extension user, you can import your creations from there to here. <0>Learn how to export/import</0>."
-msgstr "Si eres un usuario existente de la extensión de Chrome, puedes importar tus creaciones de allí a aquí. <0>Aprende cómo exportar/importar</0>."
+#~ msgid "If you are an existing Chrome extension user, you can import your creations from there to here. <0>Learn how to export/import</0>."
+#~ msgstr "Si eres un usuario existente de la extensión de Chrome, puedes importar tus creaciones de allí a aquí. <0>Aprende cómo exportar/importar</0>."
 
 #: src/components/SavedItemPane.jsx:256
 msgid "Import"
@@ -441,9 +465,13 @@ msgstr "Salir de la sesión"
 msgid "Leave a Review"
 msgstr "Deja una reseña"
 
+#: src/components/OnboardingModal.jsx:179
+msgid "Let's start"
+msgstr "Empecemos"
+
 #: src/components/OnboardingModal.jsx:123
-msgid "Lets start!"
-msgstr "¡Empecemos!"
+#~ msgid "Lets start!"
+#~ msgstr "¡Empecemos!"
 
 #: src/components/HelpModal.jsx:208
 #~ msgid "License"
@@ -457,7 +485,7 @@ msgstr "¿Te gusta esta aplicación? Por favor <0>califícalo aquí</0>."
 msgid "Line wrap"
 msgstr "Ajuste de línea"
 
-#: src/components/Assets.jsx:237
+#: src/components/Assets.jsx:239
 msgid "List view"
 msgstr "Vista de lista"
 
@@ -465,11 +493,11 @@ msgstr "Vista de lista"
 msgid "Loads the last open creation when app starts"
 msgstr "Carga la última creación abierta cuando la aplicación se inicia"
 
-#: src/components/Assets.jsx:527
+#: src/components/Assets.jsx:531
 msgid "Local"
 msgstr "Local"
 
-#: src/components/Assets.jsx:461
+#: src/components/Assets.jsx:465
 msgid "Login & upgrade to PRO"
 msgstr "Iniciar sesión y actualizar a PRO"
 
@@ -505,6 +533,10 @@ msgstr "Hecho con <0>❤️</0>& <1>🙌</1> por <2>Kushagra Gour</2>"
 msgid "Make a monthly pledge on Patreon"
 msgstr "Haz una promesa mensual en Patreon"
 
+#: src/components/OnboardingModal.jsx:98
+msgid "Make it yours"
+msgstr "Hazlo tuyo"
+
 #: src/components/Settings.jsx:400
 msgid "Make the app ready to build some games for <0>Js13kGames</0>."
 msgstr "Prepara la aplicación para construir algunos juegos para <0>Js13kGames</0>."
@@ -517,15 +549,15 @@ msgstr "Administrar"
 msgid "Manage your PRO subscription"
 msgstr "Gestiona tu suscripción PRO"
 
-#: src/components/CreateNewModal.jsx:146
+#: src/components/CreateNewModal.jsx:148
 msgid "Manage your code in files. Just like you would have files on your local machine."
 msgstr "Administra tu código en archivos. Tal como tendrías archivos en tu máquina local."
 
-#: src/components/Assets.jsx:476
+#: src/components/Assets.jsx:480
 msgid "Max 300KB per file"
 msgstr "Máx 300KB por archivo"
 
-#: src/components/Assets.jsx:333
+#: src/components/Assets.jsx:337
 msgid "Max 5MB per file"
 msgstr "Máx 5MB por archivo"
 
@@ -573,7 +605,7 @@ msgstr "Nuevo"
 msgid "No feedback yet. Be the first!"
 msgstr "¡No hay comentarios aún. Sé el primero!"
 
-#: src/components/Assets.jsx:488
+#: src/components/Assets.jsx:492
 msgid "No files uploaded yet"
 msgstr "No se han subido archivos aún"
 
@@ -602,16 +634,24 @@ msgid "Open"
 msgstr "Abrir"
 
 #: src/components/OnboardingModal.jsx:52
-msgid "Open Web Maker anytime by clicking the<0><1/></0> button in top-right side of your browser."
-msgstr "Abre Web Maker en cualquier momento haciendo clic en el botón<0><1/></0> en la esquina superior derecha de tu navegador."
+#~ msgid "Open Web Maker anytime by clicking the<0><1/></0> button in top-right side of your browser."
+#~ msgstr "Abre Web Maker en cualquier momento haciendo clic en el botón<0><1/></0> en la esquina superior derecha de tu navegador."
 
 #: src/components/OnboardingModal.jsx:29
-msgid "Open Web Maker anytime by visiting <0>https://webmaker.app/create/</0> - Even when you are offline! It just works! 😱 <1>Drag the following bookmarklet</1> on your bookmark bar to create a quick access shortcut:"
-msgstr "Abre Web Maker en cualquier momento visitando <0>https://webmaker.app/create/</0> - ¡Incluso cuando estés desconectado! ¡Simplemente funciona! 😱 <1>Arrastra el siguiente bookmarklet</1> a tu barra de marcadores para crear un acceso rápido:"
+#~ msgid "Open Web Maker anytime by visiting <0>https://webmaker.app/create/</0> - Even when you are offline! It just works! 😱 <1>Drag the following bookmarklet</1> on your bookmark bar to create a quick access shortcut:"
+#~ msgstr "Abre Web Maker en cualquier momento visitando <0>https://webmaker.app/create/</0> - ¡Incluso cuando estés desconectado! ¡Simplemente funciona! 😱 <1>Arrastra el siguiente bookmarklet</1> a tu barra de marcadores para crear un acceso rápido:"
 
 #: src/components/MainHeader.jsx:174
 msgid "Open a saved creation (Ctrl/⌘ + O)"
 msgstr "Abrir una creación guardada (Ctrl/⌘ + O)"
+
+#: src/components/OnboardingModal.jsx:57
+msgid "Open anywhere, even offline"
+msgstr "Abre en cualquier lugar, incluso offline"
+
+#: src/components/OnboardingModal.jsx:83
+msgid "Open from your toolbar"
+msgstr "Abre desde tu barra de herramientas"
 
 #: src/components/KeyboardShortcutsModal.jsx:38
 msgid "Open list of saved creations"
@@ -624,6 +664,10 @@ msgstr "O, haz una donación única"
 #: src/components/Settings.jsx:293
 msgid "Other font from system"
 msgstr "Otra fuente del sistema"
+
+#: src/components/OnboardingModal.jsx:154
+msgid "PRO unlocks unlimited public creations, unlimited Files mode projects, cloud asset hosting and real-time multiplayer collab."
+msgstr "PRO desbloquea creaciones públicas ilimitadas, proyectos en modo Archivos ilimitados, alojamiento de activos en la nube y colaboración multijugador en tiempo real."
 
 #: src/components/MultiplayerModal.jsx:187
 msgid "Participants"
@@ -730,13 +774,17 @@ msgstr "Guardar la creación actual (Ctrl/⌘ + S)"
 msgid "Save current creations"
 msgstr "Guardar las creaciones actuales"
 
-#: src/components/Assets.jsx:227
+#: src/components/Assets.jsx:229
 msgid "Search files"
 msgstr "Buscar archivos"
 
 #: src/components/SavedItemPane.jsx:267
 msgid "Search your creations here..."
 msgstr "Busca tus creaciones aquí..."
+
+#: src/components/OnboardingModal.jsx:171
+msgid "See PRO"
+msgstr "Ver PRO"
 
 #: src/components/HelpModal.jsx:173
 msgid "See awesome libraries used"
@@ -792,11 +840,11 @@ msgstr "Comentario de una sola línea"
 msgid "Spaces"
 msgstr "Espacios"
 
-#: src/components/CreateNewModal.jsx:172
+#: src/components/CreateNewModal.jsx:174
 msgid "Start Blank"
 msgstr "Comenzar en blanco"
 
-#: src/components/CreateNewModal.jsx:197
+#: src/components/CreateNewModal.jsx:199
 msgid "Start Blank in File Mode"
 msgstr "Comenzar en blanco en modo archivo"
 
@@ -815,6 +863,10 @@ msgstr "Iniciar una nueva creación"
 #: src/components/CollabButton.jsx:60
 msgid "Start multiplayer collaboration session"
 msgstr "Iniciar sesión de colaboración multijugador"
+
+#: src/components/OnboardingModal.jsx:113
+msgid "Stay in the loop"
+msgstr "Mantente al tanto"
 
 #: src/components/FeedbackBoard.jsx:169
 msgid "Submit"
@@ -917,7 +969,8 @@ msgstr "Envía tus solicitudes de funciones, comentarios y sugerencias a <0>@web
 msgid "Type here to search libraries"
 msgstr "Escriba aquí para buscar en las librerías"
 
-#: src/components/Assets.jsx:459
+#: src/components/Assets.jsx:463
+#: src/components/CreateNewModal.jsx:235
 msgid "Upgrade to PRO"
 msgstr "Actualiza a PRO"
 
@@ -929,7 +982,7 @@ msgstr "¡Actualiza a PRO y obtén algunos superpoderes avanzados!"
 msgid "Upload Image"
 msgstr "Cargar imagen"
 
-#: src/components/Assets.jsx:451
+#: src/components/Assets.jsx:455
 msgid "Upload assets to the cloud for use across devices."
 msgstr "Sube activos a la nube para usarlos en varios dispositivos."
 
@@ -945,13 +998,21 @@ msgstr "Usar Monaco Editor"
 msgid "Use experimental Monaco editor"
 msgstr "Usar editor Monaco experimental"
 
+#: src/components/OnboardingModal.jsx:60
+msgid "Visit <0>https://webmaker.app/create/</0> any time — it works offline. Drag the bookmarklet onto your bookmark bar for one-click access:"
+msgstr "Visita <0>https://webmaker.app/create/</0> en cualquier momento — funciona offline. Arrastra el marcador a tu barra de marcadores para acceso con un clic:"
+
 #: src/components/FeedbackBoard.jsx:124
 msgid "Vote for features you want to see or suggest new ones."
 msgstr "Vota por las funciones que quieres ver o sugiere nuevas."
 
+#: src/components/OnboardingModal.jsx:150
+msgid "Want more super-powers?"
+msgstr "¿Quieres más superpoderes?"
+
 #: src/components/OnboardingModal.jsx:14
-msgid "Welcome to Web Maker"
-msgstr "Bienvenido a Web Maker"
+#~ msgid "Welcome to Web Maker"
+#~ msgstr "Bienvenido a Web Maker"
 
 #: src/components/AskToImportModal.jsx:41
 msgid "Yes, please import"

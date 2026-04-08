@@ -17,6 +17,8 @@
 			'\u514D\u8D39\u8BA1\u5212\u4E2D\u53EF\u521B\u5EFA 2 \u4E2A\u6587\u4EF6\u6A21\u5F0F\u3002\u8981\u521B\u5EFA\u65E0\u9650\u6587\u4EF6\u6A21\u5F0F\uFF0C\u8BF7\u5347\u7EA7\u5230 <0/>\u3002',
 		'3 separate panes to write HTML, CSS and JavaScript. Good for quickly testing something.':
 			'3 \u4E2A\u72EC\u7ACB\u7684\u7A97\u683C\u7528\u4E8E\u7F16\u5199 HTML\u3001CSS \u548C JavaScript\u3002\u9002\u5408\u5FEB\u901F\u6D4B\u8BD5\u67D0\u4E9B\u5185\u5BB9\u3002',
+		'A blazing-fast, offline code editor for the web. Three things to know before you start.':
+			'\u4E00\u4E2A\u5FEB\u901F\u7684\u79BB\u7EBF\u7F51\u9875\u4EE3\u7801\u7F16\u8F91\u5668\u3002\u5728\u5F00\u59CB\u4E4B\u524D\u9700\u8981\u77E5\u9053\u7684\u4E09\u4EF6\u4E8B\u3002',
 		'Add Library': '\u6DFB\u52A0\u5E93',
 		'Add a JS/CSS library': '\u6DFB\u52A0 JS/CSS \u5E93',
 		'Add collection': '\u6DFB\u52A0\u96C6\u5408',
@@ -43,6 +45,8 @@
 		'Clear console (CTRL + L)': '\u6E05\u9664\u63A7\u5236\u53F0 (CTRL + L)',
 		'Clear console (works when console input is focused)':
 			'\u6E05\u9664\u63A7\u5236\u53F0\uFF08\u5728\u63A7\u5236\u53F0\u8F93\u5165\u6846\u805A\u7126\u65F6\u6709\u6548\uFF09',
+		'Click the Web Maker icon in the top-right of your browser any time you want to start tinkering.':
+			'\u968F\u65F6\u70B9\u51FB\u6D4F\u89C8\u5668\u53F3\u4E0A\u89D2\u7684 Web Maker \u56FE\u6807\u5F00\u59CB\u5C1D\u8BD5\u3002',
 		'Click to change': '\u70B9\u51FB\u66F4\u6539',
 		'Click to edit': '\u70B9\u51FB\u7F16\u8F91',
 		'Close saved creations pane':
@@ -56,6 +60,8 @@
 		'Collaboration unavailable offline':
 			'\u79BB\u7EBF\u65F6\u65E0\u6CD5\u534F\u4F5C',
 		'Collection name': '\u96C6\u5408\u540D\u79F0',
+		'Coming from the Chrome extension? <0>Learn how to import your creations</0>.':
+			'\u6765\u81EA Chrome \u6269\u5C55\u5417\uFF1F<0>\u4E86\u89E3\u5982\u4F55\u5BFC\u5165\u60A8\u7684\u521B\u4F5C</0>\u3002',
 		'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.':
 			'\u901A\u8FC7\u70B9\u51FB\u5E94\u7528\u53F3\u4E0B\u89D2\u7684\u9F7F\u8F6E\u56FE\u6807 (<0><1/></0>) \u6765\u914D\u7F6E\u548C\u81EA\u5B9A\u4E49\u8BBE\u7F6E\u3002',
 		Console: '\u63A7\u5236\u53F0',
@@ -66,6 +72,8 @@
 		'Create New': '\u521B\u5EFA\u65B0\u5185\u5BB9',
 		'Custom font name here':
 			'\u5728\u6B64\u8F93\u5165\u81EA\u5B9A\u4E49\u5B57\u4F53\u540D\u79F0',
+		'Customize editor, theme, key bindings and more from the settings gear in the bottom-right corner.':
+			'\u4ECE\u53F3\u4E0B\u89D2\u7684\u8BBE\u7F6E\u9F7F\u8F6E\u4E2D\u81EA\u5B9A\u4E49\u7F16\u8F91\u5668\u3001\u4E3B\u9898\u3001\u5FEB\u6377\u952E\u7B49\u3002',
 		'Default CSS preprocessor': '\u9ED8\u8BA4 CSS \u9884\u5904\u7406\u5668',
 		'Default HTML preprocessor': '\u9ED8\u8BA4 HTML \u9884\u5904\u7406\u5668',
 		'Default JavaScript preprocessor':
@@ -107,6 +115,8 @@
 		'Focus HTML pane': '\u805A\u7126 HTML \u9762\u677F',
 		'Focus JS pane': '\u805A\u7126 JS \u9762\u677F',
 		'Focus preview': '\u805A\u7126\u9884\u89C8',
+		'Follow <0>@webmakerApp</0> for new features and release notes.':
+			'\u5173\u6CE8 <0>@webmakerApp</0> \u83B7\u53D6\u65B0\u529F\u80FD\u548C\u53D1\u5E03\u8BF4\u660E\u3002',
 		'Follow <0>@webmakerApp</0> to know about the new upcoming features!':
 			'\u5173\u6CE8 <0>@webmakerApp</0> \u4EE5\u4E86\u89E3\u5373\u5C06\u63A8\u51FA\u7684\u65B0\u529F\u80FD\uFF01',
 		Font: '\u5B57\u4F53',
@@ -115,6 +125,8 @@
 		'Fork this creation': '\u5206\u53C9\u6B64\u521B\u4F5C',
 		'Format Code': '\u683C\u5F0F\u5316\u4EE3\u7801',
 		'Format code': '\u683C\u5F0F\u5316\u4EE3\u7801',
+		'Free plan includes 2 Files mode creations. Upgrade to <0/> for unlimited Files mode, cloud assets & more':
+			'\u514D\u8D39\u8BA1\u5212\u5305\u62EC 2 \u4E2A\u6587\u4EF6\u6A21\u5F0F\u521B\u4F5C\u3002\u5347\u7EA7\u5230 <0/> \u4EE5\u83B7\u5F97\u65E0\u9650\u6587\u4EF6\u6A21\u5F0F\u3001\u4E91\u8D44\u4EA7\u7B49\u3002',
 		Fun: '\u4E50\u8DA3',
 		General: '\u5E38\u89C4',
 		Get: '\u83B7\u53D6',
@@ -149,6 +161,7 @@
 		Language: '\u8BED\u8A00',
 		'Leave Session': '\u79BB\u5F00\u4F1A\u8BDD',
 		'Leave a Review': '\u7559\u4E0B\u8BC4\u4EF7',
+		"Let's start": '\u8BA9\u6211\u4EEC\u5F00\u59CB\u5427',
 		'Lets start!': '\u8BA9\u6211\u4EEC\u5F00\u59CB\u5427\uFF01',
 		License: '\u8BB8\u53EF\u8BC1',
 		'Like this app? Please <0>rate it here</0>.':
@@ -175,6 +188,7 @@
 		'Mail me': '\u7ED9\u6211\u53D1\u90AE\u4EF6',
 		'Make a monthly pledge on Patreon':
 			'\u5728 Patreon \u4E0A\u6BCF\u6708\u652F\u6301',
+		'Make it yours': '\u8BA9\u5B83\u6210\u4E3A\u4F60\u7684',
 		'Make the app ready to build some games for <0>Js13kGames</0>.':
 			'\u8BA9\u5E94\u7528\u51C6\u5907\u597D\u4E3A <0>Js13kGames</0> \u521B\u5EFA\u4E00\u4E9B\u6E38\u620F\u3002',
 		Manage: '\u7BA1\u7406',
@@ -217,12 +231,17 @@
 			'\u901A\u8FC7\u8BBF\u95EE<0>https://webmaker.app/create/</0>\u968F\u65F6\u6253\u5F00Web Maker - \u5373\u4F7F\u5728\u79BB\u7EBF\u65F6\u4E5F\u53EF\u4EE5\uFF01\u5B83\u5C31\u662F\u597D\u7528\uFF01\uD83D\uDE31 <1>\u5C06\u4EE5\u4E0B\u4E66\u7B7E\u62D6\u5230\u60A8\u7684\u4E66\u7B7E\u680F</1>\u4EE5\u521B\u5EFA\u5FEB\u901F\u8BBF\u95EE\u5FEB\u6377\u65B9\u5F0F\uFF1A',
 		'Open a saved creation (Ctrl/\u2318 + O)':
 			'\u6253\u5F00\u5DF2\u4FDD\u5B58\u7684\u521B\u4F5C (Ctrl/\u2318 + O)',
+		'Open anywhere, even offline':
+			'\u968F\u65F6\u968F\u5730\u6253\u5F00\uFF0C\u751A\u81F3\u79BB\u7EBF',
+		'Open from your toolbar': '\u4ECE\u5DE5\u5177\u680F\u6253\u5F00',
 		'Open list of saved creations':
 			'\u6253\u5F00\u5DF2\u4FDD\u5B58\u521B\u4F5C\u7684\u5217\u8868',
 		'Or, make a one time donation':
 			'\u6216\u8005\uFF0C\u8FDB\u884C\u4E00\u6B21\u6027\u6350\u8D60',
 		'Other font from system':
 			'\u7CFB\u7EDF\u4E2D\u7684\u5176\u4ED6\u5B57\u4F53',
+		'PRO unlocks unlimited public creations, unlimited Files mode projects, cloud asset hosting and real-time multiplayer collab.':
+			'PRO \u89E3\u9501\u65E0\u9650\u516C\u5171\u521B\u4F5C\u3001\u65E0\u9650\u6587\u4EF6\u6A21\u5F0F\u9879\u76EE\u3001\u4E91\u8D44\u4EA7\u6258\u7BA1\u548C\u5B9E\u65F6\u591A\u4EBA\u534F\u4F5C\u3002',
 		Participants: '\u53C2\u4E0E\u8005',
 		'Powered by cdnjs': '\u7531cdnjs\u63D0\u4F9B\u652F\u6301',
 		'Preserve console logs': '\u4FDD\u7559\u63A7\u5236\u53F0\u65E5\u5FD7',
@@ -262,6 +281,7 @@
 		'Search your creations here...':
 			'\u5728\u8FD9\u91CC\u641C\u7D22\u4F60\u7684\u521B\u4F5C...',
 		'See Changelog': 'See Changelog',
+		'See PRO': '\u67E5\u770B PRO',
 		'See awesome libraries used':
 			'\u67E5\u770B\u4F7F\u7528\u7684\u7CBE\u5F69\u5E93',
 		'See changelog': '\u67E5\u770B\u66F4\u65B0\u65E5\u5FD7',
@@ -290,6 +310,7 @@
 		'Start a new creation': '\u5F00\u59CB\u4E00\u4E2A\u65B0\u521B\u4F5C',
 		'Start multiplayer collaboration session':
 			'\u5F00\u59CB\u591A\u4EBA\u534F\u4F5C\u4F1A\u8BDD',
+		'Stay in the loop': '\u4FDD\u6301\u66F4\u65B0',
 		Submit: '\u63D0\u4EA4',
 		'Submitted on:': '\u63D0\u4EA4\u65F6\u95F4\uFF1A',
 		'Submitting...': '\u63D0\u4EA4\u4E2D...',
@@ -340,8 +361,12 @@
 		'Use Monaco Editor': '\u4F7F\u7528 Monaco \u7F16\u8F91\u5668',
 		'Use experimental Monaco editor':
 			'\u4F7F\u7528\u5B9E\u9A8C\u6027 Monaco \u7F16\u8F91\u5668',
+		'Visit <0>https://webmaker.app/create/</0> any time \u2014 it works offline. Drag the bookmarklet onto your bookmark bar for one-click access:':
+			'\u968F\u65F6\u8BBF\u95EE <0>https://webmaker.app/create/</0> \u2014 \u5B83\u53EF\u4EE5\u79BB\u7EBF\u4F7F\u7528\u3002\u5C06\u4E66\u7B7E\u5C0F\u5DE5\u5177\u62D6\u5230\u4E66\u7B7E\u680F\u4EE5\u4FBF\u4E00\u952E\u8BBF\u95EE\uFF1A',
 		'Vote for features you want to see or suggest new ones.':
 			'\u6295\u7968\u652F\u6301\u60A8\u60F3\u8981\u770B\u5230\u7684\u529F\u80FD\u6216\u5EFA\u8BAE\u65B0\u529F\u80FD\u3002',
+		'Want more super-powers?':
+			'\u60F3\u8981\u66F4\u591A\u8D85\u80FD\u529B\u5417\uFF1F',
 		'Welcome to Web Maker': '\u6B22\u8FCE\u6765\u5230 Web Maker',
 		'Yes, please import': '\u662F\u7684\uFF0C\u8BF7\u5BFC\u5165',
 		'You have <0>{oldSavedCreationsCount}</0> creations saved in your local machine. Do you want to import those creations in your account so they are more secure and accessible anywhere?':

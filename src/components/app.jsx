@@ -314,8 +314,7 @@ export default class App extends Component {
 						newUser = {
 							...newUser,
 							isPro: false,
-							...customUser,
-							isPro: false
+							...customUser
 						};
 						window.user = newUser;
 						this.setState({ user: newUser, prefs }, this.updateSetting);

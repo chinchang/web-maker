@@ -1188,7 +1188,7 @@ export default class App extends Component {
 	}
 	toggleLayout(mode) {
 		/* eslint-disable no-param-reassign */
-		mode = window.innerWidth < 600 ? 2 : mode;
+		mode = window.innerWidth < 600 ? 6 : mode;
 
 		// If layout is already applied, just return. Check in DOM as well because
 		// when we come back to 3-pane mode from files mode, state might be same

@@ -85,7 +85,15 @@ export function Changelog(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="7.0.1" {...props} isLatest={true}>
+			<Notification version="7.1.0" {...props} isLatest={true}>
+				<li>
+					<strong>URL Query Params</strong>: New <code>htmlMode</code>,{' '}
+					<code>cssMode</code> and <code>jsMode</code> query parameters to
+					preset the preprocessor mode for each editor when opening Web Maker.
+				</li>
+			</Notification>
+
+			<Notification version="7.0.1" {...props}>
 				<NotificationItem type="bug">
 					Console open/close button now shows correctly and toggles between
 					minimize and maximize icons.

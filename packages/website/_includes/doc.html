@@ -28,14 +28,7 @@ item.url == currentUrl %} {% assign found = true %} {% endif %} {% unless found
 						<a
 							href="{{ item.url }}"
 							class="docs-nav__link{% if item.url == currentUrl %} is-active{% endif %}"
-							{%
-							if
-							item.url=""
-							="currentUrl"
-							%}aria-current="page"
-							{%
-							endif
-							%}
+							aria-current="{% if item.url == currentUrl %}page{% else %}false{% endif %}"
 						>
 							{{ item.title }}
 						</a>

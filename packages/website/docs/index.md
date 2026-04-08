@@ -1,33 +1,21 @@
 ---
-layout: default.html
+layout: doc.html
 title: 'Documentation'
 ---
 
-# Documentation
+Welcome to the Web Maker documentation. Use the sidebar to browse topics, or search above.
 
-- [Introduction](/docs/introduction)
-- [Features](/docs/features)
-- [Getting started](/docs/getting-started)
-- [User interface](/docs/user-interface)
-- [User account](/docs/user-account)
-- [Using external libraries](/docs/external-libraries)
-- [Layouts](/docs/layouts)
-- [Keyboard Shortcuts](/docs/keyboard-shortcuts)
-- [Settings](/docs/settings)
-- [URL Parameters](/docs/url-parameters)
-- [From the Developer](/docs/from-the-developer)
-- [Pre-processors](/docs/preprocessors)
-- [Pro](/docs/pro)
+New here? Start with [Introduction](/docs/introduction) and [Getting started](/docs/getting-started).
 
 ## Frequently Asked Questions
 
-[See on Github](https://github.com/chinchang/web-maker/issues?q=label%3Afaq)
+[See on GitHub](https://github.com/chinchang/web-maker/issues?q=label%3Afaq)
 
 ## Let's Talk
 
-Want to send in some suggestions, comments, feature requests or just have a question? Here are your options:
+Want to send in suggestions, comments, feature requests, or just have a question? Here are your options:
 
-- [ @webmakerApp on X](https://twitter.com/webmakerapp)
+- [@webmakerApp on X](https://twitter.com/webmakerapp)
 - [Community forum](https://github.com/chinchang/web-maker/discussions)
-- [Github repository](https://github.com/chinchang/web-maker/issues)
+- [GitHub repository](https://github.com/chinchang/web-maker/issues)
 - [Discord server](https://discord.gg/cpYfafCJ5H)

@@ -2,19 +2,286 @@
 layout: default
 ---
 
-<a href="/docs"><span aria-hidden="true">⬅️</span> Table of contents </a>
+{% assign currentUrl = page.url %} {% assign prevPage = null %} {% assign
+nextPage = null %} {% assign found = false %} {% for item in docsNav %} {% if
+found and nextPage == null %} {% assign nextPage = item %} {% endif %} {% if
+item.url == currentUrl %} {% assign found = true %} {% endif %} {% unless found
+%} {% assign prevPage = item %} {% endunless %} {% endfor %}
 
-<article>
-	<header>
-		<h1 class="post-title">{{ title }}</h1>
-	</header>
-	<!-- <time datetime="{{ page.date | htmlDateString }}" class="post-meta">🗓 {{ page.date | date: "%B %d, %Y" }}</time> -->
+<div class="docs-layout">
+	<aside class="docs-sidebar" aria-label="Docs navigation">
+		<div class="docs-sidebar__inner">
+			<div class="docs-search">
+				<input
+					type="search"
+					id="docs-search-input"
+					placeholder="Search docs…"
+					autocomplete="off"
+					aria-label="Search documentation"
+				/>
+				<ul id="docs-search-results" class="docs-search__results" hidden></ul>
+			</div>
+			<nav class="docs-nav">
+				<ul>
+					{% for item in docsNav %}
+					<li>
+						<a
+							href="{{ item.url }}"
+							class="docs-nav__link{% if item.url == currentUrl %} is-active{% endif %}"
+							{%
+							if
+							item.url=""
+							="currentUrl"
+							%}aria-current="page"
+							{%
+							endif
+							%}
+						>
+							{{ item.title }}
+						</a>
+					</li>
+					{% endfor %}
+				</ul>
+			</nav>
+		</div>
+	</aside>
 
-	<div class="post-content">{{ content | safe }}</div>
-</article>
+	<div class="docs-content">
+		<article>
+			<header>
+				<h1 class="post-title">{{ title }}</h1>
+			</header>
+			<div class="post-content">{{ content | safe }}</div>
+		</article>
 
-<hr />
+		<nav class="docs-pagination" aria-label="Docs pagination">
+			{% if prevPage %}
+			<a
+				class="docs-pagination__link docs-pagination__prev"
+				href="{{ prevPage.url }}"
+			>
+				<span class="docs-pagination__label">← Previous</span>
+				<span class="docs-pagination__title">{{ prevPage.title }}</span>
+			</a>
+			{% else %}
+			<span></span>
+			{% endif %} {% if nextPage %}
+			<a
+				class="docs-pagination__link docs-pagination__next"
+				href="{{ nextPage.url }}"
+			>
+				<span class="docs-pagination__label">Next →</span>
+				<span class="docs-pagination__title">{{ nextPage.title }}</span>
+			</a>
+			{% endif %}
+		</nav>
 
-<p>
-	<a href="/docs"><span aria-hidden="true">⬅️</span> Table of contents</a>
-</p>
+		<p class="docs-edit">
+			<a
+				href="https://github.com/chinchang/web-maker/edit/master/packages/website/docs/{{ page.fileSlug }}.md"
+				target="_blank"
+				rel="noopener"
+			>
+				Edit this page on GitHub
+			</a>
+		</p>
+	</div>
+
+	<aside class="docs-toc" aria-label="On this page">
+		<div class="docs-toc__inner">
+			<p class="docs-toc__title">On this page</p>
+			<ul id="docs-toc-list"></ul>
+		</div>
+	</aside>
+</div>
+
+<script>
+	(function () {
+		// In-page TOC builder + scrollspy
+		var content = document.querySelector('.post-content');
+		var tocList = document.getElementById('docs-toc-list');
+		if (content && tocList) {
+			var headings = content.querySelectorAll('h2, h3');
+			var links = [];
+			headings.forEach(function (h) {
+				if (!h.id) return;
+				var li = document.createElement('li');
+				li.className =
+					'docs-toc__item docs-toc__item--' + h.tagName.toLowerCase();
+				var a = document.createElement('a');
+				a.href = '#' + h.id;
+				a.textContent = h.textContent.replace(/#$/, '').trim();
+				li.appendChild(a);
+				tocList.appendChild(li);
+				links.push({ id: h.id, link: a });
+			});
+			if (links.length === 0) {
+				var tocAside = document.querySelector('.docs-toc');
+				if (tocAside) tocAside.style.visibility = 'hidden';
+			} else if ('IntersectionObserver' in window) {
+				var byId = {};
+				links.forEach(function (l) {
+					byId[l.id] = l.link;
+				});
+				var visible = new Set();
+				var obs = new IntersectionObserver(
+					function (entries) {
+						entries.forEach(function (e) {
+							if (e.isIntersecting) visible.add(e.target.id);
+							else visible.delete(e.target.id);
+						});
+						links.forEach(function (l) {
+							l.link.classList.remove('is-active');
+						});
+						var firstVisible = links.find(function (l) {
+							return visible.has(l.id);
+						});
+						if (firstVisible) firstVisible.link.classList.add('is-active');
+					},
+					{ rootMargin: '0px 0px -70% 0px', threshold: 0 }
+				);
+				headings.forEach(function (h) {
+					if (h.id) obs.observe(h);
+				});
+			}
+		}
+
+		// Client-side search
+		var searchInput = document.getElementById('docs-search-input');
+		var searchResults = document.getElementById('docs-search-results');
+		var index = null;
+		function loadIndex() {
+			if (index) return Promise.resolve(index);
+			return fetch('/docs/search-index.json')
+				.then(function (r) {
+					return r.json();
+				})
+				.then(function (data) {
+					index = data;
+					return data;
+				});
+		}
+		if (searchInput && searchResults) {
+			var activeIdx = -1;
+
+			function getResultLinks() {
+				return Array.prototype.slice.call(searchResults.querySelectorAll('a'));
+			}
+			function setActive(idx) {
+				var links = getResultLinks();
+				if (links.length === 0) {
+					activeIdx = -1;
+					return;
+				}
+				if (idx < 0) idx = links.length - 1;
+				if (idx >= links.length) idx = 0;
+				activeIdx = idx;
+				links.forEach(function (l, i) {
+					l.classList.toggle('is-active', i === activeIdx);
+					if (i === activeIdx) {
+						l.setAttribute('aria-selected', 'true');
+						searchInput.setAttribute('aria-activedescendant', l.id);
+						l.scrollIntoView({ block: 'nearest' });
+					} else {
+						l.removeAttribute('aria-selected');
+					}
+				});
+			}
+			function closeResults() {
+				searchResults.hidden = true;
+				activeIdx = -1;
+				searchInput.removeAttribute('aria-activedescendant');
+				searchInput.setAttribute('aria-expanded', 'false');
+			}
+
+			searchInput.setAttribute('role', 'combobox');
+			searchInput.setAttribute('aria-controls', 'docs-search-results');
+			searchInput.setAttribute('aria-autocomplete', 'list');
+			searchInput.setAttribute('aria-expanded', 'false');
+			searchResults.setAttribute('role', 'listbox');
+
+			searchInput.addEventListener('focus', loadIndex);
+			searchInput.addEventListener('input', function () {
+				var q = searchInput.value.trim().toLowerCase();
+				if (!q) {
+					closeResults();
+					searchResults.innerHTML = '';
+					return;
+				}
+				loadIndex().then(function (data) {
+					var matches = [];
+					data.forEach(function (page) {
+						var hay = (
+							page.title +
+							' ' +
+							(page.headings || []).join(' ')
+						).toLowerCase();
+						if (hay.indexOf(q) !== -1) matches.push(page);
+					});
+					searchResults.innerHTML = '';
+					activeIdx = -1;
+					if (matches.length === 0) {
+						var li = document.createElement('li');
+						li.className = 'docs-search__empty';
+						li.textContent = 'No results';
+						searchResults.appendChild(li);
+					} else {
+						matches.slice(0, 8).forEach(function (m, i) {
+							var li = document.createElement('li');
+							li.setAttribute('role', 'presentation');
+							var a = document.createElement('a');
+							a.href = m.url;
+							a.textContent = m.title;
+							a.id = 'docs-search-result-' + i;
+							a.setAttribute('role', 'option');
+							li.appendChild(a);
+							searchResults.appendChild(li);
+						});
+					}
+					searchResults.hidden = false;
+					searchInput.setAttribute('aria-expanded', 'true');
+				});
+			});
+			searchInput.addEventListener('keydown', function (e) {
+				if (e.key === 'ArrowDown') {
+					e.preventDefault();
+					if (searchResults.hidden) return;
+					setActive(activeIdx + 1);
+				} else if (e.key === 'ArrowUp') {
+					e.preventDefault();
+					if (searchResults.hidden) return;
+					setActive(activeIdx - 1);
+				} else if (e.key === 'Home') {
+					if (!searchResults.hidden) {
+						e.preventDefault();
+						setActive(0);
+					}
+				} else if (e.key === 'End') {
+					if (!searchResults.hidden) {
+						e.preventDefault();
+						setActive(getResultLinks().length - 1);
+					}
+				} else if (e.key === 'Enter') {
+					var links = getResultLinks();
+					if (!searchResults.hidden && activeIdx >= 0 && links[activeIdx]) {
+						e.preventDefault();
+						window.location.href = links[activeIdx].href;
+					}
+				} else if (e.key === 'Escape') {
+					if (!searchResults.hidden) {
+						e.preventDefault();
+						closeResults();
+					}
+				}
+			});
+			document.addEventListener('click', function (e) {
+				if (
+					!searchInput.contains(e.target) &&
+					!searchResults.contains(e.target)
+				) {
+					closeResults();
+				}
+			});
+		}
+	})();
+</script>

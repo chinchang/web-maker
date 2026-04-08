@@ -12,11 +12,15 @@ The PRO subscription gives you unlimited public creations, allowing you to share
 
 You get unlimited File mode creations. Otherwise limited to 2 in free plan.
 
-### Asset Hosting
+### Cloud Asset Hosting
 
-No more stressing to host your assets on other hosting services. With PRO, you can host all your assets directly inside Web Maker, ensuring faster development.
+No more stressing to host your assets on other hosting services. With PRO, you can host all your assets in the cloud directly inside Web Maker, making them available across devices and ensuring faster development. Free users get local asset hosting only.
 
 Asset hosting supports upto 1 MB per file and a total of 5 GB of assets per account.
+
+### Host Multi-user Collab Sessions
+
+PRO lets you host multi-user real-time collaboration sessions, so multiple people can edit the same creation together. Free users can join sessions but only PRO users can host them.
 
 ### Priority Support
 

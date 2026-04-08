@@ -74,9 +74,9 @@ https://webmaker.app/create/?cssMode=scss&html=%3Cdiv%20class%3D%22card%22%3E%3C
 
 Pick a specific editor layout when opening Web Maker.
 
-| Parameter | Allowed values                  | Meaning                                                |
-| --------- | ------------------------------- | ------------------------------------------------------ |
-| `layout`  | `1`, `2`, `3`, `4`, `5`, `full` | Layout mode index. `full` is shorthand for layout `4`. |
+| Parameter | Allowed values                       | Meaning                                                                                                                    |
+| --------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| `layout`  | `1`, `2`, `3`, `4`, `5`, `6`, `full` | Layout mode index. `full` is shorthand for layout `4`. See the [Layouts doc](/docs/layouts/) for what each one looks like. |
 
 **Example** — open in full preview layout:
 

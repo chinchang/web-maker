@@ -1,49 +1,51 @@
 ---
 title: 'Getting started'
+description: 'Open Web Maker, write your first HTML/CSS/JS, and see a live preview in under a minute. A quick tour of the offline web playground.'
 ---
 
-## Installation
+Web Maker is a blazing fast, offline-capable web playground for HTML, CSS and JavaScript. Write code in three panes (or as files), see a live preview as you type, and reach for preprocessors like SCSS, Pug or TypeScript whenever you need them.
 
-Web Maker is available as a Web app and a Chrome extension. Web app is recommended for use as it has it more features and lesser restrictions due to Chrome extension policies.
+This page gets you from zero to your first saved creation in under a minute.
 
-**Web app**
+## Open Web Maker
 
-The web app requires no installation. Just [goto the app url](/create/). Once you open the app, it is available for offline use in future.
+You can use Web Maker two ways — pick whichever fits your workflow:
 
-**Chrome extension**
+- **Web app** (recommended) — no install, more features, works offline after the first visit. [Open the app →](/create/)
+- **Chrome extension** — opens in a new tab on every new tab click. [Get it from the Chrome Web Store →](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
 
-Here is the link to the Chrome extension 👉 [Chrome Web Store](https://chrome.google.com/webstore/detail/web-maker/lkfkkhfhhdkiemehlpkgjeojomhpccnh)
+> The extension also works in Brave and other Chromium browsers, though those aren't tested as thoroughly.
 
-> Note: Chrome extension works in Brave and UC Browser also. Though, it hasn't been thoroughly tested on them.
+## Write your first code
 
-## Starting Web Maker
-
-**Web app**
-
-As mentioned, the Web app can be simply opened by visiting [https://webmaker.app/create/](/create/).
-
-**Chrome extension**
-
-Once the Chrome extension is installed, you'll see a Web Maker icon in the right-top of your Chrome browser. Click it and Web Maker will open in a new tab.
-
-## Your first creation
-
-Okay, so now you might be wondering what do I do with Web Maker open in front of me? Web Maker lets you write HTML, CSS & JavaScript code and see it's instant preview. So let's write some code.
-
-You should be seeing 3 code panes with the headings: **HTML**, **CSS** and **JS**. Each code pane is a dedicated place to write code in the respective languages. Go ahead and click inside the **HTML** code pane to focus it and then write the following HTML code:
+When Web Maker opens, you'll see three code panes labelled **HTML**, **CSS** and **JS**. Click inside the **HTML** pane and type:
 
 ```html
 <h1>My first HTML</h1>
 ```
 
-As soon as you paste the code, you should see the preview of your HTML in the white preview area.
+![Web Maker showing an h1 element in the HTML pane and its rendered live preview on the right](/images/docs/first-code.png)
 
-![First code](/images/docs/first-code.png)
+## See the live preview
 
-This is a very simple web page we just made. Going forward, you might want to put CSS and JavaScript too. You can write them in their respective code panes and see instant preview.
+The preview pane updates automatically as you type — no save, no refresh. Add CSS or JavaScript in their respective panes and watch the preview react instantly. If you'd rather control when it runs, you can switch to manual run mode in [Settings](/docs/settings/).
 
-## Your first creation - the files way
+Open the built-in **console** (bottom of the preview) to see `console.log` output and evaluate expressions live.
 
-You can write the same HTML, CSS and JavaScript in the usual files way as well. Click on **New** button in the top bar. Select the **Files mode** and click **Start blank** button. You'll notice that now you have a sidebar with some files listed and an area for editing any file, instead of 3 code panes for HTML, CSS and JavaScript.
+## Save your work
 
-Go ahead and put the same HTML from above in the `index.html` file. You get the same result. But with files mode you get the same old local-like environment inside Web Maker.
+Hit **Save** in the top toolbar (or `Ctrl/Cmd + S`) to save the creation. Without an account, creations are stored locally in your browser. To sync across devices and avoid losing work if you clear browser data, [sign in with a free account](/docs/user-account/).
+
+## What's next?
+
+Now that you've made your first creation, explore what Web Maker can really do:
+
+- **[Use a preprocessor](/docs/preprocessors/)** — switch any pane to SCSS, Less, Pug, Markdown, TypeScript, Babel and more.
+- **[Add an external library](/docs/external-libraries/)** — drop in jQuery, React, Tailwind, or any CDN URL.
+- **[Switch layouts](/docs/layouts/)** — six layouts including a tabbed-editor mode for focused work.
+- **[Keyboard shortcuts](/docs/keyboard-shortcuts/)** — speed up everything you just learned.
+- **[Go PRO](/docs/pro/)** — unlimited public creations, cloud asset hosting, multi-user collab and more.
+
+### Prefer working with files?
+
+Web Maker also has a **Files mode** with a sidebar and a real folder structure, instead of three fixed panes. Click **New** in the top bar, choose **Files mode**, and hit **Start blank**. Put the same `<h1>` in `index.html` — same result, but in a familiar file-based environment. Free accounts can have up to 2 file-mode creations; PRO is unlimited.

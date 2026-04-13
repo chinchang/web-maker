@@ -75,8 +75,19 @@ export const Footer = props => {
 			{({ i18n }) => (
 				<div id="footer" class="footer">
 					<HStack gap={2} align="center">
-						<a href="/" target="_blank" rel="noopener noreferrer">
-							<div class="logo" />
+						<a
+							href="/"
+							target="_blank"
+							rel="noopener noreferrer"
+							style={{ display: 'flex' }}
+						>
+							<div class="logo">
+								<img
+									src="assets/logo-new.png"
+									alt="Web Maker logo"
+									height="24"
+								/>
+							</div>
 						</a>
 						<span>
 							&copy;

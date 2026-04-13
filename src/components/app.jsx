@@ -394,6 +394,12 @@ export default class App extends Component {
 				this.createNewItem();
 			}
 			Object.assign(this.state.prefs, result);
+			// If a logged-in user is cached locally, apply their settings
+			// immediately to avoid a flash of the wrong theme while waiting
+			// for the async Firestore user fetch.
+			if (this.state.user && this.state.user.settings) {
+				Object.assign(this.state.prefs, this.state.user.settings);
+			}
 			this.setState({ prefs: { ...this.state.prefs } }, this.updateSetting);
 		});
 

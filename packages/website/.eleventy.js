@@ -17,8 +17,21 @@ const markdownLib = markdownIt(markdownItConfig).use(
 	markdownItAnchorConfig
 );
 
-module.exports = function(eleventyConfig) {
+module.exports = function (eleventyConfig) {
 	eleventyConfig.setLibrary('md', markdownLib);
+
+	eleventyConfig.addFilter('dateFormat', date => {
+		const d = new Date(date);
+		return d.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric'
+		});
+	});
+
+	eleventyConfig.addFilter('isoDate', date => {
+		return new Date(date).toISOString().split('T')[0];
+	});
 
 	eleventyConfig.addFilter('clean', path => {
 		if (path === '/') return path;

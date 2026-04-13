@@ -1,0 +1,196 @@
+---
+layout: default.html
+title: 'Blog'
+tags: []
+eleventyExcludeFromCollections: true
+---
+
+<style>
+	body.blog {
+		background: #0a0a0f;
+		background-image: radial-gradient(
+			circle at 1px 1px,
+			rgba(255, 255, 255, 0.06) 1px,
+			transparent 0
+		);
+		background-size: 22px 22px;
+	}
+	body.blog > .main-content {
+		background: none;
+		max-width: none;
+		padding: 0;
+		margin: 0;
+		min-height: 0;
+	}
+
+	.blog-index {
+		max-width: 780px;
+		margin: 0 auto;
+		padding: 3rem 1.5rem;
+	}
+
+	.blog-index__head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 2.5rem;
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid #23232c;
+	}
+	.blog-index__eyebrow {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.72rem;
+		font-weight: 500;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: #8a8a96;
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+	}
+	.blog-index__eyebrow::before {
+		content: '';
+		width: 10px;
+		height: 10px;
+		background: #ffe300;
+		display: inline-block;
+		box-shadow: 0 0 12px rgba(255, 227, 0, 0.5);
+	}
+	.blog-index__title {
+		font-family: 'JetBrains Mono', monospace;
+		font-weight: 800;
+		font-size: 2.8rem;
+		line-height: 0.9;
+		letter-spacing: -0.04em;
+		color: #f4f1ea;
+		margin: 0.5rem 0 0;
+	}
+	.blog-index__title em {
+		font-style: normal;
+		color: #ffe300;
+	}
+	.blog-index__title em::after {
+		content: '_';
+		animation: blink 1.1s steps(1) infinite;
+	}
+	@keyframes blink {
+		50% {
+			opacity: 0;
+		}
+	}
+	.blog-index__meta {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.75rem;
+		color: #8a8a96;
+		text-align: right;
+	}
+	.blog-index__meta span {
+		display: block;
+	}
+	.blog-index__meta .cmd {
+		color: #b9b9c4;
+	}
+
+	.blog-posts {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.blog-card {
+		display: block;
+		background: #f4f1ea;
+		border: 1px solid #0a0a0f;
+		box-shadow: 6px 6px 0 #ffe300;
+		padding: 2rem;
+		text-decoration: none;
+		color: #0a0a0f;
+		transition:
+			transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+			box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+	.blog-card:hover {
+		transform: translate(-2px, -2px);
+		box-shadow: 8px 8px 0 #ffe300;
+	}
+	.blog-card__date {
+		font-family: 'JetBrains Mono', monospace;
+		font-size: 0.72rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: #6b6b74;
+		margin: 0 0 0.6rem;
+	}
+	.blog-card__title {
+		font-family: 'JetBrains Mono', monospace;
+		font-weight: 700;
+		font-size: 1.3rem;
+		line-height: 1.15;
+		letter-spacing: -0.02em;
+		color: #0a0a0f;
+		margin: 0 0 0.5rem;
+	}
+	.blog-card__desc {
+		font-family: 'IBM Plex Sans', sans-serif;
+		font-size: 0.95rem;
+		line-height: 1.5;
+		color: #4a4a54;
+		margin: 0;
+	}
+
+	.blog-empty {
+		font-family: 'JetBrains Mono', monospace;
+		color: #8a8a96;
+		font-size: 0.9rem;
+		text-align: center;
+		padding: 3rem 0;
+	}
+
+	@media (max-width: 600px) {
+		.blog-index__title {
+			font-size: 2rem;
+		}
+		.blog-index__head {
+			flex-direction: column;
+		}
+		.blog-index__meta {
+			text-align: left;
+		}
+		.blog-card {
+			padding: 1.5rem;
+		}
+	}
+</style>
+
+<div class="blog-index">
+	<div class="blog-index__head">
+		<div>
+			<p class="blog-index__eyebrow">
+				BLOG // {{ collections.blogPosts | size }}
+			</p>
+			<h1 class="blog-index__title"><em>Blog</em></h1>
+		</div>
+		<div class="blog-index__meta">
+			<span>dispatches from the editor</span>
+			<span class="cmd">$ cat posts.log</span>
+		</div>
+	</div>
+
+	<div class="blog-posts">
+		{% assign posts = collections.blogPosts | reverse %} {% for post in posts %}
+		<a href="{{ post.url }}" class="blog-card">
+			<p class="blog-card__date">
+				<time datetime="{{ post.data.date | isoDate }}">
+					{{ post.data.date | dateFormat }}
+				</time>
+			</p>
+			<h2 class="blog-card__title">{{ post.data.title }}</h2>
+			{% if post.data.description %}
+			<p class="blog-card__desc">{{ post.data.description }}</p>
+			{% endif %}
+		</a>
+		{% endfor %}
+	</div>
+</div>

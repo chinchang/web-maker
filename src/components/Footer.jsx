@@ -6,6 +6,7 @@ import { HStack } from './Stack';
 import { useEffect, useState } from 'preact/hooks';
 import { DropdownMenu } from './Dropdown';
 import { Attention } from './Attention';
+import { EthicalAds } from './EthicalAds';
 
 const JS13K = props => {
 	const [daysLeft, setDaysLeft] = useState(0);
@@ -73,90 +74,112 @@ export const Footer = props => {
 		<I18n>
 			{({ i18n }) => (
 				<div id="footer" class="footer">
-					<div>
+					<HStack gap={2} align="center">
 						<a href="/" target="_blank" rel="noopener noreferrer">
 							<div class="logo" />
 						</a>
-						&copy;
-						<span class="web-maker-with-tag">Web Maker</span> &nbsp;&nbsp;
-						<Button
-							onClick={props.helpBtnClickHandler}
-							data-event-category="ui"
-							data-event-action="helpButtonClick"
-							class="footer__link  hint--rounded  hint--top-right"
-							aria-label={i18n._(t`Help`)}
-						>
-							<svg
-								style="width:20px; height:20px; vertical-align:text-bottom"
-								viewBox="0 0 24 24"
-							>
-								<path d="M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z" />
-							</svg>
-						</Button>
-						<Button
-							onClick={props.keyboardShortcutsBtnClickHandler}
-							data-event-category="ui"
-							data-event-action="keyboardShortcutButtonClick"
-							class="footer__link hint--rounded  hint--top-right hide-on-mobile"
-							aria-label={i18n._(t`Keyboard shortcuts`)}
-						>
-							<svg
-								style={{
-									width: '20px',
-									height: '20px',
-									verticalAlign: 'text-bottom'
-								}}
-							>
-								<use xlinkHref="#keyboard-icon" />
-							</svg>
-						</Button>
-						<a
-							class="footer__link  hint--rounded  hint--top-right"
-							aria-label={i18n._(t`Tweet about 'Web Maker'`)}
-							href="http://twitter.com/share?url=https://webmaker.app&text=Web Maker - A blazing fast %26 offline frontend playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							<svg
-								style={{
-									width: '20px',
-									height: '20px',
-									verticalAlign: 'text-bottom'
-								}}
-							>
-								<use xlinkHref="#twitter-icon" />
-							</svg>
-						</a>
-						{props.user?.isPro ? (
+						<span>
+							&copy;
+							<span class="web-maker-with-tag">Web Maker</span>
+						</span>
+
+						<HStack inline gap={1} align="center">
 							<Button
-								onClick={props.proBtnClickHandler}
+								onClick={props.helpBtnClickHandler}
 								data-event-category="ui"
-								data-event-action="manageProFooterBtnClick"
-								class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
-								aria-label={i18n._(t`Manage your PRO subscription`)}
+								data-event-action="helpButtonClick"
+								class="footer__link  hint--rounded  hint--top-right"
+								aria-label={i18n._(t`Help`)}
 							>
-								<HStack gap={1}>
-									<Trans>Manage</Trans>
-									<ProBadge />
-								</HStack>
+								<svg
+									style="width:20px; height:20px; vertical-align:text-bottom"
+									viewBox="0 0 24 24"
+								>
+									<path d="M15.07,11.25L14.17,12.17C13.45,12.89 13,13.5 13,15H11V14.5C11,13.39 11.45,12.39 12.17,11.67L13.41,10.41C13.78,10.05 14,9.55 14,9C14,7.89 13.1,7 12,7A2,2 0 0,0 10,9H8A4,4 0 0,1 12,5A4,4 0 0,1 16,9C16,9.88 15.64,10.67 15.07,11.25M13,19H11V17H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2Z" />
+								</svg>
 							</Button>
-						) : (
 							<Button
-								onClick={props.proBtnClickHandler}
+								onClick={props.keyboardShortcutsBtnClickHandler}
 								data-event-category="ui"
-								data-event-action="proFooterBtnClick"
-								class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
-								aria-label={i18n._(
-									t`Upgrade to PRO and get some advanced superpowers!`
-								)}
+								data-event-action="keyboardShortcutButtonClick"
+								class="footer__link hint--rounded  hint--top-right hide-on-mobile"
+								aria-label={i18n._(t`Keyboard shortcuts`)}
 							>
-								<HStack gap={1}>
-									<Trans>Get</Trans>
-									<ProBadge />
-								</HStack>
+								<svg
+									style={{
+										width: '20px',
+										height: '20px',
+										verticalAlign: 'text-bottom'
+									}}
+								>
+									<use xlinkHref="#keyboard-icon" />
+								</svg>
 							</Button>
-						)}
-					</div>
+							<Attention interval={7000}>
+								<Button
+									onClick={props.onFeedbackBtnClick}
+									class="footer__link hint--top hint--rounded hide-on-mobile"
+									aria-label={i18n._(t`Feedback & Suggestions`)}
+								>
+									<svg
+										viewBox="0 0 24 24"
+										style={{
+											width: '20px',
+											height: '20px'
+										}}
+									>
+										<path d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M14,14H7V12H14M17,10H7V8H17" />
+									</svg>
+								</Button>
+							</Attention>
+							<a
+								class="footer__link  hint--rounded  hint--top-right"
+								aria-label={i18n._(t`Tweet about 'Web Maker'`)}
+								href="http://twitter.com/share?url=https://webmaker.app&text=Web Maker - A blazing fast %26 offline frontend playground! via @webmakerApp&related=webmakerApp&hashtags=web,frontend,playground,offline"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								<svg
+									style={{
+										width: '20px',
+										height: '20px',
+										verticalAlign: 'text-bottom'
+									}}
+								>
+									<use xlinkHref="#twitter-icon" />
+								</svg>
+							</a>
+							{props.user?.isPro ? (
+								<Button
+									onClick={props.proBtnClickHandler}
+									data-event-category="ui"
+									data-event-action="manageProFooterBtnClick"
+									class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
+									aria-label={i18n._(t`Manage your PRO subscription`)}
+								>
+									<HStack gap={1}>
+										<Trans>Manage</Trans>
+										<ProBadge />
+									</HStack>
+								</Button>
+							) : (
+								<Button
+									onClick={props.proBtnClickHandler}
+									data-event-category="ui"
+									data-event-action="proFooterBtnClick"
+									class="footer__link  ml-1  hint--rounded  hint--top-right hide-on-mobile support-link"
+									aria-label={i18n._(
+										t`Upgrade to PRO and get some advanced superpowers!`
+									)}
+								>
+									<HStack gap={1}>
+										<Trans>Get</Trans>
+										<ProBadge />
+									</HStack>
+								</Button>
+							)}
+						</HStack>
+					</HStack>
 
 					{props.prefs.isJs13kModeOn ? (
 						<div class="flex flex-v-center">
@@ -376,17 +399,7 @@ export const Footer = props => {
 					</div>
 
 					<div class="footer__center-absolute">
-						<Attention interval={7000}>
-							<Button
-								onClick={props.onFeedbackBtnClick}
-								class="mode-btn hint--top hint--rounded hide-on-mobile"
-								aria-label={i18n._(t`Feedback & Suggestions`)}
-							>
-								<svg viewBox="0 0 24 24">
-									<path d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M14,14H7V12H14M17,10H7V8H17" />
-								</svg>
-							</Button>
-						</Attention>
+						<EthicalAds user={props.user} />
 					</div>
 				</div>
 			)}

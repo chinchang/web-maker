@@ -2127,6 +2127,9 @@ export default class App extends Component {
 		if (this.state.currentItem && this.state.currentItem.files) {
 			classes.push('is-file-mode');
 		}
+		if (this.state.user?.isPro) {
+			classes.push('is-pro');
+		}
 		return classes.join(' ');
 	}
 

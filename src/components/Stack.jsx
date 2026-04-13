@@ -9,12 +9,13 @@ const Stack = function ({
 	fullWidth = false,
 	fullHeight = false,
 	wrap,
+	inline,
 	children
 }) {
 	return (
 		<div
 			style={{
-				display: 'flex',
+				display: inline ? 'inline-flex' : 'flex',
 				gap: gaps[gap] || gap,
 				alignItems: align,
 				justifyContent: justify,

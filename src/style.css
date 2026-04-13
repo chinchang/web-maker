@@ -976,6 +976,12 @@ body > #demo-frame {
 	/* Because .console is 6 */
 	z-index: var(--zindex-footer);
 	position: relative;
+
+	/* For Ethical ads to show */
+	padding-block: 11px;
+}
+.is-pro .footer {
+	padding-block: 5px;
 }
 
 .footer__center-absolute {
@@ -1104,18 +1110,11 @@ body > #demo-frame {
 	margin-left: 10px;
 }
 
-.footer__link:first-of-type {
-	margin-left: 5px;
-}
-
 .footer__link {
-	display: inline-block;
+	display: inline-flex;
 	background: transparent;
 	border: 0;
 	padding: 0;
-	margin-right: 5px;
-	position: relative;
-	top: 2px;
 }
 
 .footer a > svg,
@@ -4025,4 +4024,22 @@ body.light-theme .help-modal__libs li::marker {
 	color: var(--color-text-lightest-final);
 	text-align: center;
 	padding-top: 0.25rem;
+}
+
+/* Ethical ads overrides */
+.ea-content {
+	margin: 0 !important;
+	padding: 0.1em 1em !important;
+}
+.ea-callout {
+	margin: 0 !important;
+}
+
+@media screen and (max-width: 1580px) {
+	[data-ea-publisher] {
+		display: none !important;
+	}
+	.footer {
+		padding-block: 5px;
+	}
 }

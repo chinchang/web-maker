@@ -8,7 +8,7 @@
 		"start:all": "concurrently --kill-others \"npm run start\" \"npm run start:collab\"",
 		"build": "preact build --template src/index.ejs --prerender false --no-inline-css --sw false",
 		"dev": "preact watch --template src/index.ejs",
-		"serve-website": "cd packages/website; npm start",
+		"website": "cd packages/website; npm start",
 		"build-website": "cd packages/website; npm run build",
 		"lint": "eslint src",
 		"test": "jest",

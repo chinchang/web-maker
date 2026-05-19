@@ -2400,6 +2400,18 @@ export default class App extends Component {
 								this.closeAllOverlays();
 								this.proBtnClickHandler();
 							}}
+							onGistExported={({ gistId, gistUrl }) => {
+								this.setState(
+									{
+										currentItem: {
+											...this.state.currentItem,
+											gistId,
+											gistUrl
+										}
+									},
+									() => this.saveItem()
+								);
+							}}
 						/>
 					</Modal>
 					<Modal

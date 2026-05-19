@@ -1828,6 +1828,26 @@ body:not(.light-version) .modal-overlay {
 	transform: translateX(-50%) translateY(0);
 }
 
+.alerts-container--loading::before {
+	content: '';
+	display: inline-block;
+	width: 0.9em;
+	height: 0.9em;
+	margin-right: 0.5em;
+	vertical-align: -0.15em;
+	border: 2px solid currentColor;
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: alerts-spin 0.7s linear infinite;
+	opacity: 0.7;
+}
+
+@keyframes alerts-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
 .error-gutter {
 	width: 8px;
 }
@@ -4038,4 +4058,73 @@ body.light-theme .help-modal__libs li::marker {
 	.footer {
 		padding-block: 5px;
 	}
+}
+
+/* GitHub Gist export */
+.gist-export {
+	border-top: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
+	padding-top: 1rem;
+}
+.gist-export__title {
+	font-size: 1rem;
+	font-weight: 600;
+	margin: 0;
+}
+.gist-export__row {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	font-size: 0.875rem;
+}
+.gist-export__input {
+	padding: 0.4rem 0.6rem;
+	border-radius: 4px;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	background: rgba(0, 0, 0, 0.2);
+	color: inherit;
+	font: inherit;
+	width: 100%;
+}
+.gist-export__url {
+	font-size: 0.875rem;
+	word-break: break-all;
+	margin: 0;
+}
+.gist-export__url a {
+	margin-right: 0.5rem;
+}
+.gist-export__actions {
+	flex-wrap: wrap;
+}
+.gist-export__disconnect {
+	background: none;
+	border: none;
+	color: var(--color-text-lightest-final, #888);
+	text-decoration: underline;
+	cursor: pointer;
+	font-size: 0.8125rem;
+	padding: 0;
+}
+.gist-export__disconnect:hover:not(:disabled) {
+	color: inherit;
+}
+.gist-export__disconnect:disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+.gist-export__error {
+	color: #ff7676;
+	font-size: 0.875rem;
+	margin: 0;
+}
+
+body.light-theme .gist-export {
+	border-top-color: rgba(0, 0, 0, 0.1);
+}
+body.light-theme .gist-export__input {
+	background: #fff;
+	border-color: rgba(0, 0, 0, 0.15);
+}
+body.light-theme .gist-export__error {
+	color: #c92a2a;
 }

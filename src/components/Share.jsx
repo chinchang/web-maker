@@ -8,6 +8,7 @@ import { Button } from './common';
 import { Icon } from './Icons';
 import { Text } from './Text';
 import { LoaderWithText } from './Loader';
+import { GistExportSection } from './GistExportSection';
 
 const FREE_PUBLIC_ITEM_COUNT = 1;
 const BASE_URL = location.origin.includes('chrome-extension://')
@@ -72,7 +73,8 @@ export function Share({
 	item,
 	onVisibilityChange,
 	onLoginBtnClick,
-	onProBtnClick
+	onProBtnClick,
+	onGistExported
 }) {
 	const [publicItemCount, setPublicItemCount] = useState();
 	const [selectedLayout, setSelectedLayout] = useState(2); // Default to layout 2
@@ -264,6 +266,10 @@ export function Share({
 					</p>
 				</VStack>
 			) : null}
+
+			{item.id && (
+				<GistExportSection item={item} onGistExported={onGistExported} />
+			)}
 		</VStack>
 	);
 }

@@ -85,7 +85,25 @@ export function Changelog(props) {
 		<div>
 			<h1>Whats new?</h1>
 
-			<Notification version="7.2.0" {...props} isLatest={true}>
+			<Notification version="7.3.0" {...props} isLatest={true}>
+				<li>
+					<strong>Export to GitHub Gist</strong>: Push the current creation to a
+					GitHub gist straight from the Share modal. The first export prompts a
+					one-time GitHub connect (gist scope only); subsequent exports update
+					the same gist in place. Preprocessor sources keep their proper
+					extensions (<code>.scss</code>, <code>.pug</code>, <code>.ts</code>,
+					etc.), and external library URLs are inlined into the gist's
+					<code>index.html</code> so it runs standalone. Optional toggle to
+					include a <code>README.md</code> and <code>webmaker.json</code>{' '}
+					alongside the source.
+				</li>
+
+				<NotificationItem type="ui" label="">
+					Improved toast UI
+				</NotificationItem>
+			</Notification>
+
+			<Notification version="7.2.0" {...props}>
 				<li>
 					<strong>Larger Local Assets</strong>: The local assets file size limit
 					has been increased from 5MB to 10MB per file.

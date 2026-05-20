@@ -193,7 +193,7 @@ const FileGrid = ({ files, listType, onCopy, onDelete, i18n }) => (
 				<div class="asset-manager__file-actions">
 					<Stack gap={1} fullWidth justify="center">
 						<button
-							class="btn btn--dark hint--rounded hint--top hint--medium"
+							class="btn btn--dark btn--dark--small hint--rounded hint--top hint--medium"
 							onClick={() => onCopy(file)}
 							aria-label={i18n._(
 								t`Copy URL (or keep clicking to copy other formats)`
@@ -202,7 +202,7 @@ const FileGrid = ({ files, listType, onCopy, onDelete, i18n }) => (
 							<Icon name="copy" />
 						</button>
 						<button
-							class="btn btn--dark hint--rounded hint--top-left"
+							class="btn btn--dark btn--dark--small hint--rounded hint--top-left"
 							onClick={() => onDelete(file, index)}
 							aria-label={i18n._(t`Delete`)}
 						>
@@ -232,7 +232,7 @@ const SearchAndViewToolbar = ({
 			style={{ width: '100%' }}
 		/>
 		<button
-			class={`btn btn--dark ${
+			class={`btn btn--dark btn--dark--small ${
 				listType === 'list' ? 'btn--active' : ''
 			}  hint--rounded hint--top-left`}
 			onClick={() => setListType('list')}
@@ -241,7 +241,7 @@ const SearchAndViewToolbar = ({
 			<Icon name="view-list" />
 		</button>
 		<button
-			class={`btn btn--dark ${
+			class={`btn btn--dark btn--dark--small ${
 				listType === 'grid' ? 'btn--active' : ''
 			}  hint--rounded hint--top-left`}
 			onClick={() => setListType('grid')}

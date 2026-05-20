@@ -239,7 +239,7 @@ export default function SavedItemPane({
 						<div>
 							<button
 								onClick={onExport}
-								class="btn--dark hint--bottom-left hint--rounded hint--medium"
+								class="btn btn--dark btn--dark--small hint--bottom-left hint--rounded hint--medium"
 								aria-label={i18n._(
 									t`Export all your creations into a single importable file.`
 								)}
@@ -248,7 +248,7 @@ export default function SavedItemPane({
 							</button>
 							<button
 								onClick={importBtnClickHandler}
-								class="btn--dark hint--bottom-left hint--rounded hint--medium"
+								class="btn btn--dark btn--dark--small hint--bottom-left hint--rounded hint--medium"
 								aria-label={i18n._(
 									t`Import your creations. Only the file that you export through the 'Export' button can be imported.`
 								)}

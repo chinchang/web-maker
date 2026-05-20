@@ -442,7 +442,7 @@ a > svg {
 	font-size: inherit;
 	background: transparent;
 	border: 3px solid var(--color-button);
-	border-radius: 2rem;
+	border-radius: 0.5rem;
 	padding: 9px 15px;
 	cursor: pointer;
 	letter-spacing: 0.2px;
@@ -457,13 +457,13 @@ a > svg {
 	--black-mix: 70%;
 	background: linear-gradient(
 		180deg,
-		var(--color-button),
-		color-mix(in lch, var(--color-button), black)
+		var(--color-btn-hover-1),
+		var(--color-btn-hover-2)
 	);
 	color: black;
 	font-weight: 600;
 	border: 1px solid
-		color-mix(in lch, var(--color-button), black var(--black-mix));
+		color-mix(in lch, var(--color-btn-hover-2), black var(--black-mix));
 	box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.15);
 }
 
@@ -1001,26 +1001,29 @@ body > #demo-frame {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-.btn--dark,
-.main-header__btn-wrap > button {
+.btn--dark {
 	--clr-1: hsl(0, 0%, 25%);
 	--clr-2: hsl(0, 0%, 13%);
-	box-sizing: content-box;
-	/* text-transform: uppercase; */
-	/* font-size: 0.875rem; */
 	font-weight: 500;
-	line-height: 20px;
-	height: 20px;
 	letter-spacing: 0.6px;
 	white-space: nowrap;
 	color: #bbbfd3;
-	border-radius: 3px;
-	margin-left: 10px;
-	padding: 3px 8px;
 	border: 1px solid rgba(0, 0, 0, 0.9);
-	border-radius: 5px;
 	background: linear-gradient(180deg, var(--clr-1) 0, var(--clr-2) 100%);
 	box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Compact variant — reproduces the historical .btn--dark sizing.
+   Applied automatically to direct button children of .main-header__btn-wrap
+   so the toolbar stays dense without touching every button in JSX. */
+.btn--dark--small,
+.main-header__btn-wrap > button {
+	box-sizing: content-box;
+	line-height: 20px;
+	height: 20px;
+	padding: 3px 8px;
+	margin-left: 10px;
+	border-radius: 0.3rem;
 }
 
 .btn--dark > svg {
@@ -4151,6 +4154,27 @@ body.light-theme .help-modal__libs li::marker {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+/* Visually branches a follow-up row off the bottom-left of a .url-pill above */
+.public-link-branch {
+	position: relative;
+	padding-left: 1.85rem;
+}
+.public-link-branch::before {
+	content: '';
+	position: absolute;
+	left: 0.95rem;
+	top: -0.5rem;
+	bottom: 50%;
+	width: 0.7rem;
+	border-left: 1.5px solid rgba(255, 255, 255, 0.22);
+	border-bottom: 1.5px solid rgba(255, 255, 255, 0.22);
+	border-bottom-left-radius: 8px;
+	pointer-events: none;
+}
+body.light-theme .public-link-branch::before {
+	border-color: rgba(0, 0, 0, 0.22);
 }
 .gist-export__actions {
 	flex-wrap: wrap;

@@ -204,7 +204,7 @@ export function GistExportSection({ item, onGistExported }) {
 	const showUpdateUi = hasGist && !gistGone;
 
 	return (
-		<VStack gap={3} align="stretch" class="gist-export">
+		<VStack gap={2} align="stretch" class="gist-export">
 			<h3 class="gist-export__title">
 				<Icon name="github-icon" />
 				<span>Export to GitHub Gist</span>
@@ -242,7 +242,7 @@ export function GistExportSection({ item, onGistExported }) {
 								{item.gistUrl}
 							</a>
 							<Button
-								class="btn btn--dark hint--bottom hint--rounded"
+								class="btn btn--dark btn--small hint--bottom hint--rounded"
 								onClick={copyUrl}
 								aria-label="Copy"
 							>

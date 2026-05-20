@@ -88,14 +88,9 @@ export function Changelog(props) {
 			<Notification version="7.3.0" {...props} isLatest={true}>
 				<li>
 					<strong>Export to GitHub Gist</strong>: Push the current creation to a
-					GitHub gist straight from the Share modal. The first export prompts a
-					one-time GitHub connect (gist scope only); subsequent exports update
-					the same gist in place. Preprocessor sources keep their proper
-					extensions (<code>.scss</code>, <code>.pug</code>, <code>.ts</code>,
-					etc.), and external library URLs are inlined into the gist's
-					<code>index.html</code> so it runs standalone. Optional toggle to
-					include a <code>README.md</code> and <code>webmaker.json</code>{' '}
-					alongside the source.
+					GitHub gist straight from the Share modal. Optionally add a{' '}
+					<code>README.md</code> and <code>webmaker.json</code> alongside the
+					source.
 				</li>
 
 				<NotificationItem type="ui" label="">

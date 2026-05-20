@@ -177,7 +177,7 @@ export function Share({
 									{getShareUrl()}
 								</a>
 								<Button
-									class="btn btn--dark hint--bottom hint--rounded"
+									class="btn btn--dark btn--small hint--bottom hint--rounded"
 									onClick={copyUrl}
 									aria-label="Copy"
 								>

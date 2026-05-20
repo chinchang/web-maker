@@ -146,6 +146,6 @@ export async function connectGithubForGist() {
 		e.code = 'NO_TOKEN';
 		throw e;
 	}
-	trackEvent('fn', 'connectedGithubForGist');
+	trackEvent('fn', 'gistConnectSuccess');
 	return accessToken;
 }

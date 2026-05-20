@@ -29,6 +29,10 @@ export function GistExportSection({ item, onGistExported }) {
 	const [gistGone, setGistGone] = useState(false);
 
 	useEffect(() => {
+		if (window.IS_EXTENSION) {
+			trackEvent('ui', 'gistExportExtensionBlockedSeen');
+			return;
+		}
 		getStoredGistToken().then(t => {
 			setToken(t);
 			setTokenChecked(true);
@@ -61,6 +65,7 @@ export function GistExportSection({ item, onGistExported }) {
 	const handleConnect = async () => {
 		setErrorMsg('');
 		setIsBusy(true);
+		trackEvent('ui', 'gistConnectClick');
 		try {
 			const newToken = await alertsService.promise(connectGithubForGist(), {
 				loading: 'Connecting to GitHub…',
@@ -75,6 +80,9 @@ export function GistExportSection({ item, onGistExported }) {
 		} catch (err) {
 			if (err && err.code !== 'POPUP_CLOSED') {
 				setErrorMsg(err.message || 'Could not connect to GitHub.');
+				trackEvent('fn', 'gistConnectFail', (err && err.code) || 'unknown');
+			} else if (err && err.code === 'POPUP_CLOSED') {
+				trackEvent('fn', 'gistConnectCancelled');
 			}
 		} finally {
 			setIsBusy(false);
@@ -82,6 +90,7 @@ export function GistExportSection({ item, onGistExported }) {
 	};
 
 	const handleDisconnect = async () => {
+		trackEvent('ui', 'gistDisconnectClick');
 		await clearStoredGistToken();
 		setToken(null);
 		alertsService.add('GitHub disconnected');
@@ -131,10 +140,13 @@ export function GistExportSection({ item, onGistExported }) {
 		}
 	};
 
-	const runExport = async ({ loading, success, op }) => {
+	const runExport = async ({ loading, success, kind, op }) => {
 		setErrorMsg('');
 		const files = mapItemToGistFiles(item, { includeMeta });
-		if (!ensureFilesOrAbort(files)) return;
+		if (!ensureFilesOrAbort(files)) {
+			trackEvent('fn', 'gistExportEmpty', kind);
+			return;
+		}
 		setIsBusy(true);
 		try {
 			const result = await alertsService.promise(op(files), {
@@ -143,50 +155,62 @@ export function GistExportSection({ item, onGistExported }) {
 				error: formatError
 			});
 			onGistExported({ gistId: result.id, gistUrl: result.html_url });
+			trackEvent('fn', 'gistExportSuccess', kind);
+			if (kind !== 'update') {
+				trackEvent('fn', 'gistVisibility', isPublic ? 'public' : 'secret');
+			}
+			trackEvent('fn', 'gistIncludeMeta', includeMeta ? '1' : '0');
 		} catch (err) {
+			trackEvent(
+				'fn',
+				'gistExportFail',
+				`${kind}:${(err && err.code) || 'unknown'}`
+			);
 			await handleGistError(err);
 		} finally {
 			setIsBusy(false);
 		}
 	};
 
-	const handleCreate = () =>
-		runExport({
+	const handleCreate = () => {
+		trackEvent('ui', 'gistExportClick', 'create');
+		return runExport({
 			loading: 'Exporting to Gist…',
 			success: 'Exported to Gist',
-			op: files => {
-				trackEvent('fn', 'gistExportCreate');
-				return createGist(token, { description, isPublic, files });
-			}
+			kind: 'create',
+			op: files => createGist(token, { description, isPublic, files })
 		});
+	};
 
-	const handleUpdate = () =>
-		runExport({
+	const handleUpdate = () => {
+		trackEvent('ui', 'gistExportClick', 'update');
+		return runExport({
 			loading: 'Updating Gist…',
 			success: 'Gist updated',
-			op: files => {
-				trackEvent('fn', 'gistExportUpdate');
-				return updateGist(token, item.gistId, { description, files });
-			}
+			kind: 'update',
+			op: files => updateGist(token, item.gistId, { description, files })
 		});
+	};
 
-	const handleExportAsNew = () =>
-		runExport({
+	const handleExportAsNew = () => {
+		trackEvent('ui', 'gistExportClick', 'new');
+		return runExport({
 			loading: 'Creating new Gist…',
 			success: 'New gist created',
-			op: files => {
-				trackEvent('fn', 'gistExportCreateReplacement');
-				return createGist(token, { description, isPublic, files }).then(r => {
+			kind: 'new',
+			op: files =>
+				createGist(token, { description, isPublic, files }).then(r => {
 					setGistGone(false);
 					return r;
-				});
-			}
+				})
 		});
+	};
 
 	const copyUrl = () => {
 		if (!item.gistUrl) return;
 		navigator.clipboard.writeText(item.gistUrl);
 		alertsService.add('Gist URL copied');
+		trackEvent('ui', 'gistCopyUrlClick');
 	};
 
 	if (!tokenChecked) {

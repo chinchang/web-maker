@@ -1342,6 +1342,13 @@ body:not(.light-version) .modal-overlay {
 	.modal--command-palette > .modal__content {
 		width: 600px;
 	}
+	.modal--assets > .modal__content {
+		width: 820px;
+	}
+}
+
+.modal--assets .tabs__tabpanel {
+	min-height: 360px;
 }
 
 .pledge-modal .modal__content,

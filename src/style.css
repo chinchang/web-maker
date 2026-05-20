@@ -442,7 +442,7 @@ a > svg {
 	font-size: inherit;
 	background: transparent;
 	border: 3px solid var(--color-button);
-	border-radius: 2rem;
+	border-radius: 0.5rem;
 	padding: 9px 15px;
 	cursor: pointer;
 	letter-spacing: 0.2px;
@@ -457,13 +457,13 @@ a > svg {
 	--black-mix: 70%;
 	background: linear-gradient(
 		180deg,
-		var(--color-button),
-		color-mix(in lch, var(--color-button), black)
+		var(--color-btn-hover-1),
+		var(--color-btn-hover-2)
 	);
 	color: black;
 	font-weight: 600;
 	border: 1px solid
-		color-mix(in lch, var(--color-button), black var(--black-mix));
+		color-mix(in lch, var(--color-btn-hover-2), black var(--black-mix));
 	box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.15);
 }
 
@@ -1001,26 +1001,29 @@ body > #demo-frame {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-.btn--dark,
-.main-header__btn-wrap > button {
+.btn--dark {
 	--clr-1: hsl(0, 0%, 25%);
 	--clr-2: hsl(0, 0%, 13%);
-	box-sizing: content-box;
-	/* text-transform: uppercase; */
-	/* font-size: 0.875rem; */
 	font-weight: 500;
-	line-height: 20px;
-	height: 20px;
 	letter-spacing: 0.6px;
 	white-space: nowrap;
 	color: #bbbfd3;
-	border-radius: 3px;
-	margin-left: 10px;
-	padding: 3px 8px;
 	border: 1px solid rgba(0, 0, 0, 0.9);
-	border-radius: 5px;
 	background: linear-gradient(180deg, var(--clr-1) 0, var(--clr-2) 100%);
 	box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Compact variant — reproduces the historical .btn--dark sizing.
+   Applied automatically to direct button children of .main-header__btn-wrap
+   so the toolbar stays dense without touching every button in JSX. */
+.btn--dark--small,
+.main-header__btn-wrap > button {
+	box-sizing: content-box;
+	line-height: 20px;
+	height: 20px;
+	padding: 3px 8px;
+	margin-left: 10px;
+	border-radius: 0.3rem;
 }
 
 .btn--dark > svg {
@@ -1808,24 +1811,61 @@ body:not(.light-version) .modal-overlay {
 
 .alerts-container {
 	position: fixed;
-	will-change: transform;
+	will-change: transform, opacity;
 	left: 50%;
-	top: -5px;
-	padding: 10px;
-	background: white;
-	border: 1px solid #eee;
-	color: #333;
-	box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
-	/*color: #333;*/
-	font-size: 1rem;
-	border-radius: 3px;
+	top: 20px;
+	padding: 12px 18px;
+	background: #ffffff;
+	border: 1px solid rgba(0, 0, 0, 0.05);
+	color: #2a2a3a;
+	box-shadow:
+		0 1px 2px rgba(0, 0, 0, 0.08),
+		0 10px 28px -8px rgba(0, 0, 0, 0.25),
+		0 24px 48px -16px rgba(0, 0, 0, 0.18);
+	/* font-size: 0.9rem; */
+	font-weight: 600;
+	line-height: 1.3;
+	border-radius: 12px;
 	z-index: 6;
-	transform: translateX(-50%) translateY(-100%);
-	transition: 0.3s ease;
+	transform: translateX(-50%) translateY(-14px) scale(0.94);
+	opacity: 0;
+	pointer-events: none;
+	transition:
+		transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+		opacity 0.22s ease;
 }
 
 .alerts-container.is-active {
-	transform: translateX(-50%) translateY(0);
+	transform: translateX(-50%) translateY(0) scale(1);
+	opacity: 1;
+	pointer-events: auto;
+}
+
+body.light-theme .alerts-container {
+	box-shadow:
+		0 1px 2px rgba(0, 0, 0, 0.06),
+		0 8px 24px -8px rgba(0, 0, 0, 0.15),
+		0 20px 40px -12px rgba(0, 0, 0, 0.1);
+}
+
+.alerts-container--loading::before {
+	content: '';
+	display: inline-block;
+	width: 0.9em;
+	height: 0.9em;
+	margin-right: 0.5em;
+	vertical-align: -0.15em;
+	border: 2px solid currentColor;
+	border-right-color: transparent;
+	border-radius: 50%;
+	animation: alerts-spin 0.7s linear infinite;
+	opacity: 0.7;
+}
+
+@keyframes alerts-spin {
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 .error-gutter {
@@ -4038,4 +4078,165 @@ body.light-theme .help-modal__libs li::marker {
 	.footer {
 		padding-block: 5px;
 	}
+}
+
+/* GitHub Gist export — visually distinct card sitting below the Access section */
+.gist-export {
+	margin-top: 1.5rem;
+	padding: 1.1rem 1.25rem 1.25rem;
+	background: rgba(255, 255, 255, 0.035);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 10px;
+	position: relative;
+}
+.gist-export::before {
+	content: '';
+	position: absolute;
+	left: 1.25rem;
+	right: 1.25rem;
+	top: -1.5rem;
+	height: 1px;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(255, 255, 255, 0.12),
+		transparent
+	);
+}
+.gist-export__title {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	font-size: 1.2rem;
+	font-weight: 600;
+	margin: 0;
+	letter-spacing: -0.005em;
+}
+.gist-export__title svg {
+	width: 1.15em;
+	height: 1.15em;
+	opacity: 0.85;
+	fill: currentColor;
+	flex-shrink: 0;
+}
+.gist-export__row {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+	font-size: 1rem;
+}
+.gist-export__row > span:first-child {
+	opacity: 0.7;
+	/* font-size: 0.8125rem; */
+}
+
+.url-pill {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	padding: 0.5rem 0.65rem 0.5rem 0.85rem;
+	background: rgba(0, 0, 0, 0.22);
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	border-radius: 6px;
+	font-size: 0.85rem;
+}
+.url-pill__label {
+	opacity: 0.55;
+	font-weight: 500;
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	flex-shrink: 0;
+}
+.url-pill__link {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Visually branches a follow-up row off the bottom-left of a .url-pill above */
+.public-link-branch {
+	position: relative;
+	padding-left: 1.85rem;
+}
+.public-link-branch::before {
+	content: '';
+	position: absolute;
+	left: 0.95rem;
+	top: -0.5rem;
+	bottom: 50%;
+	width: 0.7rem;
+	border-left: 1.5px solid rgba(255, 255, 255, 0.22);
+	border-bottom: 1.5px solid rgba(255, 255, 255, 0.22);
+	border-bottom-left-radius: 8px;
+	pointer-events: none;
+}
+body.light-theme .public-link-branch::before {
+	border-color: rgba(0, 0, 0, 0.22);
+}
+.gist-export__actions {
+	flex-wrap: wrap;
+	margin-top: 0.2rem;
+	align-items: center;
+}
+.gist-export__disconnect {
+	background: none;
+	border: none;
+	color: var(--color-text-light, #888);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+	cursor: pointer;
+	font-size: 0.875rem;
+	padding: 0.25rem 0.5rem;
+	margin-left: auto;
+	transition: color 0.15s ease;
+}
+.gist-export__disconnect:hover:not(:disabled) {
+	color: inherit;
+}
+.gist-export__disconnect:disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+.gist-export__error {
+	color: #ff8a8a;
+	font-size: 0.875rem;
+	margin: 0;
+	padding: 0.5rem 0.75rem;
+	background: rgba(255, 100, 100, 0.08);
+	border: 1px solid rgba(255, 100, 100, 0.25);
+	border-radius: 6px;
+}
+
+body.light-theme .gist-export {
+	background: rgba(0, 0, 0, 0.025);
+	border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-theme .gist-export::before {
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(0, 0, 0, 0.12),
+		transparent
+	);
+}
+body.light-theme .gist-export__input {
+	background: #fff;
+	border-color: rgba(0, 0, 0, 0.15);
+}
+body.light-theme .gist-export__input:focus {
+	background: #fff;
+	border-color: var(--clr-brand-2, #fdc100);
+}
+body.light-theme .url-pill {
+	background: rgba(0, 0, 0, 0.04);
+	border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-theme .gist-export__error {
+	color: #c92a2a;
+	background: rgba(201, 42, 42, 0.06);
+	border-color: rgba(201, 42, 42, 0.25);
 }

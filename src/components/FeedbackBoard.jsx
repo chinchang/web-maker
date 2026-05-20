@@ -159,7 +159,7 @@ export const FeedbackBoard = ({ isOpen, onClose, user }) => {
 								disabled={isSubmitting}
 							/>
 							<Button
-								class="btn btn--dark"
+								class="btn btn--dark btn--dark--small"
 								type="submit"
 								disabled={isSubmitting || !newFeedback.trim()}
 							>

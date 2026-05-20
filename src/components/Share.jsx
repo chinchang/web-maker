@@ -8,6 +8,7 @@ import { Button } from './common';
 import { Icon } from './Icons';
 import { Text } from './Text';
 import { LoaderWithText } from './Loader';
+import { GistExportSection } from './GistExportSection';
 
 const FREE_PUBLIC_ITEM_COUNT = 1;
 const BASE_URL = location.origin.includes('chrome-extension://')
@@ -72,7 +73,8 @@ export function Share({
 	item,
 	onVisibilityChange,
 	onLoginBtnClick,
-	onProBtnClick
+	onProBtnClick,
+	onGistExported
 }) {
 	const [publicItemCount, setPublicItemCount] = useState();
 	const [selectedLayout, setSelectedLayout] = useState(2); // Default to layout 2
@@ -163,69 +165,73 @@ export function Share({
 						</p>
 					)}
 					{item.isPublic && (
-						<VStack gap={2} align="stretch">
-							<p>
-								Public at{' '}
-								<a href={getShareUrl()} target="_blank">
+						<VStack gap={1} align="stretch">
+							<div class="url-pill">
+								<span class="url-pill__label">Public URL</span>
+								<a
+									href={getShareUrl()}
+									target="_blank"
+									rel="noopener"
+									class="url-pill__link"
+								>
 									{getShareUrl()}
-								</a>{' '}
+								</a>
 								<Button
-									class="btn btn--dark hint--bottom hint--rounded"
+									class="btn btn--dark btn--small hint--bottom hint--rounded"
 									onClick={copyUrl}
 									aria-label="Copy"
 								>
-									<Icon name="copy" /> Copy
+									<Icon name="copy" />
 								</Button>
-							</p>
+							</div>
 
-							{/* Layout Mode Selector */}
-							<HStack gap={3} align="center">
-								<label style="display: block; font-weight: 500;">
-									Layout Mode:
-								</label>
-								<HStack gap={1} align="center">
-									{LAYOUT_MODES.map(layout => (
-										<label
-											key={layout.id}
-											style={{
-												display: 'flex',
-												cursor: 'pointer',
-												padding: '8px',
-												border:
-													selectedLayout === layout.id
-														? '2px solid var(--clr-brand-2)'
-														: '2px solid transparent',
-												borderRadius: '0.5rem',
-												transition: 'all 0.2s ease'
-											}}
-										>
-											<input
-												type="radio"
-												name="layout-mode"
-												value={layout.id}
-												checked={selectedLayout === layout.id}
-												onChange={e =>
-													setSelectedLayout(parseInt(e.target.value, 10))
-												}
-												style={{ display: 'none' }}
-											/>
-											<div
+							{/* Layout Mode Selector — visually branches off the URL pill above */}
+							<div class="public-link-branch">
+								<HStack gap={3} align="center">
+									<HStack gap={1} align="center">
+										{LAYOUT_MODES.map(layout => (
+											<label
+												key={layout.id}
 												style={{
-													fill:
+													display: 'flex',
+													cursor: 'pointer',
+													padding: '8px',
+													border:
 														selectedLayout === layout.id
-															? 'var(--clr-brand-2)'
-															: 'currentColor',
-													width: '26px',
-													height: '26px',
-													display: 'flex'
+															? '2px solid var(--clr-brand-2)'
+															: '2px solid transparent',
+													borderRadius: '0.5rem',
+													transition: 'all 0.2s ease'
 												}}
 											>
-												{layout.icon}
-											</div>
-										</label>
-									))}
+												<input
+													type="radio"
+													name="layout-mode"
+													value={layout.id}
+													checked={selectedLayout === layout.id}
+													onChange={e =>
+														setSelectedLayout(parseInt(e.target.value, 10))
+													}
+													style={{ display: 'none' }}
+												/>
+												<div
+													style={{
+														fill:
+															selectedLayout === layout.id
+																? 'var(--clr-brand-2)'
+																: 'currentColor',
+														width: '26px',
+														height: '26px',
+														display: 'flex'
+													}}
+												>
+													{layout.icon}
+												</div>
+											</label>
+										))}
+									</HStack>
 								</HStack>
-							</HStack>
+							</div>
 						</VStack>
 					)}
 				</VStack>
@@ -264,6 +270,10 @@ export function Share({
 					</p>
 				</VStack>
 			) : null}
+
+			{item.id && (
+				<GistExportSection item={item} onGistExported={onGistExported} />
+			)}
 		</VStack>
 	);
 }

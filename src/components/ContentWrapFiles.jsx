@@ -634,7 +634,7 @@ export default class ContentWrapFiles extends Component {
 									</div>
 									<div class="code-wrap__header-right-options">
 										<button
-											class="btn btn--dark"
+											class="btn btn--dark btn--dark--small"
 											aria-label={i18n._(t`Format code`)}
 											title={i18n._(t`Format Code`)}
 											onClick={this.prettifyBtnClickHandler.bind(this)}

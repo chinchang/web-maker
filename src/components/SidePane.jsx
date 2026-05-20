@@ -77,7 +77,7 @@ function File({
 					<div class="sidebar__file-options">
 						<button
 							type="button"
-							class="btn btn--dark btn--chromeless"
+							class="btn btn--dark btn--dark--small btn--chromeless"
 							onClick={onRenameBtnClick.bind(null, file)}
 						>
 							<svg viewBox="0 0 24 24">
@@ -87,7 +87,7 @@ function File({
 
 						<button
 							type="button"
-							class="btn btn--dark btn--chromeless"
+							class="btn btn--dark btn--dark--small btn--chromeless"
 							onClick={onRemoveBtnClick.bind(null, file)}
 						>
 							<svg viewBox="0 0 24 24">
@@ -240,7 +240,7 @@ export class SidePane extends Component {
 					<div class="flex ai-c">
 						<button
 							type="button"
-							class="btn btn--dark"
+							class="btn btn--dark btn--dark--small"
 							onClick={this.addFileButtonClickHandler.bind(this)}
 						>
 							<svg viewBox="0 0 24 24">
@@ -249,7 +249,7 @@ export class SidePane extends Component {
 						</button>
 						<button
 							type="button"
-							class="btn btn--dark"
+							class="btn btn--dark btn--dark--small"
 							onClick={this.addFolderButtonClickHandler.bind(this)}
 						>
 							<svg viewBox="0 0 24 24">

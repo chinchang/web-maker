@@ -85,7 +85,7 @@ function buildReadme(item, htmlExt, cssExt, jsExt) {
 	return lines.join('\n') + '\n';
 }
 
-export function mapItemToGistFiles(item) {
+export function mapItemToGistFiles(item, { includeMeta = false } = {}) {
 	const htmlExt = extensionFor('html', item.htmlMode);
 	const cssExt = extensionFor('css', item.cssMode);
 	const jsExt = extensionFor('js', item.jsMode);
@@ -97,24 +97,26 @@ export function mapItemToGistFiles(item) {
 	if ((item.css || '').trim()) files[`style.${cssExt}`] = { content: item.css };
 	if ((item.js || '').trim()) files[`script.${jsExt}`] = { content: item.js };
 
-	files['README.md'] = { content: buildReadme(item, htmlExt, cssExt, jsExt) };
-	files['webmaker.json'] = {
-		content:
-			JSON.stringify(
-				{
-					version: 1,
-					itemId: item.id,
-					title: item.title,
-					htmlMode: item.htmlMode,
-					cssMode: item.cssMode,
-					jsMode: item.jsMode,
-					externalLibs: item.externalLibs,
-					layoutMode: item.layoutMode
-				},
-				null,
-				2
-			) + '\n'
-	};
+	if (includeMeta) {
+		files['README.md'] = { content: buildReadme(item, htmlExt, cssExt, jsExt) };
+		files['webmaker.json'] = {
+			content:
+				JSON.stringify(
+					{
+						version: 1,
+						itemId: item.id,
+						title: item.title,
+						htmlMode: item.htmlMode,
+						cssMode: item.cssMode,
+						jsMode: item.jsMode,
+						externalLibs: item.externalLibs,
+						layoutMode: item.layoutMode
+					},
+					null,
+					2
+				) + '\n'
+		};
+	}
 
 	return files;
 }

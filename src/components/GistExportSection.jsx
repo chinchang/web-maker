@@ -23,6 +23,7 @@ export function GistExportSection({ item, onGistExported }) {
 		item.title ? `${item.title} — made with Web-Maker` : 'Made with Web-Maker'
 	);
 	const [isPublic, setIsPublic] = useState(false);
+	const [includeMeta, setIncludeMeta] = useState(false);
 	const [isBusy, setIsBusy] = useState(false);
 	const [errorMsg, setErrorMsg] = useState('');
 	const [gistGone, setGistGone] = useState(false);
@@ -129,7 +130,7 @@ export function GistExportSection({ item, onGistExported }) {
 
 	const runExport = async ({ loading, success, op }) => {
 		setErrorMsg('');
-		const files = mapItemToGistFiles(item);
+		const files = mapItemToGistFiles(item, { includeMeta });
 		if (!ensureFilesOrAbort(files)) return;
 		setIsBusy(true);
 		try {
@@ -263,6 +264,14 @@ export function GistExportSection({ item, onGistExported }) {
 							Visibility
 						</Switch>
 					)}
+
+					<Switch
+						checked={includeMeta}
+						onChange={e => setIncludeMeta(e.target.checked)}
+						labels={['No', 'Yes']}
+					>
+						Include README.md and webmaker.json
+					</Switch>
 
 					<HStack gap={2} class="gist-export__actions">
 						{showUpdateUi ? (

@@ -43,7 +43,10 @@ export function GistExportSection({ item, onGistExported }) {
 	if (window.IS_EXTENSION) {
 		return (
 			<VStack gap={2} align="stretch" class="gist-export">
-				<h3 class="gist-export__title">Export to GitHub Gist</h3>
+				<h3 class="gist-export__title">
+					<Icon name="github-icon" />
+					<span>Export to GitHub Gist</span>
+				</h3>
 				<Text>
 					Gist export is only available on the{' '}
 					<a href="https://webmaker.app" target="_blank" rel="noopener">
@@ -189,7 +192,10 @@ export function GistExportSection({ item, onGistExported }) {
 	if (!tokenChecked) {
 		return (
 			<VStack gap={2} align="stretch" class="gist-export">
-				<h3 class="gist-export__title">Export to GitHub Gist</h3>
+				<h3 class="gist-export__title">
+					<Icon name="github-icon" />
+					<span>Export to GitHub Gist</span>
+				</h3>
 			</VStack>
 		);
 	}
@@ -198,8 +204,11 @@ export function GistExportSection({ item, onGistExported }) {
 	const showUpdateUi = hasGist && !gistGone;
 
 	return (
-		<VStack gap={2} align="stretch" class="gist-export">
-			<h3 class="gist-export__title">Export to GitHub Gist</h3>
+		<VStack gap={3} align="stretch" class="gist-export">
+			<h3 class="gist-export__title">
+				<Icon name="github-icon" />
+				<span>Export to GitHub Gist</span>
+			</h3>
 
 			{!token && (
 				<VStack gap={2} align="stretch">
@@ -220,23 +229,26 @@ export function GistExportSection({ item, onGistExported }) {
 			)}
 
 			{token && (
-				<VStack gap={2} align="stretch">
+				<VStack gap={3} align="stretch">
 					{showUpdateUi && (
-						<VStack gap={1} align="stretch">
-							<p class="gist-export__url">
-								Linked gist:{' '}
-								<a href={item.gistUrl} target="_blank" rel="noopener">
-									{item.gistUrl}
-								</a>{' '}
-								<Button
-									class="btn btn--dark hint--bottom hint--rounded"
-									onClick={copyUrl}
-									aria-label="Copy"
-								>
-									<Icon name="copy" /> Copy
-								</Button>
-							</p>
-						</VStack>
+						<div class="url-pill">
+							<span class="url-pill__label">Linked gist</span>
+							<a
+								href={item.gistUrl}
+								target="_blank"
+								rel="noopener"
+								class="url-pill__link"
+							>
+								{item.gistUrl}
+							</a>
+							<Button
+								class="btn btn--dark hint--bottom hint--rounded"
+								onClick={copyUrl}
+								aria-label="Copy"
+							>
+								<Icon name="copy" />
+							</Button>
+						</div>
 					)}
 
 					{gistGone && (

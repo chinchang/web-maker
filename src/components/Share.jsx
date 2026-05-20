@@ -166,19 +166,24 @@ export function Share({
 					)}
 					{item.isPublic && (
 						<VStack gap={2} align="stretch">
-							<p>
-								Public at{' '}
-								<a href={getShareUrl()} target="_blank">
+							<div class="url-pill">
+								<span class="url-pill__label">Public URL</span>
+								<a
+									href={getShareUrl()}
+									target="_blank"
+									rel="noopener"
+									class="url-pill__link"
+								>
 									{getShareUrl()}
-								</a>{' '}
+								</a>
 								<Button
 									class="btn btn--dark hint--bottom hint--rounded"
 									onClick={copyUrl}
 									aria-label="Copy"
 								>
-									<Icon name="copy" /> Copy
+									<Icon name="copy" />
 								</Button>
-							</p>
+							</div>
 
 							{/* Layout Mode Selector */}
 							<HStack gap={3} align="center">

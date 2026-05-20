@@ -4060,50 +4060,114 @@ body.light-theme .help-modal__libs li::marker {
 	}
 }
 
-/* GitHub Gist export */
+/* GitHub Gist export — visually distinct card sitting below the Access section */
 .gist-export {
-	border-top: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
-	padding-top: 1rem;
+	margin-top: 1.5rem;
+	padding: 1.1rem 1.25rem 1.25rem;
+	background: rgba(255, 255, 255, 0.035);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 10px;
+	position: relative;
+}
+.gist-export::before {
+	content: '';
+	position: absolute;
+	left: 1.25rem;
+	right: 1.25rem;
+	top: -1.5rem;
+	height: 1px;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(255, 255, 255, 0.12),
+		transparent
+	);
 }
 .gist-export__title {
-	font-size: 1rem;
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	font-size: 1.2rem;
 	font-weight: 600;
 	margin: 0;
+	letter-spacing: -0.005em;
+}
+.gist-export__title svg {
+	width: 1.15em;
+	height: 1.15em;
+	opacity: 0.85;
+	fill: currentColor;
+	flex-shrink: 0;
 }
 .gist-export__row {
 	display: flex;
 	flex-direction: column;
-	gap: 0.25rem;
-	font-size: 0.875rem;
+	gap: 0.3rem;
+	font-size: 1rem;
+}
+.gist-export__row > span:first-child {
+	opacity: 0.7;
+	/* font-size: 0.8125rem; */
 }
 .gist-export__input {
-	padding: 0.4rem 0.6rem;
-	border-radius: 4px;
-	border: 1px solid rgba(255, 255, 255, 0.15);
-	background: rgba(0, 0, 0, 0.2);
+	padding: 0.5rem 0.7rem;
+	border-radius: 6px;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	background: rgba(0, 0, 0, 0.25);
 	color: inherit;
 	font: inherit;
 	width: 100%;
+	transition:
+		border-color 0.15s ease,
+		background 0.15s ease;
 }
-.gist-export__url {
-	font-size: 0.875rem;
-	word-break: break-all;
-	margin: 0;
+.gist-export__input:focus {
+	outline: none;
+	border-color: var(--clr-brand-2, #fdc100);
+	background: rgba(0, 0, 0, 0.35);
 }
-.gist-export__url a {
-	margin-right: 0.5rem;
+.url-pill {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	padding: 0.5rem 0.65rem 0.5rem 0.85rem;
+	background: rgba(0, 0, 0, 0.22);
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	border-radius: 6px;
+	font-size: 0.85rem;
+}
+.url-pill__label {
+	opacity: 0.55;
+	font-weight: 500;
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	flex-shrink: 0;
+}
+.url-pill__link {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 .gist-export__actions {
 	flex-wrap: wrap;
+	margin-top: 0.2rem;
+	align-items: center;
 }
 .gist-export__disconnect {
 	background: none;
 	border: none;
-	color: var(--color-text-lightest-final, #888);
+	color: var(--color-text-light, #888);
 	text-decoration: underline;
+	text-underline-offset: 2px;
 	cursor: pointer;
-	font-size: 0.8125rem;
-	padding: 0;
+	font-size: 0.875rem;
+	padding: 0.25rem 0.5rem;
+	margin-left: auto;
+	transition: color 0.15s ease;
 }
 .gist-export__disconnect:hover:not(:disabled) {
 	color: inherit;
@@ -4113,18 +4177,41 @@ body.light-theme .help-modal__libs li::marker {
 	cursor: default;
 }
 .gist-export__error {
-	color: #ff7676;
+	color: #ff8a8a;
 	font-size: 0.875rem;
 	margin: 0;
+	padding: 0.5rem 0.75rem;
+	background: rgba(255, 100, 100, 0.08);
+	border: 1px solid rgba(255, 100, 100, 0.25);
+	border-radius: 6px;
 }
 
 body.light-theme .gist-export {
-	border-top-color: rgba(0, 0, 0, 0.1);
+	background: rgba(0, 0, 0, 0.025);
+	border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-theme .gist-export::before {
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(0, 0, 0, 0.12),
+		transparent
+	);
 }
 body.light-theme .gist-export__input {
 	background: #fff;
 	border-color: rgba(0, 0, 0, 0.15);
 }
+body.light-theme .gist-export__input:focus {
+	background: #fff;
+	border-color: var(--clr-brand-2, #fdc100);
+}
+body.light-theme .url-pill {
+	background: rgba(0, 0, 0, 0.04);
+	border-color: rgba(0, 0, 0, 0.08);
+}
 body.light-theme .gist-export__error {
 	color: #c92a2a;
+	background: rgba(201, 42, 42, 0.06);
+	border-color: rgba(201, 42, 42, 0.25);
 }

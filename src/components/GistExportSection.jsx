@@ -227,6 +227,27 @@ export function GistExportSection({ item, onGistExported }) {
 	const hasGist = !!item.gistId;
 	const showUpdateUi = hasGist && !gistGone;
 
+	const linkedGistPill = item.gistUrl ? (
+		<div class="url-pill">
+			<span class="url-pill__label">Linked gist</span>
+			<a
+				href={item.gistUrl}
+				target="_blank"
+				rel="noopener"
+				class="url-pill__link"
+			>
+				{item.gistUrl}
+			</a>
+			<Button
+				class="btn btn--dark btn--small hint--bottom hint--rounded"
+				onClick={copyUrl}
+				aria-label="Copy"
+			>
+				<Icon name="copy" />
+			</Button>
+		</div>
+	) : null;
+
 	return (
 		<VStack gap={2} align="stretch" class="gist-export">
 			<h3 class="gist-export__title">
@@ -236,9 +257,12 @@ export function GistExportSection({ item, onGistExported }) {
 
 			{!token && (
 				<VStack gap={2} align="stretch">
+					{linkedGistPill}
 					<Text>
-						Push this creation to a GitHub gist. Requires the <code>gist</code>{' '}
-						scope.
+						{item.gistUrl
+							? 'Connect GitHub to update this gist or push a new version.'
+							: 'Push this creation to a GitHub gist.'}{' '}
+						Requires the <code>gist</code> scope.
 					</Text>
 					<HStack gap={2}>
 						<Button
@@ -254,26 +278,7 @@ export function GistExportSection({ item, onGistExported }) {
 
 			{token && (
 				<VStack gap={3} align="stretch">
-					{showUpdateUi && (
-						<div class="url-pill">
-							<span class="url-pill__label">Linked gist</span>
-							<a
-								href={item.gistUrl}
-								target="_blank"
-								rel="noopener"
-								class="url-pill__link"
-							>
-								{item.gistUrl}
-							</a>
-							<Button
-								class="btn btn--dark btn--small hint--bottom hint--rounded"
-								onClick={copyUrl}
-								aria-label="Copy"
-							>
-								<Icon name="copy" />
-							</Button>
-						</div>
-					)}
+					{showUpdateUi && linkedGistPill}
 
 					{gistGone && (
 						<Text>

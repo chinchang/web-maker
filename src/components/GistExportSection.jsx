@@ -13,8 +13,12 @@ import {
 	mapItemToGistFiles,
 	getStoredGistToken,
 	setStoredGistToken,
-	clearStoredGistToken
+	clearStoredGistToken,
+	validateGistToken
 } from '../gistService';
+
+const PAT_CREATE_URL =
+	'https://github.com/settings/tokens/new?description=Web%20Maker%20Gist%20Export&scopes=gist';
 
 export function GistExportSection({ item, onGistExported }) {
 	const [token, setToken] = useState(null);
@@ -27,6 +31,9 @@ export function GistExportSection({ item, onGistExported }) {
 	const [isBusy, setIsBusy] = useState(false);
 	const [errorMsg, setErrorMsg] = useState('');
 	const [gistGone, setGistGone] = useState(false);
+	const [showTokenInput, setShowTokenInput] = useState(false);
+	const [tokenInput, setTokenInput] = useState('');
+	const [tokenError, setTokenError] = useState('');
 
 	useEffect(() => {
 		if (window.IS_EXTENSION) {
@@ -84,6 +91,37 @@ export function GistExportSection({ item, onGistExported }) {
 			} else if (err && err.code === 'POPUP_CLOSED') {
 				trackEvent('fn', 'gistConnectCancelled');
 			}
+		} finally {
+			setIsBusy(false);
+		}
+	};
+
+	const handleSaveToken = async () => {
+		const trimmed = tokenInput.trim();
+		setTokenError('');
+		if (!trimmed) {
+			setTokenError('Paste a token to continue.');
+			return;
+		}
+		setIsBusy(true);
+		trackEvent('ui', 'gistPatSaveClick');
+		try {
+			const { login } = await validateGistToken(trimmed);
+			await setStoredGistToken(trimmed);
+			setToken(trimmed);
+			setTokenInput('');
+			setShowTokenInput(false);
+			alertsService.add(`Connected as ${login}`);
+			trackEvent('fn', 'gistPatSaveSuccess');
+		} catch (err) {
+			const msg =
+				err && err.code === 'INVALID_TOKEN'
+					? "That token didn't work. Double-check you copied it correctly and that it hasn't expired."
+					: err && err.code === 'MISSING_SCOPE'
+						? 'This token is missing the "gist" scope. Recreate it on GitHub with "gist" checked.'
+						: (err && err.message) || 'Could not validate token.';
+			setTokenError(msg);
+			trackEvent('fn', 'gistPatSaveFail', (err && err.code) || 'unknown');
 		} finally {
 			setIsBusy(false);
 		}
@@ -255,7 +293,7 @@ export function GistExportSection({ item, onGistExported }) {
 				<span>Export to GitHub Gist</span>
 			</h3>
 
-			{!token && (
+			{!token && !showTokenInput && (
 				<VStack gap={2} align="stretch">
 					{linkedGistPill}
 					<Text>
@@ -272,6 +310,92 @@ export function GistExportSection({ item, onGistExported }) {
 						>
 							Connect GitHub
 						</Button>
+					</HStack>
+					<Text class="gist-export__hint">
+						Can't connect?{' '}
+						<button
+							type="button"
+							class="gist-export__linkbtn"
+							onClick={() => {
+								setTokenError('');
+								setShowTokenInput(true);
+								trackEvent('ui', 'gistPatToggleOpen');
+							}}
+						>
+							Use a personal access token instead
+						</button>
+					</Text>
+				</VStack>
+			)}
+
+			{!token && showTokenInput && (
+				<VStack gap={2} align="stretch" class="gist-export__pat">
+					{linkedGistPill}
+					<Text>
+						Paste a GitHub personal access token with the <code>gist</code>{' '}
+						scope. It's stored only on this device.
+					</Text>
+					<ol class="gist-export__steps">
+						<li>
+							<a
+								href={PAT_CREATE_URL}
+								target="_blank"
+								rel="noopener"
+								onClick={() => trackEvent('ui', 'gistPatCreateLinkClick')}
+							>
+								Open GitHub's "New token" page
+							</a>{' '}
+							(the <code>gist</code> scope is pre-selected).
+						</li>
+						<li>
+							Pick an expiration, scroll down, and click{' '}
+							<strong>Generate token</strong>.
+						</li>
+						<li>Copy the token and paste it below.</li>
+					</ol>
+					<label class="gist-export__row">
+						<span>Personal access token</span>
+						<input
+							type="password"
+							class="gist-export__input"
+							placeholder="ghp_… or github_pat_…"
+							value={tokenInput}
+							autoFocus
+							onInput={e => {
+								setTokenInput(e.target.value);
+								if (tokenError) setTokenError('');
+							}}
+							onKeyDown={e => {
+								if (e.key === 'Enter' && !isBusy) handleSaveToken();
+							}}
+						/>
+					</label>
+					{tokenError && (
+						<p class="gist-export__error" role="alert">
+							{tokenError}
+						</p>
+					)}
+					<HStack gap={2}>
+						<Button
+							class={`btn btn--primary ${isBusy ? 'is-loading' : ''}`}
+							disabled={isBusy || !tokenInput.trim()}
+							onClick={handleSaveToken}
+						>
+							Save token
+						</Button>
+						<button
+							type="button"
+							class="gist-export__linkbtn"
+							disabled={isBusy}
+							onClick={() => {
+								setShowTokenInput(false);
+								setTokenInput('');
+								setTokenError('');
+								trackEvent('ui', 'gistPatToggleClose');
+							}}
+						>
+							Back
+						</button>
 					</HStack>
 				</VStack>
 			)}

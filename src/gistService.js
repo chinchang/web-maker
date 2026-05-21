@@ -190,6 +190,32 @@ export async function updateGist(token, gistId, { description, files }) {
 	return { id: json.id, html_url: json.html_url };
 }
 
+export async function validateGistToken(token) {
+	const res = await fetch(`${GITHUB_API}/user`, { headers: headers(token) });
+	if (res.status === 401) {
+		throw { code: 'INVALID_TOKEN', message: 'Invalid token.' };
+	}
+	if (!res.ok) {
+		throw {
+			code: 'UNKNOWN',
+			status: res.status,
+			message: `GitHub responded with ${res.status}.`
+		};
+	}
+	const scopes = (res.headers.get('x-oauth-scopes') || '')
+		.split(',')
+		.map(s => s.trim())
+		.filter(Boolean);
+	if (scopes.length > 0 && !scopes.includes('gist')) {
+		throw {
+			code: 'MISSING_SCOPE',
+			message: 'This token is missing the "gist" scope.'
+		};
+	}
+	const user = await res.json();
+	return { login: user.login };
+}
+
 export function getStoredGistToken() {
 	return new Promise(resolve => {
 		window.db.sync.get({ [TOKEN_KEY]: null }, result => {

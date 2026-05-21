@@ -4218,6 +4218,50 @@ body.light-theme .public-link-branch::before {
 	border-radius: 6px;
 }
 
+.gist-export__hint {
+	font-size: 0.85rem;
+	opacity: 0.75;
+}
+
+.gist-export__linkbtn {
+	background: none;
+	border: 0;
+	padding: 0;
+	color: inherit;
+	font: inherit;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+	cursor: pointer;
+}
+.gist-export__linkbtn:hover:not(:disabled) {
+	opacity: 0.85;
+}
+.gist-export__linkbtn:disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+
+.gist-export__steps {
+	margin: 0;
+	padding-left: 1.25rem;
+	font-size: 0.9rem;
+	line-height: 1.6;
+}
+.gist-export__steps li + li {
+	margin-top: 0.25rem;
+}
+
+.gist-export__pat {
+	padding: 1rem;
+	border-radius: 8px;
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.06);
+}
+body.light-theme .gist-export__pat {
+	background: rgba(0, 0, 0, 0.025);
+	border-color: rgba(0, 0, 0, 0.08);
+}
+
 body.light-theme .gist-export {
 	background: rgba(0, 0, 0, 0.025);
 	border-color: rgba(0, 0, 0, 0.08);

@@ -87,7 +87,17 @@ export function Changelog(props) {
 			<h1>Whats new?</h1>
 			<Tabs>
 				<TabPanel label="2026">
-					<Notification version="7.3.0" {...props} isLatest={true}>
+					<Notification version="7.3.1" {...props} isLatest={true}>
+						<li>
+							<strong>Personal Access Token for Gist</strong>: If "Connect
+							GitHub" doesn't work for you (for example, when your GitHub email
+							differs from your Web Maker login), you can now paste a GitHub
+							personal access token with the <code>gist</code> scope to push to
+							gists. The token is stored only on your device.
+						</li>
+					</Notification>
+
+					<Notification version="7.3.0" {...props}>
 						<li>
 							<strong>Export to GitHub Gist</strong>: Push the current creation
 							to a GitHub gist straight from the Share modal. Optionally add a{' '}

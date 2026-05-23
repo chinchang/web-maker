@@ -266,10 +266,14 @@ export default class App extends Component {
 		}
 
 		onAuthStateChanged(auth, authUser => {
+			const isInitialAuthEvent = !this.hasReceivedAuthEvent;
+			this.hasReceivedAuthEvent = true;
 			this.setState({ isLoginModalOpen: false });
 			if (authUser) {
 				log('You are -> ', authUser);
-				alertsService.add('You are now logged in!');
+				if (!isInitialAuthEvent) {
+					alertsService.add('You are now logged in!');
+				}
 
 				let newUser = {
 					uid: authUser.uid,

@@ -437,6 +437,7 @@ a > svg {
 
 .btn {
 	display: inline-flex;
+	gap: 0.2em;
 	align-items: center;
 	color: var(--color-button);
 	font-size: inherit;
@@ -512,13 +513,11 @@ a > svg {
 	height: 20px;
 	fill: currentColor;
 	vertical-align: middle;
-	margin-right: 8px;
 }
 
 .btn--big > svg {
 	width: 2rem;
 	height: 2rem;
-	margin-right: 1rem;
 }
 
 @property --angle {
@@ -1032,7 +1031,7 @@ body > #demo-frame {
 	height: 20px;
 }
 .btn--dark > svg {
-	margin-right: 4px;
+	/* margin-right: 4px; */
 }
 
 .main-header__btn-wrap > .is-marked > svg {
@@ -3643,7 +3642,7 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 
 .multiplayer-modal__hint {
 	margin: 0.5rem 0 0;
-	font-size: 0.8rem;
+	font-size: 0.875rem;
 	color: var(--color-text-secondary, #888);
 }
 

@@ -141,7 +141,7 @@ export default function MultiplayerModal({
 											onClick={e => e.target.select()}
 										/>
 										<button
-											class={`btn btn--dark btn--big  ${
+											class={`btn btn--dark btn--small  ${
 												copySuccess ? 'is-success' : ''
 											}`}
 											onClick={handleCopyLink}

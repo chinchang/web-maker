@@ -13,6 +13,8 @@
 			'\'\u54CE\u5440\uFF01\u6240\u9009\u6587\u4EF6\u5DF2\u635F\u574F\u3002\u8BF7\u9009\u62E9\u4E00\u4E2A\u901A\u8FC7\u70B9\u51FB "\u5BFC\u51FA" \u6309\u94AE\u751F\u6210\u7684\u6587\u4EF6\u3002',
 		'(Experimental) Switches from CodeMirror to Monaco. Many other settings might not be available in Monaco.':
 			'\uFF08\u5B9E\u9A8C\u6027\uFF09\u4ECE CodeMirror \u5207\u6362\u5230 Monaco\u3002\u8BB8\u591A\u5176\u4ED6\u8BBE\u7F6E\u53EF\u80FD\u5728 Monaco \u4E2D\u4E0D\u53EF\u7528\u3002',
+		'(the <0>gist</0> scope is pre-selected).':
+			'(the <0>gist</0> scope is pre-selected).',
 		'2 files mode creations available in Free plan. To create unlimited files mode creations, upgrade to <0/>.':
 			'\u514D\u8D39\u8BA1\u5212\u4E2D\u53EF\u521B\u5EFA 2 \u4E2A\u6587\u4EF6\u6A21\u5F0F\u3002\u8981\u521B\u5EFA\u65E0\u9650\u6587\u4EF6\u6A21\u5F0F\uFF0C\u8BF7\u5347\u7EA7\u5230 <0/>\u3002',
 		'3 separate panes to write HTML, CSS and JavaScript. Good for quickly testing something.':
@@ -25,6 +27,8 @@
 		"Add files locally, usable only on this browser. Won't work for others if you share this publicly.":
 			'\u672C\u5730\u6DFB\u52A0\u6587\u4EF6\uFF0C\u4EC5\u5728\u6B64\u6D4F\u89C8\u5668\u4E2D\u53EF\u7528\u3002\u5982\u679C\u60A8\u516C\u5F00\u5206\u4EAB\uFF0C\u5C06\u65E0\u6CD5\u5728\u5176\u4ED6\u6D4F\u89C8\u5668\u4E2D\u4F7F\u7528\u3002',
 		'Add library': '\u6DFB\u52A0\u5E93',
+		'Add some code before exporting.':
+			'\u5728\u5BFC\u51FA\u4E4B\u524D\u6DFB\u52A0\u4E00\u4E9B\u4EE3\u7801\u3002',
 		'Add the closing tag automatically on seeing an opening tag in HTML':
 			'\u5728 HTML \u4E2D\u770B\u5230\u5F00\u6807\u7B7E\u65F6\u81EA\u52A8\u6DFB\u52A0\u95ED\u5408\u6807\u7B7E',
 		Advanced: '\u9AD8\u7EA7',
@@ -39,6 +43,9 @@
 		'Auto-save': '\u81EA\u52A8\u4FDD\u5B58',
 		'Auto-save keeps saving your code at regular intervals after you hit save manually the first time':
 			'\u81EA\u52A8\u4FDD\u5B58\u4F1A\u5728\u60A8\u7B2C\u4E00\u6B21\u624B\u52A8\u70B9\u51FB\u4FDD\u5B58\u540E\u5B9A\u671F\u4FDD\u5B58\u60A8\u7684\u4EE3\u7801',
+		Back: '\u8FD4\u56DE',
+		"Can't connect?": '\u65E0\u6CD5\u8FDE\u63A5\uFF1F',
+		Cancelled: '\u5DF2\u53D6\u6D88',
 		Chat: 'Chat',
 		'Choose from popular libraries':
 			'\u4ECE\u6D41\u884C\u5E93\u4E2D\u9009\u62E9',
@@ -64,12 +71,28 @@
 			'\u6765\u81EA Chrome \u6269\u5C55\u5417\uFF1F<0>\u4E86\u89E3\u5982\u4F55\u5BFC\u5165\u60A8\u7684\u521B\u4F5C</0>\u3002',
 		'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.':
 			'\u901A\u8FC7\u70B9\u51FB\u5E94\u7528\u53F3\u4E0B\u89D2\u7684\u9F7F\u8F6E\u56FE\u6807 (<0><1/></0>) \u6765\u914D\u7F6E\u548C\u81EA\u5B9A\u4E49\u8BBE\u7F6E\u3002',
+		'Connect GitHub': '\u8FDE\u63A5 GitHub',
+		'Connect GitHub to update this gist or push a new version.':
+			'\u8FDE\u63A5 GitHub \u4EE5\u66F4\u65B0\u6B64 gist \u6216\u63A8\u9001\u65B0\u7248\u672C\u3002',
+		'Connected as {login}': function (a) {
+			return ['\u5DF2\u8FDE\u63A5\u4E3A ', a('login')];
+		},
+		'Connecting to GitHub\u2026': '\u6B63\u5728\u8FDE\u63A5\u5230 GitHub\u2026',
 		Console: '\u63A7\u5236\u53F0',
 		'Contact the Developer': '\u8054\u7CFB\u5F00\u53D1\u8005',
 		'Copy URL (or keep clicking to copy other formats)':
 			'\u590D\u5236 URL\uFF08\u6216\u7EE7\u7EED\u70B9\u51FB\u4EE5\u590D\u5236\u5176\u4ED6\u683C\u5F0F\uFF09',
+		'Copy gist URL': '\u590D\u5236 gist URL',
 		'Copy link': '\u590D\u5236\u94FE\u63A5',
+		'Copy public URL': '\u590D\u5236\u516C\u5171 URL',
+		'Copy the token and paste it below.':
+			'\u590D\u5236\u4EE4\u724C\u5E76\u7C98\u8D34\u5230\u4E0B\u9762\u3002',
+		'Could not connect to GitHub.':
+			'\u65E0\u6CD5\u8FDE\u63A5\u5230 GitHub\u3002',
+		'Could not validate token.': '\u65E0\u6CD5\u9A8C\u8BC1\u4EE4\u724C\u3002',
 		'Create New': '\u521B\u5EFA\u65B0\u5185\u5BB9',
+		'Create new Gist': '\u521B\u5EFA\u65B0 Gist',
+		'Creating new Gist\u2026': '\u6B63\u5728\u521B\u5EFA\u65B0 Gist\u2026',
 		'Custom font name here':
 			'\u5728\u6B64\u8F93\u5165\u81EA\u5B9A\u4E49\u5B57\u4F53\u540D\u79F0',
 		'Customize editor, theme, key bindings and more from the settings gear in the bottom-right corner.':
@@ -80,8 +103,10 @@
 			'\u9ED8\u8BA4 JavaScript \u9884\u5904\u7406\u5668',
 		'Default Preprocessors': '\u9ED8\u8BA4\u9884\u5904\u7406\u5668',
 		Delete: '\u5220\u9664',
+		Description: '\u63CF\u8FF0',
 		'Detach Preview': 'Detach Preview',
 		'Detach preview': '\u5206\u79BB\u9884\u89C8',
+		'Disconnect GitHub': '\u65AD\u5F00 GitHub \u8FDE\u63A5',
 		Discuss: '\u8BA8\u8BBA',
 		"Don't ask me again": '\u4E0D\u8981\u518D\u95EE\u6211',
 		Donate: 'Donate',
@@ -102,6 +127,11 @@
 		Export: '\u5BFC\u51FA',
 		'Export all your creations into a single importable file.':
 			'\u5C06\u60A8\u6240\u6709\u7684\u521B\u4F5C\u5BFC\u51FA\u4E3A\u4E00\u4E2A\u53EF\u5BFC\u5165\u7684\u6587\u4EF6\u3002',
+		'Export as new gist': '\u5BFC\u51FA\u4E3A\u65B0 gist',
+		'Export to Gist': '\u5BFC\u51FA\u5230 Gist',
+		'Export to GitHub Gist': '\u5BFC\u51FA\u5230 GitHub Gist',
+		'Exported to Gist': '\u5DF2\u5BFC\u51FA\u5230 Gist',
+		'Exporting to Gist\u2026': '\u6B63\u5728\u5BFC\u51FA\u5230 Gist\u2026',
 		'Fast/light-weight version': '\u5FEB\u901F/\u8F7B\u91CF\u7EA7\u7248\u672C',
 		'Feedback & Suggestions': '\u53CD\u9988\u4E0E\u5EFA\u8BAE',
 		'Fetching files...': '\u6B63\u5728\u83B7\u53D6\u6587\u4EF6...',
@@ -130,6 +160,17 @@
 		Fun: '\u4E50\u8DA3',
 		General: '\u5E38\u89C4',
 		Get: '\u83B7\u53D6',
+		'Gist URL copied': 'Gist URL \u5DF2\u590D\u5236',
+		'Gist export is only available on the <0>web version</0> of Web-Maker.':
+			'Gist \u5BFC\u51FA\u4EC5\u5728 Web-Maker \u7684 <0>\u7F51\u9875\u7248\u672C</0> \u4E2D\u53EF\u7528\u3002',
+		'Gist updated': 'Gist \u5DF2\u66F4\u65B0',
+		'Gist was deleted on GitHub':
+			'Gist \u5728 GitHub \u4E0A\u5DF2\u88AB\u5220\u9664',
+		'GitHub access expired': 'GitHub \u8BBF\u95EE\u5DF2\u8FC7\u671F',
+		'GitHub access expired. Please reconnect.':
+			'GitHub \u8BBF\u95EE\u5DF2\u8FC7\u671F\u3002\u8BF7\u91CD\u65B0\u8FDE\u63A5\u3002',
+		'GitHub connected': 'GitHub \u5DF2\u8FDE\u63A5',
+		'GitHub disconnected': 'GitHub \u5DF2\u65AD\u5F00\u8FDE\u63A5',
 		Global: '\u5168\u5C40',
 		'Grid view': '\u7F51\u683C\u89C6\u56FE',
 		Help: '\u5E2E\u52A9',
@@ -146,6 +187,8 @@
 			'\u5728\u60A8\u7684\u5E10\u6237\u4E2D\u5BFC\u5165\u60A8\u7684\u521B\u4F5C',
 		"Import your creations. Only the file that you export through the 'Export' button can be imported.":
 			'\u5BFC\u5165\u60A8\u7684\u521B\u4F5C\u3002\u53EA\u6709\u901A\u8FC7\u201C\u5BFC\u51FA\u201D\u6309\u94AE\u5BFC\u51FA\u7684\u6587\u4EF6\u624D\u80FD\u88AB\u5BFC\u5165\u3002',
+		'Include README.md and webmaker.json':
+			'\u5305\u542B README.md \u548C webmaker.json',
 		'Indent code left': '\u5DE6\u7F29\u8FDB\u4EE3\u7801',
 		'Indent code right': '\u53F3\u7F29\u8FDB\u4EE3\u7801',
 		Indentation: '\u7F29\u8FDB',
@@ -169,6 +212,7 @@
 		'Like this extension? Please <0>rate it here</0>.':
 			'Like this extension? Please <0>rate it here</0>.',
 		'Line wrap': '\u6362\u884C',
+		'Linked gist': '\u94FE\u63A5\u7684 gist',
 		'List view': '\u5217\u8868\u89C6\u56FE',
 		'Loads the last open creation when app starts':
 			'\u5E94\u7528\u542F\u52A8\u65F6\u52A0\u8F7D\u6700\u540E\u6253\u5F00\u7684\u521B\u4F5C',
@@ -195,6 +239,7 @@
 		'Manage your PRO subscription': '\u7BA1\u7406\u60A8\u7684 PRO \u8BA2\u9605',
 		'Manage your code in files. Just like you would have files on your local machine.':
 			'\u5728\u6587\u4EF6\u4E2D\u7BA1\u7406\u60A8\u7684\u4EE3\u7801\u3002\u5C31\u50CF\u60A8\u5728\u672C\u5730\u8BA1\u7B97\u673A\u4E0A\u62E5\u6709\u6587\u4EF6\u4E00\u6837\u3002',
+		'Max 10MB per file': '\u6BCF\u4E2A\u6587\u4EF6\u6700\u5927 10MB',
 		'Max 300KB per file': '\u6BCF\u4E2A\u6587\u4EF6\u6700\u5927 300KB',
 		'Max 5MB per file': '\u6BCF\u4E2A\u6587\u4EF6\u6700\u5927 5MB',
 		'Maximize pane': '\u6700\u5927\u5316\u9762\u677F',
@@ -210,6 +255,8 @@
 			return ['My Library (', a('0'), ')'];
 		},
 		New: '\u65B0\u5EFA',
+		'New gist created': '\u65B0\u5EFA gist \u5DF2\u521B\u5EFA',
+		No: '\u5426',
 		'No feedback yet. Be the first!':
 			'\u8FD8\u6CA1\u6709\u53CD\u9988\u3002\u6210\u4E3A\u7B2C\u4E00\u4E2A\uFF01',
 		'No files uploaded yet': '\u5C1A\u672A\u4E0A\u4F20\u6587\u4EF6',
@@ -225,6 +272,8 @@
 		'Once you stop typing, the preview waits for this much time before getting updated. Too low value might choke your browser!':
 			'\u4E00\u65E6\u60A8\u505C\u6B62\u8F93\u5165\uFF0C\u9884\u89C8\u5C06\u5728\u6B64\u65F6\u95F4\u5185\u7B49\u5F85\u66F4\u65B0\u3002\u503C\u8FC7\u4F4E\u53EF\u80FD\u4F1A\u4F7F\u60A8\u7684\u6D4F\u89C8\u5668\u5D29\u6E83\uFF01',
 		Open: '\u6253\u5F00',
+		'Open GitHub\'s "New token" page':
+			'\u6253\u5F00 GitHub \u7684 "\u65B0\u4EE4\u724C" \u9875\u9762',
 		'Open Web Maker anytime by clicking the<0><1/></0> button in top-right side of your browser.':
 			'\u901A\u8FC7\u70B9\u51FB\u6D4F\u89C8\u5668\u53F3\u4E0A\u89D2\u7684<0><1/></0>\u6309\u94AE\u968F\u65F6\u6253\u5F00Web Maker\u3002',
 		'Open Web Maker anytime by visiting <0>https://webmaker.app/create/</0> - Even when you are offline! It just works! \uD83D\uDE31 <1>Drag the following bookmarklet</1> on your bookmark bar to create a quick access shortcut:':
@@ -243,6 +292,15 @@
 		'PRO unlocks unlimited public creations, unlimited Files mode projects, cloud asset hosting and real-time multiplayer collab.':
 			'PRO \u89E3\u9501\u65E0\u9650\u516C\u5171\u521B\u4F5C\u3001\u65E0\u9650\u6587\u4EF6\u6A21\u5F0F\u9879\u76EE\u3001\u4E91\u8D44\u4EA7\u6258\u7BA1\u548C\u5B9E\u65F6\u591A\u4EBA\u534F\u4F5C\u3002',
 		Participants: '\u53C2\u4E0E\u8005',
+		"Paste a GitHub personal access token with the <0>gist</0> scope. It's stored only on this device.":
+			'\u7C98\u8D34\u4E00\u4E2A\u5177\u6709 <0>gist</0> \u8303\u56F4\u7684 GitHub \u4E2A\u4EBA\u8BBF\u95EE\u4EE4\u724C\u3002\u5B83\u4EC5\u5B58\u50A8\u5728\u6B64\u8BBE\u5907\u4E0A\u3002',
+		'Paste a token to continue.':
+			'\u7C98\u8D34\u4E00\u4E2A\u4EE4\u724C\u4EE5\u7EE7\u7EED\u3002',
+		'Permission denied. Make sure your token has the "gist" scope.':
+			'\u6743\u9650\u88AB\u62D2\u3002\u786E\u4FDD\u60A8\u7684\u4EE4\u724C\u5177\u6709 "gist" \u8303\u56F4\u3002',
+		'Personal access token': '\u4E2A\u4EBA\u8BBF\u95EE\u4EE4\u724C',
+		'Pick an expiration, scroll down, and click <0>Generate token</0>.':
+			'\u9009\u62E9\u4E00\u4E2A\u8FC7\u671F\u65F6\u95F4\uFF0C\u5411\u4E0B\u6EDA\u52A8\u5E76\u70B9\u51FB <0>\u751F\u6210\u4EE4\u724C</0>\u3002',
 		'Powered by cdnjs': '\u7531cdnjs\u63D0\u4F9B\u652F\u6301',
 		'Preserve console logs': '\u4FDD\u7559\u63A7\u5236\u53F0\u65E5\u5FD7',
 		'Preserve last written code':
@@ -253,6 +311,10 @@
 			'\u9884\u89C8\u5237\u65B0\u7B49\u5F85\u65F6\u95F4',
 		'Preview will refresh when you resize the preview pane':
 			'\u5F53\u60A8\u8C03\u6574\u9884\u89C8\u7A97\u683C\u5927\u5C0F\u65F6\uFF0C\u9884\u89C8\u5C06\u5237\u65B0',
+		Public: '\u516C\u5F00',
+		'Public URL': '\u516C\u5F00 URL',
+		'Push this creation to a GitHub gist.':
+			'\u5C06\u6B64\u521B\u4F5C\u63A8\u9001\u5230 GitHub gist\u3002',
 		'Put each library in new line':
 			'\u5C06\u6BCF\u4E2A\u5E93\u653E\u5728\u65B0\u884C\u4E2D',
 		'Read more': '\u9605\u8BFB\u66F4\u591A',
@@ -267,6 +329,8 @@
 		'Replace new tab page': '\u66FF\u6362\u65B0\u6807\u7B7E\u9875',
 		'Report a Bug': '\u62A5\u544A\u9519\u8BEF',
 		'Report a bug': '\u62A5\u544A\u4E00\u4E2A\u9519\u8BEF',
+		'Requires the <0>gist</0> scope.':
+			'\u9700\u8981 <0>gist</0> \u8303\u56F4\u3002',
 		'Review Web Maker': '\u8BC4\u4EF7 Web Maker',
 		Run: '\u8FD0\u884C',
 		'Run Prettier': '\u8FD0\u884C Prettier',
@@ -277,9 +341,11 @@
 		'Save current creation (Ctrl/\u2318 + S)':
 			'\u4FDD\u5B58\u5F53\u524D\u521B\u4F5C (Ctrl/\u2318 + S)',
 		'Save current creations': '\u4FDD\u5B58\u5F53\u524D\u521B\u4F5C',
+		'Save token': '\u4FDD\u5B58\u4EE4\u724C',
 		'Search files': '\u641C\u7D22\u6587\u4EF6',
 		'Search your creations here...':
 			'\u5728\u8FD9\u91CC\u641C\u7D22\u4F60\u7684\u521B\u4F5C...',
+		Secret: '\u79D8\u5BC6',
 		'See Changelog': 'See Changelog',
 		'See PRO': '\u67E5\u770B PRO',
 		'See awesome libraries used':
@@ -293,12 +359,15 @@
 		Share: '\u5206\u4EAB',
 		'Share Link': '\u5206\u4EAB\u94FE\u63A5',
 		'Share Web Maker': '\u5206\u4EAB Web Maker',
+		'Share link': '\u5206\u4EAB\u94FE\u63A5',
 		'Share this creation publicly':
 			'\u516C\u5F00\u5206\u4EAB\u8FD9\u4E2A\u521B\u4F5C',
 		'Share this link with others to let them join your session.':
 			'\u4E0E\u4ED6\u4EBA\u5206\u4EAB\u6B64\u94FE\u63A5\u4EE5\u8BA9\u4ED6\u4EEC\u52A0\u5165\u4F60\u7684\u4F1A\u8BDD\u3002',
 		Signup: 'Signup',
 		'Single line comment': '\u5355\u884C\u6CE8\u91CA',
+		'Something went wrong talking to GitHub.':
+			'\u4E0E GitHub \u901A\u4FE1\u65F6\u51FA\u73B0\u95EE\u9898\u3002',
 		Spaces: '\u7A7A\u683C',
 		'Start Blank': '\u5F00\u59CB\u7A7A\u767D',
 		'Start Blank in File Mode':
@@ -336,7 +405,13 @@
 		Tabs: '\u6807\u7B7E',
 		'Take screenshot of preview':
 			'\u622A\u53D6\u9884\u89C8\u7684\u5C4F\u5E55\u622A\u56FE',
+		"That token didn't work. Double-check you copied it correctly and that it hasn't expired.":
+			'\u8BE5\u4EE4\u724C\u65E0\u6548\u3002\u8BF7\u4ED4\u7EC6\u68C0\u67E5\u60A8\u662F\u5426\u6B63\u786E\u590D\u5236\uFF0C\u5E76\u786E\u4FDD\u5B83\u5C1A\u672A\u8FC7\u671F\u3002',
 		Theme: '\u4E3B\u9898',
+		'This gist was deleted on GitHub. Create a new one to re-link.':
+			'\u6B64 gist \u5DF2\u5728 GitHub \u4E0A\u5220\u9664\u3002\u521B\u5EFA\u4E00\u4E2A\u65B0\u7684\u4EE5\u91CD\u65B0\u94FE\u63A5\u3002',
+		'This token is missing the "gist" scope. Recreate it on GitHub with "gist" checked.':
+			'\u6B64\u4EE4\u724C\u7F3A\u5C11 "gist" \u8303\u56F4\u3002\u5728 GitHub \u4E0A\u91CD\u65B0\u521B\u5EFA\u65F6\u52FE\u9009 "gist"\u3002',
 		'Toggle code pane': '\u5207\u6362\u4EE3\u7801\u7A97\u683C',
 		'Toggle console': '\u5207\u6362\u63A7\u5236\u53F0',
 		'Toggle full screen preview': '\u5207\u6362\u5168\u5C4F\u9884\u89C8',
@@ -351,6 +426,8 @@
 			'\u5C06\u60A8\u7684\u529F\u80FD\u8BF7\u6C42\u3001\u8BC4\u8BBA\u548C\u5EFA\u8BAE\u53D1\u63A8\u7ED9 <0>@webmakerApp</0>',
 		'Type here to search libraries':
 			'\u5728\u8FD9\u91CC\u8F93\u5165\u4EE5\u641C\u7D22\u5E93',
+		'Update Gist': '\u66F4\u65B0 Gist',
+		'Updating Gist\u2026': '\u6B63\u5728\u66F4\u65B0 Gist\u2026',
 		'Upgrade to PRO': '\u5347\u7EA7\u5230 PRO',
 		'Upgrade to PRO and get some advanced superpowers!':
 			'\u5347\u7EA7\u5230 PRO \u5E76\u83B7\u5F97\u4E00\u4E9B\u9AD8\u7EA7\u8D85\u80FD\u529B\uFF01',
@@ -359,8 +436,11 @@
 			'\u5C06\u8D44\u4EA7\u4E0A\u4F20\u5230\u4E91\u7AEF\uFF0C\u4EE5\u4FBF\u5728\u4E0D\u540C\u8BBE\u5907\u4E0A\u4F7F\u7528\u3002',
 		'Upload/Use assets': '\u4E0A\u4F20/\u4F7F\u7528\u8D44\u6E90',
 		'Use Monaco Editor': '\u4F7F\u7528 Monaco \u7F16\u8F91\u5668',
+		'Use a personal access token instead':
+			'\u6539\u7528\u4E2A\u4EBA\u8BBF\u95EE\u4EE4\u724C',
 		'Use experimental Monaco editor':
 			'\u4F7F\u7528\u5B9E\u9A8C\u6027 Monaco \u7F16\u8F91\u5668',
+		Visibility: '\u53EF\u89C1\u6027',
 		'Visit <0>https://webmaker.app/create/</0> any time \u2014 it works offline. Drag the bookmarklet onto your bookmark bar for one-click access:':
 			'\u968F\u65F6\u8BBF\u95EE <0>https://webmaker.app/create/</0> \u2014 \u5B83\u53EF\u4EE5\u79BB\u7EBF\u4F7F\u7528\u3002\u5C06\u4E66\u7B7E\u5C0F\u5DE5\u5177\u62D6\u5230\u4E66\u7B7E\u680F\u4EE5\u4FBF\u4E00\u952E\u8BBF\u95EE\uFF1A',
 		'Vote for features you want to see or suggest new ones.':
@@ -368,6 +448,7 @@
 		'Want more super-powers?':
 			'\u60F3\u8981\u66F4\u591A\u8D85\u80FD\u529B\u5417\uFF1F',
 		'Welcome to Web Maker': '\u6B22\u8FCE\u6765\u5230 Web Maker',
+		Yes: '\u662F',
 		'Yes, please import': '\u662F\u7684\uFF0C\u8BF7\u5BFC\u5165',
 		'You have <0>{oldSavedCreationsCount}</0> creations saved in your local machine. Do you want to import those creations in your account so they are more secure and accessible anywhere?':
 			function (a) {

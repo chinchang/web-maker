@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'preact/hooks';
+import { t, Trans } from '@lingui/macro';
+import { withI18n } from '@lingui/react';
 import { HStack, VStack } from './Stack';
 import Switch from './Switch';
 import { Button } from './common';
 import { Icon } from './Icons';
 import { Text } from './Text';
+import { UrlPill } from './UrlPill';
 import { alertsService } from '../notifications';
 import { trackEvent } from '../analytics';
 import { connectGithubForGist } from '../auth';
@@ -20,7 +23,7 @@ import {
 const PAT_CREATE_URL =
 	'https://github.com/settings/tokens/new?description=Web%20Maker%20Gist%20Export&scopes=gist';
 
-export function GistExportSection({ item, onGistExported }) {
+function GistExportSectionInner({ item, onGistExported, i18n }) {
 	const [token, setToken] = useState(null);
 	const [tokenChecked, setTokenChecked] = useState(false);
 	const [description, setDescription] = useState(
@@ -40,8 +43,8 @@ export function GistExportSection({ item, onGistExported }) {
 			trackEvent('ui', 'gistExportExtensionBlockedSeen');
 			return;
 		}
-		getStoredGistToken().then(t => {
-			setToken(t);
+		getStoredGistToken().then(stored => {
+			setToken(stored);
 			setTokenChecked(true);
 		});
 	}, []);
@@ -56,14 +59,18 @@ export function GistExportSection({ item, onGistExported }) {
 			<VStack gap={2} align="stretch" class="gist-export">
 				<h3 class="gist-export__title">
 					<Icon name="github-icon" />
-					<span>Export to GitHub Gist</span>
+					<span>
+						<Trans>Export to GitHub Gist</Trans>
+					</span>
 				</h3>
 				<Text>
-					Gist export is only available on the{' '}
-					<a href="https://webmaker.app" target="_blank" rel="noopener">
-						web version
-					</a>{' '}
-					of Web-Maker.
+					<Trans>
+						Gist export is only available on the{' '}
+						<a href="https://webmaker.app" target="_blank" rel="noopener">
+							web version
+						</a>{' '}
+						of Web-Maker.
+					</Trans>
 				</Text>
 			</VStack>
 		);
@@ -75,18 +82,18 @@ export function GistExportSection({ item, onGistExported }) {
 		trackEvent('ui', 'gistConnectClick');
 		try {
 			const newToken = await alertsService.promise(connectGithubForGist(), {
-				loading: 'Connecting to GitHub…',
-				success: 'GitHub connected',
+				loading: i18n._(t`Connecting to GitHub…`),
+				success: i18n._(t`GitHub connected`),
 				error: err =>
 					err && err.code === 'POPUP_CLOSED'
-						? 'Cancelled'
-						: (err && err.message) || 'Could not connect to GitHub.'
+						? i18n._(t`Cancelled`)
+						: (err && err.message) || i18n._(t`Could not connect to GitHub.`)
 			});
 			await setStoredGistToken(newToken);
 			setToken(newToken);
 		} catch (err) {
 			if (err && err.code !== 'POPUP_CLOSED') {
-				setErrorMsg(err.message || 'Could not connect to GitHub.');
+				setErrorMsg(err.message || i18n._(t`Could not connect to GitHub.`));
 				trackEvent('fn', 'gistConnectFail', (err && err.code) || 'unknown');
 			} else if (err && err.code === 'POPUP_CLOSED') {
 				trackEvent('fn', 'gistConnectCancelled');
@@ -100,7 +107,7 @@ export function GistExportSection({ item, onGistExported }) {
 		const trimmed = tokenInput.trim();
 		setTokenError('');
 		if (!trimmed) {
-			setTokenError('Paste a token to continue.');
+			setTokenError(i18n._(t`Paste a token to continue.`));
 			return;
 		}
 		setIsBusy(true);
@@ -111,15 +118,19 @@ export function GistExportSection({ item, onGistExported }) {
 			setToken(trimmed);
 			setTokenInput('');
 			setShowTokenInput(false);
-			alertsService.add(`Connected as ${login}`);
+			alertsService.add(i18n._(t`Connected as ${login}`));
 			trackEvent('fn', 'gistPatSaveSuccess');
 		} catch (err) {
 			const msg =
 				err && err.code === 'INVALID_TOKEN'
-					? "That token didn't work. Double-check you copied it correctly and that it hasn't expired."
+					? i18n._(
+							t`That token didn't work. Double-check you copied it correctly and that it hasn't expired.`
+						)
 					: err && err.code === 'MISSING_SCOPE'
-						? 'This token is missing the "gist" scope. Recreate it on GitHub with "gist" checked.'
-						: (err && err.message) || 'Could not validate token.';
+						? i18n._(
+								t`This token is missing the "gist" scope. Recreate it on GitHub with "gist" checked.`
+							)
+						: (err && err.message) || i18n._(t`Could not validate token.`);
 			setTokenError(msg);
 			trackEvent('fn', 'gistPatSaveFail', (err && err.code) || 'unknown');
 		} finally {
@@ -131,7 +142,7 @@ export function GistExportSection({ item, onGistExported }) {
 		trackEvent('ui', 'gistDisconnectClick');
 		await clearStoredGistToken();
 		setToken(null);
-		alertsService.add('GitHub disconnected');
+		alertsService.add(i18n._(t`GitHub disconnected`));
 	};
 
 	const ensureFilesOrAbort = files => {
@@ -143,30 +154,30 @@ export function GistExportSection({ item, onGistExported }) {
 				k => k.startsWith('style.') || k.startsWith('script.')
 			);
 		if (!hasSource) {
-			setErrorMsg('Add some code before exporting.');
+			setErrorMsg(i18n._(t`Add some code before exporting.`));
 			return false;
 		}
 		return true;
 	};
 
 	const formatError = err => {
-		if (!err) return 'Something went wrong talking to GitHub.';
-		if (err.code === 'AUTH_EXPIRED') return 'GitHub access expired';
-		if (err.code === 'GIST_GONE') return 'Gist was deleted on GitHub';
+		if (!err) return i18n._(t`Something went wrong talking to GitHub.`);
+		if (err.code === 'AUTH_EXPIRED') return i18n._(t`GitHub access expired`);
+		if (err.code === 'GIST_GONE') return i18n._(t`Gist was deleted on GitHub`);
 		if (err.code === 'FORBIDDEN') {
 			return (
 				err.message ||
-				"Permission denied. Make sure your token has the 'gist' scope."
+				i18n._(t`Permission denied. Make sure your token has the "gist" scope.`)
 			);
 		}
-		return err.message || 'Something went wrong talking to GitHub.';
+		return err.message || i18n._(t`Something went wrong talking to GitHub.`);
 	};
 
 	const handleGistError = async err => {
 		if (err && err.code === 'AUTH_EXPIRED') {
 			await clearStoredGistToken();
 			setToken(null);
-			setErrorMsg('GitHub access expired. Please reconnect.');
+			setErrorMsg(i18n._(t`GitHub access expired. Please reconnect.`));
 			trackEvent('fn', 'gistAuthExpired');
 		} else if (err && err.code === 'GIST_GONE') {
 			setGistGone(true);
@@ -213,8 +224,8 @@ export function GistExportSection({ item, onGistExported }) {
 	const handleCreate = () => {
 		trackEvent('ui', 'gistExportClick', 'create');
 		return runExport({
-			loading: 'Exporting to Gist…',
-			success: 'Exported to Gist',
+			loading: i18n._(t`Exporting to Gist…`),
+			success: i18n._(t`Exported to Gist`),
 			kind: 'create',
 			op: files => createGist(token, { description, isPublic, files })
 		});
@@ -223,8 +234,8 @@ export function GistExportSection({ item, onGistExported }) {
 	const handleUpdate = () => {
 		trackEvent('ui', 'gistExportClick', 'update');
 		return runExport({
-			loading: 'Updating Gist…',
-			success: 'Gist updated',
+			loading: i18n._(t`Updating Gist…`),
+			success: i18n._(t`Gist updated`),
 			kind: 'update',
 			op: files => updateGist(token, item.gistId, { description, files })
 		});
@@ -233,8 +244,8 @@ export function GistExportSection({ item, onGistExported }) {
 	const handleExportAsNew = () => {
 		trackEvent('ui', 'gistExportClick', 'new');
 		return runExport({
-			loading: 'Creating new Gist…',
-			success: 'New gist created',
+			loading: i18n._(t`Creating new Gist…`),
+			success: i18n._(t`New gist created`),
 			kind: 'new',
 			op: files =>
 				createGist(token, { description, isPublic, files }).then(r => {
@@ -244,10 +255,8 @@ export function GistExportSection({ item, onGistExported }) {
 		});
 	};
 
-	const copyUrl = () => {
-		if (!item.gistUrl) return;
-		navigator.clipboard.writeText(item.gistUrl);
-		alertsService.add('Gist URL copied');
+	const handleGistCopy = () => {
+		alertsService.add(i18n._(t`Gist URL copied`));
 		trackEvent('ui', 'gistCopyUrlClick');
 	};
 
@@ -256,7 +265,9 @@ export function GistExportSection({ item, onGistExported }) {
 			<VStack gap={2} align="stretch" class="gist-export">
 				<h3 class="gist-export__title">
 					<Icon name="github-icon" />
-					<span>Export to GitHub Gist</span>
+					<span>
+						<Trans>Export to GitHub Gist</Trans>
+					</span>
 				</h3>
 			</VStack>
 		);
@@ -265,42 +276,38 @@ export function GistExportSection({ item, onGistExported }) {
 	const hasGist = !!item.gistId;
 	const showUpdateUi = hasGist && !gistGone;
 
-	const linkedGistPill = item.gistUrl ? (
-		<div class="url-pill">
-			<span class="url-pill__label">Linked gist</span>
-			<a
-				href={item.gistUrl}
-				target="_blank"
-				rel="noopener"
-				class="url-pill__link"
-			>
-				{item.gistUrl}
-			</a>
-			<Button
-				class="btn btn--dark btn--small hint--bottom hint--rounded"
-				onClick={copyUrl}
-				aria-label="Copy"
-			>
-				<Icon name="copy" />
-			</Button>
-		</div>
-	) : null;
+	const linkedGistPill = (
+		<UrlPill
+			url={item.gistUrl}
+			label={i18n._(t`Linked gist`)}
+			copyAriaLabel={i18n._(t`Copy gist URL`)}
+			onCopy={handleGistCopy}
+		/>
+	);
 
 	return (
 		<VStack gap={2} align="stretch" class="gist-export">
 			<h3 class="gist-export__title">
 				<Icon name="github-icon" />
-				<span>Export to GitHub Gist</span>
+				<span>
+					<Trans>Export to GitHub Gist</Trans>
+				</span>
 			</h3>
 
 			{!token && !showTokenInput && (
 				<VStack gap={2} align="stretch">
 					{linkedGistPill}
 					<Text>
-						{item.gistUrl
-							? 'Connect GitHub to update this gist or push a new version.'
-							: 'Push this creation to a GitHub gist.'}{' '}
-						Requires the <code>gist</code> scope.
+						{item.gistUrl ? (
+							<Trans>
+								Connect GitHub to update this gist or push a new version.
+							</Trans>
+						) : (
+							<Trans>Push this creation to a GitHub gist.</Trans>
+						)}{' '}
+						<Trans>
+							Requires the <code>gist</code> scope.
+						</Trans>
 					</Text>
 					<HStack gap={2}>
 						<Button
@@ -308,11 +315,11 @@ export function GistExportSection({ item, onGistExported }) {
 							disabled={isBusy}
 							onClick={handleConnect}
 						>
-							Connect GitHub
+							<Trans>Connect GitHub</Trans>
 						</Button>
 					</HStack>
 					<Text class="gist-export__hint">
-						Can't connect?{' '}
+						<Trans>Can't connect?</Trans>{' '}
 						<button
 							type="button"
 							class="gist-export__linkbtn"
@@ -322,7 +329,7 @@ export function GistExportSection({ item, onGistExported }) {
 								trackEvent('ui', 'gistPatToggleOpen');
 							}}
 						>
-							Use a personal access token instead
+							<Trans>Use a personal access token instead</Trans>
 						</button>
 					</Text>
 				</VStack>
@@ -332,8 +339,10 @@ export function GistExportSection({ item, onGistExported }) {
 				<VStack gap={2} align="stretch" class="gist-export__pat">
 					{linkedGistPill}
 					<Text>
-						Paste a GitHub personal access token with the <code>gist</code>{' '}
-						scope. It's stored only on this device.
+						<Trans>
+							Paste a GitHub personal access token with the <code>gist</code>{' '}
+							scope. It's stored only on this device.
+						</Trans>
 					</Text>
 					<ol class="gist-export__steps">
 						<li>
@@ -343,18 +352,26 @@ export function GistExportSection({ item, onGistExported }) {
 								rel="noopener"
 								onClick={() => trackEvent('ui', 'gistPatCreateLinkClick')}
 							>
-								Open GitHub's "New token" page
+								<Trans>Open GitHub's "New token" page</Trans>
 							</a>{' '}
-							(the <code>gist</code> scope is pre-selected).
+							<Trans>
+								(the <code>gist</code> scope is pre-selected).
+							</Trans>
 						</li>
 						<li>
-							Pick an expiration, scroll down, and click{' '}
-							<strong>Generate token</strong>.
+							<Trans>
+								Pick an expiration, scroll down, and click{' '}
+								<strong>Generate token</strong>.
+							</Trans>
 						</li>
-						<li>Copy the token and paste it below.</li>
+						<li>
+							<Trans>Copy the token and paste it below.</Trans>
+						</li>
 					</ol>
 					<label class="gist-export__row">
-						<span>Personal access token</span>
+						<span>
+							<Trans>Personal access token</Trans>
+						</span>
 						<input
 							type="password"
 							class="gist-export__input"
@@ -381,7 +398,7 @@ export function GistExportSection({ item, onGistExported }) {
 							disabled={isBusy || !tokenInput.trim()}
 							onClick={handleSaveToken}
 						>
-							Save token
+							<Trans>Save token</Trans>
 						</Button>
 						<button
 							type="button"
@@ -394,7 +411,7 @@ export function GistExportSection({ item, onGistExported }) {
 								trackEvent('ui', 'gistPatToggleClose');
 							}}
 						>
-							Back
+							<Trans>Back</Trans>
 						</button>
 					</HStack>
 				</VStack>
@@ -406,12 +423,16 @@ export function GistExportSection({ item, onGistExported }) {
 
 					{gistGone && (
 						<Text>
-							This gist was deleted on GitHub. Create a new one to re-link.
+							<Trans>
+								This gist was deleted on GitHub. Create a new one to re-link.
+							</Trans>
 						</Text>
 					)}
 
 					<label class="gist-export__row">
-						<span>Description</span>
+						<span>
+							<Trans>Description</Trans>
+						</span>
 						<input
 							type="text"
 							class="gist-export__input"
@@ -424,18 +445,18 @@ export function GistExportSection({ item, onGistExported }) {
 						<Switch
 							checked={isPublic}
 							onChange={e => setIsPublic(e.target.checked)}
-							labels={['Secret', 'Public']}
+							labels={[i18n._(t`Secret`), i18n._(t`Public`)]}
 						>
-							Visibility
+							<Trans>Visibility</Trans>
 						</Switch>
 					)}
 
 					<Switch
 						checked={includeMeta}
 						onChange={e => setIncludeMeta(e.target.checked)}
-						labels={['No', 'Yes']}
+						labels={[i18n._(t`No`), i18n._(t`Yes`)]}
 					>
-						Include README.md and webmaker.json
+						<Trans>Include README.md and webmaker.json</Trans>
 					</Switch>
 
 					<HStack gap={2} class="gist-export__actions">
@@ -445,7 +466,7 @@ export function GistExportSection({ item, onGistExported }) {
 								disabled={isBusy}
 								onClick={handleUpdate}
 							>
-								Update Gist
+								<Trans>Update Gist</Trans>
 							</Button>
 						) : gistGone ? (
 							<Button
@@ -453,7 +474,7 @@ export function GistExportSection({ item, onGistExported }) {
 								disabled={isBusy}
 								onClick={handleExportAsNew}
 							>
-								Create new Gist
+								<Trans>Create new Gist</Trans>
 							</Button>
 						) : (
 							<Button
@@ -461,7 +482,7 @@ export function GistExportSection({ item, onGistExported }) {
 								disabled={isBusy}
 								onClick={handleCreate}
 							>
-								Export to Gist
+								<Trans>Export to Gist</Trans>
 							</Button>
 						)}
 
@@ -471,7 +492,7 @@ export function GistExportSection({ item, onGistExported }) {
 								disabled={isBusy}
 								onClick={handleExportAsNew}
 							>
-								Export as new gist
+								<Trans>Export as new gist</Trans>
 							</Button>
 						)}
 
@@ -481,7 +502,7 @@ export function GistExportSection({ item, onGistExported }) {
 							disabled={isBusy}
 							onClick={handleDisconnect}
 						>
-							Disconnect GitHub
+							<Trans>Disconnect GitHub</Trans>
 						</button>
 					</HStack>
 				</VStack>
@@ -491,3 +512,5 @@ export function GistExportSection({ item, onGistExported }) {
 		</VStack>
 	);
 }
+
+export const GistExportSection = withI18n()(GistExportSectionInner);

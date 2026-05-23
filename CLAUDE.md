@@ -118,3 +118,7 @@ The changelog is in `src/components/Changelog.jsx`. Each version is a `<Notifica
 
 - **3-Pane Mode**: Traditional HTML/CSS/JS editors side-by-side
 - **File Mode**: Full file system with folder structure, limited to 2 projects for free users, unlimited for PRO
+
+## Things to remember
+
+- Always use i18n/Trans on strings

@@ -1,5 +1,15 @@
 msgid ""
-msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: \nLanguage: \nLanguage-Team: \nContent-Type: \nContent-Transfer-Encoding: \nPlural-Forms: \n"
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language: \n"
+"Language-Team: \n"
+"Content-Type: \n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #: src/components/HelpModal.jsx:201
 #~ msgid "\"Web Maker\" <0>CHill</0>."
@@ -16,6 +26,10 @@ msgstr "'哎呀！所选文件已损坏。请选择一个通过点击 \"导出\"
 #: src/components/Settings.jsx:209
 msgid "(Experimental) Switches from CodeMirror to Monaco. Many other settings might not be available in Monaco."
 msgstr "（实验性）从 CodeMirror 切换到 Monaco。许多其他设置可能在 Monaco 中不可用。"
+
+#: src/components/GistExportSection.jsx:359
+msgid "(the <0>gist</0> scope is pre-selected)."
+msgstr "(the <0>gist</0> scope is pre-selected)."
 
 #: src/components/CreateNewModal.jsx:215
 #~ msgid "2 files mode creations available in Free plan. To create unlimited files mode creations, upgrade to <0/>."
@@ -48,6 +62,10 @@ msgstr "本地添加文件，仅在此浏览器中可用。如果您公开分享
 #: src/components/MainHeader.jsx:82
 msgid "Add library"
 msgstr "添加库"
+
+#: src/components/GistExportSection.jsx:157
+msgid "Add some code before exporting."
+msgstr "在导出之前添加一些代码。"
 
 #: src/components/Settings.jsx:366
 msgid "Add the closing tag automatically on seeing an opening tag in HTML"
@@ -94,6 +112,18 @@ msgstr "自动保存"
 msgid "Auto-save keeps saving your code at regular intervals after you hit save manually the first time"
 msgstr "自动保存会在您第一次手动点击保存后定期保存您的代码"
 
+#: src/components/GistExportSection.jsx:416
+msgid "Back"
+msgstr "返回"
+
+#: src/components/GistExportSection.jsx:324
+msgid "Can't connect?"
+msgstr "无法连接？"
+
+#: src/components/GistExportSection.jsx:89
+msgid "Cancelled"
+msgstr "已取消"
+
 #: src/components/HelpModal.jsx:91
 #~ msgid "Chat"
 #~ msgstr ""
@@ -128,7 +158,7 @@ msgstr "点击编辑"
 msgid "Close saved creations pane"
 msgstr "关闭已保存创作窗格"
 
-#: src/components/KeyboardShortcutsModal.jsx:80
+#: src/components/KeyboardShortcutsModal.jsx:86
 msgid "Close saved creations panel & modals"
 msgstr "关闭已保存创作面板和模态框"
 
@@ -144,7 +174,7 @@ msgstr "代码爆发！"
 msgid "Collab"
 msgstr "协作"
 
-#: src/components/MultiplayerModal.jsx:91
+#: src/components/MultiplayerModal.jsx:73
 msgid "Collab Session"
 msgstr "协作会议"
 
@@ -164,6 +194,22 @@ msgstr "来自 Chrome 扩展吗？<0>了解如何导入您的创作</0>。"
 #~ msgid "Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app."
 #~ msgstr "通过点击应用右下角的齿轮图标 (<0><1/></0>) 来配置和自定义设置。"
 
+#: src/components/GistExportSection.jsx:320
+msgid "Connect GitHub"
+msgstr "连接 GitHub"
+
+#: src/components/GistExportSection.jsx:304
+msgid "Connect GitHub to update this gist or push a new version."
+msgstr "连接 GitHub 以更新此 gist 或推送新版本。"
+
+#: src/components/GistExportSection.jsx:121
+msgid "Connected as {login}"
+msgstr "已连接为 {login}"
+
+#: src/components/GistExportSection.jsx:85
+msgid "Connecting to GitHub…"
+msgstr "正在连接到 GitHub…"
+
 #: src/components/Console.jsx:102
 msgid "Console"
 msgstr "控制台"
@@ -176,13 +222,42 @@ msgstr "联系开发者"
 msgid "Copy URL (or keep clicking to copy other formats)"
 msgstr "复制 URL（或继续点击以复制其他格式）"
 
-#: src/components/MultiplayerModal.jsx:148
+#: src/components/GistExportSection.jsx:285
+msgid "Copy gist URL"
+msgstr "复制 gist URL"
+
+#: src/components/MultiplayerModal.jsx:118
 msgid "Copy link"
 msgstr "复制链接"
+
+#: src/components/Share.jsx:171
+msgid "Copy public URL"
+msgstr "复制公共 URL"
+
+#: src/components/GistExportSection.jsx:370
+msgid "Copy the token and paste it below."
+msgstr "复制令牌并粘贴到下面。"
+
+#: src/components/GistExportSection.jsx:90
+#: src/components/GistExportSection.jsx:96
+msgid "Could not connect to GitHub."
+msgstr "无法连接到 GitHub。"
+
+#: src/components/GistExportSection.jsx:133
+msgid "Could not validate token."
+msgstr "无法验证令牌。"
 
 #: src/components/CreateNewModal.jsx:160
 msgid "Create New"
 msgstr "创建新内容"
+
+#: src/components/GistExportSection.jsx:479
+msgid "Create new Gist"
+msgstr "创建新 Gist"
+
+#: src/components/GistExportSection.jsx:249
+msgid "Creating new Gist…"
+msgstr "正在创建新 Gist…"
 
 #: src/components/Settings.jsx:302
 msgid "Custom font name here"
@@ -212,13 +287,21 @@ msgstr "默认预处理器"
 msgid "Delete"
 msgstr "删除"
 
+#: src/components/GistExportSection.jsx:436
+msgid "Description"
+msgstr "描述"
+
 #: src/components/Footer.jsx:301
 #~ msgid "Detach Preview"
 #~ msgstr ""
 
-#: src/components/Footer.jsx:342
+#: src/components/Footer.jsx:376
 msgid "Detach preview"
 msgstr "分离预览"
+
+#: src/components/GistExportSection.jsx:507
+msgid "Disconnect GitHub"
+msgstr "断开 GitHub 连接"
 
 #: src/components/HelpModal.jsx:139
 msgid "Discuss"
@@ -242,7 +325,7 @@ msgstr "双击切换代码面板"
 msgid "Double click to toggle console"
 msgstr "双击切换控制台"
 
-#: src/components/Footer.jsx:182
+#: src/components/Footer.jsx:216
 msgid "Download game as zip"
 msgstr "下载游戏为 zip"
 
@@ -254,16 +337,16 @@ msgstr "拖放文件或点击这里添加"
 msgid "Drop files or click here to upload"
 msgstr "拖放文件或点击此处上传"
 
-#: src/components/Footer.jsx:257
+#: src/components/Footer.jsx:291
 msgid "Edit on CodePen"
 msgstr "在 CodePen 上编辑"
 
-#: src/components/KeyboardShortcutsModal.jsx:86
+#: src/components/KeyboardShortcutsModal.jsx:92
 #: src/components/Settings.jsx:199
 msgid "Editor"
 msgstr "编辑器"
 
-#: src/components/KeyboardShortcutsModal.jsx:133
+#: src/components/KeyboardShortcutsModal.jsx:139
 msgid "Emmet code completion"
 msgstr "Emmet 代码补全"
 
@@ -279,12 +362,34 @@ msgstr "导出"
 msgid "Export all your creations into a single importable file."
 msgstr "将您所有的创作导出为一个可导入的文件。"
 
+#: src/components/GistExportSection.jsx:497
+msgid "Export as new gist"
+msgstr "导出为新 gist"
+
+#: src/components/GistExportSection.jsx:487
+msgid "Export to Gist"
+msgstr "导出到 Gist"
+
+#: src/components/GistExportSection.jsx:63
+#: src/components/GistExportSection.jsx:271
+#: src/components/GistExportSection.jsx:295
+msgid "Export to GitHub Gist"
+msgstr "导出到 GitHub Gist"
+
+#: src/components/GistExportSection.jsx:230
+msgid "Exported to Gist"
+msgstr "已导出到 Gist"
+
+#: src/components/GistExportSection.jsx:229
+msgid "Exporting to Gist…"
+msgstr "正在导出到 Gist…"
+
 #: src/components/Settings.jsx:53
 msgid "Fast/light-weight version"
 msgstr "快速/轻量级版本"
 
 #: src/components/FeedbackBoard.jsx:121
-#: src/components/Footer.jsx:383
+#: src/components/Footer.jsx:133
 msgid "Feedback & Suggestions"
 msgstr "反馈与建议"
 
@@ -300,27 +405,27 @@ msgstr "正在获取文件..."
 msgid "Files modes is currently only available in Web app. <0>Try the Web app now</0>."
 msgstr "文件模式目前仅在Web应用程序中可用。<0>立即尝试Web应用程序</0>。"
 
-#: src/components/KeyboardShortcutsModal.jsx:91
+#: src/components/KeyboardShortcutsModal.jsx:97
 msgid "Find"
 msgstr "查找"
 
-#: src/components/KeyboardShortcutsModal.jsx:109
+#: src/components/KeyboardShortcutsModal.jsx:115
 msgid "Find & replace"
 msgstr "查找和替换"
 
-#: src/components/KeyboardShortcutsModal.jsx:68
+#: src/components/KeyboardShortcutsModal.jsx:74
 msgid "Focus CSS pane"
 msgstr "聚焦 CSS 面板"
 
-#: src/components/KeyboardShortcutsModal.jsx:62
+#: src/components/KeyboardShortcutsModal.jsx:68
 msgid "Focus HTML pane"
 msgstr "聚焦 HTML 面板"
 
-#: src/components/KeyboardShortcutsModal.jsx:74
+#: src/components/KeyboardShortcutsModal.jsx:80
 msgid "Focus JS pane"
 msgstr "聚焦 JS 面板"
 
-#: src/components/KeyboardShortcutsModal.jsx:56
+#: src/components/KeyboardShortcutsModal.jsx:62
 msgid "Focus preview"
 msgstr "聚焦预览"
 
@@ -372,9 +477,41 @@ msgstr "乐趣"
 msgid "General"
 msgstr "常规"
 
-#: src/components/Footer.jsx:154
+#: src/components/Footer.jsx:187
 msgid "Get"
 msgstr "获取"
+
+#: src/components/GistExportSection.jsx:261
+msgid "Gist URL copied"
+msgstr "Gist URL 已复制"
+
+#: src/components/GistExportSection.jsx:67
+msgid "Gist export is only available on the <0>web version</0> of Web-Maker."
+msgstr "Gist 导出仅在 Web-Maker 的 <0>网页版本</0> 中可用。"
+
+#: src/components/GistExportSection.jsx:240
+msgid "Gist updated"
+msgstr "Gist 已更新"
+
+#: src/components/GistExportSection.jsx:166
+msgid "Gist was deleted on GitHub"
+msgstr "Gist 在 GitHub 上已被删除"
+
+#: src/components/GistExportSection.jsx:165
+msgid "GitHub access expired"
+msgstr "GitHub 访问已过期"
+
+#: src/components/GistExportSection.jsx:182
+msgid "GitHub access expired. Please reconnect."
+msgstr "GitHub 访问已过期。请重新连接。"
+
+#: src/components/GistExportSection.jsx:86
+msgid "GitHub connected"
+msgstr "GitHub 已连接"
+
+#: src/components/GistExportSection.jsx:145
+msgid "GitHub disconnected"
+msgstr "GitHub 已断开连接"
 
 #: src/components/KeyboardShortcutsModal.jsx:15
 msgid "Global"
@@ -384,8 +521,8 @@ msgstr "全局"
 msgid "Grid view"
 msgstr "网格视图"
 
-#: src/components/Footer.jsx:87
-#: src/components/Footer.jsx:202
+#: src/components/Footer.jsx:103
+#: src/components/Footer.jsx:236
 msgid "Help"
 msgstr "帮助"
 
@@ -421,11 +558,15 @@ msgstr "在您的帐户中导入您的创作"
 msgid "Import your creations. Only the file that you export through the 'Export' button can be imported."
 msgstr "导入您的创作。只有通过“导出”按钮导出的文件才能被导入。"
 
-#: src/components/KeyboardShortcutsModal.jsx:127
+#: src/components/GistExportSection.jsx:461
+msgid "Include README.md and webmaker.json"
+msgstr "包含 README.md 和 webmaker.json"
+
+#: src/components/KeyboardShortcutsModal.jsx:133
 msgid "Indent code left"
 msgstr "左缩进代码"
 
-#: src/components/KeyboardShortcutsModal.jsx:121
+#: src/components/KeyboardShortcutsModal.jsx:127
 msgid "Indent code right"
 msgstr "右缩进代码"
 
@@ -457,7 +598,7 @@ msgstr "按键绑定"
 msgid "Keyboard Shortcuts"
 msgstr "键盘快捷键"
 
-#: src/components/Footer.jsx:101
+#: src/components/Footer.jsx:117
 msgid "Keyboard shortcuts"
 msgstr "键盘快捷键"
 
@@ -465,7 +606,7 @@ msgstr "键盘快捷键"
 msgid "Language"
 msgstr "语言"
 
-#: src/components/MultiplayerModal.jsx:226
+#: src/components/MultiplayerModal.jsx:172
 msgid "Leave Session"
 msgstr "离开会话"
 
@@ -496,6 +637,10 @@ msgstr "喜欢这个应用吗？请在这里<0>评分</0>。"
 #: src/components/Settings.jsx:359
 msgid "Line wrap"
 msgstr "换行"
+
+#: src/components/GistExportSection.jsx:284
+msgid "Linked gist"
+msgstr "链接的 gist"
 
 #: src/components/Assets.jsx:239
 msgid "List view"
@@ -562,11 +707,11 @@ msgstr "让它成为你的"
 msgid "Make the app ready to build some games for <0>Js13kGames</0>."
 msgstr "让应用准备好为 <0>Js13kGames</0> 创建一些游戏。"
 
-#: src/components/Footer.jsx:139
+#: src/components/Footer.jsx:172
 msgid "Manage"
 msgstr "管理"
 
-#: src/components/Footer.jsx:136
+#: src/components/Footer.jsx:169
 msgid "Manage your PRO subscription"
 msgstr "管理您的 PRO 订阅"
 
@@ -574,13 +719,17 @@ msgstr "管理您的 PRO 订阅"
 msgid "Manage your code in files. Just like you would have files on your local machine."
 msgstr "在文件中管理您的代码。就像您在本地计算机上拥有文件一样。"
 
+#: src/components/Assets.jsx:337
+msgid "Max 10MB per file"
+msgstr "每个文件最大 10MB"
+
 #: src/components/Assets.jsx:480
 msgid "Max 300KB per file"
 msgstr "每个文件最大 300KB"
 
 #: src/components/Assets.jsx:337
-msgid "Max 5MB per file"
-msgstr "每个文件最大 5MB"
+#~ msgid "Max 5MB per file"
+#~ msgstr "每个文件最大 5MB"
 
 #: src/components/ContentWrap.jsx:840
 #: src/components/ContentWrap.jsx:939
@@ -622,6 +771,14 @@ msgstr "我的库"
 msgid "New"
 msgstr "新建"
 
+#: src/components/GistExportSection.jsx:250
+msgid "New gist created"
+msgstr "新建 gist 已创建"
+
+#: src/components/GistExportSection.jsx:459
+msgid "No"
+msgstr "否"
+
 #: src/components/FeedbackBoard.jsx:177
 msgid "No feedback yet. Be the first!"
 msgstr "还没有反馈。成为第一个！"
@@ -657,6 +814,10 @@ msgstr "一旦您停止输入，预览将在此时间内等待更新。值过低
 #: src/components/MainHeader.jsx:183
 msgid "Open"
 msgstr "打开"
+
+#: src/components/GistExportSection.jsx:357
+msgid "Open GitHub's \"New token\" page"
+msgstr "打开 GitHub 的 \"新令牌\" 页面"
 
 #: src/components/OnboardingModal.jsx:52
 #~ msgid "Open Web Maker anytime by clicking the<0><1/></0> button in top-right side of your browser."
@@ -694,9 +855,29 @@ msgstr "系统中的其他字体"
 msgid "PRO unlocks unlimited public creations, unlimited Files mode projects, cloud asset hosting and real-time multiplayer collab."
 msgstr "PRO 解锁无限公共创作、无限文件模式项目、云资产托管和实时多人协作。"
 
-#: src/components/MultiplayerModal.jsx:187
+#: src/components/MultiplayerModal.jsx:133
 msgid "Participants"
 msgstr "参与者"
+
+#: src/components/GistExportSection.jsx:344
+msgid "Paste a GitHub personal access token with the <0>gist</0> scope. It's stored only on this device."
+msgstr "粘贴一个具有 <0>gist</0> 范围的 GitHub 个人访问令牌。它仅存储在此设备上。"
+
+#: src/components/GistExportSection.jsx:110
+msgid "Paste a token to continue."
+msgstr "粘贴一个令牌以继续。"
+
+#: src/components/GistExportSection.jsx:171
+msgid "Permission denied. Make sure your token has the \"gist\" scope."
+msgstr "权限被拒。确保您的令牌具有 \"gist\" 范围。"
+
+#: src/components/GistExportSection.jsx:375
+msgid "Personal access token"
+msgstr "个人访问令牌"
+
+#: src/components/GistExportSection.jsx:364
+msgid "Pick an expiration, scroll down, and click <0>Generate token</0>."
+msgstr "选择一个过期时间，向下滚动并点击 <0>生成令牌</0>。"
 
 #: src/components/AddLibrary.jsx:93
 msgid "Powered by cdnjs"
@@ -722,12 +903,24 @@ msgstr "预览刷新等待时间"
 msgid "Preview will refresh when you resize the preview pane"
 msgstr "当您调整预览窗格大小时，预览将刷新"
 
+#: src/components/GistExportSection.jsx:450
+msgid "Public"
+msgstr "公开"
+
+#: src/components/Share.jsx:170
+msgid "Public URL"
+msgstr "公开 URL"
+
+#: src/components/GistExportSection.jsx:308
+msgid "Push this creation to a GitHub gist."
+msgstr "将此创作推送到 GitHub gist。"
+
 #: src/components/AddLibrary.jsx:123
 #: src/components/AddLibrary.jsx:153
 msgid "Put each library in new line"
 msgstr "将每个库放在新行中"
 
-#: src/components/KeyboardShortcutsModal.jsx:139
+#: src/components/KeyboardShortcutsModal.jsx:145
 msgid "Read more"
 msgstr "阅读更多"
 
@@ -739,7 +932,7 @@ msgstr "阅读文档"
 #~ msgid "Read the documentation."
 #~ msgstr "阅读文档。"
 
-#: src/components/KeyboardShortcutsModal.jsx:115
+#: src/components/KeyboardShortcutsModal.jsx:121
 msgid "Realign code"
 msgstr "重新对齐代码"
 
@@ -767,6 +960,10 @@ msgstr "报告错误"
 #~ msgid "Report a bug"
 #~ msgstr "报告一个错误"
 
+#: src/components/GistExportSection.jsx:310
+msgid "Requires the <0>gist</0> scope."
+msgstr "需要 <0>gist</0> 范围。"
+
 #: src/components/HelpModal.jsx:84
 #~ msgid "Review Web Maker"
 #~ msgstr "评价 Web Maker"
@@ -775,7 +972,7 @@ msgstr "报告错误"
 msgid "Run"
 msgstr "运行"
 
-#: src/components/KeyboardShortcutsModal.jsx:152
+#: src/components/KeyboardShortcutsModal.jsx:158
 msgid "Run Prettier"
 msgstr "运行 Prettier"
 
@@ -787,7 +984,7 @@ msgstr "运行预览 (Ctrl/⌘ + Shift + 5)"
 msgid "Save"
 msgstr "保存"
 
-#: src/components/Footer.jsx:231
+#: src/components/Footer.jsx:265
 msgid "Save as HTML file"
 msgstr "另存为 HTML 文件"
 
@@ -799,6 +996,10 @@ msgstr "保存当前创作 (Ctrl/⌘ + S)"
 msgid "Save current creations"
 msgstr "保存当前创作"
 
+#: src/components/GistExportSection.jsx:403
+msgid "Save token"
+msgstr "保存令牌"
+
 #: src/components/Assets.jsx:229
 msgid "Search files"
 msgstr "搜索文件"
@@ -806,6 +1007,10 @@ msgstr "搜索文件"
 #: src/components/SavedItemPane.jsx:267
 msgid "Search your creations here..."
 msgstr "在这里搜索你的创作..."
+
+#: src/components/GistExportSection.jsx:450
+msgid "Secret"
+msgstr "秘密"
 
 #: src/components/Footer.jsx:317
 #~ msgid "See Changelog"
@@ -819,7 +1024,7 @@ msgstr "查看 PRO"
 msgid "See awesome libraries used"
 msgstr "查看使用的精彩库"
 
-#: src/components/Footer.jsx:358
+#: src/components/Footer.jsx:392
 msgid "See changelog"
 msgstr "查看更新日志"
 
@@ -827,15 +1032,15 @@ msgstr "查看更新日志"
 msgid "See profile or Logout"
 msgstr "查看个人资料或登出"
 
-#: src/components/KeyboardShortcutsModal.jsx:97
+#: src/components/KeyboardShortcutsModal.jsx:103
 msgid "Select next match"
 msgstr "选择下一个匹配项"
 
-#: src/components/KeyboardShortcutsModal.jsx:103
+#: src/components/KeyboardShortcutsModal.jsx:109
 msgid "Select previous match"
 msgstr "选择上一个匹配项"
 
-#: src/components/Footer.jsx:370
+#: src/components/Footer.jsx:404
 #: src/components/Settings.jsx:38
 msgid "Settings"
 msgstr "设置"
@@ -846,18 +1051,22 @@ msgid "Share"
 msgstr "分享"
 
 #: src/components/MultiplayerModal.jsx:130
-msgid "Share Link"
-msgstr "分享链接"
+#~ msgid "Share Link"
+#~ msgstr "分享链接"
 
 #: src/components/HelpModal.jsx:73
 #~ msgid "Share Web Maker"
 #~ msgstr "分享 Web Maker"
 
+#: src/components/MultiplayerModal.jsx:113
+msgid "Share link"
+msgstr "分享链接"
+
 #: src/components/MainHeader.jsx:98
 msgid "Share this creation publicly"
 msgstr "公开分享这个创作"
 
-#: src/components/MultiplayerModal.jsx:179
+#: src/components/MultiplayerModal.jsx:125
 msgid "Share this link with others to let them join your session."
 msgstr "与他人分享此链接以让他们加入你的会话。"
 
@@ -866,9 +1075,14 @@ msgstr "与他人分享此链接以让他们加入你的会话。"
 #~ msgid "Signup"
 #~ msgstr ""
 
-#: src/components/KeyboardShortcutsModal.jsx:146
+#: src/components/KeyboardShortcutsModal.jsx:152
 msgid "Single line comment"
 msgstr "单行注释"
+
+#: src/components/GistExportSection.jsx:164
+#: src/components/GistExportSection.jsx:175
+msgid "Something went wrong talking to GitHub."
+msgstr "与 GitHub 通信时出现问题。"
 
 #: src/components/Settings.jsx:157
 msgid "Spaces"
@@ -882,11 +1096,11 @@ msgstr "开始空白"
 msgid "Start Blank in File Mode"
 msgstr "以文件模式开始空白"
 
-#: src/components/MultiplayerModal.jsx:111
+#: src/components/MultiplayerModal.jsx:93
 msgid "Start New Collab Session"
 msgstr "开始新的协作会话"
 
-#: src/components/MultiplayerModal.jsx:97
+#: src/components/MultiplayerModal.jsx:79
 msgid "Start a collaborative editing session and invite others to code together in real-time. Everyone can see each other's cursors and edits."
 msgstr "开始一个协作编辑会话，并邀请其他人实时一起编码。每个人都可以看到彼此的光标和编辑。"
 
@@ -930,15 +1144,15 @@ msgstr "支持开发者"
 #~ msgid "Switch to full screen preview"
 #~ msgstr ""
 
-#: src/components/Footer.jsx:311
+#: src/components/Footer.jsx:345
 msgid "Switch to layout with all vertical panes"
 msgstr "切换到所有垂直窗格的布局"
 
-#: src/components/Footer.jsx:291
+#: src/components/Footer.jsx:325
 msgid "Switch to layout with preview on bottom"
 msgstr "切换到底部预览的布局"
 
-#: src/components/Footer.jsx:301
+#: src/components/Footer.jsx:335
 msgid "Switch to layout with preview on left"
 msgstr "切换到左侧预览的布局"
 
@@ -946,7 +1160,7 @@ msgstr "切换到左侧预览的布局"
 #~ msgid "Switch to layout with preview on left\""
 #~ msgstr ""
 
-#: src/components/Footer.jsx:281
+#: src/components/Footer.jsx:315
 msgid "Switch to layout with preview on right"
 msgstr "切换到右侧预览的布局"
 
@@ -954,7 +1168,7 @@ msgstr "切换到右侧预览的布局"
 msgid "Switch to lighter version for better performance. Removes things like blur etc."
 msgstr "切换到更轻的版本以获得更好的性能。移除模糊等效果。"
 
-#: src/components/Footer.jsx:321
+#: src/components/Footer.jsx:355
 msgid "Switch to tabbed layout"
 msgstr "切换到标签式布局"
 
@@ -962,13 +1176,25 @@ msgstr "切换到标签式布局"
 msgid "Tabs"
 msgstr "标签"
 
-#: src/components/Footer.jsx:268
+#: src/components/Footer.jsx:302
 msgid "Take screenshot of preview"
 msgstr "截取预览的屏幕截图"
+
+#: src/components/GistExportSection.jsx:127
+msgid "That token didn't work. Double-check you copied it correctly and that it hasn't expired."
+msgstr "该令牌无效。请仔细检查您是否正确复制，并确保它尚未过期。"
 
 #: src/components/Settings.jsx:260
 msgid "Theme"
 msgstr "主题"
+
+#: src/components/GistExportSection.jsx:428
+msgid "This gist was deleted on GitHub. Create a new one to re-link."
+msgstr "此 gist 已在 GitHub 上删除。创建一个新的以重新链接。"
+
+#: src/components/GistExportSection.jsx:131
+msgid "This token is missing the \"gist\" scope. Recreate it on GitHub with \"gist\" checked."
+msgstr "此令牌缺少 \"gist\" 范围。在 GitHub 上重新创建时勾选 \"gist\"。"
 
 #: src/components/ContentWrapFiles.jsx:648
 msgid "Toggle code pane"
@@ -979,7 +1205,8 @@ msgstr "切换代码窗格"
 msgid "Toggle console"
 msgstr "切换控制台"
 
-#: src/components/Footer.jsx:334
+#: src/components/Footer.jsx:368
+#: src/components/KeyboardShortcutsModal.jsx:56
 msgid "Toggle full screen preview"
 msgstr "切换全屏预览"
 
@@ -995,7 +1222,7 @@ msgstr "开启此功能将在您打开的每个新标签中显示 Web Maker"
 msgid "Turns on the auto-completion suggestions as you type"
 msgstr "在您输入时开启自动完成建议"
 
-#: src/components/Footer.jsx:115
+#: src/components/Footer.jsx:148
 msgid "Tweet about 'Web Maker'"
 msgstr "发推文关于 'Web Maker'"
 
@@ -1007,16 +1234,24 @@ msgstr "将您的功能请求、评论和建议发推给 <0>@webmakerApp</0>"
 msgid "Type here to search libraries"
 msgstr "在这里输入以搜索库"
 
+#: src/components/GistExportSection.jsx:471
+msgid "Update Gist"
+msgstr "更新 Gist"
+
+#: src/components/GistExportSection.jsx:239
+msgid "Updating Gist…"
+msgstr "正在更新 Gist…"
+
 #: src/components/Assets.jsx:463
 #: src/components/CreateNewModal.jsx:235
 msgid "Upgrade to PRO"
 msgstr "升级到 PRO"
 
-#: src/components/Footer.jsx:150
+#: src/components/Footer.jsx:183
 msgid "Upgrade to PRO and get some advanced superpowers!"
 msgstr "升级到 PRO 并获得一些高级超能力！"
 
-#: src/components/Footer.jsx:195
+#: src/components/Footer.jsx:229
 msgid "Upload Image"
 msgstr "上传图片"
 
@@ -1032,9 +1267,17 @@ msgstr "上传/使用资源"
 msgid "Use Monaco Editor"
 msgstr "使用 Monaco 编辑器"
 
+#: src/components/GistExportSection.jsx:334
+msgid "Use a personal access token instead"
+msgstr "改用个人访问令牌"
+
 #: src/components/Settings.jsx:203
 msgid "Use experimental Monaco editor"
 msgstr "使用实验性 Monaco 编辑器"
+
+#: src/components/GistExportSection.jsx:452
+msgid "Visibility"
+msgstr "可见性"
 
 #: src/components/OnboardingModal.jsx:60
 msgid "Visit <0>https://webmaker.app/create/</0> any time — it works offline. Drag the bookmarklet onto your bookmark bar for one-click access:"
@@ -1051,6 +1294,10 @@ msgstr "想要更多超能力吗？"
 #: src/components/OnboardingModal.jsx:14
 #~ msgid "Welcome to Web Maker"
 #~ msgstr "欢迎来到 Web Maker"
+
+#: src/components/GistExportSection.jsx:459
+msgid "Yes"
+msgstr "是"
 
 #: src/components/AskToImportModal.jsx:41
 msgid "Yes, please import"

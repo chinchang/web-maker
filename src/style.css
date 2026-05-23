@@ -3629,17 +3629,6 @@ body.light-theme ::-webkit-scrollbar-thumb:hover {
 	background: #ff4444;
 }
 
-.multiplayer-modal__link-input {
-	flex: 1;
-	padding: 0.5rem;
-	border: 1px solid var(--color-border, #444);
-	border-radius: 4px;
-	background: var(--color-bg-input, #2a2a2a);
-	color: var(--color-text, #fff);
-	font-family: monospace;
-	font-size: 0.85rem;
-}
-
 .multiplayer-modal__hint {
 	margin: 0.5rem 0 0;
 	font-size: 0.875rem;

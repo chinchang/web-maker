@@ -12,6 +12,8 @@
 			'\'Oops! Le fichier s\xE9lectionn\xE9 est corrompu. Veuillez s\xE9lectionner un fichier g\xE9n\xE9r\xE9 en cliquant sur le bouton "Exporter".',
 		'(Experimental) Switches from CodeMirror to Monaco. Many other settings might not be available in Monaco.':
 			'(Exp\xE9rimental) Passe de CodeMirror \xE0 Monaco. De nombreux autres param\xE8tres pourraient ne pas \xEAtre disponibles dans Monaco.',
+		'(the <0>gist</0> scope is pre-selected).':
+			'(le scope <0>gist</0> est pr\xE9-s\xE9lectionn\xE9).',
 		'2 files mode creations available in Free plan. To create unlimited files mode creations, upgrade to <0/>.':
 			'2 cr\xE9ations de mode fichiers disponibles dans le plan gratuit. Pour cr\xE9er des cr\xE9ations de mode fichiers illimit\xE9es, passez \xE0 <0/>.',
 		'3 separate panes to write HTML, CSS and JavaScript. Good for quickly testing something.':
@@ -24,6 +26,7 @@
 		"Add files locally, usable only on this browser. Won't work for others if you share this publicly.":
 			"Ajoutez des fichiers localement, utilisables uniquement sur ce navigateur. Ne fonctionnera pas pour d'autres si vous partagez cela publiquement.",
 		'Add library': 'Ajouter une biblioth\xE8que',
+		'Add some code before exporting.': "Ajoutez du code avant d'exporter.",
 		'Add the closing tag automatically on seeing an opening tag in HTML':
 			"Ajoutez automatiquement la balise de fermeture en voyant une balise d'ouverture en HTML",
 		Advanced: 'Avanc\xE9',
@@ -38,6 +41,9 @@
 		'Auto-save': 'Sauvegarde automatique',
 		'Auto-save keeps saving your code at regular intervals after you hit save manually the first time':
 			'La sauvegarde automatique continue de sauvegarder votre code \xE0 intervalles r\xE9guliers apr\xE8s que vous ayez enregistr\xE9 manuellement la premi\xE8re fois',
+		Back: 'Retour',
+		"Can't connect?": 'Impossible de se connecter ?',
+		Cancelled: 'Annul\xE9',
 		'Choose from popular libraries':
 			'Choisissez parmi des biblioth\xE8ques populaires',
 		'Clear console (CTRL + L)': 'Effacer la console (CTRL + L)',
@@ -62,12 +68,27 @@
 			"Vous venez de l'extension Chrome ? <0>D\xE9couvrez comment importer vos cr\xE9ations</0>.",
 		'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.':
 			"Configurez et personnalisez les param\xE8tres en cliquant sur l'ic\xF4ne d'engrenage (<0><1/></0>) en bas \xE0 droite de l'application.",
+		'Connect GitHub': 'Connecter GitHub',
+		'Connect GitHub to update this gist or push a new version.':
+			'Connectez GitHub pour mettre \xE0 jour ce gist ou pousser une nouvelle version.',
+		'Connected as {login}': function (a) {
+			return ['Connect\xE9 en tant que ', a('login')];
+		},
+		'Connecting to GitHub\u2026': 'Connexion \xE0 GitHub\u2026',
 		Console: 'Console',
 		'Contact the Developer': 'Contacter le d\xE9veloppeur',
 		'Copy URL (or keep clicking to copy other formats)':
 			"Copier l'URL (ou continuez \xE0 cliquer pour copier d'autres formats)",
+		'Copy gist URL': "Copier l'URL du gist",
 		'Copy link': 'Copier le lien',
+		'Copy public URL': "Copier l'URL publique",
+		'Copy the token and paste it below.':
+			'Copiez le jeton et collez-le ci-dessous.',
+		'Could not connect to GitHub.': 'Impossible de se connecter \xE0 GitHub.',
+		'Could not validate token.': 'Impossible de valider le jeton.',
 		'Create New': 'Cr\xE9er Nouveau',
+		'Create new Gist': 'Cr\xE9er un nouveau Gist',
+		'Creating new Gist\u2026': "Cr\xE9ation d'un nouveau Gist\u2026",
 		'Custom font name here': 'Nom de la police personnalis\xE9e ici',
 		'Customize editor, theme, key bindings and more from the settings gear in the bottom-right corner.':
 			"Personnalisez l'\xE9diteur, le th\xE8me, les raccourcis clavier et plus depuis l'ic\xF4ne des param\xE8tres en bas \xE0 droite.",
@@ -77,7 +98,9 @@
 			'Pr\xE9processeur JavaScript par d\xE9faut',
 		'Default Preprocessors': 'Pr\xE9processeurs par d\xE9faut',
 		Delete: 'Supprimer',
+		Description: 'Description',
 		'Detach preview': "D\xE9tacher l'aper\xE7u",
+		'Disconnect GitHub': 'D\xE9connecter GitHub',
 		Discuss: 'Discuter',
 		"Don't ask me again": 'Ne me demandez plus',
 		'Double click to toggle code pane':
@@ -96,6 +119,11 @@
 		Export: 'Exporter',
 		'Export all your creations into a single importable file.':
 			'Exportez toutes vos cr\xE9ations dans un seul fichier importable.',
+		'Export as new gist': 'Exporter en tant que nouveau gist',
+		'Export to Gist': 'Exporter vers Gist',
+		'Export to GitHub Gist': 'Exporter vers GitHub Gist',
+		'Exported to Gist': 'Export\xE9 vers Gist',
+		'Exporting to Gist\u2026': 'Exportation vers Gist\u2026',
 		'Fast/light-weight version': 'Version rapide/l\xE9g\xE8re',
 		'Feedback & Suggestions': 'Retour & Suggestions',
 		'Fetching files...': 'R\xE9cup\xE9ration des fichiers...',
@@ -124,6 +152,16 @@
 		Fun: 'Amusant',
 		General: 'G\xE9n\xE9ral',
 		Get: 'Obtenir',
+		'Gist URL copied': 'URL du gist copi\xE9e',
+		'Gist export is only available on the <0>web version</0> of Web-Maker.':
+			"L'exportation de gist n'est disponible que sur la <0>version web</0> de Web-Maker.",
+		'Gist updated': 'Gist mis \xE0 jour',
+		'Gist was deleted on GitHub': 'Le gist a \xE9t\xE9 supprim\xE9 sur GitHub',
+		'GitHub access expired': 'Acc\xE8s GitHub expir\xE9',
+		'GitHub access expired. Please reconnect.':
+			'Acc\xE8s GitHub expir\xE9. Veuillez vous reconnecter.',
+		'GitHub connected': 'GitHub connect\xE9',
+		'GitHub disconnected': 'GitHub d\xE9connect\xE9',
 		Global: 'Global',
 		'Grid view': 'Vue en grille',
 		Help: 'Aide',
@@ -140,6 +178,7 @@
 			'Importez vos cr\xE9ations dans votre compte',
 		"Import your creations. Only the file that you export through the 'Export' button can be imported.":
 			"Importez vos cr\xE9ations. Seul le fichier que vous exportez via le bouton 'Exporter' peut \xEAtre import\xE9.",
+		'Include README.md and webmaker.json': 'Inclure README.md et webmaker.json',
 		'Indent code left': 'Indenter le code \xE0 gauche',
 		'Indent code right': 'Indenter le code \xE0 droite',
 		Indentation: 'Indentation',
@@ -161,6 +200,7 @@
 		'Like this app? Please <0>rate it here</0>.':
 			'Aimez-vous cette application ? Veuillez <0>la noter ici</0>.',
 		'Line wrap': 'Retour \xE0 la ligne',
+		'Linked gist': 'Gist li\xE9',
 		'List view': 'Vue en liste',
 		'Loads the last open creation when app starts':
 			"Charge la derni\xE8re cr\xE9ation ouverte lorsque l'application d\xE9marre",
@@ -183,6 +223,7 @@
 		'Manage your PRO subscription': 'G\xE9rer votre abonnement PRO',
 		'Manage your code in files. Just like you would have files on your local machine.':
 			'G\xE9rez votre code dans des fichiers. Tout comme vous auriez des fichiers sur votre machine locale.',
+		'Max 10MB per file': 'Max 10 Mo par fichier',
 		'Max 300KB per file': 'Max 300Ko par fichier',
 		'Max 5MB per file': 'Max 5Mo par fichier',
 		'Maximize pane': 'Agrandir le panneau',
@@ -194,6 +235,8 @@
 		'Multiplayer session active': 'Session multijoueur active',
 		'My Library': 'Ma Biblioth\xE8que',
 		New: 'Nouveau',
+		'New gist created': 'Nouveau gist cr\xE9\xE9',
+		No: 'Non',
 		'No feedback yet. Be the first!':
 			'Pas encore de retour. Soyez le premier !',
 		'No files uploaded yet': "Aucun fichier t\xE9l\xE9charg\xE9 pour l'instant",
@@ -206,6 +249,8 @@
 		'Once you stop typing, the preview waits for this much time before getting updated. Too low value might choke your browser!':
 			"Une fois que vous arr\xEAtez de taper, l'aper\xE7u attend ce temps avant de se mettre \xE0 jour. Une valeur trop basse pourrait bloquer votre navigateur !",
 		Open: 'Ouvrir',
+		'Open GitHub\'s "New token" page':
+			'Ouvrir la page "Nouveau token" de GitHub',
 		'Open Web Maker anytime by clicking the<0><1/></0> button in top-right side of your browser.':
 			'Ouvrez Web Maker \xE0 tout moment en cliquant sur le<0><1/></0> bouton en haut \xE0 droite de votre navigateur.',
 		'Open Web Maker anytime by visiting <0>https://webmaker.app/create/</0> - Even when you are offline! It just works! \uD83D\uDE31 <1>Drag the following bookmarklet</1> on your bookmark bar to create a quick access shortcut:':
@@ -221,6 +266,14 @@
 		'PRO unlocks unlimited public creations, unlimited Files mode projects, cloud asset hosting and real-time multiplayer collab.':
 			"Le PRO d\xE9bloque des cr\xE9ations publiques illimit\xE9es, des projets en mode Fichiers illimit\xE9s, l'h\xE9bergement d'actifs cloud et la collaboration multijoueur en temps r\xE9el.",
 		Participants: 'Participants',
+		"Paste a GitHub personal access token with the <0>gist</0> scope. It's stored only on this device.":
+			"Collez un token d'acc\xE8s personnel GitHub avec le scope <0>gist</0>. Il est stock\xE9 uniquement sur cet appareil.",
+		'Paste a token to continue.': 'Collez un token pour continuer.',
+		'Permission denied. Make sure your token has the "gist" scope.':
+			'Permission refus\xE9e. Assurez-vous que votre token a le scope "gist".',
+		'Personal access token': "Token d'acc\xE8s personnel",
+		'Pick an expiration, scroll down, and click <0>Generate token</0>.':
+			'Choisissez une expiration, faites d\xE9filer vers le bas et cliquez sur <0>G\xE9n\xE9rer le token</0>.',
 		'Powered by cdnjs': 'Propuls\xE9 par cdnjs',
 		'Preserve console logs': 'Conserver les journaux de la console',
 		'Preserve last written code': 'Conserver le dernier code \xE9crit',
@@ -230,6 +283,10 @@
 			"Temps d'attente pour l'actualisation de l'aper\xE7u",
 		'Preview will refresh when you resize the preview pane':
 			"L'aper\xE7u se mettra \xE0 jour lorsque vous redimensionnerez le panneau d'aper\xE7u",
+		Public: 'Public',
+		'Public URL': 'URL publique',
+		'Push this creation to a GitHub gist.':
+			'Poussez cette cr\xE9ation vers un gist GitHub.',
 		'Put each library in new line':
 			'Mettez chaque biblioth\xE8que sur une nouvelle ligne',
 		'Read more': 'En savoir plus',
@@ -244,6 +301,7 @@
 		'Replace new tab page': 'Remplacer la page nouvel onglet',
 		'Report a Bug': 'Signaler un bug',
 		'Report a bug': 'Signaler un bug',
+		'Requires the <0>gist</0> scope.': 'N\xE9cessite le scope <0>gist</0>.',
 		'Review Web Maker': '\xC9valuer Web Maker',
 		Run: 'Ex\xE9cuter',
 		'Run Prettier': 'Ex\xE9cuter Prettier',
@@ -254,8 +312,10 @@
 		'Save current creation (Ctrl/\u2318 + S)':
 			'Enregistrer la cr\xE9ation actuelle (Ctrl/\u2318 + S)',
 		'Save current creations': 'Enregistrer les cr\xE9ations actuelles',
+		'Save token': 'Enregistrer le token',
 		'Search files': 'Rechercher des fichiers',
 		'Search your creations here...': 'Recherchez vos cr\xE9ations ici...',
+		Secret: 'Secret',
 		'See PRO': 'Voir PRO',
 		'See awesome libraries used':
 			'Voir les biblioth\xE8ques g\xE9niales utilis\xE9es',
@@ -268,10 +328,13 @@
 		Share: 'Partager',
 		'Share Link': 'Partager le lien',
 		'Share Web Maker': 'Partager Web Maker',
+		'Share link': 'Partager le lien',
 		'Share this creation publicly': 'Partager cette cr\xE9ation publiquement',
 		'Share this link with others to let them join your session.':
 			"Partagez ce lien avec d'autres pour leur permettre de rejoindre votre session.",
 		'Single line comment': 'Commentaire sur une seule ligne',
+		'Something went wrong talking to GitHub.':
+			'Quelque chose a mal tourn\xE9 en parlant \xE0 GitHub.',
 		Spaces: 'Espaces',
 		'Start Blank': 'D\xE9marrer vide',
 		'Start Blank in File Mode': 'D\xE9marrer vide en mode fichier',
@@ -301,7 +364,13 @@
 		Tabs: 'Onglets',
 		'Take screenshot of preview':
 			"Prendre une capture d'\xE9cran de l'aper\xE7u",
+		"That token didn't work. Double-check you copied it correctly and that it hasn't expired.":
+			"Ce token n'a pas fonctionn\xE9. V\xE9rifiez que vous l'avez copi\xE9 correctement et qu'il n'a pas expir\xE9.",
 		Theme: 'Th\xE8me',
+		'This gist was deleted on GitHub. Create a new one to re-link.':
+			'Ce gist a \xE9t\xE9 supprim\xE9 sur GitHub. Cr\xE9ez-en un nouveau pour le relier \xE0 nouveau.',
+		'This token is missing the "gist" scope. Recreate it on GitHub with "gist" checked.':
+			'Ce token manque du scope "gist". Recr\xE9ez-le sur GitHub avec "gist" coch\xE9.',
 		'Toggle code pane': 'Basculer le panneau de code',
 		'Toggle console': 'Basculer la console',
 		'Toggle full screen preview': "Basculer l'aper\xE7u en plein \xE9cran",
@@ -316,6 +385,8 @@
 			'Tweetez vos demandes de fonctionnalit\xE9s, commentaires et suggestions \xE0 <0>@webmakerApp</0>',
 		'Type here to search libraries':
 			'Tapez ici pour rechercher des biblioth\xE8ques',
+		'Update Gist': 'Mettre \xE0 jour le Gist',
+		'Updating Gist\u2026': 'Mise \xE0 jour du Gist\u2026',
 		'Upgrade to PRO': 'Passer \xE0 PRO',
 		'Upgrade to PRO and get some advanced superpowers!':
 			'Passez \xE0 PRO et obtenez des super-pouvoirs avanc\xE9s !',
@@ -324,14 +395,18 @@
 			'T\xE9l\xE9chargez des ressources dans le nuage pour une utilisation sur plusieurs appareils.',
 		'Upload/Use assets': 'T\xE9l\xE9charger/Utiliser des ressources',
 		'Use Monaco Editor': "Utiliser l'\xE9diteur Monaco",
+		'Use a personal access token instead':
+			"Utilisez un token d'acc\xE8s personnel \xE0 la place",
 		'Use experimental Monaco editor':
 			"Utiliser l'\xE9diteur Monaco exp\xE9rimental",
+		Visibility: 'Visibilit\xE9',
 		'Visit <0>https://webmaker.app/create/</0> any time \u2014 it works offline. Drag the bookmarklet onto your bookmark bar for one-click access:':
 			'Visitez <0>https://webmaker.app/create/</0> \xE0 tout moment \u2014 cela fonctionne hors ligne. Faites glisser le bookmarklet sur votre barre de favoris pour un acc\xE8s en un clic :',
 		'Vote for features you want to see or suggest new ones.':
 			'Votez pour les fonctionnalit\xE9s que vous souhaitez voir ou sugg\xE9rez-en de nouvelles.',
 		'Want more super-powers?': 'Vous voulez plus de super-pouvoirs ?',
 		'Welcome to Web Maker': 'Bienvenue sur Web Maker',
+		Yes: 'Oui',
 		'Yes, please import': 'Oui, veuillez importer',
 		'You have <0>{oldSavedCreationsCount}</0> creations saved in your local machine. Do you want to import those creations in your account so they are more secure and accessible anywhere?':
 			function (a) {

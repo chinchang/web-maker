@@ -2,19 +2,25 @@
  * Translates Lingui .po message catalogs using GPT-4o.
  *
  * Usage:
- *   OPENAI_API_KEY=sk-... node scripts/translate-po.js
+ *   node scripts/translate-po.js
  *
- * Reads src/locales/<locale>/messages.po for each target locale,
- * finds untranslated entries (empty msgstr), translates them in
- * batches via OpenAI, and writes the results back.
+ * Reads OPENAI_API_KEY from .env.local (or the environment).
+ * For each target locale, finds untranslated entries (empty msgstr),
+ * translates them in batches via OpenAI, and writes the results back.
  */
 
 const fs = require('fs');
 const path = require('path');
 
+require('dotenv').config({
+	path: path.resolve(__dirname, '../.env.local')
+});
+
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 if (!OPENAI_API_KEY) {
-	console.error('Error: OPENAI_API_KEY environment variable is required.');
+	console.error(
+		'Error: OPENAI_API_KEY not found in .env.local or environment.'
+	);
 	process.exit(1);
 }
 

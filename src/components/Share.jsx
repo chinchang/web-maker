@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'preact/hooks';
+import { t } from '@lingui/macro';
+import { I18n } from '@lingui/react';
 import { Skeleton } from './Skeleton';
 import { HStack, Stack, VStack } from './Stack';
 import Switch from './Switch';
 import { itemService } from '../itemService';
 import { alertsService } from '../notifications';
 import { Button } from './common';
-import { Icon } from './Icons';
 import { Text } from './Text';
 import { LoaderWithText } from './Loader';
 import { GistExportSection } from './GistExportSection';
+import { UrlPill } from './UrlPill';
 
 const FREE_PUBLIC_ITEM_COUNT = 1;
 const BASE_URL = location.origin.includes('chrome-extension://')
@@ -133,11 +135,6 @@ export function Share({
 		return selectedLayout ? `${baseUrl}?layout=${selectedLayout}` : baseUrl;
 	};
 
-	const copyUrl = () => {
-		navigator.clipboard.writeText(getShareUrl());
-		alertsService.add('URL copied to clipboard');
-	};
-
 	if (!user) {
 		return (
 			<HStack justify="center" gap={2}>
@@ -166,24 +163,16 @@ export function Share({
 					)}
 					{item.isPublic && (
 						<VStack gap={1} align="stretch">
-							<div class="url-pill">
-								<span class="url-pill__label">Public URL</span>
-								<a
-									href={getShareUrl()}
-									target="_blank"
-									rel="noopener"
-									class="url-pill__link"
-								>
-									{getShareUrl()}
-								</a>
-								<Button
-									class="btn btn--dark btn--small hint--bottom hint--rounded"
-									onClick={copyUrl}
-									aria-label="Copy"
-								>
-									<Icon name="copy" />
-								</Button>
-							</div>
+							<I18n>
+								{({ i18n }) => (
+									<UrlPill
+										url={getShareUrl()}
+										label={i18n._(t`Public URL`)}
+										copyAriaLabel={i18n._(t`Copy public URL`)}
+										onCopy={() => alertsService.add('URL copied to clipboard')}
+									/>
+								)}
+							</I18n>
 
 							{/* Layout Mode Selector — visually branches off the URL pill above */}
 							<div class="public-link-branch">

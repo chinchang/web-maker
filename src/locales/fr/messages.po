@@ -1,5 +1,15 @@
 msgid ""
-msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: \nPO-Revision-Date: \nLast-Translator: \nLanguage: \nLanguage-Team: \nContent-Type: \nContent-Transfer-Encoding: \nPlural-Forms: \n"
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language: \n"
+"Language-Team: \n"
+"Content-Type: \n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #: src/components/HelpModal.jsx:266
 msgid "\"Web Maker\" is <0>open-source</0> under the <1>MIT License</1>"
@@ -12,6 +22,10 @@ msgstr "'Oops! Le fichier sélectionné est corrompu. Veuillez sélectionner un 
 #: src/components/Settings.jsx:209
 msgid "(Experimental) Switches from CodeMirror to Monaco. Many other settings might not be available in Monaco."
 msgstr "(Expérimental) Passe de CodeMirror à Monaco. De nombreux autres paramètres pourraient ne pas être disponibles dans Monaco."
+
+#: src/components/GistExportSection.jsx:359
+msgid "(the <0>gist</0> scope is pre-selected)."
+msgstr "(le scope <0>gist</0> est pré-sélectionné)."
 
 #: src/components/CreateNewModal.jsx:215
 #~ msgid "2 files mode creations available in Free plan. To create unlimited files mode creations, upgrade to <0/>."
@@ -44,6 +58,10 @@ msgstr "Ajoutez des fichiers localement, utilisables uniquement sur ce navigateu
 #: src/components/MainHeader.jsx:82
 msgid "Add library"
 msgstr "Ajouter une bibliothèque"
+
+#: src/components/GistExportSection.jsx:157
+msgid "Add some code before exporting."
+msgstr "Ajoutez du code avant d'exporter."
 
 #: src/components/Settings.jsx:366
 msgid "Add the closing tag automatically on seeing an opening tag in HTML"
@@ -90,6 +108,18 @@ msgstr "Sauvegarde automatique"
 msgid "Auto-save keeps saving your code at regular intervals after you hit save manually the first time"
 msgstr "La sauvegarde automatique continue de sauvegarder votre code à intervalles réguliers après que vous ayez enregistré manuellement la première fois"
 
+#: src/components/GistExportSection.jsx:416
+msgid "Back"
+msgstr "Retour"
+
+#: src/components/GistExportSection.jsx:324
+msgid "Can't connect?"
+msgstr "Impossible de se connecter ?"
+
+#: src/components/GistExportSection.jsx:89
+msgid "Cancelled"
+msgstr "Annulé"
+
 #: src/components/AddLibrary.jsx:97
 msgid "Choose from popular libraries"
 msgstr "Choisissez parmi des bibliothèques populaires"
@@ -120,7 +150,7 @@ msgstr "Cliquez pour éditer"
 msgid "Close saved creations pane"
 msgstr "Fermer le panneau des créations sauvegardées"
 
-#: src/components/KeyboardShortcutsModal.jsx:80
+#: src/components/KeyboardShortcutsModal.jsx:86
 msgid "Close saved creations panel & modals"
 msgstr "Fermer le panneau des créations sauvegardées et les modales"
 
@@ -136,7 +166,7 @@ msgstr "Explosion de code !"
 msgid "Collab"
 msgstr "Collab"
 
-#: src/components/MultiplayerModal.jsx:91
+#: src/components/MultiplayerModal.jsx:73
 msgid "Collab Session"
 msgstr "Session de collaboration"
 
@@ -156,6 +186,22 @@ msgstr "Vous venez de l'extension Chrome ? <0>Découvrez comment importer vos cr
 #~ msgid "Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app."
 #~ msgstr "Configurez et personnalisez les paramètres en cliquant sur l'icône d'engrenage (<0><1/></0>) en bas à droite de l'application."
 
+#: src/components/GistExportSection.jsx:320
+msgid "Connect GitHub"
+msgstr "Connecter GitHub"
+
+#: src/components/GistExportSection.jsx:304
+msgid "Connect GitHub to update this gist or push a new version."
+msgstr "Connectez GitHub pour mettre à jour ce gist ou pousser une nouvelle version."
+
+#: src/components/GistExportSection.jsx:121
+msgid "Connected as {login}"
+msgstr "Connecté en tant que {login}"
+
+#: src/components/GistExportSection.jsx:85
+msgid "Connecting to GitHub…"
+msgstr "Connexion à GitHub…"
+
 #: src/components/Console.jsx:102
 msgid "Console"
 msgstr "Console"
@@ -168,13 +214,42 @@ msgstr "Contacter le développeur"
 msgid "Copy URL (or keep clicking to copy other formats)"
 msgstr "Copier l'URL (ou continuez à cliquer pour copier d'autres formats)"
 
-#: src/components/MultiplayerModal.jsx:148
+#: src/components/GistExportSection.jsx:285
+msgid "Copy gist URL"
+msgstr "Copier l'URL du gist"
+
+#: src/components/MultiplayerModal.jsx:118
 msgid "Copy link"
 msgstr "Copier le lien"
+
+#: src/components/Share.jsx:171
+msgid "Copy public URL"
+msgstr "Copier l'URL publique"
+
+#: src/components/GistExportSection.jsx:370
+msgid "Copy the token and paste it below."
+msgstr "Copiez le jeton et collez-le ci-dessous."
+
+#: src/components/GistExportSection.jsx:90
+#: src/components/GistExportSection.jsx:96
+msgid "Could not connect to GitHub."
+msgstr "Impossible de se connecter à GitHub."
+
+#: src/components/GistExportSection.jsx:133
+msgid "Could not validate token."
+msgstr "Impossible de valider le jeton."
 
 #: src/components/CreateNewModal.jsx:160
 msgid "Create New"
 msgstr "Créer Nouveau"
+
+#: src/components/GistExportSection.jsx:479
+msgid "Create new Gist"
+msgstr "Créer un nouveau Gist"
+
+#: src/components/GistExportSection.jsx:249
+msgid "Creating new Gist…"
+msgstr "Création d'un nouveau Gist…"
 
 #: src/components/Settings.jsx:302
 msgid "Custom font name here"
@@ -204,9 +279,17 @@ msgstr "Préprocesseurs par défaut"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: src/components/Footer.jsx:342
+#: src/components/GistExportSection.jsx:436
+msgid "Description"
+msgstr "Description"
+
+#: src/components/Footer.jsx:376
 msgid "Detach preview"
 msgstr "Détacher l'aperçu"
+
+#: src/components/GistExportSection.jsx:507
+msgid "Disconnect GitHub"
+msgstr "Déconnecter GitHub"
 
 #: src/components/HelpModal.jsx:139
 msgid "Discuss"
@@ -226,7 +309,7 @@ msgstr "Double-cliquez pour basculer le panneau de code"
 msgid "Double click to toggle console"
 msgstr "Double-cliquez pour basculer la console"
 
-#: src/components/Footer.jsx:182
+#: src/components/Footer.jsx:216
 msgid "Download game as zip"
 msgstr "Télécharger le jeu au format zip"
 
@@ -238,16 +321,16 @@ msgstr "Déposez des fichiers ou cliquez ici pour ajouter"
 msgid "Drop files or click here to upload"
 msgstr "Déposez des fichiers ou cliquez ici pour télécharger"
 
-#: src/components/Footer.jsx:257
+#: src/components/Footer.jsx:291
 msgid "Edit on CodePen"
 msgstr "Modifier sur CodePen"
 
-#: src/components/KeyboardShortcutsModal.jsx:86
+#: src/components/KeyboardShortcutsModal.jsx:92
 #: src/components/Settings.jsx:199
 msgid "Editor"
 msgstr "Éditeur"
 
-#: src/components/KeyboardShortcutsModal.jsx:133
+#: src/components/KeyboardShortcutsModal.jsx:139
 msgid "Emmet code completion"
 msgstr "Complétion de code Emmet"
 
@@ -263,12 +346,34 @@ msgstr "Exporter"
 msgid "Export all your creations into a single importable file."
 msgstr "Exportez toutes vos créations dans un seul fichier importable."
 
+#: src/components/GistExportSection.jsx:497
+msgid "Export as new gist"
+msgstr "Exporter en tant que nouveau gist"
+
+#: src/components/GistExportSection.jsx:487
+msgid "Export to Gist"
+msgstr "Exporter vers Gist"
+
+#: src/components/GistExportSection.jsx:63
+#: src/components/GistExportSection.jsx:271
+#: src/components/GistExportSection.jsx:295
+msgid "Export to GitHub Gist"
+msgstr "Exporter vers GitHub Gist"
+
+#: src/components/GistExportSection.jsx:230
+msgid "Exported to Gist"
+msgstr "Exporté vers Gist"
+
+#: src/components/GistExportSection.jsx:229
+msgid "Exporting to Gist…"
+msgstr "Exportation vers Gist…"
+
 #: src/components/Settings.jsx:53
 msgid "Fast/light-weight version"
 msgstr "Version rapide/légère"
 
 #: src/components/FeedbackBoard.jsx:121
-#: src/components/Footer.jsx:383
+#: src/components/Footer.jsx:133
 msgid "Feedback & Suggestions"
 msgstr "Retour & Suggestions"
 
@@ -284,27 +389,27 @@ msgstr "Récupération des fichiers..."
 msgid "Files modes is currently only available in Web app. <0>Try the Web app now</0>."
 msgstr "Les modes de fichiers ne sont actuellement disponibles que dans l'application Web. <0>Essayez l'application Web maintenant</0>."
 
-#: src/components/KeyboardShortcutsModal.jsx:91
+#: src/components/KeyboardShortcutsModal.jsx:97
 msgid "Find"
 msgstr "Trouver"
 
-#: src/components/KeyboardShortcutsModal.jsx:109
+#: src/components/KeyboardShortcutsModal.jsx:115
 msgid "Find & replace"
 msgstr "Trouver & remplacer"
 
-#: src/components/KeyboardShortcutsModal.jsx:68
+#: src/components/KeyboardShortcutsModal.jsx:74
 msgid "Focus CSS pane"
 msgstr "Concentrez-vous sur le panneau CSS"
 
-#: src/components/KeyboardShortcutsModal.jsx:62
+#: src/components/KeyboardShortcutsModal.jsx:68
 msgid "Focus HTML pane"
 msgstr "Concentrez-vous sur le panneau HTML"
 
-#: src/components/KeyboardShortcutsModal.jsx:74
+#: src/components/KeyboardShortcutsModal.jsx:80
 msgid "Focus JS pane"
 msgstr "Concentrez-vous sur le panneau JS"
 
-#: src/components/KeyboardShortcutsModal.jsx:56
+#: src/components/KeyboardShortcutsModal.jsx:62
 msgid "Focus preview"
 msgstr "Concentrez-vous sur l'aperçu"
 
@@ -356,9 +461,41 @@ msgstr "Amusant"
 msgid "General"
 msgstr "Général"
 
-#: src/components/Footer.jsx:154
+#: src/components/Footer.jsx:187
 msgid "Get"
 msgstr "Obtenir"
+
+#: src/components/GistExportSection.jsx:261
+msgid "Gist URL copied"
+msgstr "URL du gist copiée"
+
+#: src/components/GistExportSection.jsx:67
+msgid "Gist export is only available on the <0>web version</0> of Web-Maker."
+msgstr "L'exportation de gist n'est disponible que sur la <0>version web</0> de Web-Maker."
+
+#: src/components/GistExportSection.jsx:240
+msgid "Gist updated"
+msgstr "Gist mis à jour"
+
+#: src/components/GistExportSection.jsx:166
+msgid "Gist was deleted on GitHub"
+msgstr "Le gist a été supprimé sur GitHub"
+
+#: src/components/GistExportSection.jsx:165
+msgid "GitHub access expired"
+msgstr "Accès GitHub expiré"
+
+#: src/components/GistExportSection.jsx:182
+msgid "GitHub access expired. Please reconnect."
+msgstr "Accès GitHub expiré. Veuillez vous reconnecter."
+
+#: src/components/GistExportSection.jsx:86
+msgid "GitHub connected"
+msgstr "GitHub connecté"
+
+#: src/components/GistExportSection.jsx:145
+msgid "GitHub disconnected"
+msgstr "GitHub déconnecté"
 
 #: src/components/KeyboardShortcutsModal.jsx:15
 msgid "Global"
@@ -368,8 +505,8 @@ msgstr "Global"
 msgid "Grid view"
 msgstr "Vue en grille"
 
-#: src/components/Footer.jsx:87
-#: src/components/Footer.jsx:202
+#: src/components/Footer.jsx:103
+#: src/components/Footer.jsx:236
 msgid "Help"
 msgstr "Aide"
 
@@ -405,11 +542,15 @@ msgstr "Importez vos créations dans votre compte"
 msgid "Import your creations. Only the file that you export through the 'Export' button can be imported."
 msgstr "Importez vos créations. Seul le fichier que vous exportez via le bouton 'Exporter' peut être importé."
 
-#: src/components/KeyboardShortcutsModal.jsx:127
+#: src/components/GistExportSection.jsx:461
+msgid "Include README.md and webmaker.json"
+msgstr "Inclure README.md et webmaker.json"
+
+#: src/components/KeyboardShortcutsModal.jsx:133
 msgid "Indent code left"
 msgstr "Indenter le code à gauche"
 
-#: src/components/KeyboardShortcutsModal.jsx:121
+#: src/components/KeyboardShortcutsModal.jsx:127
 msgid "Indent code right"
 msgstr "Indenter le code à droite"
 
@@ -441,7 +582,7 @@ msgstr "Raccourcis clavier"
 msgid "Keyboard Shortcuts"
 msgstr "Raccourcis clavier"
 
-#: src/components/Footer.jsx:101
+#: src/components/Footer.jsx:117
 msgid "Keyboard shortcuts"
 msgstr "Raccourcis clavier"
 
@@ -449,7 +590,7 @@ msgstr "Raccourcis clavier"
 msgid "Language"
 msgstr "Langue"
 
-#: src/components/MultiplayerModal.jsx:226
+#: src/components/MultiplayerModal.jsx:172
 msgid "Leave Session"
 msgstr "Quitter la session"
 
@@ -476,6 +617,10 @@ msgstr "Aimez-vous cette application ? Veuillez <0>la noter ici</0>."
 #: src/components/Settings.jsx:359
 msgid "Line wrap"
 msgstr "Retour à la ligne"
+
+#: src/components/GistExportSection.jsx:284
+msgid "Linked gist"
+msgstr "Gist lié"
 
 #: src/components/Assets.jsx:239
 msgid "List view"
@@ -533,11 +678,11 @@ msgstr "Faites-le vôtre"
 msgid "Make the app ready to build some games for <0>Js13kGames</0>."
 msgstr "Préparez l'application à créer des jeux pour <0>Js13kGames</0>."
 
-#: src/components/Footer.jsx:139
+#: src/components/Footer.jsx:172
 msgid "Manage"
 msgstr "Gérer"
 
-#: src/components/Footer.jsx:136
+#: src/components/Footer.jsx:169
 msgid "Manage your PRO subscription"
 msgstr "Gérer votre abonnement PRO"
 
@@ -545,13 +690,17 @@ msgstr "Gérer votre abonnement PRO"
 msgid "Manage your code in files. Just like you would have files on your local machine."
 msgstr "Gérez votre code dans des fichiers. Tout comme vous auriez des fichiers sur votre machine locale."
 
+#: src/components/Assets.jsx:337
+msgid "Max 10MB per file"
+msgstr "Max 10 Mo par fichier"
+
 #: src/components/Assets.jsx:480
 msgid "Max 300KB per file"
 msgstr "Max 300Ko par fichier"
 
 #: src/components/Assets.jsx:337
-msgid "Max 5MB per file"
-msgstr "Max 5Mo par fichier"
+#~ msgid "Max 5MB per file"
+#~ msgstr "Max 5Mo par fichier"
 
 #: src/components/ContentWrap.jsx:840
 #: src/components/ContentWrap.jsx:939
@@ -589,6 +738,14 @@ msgstr "Ma Bibliothèque"
 msgid "New"
 msgstr "Nouveau"
 
+#: src/components/GistExportSection.jsx:250
+msgid "New gist created"
+msgstr "Nouveau gist créé"
+
+#: src/components/GistExportSection.jsx:459
+msgid "No"
+msgstr "Non"
+
 #: src/components/FeedbackBoard.jsx:177
 msgid "No feedback yet. Be the first!"
 msgstr "Pas encore de retour. Soyez le premier !"
@@ -620,6 +777,10 @@ msgstr "Une fois que vous arrêtez de taper, l'aperçu attend ce temps avant de 
 #: src/components/MainHeader.jsx:183
 msgid "Open"
 msgstr "Ouvrir"
+
+#: src/components/GistExportSection.jsx:357
+msgid "Open GitHub's \"New token\" page"
+msgstr "Ouvrir la page \"Nouveau token\" de GitHub"
 
 #: src/components/OnboardingModal.jsx:52
 #~ msgid "Open Web Maker anytime by clicking the<0><1/></0> button in top-right side of your browser."
@@ -657,9 +818,29 @@ msgstr "Autre police du système"
 msgid "PRO unlocks unlimited public creations, unlimited Files mode projects, cloud asset hosting and real-time multiplayer collab."
 msgstr "Le PRO débloque des créations publiques illimitées, des projets en mode Fichiers illimités, l'hébergement d'actifs cloud et la collaboration multijoueur en temps réel."
 
-#: src/components/MultiplayerModal.jsx:187
+#: src/components/MultiplayerModal.jsx:133
 msgid "Participants"
 msgstr "Participants"
+
+#: src/components/GistExportSection.jsx:344
+msgid "Paste a GitHub personal access token with the <0>gist</0> scope. It's stored only on this device."
+msgstr "Collez un token d'accès personnel GitHub avec le scope <0>gist</0>. Il est stocké uniquement sur cet appareil."
+
+#: src/components/GistExportSection.jsx:110
+msgid "Paste a token to continue."
+msgstr "Collez un token pour continuer."
+
+#: src/components/GistExportSection.jsx:171
+msgid "Permission denied. Make sure your token has the \"gist\" scope."
+msgstr "Permission refusée. Assurez-vous que votre token a le scope \"gist\"."
+
+#: src/components/GistExportSection.jsx:375
+msgid "Personal access token"
+msgstr "Token d'accès personnel"
+
+#: src/components/GistExportSection.jsx:364
+msgid "Pick an expiration, scroll down, and click <0>Generate token</0>."
+msgstr "Choisissez une expiration, faites défiler vers le bas et cliquez sur <0>Générer le token</0>."
 
 #: src/components/AddLibrary.jsx:93
 msgid "Powered by cdnjs"
@@ -685,12 +866,24 @@ msgstr "Temps d'attente pour l'actualisation de l'aperçu"
 msgid "Preview will refresh when you resize the preview pane"
 msgstr "L'aperçu se mettra à jour lorsque vous redimensionnerez le panneau d'aperçu"
 
+#: src/components/GistExportSection.jsx:450
+msgid "Public"
+msgstr "Public"
+
+#: src/components/Share.jsx:170
+msgid "Public URL"
+msgstr "URL publique"
+
+#: src/components/GistExportSection.jsx:308
+msgid "Push this creation to a GitHub gist."
+msgstr "Poussez cette création vers un gist GitHub."
+
 #: src/components/AddLibrary.jsx:123
 #: src/components/AddLibrary.jsx:153
 msgid "Put each library in new line"
 msgstr "Mettez chaque bibliothèque sur une nouvelle ligne"
 
-#: src/components/KeyboardShortcutsModal.jsx:139
+#: src/components/KeyboardShortcutsModal.jsx:145
 msgid "Read more"
 msgstr "En savoir plus"
 
@@ -702,7 +895,7 @@ msgstr "Lisez la documentation"
 #~ msgid "Read the documentation."
 #~ msgstr "Lisez la documentation."
 
-#: src/components/KeyboardShortcutsModal.jsx:115
+#: src/components/KeyboardShortcutsModal.jsx:121
 msgid "Realign code"
 msgstr "Réajuster le code"
 
@@ -730,6 +923,10 @@ msgstr "Signaler un bug"
 #~ msgid "Report a bug"
 #~ msgstr "Signaler un bug"
 
+#: src/components/GistExportSection.jsx:310
+msgid "Requires the <0>gist</0> scope."
+msgstr "Nécessite le scope <0>gist</0>."
+
 #: src/components/HelpModal.jsx:84
 #~ msgid "Review Web Maker"
 #~ msgstr "Évaluer Web Maker"
@@ -738,7 +935,7 @@ msgstr "Signaler un bug"
 msgid "Run"
 msgstr "Exécuter"
 
-#: src/components/KeyboardShortcutsModal.jsx:152
+#: src/components/KeyboardShortcutsModal.jsx:158
 msgid "Run Prettier"
 msgstr "Exécuter Prettier"
 
@@ -750,7 +947,7 @@ msgstr "Exécuter l'aperçu (Ctrl/⌘ + Shift + 5)"
 msgid "Save"
 msgstr "Enregistrer"
 
-#: src/components/Footer.jsx:231
+#: src/components/Footer.jsx:265
 msgid "Save as HTML file"
 msgstr "Enregistrer en tant que fichier HTML"
 
@@ -762,6 +959,10 @@ msgstr "Enregistrer la création actuelle (Ctrl/⌘ + S)"
 msgid "Save current creations"
 msgstr "Enregistrer les créations actuelles"
 
+#: src/components/GistExportSection.jsx:403
+msgid "Save token"
+msgstr "Enregistrer le token"
+
 #: src/components/Assets.jsx:229
 msgid "Search files"
 msgstr "Rechercher des fichiers"
@@ -769,6 +970,10 @@ msgstr "Rechercher des fichiers"
 #: src/components/SavedItemPane.jsx:267
 msgid "Search your creations here..."
 msgstr "Recherchez vos créations ici..."
+
+#: src/components/GistExportSection.jsx:450
+msgid "Secret"
+msgstr "Secret"
 
 #: src/components/OnboardingModal.jsx:171
 msgid "See PRO"
@@ -778,7 +983,7 @@ msgstr "Voir PRO"
 msgid "See awesome libraries used"
 msgstr "Voir les bibliothèques géniales utilisées"
 
-#: src/components/Footer.jsx:358
+#: src/components/Footer.jsx:392
 msgid "See changelog"
 msgstr "Voir le changelog"
 
@@ -786,15 +991,15 @@ msgstr "Voir le changelog"
 msgid "See profile or Logout"
 msgstr "Voir le profil ou Se déconnecter"
 
-#: src/components/KeyboardShortcutsModal.jsx:97
+#: src/components/KeyboardShortcutsModal.jsx:103
 msgid "Select next match"
 msgstr "Sélectionner la correspondance suivante"
 
-#: src/components/KeyboardShortcutsModal.jsx:103
+#: src/components/KeyboardShortcutsModal.jsx:109
 msgid "Select previous match"
 msgstr "Sélectionner la correspondance précédente"
 
-#: src/components/Footer.jsx:370
+#: src/components/Footer.jsx:404
 #: src/components/Settings.jsx:38
 msgid "Settings"
 msgstr "Paramètres"
@@ -805,24 +1010,33 @@ msgid "Share"
 msgstr "Partager"
 
 #: src/components/MultiplayerModal.jsx:130
-msgid "Share Link"
-msgstr "Partager le lien"
+#~ msgid "Share Link"
+#~ msgstr "Partager le lien"
 
 #: src/components/HelpModal.jsx:73
 #~ msgid "Share Web Maker"
 #~ msgstr "Partager Web Maker"
 
+#: src/components/MultiplayerModal.jsx:113
+msgid "Share link"
+msgstr "Partager le lien"
+
 #: src/components/MainHeader.jsx:98
 msgid "Share this creation publicly"
 msgstr "Partager cette création publiquement"
 
-#: src/components/MultiplayerModal.jsx:179
+#: src/components/MultiplayerModal.jsx:125
 msgid "Share this link with others to let them join your session."
 msgstr "Partagez ce lien avec d'autres pour leur permettre de rejoindre votre session."
 
-#: src/components/KeyboardShortcutsModal.jsx:146
+#: src/components/KeyboardShortcutsModal.jsx:152
 msgid "Single line comment"
 msgstr "Commentaire sur une seule ligne"
+
+#: src/components/GistExportSection.jsx:164
+#: src/components/GistExportSection.jsx:175
+msgid "Something went wrong talking to GitHub."
+msgstr "Quelque chose a mal tourné en parlant à GitHub."
 
 #: src/components/Settings.jsx:157
 msgid "Spaces"
@@ -836,11 +1050,11 @@ msgstr "Démarrer vide"
 msgid "Start Blank in File Mode"
 msgstr "Démarrer vide en mode fichier"
 
-#: src/components/MultiplayerModal.jsx:111
+#: src/components/MultiplayerModal.jsx:93
 msgid "Start New Collab Session"
 msgstr "Démarrer une nouvelle session de collaboration"
 
-#: src/components/MultiplayerModal.jsx:97
+#: src/components/MultiplayerModal.jsx:79
 msgid "Start a collaborative editing session and invite others to code together in real-time. Everyone can see each other's cursors and edits."
 msgstr "Démarrez une session d'édition collaborative et invitez d'autres à coder ensemble en temps réel. Tout le monde peut voir les curseurs et les modifications des autres."
 
@@ -872,19 +1086,19 @@ msgstr "Soumission en cours..."
 msgid "Support the Developer"
 msgstr "Soutenir le développeur"
 
-#: src/components/Footer.jsx:311
+#: src/components/Footer.jsx:345
 msgid "Switch to layout with all vertical panes"
 msgstr "Passer à une mise en page avec tous les panneaux verticaux"
 
-#: src/components/Footer.jsx:291
+#: src/components/Footer.jsx:325
 msgid "Switch to layout with preview on bottom"
 msgstr "Passer à une mise en page avec un aperçu en bas"
 
-#: src/components/Footer.jsx:301
+#: src/components/Footer.jsx:335
 msgid "Switch to layout with preview on left"
 msgstr "Passer à une mise en page avec un aperçu à gauche"
 
-#: src/components/Footer.jsx:281
+#: src/components/Footer.jsx:315
 msgid "Switch to layout with preview on right"
 msgstr "Passer à une mise en page avec un aperçu à droite"
 
@@ -892,7 +1106,7 @@ msgstr "Passer à une mise en page avec un aperçu à droite"
 msgid "Switch to lighter version for better performance. Removes things like blur etc."
 msgstr "Passer à une version plus légère pour de meilleures performances. Supprime des éléments comme le flou, etc."
 
-#: src/components/Footer.jsx:321
+#: src/components/Footer.jsx:355
 msgid "Switch to tabbed layout"
 msgstr "Passer à une mise en page par onglets"
 
@@ -900,13 +1114,25 @@ msgstr "Passer à une mise en page par onglets"
 msgid "Tabs"
 msgstr "Onglets"
 
-#: src/components/Footer.jsx:268
+#: src/components/Footer.jsx:302
 msgid "Take screenshot of preview"
 msgstr "Prendre une capture d'écran de l'aperçu"
+
+#: src/components/GistExportSection.jsx:127
+msgid "That token didn't work. Double-check you copied it correctly and that it hasn't expired."
+msgstr "Ce token n'a pas fonctionné. Vérifiez que vous l'avez copié correctement et qu'il n'a pas expiré."
 
 #: src/components/Settings.jsx:260
 msgid "Theme"
 msgstr "Thème"
+
+#: src/components/GistExportSection.jsx:428
+msgid "This gist was deleted on GitHub. Create a new one to re-link."
+msgstr "Ce gist a été supprimé sur GitHub. Créez-en un nouveau pour le relier à nouveau."
+
+#: src/components/GistExportSection.jsx:131
+msgid "This token is missing the \"gist\" scope. Recreate it on GitHub with \"gist\" checked."
+msgstr "Ce token manque du scope \"gist\". Recréez-le sur GitHub avec \"gist\" coché."
 
 #: src/components/ContentWrapFiles.jsx:648
 msgid "Toggle code pane"
@@ -917,7 +1143,8 @@ msgstr "Basculer le panneau de code"
 msgid "Toggle console"
 msgstr "Basculer la console"
 
-#: src/components/Footer.jsx:334
+#: src/components/Footer.jsx:368
+#: src/components/KeyboardShortcutsModal.jsx:56
 msgid "Toggle full screen preview"
 msgstr "Basculer l'aperçu en plein écran"
 
@@ -933,7 +1160,7 @@ msgstr "Activer cette option affichera Web Maker dans chaque nouvel onglet que v
 msgid "Turns on the auto-completion suggestions as you type"
 msgstr "Active les suggestions de complétion automatique au fur et à mesure que vous tapez"
 
-#: src/components/Footer.jsx:115
+#: src/components/Footer.jsx:148
 msgid "Tweet about 'Web Maker'"
 msgstr "Tweeter à propos de 'Web Maker'"
 
@@ -945,16 +1172,24 @@ msgstr "Tweetez vos demandes de fonctionnalités, commentaires et suggestions à
 msgid "Type here to search libraries"
 msgstr "Tapez ici pour rechercher des bibliothèques"
 
+#: src/components/GistExportSection.jsx:471
+msgid "Update Gist"
+msgstr "Mettre à jour le Gist"
+
+#: src/components/GistExportSection.jsx:239
+msgid "Updating Gist…"
+msgstr "Mise à jour du Gist…"
+
 #: src/components/Assets.jsx:463
 #: src/components/CreateNewModal.jsx:235
 msgid "Upgrade to PRO"
 msgstr "Passer à PRO"
 
-#: src/components/Footer.jsx:150
+#: src/components/Footer.jsx:183
 msgid "Upgrade to PRO and get some advanced superpowers!"
 msgstr "Passez à PRO et obtenez des super-pouvoirs avancés !"
 
-#: src/components/Footer.jsx:195
+#: src/components/Footer.jsx:229
 msgid "Upload Image"
 msgstr "Télécharger une image"
 
@@ -970,9 +1205,17 @@ msgstr "Télécharger/Utiliser des ressources"
 msgid "Use Monaco Editor"
 msgstr "Utiliser l'éditeur Monaco"
 
+#: src/components/GistExportSection.jsx:334
+msgid "Use a personal access token instead"
+msgstr "Utilisez un token d'accès personnel à la place"
+
 #: src/components/Settings.jsx:203
 msgid "Use experimental Monaco editor"
 msgstr "Utiliser l'éditeur Monaco expérimental"
+
+#: src/components/GistExportSection.jsx:452
+msgid "Visibility"
+msgstr "Visibilité"
 
 #: src/components/OnboardingModal.jsx:60
 msgid "Visit <0>https://webmaker.app/create/</0> any time — it works offline. Drag the bookmarklet onto your bookmark bar for one-click access:"
@@ -989,6 +1232,10 @@ msgstr "Vous voulez plus de super-pouvoirs ?"
 #: src/components/OnboardingModal.jsx:14
 #~ msgid "Welcome to Web Maker"
 #~ msgstr "Bienvenue sur Web Maker"
+
+#: src/components/GistExportSection.jsx:459
+msgid "Yes"
+msgstr "Oui"
 
 #: src/components/AskToImportModal.jsx:41
 msgid "Yes, please import"

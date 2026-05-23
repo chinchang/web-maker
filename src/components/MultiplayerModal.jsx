@@ -1,10 +1,9 @@
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
 import Modal from './Modal.jsx';
 import { Trans, t } from '@lingui/macro';
 import { I18n } from '@lingui/react';
 import { trackEvent } from '../analytics';
-import { HStack } from './Stack.jsx';
+import { UrlPill } from './UrlPill';
 
 /**
  * MultiplayerModal - Modal for managing multiplayer/collaborative editing sessions
@@ -27,23 +26,6 @@ export default function MultiplayerModal({
 	onStartSession,
 	onLeaveSession
 }) {
-	const [copySuccess, setCopySuccess] = useState(false);
-
-	useEffect(() => {
-		if (copySuccess) {
-			const timer = setTimeout(() => setCopySuccess(false), 2000);
-			return () => clearTimeout(timer);
-		}
-	}, [copySuccess]);
-
-	const handleCopyLink = () => {
-		if (multiplayerSession?.url) {
-			navigator.clipboard.writeText(multiplayerSession.url);
-			setCopySuccess(true);
-			trackEvent('ui', 'multiplayerCopyLink');
-		}
-	};
-
 	const handleStartSession = () => {
 		onStartSession();
 		trackEvent('ui', 'multiplayerStartSession');
@@ -126,54 +108,16 @@ export default function MultiplayerModal({
 								</div>
 
 								<div class="multiplayer-modal__section">
-									<h3 class="multiplayer-modal__section-title">
-										<Trans>Share Link</Trans>
-									</h3>
-									<HStack gap="0.5rem">
-										<input
-											type="text"
-											class="multiplayer-modal__link-input"
-											value={
-												multiplayerSession?.url?.replace(/https?:\/\//, '') ||
-												''
-											}
-											readOnly
-											onClick={e => e.target.select()}
-										/>
-										<button
-											class={`btn btn--dark btn--small  ${
-												copySuccess ? 'is-success' : ''
-											}`}
-											onClick={handleCopyLink}
-											title={i18n._(t`Copy link`)}
-										>
-											{copySuccess ? (
-												<svg
-													viewBox="0 0 24 24"
-													width="18"
-													height="18"
-													style="margin-right:0"
-												>
-													<path
-														fill="currentColor"
-														d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
-													/>
-												</svg>
-											) : (
-												<svg
-													viewBox="0 0 24 24"
-													width="18"
-													height="18"
-													style="margin-right:0"
-												>
-													<path
-														fill="currentColor"
-														d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
-													/>
-												</svg>
-											)}
-										</button>
-									</HStack>
+									<UrlPill
+										url={multiplayerSession?.url}
+										label={i18n._(t`Share link`)}
+										displayUrl={multiplayerSession?.url?.replace(
+											/https?:\/\//,
+											''
+										)}
+										copyAriaLabel={i18n._(t`Copy link`)}
+										onCopy={() => trackEvent('ui', 'multiplayerCopyLink')}
+									/>
 
 									<p class="multiplayer-modal__hint">
 										<Trans>

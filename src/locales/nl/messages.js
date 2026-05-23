@@ -14,6 +14,8 @@
 			'\'Oeps! Geselecteerd bestand is beschadigd. Kies een bestand dat is gegenereerd door op de "Export"-knop te klikken.',
 		'(Experimental) Switches from CodeMirror to Monaco. Many other settings might not be available in Monaco.':
 			'(Experimenteel) Schakelt over van CodeMirror naar Monaco. Veel andere instellingen zijn mogelijk niet beschikbaar in Monaco.',
+		'(the <0>gist</0> scope is pre-selected).':
+			'(de <0>gist</0> scope is vooraf geselecteerd).',
 		'2 files mode creations available in Free plan. To create unlimited files mode creations, upgrade to <0/>.':
 			'2 bestanden modus creaties beschikbaar in het Gratis plan. Om onbeperkte bestanden modus creaties te maken, upgrade naar <0/>.',
 		'3 separate panes to write HTML, CSS and JavaScript. Good for quickly testing something.':
@@ -26,6 +28,8 @@
 		"Add files locally, usable only on this browser. Won't work for others if you share this publicly.":
 			'Voeg bestanden lokaal toe, alleen bruikbaar op deze browser. Werkt niet voor anderen als je dit openbaar deelt.',
 		'Add library': 'Bibliotheek toevoegen',
+		'Add some code before exporting.':
+			'Voeg wat code toe voordat je exporteert.',
 		'Add the closing tag automatically on seeing an opening tag in HTML':
 			'Voeg automatisch de sluit-tag toe bij het zien van een openingstag in HTML',
 		Advanced: 'Geavanceerd',
@@ -40,6 +44,9 @@
 		'Auto-save': 'Automatisch opslaan',
 		'Auto-save keeps saving your code at regular intervals after you hit save manually the first time':
 			'Automatisch opslaan blijft je code op regelmatige intervallen opslaan nadat je de eerste keer handmatig op opslaan hebt gedrukt',
+		Back: 'Terug',
+		"Can't connect?": 'Kan geen verbinding maken?',
+		Cancelled: 'Geannuleerd',
 		'Choose from popular libraries': 'Kies uit populaire bibliotheken',
 		'Clear console (CTRL + L)': 'Console wissen (CTRL + L)',
 		'Clear console (works when console input is focused)':
@@ -62,12 +69,27 @@
 			'Kom je van de Chrome-extensie? <0>Leer hoe je je creaties kunt importeren</0>.',
 		'Configure and customize settings by clicking the gear icon (<0><1/></0>) in bottom right of the app.':
 			'Configureer en pas instellingen aan door op het tandwielpictogram (<0><1/></0>) rechtsonder in de app te klikken.',
+		'Connect GitHub': 'Verbind GitHub',
+		'Connect GitHub to update this gist or push a new version.':
+			'Verbind GitHub om deze gist bij te werken of een nieuwe versie te pushen.',
+		'Connected as {login}': function (a) {
+			return ['Verbonden als ', a('login')];
+		},
+		'Connecting to GitHub\u2026': 'Verbinden met GitHub\u2026',
 		Console: 'Console',
 		'Contact the Developer': 'Neem contact op met de ontwikkelaar',
 		'Copy URL (or keep clicking to copy other formats)':
 			'Kopieer URL (of blijf klikken om andere formaten te kopi\xEBren)',
+		'Copy gist URL': 'Kopieer gist URL',
 		'Copy link': 'Kopieer link',
+		'Copy public URL': 'Kopieer openbare URL',
+		'Copy the token and paste it below.':
+			'Kopieer de token en plak deze hieronder.',
+		'Could not connect to GitHub.': 'Kon geen verbinding maken met GitHub.',
+		'Could not validate token.': 'Kon de token niet valideren.',
 		'Create New': 'Nieuwe maken',
+		'Create new Gist': 'Maak nieuwe Gist',
+		'Creating new Gist\u2026': 'Nieuwe Gist aanmaken\u2026',
 		'Custom font name here': 'Aangepaste lettertype naam hier',
 		'Customize editor, theme, key bindings and more from the settings gear in the bottom-right corner.':
 			'Pas de editor, het thema, de sneltoetsen en meer aan via het instellingenwiel in de rechterbenedenhoek.',
@@ -76,7 +98,9 @@
 		'Default JavaScript preprocessor': 'Standaard JavaScript-preprocessor',
 		'Default Preprocessors': 'Standaard preprocessors',
 		Delete: 'Verwijderen',
+		Description: 'Beschrijving',
 		'Detach preview': 'Ontkoppel voorbeeld',
+		'Disconnect GitHub': 'Ontkoppel GitHub',
 		Discuss: 'Bespreken',
 		"Don't ask me again": 'Vraag het me niet opnieuw',
 		'Double click to toggle code pane':
@@ -95,6 +119,11 @@
 		Export: 'Exporteren',
 		'Export all your creations into a single importable file.':
 			'Exporteer al je creaties naar een enkel importeerbaar bestand.',
+		'Export as new gist': 'Exporteer als nieuwe gist',
+		'Export to Gist': 'Exporteer naar Gist',
+		'Export to GitHub Gist': 'Exporteer naar GitHub Gist',
+		'Exported to Gist': 'Ge\xEBxporteerd naar Gist',
+		'Exporting to Gist\u2026': 'Exporteert naar Gist\u2026',
 		'Fast/light-weight version': 'Snelle/lichtgewicht versie',
 		'Feedback & Suggestions': 'Feedback & Suggesties',
 		'Fetching files...': 'Bestanden ophalen...',
@@ -122,6 +151,16 @@
 		Fun: 'Plezier',
 		General: 'Algemeen',
 		Get: 'Krijg',
+		'Gist URL copied': 'Gist URL gekopieerd',
+		'Gist export is only available on the <0>web version</0> of Web-Maker.':
+			'Gist-export is alleen beschikbaar op de <0>webversie</0> van Web-Maker.',
+		'Gist updated': 'Gist bijgewerkt',
+		'Gist was deleted on GitHub': 'Gist is verwijderd op GitHub',
+		'GitHub access expired': 'GitHub-toegang is verlopen',
+		'GitHub access expired. Please reconnect.':
+			'GitHub-toegang is verlopen. Gelieve opnieuw te verbinden.',
+		'GitHub connected': 'GitHub verbonden',
+		'GitHub disconnected': 'GitHub losgekoppeld',
 		Global: 'Globaal',
 		'Grid view': 'Rasterweergave',
 		Help: 'Help',
@@ -138,6 +177,7 @@
 			'Importeer je creaties in je account',
 		"Import your creations. Only the file that you export through the 'Export' button can be imported.":
 			"Importeer je creaties. Alleen het bestand dat je via de 'Exporteren' knop exporteert, kan worden ge\xEFmporteerd.",
+		'Include README.md and webmaker.json': 'Include README.md en webmaker.json',
 		'Indent code left': 'Code naar links inspringen',
 		'Indent code right': 'Code naar rechts inspringen',
 		Indentation: 'Inspringing',
@@ -159,6 +199,7 @@
 		'Like this app? Please <0>rate it here</0>.':
 			'Vind je deze app leuk? Beoordeel het alsjeblieft <0>hier</0>.',
 		'Line wrap': 'Regelomloop',
+		'Linked gist': 'Gelinkte gist',
 		'List view': 'Lijstweergave',
 		'Loads the last open creation when app starts':
 			'Laadt de laatste open creatie wanneer de app start',
@@ -182,6 +223,7 @@
 		'Manage your PRO subscription': 'Beheer je PRO-abonnement',
 		'Manage your code in files. Just like you would have files on your local machine.':
 			'Beheer je code in bestanden. Net zoals je bestanden op je lokale machine zou hebben.',
+		'Max 10MB per file': 'Max 10MB per bestand',
 		'Max 300KB per file': 'Max 300KB per bestand',
 		'Max 5MB per file': 'Max 5MB per bestand',
 		'Maximize pane': 'Maximaliseer paneel',
@@ -193,6 +235,8 @@
 		'Multiplayer session active': 'Multiplayer sessie actief',
 		'My Library': 'Mijn Bibliotheek',
 		New: 'Nieuw',
+		'New gist created': 'Nieuwe gist aangemaakt',
+		No: 'Nee',
 		'No feedback yet. Be the first!': 'Nog geen feedback. Wees de eerste!',
 		'No files uploaded yet': 'Nog geen bestanden ge\xFCpload',
 		'No items in this collection.': 'Geen items in deze collectie.',
@@ -203,6 +247,7 @@
 		'Once you stop typing, the preview waits for this much time before getting updated. Too low value might choke your browser!':
 			'Zodra je stopt met typen, wacht de preview deze tijd voordat hij wordt bijgewerkt. Een te lage waarde kan je browser verstoren!',
 		Open: 'Openen',
+		'Open GitHub\'s "New token" page': 'Open GitHub\'s "Nieuwe token" pagina',
 		'Open Web Maker anytime by clicking the<0><1/></0> button in top-right side of your browser.':
 			'Open Web Maker op elk moment door op de<0><1/></0> knop in de rechterbovenhoek van je browser te klikken.',
 		'Open Web Maker anytime by visiting <0>https://webmaker.app/create/</0> - Even when you are offline! It just works! \uD83D\uDE31 <1>Drag the following bookmarklet</1> on your bookmark bar to create a quick access shortcut:':
@@ -217,6 +262,14 @@
 		'PRO unlocks unlimited public creations, unlimited Files mode projects, cloud asset hosting and real-time multiplayer collab.':
 			'PRO ontgrendelt onbeperkte openbare creaties, onbeperkte projecten in de Bestandenmodus, cloud asset hosting en realtime multiplayer samenwerking.',
 		Participants: 'Deelnemers',
+		"Paste a GitHub personal access token with the <0>gist</0> scope. It's stored only on this device.":
+			'Plak een GitHub persoonlijke toegangstoken met de <0>gist</0> scope. Het wordt alleen op dit apparaat opgeslagen.',
+		'Paste a token to continue.': 'Plak een token om door te gaan.',
+		'Permission denied. Make sure your token has the "gist" scope.':
+			'Toegang geweigerd. Zorg ervoor dat je token de "gist" scope heeft.',
+		'Personal access token': 'Persoonlijke toegangstoken',
+		'Pick an expiration, scroll down, and click <0>Generate token</0>.':
+			'Kies een vervaldatum, scroll naar beneden en klik op <0>Genereer token</0>.',
 		'Powered by cdnjs': 'Aangedreven door cdnjs',
 		'Preserve console logs': 'Console logs behouden',
 		'Preserve last written code': 'Laatst geschreven code behouden',
@@ -225,6 +278,10 @@
 		'Preview refresh wait time': 'Wachtijd voor preview vernieuwing',
 		'Preview will refresh when you resize the preview pane':
 			'Preview wordt vernieuwd wanneer je het previewvenster vergroot of verkleint',
+		Public: 'Openbaar',
+		'Public URL': 'Openbare URL',
+		'Push this creation to a GitHub gist.':
+			'Duw deze creatie naar een GitHub gist.',
 		'Put each library in new line':
 			'Plaats elke bibliotheek op een nieuwe regel',
 		'Read more': 'Lees meer',
@@ -239,6 +296,7 @@
 		'Replace new tab page': 'Vervang nieuwe tabblad pagina',
 		'Report a Bug': 'Rapporteer een bug',
 		'Report a bug': 'Meld een bug',
+		'Requires the <0>gist</0> scope.': 'Vereist de <0>gist</0> scope.',
 		'Review Web Maker': 'Beoordeel Web Maker',
 		Run: 'Uitvoeren',
 		'Run Prettier': 'Run Prettier',
@@ -249,8 +307,10 @@
 		'Save current creation (Ctrl/\u2318 + S)':
 			'Huidige creatie opslaan (Ctrl/\u2318 + S)',
 		'Save current creations': 'Huidige creaties opslaan',
+		'Save token': 'Token opslaan',
 		'Search files': 'Zoek bestanden',
 		'Search your creations here...': 'Zoek hier je creaties...',
+		Secret: 'Geheim',
 		'See PRO': 'Bekijk PRO',
 		'See awesome libraries used':
 			'Bekijk geweldige bibliotheken die zijn gebruikt',
@@ -262,10 +322,13 @@
 		Share: 'Delen',
 		'Share Link': 'Deel Link',
 		'Share Web Maker': 'Deel Web Maker',
+		'Share link': 'Deel link',
 		'Share this creation publicly': 'Deel deze creatie openbaar',
 		'Share this link with others to let them join your session.':
 			'Deel deze link met anderen zodat ze zich bij je sessie kunnen voegen.',
 		'Single line comment': 'Enkele regel commentaar',
+		'Something went wrong talking to GitHub.':
+			'Er ging iets mis bij het communiceren met GitHub.',
 		Spaces: 'Spaties',
 		'Start Blank': 'Begin Leeg',
 		'Start Blank in File Mode': 'Begin Leeg in Bestandsmodus',
@@ -293,7 +356,13 @@
 		'Switch to tabbed layout': 'Schakel over naar tabbladindeling',
 		Tabs: 'Tabs',
 		'Take screenshot of preview': 'Neem screenshot van voorbeeld',
+		"That token didn't work. Double-check you copied it correctly and that it hasn't expired.":
+			'Die token werkte niet. Controleer of je het correct hebt gekopieerd en dat het niet is verlopen.',
 		Theme: 'Thema',
+		'This gist was deleted on GitHub. Create a new one to re-link.':
+			'Deze gist is verwijderd op GitHub. Maak een nieuwe aan om opnieuw te linken.',
+		'This token is missing the "gist" scope. Recreate it on GitHub with "gist" checked.':
+			'Deze token mist de "gist" scope. Maak het opnieuw aan op GitHub met "gist" aangevinkt.',
 		'Toggle code pane': 'Schakel codepaneel in/uit',
 		'Toggle console': 'Schakel console in/uit',
 		'Toggle full screen preview': 'Schakel voorbeeld op volledig scherm in/uit',
@@ -307,6 +376,8 @@
 		'Tweet out your feature requests, comments & suggestions to <0>@webmakerApp</0>':
 			'Tweet je functie verzoeken, opmerkingen en suggesties naar <0>@webmakerApp</0>',
 		'Type here to search libraries': 'Typ hier om bibliotheken te zoeken',
+		'Update Gist': 'Update Gist',
+		'Updating Gist\u2026': 'Gist bijwerken\u2026',
 		'Upgrade to PRO': 'Upgrade naar PRO',
 		'Upgrade to PRO and get some advanced superpowers!':
 			'Upgrade naar PRO en krijg enkele geavanceerde superkrachten!',
@@ -315,13 +386,17 @@
 			'Upload middelen naar de cloud voor gebruik op verschillende apparaten.',
 		'Upload/Use assets': 'Upload/Gebruik middelen',
 		'Use Monaco Editor': 'Gebruik Monaco Editor',
+		'Use a personal access token instead':
+			'Gebruik in plaats daarvan een persoonlijke toegangstoken',
 		'Use experimental Monaco editor': 'Gebruik experimentele Monaco editor',
+		Visibility: 'Zichtbaarheid',
 		'Visit <0>https://webmaker.app/create/</0> any time \u2014 it works offline. Drag the bookmarklet onto your bookmark bar for one-click access:':
 			'Bezoek <0>https://webmaker.app/create/</0> op elk moment \u2014 het werkt offline. Sleep de bookmarklet naar je bladwijzerbalk voor \xE9\xE9n-klik toegang:',
 		'Vote for features you want to see or suggest new ones.':
 			'Stem op functies die je wilt zien of stel nieuwe voor.',
 		'Want more super-powers?': 'Wil je meer superkrachten?',
 		'Welcome to Web Maker': 'Welkom bij Web Maker',
+		Yes: 'Ja',
 		'Yes, please import': 'Ja, graag importeren',
 		'You have <0>{oldSavedCreationsCount}</0> creations saved in your local machine. Do you want to import those creations in your account so they are more secure and accessible anywhere?':
 			function (a) {

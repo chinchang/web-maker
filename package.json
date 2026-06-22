@@ -80,7 +80,7 @@
 		"codemirror": "^5.65.19",
 		"copy-webpack-plugin": "^4.5.1",
 		"esprima-next": "^6.0.3",
-		"firebase": "^10.8.0",
+		"firebase": "^12.15.0",
 		"jszip": "^3.1.5",
 		"preact": "^10.17.0",
 		"preact-portal": "^1.1.3",

@@ -38,7 +38,7 @@
 	},
 	"devDependencies": {
 		"@11ty/eleventy": "^0.7.1",
-		"@babel/core": "^7.5.4",
+		"@babel/core": "^7.29.6",
 		"@babel/preset-react": "^7.25.9",
 		"@lingui/cli": "^2.8.3",
 		"@lingui/macro": "^2.8.3",

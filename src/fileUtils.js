@@ -88,7 +88,9 @@ export function removeFileAtPath(files, path) {
 	}
 	// now we should be left with just one value in the pathPieces array - the actual file name
 	const { index } = getChildFileFromName(currentFolder, pathPieces[0]);
-	currentFolder.splice(index, 1);
+	if (index !== -1) {
+		currentFolder.splice(index, 1);
+	}
 }
 
 /**

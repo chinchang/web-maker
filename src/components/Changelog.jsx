@@ -87,7 +87,17 @@ export function Changelog(props) {
 			<h1>Whats new?</h1>
 			<Tabs>
 				<TabPanel label="2026">
-					<Notification version="7.3.1" {...props} isLatest={true}>
+					<Notification version="7.4.0" {...props} isLatest={true}>
+						<li>
+							<strong>Korean Language</strong>: Web Maker is now available in
+							Korean.
+						</li>
+						<NotificationItem type="ui" label="">
+							Improved Share modal and added missing translations.
+						</NotificationItem>
+					</Notification>
+
+					<Notification version="7.3.1" {...props}>
 						<li>
 							<strong>Personal Access Token for Gist</strong>: If "Connect
 							GitHub" doesn't work for you (for example, when your GitHub email

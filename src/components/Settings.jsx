@@ -139,6 +139,7 @@ export default class Settings extends Component {
 											<option value="fr">Français</option>
 											<option value="nl">Dutch</option>
 											<option value="zh-Hans">中文(简体)</option>
+											<option value="ko">한국어</option>
 										</select>
 									</label>
 								</div>

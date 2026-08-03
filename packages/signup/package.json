@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"firebase": "^10.11.1"
+		"firebase": "^12.17.0"
 	},
 	"devDependencies": {
 		"parcel": "^2.12.0",

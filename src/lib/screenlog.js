@@ -57,6 +57,85 @@ function sanitizeEvent(event) {
 	}
 	return fakeEvent;
 }
+// Deep-converts a value into something postMessage can clone. Functions,
+// promises, symbols, DOM nodes etc. throw DataCloneError otherwise, which
+// would break the user's code and drop the log.
+function makeCloneable(value, seen = new WeakMap()) {
+	const type = typeof value;
+	if (type === 'function') {
+		return `ƒ ${value.name || 'anonymous'}()`;
+	}
+	if (type === 'symbol') {
+		return value.toString();
+	}
+	if (value === null || type !== 'object') {
+		return value;
+	}
+	if (seen.has(value)) {
+		return seen.get(value);
+	}
+	if (value instanceof Window) {
+		return 'Window';
+	}
+	if (value instanceof Document) {
+		return 'Document';
+	}
+	if (value instanceof Node) {
+		return sanitizeDomNode(value);
+	}
+	if (value instanceof Event) {
+		return sanitizeEvent(value);
+	}
+	if (value instanceof Promise) {
+		return 'Promise {}';
+	}
+	if (
+		value instanceof Date ||
+		value instanceof RegExp ||
+		value instanceof Error ||
+		ArrayBuffer.isView(value) ||
+		value instanceof ArrayBuffer
+	) {
+		return value;
+	}
+	if (value instanceof Map) {
+		const copy = new Map();
+		seen.set(value, copy);
+		value.forEach((v, k) =>
+			copy.set(makeCloneable(k, seen), makeCloneable(v, seen))
+		);
+		return copy;
+	}
+	if (value instanceof Set) {
+		const copy = new Set();
+		seen.set(value, copy);
+		value.forEach(v => copy.add(makeCloneable(v, seen)));
+		return copy;
+	}
+	if (
+		Array.isArray(value) ||
+		value instanceof NodeList ||
+		value instanceof HTMLCollection
+	) {
+		const copy = [];
+		seen.set(value, copy);
+		for (let i = 0; i < value.length; i++) {
+			copy.push(makeCloneable(value[i], seen));
+		}
+		return copy;
+	}
+	const copy = {};
+	seen.set(value, copy);
+	for (const key in value) {
+		try {
+			copy[key] = makeCloneable(value[key], seen);
+		} catch (e) {
+			// Some getters throw on access
+		}
+	}
+	return copy;
+}
+
 function sendLog(...args) {
 	const sanitizedArgs = [...args].map(arg => {
 		if (arg && arg instanceof HTMLElement) {
@@ -66,7 +145,14 @@ function sendLog(...args) {
 		}
 		return arg;
 	});
-	mainWindow.postMessage({ logs: sanitizedArgs }, '*');
+	try {
+		mainWindow.postMessage({ logs: sanitizedArgs }, '*');
+	} catch (e) {
+		mainWindow.postMessage(
+			{ logs: sanitizedArgs.map(arg => makeCloneable(arg)) },
+			'*'
+		);
+	}
 }
 
 (function() {
@@ -242,8 +328,12 @@ function sendLog(...args) {
 			}
 		};
 	}
-	window.addEventListener('error', function() {
-		genericLogger(_options.errorColor).call(null, arguments[0].error.stack);
+	window.addEventListener('error', function(e) {
+		// `error` is null for errors from cross-origin scripts
+		genericLogger(_options.errorColor).call(
+			null,
+			e.error ? e.error.stack : e.message
+		);
 	});
 
 	// Public API

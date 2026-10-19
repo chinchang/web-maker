@@ -87,7 +87,21 @@ export function Changelog(props) {
 			<h1>Whats new?</h1>
 			<Tabs>
 				<TabPanel label="2026">
-					<Notification version="7.4.0" {...props} isLatest={true}>
+					<Notification version="7.4.1" {...props} isLatest={true}>
+						<li>
+							<strong>Grouped Console Logs</strong>: All arguments of a single{' '}
+							<code>console.log</code> call now show on one row, just like the
+							browser's console. Strings print without quotes and error stacks
+							keep their line breaks.
+						</li>
+						<NotificationItem type="bug" label="">
+							Fix console breaking when logging values like functions, promises
+							or DOM node lists. Such logs stopped your script and hid all later
+							logs.
+						</NotificationItem>
+					</Notification>
+
+					<Notification version="7.4.0" {...props}>
 						<li>
 							<strong>Korean Language</strong>: Web Maker is now available in
 							Korean.

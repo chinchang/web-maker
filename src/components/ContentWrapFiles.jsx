@@ -541,7 +541,7 @@ export default class ContentWrapFiles extends Component {
 			return arg;
 		});
 		this.setState({
-			logs: [...this.state.logs, ...logs]
+			logs: [...this.state.logs, logs]
 		});
 	}
 

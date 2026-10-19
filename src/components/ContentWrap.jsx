@@ -649,7 +649,7 @@ export default class ContentWrap extends Component {
 			}
 			return arg;
 		});
-		this.setState({ logs: [...this.state.logs, ...logs] });
+		this.setState({ logs: [...this.state.logs, logs] });
 	}
 
 	previewException(error) {

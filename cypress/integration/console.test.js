@@ -4,15 +4,17 @@ const consoleAssert = (prompt, expected) => {
 	cy.get('#consolePromptEl').type(`${prompt}{enter}`);
 
 	// append the prompt at the beginning of the expected items
-	expected.unshift(`"> ${prompt}"`);
+	expected.unshift(`> ${prompt}`);
 
-	cy.get('ul[data-testid=consoleItems] li').should(
+	cy.get('ul[data-testid=consoleItems] > li').should(
 		'have.length',
 		expected.length
 	);
 
 	expected.forEach((expectedValue, index) => {
-		cy.get('ul[data-testid=consoleItems] li').eq(index).contains(expectedValue);
+		cy.get('ul[data-testid=consoleItems] > li')
+			.eq(index)
+			.contains(expectedValue);
 	});
 };
 

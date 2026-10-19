@@ -2047,8 +2047,16 @@ body.light-theme .alerts-container {
 .console__items li {
 	font-size: var(--code-font-size) !important;
 	line-height: inherit !important;
-	padding: 5px 10px !important;
+}
+.console__row {
+	padding: 5px 10px;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+/* Matches react-inspector's font so strings line up with other values */
+.console__string {
+	font-family: Menlo, monospace;
+	white-space: pre-wrap;
+	word-break: break-word;
 }
 
 /* Detached mode */
@@ -3365,7 +3373,7 @@ body.light-theme .console-exec-input {
 	border: 1px solid #d1d5db;
 }
 
-body.light-theme .console__items li {
+body.light-theme .console__row {
 	border-bottom-color: rgba(0, 0, 0, 0.08);
 }
 

@@ -3,6 +3,7 @@ import { Inspector, chromeDark, chromeLight } from 'react-inspector';
 import { Trans, t, NumberFormat } from '@lingui/macro';
 import { I18n } from '@lingui/react';
 import { PureComponent } from 'preact/compat';
+import { HStack } from './Stack.jsx';
 
 class LogRow extends Component {
 	shouldComponentUpdate() {
@@ -19,7 +20,21 @@ class LogRow extends Component {
 			}
 		};
 
-		return <Inspector theme={theme} data={this.props.data} />;
+		// All arguments of a single console call go on one row, like browsers.
+		// Top-level strings are printed as plain text (without quotes).
+		return (
+			<li class="console__row">
+				<HStack gap="1ch" align="flex-start" wrap>
+					{this.props.args.map(arg =>
+						typeof arg === 'string' ? (
+							<span class="console__string">{arg}</span>
+						) : (
+							<Inspector theme={theme} data={arg} />
+						)
+					)}
+				</HStack>
+			</li>
+		);
 	}
 }
 
@@ -129,8 +144,8 @@ export class Console extends PureComponent {
 								}}
 								data-testid="consoleItems"
 							>
-								{logs.map(log => (
-									<LogRow data={log} />
+								{logs.map(args => (
+									<LogRow args={args} />
 								))}
 							</ul>
 						</div>
